@@ -1,0 +1,14 @@
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import ch.jeda.*;
+import ch.jeda.ui.*;
+
+public class ${name} extends Program {
+
+    @Override
+    public void run() {
+        // Write your code here.
+    }
+}

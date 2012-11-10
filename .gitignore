@@ -1,0 +1,24 @@
+# NetBeans generated files
+
+build/
+dist/
+
+*/nbproject/*
+!*/nbproject/project.properties
+!*/nbproject/project.xml
+
+
+# Jeda generated files
+
+nbjeda/plugin/release
+nbjeda/plugin/src/ch/jeda/netbeans/java/template/JedaProjectTemplate.zip
+jedandroid/gen/
+nbjeda/plugin/nbproject/private/
+
+jedandroid/bin/
+jedandroid/gen/
+jedandroid/libs/
+
+template-android/bin/
+template-android/gen/
+

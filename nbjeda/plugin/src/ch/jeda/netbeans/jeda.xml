@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library PUBLIC "-//NetBeans//DTD Library Declaration 1.0//EN" "http://www.netbeans.org/dtds/library-declaration-1_0.dtd">
+<library version="1.0">
+    <name>jeda</name>
+    <type>j2se</type>
+    <localizing-bundle>ch.jeda.netbeans.Bundle</localizing-bundle>
+    <volume>
+        <type>classpath</type>
+        <resource>jar:nbinst://ch.jeda.netbeans/lib/jeda.jar!/</resource>
+    </volume>
+    <volume>
+        <type>src</type>
+        <resource>jar:nbinst://ch.jeda.netbeans/sources/jeda-src.jar!/</resource>
+    </volume>
+    <volume>
+        <type>javadoc</type>
+        <resource>jar:nbinst://ch.jeda.netbeans/docs/jeda-api.zip!/</resource>
+    </volume>
+</library>

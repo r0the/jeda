@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jeda" default="default" basedir=".">
+    <description>Builds, tests, and runs the project jeda.</description>
+    <import file="nbproject/build-impl.xml"/>
+
+    <!-- Properties -->
+
+    <property name="jeda.core.dir" value="../core"/>
+    <property name="jeda.nbjeda.dir" value="../nbjeda/plugin"/>
+    <property name="jeda.library.release.dir" value="${jeda.nbjeda.dir}/release"/>
+    <property name="jeda.source.jar" value="${jeda.library.release.dir}/sources/jeda-src.jar"/>
+    <property name="jeda.javadoc.zip" value="${jeda.library.release.dir}/docs/jeda-api.zip"/>
+
+    <target name="-post-jar">
+        <!-- Load jeda version -->
+        <property file="${jeda.core.dir}/src/ch/jeda/resources/jeda.properties"/>
+        
+        <!-- Add core library to jar -->
+        <jar update="true" jarfile="${dist.jar}">
+            <zipfileset src="${jeda.core.dir}/dist/core.jar" />
+        </jar>
+
+        <!-- Add information to library manifest -->
+        <jar update="true" destfile="${dist.jar}">
+            <manifest>
+                <attribute name="Implementation-Title" value="Jeda Library"/>
+                <attribute name="Implementation-URL" value="http://jeda.ch"/>
+                <attribute name="Implementation-Version" value="${jeda.version}"/>
+            </manifest>
+        </jar>
+        
+        <!-- Update Library Module -->
+
+        <copy file="${dist.jar}" tofile="${jeda.library.release.dir}/lib/jeda.jar"/>
+        <zip basedir="${jeda.core.dir}/dist/javadoc" destfile="${jeda.javadoc.zip}"/>
+
+        <zip basedir="${jeda.core.dir}/src" destfile="${jeda.source.jar}"/>
+        <zip basedir="${src.dir}" update="true" destfile="${jeda.source.jar}"/>
+
+        <!-- Update Project Module -->
+        <property name="template.java.zipfile" value="${jeda.nbjeda.dir}/src/ch/jeda/netbeans/java/template/JedaProjectTemplate.zip"/>
+        <property name="template.java.dir" value="../template-java"/>
+
+        <delete file="${template.java.zipfile}"/>
+        <mkdir dir="${template.java.dir}/src"/>
+        <zip basedir="${template.java.dir}" destfile="${template.java.zipfile}">
+            <exclude name="**/build/"/>
+            <exclude name="**/dist/"/>
+            <exclude name="**/nbproject/private/"/>
+        </zip>
+
+        <!-- Update Jeda version in Module Suite -->
+        <manifest file="${jeda.nbjeda.dir}/manifest.mf" mode="update">
+            <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
+        </manifest>
+        
+        <!-- Directly update installed library files -->
+        <copy file="${dist.jar}" tofile="${user.home}/.netbeans/7.0/lib/jeda.jar"/>
+        <copy file="${jeda.library.release.dir}/docs/jeda-api.zip" tofile="${user.home}/.netbeans/7.0/docs/jeda-api.zip/"/>
+        <copy file="${jeda.source.jar}" tofile="${user.home}/.netbeans/7.0/sources/jeda-src.jar/"/>
+    </target>
+</project>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="${ProjectName}" default="default" basedir=".">
+    <description>Builds, tests, and runs the project ${ProjectName}.</description>
+    <import file="nbproject/build-impl.xml"/>
+
+    <target name="-post-jar">
+        <jar update="true" destfile="${dist.jar}">
+            <zipfileset src="${libs.jeda.classpath}" excludes="META-INF/*" />
+        </jar> 
+    </target>
+</project>

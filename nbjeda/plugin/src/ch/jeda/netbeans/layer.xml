@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Projects">
+        <folder name="org-netbeans-modules-java-j2seproject">
+            <folder name="Lookup">
+                <file name="ch.jeda.netbeans.java.JedaLookupProvider.instance"/>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Templates">
+        <folder name="Project">
+            <folder name="Standard">
+                <file name="JedaProjectTemplate.zip" url="java/template/JedaProjectTemplate.zip">
+                    <attr name="displayName" bundlevalue="ch.jeda.netbeans.java.template.Bundle#Templates/Project/Standard/JedaProjectTemplate.zip"/>
+                    <attr name="iconBase" stringvalue="ch/jeda/netbeans/resources/logo-16x16.png"/>
+                    <attr name="instantiatingIterator" methodvalue="ch.jeda.netbeans.java.template.JedaProjectWizardIterator.createIterator"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/ch/jeda/netbeans/java/template/JedaProjectDescription.html"/>
+                    <attr name="template" boolvalue="true"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="Jeda">
+            <file name="JedaBlocks.java" url="resources/JedaBlocksClassTemplate_java">
+                <attr name="displayName" bundlevalue="ch.jeda.netbeans.Bundle#Templates/Jeda/JedaBlocks.java"/>
+                <attr name="iconBase" stringvalue="ch/jeda/netbeans/resources/logo-16x16.png"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/ch/jeda/netbeans/resources/JedaBlocksClassDescription.html"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.form.wizard.TemplateWizardIterator.create"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-classes"/>
+            </file>
+            <file name="JedaProgram.java" url="resources/JedaProgramClassTemplate_java">
+                <attr name="displayName" bundlevalue="ch.jeda.netbeans.Bundle#Templates/Jeda/JedaProgram.java"/>
+                <attr name="iconBase" stringvalue="ch/jeda/netbeans/resources/logo-16x16.png"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/ch/jeda/netbeans/resources/JedaProgramClassDescription.html"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.form.wizard.TemplateWizardIterator.create"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-classes"/>
+            </file>
+            <file name="JedaSimulation.java" url="resources/JedaSimulationClassTemplate_java">
+                <attr name="displayName" bundlevalue="ch.jeda.netbeans.Bundle#Templates/Jeda/JedaSimulation.java"/>
+                <attr name="iconBase" stringvalue="ch/jeda/netbeans/resources/logo-16x16.png"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/ch/jeda/netbeans/resources/JedaSimulationClassDescription.html"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.form.wizard.TemplateWizardIterator.create"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-classes"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="org-netbeans-api-project-libraries">
+        <folder name="Libraries">
+            <file name="jeda.xml" url="jeda.xml"/>
+        </folder>
+    </folder>
+</filesystem>
