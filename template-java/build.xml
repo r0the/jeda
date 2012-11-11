@@ -3,6 +3,10 @@
     <description>Builds, tests, and runs the project ${ProjectName}.</description>
     <import file="nbproject/build-impl.xml"/>
 
+    <target name="-post-compile">
+        <copy file="jeda.properties" todir="${build.dir}/classes"/>
+    </target>
+
     <target name="-post-jar">
         <jar update="true" destfile="${dist.jar}">
             <zipfileset src="${libs.jeda.classpath}" excludes="META-INF/*" />

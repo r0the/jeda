@@ -24,8 +24,8 @@ import org.openide.util.ImageUtilities;
 
 public class Util {
 
+    public static final String PROJECT_FILE = "jeda.properties";
     private static final String ICON = "ch/jeda/netbeans/resources/logo-16x16.png";
-    private static final String PROJECT_FILE = "jeda.properties";
     private static Image JEDA_IMAGE;
     private static Icon JEDA_ICON;
 
