@@ -67,4 +67,8 @@ public class AndroidImageImp implements ImageImp {
 
         return result;
     }
+
+    Bitmap getBitmap() {
+        return this.bitmap;
+    }
 }

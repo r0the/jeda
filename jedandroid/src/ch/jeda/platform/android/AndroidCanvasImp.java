@@ -31,19 +31,23 @@ import ch.jeda.ui.Color;
 
 class AndroidCanvasImp implements CanvasImp {
 
-    private final Paint fill;
-    private final Paint stroke;
+    private final Paint fillPaint;
+    private final Paint pixelPaint;
+    private final Paint strokePaint;
+    private final Paint textPaint;
     private Bitmap bitmap;
     private Canvas canvas;
     private Size size;
 
     AndroidCanvasImp() {
-        this.fill = new Paint();
-        this.fill.setStyle(Paint.Style.FILL);
-        this.fill.setAntiAlias(true);
-        this.stroke = new Paint();
-        this.stroke.setStyle(Paint.Style.STROKE);
-        this.stroke.setAntiAlias(true);
+        this.fillPaint = new Paint();
+        this.fillPaint.setStyle(Paint.Style.FILL);
+        this.fillPaint.setAntiAlias(true);
+        this.pixelPaint = new Paint();
+        this.strokePaint = new Paint();
+        this.strokePaint.setStyle(Paint.Style.STROKE);
+        this.strokePaint.setAntiAlias(true);
+        this.textPaint = new Paint();
     }
 
     AndroidCanvasImp(Size size) {
@@ -67,29 +71,32 @@ class AndroidCanvasImp implements CanvasImp {
         assert center != null;
         assert radius > 0;
 
-        this.canvas.drawCircle(center.x, center.y, radius, this.stroke);
+        this.canvas.drawCircle(center.x, center.y, radius, this.strokePaint);
         this.modified();
     }
 
     public void drawImage(Location topLeft, ImageImp image) {
         assert topLeft != null;
         assert image != null;
+        assert image instanceof AndroidImageImp;
 
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.canvas.drawBitmap(((AndroidImageImp) image).getBitmap(),
+                topLeft.x, topLeft.y, this.fillPaint);
+        this.modified();
     }
 
     public void drawLine(Location start, Location end) {
         assert start != null;
         assert end != null;
 
-        this.canvas.drawLine(start.x, start.y, end.x, end.y, this.stroke);
+        this.canvas.drawLine(start.x, start.y, end.x, end.y, this.strokePaint);
         this.modified();
     }
 
     public void drawPolygon(Iterable<Location> edges) {
         assert edges != null;
 
-        this.canvas.drawPath(createPath(edges), this.stroke);
+        this.canvas.drawPath(createPath(edges), this.strokePaint);
         this.modified();
     }
 
@@ -99,7 +106,7 @@ class AndroidCanvasImp implements CanvasImp {
 
         int right = topLeft.x + size.width;
         int bottom = topLeft.y + size.height;
-        this.canvas.drawRect(topLeft.x, topLeft.y, right, bottom, this.stroke);
+        this.canvas.drawRect(topLeft.x, topLeft.y, right, bottom, this.strokePaint);
         this.modified();
     }
 
@@ -107,12 +114,12 @@ class AndroidCanvasImp implements CanvasImp {
         assert topLeft != null;
         assert text != null;
 
-        this.canvas.drawText(text, topLeft.x, topLeft.y, this.stroke);
+        this.canvas.drawText(text, topLeft.x, topLeft.y, this.textPaint);
         this.modified();
     }
 
     public void fill() {
-        this.canvas.drawColor(this.fill.getColor());
+        this.canvas.drawColor(this.fillPaint.getColor());
         this.modified();
     }
 
@@ -120,14 +127,14 @@ class AndroidCanvasImp implements CanvasImp {
         assert center != null;
         assert radius > 0;
 
-        this.canvas.drawCircle(center.x, center.y, radius, this.fill);
+        this.canvas.drawCircle(center.x, center.y, radius, this.fillPaint);
         this.modified();
     }
 
     public void fillPolygon(Iterable<Location> edges) {
         assert edges != null;
 
-        this.canvas.drawPath(createPath(edges), this.fill);
+        this.canvas.drawPath(createPath(edges), this.fillPaint);
         this.modified();
     }
 
@@ -137,7 +144,7 @@ class AndroidCanvasImp implements CanvasImp {
 
         int right = topLeft.x + size.width;
         int bottom = topLeft.y + size.height;
-        this.canvas.drawRect(topLeft.x, topLeft.y, right, bottom, this.fill);
+        this.canvas.drawRect(topLeft.x, topLeft.y, right, bottom, this.fillPaint);
         this.modified();
     }
 
@@ -150,7 +157,7 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     public double getLineWidth() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.strokePaint.getStrokeWidth();
     }
 
     public Color getPixelAt(Location location) {
@@ -168,24 +175,26 @@ class AndroidCanvasImp implements CanvasImp {
     public void setAlpha(int alpha) {
         assert 0 <= alpha && alpha <= 255;
 
-        this.fill.setAlpha(alpha);
+        this.fillPaint.setAlpha(alpha);
     }
 
     public void setColor(Color color) {
-        this.fill.setColor(color.getValue());
-        this.stroke.setColor(color.getValue());
+        this.fillPaint.setColor(color.getValue());
+        this.strokePaint.setColor(color.getValue());
+        this.textPaint.setColor(color.getValue());
     }
 
     public void setFontSize(int size) {
-        this.stroke.setTextSize(size);
+        this.strokePaint.setTextSize(size);
     }
 
     public void setLineWidth(double width) {
-        this.stroke.setStrokeWidth((float) width);
+        this.strokePaint.setStrokeWidth((float) width);
     }
 
     public void setPixelAt(Location location, Color color) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.pixelPaint.setColor(color.getValue());
+        this.canvas.drawPoint(location.x, location.y, this.pixelPaint);
     }
 
     public void setTransformation(Transformation transformation) {
@@ -198,7 +207,7 @@ class AndroidCanvasImp implements CanvasImp {
 
     public Size textSize(String text) {
         Rect bounds = new Rect();
-        this.stroke.getTextBounds(text, 0, text.length() - 1, bounds);
+        this.strokePaint.getTextBounds(text, 0, text.length() - 1, bounds);
         return new Size(bounds.width(), bounds.height());
     }
 
@@ -226,9 +235,11 @@ class AndroidCanvasImp implements CanvasImp {
 
     private static Path createPath(Iterable<Location> edges) {
         Path result = new Path();
+        boolean first = true;
         for (Location edge : edges) {
-            if (result.isEmpty()) {
+            if (first) {
                 result.moveTo(edge.x, edge.y);
+                first = false;
             }
             else {
                 result.lineTo(edge.x, edge.y);
