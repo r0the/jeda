@@ -73,18 +73,30 @@ public abstract class Program {
     }
 
     /**
+     * Prompts the user to input a double value. The specified
+     * <code>message</code> is displayed to the user. It may be formatted using
+     * simple HTML. Returns <code>0d</code> if the user cancels the input
+     * prompt.
      * 
-     * @param message
-     * @return 
+     * @param message the message displayed to the user
+     * @return double value entered by the user
+     * 
+     * @since 1.0
      */
     protected final double readDouble(String message) {
         return Engine.getCurrentEngine().readDouble(message);
     }
 
     /**
+     * Prompts the user to input an int value. The specified
+     * <code>message</code> is displayed to the user. It may be formatted using
+     * simple HTML. Returns <code>0d</code> if the user cancels the input
+     * prompt.
      * 
-     * @param message
-     * @return 
+     * @param message the message displayed to the user
+     * @return iny value entered by the user
+     * 
+     * @since 1.0
      */
     protected final int readInt(String message) {
         return Engine.getCurrentEngine().readInt(message);
@@ -93,7 +105,9 @@ public abstract class Program {
     /**
      * Waits for the specified amount of time.
      * 
-     * @param milliseconds amount of milliseconds to wait
+     * @param milliseconds the amount of milliseconds to wait
+     * 
+     * @since 1.0
      */
     protected final void sleep(int milliseconds) {
         try {
@@ -103,6 +117,11 @@ public abstract class Program {
         }
     }
 
+    /**
+     * Writes a message to the Jeda log window.
+     * 
+     * @param message the message to write
+     */
     protected final void write(String message) {
         Engine.getCurrentEngine().write(message);
     }

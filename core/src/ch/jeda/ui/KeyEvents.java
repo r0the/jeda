@@ -25,7 +25,7 @@ import java.util.Set;
  * of the keyboard is not updated automatically, but only when the method
  * {@link Window#flip()} of the corresponding window is called.
  * 
- * The Keyboard class distinguishes between <b>pressed</b> keys and <b>typed</b>
+ * The KeyEvents class distinguishes between <b>pressed</b> keys and <b>typed</b>
  * keys. A key is considered <b>pressed</b> as long as the user holds it down.
  * A key is considered typed at the moment when the user presses it down. When
  * the user continues to hold the key down, the system will start to generate
@@ -67,10 +67,7 @@ public class KeyEvents {
     }
 
     /**
-     * Checks whether the specified key is currently pressed. Use {@link Key#ANY}
-     * to check whether any key is pressed. Use {@link Key#NONE} to check whethe
-     * no key is pressed. In the last case <code>true</code> is returned when
-     * no key is currently pressed.
+     * Checks whether the specified key is currently pressed.
      *
      * @param key the key to check for
      * @return <code>true</code> if specified key is currently pressed
@@ -86,10 +83,7 @@ public class KeyEvents {
     }
 
     /**
-     * Checks whether a key was typed recently. Use {@link Key#ANY} to check
-     * whether any key was typed. Use {@link Key#NONE} to check whether no
-     * key was typed. In the last case <code>true</code> is returned when
-     * no key was typed recently.
+     * Checks whether a key was typed recently.
      *
      * @param key key to check
      * @return <code>true</code> if specified key was typed recently

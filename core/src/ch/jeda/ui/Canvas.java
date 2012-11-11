@@ -621,7 +621,7 @@ public class Canvas {
 
     /**
      * Returns the color of the pixel at the coordinates (x, y). Returns
-     * {@link ch.jeda.ui.Color#TRANSPARENT} when the pixel is outside the
+     * {@link ch.jeda.ui.Color#NONE} when the pixel is outside the
      * canvas.
      *
      * @param x x coordinate of the pixel

@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a key of the keyboard. Key values are used by the {@link Keyboard}
- * class to check wheter a key is pressed or has been typed.
+ * Represents a key that can be typed by the user. Key values are used by the 
+ * {@link KeyEvents} class to represent which keys have been pressed or typed.
  *
  * Key objects cannot be created, they are provided as constants.
  *
- * @see Keyboard
+ * @see KeyEvents
  */
 public final class Key implements Serializable {
 
@@ -377,21 +377,12 @@ public final class Key implements Serializable {
      * The alt graph key. The string representation of this key is "AltGr".
      */
     public static final Key ALT_GRAPH = new Key(65406, "AltGr");
-    /**
-     * The "Any" key. Matches any key of the keyboard. The string
-     * representation of this key is "Any".
-     */
-    public static final Key ANY = new Key(ANYKEY, "Any");
-    /**
-     * Indicates no key.
-     */
-    public static final Key NONE = new Key(NOKEY, "None");
     private final int keyCode;
     private final String name;
 
     /**
-     * Returns the with the specified string representation. Returns null if the
-     * name does not correspond to any key.
+     * Returns the with the specified string representation. Returns null if 
+     * the name does not correspond to any key.
      *
      * @param name name of the key
      * @return Key the key with the specified name
@@ -434,17 +425,5 @@ public final class Key implements Serializable {
     @Override
     public String toString() {
         return this.name;
-    }
-
-    boolean matches(Collection<Key> keys) {
-        if (this.keyCode == NOKEY) {
-            return keys.isEmpty();
-        }
-        else if (this.keyCode == ANYKEY) {
-            return !keys.isEmpty();
-        }
-        else {
-            return keys.contains(this);
-        }
     }
 }

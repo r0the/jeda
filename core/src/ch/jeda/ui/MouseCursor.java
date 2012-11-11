@@ -19,10 +19,10 @@ package ch.jeda.ui;
 /**
  * Represents a mouse cursor (the small picture that indicates the location of
  * the mouse on the screen). Mouse cursors can be changed using the
- * {@link Mouse#setCursor(ch.jeda.ui.MouseCursor)} method.
+ * {@link Window#setMouseCursor(ch.jeda.ui.MouseCursor)} method.
  *
  * @version 1.0
- * @see Mouse
+ * @see Window
  */
 public final class MouseCursor {
 

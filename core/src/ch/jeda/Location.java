@@ -25,6 +25,10 @@ import java.io.Serializable;
  */
 public final class Location implements Serializable {
 
+    /**
+     * <code>Location</code> representing the origin. Both coordinates of this
+     * location are zero.
+     */
     public static final Location ORIGIN = new Location(0, 0);
     /**
      * The x coordinate of this location.
@@ -35,6 +39,13 @@ public final class Location implements Serializable {
      */
     public final int y;
 
+    /**
+     * Creates a new <code>Location</code> object with the specified x and y
+     * cooredinates.
+     * 
+     * @param x the x coordinate of this location
+     * @param y the y coordinate of this location
+     */
     public Location(int x, int y) {
         this.x = x;
         this.y = y;
@@ -103,6 +114,11 @@ public final class Location implements Serializable {
         return result.toString();
     }
 
+    /**
+     * Converts this location to a {@link ch.jeda.Vector}.
+     * 
+     * @return <code>Vector</code> representing this location
+     */
     public Vector toVector() {
         return new Vector(this.x, this.y);
     }
