@@ -153,11 +153,7 @@ public final class Engine {
     void fatalError(Throwable exception, String messageKey, Object... args) {
         this.log(Log.Level.Error, Util.args(Message.translate(messageKey), args), exception);
         this.showLog();
-        this.finish();
-    }
-
-    void finish() {
-        //this.platform.finish();
+        this.platform.stop();
     }
 
     private Program createProgram(Class<Program> programClass) {
@@ -256,7 +252,7 @@ public final class Engine {
 
                     @Override
                     protected void onCancel() {
-                        finish();
+                        platform.stop();
                     }
                 };
                 for (ProgramInfo programInfo : programInfos) {
@@ -338,7 +334,7 @@ public final class Engine {
                 this.engine.fatalError(ex, Message.PROGRAM_RUN_ERROR, this.program.getClass());
             }
             finally {
-                this.engine.finish();
+                this.engine.platform.stop();
             }
         }
     }

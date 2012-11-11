@@ -60,10 +60,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
         return new AndroidCanvasImp(size);
     }
 
-    public void exit() {
-        //this.finish();
-    }
-
     public Iterable<String> listClassNames() throws Exception {
         return this.resourceFinder.findClassNames();
     }
@@ -115,6 +111,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
                 return new AndroidViewImp(this, this.surfaceHolder);
             }
         }
+    }
+
+    @Override
+    public void stop() {
+        // ignore
     }
 
     @Override

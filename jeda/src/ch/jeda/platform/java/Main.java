@@ -64,11 +64,6 @@ public class Main implements Platform {
     }
 
     @Override
-    public void finish() {
-        this.windowManager.finish();
-    }
-
-    @Override
     public Iterable<String> listClassNames() throws Exception {
         return this.resourceFinder.findClassNames();
     }
@@ -107,6 +102,11 @@ public class Main implements Platform {
     @Override
     public ViewImp showView(ViewInfo viewInfo) {
         return this.windowManager.createViewImp(viewInfo);
+    }
+
+    @Override
+    public void stop() {
+        this.windowManager.finish();
     }
 
     private void start() {

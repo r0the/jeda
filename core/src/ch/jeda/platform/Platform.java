@@ -23,8 +23,6 @@ public interface Platform {
 
     CanvasImp createCanvasImp(Size size);
 
-    void finish();
-
     Iterable<String> listClassNames() throws Exception;
 
     Iterable<String> listPropertyFiles() throws Exception;
@@ -38,4 +36,6 @@ public interface Platform {
     void showLog(LogInfo logInfo);
 
     ViewImp showView(ViewInfo viewInfo);
+
+    void stop();
 }
