@@ -14,33 +14,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.platform.java;
+package ch.jeda.platform;
 
-import java.awt.image.BufferedImage;
+import ch.jeda.ui.Key;
+import java.util.List;
+import java.util.Set;
 
-public class DefaultViewImp extends AbstractViewImp {
+public interface KeyEventsImp {
 
-    private final BufferedImage buffer;
+    Set<Key> getPressedKeys();
 
-    public DefaultViewImp(ViewWindow viewWindow) {
-        super(viewWindow);
-        this.buffer = createBuffer(viewWindow.getWidth(), viewWindow.getHeight());
-        viewWindow.setImage(this.buffer);
-        this.setBuffer(this.buffer);
-    }
+    String getTypedChars();
 
-    @Override
-    public boolean isDoubleBuffered() {
-        return false;
-    }
-
-    @Override
-    void modified() {
-        this.viewWindow.update();
-    }
-
-    @Override
-    protected void doUpdate() {
-        this.viewWindow.update();
-    }
+    List<Key> getTypedKeys();
 }

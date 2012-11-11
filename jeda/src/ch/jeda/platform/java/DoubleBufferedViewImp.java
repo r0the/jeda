@@ -37,7 +37,7 @@ public class DoubleBufferedViewImp extends AbstractViewImp {
     }
 
     @Override
-    public void update() {
+    protected void doUpdate() {
         BufferedImage temp = this.frontBuffer;
         this.frontBuffer = this.backBuffer;
         this.backBuffer = temp;

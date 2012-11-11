@@ -22,6 +22,8 @@ public interface ViewImp extends CanvasImp {
 
     void close();
 
+    KeyEventsImp getKeyEventsImp();
+
     boolean isDoubleBuffered();
 
     boolean isFullscreen();

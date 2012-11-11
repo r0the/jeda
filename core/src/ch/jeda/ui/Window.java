@@ -42,8 +42,7 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public static final int DEFAULT_WIDTH = 800;
-//    private final Input input;
-//    private final Keyboard keyboard;
+    private final KeyEvents keyEvents;
 //    private final Mouse mouse;
     private ViewImp imp;
     private Size size;
@@ -75,9 +74,7 @@ public class Window extends Canvas {
 
     private Window(Size size) {
         super();
-//        this.input = new Input();
-//        this.bufferMode = BufferMode.Single;
-//        this.keyboard = new Keyboard();
+        this.keyEvents = new KeyEvents();
 //        this.mouse = new Mouse();
         if (size.isEmpty()) {
             size = new Size(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -104,14 +101,9 @@ public class Window extends Canvas {
         this.update();
     }
 
-//    public Input getInput() {
-//        return this.input;
-//    }
-//
-//    @Deprecated
-//    public Keyboard getKeyboard() {
-//        return this.keyboard;
-//    }
+    public KeyEvents getKeyEvents() {
+        return this.keyEvents;
+    }
 //
 //    @Deprecated
 //    public Keyboard keyboard() {
@@ -122,6 +114,7 @@ public class Window extends Canvas {
 //    public Mouse mouse() {
 //        return this.mouse;
 //    }
+
     /**
      * Returns the window's current title.
      *
@@ -224,16 +217,15 @@ public class Window extends Canvas {
         }
 
         this.imp = Engine.getCurrentEngine().showView(this.size, doubleBuffered, fullscreen);
-//        this.input.setImp(this.imp.getInputImp());
-//        this.keyboard.setImp(this.imp.getInputImp());
+        this.keyEvents.setImp(this.imp.getKeyEventsImp());
 //        this.mouse.setImp(this.imp);
         this.imp.setTitle(this.title);
-//        if (this.bufferMode != BufferMode.Double) {
-        this.imp.setColor(Color.WHITE);
-        this.imp.fill();
-//        }
-        this.setImp(this.imp);
+        if (!this.isDoubleBuffered()) {
+            this.imp.setColor(Color.WHITE);
+            this.imp.fill();
+        }
 
+        super.setImp(this.imp);
         this.flip();
     }
 }

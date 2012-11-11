@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.platform.KeyEventsImp;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
 import java.awt.Cursor;
@@ -27,14 +28,21 @@ abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
 
     private static final Map<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
     protected final ViewWindow viewWindow;
+    private final JavaKeyEventsImp keyEventsImp;
 
     protected AbstractViewImp(ViewWindow viewWindow) {
         this.viewWindow = viewWindow;
+        this.keyEventsImp = new JavaKeyEventsImp(viewWindow);
     }
 
     @Override
     public void close() {
         this.viewWindow.dispose();
+    }
+
+    @Override
+    public KeyEventsImp getKeyEventsImp() {
+        return this.keyEventsImp;
     }
 
     @Override
@@ -53,6 +61,14 @@ abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
     public void setTitle(String title) {
         this.viewWindow.setTitle(title);
     }
+
+    @Override
+    public final void update() {
+        this.keyEventsImp.update();
+        this.doUpdate();
+    }
+
+    protected abstract void doUpdate();
 
     private static Map<MouseCursor, Cursor> initCursorMap() {
         Map<MouseCursor, Cursor> result = new HashMap();

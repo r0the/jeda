@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.android;
 
+import ch.jeda.platform.KeyEventsImp;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
 
@@ -28,30 +29,37 @@ public class DoubleBufferedViewImp extends AndroidCanvasImp implements ViewImp {
         this.setSize(this.viewManager.getSize());
     }
 
+    @Override
     public void close() {
     }
 
+    @Override
+    public KeyEventsImp getKeyEventsImp() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public boolean isDoubleBuffered() {
         return false;
     }
 
-//    public InputImp getInputImp() {
-//        return new AndroidInputImp();
-//    }
+    @Override
     public boolean isFullscreen() {
         return false;
     }
 
+    @Override
     public void setMouseCursor(MouseCursor mouseCursor) {
         // ignore
     }
 
+    @Override
     public void setTitle(final String title) {
         this.viewManager.setTitle(title);
     }
 
+    @Override
     public void update() {
         this.viewManager.setBitmap(this.getBitmap());
-
     }
 }
