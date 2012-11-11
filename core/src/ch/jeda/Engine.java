@@ -18,6 +18,8 @@ package ch.jeda;
 
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
+import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.InputType;
 import ch.jeda.platform.ListInfo;
 import ch.jeda.platform.LogInfo;
 import ch.jeda.platform.Platform;
@@ -119,6 +121,24 @@ public final class Engine {
                 }
             }
         }
+    }
+
+    double readDouble(String message) {
+        InputRequest<Double> request = new InputRequest(InputType.forDouble(), 0d);
+        request.setMessage(message);
+        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        this.platform.showInputRequest(request);
+        request.waitForResult();
+        return request.getResult();
+    }
+
+    int readInt(String message) {
+        InputRequest<Integer> request = new InputRequest(InputType.forInt(), 0);
+        request.setMessage(message);
+        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        this.platform.showInputRequest(request);
+        request.waitForResult();
+        return request.getResult();
     }
 
     void write(String message, Object... args) {

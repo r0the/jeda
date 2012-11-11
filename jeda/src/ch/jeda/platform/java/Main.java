@@ -20,6 +20,7 @@ import ch.jeda.Engine;
 import ch.jeda.Size;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
+import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.ListInfo;
 import ch.jeda.platform.LogInfo;
 import ch.jeda.platform.Platform;
@@ -80,6 +81,13 @@ public class Main implements Platform {
     @Override
     public ImageImp loadImageImp(URL url) throws Exception {
         return new JavaImageImp(ImageIO.read(url));
+    }
+
+    @Override
+    public void showInputRequest(InputRequest inputRequest) {
+        InputWindow window = this.windowManager.getInputWindow();
+        window.setRequest(inputRequest);
+        window.setVisible(true);
     }
 
     @Override

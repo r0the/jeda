@@ -17,7 +17,6 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Engine;
-import ch.jeda.platform.Platform;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
 import java.awt.Window;
@@ -30,6 +29,7 @@ import java.util.Set;
 public class WindowManager {
 
     private final Engine engine;
+    private final InputWindow inputWindow;
     private final WindowListener listener;
     private final ListWindow listWindow;
     private final LogWindow logWindow;
@@ -38,10 +38,13 @@ public class WindowManager {
 
     public WindowManager(Engine engine) {
         this.engine = engine;
+        this.inputWindow = new InputWindow();
         this.listener = new WindowListener(this);
         this.listWindow = new ListWindow();
         this.logWindow = new LogWindow();
         this.windows = new HashSet();
+
+        this.registerWindow(this.inputWindow);
         this.registerWindow(this.listWindow);
         this.registerWindow(this.logWindow);
     }
@@ -67,6 +70,10 @@ public class WindowManager {
         else {
             return new DefaultViewImp(window);
         }
+    }
+
+    InputWindow getInputWindow() {
+        return this.inputWindow;
     }
 
     ListWindow getListWindow() {

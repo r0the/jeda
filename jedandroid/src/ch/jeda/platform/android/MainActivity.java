@@ -27,6 +27,7 @@ import ch.jeda.Log;
 import ch.jeda.Size;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
+import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.ListInfo;
 import ch.jeda.platform.LogInfo;
 import ch.jeda.platform.Platform;
@@ -73,6 +74,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,
 
     public ImageImp loadImageImp(URL url) throws Exception {
         return new AndroidImageImp(BitmapFactory.decodeStream(url.openStream()));
+    }
+
+    public void showInputRequest(InputRequest inputRequest) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public <T> void showList(ListInfo<T> listInfo) {

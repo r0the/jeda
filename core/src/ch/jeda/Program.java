@@ -73,6 +73,24 @@ public abstract class Program {
     }
 
     /**
+     * 
+     * @param message
+     * @return 
+     */
+    protected final double readDouble(String message) {
+        return Engine.getCurrentEngine().readDouble(message);
+    }
+
+    /**
+     * 
+     * @param message
+     * @return 
+     */
+    protected final int readInt(String message) {
+        return Engine.getCurrentEngine().readInt(message);
+    }
+
+    /**
      * Waits for the specified amount of time.
      * 
      * @param milliseconds amount of milliseconds to wait

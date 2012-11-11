@@ -21,11 +21,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class ListInfo<T> {
+public abstract class ListInfo<T> extends Request {
 
     private static final Comparator<ListItem> LIST_ITEM_BY_NAME = new ListItemByName();
     private final List<ListItem<T>> items;
-    private String title;
 
     protected ListInfo() {
         this.items = new ArrayList();
@@ -51,14 +50,6 @@ public abstract class ListInfo<T> {
         }
 
         return result;
-    }
-
-    public final String getTitle() {
-        return this.title;
-    }
-
-    public final void setTitle(String value) {
-        this.title = value;
     }
 
     public final void sortItemsByName() {

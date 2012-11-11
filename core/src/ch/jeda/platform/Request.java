@@ -16,26 +16,27 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.Size;
-import java.net.URL;
+public class Request {
 
-public interface Platform {
+    private String message;
+    private String title;
 
-    CanvasImp createCanvasImp(Size size);
+    protected Request() {
+    }
 
-    void finish();
+    public String getMessage() {
+        return message;
+    }
 
-    Iterable<String> listClassNames() throws Exception;
+    public final String getTitle() {
+        return this.title;
+    }
 
-    Iterable<String> listPropertyFiles() throws Exception;
+    public final void setTitle(String value) {
+        this.title = value;
+    }
 
-    ImageImp loadImageImp(URL url) throws Exception;
-
-    void showInputRequest(InputRequest inputRequest);
-
-     <T> void showList(ListInfo<T> listInfo);
-
-    void showLog(LogInfo logInfo);
-
-    ViewImp showView(ViewInfo viewInfo);
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
