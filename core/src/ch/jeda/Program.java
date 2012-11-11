@@ -73,13 +73,13 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to input a double value. The specified
+     * Prompts the user to input a <code>double</code> value. The specified
      * <code>message</code> is displayed to the user. It may be formatted using
      * simple HTML. Returns <code>0d</code> if the user cancels the input
      * prompt.
      * 
      * @param message the message displayed to the user
-     * @return double value entered by the user
+     * @return <code>double</code> value entered by the user
      * 
      * @since 1.0
      */
@@ -88,18 +88,33 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to input an int value. The specified
+     * Prompts the user to input an <code>int</code> value. The specified
      * <code>message</code> is displayed to the user. It may be formatted using
      * simple HTML. Returns <code>0d</code> if the user cancels the input
      * prompt.
      * 
      * @param message the message displayed to the user
-     * @return iny value entered by the user
+     * @return <code>int</code> value entered by the user
      * 
      * @since 1.0
      */
     protected final int readInt(String message) {
         return Engine.getCurrentEngine().readInt(message);
+    }
+
+    /**
+     * Prompts the user to input a <code>String</code> value. The specified
+     * <code>message</code> is displayed to the user. It may be formatted using
+     * simple HTML. Returns <code>0d</code> if the user cancels the input
+     * prompt.
+     * 
+     * @param message the message displayed to the user
+     * @return <code>String</code> value entered by the user
+     * 
+     * @since 1.0
+     */
+    protected final String readString(String message) {
+        return Engine.getCurrentEngine().readString(message);
     }
 
     /**

@@ -141,6 +141,15 @@ public final class Engine {
         return request.getResult();
     }
 
+    String readString(String message) {
+        InputRequest<String> request = new InputRequest(InputType.forString(), "");
+        request.setMessage(message);
+        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        this.platform.showInputRequest(request);
+        request.waitForResult();
+        return request.getResult();
+    }
+
     void write(String message, Object... args) {
         this.writeLine(Util.args(message, args));
         this.showLog();

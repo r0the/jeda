@@ -26,6 +26,10 @@ public abstract class InputType<T> {
         return new IntInputType();
     }
 
+    public static InputType<String> forString() {
+        return new StringInputType();
+    }
+
     private InputType() {
     }
 
@@ -66,6 +70,19 @@ public abstract class InputType<T> {
         @Override
         public boolean validate(String text) {
             return this.parse(text) != null;
+        }
+    }
+
+    private static class StringInputType extends InputType<String> {
+
+        @Override
+        public String parse(String text) {
+            return text;
+        }
+
+        @Override
+        public boolean validate(String text) {
+            return true;
         }
     }
 }
