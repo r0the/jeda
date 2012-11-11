@@ -26,7 +26,7 @@ import java.util.Map;
 
 class FileSystem {
 
-    private static final String DEFAULT_IMAGE_PATH = ":ch/jeda/resources/default-image.png";
+    private static final String DEFAULT_IMAGE_PATH = ":ch/jeda/resources/logo-64x64.png";
     private static final String RESOURCE_PREFIX = ":";
     private final Platform platform;
     private final Map<String, ImageImp> imageMap;
