@@ -102,7 +102,8 @@ public final class Location implements Serializable {
         result.append(')');
         return result.toString();
     }
-//    public Vector toVector() {
-//        return new Vector(this.x, this.y);
-//    }
+
+    public Vector toVector() {
+        return new Vector(this.x, this.y);
+    }
 }
