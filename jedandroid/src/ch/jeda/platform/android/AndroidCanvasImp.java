@@ -50,12 +50,6 @@ class AndroidCanvasImp implements CanvasImp {
         this.textPaint = new Paint();
     }
 
-    AndroidCanvasImp(Size size) {
-        this();
-        this.bitmap = Bitmap.createBitmap(size.width, size.height, Config.ARGB_8888);
-        this.setCanvas(new Canvas(bitmap));
-    }
-
     public void clear() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -222,15 +216,10 @@ class AndroidCanvasImp implements CanvasImp {
         return this.bitmap;
     }
 
-    final void setSize(int width, int height) {
-        this.size = new Size(width, height);
+    final void setSize(Size size) {
+        this.size = size;
         this.bitmap = Bitmap.createBitmap(size.width, size.height, Config.ARGB_8888);
         this.canvas = new Canvas(this.bitmap);
-    }
-
-    final void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
-        this.size = new Size(this.canvas.getWidth(), this.canvas.getHeight());
     }
 
     private static Path createPath(Iterable<Location> edges) {

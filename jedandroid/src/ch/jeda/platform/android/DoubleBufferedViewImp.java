@@ -16,22 +16,16 @@
  */
 package ch.jeda.platform.android;
 
-import android.graphics.Canvas;
-import android.view.SurfaceHolder;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
 
 public class DoubleBufferedViewImp extends AndroidCanvasImp implements ViewImp {
 
-    private final MainActivity mainActivity;
-    private final SurfaceHolder surfaceHolder;
+    private final ViewManager viewManager;
 
-    DoubleBufferedViewImp(MainActivity mainActivity, SurfaceHolder surfaceHolder) {
-        this.mainActivity = mainActivity;
-        this.surfaceHolder = surfaceHolder;
-        Canvas canvas = surfaceHolder.lockCanvas();
-        this.setSize(canvas.getWidth(), canvas.getHeight());
-        surfaceHolder.unlockCanvasAndPost(canvas);
+    DoubleBufferedViewImp(ViewManager viewManager) {
+        this.viewManager = viewManager;
+        this.setSize(this.viewManager.getSize());
     }
 
     public void close() {
@@ -53,18 +47,11 @@ public class DoubleBufferedViewImp extends AndroidCanvasImp implements ViewImp {
     }
 
     public void setTitle(final String title) {
-        this.mainActivity.runOnUiThread(new Runnable() {
-
-            public void run() {
-                mainActivity.setTitle(title);
-            }
-        });
+        this.viewManager.setTitle(title);
     }
 
     public void update() {
-        Canvas canvas = this.surfaceHolder.lockCanvas();
-        canvas.drawBitmap(this.getBitmap(), 0f, 0f, null);
-        this.surfaceHolder.unlockCanvasAndPost(canvas);
+        this.viewManager.setBitmap(this.getBitmap());
 
     }
 }
