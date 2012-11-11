@@ -65,6 +65,7 @@ class InputWindow extends JDialog implements JedaWindow,
         this.setTitle(inputRequest.getTitle());
         this.messageLabel.setText(inputRequest.getMessage());
         this.inputTextField.setText("");
+        this.validateInput();
     }
 
     private void accept() {
@@ -88,7 +89,6 @@ class InputWindow extends JDialog implements JedaWindow,
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setModal(true);
         setResizable(false);
 
         messageLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
