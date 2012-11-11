@@ -7,6 +7,10 @@ dist/
 !*/nbproject/project.properties
 !*/nbproject/project.xml
 
+*/*/nbproject/*
+!*/*/nbproject/project.properties
+!*/*/nbproject/project.xml
+
 
 # Jeda generated files
 
