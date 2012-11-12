@@ -191,6 +191,15 @@ public final class Engine {
         return null;
     }
 
+    private ProgramInfo createProgramInfo(Class<Program> programClass) {
+        String title = this.properties.getString(programClass.getName());
+        if (title == null) {
+            title = programClass.getSimpleName();
+        }
+
+        return new ProgramInfo(programClass, title);
+    }
+
     private void loadProperties() {
         try {
             for (String propertyFile : this.platform.listPropertyFiles()) {
@@ -237,7 +246,7 @@ public final class Engine {
             for (String className : this.platform.listClassNames()) {
                 Class cls = loadClass(className);
                 if (isProgramClass(cls)) {
-                    ProgramInfo pi = new ProgramInfo(cls);
+                    ProgramInfo pi = this.createProgramInfo(cls);
                     programInfos.add(pi);
                     if (cls.getName().equals(defaultProgramName)) {
                         defaultProgram = pi;
@@ -246,10 +255,10 @@ public final class Engine {
             }
 
             if (defaultProgram != null) {
-                startProgram(defaultProgram);
+                this.startProgram(defaultProgram);
             }
             else if (programInfos.size() == 1) {
-                startProgram(programInfos.get(0));
+                this.startProgram(programInfos.get(0));
             }
             else if (programInfos.isEmpty()) {
                 this.fatalError(Message.NO_PROGRAM_ERROR);
@@ -268,7 +277,7 @@ public final class Engine {
                     }
                 };
                 for (ProgramInfo programInfo : programInfos) {
-                    listInfo.addItem(programInfo.getTitle(), programInfo);
+                    listInfo.addItem(programInfo.getName(), programInfo);
                 }
 
                 listInfo.sortItemsByName();
@@ -284,7 +293,9 @@ public final class Engine {
     private void startProgram(ProgramInfo programInfo) {
         this.program = this.createProgram(programInfo.getProgramClass());
         if (this.program != null) {
-            new ProgramThread(this, this.program).start();
+            ProgramThread thread = new ProgramThread(this, this.program);
+            thread.setName(programInfo.getName());
+            thread.start();
         }
     }
 
@@ -332,7 +343,6 @@ public final class Engine {
         public ProgramThread(Engine engine, Program program) {
             this.engine = engine;
             this.program = program;
-            this.setName(Message.translate(Message.PROGRAM_THREAD_NAME, this.program.getClass()));
         }
 
         @Override

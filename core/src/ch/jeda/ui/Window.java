@@ -90,7 +90,7 @@ public class Window extends Canvas {
         }
 
         this.size = size;
-        this.title = getClass().getName();
+        this.title = Thread.currentThread().getName();
         this.resetImp(toSet(features));
     }
 

@@ -19,29 +19,25 @@ package ch.jeda;
 class ProgramInfo {
 
     private final Class<Program> programClass;
-    private final String title;
+    private final String name;
 
-    ProgramInfo(Class<Program> programClass) {
+    ProgramInfo(Class<Program> programClass, String name) {
         assert programClass != null;
 
         this.programClass = programClass;
-        this.title = initProgramTitle(programClass);
+        this.name = name;
+    }
+
+    String getName() {
+        return this.name;
     }
 
     Class<Program> getProgramClass() {
         return this.programClass;
     }
 
-    String getTitle() {
-        return this.title;
-    }
-
     @Override
     public String toString() {
         return this.programClass.getName();
-    }
-
-    private static String initProgramTitle(Class<Program> programClass) {
-        return programClass.getSimpleName();
     }
 }

@@ -30,7 +30,6 @@ public class Message {
     public static final String NO_PROGRAM_ERROR = "jeda.error.init.noprogram";
     public static final String PROGRAM_CREATE_ERROR = "jeda.programrunner.create.error";
     public static final String PROGRAM_RUN_ERROR = "jeda.program.run.error";
-    public static final String PROGRAM_THREAD_NAME = "jeda.program.thread.name";
     // -- TODO --
     public static final String CLASS_NOT_FOUND_ERROR = "jeda.classnotfound.error";
     public static final String GUI_CLOSE_BUTTON = "jeda.gui.close.button";
@@ -53,7 +52,6 @@ public class Message {
         put(NO_PROGRAM_ERROR, "Es ist keine Jeda-Programmklasse vorhanden.");
         put(PROGRAM_CREATE_ERROR, "Beim Initalisieren des Programms '{0}' ist ein Fehler aufgetreten.");
         put(PROGRAM_RUN_ERROR, "Fehler beim Ausführen von Programm '{0}'.");
-        put(PROGRAM_THREAD_NAME, "Jeda Programm {0}");
         // -- TODO --
         put(NO_TRANSLATION_ERROR, "Es ist keine Übersetzung für '{0}' vorhanden.");
         put("jeda.file.resource.error", "'{0}' ist kein gültiger Resourcenpfad.");
