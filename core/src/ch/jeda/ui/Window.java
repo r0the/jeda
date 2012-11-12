@@ -103,13 +103,6 @@ public class Window extends Canvas {
         this.imp.close();
     }
 
-    /**
-     *
-     */
-    public void flip() {
-        this.update();
-    }
-
     public KeyEvents getKeyEvents() {
         return this.keyEvents;
     }
@@ -222,7 +215,7 @@ public class Window extends Canvas {
         }
 
         super.setImp(this.imp);
-        this.flip();
+        this.update();
     }
 
     private static EnumSet<Feature> toSet(Feature... features) {
