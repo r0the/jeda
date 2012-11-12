@@ -37,7 +37,6 @@ public class ViewWindow extends JFrame implements JedaWindow {
         this.pack();
         GUI.center(this);
         GUI.setIcon(this);
-        this.setVisible(true);
     }
 
     @Override

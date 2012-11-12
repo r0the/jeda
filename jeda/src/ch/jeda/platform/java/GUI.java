@@ -16,12 +16,15 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.Size;
+import java.awt.DisplayMode;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Transparency;
+import java.awt.Window;
 import java.awt.image.BufferedImage;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -46,16 +49,8 @@ class GUI {
         return graphicsConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
-    static GraphicsDevice device() {
-        return graphicsEnvironment().getDefaultScreenDevice();
-    }
-
     static GraphicsConfiguration graphicsConfiguration() {
         return graphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
-    }
-
-    static GraphicsEnvironment graphicsEnvironment() {
-        return GraphicsEnvironment.getLocalGraphicsEnvironment();
     }
 
     static Icon loadIcon(String path) {
@@ -72,6 +67,39 @@ class GUI {
 
     static void setIcon(JFrame frame) {
         frame.setIconImage(loadImage("ch/jeda/resources/logo-16x16.png"));
+    }
+
+    static DisplayMode findDisplayMode(Size size) {
+        GraphicsDevice gd = graphicsDevice();
+        DisplayMode result = null;
+        int fdx = Integer.MAX_VALUE;
+        int fdy = Integer.MAX_VALUE;
+        int fcolor = Integer.MIN_VALUE;
+        for (DisplayMode candidate : gd.getDisplayModes()) {
+            int dx = candidate.getWidth() - size.width;
+            int dy = candidate.getHeight() - size.height;
+            if (dx >= 0 && dy >= 0 && (dx < fdx || dy < fdy || candidate.getBitDepth() > fcolor)) {
+                result = candidate;
+                fdx = dx;
+                fdy = dy;
+                fcolor = result.getBitDepth();
+            }
+        }
+
+        if (result == null) {
+            result = gd.getDisplayMode();
+        }
+
+        return result;
+    }
+
+    static void finishFullscreenMode() {
+        graphicsDevice().setFullScreenWindow(null);
+    }
+
+    static void setFullscreenMode(Window window, DisplayMode displayMode) {
+        graphicsDevice().setFullScreenWindow(window);
+        graphicsDevice().setDisplayMode(displayMode);
     }
 
     static void setLookAndFeel() {
@@ -96,6 +124,14 @@ class GUI {
         catch (IllegalAccessException e) {
             // TODO: handle exception
         }
+    }
+
+    private static GraphicsDevice graphicsDevice() {
+        return graphicsEnvironment().getDefaultScreenDevice();
+    }
+
+    private static GraphicsEnvironment graphicsEnvironment() {
+        return GraphicsEnvironment.getLocalGraphicsEnvironment();
     }
 
     private static ImageIcon loadImageIcon(String path) {

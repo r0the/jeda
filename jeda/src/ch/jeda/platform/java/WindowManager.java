@@ -17,9 +17,11 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Engine;
+import ch.jeda.Size;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
 import ch.jeda.ui.Window.Feature;
+import java.awt.DisplayMode;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -36,6 +38,7 @@ public class WindowManager {
     private final LogWindow logWindow;
     private final Set<JedaWindow> windows;
     private boolean finished;
+    private ViewWindow fullscreenWindow;
 
     public WindowManager(Engine engine) {
         this.engine = engine;
@@ -63,13 +66,27 @@ public class WindowManager {
     }
 
     ViewImp createViewImp(ViewInfo viewInfo) {
-        ViewWindow window = new ViewWindow(viewInfo.getSize(), false);
+        ViewWindow window = this.createViewWindow(viewInfo);
         this.registerWindow(window);
+        window.setVisible(true);
         if (viewInfo.hasFeature(Feature.DoubleBuffered)) {
             return new DoubleBufferedViewImp(window);
         }
         else {
             return new DefaultViewImp(window);
+        }
+    }
+
+    private ViewWindow createViewWindow(ViewInfo viewInfo) {
+        if (viewInfo.hasFeature(Feature.Fullscreen) && this.fullscreenWindow == null) {
+            DisplayMode displayMode = GUI.findDisplayMode(viewInfo.getSize());
+            Size size = new Size(displayMode.getWidth(), displayMode.getHeight());
+            this.fullscreenWindow = new ViewWindow(size, true);
+            GUI.setFullscreenMode(this.fullscreenWindow, displayMode);
+            return this.fullscreenWindow;
+        }
+        else {
+            return new ViewWindow(viewInfo.getSize(), false);
         }
     }
 
@@ -92,6 +109,12 @@ public class WindowManager {
 
     private void windowClosing(Window window) {
         JedaWindow jw = (JedaWindow) window;
+
+        if (window.equals(this.fullscreenWindow)) {
+            this.fullscreenWindow = null;
+            GUI.finishFullscreenMode();
+        }
+
         if (this.finished) {
             jw.removeWindowListener(this.listener);
             jw.dispose();
