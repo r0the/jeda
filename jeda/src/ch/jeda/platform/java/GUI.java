@@ -16,9 +16,13 @@
  */
 package ch.jeda.platform.java;
 
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -26,35 +30,51 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-public class GUI {
+class GUI {
 
-    public static void center(JDialog dialog) {
-        Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+    static void center(JDialog dialog) {
+        Point center = graphicsEnvironment().getCenterPoint();
         dialog.setLocation(center.x - dialog.getWidth() / 2, center.y - dialog.getHeight() / 2);
     }
 
-    public static void center(JFrame frame) {
-        Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+    static void center(JFrame frame) {
+        Point center = graphicsEnvironment().getCenterPoint();
         frame.setLocation(center.x - frame.getWidth() / 2, center.y - frame.getHeight() / 2);
     }
 
-    public static Icon loadIcon(String path) {
+    static BufferedImage createBufferedImage(int width, int height) {
+        return graphicsConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+    }
+
+    static GraphicsDevice device() {
+        return graphicsEnvironment().getDefaultScreenDevice();
+    }
+
+    static GraphicsConfiguration graphicsConfiguration() {
+        return graphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+    }
+
+    static GraphicsEnvironment graphicsEnvironment() {
+        return GraphicsEnvironment.getLocalGraphicsEnvironment();
+    }
+
+    static Icon loadIcon(String path) {
         return loadImageIcon(path);
     }
 
-    public static Image loadImage(String path) {
+    static Image loadImage(String path) {
         return loadImageIcon(path).getImage();
     }
 
-    public static void setIcon(JDialog dialog) {
+    static void setIcon(JDialog dialog) {
         dialog.setIconImage(loadImage("ch/jeda/resources/logo-16x16.png"));
     }
 
-    public static void setIcon(JFrame frame) {
+    static void setIcon(JFrame frame) {
         frame.setIconImage(loadImage("ch/jeda/resources/logo-16x16.png"));
     }
 
-    public static void setLookAndFeel() {
+    static void setLookAndFeel() {
         try {
             String defaultLaf = System.getProperty("swing.defaultlaf");
             if (defaultLaf != null) {

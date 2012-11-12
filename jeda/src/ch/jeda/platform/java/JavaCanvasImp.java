@@ -26,11 +26,7 @@ import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Composite;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Polygon;
-import java.awt.Transparency;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
@@ -48,25 +44,13 @@ class JavaCanvasImp implements CanvasImp {
     private Graphics2D graphics;
     private Size size;
 
-    static BufferedImage createBuffer(int width, int height) {
-        return defaultConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
-    }
-
-    private static GraphicsConfiguration defaultConfiguration() {
-        return defaultDevice().getDefaultConfiguration();
-    }
-
-    private static GraphicsDevice defaultDevice() {
-        return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    }
-
     JavaCanvasImp() {
         this.textLayoutCache = new HashMap();
     }
 
     JavaCanvasImp(Size size) {
         this();
-        this.setBuffer(createBuffer(size.width, size.height));
+        this.setBuffer(GUI.createBufferedImage(size.width, size.height));
     }
 
     @Override
@@ -283,7 +267,7 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public ImageImp takeSnapshot() {
-        BufferedImage result = createBuffer(this.size.width, this.size.height);
+        BufferedImage result = GUI.createBufferedImage(this.size.width, this.size.height);
         result.createGraphics().drawImage(this.buffer, 0, 0, this.size.width, this.size.height, null);
         return new JavaImageImp(result);
     }

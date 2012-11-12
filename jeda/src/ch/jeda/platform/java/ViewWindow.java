@@ -28,6 +28,7 @@ public class ViewWindow extends JFrame implements JedaWindow {
     private final boolean fullscreen;
 
     protected ViewWindow(Size size, boolean fullscreen) {
+        super(GUI.graphicsConfiguration());
         this.fullscreen = fullscreen;
         this.setIgnoreRepaint(true);
         this.setResizable(false);
