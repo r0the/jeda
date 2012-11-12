@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform.android;
 
-import ch.jeda.platform.KeyEventsImp;
+import ch.jeda.platform.EventsImp;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
@@ -40,7 +40,7 @@ public class DoubleBufferedViewImp extends AndroidCanvasImp implements ViewImp {
     }
 
     @Override
-    public KeyEventsImp getKeyEventsImp() {
+    public EventsImp getEventsImp() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

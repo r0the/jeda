@@ -16,24 +16,18 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.platform.KeyEventsImp;
+import ch.jeda.platform.EventsImp;
 import java.util.List;
 import java.util.Set;
 
 /**
- * This class provides methods to get keyboard input from the user. The state
- * of the keyboard is not updated automatically, but only when the method
- * {@link Window#flip()} of the corresponding window is called.
- * 
- * The KeyEvents class distinguishes between <b>pressed</b> keys and <b>typed</b>
- * keys. A key is considered <b>pressed</b> as long as the user holds it down.
- * A key is considered typed at the moment when the user presses it down. When
- * the user continues to hold the key down, the system will start to generate
- * more key types until the user releases the key.
+ * This class represents events that are taking place on this window. These
+ * are typically keys pressed or typed by the user or motion events such as
+ * moving or clicking with a mouse, trackball, pen or finger.
  */
-public class KeyEvents {
+public class Events {
 
-    private KeyEventsImp imp;
+    private EventsImp imp;
 
     /**
      * Returns a set of all keys that are currently pressed.
@@ -48,8 +42,8 @@ public class KeyEvents {
     /**
      * Returns a String representing the recently typed characters. When a
      * character is typed, it is appended to the String. The string is cleared
-     * when {@link Window#flip()} is called. Returns an empty String ("") when
-     * no characters have been typed since the last call to {@link Window#flip()}.
+     * when {@link Window#update()} is called. Returns an empty String ("") when
+     * no characters have been typed since the last call to {@link Window#update()}.
      *
      * @return recently typed characters or ""
      */
@@ -113,7 +107,7 @@ public class KeyEvents {
         return this.imp.getTypedKeys();
     }
 
-    void setImp(KeyEventsImp imp) {
+    void setImp(EventsImp imp) {
         this.imp = imp;
     }
 }

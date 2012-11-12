@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.platform.KeyEventsImp;
+import ch.jeda.platform.EventsImp;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
@@ -30,12 +30,12 @@ abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
 
     private static final Map<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
     private final EnumSet<Window.Feature> features;
-    private final JavaKeyEventsImp keyEventsImp;
+    private final JavaEventsImp eventsImp;
     protected final ViewWindow viewWindow;
 
     protected AbstractViewImp(ViewWindow viewWindow, boolean doubleBuffered) {
         this.features = EnumSet.noneOf(Window.Feature.class);
-        this.keyEventsImp = new JavaKeyEventsImp(viewWindow);
+        this.eventsImp = new JavaEventsImp(viewWindow);
         this.viewWindow = viewWindow;
 
         if (this.viewWindow.isFullscreen()) {
@@ -53,8 +53,8 @@ abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
     }
 
     @Override
-    public KeyEventsImp getKeyEventsImp() {
-        return this.keyEventsImp;
+    public EventsImp getEventsImp() {
+        return this.eventsImp;
     }
 
     @Override
@@ -76,7 +76,7 @@ abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
 
     @Override
     public final void update() {
-        this.keyEventsImp.update();
+        this.eventsImp.update();
         this.doUpdate();
     }
 

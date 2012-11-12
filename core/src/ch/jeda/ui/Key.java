@@ -17,17 +17,16 @@
 package ch.jeda.ui;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Represents a key that can be typed by the user. Key values are used by the 
- * {@link KeyEvents} class to represent which keys have been pressed or typed.
+ * {@link Events} class to represent which keys have been pressed or typed.
  *
  * Key objects cannot be created, they are provided as constants.
  *
- * @see KeyEvents
+ * @see Events
  */
 public final class Key implements Serializable {
 

@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.platform.KeyEventsImp;
+import ch.jeda.platform.EventsImp;
 import ch.jeda.ui.Key;
 import java.awt.Component;
 import java.awt.event.FocusEvent;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public final class JavaKeyEventsImp implements KeyEventsImp {
+public final class JavaEventsImp implements EventsImp {
 
     private static final Map<Integer, Key> KEY_MAP = initKeyMap();
     private final FocusEventQueue focusEventQueue;
@@ -38,7 +38,7 @@ public final class JavaKeyEventsImp implements KeyEventsImp {
     private final List<Key> typedKeys;
     private String typedChars;
 
-    JavaKeyEventsImp(Component component) {
+    JavaEventsImp(Component component) {
         this.focusEventQueue = new FocusEventQueue();
         this.keyboardEventQueue = new KeyboardEventQueue();
         this.pressedKeys = new HashSet();

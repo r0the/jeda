@@ -26,7 +26,7 @@ public interface ViewImp extends CanvasImp {
 
     EnumSet<Window.Feature> getFeatures();
 
-    KeyEventsImp getKeyEventsImp();
+    EventsImp getEventsImp();
 
     void setMouseCursor(MouseCursor mouseCursor);
 

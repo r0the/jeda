@@ -47,8 +47,7 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public static final int DEFAULT_WIDTH = 800;
-    private final KeyEvents keyEvents;
-//    private final Mouse mouse;
+    private final Events events;
     private ViewImp imp;
     private Size size;
     private String title;
@@ -83,8 +82,7 @@ public class Window extends Canvas {
 
     private Window(Size size, Feature... features) {
         super();
-        this.keyEvents = new KeyEvents();
-//        this.mouse = new Mouse();
+        this.events = new Events();
         if (size.isEmpty()) {
             size = new Size(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         }
@@ -103,19 +101,19 @@ public class Window extends Canvas {
         this.imp.close();
     }
 
-    public KeyEvents getKeyEvents() {
-        return this.keyEvents;
+    /**
+     * Returns an object holding the events that are taking place on this
+     * window. The #Events object returned by this method stays valid as long
+     * as the window is open. The #Events object is updated only by a call to
+     * the #update() method.
+     * 
+     * @return #Events object representing the events on this window
+     * 
+     * @since 1.0
+     */
+    public Events getEvents() {
+        return this.events;
     }
-//
-//    @Deprecated
-//    public Keyboard keyboard() {
-//        return this.keyboard;
-//    }
-//
-//    @Deprecated
-//    public Mouse mouse() {
-//        return this.mouse;
-//    }
 
     /**
      * Returns the window's current title.
@@ -206,8 +204,7 @@ public class Window extends Canvas {
         }
 
         this.imp = Engine.getCurrentEngine().showView(this.size, features);
-        this.keyEvents.setImp(this.imp.getKeyEventsImp());
-//        this.mouse.setImp(this.imp);
+        this.events.setImp(this.imp.getEventsImp());
         this.imp.setTitle(this.title);
         if (!this.hasFeature(Feature.DoubleBuffered)) {
             this.imp.setColor(Color.WHITE);

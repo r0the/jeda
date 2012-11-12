@@ -20,7 +20,7 @@ import ch.jeda.ui.Key;
 import java.util.List;
 import java.util.Set;
 
-public interface KeyEventsImp {
+public interface EventsImp {
 
     Set<Key> getPressedKeys();
 
