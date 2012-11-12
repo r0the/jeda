@@ -18,29 +18,24 @@ package ch.jeda.platform.java;
 
 import java.awt.image.BufferedImage;
 
-public class DefaultViewImp extends AbstractViewImp {
+class DefaultViewImp extends AbstractViewImp {
 
     private final BufferedImage buffer;
 
     public DefaultViewImp(ViewWindow viewWindow) {
-        super(viewWindow);
+        super(viewWindow, false);
         this.buffer = GUI.createBufferedImage(viewWindow.getWidth(), viewWindow.getHeight());
         viewWindow.setImage(this.buffer);
         this.setBuffer(this.buffer);
     }
 
     @Override
-    public boolean isDoubleBuffered() {
-        return false;
-    }
-
-    @Override
-    void modified() {
+    void doUpdate() {
         this.viewWindow.update();
     }
 
     @Override
-    protected void doUpdate() {
+    void modified() {
         this.viewWindow.update();
     }
 }

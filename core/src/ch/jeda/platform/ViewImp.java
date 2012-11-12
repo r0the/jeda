@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2012 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,16 +17,16 @@
 package ch.jeda.platform;
 
 import ch.jeda.ui.MouseCursor;
+import ch.jeda.ui.Window;
+import java.util.EnumSet;
 
 public interface ViewImp extends CanvasImp {
 
     void close();
 
+    EnumSet<Window.Feature> getFeatures();
+
     KeyEventsImp getKeyEventsImp();
-
-    boolean isDoubleBuffered();
-
-    boolean isFullscreen();
 
     void setMouseCursor(MouseCursor mouseCursor);
 

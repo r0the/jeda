@@ -24,20 +24,21 @@ import android.view.SurfaceView;
 import ch.jeda.Size;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
+import ch.jeda.ui.Window.Feature;
 
 class ViewManager implements SurfaceHolder.Callback {
-
+    
     private final Activity activity;
     private final Object surfaceLock;
     private boolean surfaceAvailable;
     private SurfaceHolder surfaceHolder;
     private SurfaceView surfaceView;
-
+    
     public ViewManager(Activity activity) {
         this.activity = activity;
         this.surfaceLock = new Object();
     }
-
+    
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         synchronized (this.surfaceLock) {
@@ -45,12 +46,12 @@ class ViewManager implements SurfaceHolder.Callback {
             this.surfaceLock.notify();
         }
     }
-
+    
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         //this.viewImp.resize(width, height);
     }
-
+    
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         synchronized (this.surfaceLock) {
@@ -58,7 +59,7 @@ class ViewManager implements SurfaceHolder.Callback {
             this.surfaceLock.notify();
         }
     }
-
+    
     ViewImp createViewImp(ViewInfo viewInfo) {
         synchronized (this.surfaceLock) {
             while (!this.surfaceAvailable) {
@@ -68,8 +69,8 @@ class ViewManager implements SurfaceHolder.Callback {
                 catch (InterruptedException ex) {
                 }
             }
-
-            if (viewInfo.isDoubleBuffered()) {
+            
+            if (viewInfo.hasFeature(Feature.DoubleBuffered)) {
                 return new DoubleBufferedViewImp(this);
             }
             else {
@@ -77,30 +78,30 @@ class ViewManager implements SurfaceHolder.Callback {
             }
         }
     }
-
+    
     Size getSize() {
         Canvas canvas = this.surfaceHolder.lockCanvas();
         Size result = new Size(canvas.getWidth(), canvas.getHeight());
         this.surfaceHolder.unlockCanvasAndPost(canvas);
         return result;
     }
-
+    
     void onCreate() {
         this.surfaceView = new SurfaceView(this.activity);
         this.surfaceHolder = this.surfaceView.getHolder();
         this.activity.setContentView(this.surfaceView);
         this.surfaceHolder.addCallback(this);
     }
-
+    
     void setTitle(final String title) {
         this.activity.runOnUiThread(new Runnable() {
-
+            
             public void run() {
                 activity.setTitle(title);
             }
         });
     }
-
+    
     void setBitmap(Bitmap bitmap) {
         Canvas canvas = this.surfaceHolder.lockCanvas();
         canvas.drawBitmap(bitmap, 0f, 0f, null);

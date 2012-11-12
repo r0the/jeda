@@ -19,6 +19,7 @@ package ch.jeda.ui;
 import ch.jeda.Engine;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.Size;
+import java.util.EnumSet;
 
 /**
  * Provides a drawing window. The window class has the follwoing functionality:
@@ -30,6 +31,10 @@ import ch.jeda.Size;
  */
 public class Window extends Canvas {
 
+    public enum Feature {
+
+        DoubleBuffered, Fullscreen
+    }
     /**
      * The default height of the drawing area of a window.
      *
@@ -58,6 +63,10 @@ public class Window extends Canvas {
         this(new Size());
     }
 
+    public Window(Feature... features) {
+        this(new Size(), features);
+    }
+
     /**
      * Creates a new window that has a drawing with the specified width and
      * height in pixels.
@@ -68,11 +77,11 @@ public class Window extends Canvas {
      * @throws IllegalArgumentException if width or height are smaller than 1
      * @since 1.0
      */
-    public Window(int width, int height) {
-        this(new Size(width, height));
+    public Window(int width, int height, Feature... features) {
+        this(new Size(width, height), features);
     }
 
-    private Window(Size size) {
+    private Window(Size size, Feature... features) {
         super();
         this.keyEvents = new KeyEvents();
 //        this.mouse = new Mouse();
@@ -82,7 +91,7 @@ public class Window extends Canvas {
 
         this.size = size;
         this.title = getClass().getName();
-        this.resetImp(false, false);
+        this.resetImp(toSet(features));
     }
 
     /**
@@ -127,52 +136,39 @@ public class Window extends Canvas {
     }
 
     /**
-     * Checks whether the window is in double buffering mode.
+     * Checks whether this window has the specified feature.
      *
-     * @return true if the window is in double buffering mode
-     * @see #setDoubleBuffered(boolean)
+     * @return true if the window has the specified feature.
+     * @see #setFeatures(Feature...)
+     * 
      * @since 1.0
      */
-    public boolean isDoubleBuffered() {
-        return this.imp.isDoubleBuffered();
+    public boolean hasFeature(Feature feature) {
+        return this.imp.getFeatures().contains(feature);
     }
 
-    /**
-     * Checks whether the window is in fullscreen mode.
-     *
-     * @return <code>true</code> if the window is in fullscreen mode
-     * @see #setFullscreen(boolean)
-     * @since 1.0
-     */
-    public boolean isFullscreen() {
-        return this.imp.isFullscreen();
-    }
-
-    /**
-     * Enables/disables the double buffering mode.
-     *
-     * @param doubleBuffered <code>true</code> to enable double buffering mode,
-     *                       <code>false</code> to disable it
-     * @see #isDoubleBuffered()
-     * @since 1.0
-     */
-    public void setDoubleBuffered(boolean doubleBuffered) {
-        this.resetImp(doubleBuffered, this.isFullscreen());
-    }
-
-    /**
-     * Enables/disables the fullscreen mode.
-     *
-     * @param fullscreen <code>true</code> to enable fullscreen mode,
-     *                   <code>false</code> to disable it
-     * @see #isFullscreen()
-     * @since 1.0
-     */
-    public void setFullscreen(boolean fullscreen) {
-        if (this.imp.isFullscreen() != fullscreen) {
-            this.imp.close();
-            //this.resetImp(fullscreen);
+    public void setFeature(Feature feature, boolean enabled) {
+        EnumSet<Feature> featureSet = EnumSet.copyOf(this.imp.getFeatures());
+        if (enabled) {
+            featureSet.add(feature);
         }
+        else {
+            featureSet.remove(feature);
+        }
+
+        this.resetImp(featureSet);
+    }
+
+    public void setFeatures(Feature... features) {
+        this.resetImp(toSet(features));
+    }
+
+    /**
+     * @deprecated use #setFeature(Feature.Fullscreen, fullscreen) instead
+     */
+    @Deprecated
+    public void setFullscreen(boolean fullscreen) {
+        this.setFeature(Feature.Fullscreen, fullscreen);
     }
 
     public void setMouseCursor(MouseCursor mouseCursor) {
@@ -211,21 +207,30 @@ public class Window extends Canvas {
         this.imp.update();
     }
 
-    private void resetImp(boolean doubleBuffered, boolean fullscreen) {
+    private void resetImp(EnumSet<Feature> features) {
         if (this.imp != null) {
             this.imp.close();
         }
 
-        this.imp = Engine.getCurrentEngine().showView(this.size, doubleBuffered, fullscreen);
+        this.imp = Engine.getCurrentEngine().showView(this.size, features);
         this.keyEvents.setImp(this.imp.getKeyEventsImp());
 //        this.mouse.setImp(this.imp);
         this.imp.setTitle(this.title);
-        if (!this.isDoubleBuffered()) {
+        if (!this.hasFeature(Feature.DoubleBuffered)) {
             this.imp.setColor(Color.WHITE);
             this.imp.fill();
         }
 
         super.setImp(this.imp);
         this.flip();
+    }
+
+    private static EnumSet<Feature> toSet(Feature... features) {
+        EnumSet<Feature> result = EnumSet.noneOf(Feature.class);
+        for (Feature feature : features) {
+            result.add(feature);
+        }
+
+        return result;
     }
 }

@@ -19,20 +19,32 @@ package ch.jeda.platform.java;
 import ch.jeda.platform.KeyEventsImp;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
+import ch.jeda.ui.Window;
 import java.awt.Cursor;
 import java.awt.image.MemoryImageSource;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
 abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
 
     private static final Map<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
-    protected final ViewWindow viewWindow;
+    private final EnumSet<Window.Feature> features;
     private final JavaKeyEventsImp keyEventsImp;
+    protected final ViewWindow viewWindow;
 
-    protected AbstractViewImp(ViewWindow viewWindow) {
-        this.viewWindow = viewWindow;
+    protected AbstractViewImp(ViewWindow viewWindow, boolean doubleBuffered) {
+        this.features = EnumSet.noneOf(Window.Feature.class);
         this.keyEventsImp = new JavaKeyEventsImp(viewWindow);
+        this.viewWindow = viewWindow;
+
+        if (this.viewWindow.isFullscreen()) {
+            this.features.add(Window.Feature.Fullscreen);
+        }
+
+        if (doubleBuffered) {
+            this.features.add(Window.Feature.DoubleBuffered);
+        }
     }
 
     @Override
@@ -46,8 +58,8 @@ abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
     }
 
     @Override
-    public boolean isFullscreen() {
-        return this.viewWindow.isFullscreen();
+    public EnumSet<Window.Feature> getFeatures() {
+        return this.features;
     }
 
     @Override
@@ -68,7 +80,7 @@ abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
         this.doUpdate();
     }
 
-    protected abstract void doUpdate();
+    abstract void doUpdate();
 
     private static Map<MouseCursor, Cursor> initCursorMap() {
         Map<MouseCursor, Cursor> result = new HashMap();

@@ -25,10 +25,12 @@ import ch.jeda.platform.LogInfo;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
+import ch.jeda.ui.Window;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public final class Engine {
@@ -89,15 +91,16 @@ public final class Engine {
         this.logLevel = value;
     }
 
-    public ViewImp showView(Size size, boolean doubleBuffered, boolean fullscreen) {
+    public ViewImp showView(Size size, EnumSet<Window.Feature> features) {
         if (size == null) {
             throw new NullPointerException("size");
         }
 
-        ViewInfo viewInfo = new ViewInfo(size);
-        viewInfo.setDoubleBuffered(doubleBuffered);
-        viewInfo.setFullscreen(fullscreen);
-        return this.platform.showView(viewInfo);
+        if (features == null) {
+            throw new NullPointerException("features");
+        }
+
+        return this.platform.showView(new ViewInfo(size, features));
     }
 
     public void start() {

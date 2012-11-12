@@ -28,9 +28,8 @@ public class AnimationExample extends Simulation {
 
     @Override
     public void init() {
-        window = new Window(300, 300);
+        window = new Window(300, 300, Window.Feature.DoubleBuffered);
         window.setTitle("Animation Example");
-        window.setDoubleBuffered(true);
         x = window.getWidth() / 2;
         y = window.getHeight() / 2 - RADIUS;
     }

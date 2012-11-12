@@ -17,34 +17,24 @@
 package ch.jeda.platform;
 
 import ch.jeda.Size;
+import ch.jeda.ui.Window;
+import java.util.EnumSet;
 
 public class ViewInfo {
 
     private final Size size;
-    private boolean doubleBuffered;
-    private boolean fullscreen;
+    private final EnumSet<Window.Feature> features;
 
-    public ViewInfo(Size size) {
+    public ViewInfo(Size size, EnumSet<Window.Feature> features) {
         this.size = size;
+        this.features = features;
+    }
+
+    public boolean hasFeature(Window.Feature mode) {
+        return this.features.contains(mode);
     }
 
     public Size getSize() {
         return this.size;
-    }
-
-    public boolean isDoubleBuffered() {
-        return this.doubleBuffered;
-    }
-
-    public boolean isFullscreen() {
-        return this.fullscreen;
-    }
-
-    public void setDoubleBuffered(boolean value) {
-        this.doubleBuffered = value;
-    }
-
-    public void setFullscreen(boolean value) {
-        this.fullscreen = value;
     }
 }

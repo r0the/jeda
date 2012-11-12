@@ -19,6 +19,8 @@ package ch.jeda.platform.android;
 import ch.jeda.platform.KeyEventsImp;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
+import ch.jeda.ui.Window;
+import java.util.EnumSet;
 
 public class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
 
@@ -33,19 +35,13 @@ public class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
     public void close() {
     }
 
+    public EnumSet<Window.Feature> getFeatures() {
+        return EnumSet.noneOf(Window.Feature.class);
+    }
+
     @Override
     public KeyEventsImp getKeyEventsImp() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isDoubleBuffered() {
-        return false;
-    }
-
-    @Override
-    public boolean isFullscreen() {
-        return false;
     }
 
     @Override

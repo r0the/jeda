@@ -19,6 +19,7 @@ package ch.jeda.platform.java;
 import ch.jeda.Engine;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
+import ch.jeda.ui.Window.Feature;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -64,7 +65,7 @@ public class WindowManager {
     ViewImp createViewImp(ViewInfo viewInfo) {
         ViewWindow window = new ViewWindow(viewInfo.getSize(), false);
         this.registerWindow(window);
-        if (viewInfo.isDoubleBuffered()) {
+        if (viewInfo.hasFeature(Feature.DoubleBuffered)) {
             return new DoubleBufferedViewImp(window);
         }
         else {
