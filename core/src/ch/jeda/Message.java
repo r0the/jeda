@@ -23,6 +23,7 @@ public class Message {
 
     public static final String CHOOSE_PROGRAM_ERROR = "jeda.error.init.programs";
     public static final String CHOOSE_PROGRAM_TITLE = "jeda.gui.programchooser.title";
+    public static final String ENGINE_THREAD_NAME = "jeda.engine.thread.name";
     public static final String INPUT_REQUEST_TITLE = "jeda.gui.inputrequest.title";
     public static final String LOAD_PROPERTIES_ERROR = "jeda.error.init.properties";
     public static final String LOG_BUTTON = "jeda.gui.log.button";
@@ -45,6 +46,7 @@ public class Message {
     static {
         put(CHOOSE_PROGRAM_ERROR, "Fehler beim Laden der Program-Klassen.");
         put(CHOOSE_PROGRAM_TITLE, "Jeda Programmauswahl");
+        put(ENGINE_THREAD_NAME, "Jeda Engine");
         put(INPUT_REQUEST_TITLE, "Jeda Eingabe");
         put(LOAD_PROPERTIES_ERROR, "Fehler beim Laden der Property-Dateien.");
         put(LOG_BUTTON, "Schliessen");

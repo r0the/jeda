@@ -35,21 +35,17 @@ import java.util.List;
 
 public final class Engine {
 
-    private enum State {
-
-        Created, Started
-    }
     private static final ThreadLocal<Engine> CURRENT_ENGINE = new ThreadLocal();
     private static final String DEFAULT_PROGRAM_PROPERTY = "jeda.default.program";
     private static final String JEDA_PROPERTIES_FILE = "ch/jeda/resources/jeda.properties";
     private static final Class<?>[] NO_PARAMS = new Class<?>[0];
     private final FileSystem fileSystem;
     private final StringBuilder log;
+    private final EngineThread thread;
     private Log.Level logLevel;
     private final Platform platform;
     private final Properties properties;
     private Program program;
-    private State state;
 
     public static Engine getCurrentEngine() {
         return CURRENT_ENGINE.get();
@@ -62,11 +58,11 @@ public final class Engine {
 
         this.fileSystem = new FileSystem(platform);
         this.log = new StringBuilder();
+        this.thread = new EngineThread(this);
+
         this.logLevel = Log.Level.Warning;
         this.platform = platform;
         this.properties = new Properties();
-        this.state = State.Created;
-        CURRENT_ENGINE.set(this);
     }
 
     public CanvasImp createCanvasImp(Size size) {
@@ -108,14 +104,11 @@ public final class Engine {
     }
 
     public void start() {
-        if (this.state != State.Created) {
+        if (this.thread.isAlive()) {
             throw new IllegalStateException("Engine has already been started.");
         }
 
-        this.state = State.Started;
-        this.fileSystem.init();
-        this.loadProperties();
-        this.startProgram();
+        this.thread.start();
     }
 
     void log(Log.Level level, String message, Throwable exception) {
@@ -162,16 +155,6 @@ public final class Engine {
         this.showLog();
     }
 
-    void fatalError(String messageKey, Object... args) {
-        this.fatalError(null, messageKey, args);
-    }
-
-    void fatalError(Throwable exception, String messageKey, Object... args) {
-        this.log(Log.Level.Error, Util.args(Message.translate(messageKey), args), exception);
-        this.showLog();
-        this.platform.stop();
-    }
-
     private Program createProgram(Class<Program> programClass) {
         try {
             Constructor<? extends Program> ctor = programClass.getDeclaredConstructor(new Class[0]);
@@ -204,18 +187,14 @@ public final class Engine {
         return new ProgramInfo(programClass, title);
     }
 
-    private void loadProperties() {
-        try {
-            for (String propertyFile : this.platform.listPropertyFiles()) {
-                this.properties.loadFromResource(propertyFile);
-            }
+    private void fatalError(String messageKey, Object... args) {
+        this.fatalError(null, messageKey, args);
+    }
 
-            // Load official properties file again to prevent manipulation
-            this.properties.loadFromResource(JEDA_PROPERTIES_FILE);
-        }
-        catch (Exception ex) {
-            this.fatalError(ex, Message.LOAD_PROPERTIES_ERROR);
-        }
+    private void fatalError(Throwable exception, String messageKey, Object... args) {
+        this.log(Log.Level.Error, Util.args(Message.translate(messageKey), args), exception);
+        this.showLog();
+        this.platform.stop();
     }
 
     private boolean matchesLogLevel(Log.Level messageLevel) {
@@ -272,6 +251,7 @@ public final class Engine {
 
                     @Override
                     protected void onSelect(ProgramInfo item) {
+                        CURRENT_ENGINE.set(Engine.this);
                         startProgram(item);
                     }
 
@@ -297,9 +277,9 @@ public final class Engine {
     private void startProgram(ProgramInfo programInfo) {
         this.program = this.createProgram(programInfo.getProgramClass());
         if (this.program != null) {
-            ProgramThread thread = new ProgramThread(this, this.program);
-            thread.setName(programInfo.getName());
-            thread.start();
+            ProgramThread programThread = new ProgramThread(this, this.program);
+            programThread.setName(programInfo.getName());
+            programThread.start();
         }
     }
 
@@ -339,6 +319,38 @@ public final class Engine {
         }
     }
 
+    private static class EngineThread extends Thread {
+
+        private final Engine engine;
+
+        EngineThread(Engine engine) {
+            this.engine = engine;
+            this.setName(Message.translate(Message.ENGINE_THREAD_NAME));
+        }
+
+        @Override
+        public void run() {
+            CURRENT_ENGINE.set(this.engine);
+            this.engine.fileSystem.init();
+            this.loadProperties();
+            this.engine.startProgram();
+        }
+
+        private void loadProperties() {
+            try {
+                for (String propertyFile : this.engine.platform.listPropertyFiles()) {
+                    this.engine.properties.loadFromResource(propertyFile);
+                }
+
+                // Load official properties file again to prevent manipulation
+                this.engine.properties.loadFromResource(JEDA_PROPERTIES_FILE);
+            }
+            catch (Exception ex) {
+                this.engine.fatalError(ex, Message.LOAD_PROPERTIES_ERROR);
+            }
+        }
+    }
+
     private static class ProgramThread extends Thread {
 
         private final Engine engine;
@@ -350,7 +362,7 @@ public final class Engine {
         }
 
         @Override
-        public final void run() {
+        public void run() {
             CURRENT_ENGINE.set(this.engine);
 
             try {
