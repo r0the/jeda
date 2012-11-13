@@ -27,6 +27,15 @@ public class Properties {
         this.imp = new java.util.Properties();
     }
 
+    public int getInt(String key, int defaultValue) {
+        try {
+            return Integer.parseInt(this.getString(key));
+        }
+        catch (Exception ex) {
+            return defaultValue;
+        }
+    }
+
     public String getString(String key) {
         return this.imp.getProperty(key);
     }

@@ -77,6 +77,10 @@ public final class Engine {
         return this.platform.createCanvasImp(size);
     }
 
+    public Properties getProperties() {
+        return this.properties;
+    }
+
     public ImageImp loadImageImp(String filePath) {
         return this.fileSystem.loadImageImp(filePath);
     }
