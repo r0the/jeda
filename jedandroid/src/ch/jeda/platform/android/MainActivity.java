@@ -25,9 +25,9 @@ import ch.jeda.Size;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.ListInfo;
 import ch.jeda.platform.LogInfo;
 import ch.jeda.platform.Platform;
+import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
 import java.net.URL;
@@ -38,7 +38,7 @@ public class MainActivity extends Activity implements Platform {
     private final Engine engine;
     private final ResourceFinder resourceFinder;
     private final ViewManager viewManager;
-    private ListInfo listInfo;
+    private SelectionRequest selectionRequest;
 
     public MainActivity() {
         this.engine = new Engine(this);
@@ -81,11 +81,11 @@ public class MainActivity extends Activity implements Platform {
     }
 
     @Override
-    public <T> void showList(ListInfo<T> listInfo) {
-        this.listInfo = listInfo;
-        Intent intent = new Intent(this, ListActivity.class);
-        intent.putExtra(ListActivity.TITLE, listInfo.getTitle());
-        intent.putExtra(ListActivity.ITEMS, listInfo.getDisplayItems());
+    public void showSelectionRequest(SelectionRequest selectionRequest) {
+        this.selectionRequest = selectionRequest;
+        Intent intent = new Intent(this, SelectionActivity.class);
+        intent.putExtra(SelectionActivity.TITLE, selectionRequest.getTitle());
+        intent.putExtra(SelectionActivity.ITEMS, selectionRequest.getDisplayItems());
         this.startActivityForResult(intent, SELECT_FROM_LIST);
     }
 
@@ -118,10 +118,10 @@ public class MainActivity extends Activity implements Platform {
 
     private void onSelectedFromList(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            this.listInfo.done(data.getIntExtra(ListActivity.SELECTED_INDEX, -1));
+            this.selectionRequest.setSelectedIndex(data.getIntExtra(SelectionActivity.SELECTED_INDEX, -1));
         }
         else {
-            this.listInfo.done(-1);
+            this.selectionRequest.cancelRequest();
         }
     }
 }

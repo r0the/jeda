@@ -21,7 +21,7 @@ import ch.jeda.Size;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.ListInfo;
+import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.LogInfo;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.ViewImp;
@@ -86,9 +86,9 @@ public class Main implements Platform {
     }
 
     @Override
-    public <T> void showList(ListInfo<T> listInfo) {
-        ListWindow window = this.windowManager.getListWindow();
-        window.setListInfo(listInfo);
+    public  void showSelectionRequest(SelectionRequest selectionRequest) {
+        SelectionWindow window = this.windowManager.getSelectionWindow();
+        window.setListInfo(selectionRequest);
         window.setVisible(true);
     }
 

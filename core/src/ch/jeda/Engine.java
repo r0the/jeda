@@ -20,7 +20,7 @@ import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.InputType;
-import ch.jeda.platform.ListInfo;
+import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.LogInfo;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.ViewImp;
@@ -247,26 +247,21 @@ public final class Engine {
                 this.fatalError(Message.NO_PROGRAM_ERROR);
             }
             else {
-                ListInfo<ProgramInfo> listInfo = new ListInfo<ProgramInfo>() {
-
-                    @Override
-                    protected void onSelect(ProgramInfo item) {
-                        CURRENT_ENGINE.set(Engine.this);
-                        startProgram(item);
-                    }
-
-                    @Override
-                    protected void onCancel() {
-                        platform.stop();
-                    }
-                };
+                SelectionRequest<ProgramInfo> request = new SelectionRequest();
                 for (ProgramInfo programInfo : programInfos) {
-                    listInfo.addItem(programInfo.getName(), programInfo);
+                    request.addItem(programInfo.getName(), programInfo);
                 }
 
-                listInfo.sortItemsByName();
-                listInfo.setTitle(Message.translate(Message.CHOOSE_PROGRAM_TITLE));
-                this.platform.showList(listInfo);
+                request.sortItemsByName();
+                request.setTitle(Message.translate(Message.CHOOSE_PROGRAM_TITLE));
+                this.platform.showSelectionRequest(request);
+                request.waitForResult();
+                if (request.isCancelled()) {
+                    this.platform.stop();
+                }
+                else {
+                    this.startProgram(request.getResult());
+                }
             }
         }
         catch (Exception ex) {

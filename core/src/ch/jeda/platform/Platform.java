@@ -31,7 +31,7 @@ public interface Platform {
 
     void showInputRequest(InputRequest inputRequest);
 
-     <T> void showList(ListInfo<T> listInfo);
+    void showSelectionRequest(SelectionRequest selectionRequest);
 
     void showLog(LogInfo logInfo);
 

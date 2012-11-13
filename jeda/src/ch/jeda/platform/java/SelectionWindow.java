@@ -16,16 +16,16 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.platform.ListInfo;
+import ch.jeda.platform.SelectionRequest;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JDialog;
 
-class ListWindow extends JDialog implements JedaWindow {
+class SelectionWindow extends JDialog implements JedaWindow {
 
-    private ListInfo listInfo;
+    private SelectionRequest listInfo;
 
-    ListWindow() {
+    SelectionWindow() {
         initComponents();
         GUI.center(this);
         GUI.setIcon(this);
@@ -37,10 +37,10 @@ class ListWindow extends JDialog implements JedaWindow {
     @Override
     public void onHide() {
         this.setVisible(false);
-        this.listInfo.done(-1);
+        this.listInfo.cancelRequest();
     }
 
-    void setListInfo(ListInfo listInfo) {
+    void setListInfo(SelectionRequest listInfo) {
         this.listInfo = listInfo;
         this.setTitle(listInfo.getTitle());
         this.list.setListData(listInfo.getDisplayItems().toArray());
@@ -51,14 +51,14 @@ class ListWindow extends JDialog implements JedaWindow {
 
     private void accept() {
         this.setVisible(false);
-        this.listInfo.done(this.list.getSelectedIndex());
+        this.listInfo.setSelectedIndex(this.list.getSelectedIndex());
     }
 
     private static class MouseListener extends MouseAdapter {
 
-        protected ListWindow dialog;
+        protected SelectionWindow dialog;
 
-        public MouseListener(ListWindow dialog) {
+        public MouseListener(SelectionWindow dialog) {
             this.dialog = dialog;
         }
 

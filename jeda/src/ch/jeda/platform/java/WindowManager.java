@@ -34,8 +34,8 @@ public class WindowManager {
     private final Engine engine;
     private final InputWindow inputWindow;
     private final WindowListener listener;
-    private final ListWindow listWindow;
     private final LogWindow logWindow;
+    private final SelectionWindow selectionWindow;
     private final Set<JedaWindow> windows;
     private boolean finished;
     private ViewWindow fullscreenWindow;
@@ -44,13 +44,13 @@ public class WindowManager {
         this.engine = engine;
         this.inputWindow = new InputWindow();
         this.listener = new WindowListener(this);
-        this.listWindow = new ListWindow();
         this.logWindow = new LogWindow();
+        this.selectionWindow = new SelectionWindow();
         this.windows = new HashSet();
 
         this.registerWindow(this.inputWindow);
-        this.registerWindow(this.listWindow);
         this.registerWindow(this.logWindow);
+        this.registerWindow(this.selectionWindow);
     }
 
     void finish() {
@@ -94,12 +94,12 @@ public class WindowManager {
         return this.inputWindow;
     }
 
-    ListWindow getListWindow() {
-        return this.listWindow;
-    }
-
     LogWindow getLogWindow() {
         return this.logWindow;
+    }
+
+    SelectionWindow getSelectionWindow() {
+        return this.selectionWindow;
     }
 
     private void registerWindow(JedaWindow window) {

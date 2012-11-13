@@ -21,29 +21,51 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class ListInfo<T> extends Request {
+public class SelectionRequest<T> extends Request {
 
     private static final Comparator<ListItem> LIST_ITEM_BY_NAME = new ListItemByName();
     private final List<ListItem<T>> items;
+    private final Object lock;
+    private boolean cancelled;
+    private boolean done;
+    private int selectedIndex;
 
-    protected ListInfo() {
+    public SelectionRequest() {
+        this.lock = new Object();
         this.items = new ArrayList();
     }
 
-    public final void addItem(String name, T item) {
+    public void addItem(String name, T item) {
         this.items.add(new ListItem(this.items.size(), name, item));
     }
 
-    public final void done(int index) {
-        if (0 <= index && index < items.size()) {
-            this.onSelect(this.items.get(index).item);
-        }
-        else {
-            this.onCancel();
+    public void cancelRequest() {
+        synchronized (this.lock) {
+            this.done = true;
+            this.cancelled = true;
+            this.lock.notify();
         }
     }
 
-    public final ArrayList<String> getDisplayItems() {
+    public T getResult() {
+        return this.items.get(this.selectedIndex).item;
+    }
+
+    public void setSelectedIndex(int index) {
+        synchronized (this.lock) {
+            if (0 <= index && index < items.size()) {
+                this.selectedIndex = index;
+            }
+            else {
+                this.cancelled = true;
+            }
+
+            this.done = true;
+            this.lock.notify();
+        }
+    }
+
+    public ArrayList<String> getDisplayItems() {
         ArrayList<String> result = new ArrayList();
         for (ListItem item : this.items) {
             result.add(item.name);
@@ -52,13 +74,26 @@ public abstract class ListInfo<T> extends Request {
         return result;
     }
 
-    public final void sortItemsByName() {
+    public boolean isCancelled() {
+        return this.cancelled;
+    }
+
+    public void sortItemsByName() {
         Collections.sort(this.items, LIST_ITEM_BY_NAME);
     }
 
-    protected abstract void onSelect(T item);
-
-    protected abstract void onCancel();
+    public void waitForResult() {
+        synchronized (this.lock) {
+            while (!this.done) {
+                try {
+                    this.lock.wait();
+                }
+                catch (InterruptedException ex) {
+                    // ignore
+                }
+            }
+        }
+    }
 
     private static class ListItem<T> {
 

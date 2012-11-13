@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ListActivity<T> extends android.app.ListActivity {
+public class SelectionActivity<T> extends android.app.ListActivity {
 
     static final String TITLE = "Title";
     static final String ITEMS = "Items";
