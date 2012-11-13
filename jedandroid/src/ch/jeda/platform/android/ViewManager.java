@@ -27,31 +27,36 @@ import ch.jeda.platform.ViewInfo;
 import ch.jeda.ui.Window.Feature;
 
 class ViewManager implements SurfaceHolder.Callback {
-    
+
     private final Activity activity;
     private final Object surfaceLock;
     private boolean surfaceAvailable;
     private SurfaceHolder surfaceHolder;
     private SurfaceView surfaceView;
-    
+    private Size surfaceSize;
+
     public ViewManager(Activity activity) {
         this.activity = activity;
         this.surfaceLock = new Object();
     }
-    
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        synchronized (this.surfaceLock) {
-            this.surfaceAvailable = true;
-            this.surfaceLock.notify();
-        }
     }
-    
+
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        //this.viewImp.resize(width, height);
+        synchronized (this.surfaceLock) {
+            this.surfaceAvailable = true;
+            this.surfaceSize = new Size(width, height);
+            this.surfaceLock.notify();
+        }
+
+//        if (this.activeView != null) {
+//            this.activeView.setSize(new Size(width, height));
+//        }
     }
-    
+
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         synchronized (this.surfaceLock) {
@@ -59,7 +64,7 @@ class ViewManager implements SurfaceHolder.Callback {
             this.surfaceLock.notify();
         }
     }
-    
+
     ViewImp createViewImp(ViewInfo viewInfo) {
         synchronized (this.surfaceLock) {
             while (!this.surfaceAvailable) {
@@ -69,39 +74,31 @@ class ViewManager implements SurfaceHolder.Callback {
                 catch (InterruptedException ex) {
                 }
             }
-            
-            if (viewInfo.hasFeature(Feature.DoubleBuffered)) {
-                return new DoubleBufferedViewImp(this);
-            }
-            else {
-                return new AndroidViewImp(this);
-            }
+
+            return AndroidViewImp.create(this, viewInfo.hasFeature(Feature.DoubleBuffered));
         }
     }
-    
+
     Size getSize() {
-        Canvas canvas = this.surfaceHolder.lockCanvas();
-        Size result = new Size(canvas.getWidth(), canvas.getHeight());
-        this.surfaceHolder.unlockCanvasAndPost(canvas);
-        return result;
+        return this.surfaceSize;
     }
-    
+
     void onCreate() {
         this.surfaceView = new SurfaceView(this.activity);
         this.surfaceHolder = this.surfaceView.getHolder();
         this.activity.setContentView(this.surfaceView);
         this.surfaceHolder.addCallback(this);
     }
-    
+
     void setTitle(final String title) {
         this.activity.runOnUiThread(new Runnable() {
-            
+
             public void run() {
                 activity.setTitle(title);
             }
         });
     }
-    
+
     void setBitmap(Bitmap bitmap) {
         Canvas canvas = this.surfaceHolder.lockCanvas();
         canvas.drawBitmap(bitmap, 0f, 0f, null);
