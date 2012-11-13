@@ -25,8 +25,8 @@ class DoubleBufferedViewImp extends AbstractViewImp {
 
     public DoubleBufferedViewImp(ViewWindow viewWindow) {
         super(viewWindow, true);
-        this.backBuffer = GUI.createBufferedImage(viewWindow.getWidth(), viewWindow.getHeight());
-        this.frontBuffer = GUI.createBufferedImage(viewWindow.getWidth(), viewWindow.getHeight());
+        this.backBuffer = GUI.createBufferedImage(viewWindow.getImageSize());
+        this.frontBuffer = GUI.createBufferedImage(viewWindow.getImageSize());
         viewWindow.setImage(this.frontBuffer);
         this.setBuffer(this.backBuffer);
     }

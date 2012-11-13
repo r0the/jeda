@@ -45,8 +45,8 @@ class GUI {
         frame.setLocation(center.x - frame.getWidth() / 2, center.y - frame.getHeight() / 2);
     }
 
-    static BufferedImage createBufferedImage(int width, int height) {
-        return graphicsConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+    static BufferedImage createBufferedImage(Size size) {
+        return graphicsConfiguration().createCompatibleImage(size.width, size.height, Transparency.TRANSLUCENT);
     }
 
     static GraphicsConfiguration graphicsConfiguration() {

@@ -24,7 +24,7 @@ class DefaultViewImp extends AbstractViewImp {
 
     public DefaultViewImp(ViewWindow viewWindow) {
         super(viewWindow, false);
-        this.buffer = GUI.createBufferedImage(viewWindow.getWidth(), viewWindow.getHeight());
+        this.buffer = GUI.createBufferedImage(viewWindow.getImageSize());
         viewWindow.setImage(this.buffer);
         this.setBuffer(this.buffer);
     }

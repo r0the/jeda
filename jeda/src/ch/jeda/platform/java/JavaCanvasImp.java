@@ -50,7 +50,7 @@ class JavaCanvasImp implements CanvasImp {
 
     JavaCanvasImp(Size size) {
         this();
-        this.setBuffer(GUI.createBufferedImage(size.width, size.height));
+        this.setBuffer(GUI.createBufferedImage(size));
     }
 
     @Override
@@ -267,7 +267,7 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public ImageImp takeSnapshot() {
-        BufferedImage result = GUI.createBufferedImage(this.size.width, this.size.height);
+        BufferedImage result = GUI.createBufferedImage(this.size);
         result.createGraphics().drawImage(this.buffer, 0, 0, this.size.width, this.size.height, null);
         return new JavaImageImp(result);
     }

@@ -26,10 +26,12 @@ public class ViewWindow extends JFrame implements JedaWindow {
 
     private final ImageCanvas canvas;
     private final boolean fullscreen;
+    private final Size size;
 
     protected ViewWindow(Size size, boolean fullscreen) {
         super(GUI.graphicsConfiguration());
         this.fullscreen = fullscreen;
+        this.size = size;
         this.setIgnoreRepaint(true);
         this.setResizable(false);
         this.canvas = new ImageCanvas(size);
@@ -42,6 +44,10 @@ public class ViewWindow extends JFrame implements JedaWindow {
     @Override
     public void onHide() {
         this.setVisible(false);
+    }
+
+    Size getImageSize() {
+        return this.size;
     }
 
     void setImage(BufferedImage image) {
