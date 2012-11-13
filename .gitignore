@@ -16,13 +16,17 @@ dist/
 
 nbjeda/plugin/release
 nbjeda/plugin/src/ch/jeda/netbeans/java/template/JedaProjectTemplate.zip
-jedandroid/gen/
 nbjeda/plugin/nbproject/private/
+
+# Jedandroid generated files
 
 jedandroid/bin/
 jedandroid/gen/
 jedandroid/libs/
+jedandroid/gen/
+jedandroid/nbandroid/
+
+# template-android generated files
 
 template-android/bin/
 template-android/gen/
-
