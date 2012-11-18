@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.platform.java.EventQueue;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 

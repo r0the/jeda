@@ -21,10 +21,12 @@ import java.awt.event.FocusListener;
 
 class FocusEventQueue extends EventQueue<FocusEvent> implements FocusListener {
 
+    @Override
     public void focusGained(FocusEvent event) {
         this.add(event);
     }
 
+    @Override
     public void focusLost(FocusEvent event) {
         this.add(event);
     }

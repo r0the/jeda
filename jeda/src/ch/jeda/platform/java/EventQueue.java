@@ -27,8 +27,8 @@ class EventQueue<T extends AWTEvent> implements Iterable<T> {
     private List<T> readQueue;
 
     EventQueue() {
-        this.listenQueue = new ArrayList<T>();
-        this.readQueue = new ArrayList<T>();
+        this.listenQueue = new ArrayList();
+        this.readQueue = new ArrayList();
     }
 
     synchronized void swap() {
