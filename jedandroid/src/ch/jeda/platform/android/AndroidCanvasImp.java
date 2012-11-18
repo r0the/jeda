@@ -196,7 +196,7 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     public ImageImp takeSnapshot() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new AndroidImageImp(Bitmap.createBitmap(this.bitmap));
     }
 
     public Size textSize(String text) {
