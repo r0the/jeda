@@ -40,8 +40,9 @@ public final class Location implements Serializable {
     public final int y;
 
     /**
-     * Creates a new <code>Location</code> object with the specified x and y
-     * cooredinates.
+     * Creates a new <code>Location</code> object with the specified
+     * <code>x</code> and <code>y</code>
+     * coordinates.
      * 
      * @param x the x coordinate of this location
      * @param y the y coordinate of this location
@@ -52,6 +53,14 @@ public final class Location implements Serializable {
     }
 
     public Location ensureRange(Location min, Location max) {
+        if (min == null) {
+            throw new NullPointerException("min");
+        }
+
+        if (max == null) {
+            throw new NullPointerException("max");
+        }
+
         return new Location(Math.max(min.x, Math.min(this.x, max.x)),
                 Math.max(min.y, Math.min(this.y, max.y)));
     }
@@ -80,16 +89,48 @@ public final class Location implements Serializable {
     }
 
     public boolean isInside(Location min, Size size) {
+        if (min == null) {
+            throw new NullPointerException("min");
+        }
+
+        if (size == null) {
+            throw new NullPointerException("size");
+        }
+
         return min.x <= this.x && this.x < min.x + size.width
                && min.y <= this.y && this.y < min.y + size.height;
     }
 
     public boolean isInside(Location min, Location max) {
+        if (min == null) {
+            throw new NullPointerException("min");
+        }
+
+        if (max == null) {
+            throw new NullPointerException("max");
+        }
+
         return min.x <= this.x && this.x < max.x && min.y <= this.y && this.y < max.y;
     }
 
     public boolean isInside(int minX, int minY, int maxX, int maxY) {
         return minX <= this.x && this.x < maxX && minY <= this.y && this.y < maxY;
+    }
+
+    /**
+     * Returns the Manhattan distance from this location to the
+     * <code>other</code> location.
+     * 
+     * @param other the other location
+     * @return Manhattan distance from this to <code>other</code> location.
+     * @throws NullPointerException if the value of <code>other</code> is <code>null</code>
+     */
+    public int manhattanDistanceTo(Location other) {
+        if (other == null) {
+            throw new NullPointerException("other");
+        }
+
+        return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
     }
 
     public Location plus(Size size) {
@@ -100,9 +141,6 @@ public final class Location implements Serializable {
         return new Location(this.x + size.width, this.y + size.width);
     }
 
-//    public Location times(double factor) {
-//        return new Location((int) (this.x * factor), (int) (this.y * factor));
-//    }
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
