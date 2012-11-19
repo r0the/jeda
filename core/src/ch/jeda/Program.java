@@ -40,6 +40,15 @@ public abstract class Program {
     }
 
     /**
+     * Returns the Jeda system properties.
+     * 
+     * @return Jeda system properties.
+     */
+    public final Properties getProperties() {
+        return Engine.getCurrentEngine().getProperties();
+    }
+
+    /**
      * Request this program to stop. After a call to this method, the method
      * {@link #stopRequested()} will return <code>true</code>.
      *
@@ -141,6 +150,12 @@ public abstract class Program {
         Engine.getCurrentEngine().write(message);
     }
 
+    /**
+     * Writes a message to the Jeda log window.
+     * 
+     * @param message the message to write
+     * @param args 
+     */
     protected final void write(String message, Object... args) {
         Engine.getCurrentEngine().write(message, args);
     }

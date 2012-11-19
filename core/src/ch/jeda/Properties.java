@@ -18,6 +18,8 @@ package ch.jeda;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Properties {
 
@@ -25,6 +27,15 @@ public class Properties {
 
     Properties() {
         this.imp = new java.util.Properties();
+    }
+
+    public double getDouble(String key, double defaultValue) {
+        try {
+            return Double.parseDouble(this.getString(key));
+        }
+        catch (Exception ex) {
+            return defaultValue;
+        }
     }
 
     public int getInt(String key, int defaultValue) {
@@ -40,15 +51,28 @@ public class Properties {
         return this.imp.getProperty(key);
     }
 
+    public Set<String> keys() {
+        Set<String> result = new TreeSet();
+        for (Object key : this.imp.keySet()) {
+            result.add(key.toString());
+        }
+
+        return result;
+    }
+
     void loadFromResource(String filePath) throws IOException {
         URL resource = Thread.currentThread().getContextClassLoader().getResource(filePath);
         this.imp.load(resource.openStream());
     }
 
+    void loadFromSystem() {
+        this.imp.putAll(System.getProperties());
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for (String key : this.imp.stringPropertyNames()) {
+        for (String key : this.keys()) {
             result.append(key);
             result.append('=');
             result.append(this.imp.get(key));

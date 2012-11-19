@@ -337,8 +337,10 @@ public final class Engine {
                     this.engine.properties.loadFromResource(propertyFile);
                 }
 
-                // Load official properties file again to prevent manipulation
+                // Load official Jeda properties file again to prevent manipulation
                 this.engine.properties.loadFromResource(JEDA_PROPERTIES_FILE);
+                // Load system properties now to prevent manipulation
+                this.engine.properties.loadFromSystem();
             }
             catch (Exception ex) {
                 this.engine.fatalError(ex, Message.LOAD_PROPERTIES_ERROR);
