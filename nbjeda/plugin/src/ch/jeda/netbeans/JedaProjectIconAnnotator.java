@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.netbeans.java;
+package ch.jeda.netbeans;
 
-import ch.jeda.netbeans.Util;
 import java.awt.Image;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
@@ -28,12 +27,13 @@ public class JedaProjectIconAnnotator implements ProjectIconAnnotator {
 
     public @Override
     Image annotateIcon(Project project, Image orig, boolean openedNode) {
-        if (Util.isJedaProject(project)) {
-            return Util.getJedaImage();
+        ProjectWrapper wrapper = ProjectWrapper.forProject(project);
+        Image result = wrapper.getIcon();
+        if (result == null) {
+            result = orig;
         }
-        else {
-            return orig;
-        }
+
+        return result;
     }
 
     public @Override

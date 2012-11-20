@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.netbeans.java;
+package ch.jeda.netbeans;
 
-import ch.jeda.netbeans.Util;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
@@ -30,9 +29,10 @@ public class ConfigNodeFactory implements NodeFactory {
 
     @Override
     public NodeList createNodes(Project project) {
-        if (Util.isJedaProject(project)) {
+        ProjectWrapper wrapper = ProjectWrapper.forProject(project);
+        if (wrapper.isJedaProject()) {
             try {
-                return NodeFactorySupport.fixedNodeList(new ConfigNode(project));
+                return NodeFactorySupport.fixedNodeList(new ConfigNode(wrapper));
             }
             catch (DataObjectNotFoundException ex) {
                 // ignore
@@ -44,31 +44,13 @@ public class ConfigNodeFactory implements NodeFactory {
 
     private static class ConfigNode extends FilterNode {
 
-        public ConfigNode(Project project) throws DataObjectNotFoundException {
-            super(DataObject.find(project.getProjectDirectory().getFileObject(Util.PROJECT_FILE)).getNodeDelegate());
+        public ConfigNode(ProjectWrapper wrapper) throws DataObjectNotFoundException {
+            super(DataObject.find(wrapper.getJedaPropertiesFiele()).getNodeDelegate());
         }
 
         @Override
         public String getDisplayName() {
             return "Jeda Configuration";
         }
-//        //Next, we add icons, for the default state, which is
-//        //closed, and the opened state; we will make them the same. 
-//        //Icons in project logical views are
-//        //based on combinations--you must combine the node's own icon
-//        //with a distinguishing badge that is merged with it. Here we
-//        //first obtain the icon from a data folder, then we add our
-//        //badge to it by merging it via a NetBeans API utility method:
-//        public Image getIcon(int type) {
-//            DataFolder root = DataFolder.findFolder(FileUtil.getConfigRoot());
-//            Image original = root.getNodeDelegate().getIcon(type);
-//            return ImageUtilities.mergeImages(original, smallImage, 7, 7);
-//        }
-//
-//        public Image getOpenedIcon(int type) {
-//            DataFolder root = DataFolder.findFolder(FileUtil.getConfigRoot());
-//            Image original = root.getNodeDelegate().getIcon(type);
-//            return ImageUtilities.mergeImages(original, smallImage, 7, 7);
-//        }
     }
 }

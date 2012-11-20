@@ -16,40 +16,28 @@
  */
 package ch.jeda.netbeans;
 
-import java.awt.Image;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
-import org.openide.util.ImageUtilities;
+import org.netbeans.api.project.ui.OpenProjects;
+import org.openide.util.Lookup;
 
 public class Util {
 
-    public static final String PROJECT_FILE = "jeda.properties";
-    private static final String ICON = "ch/jeda/netbeans/resources/logo-16x16.png";
-    private static Image JEDA_IMAGE;
-    private static Icon JEDA_ICON;
-
-    public static Icon getJedaIcon() {
-        if (JEDA_ICON == null) {
-            JEDA_ICON = new ImageIcon(getJedaImage());
-        }
-
-        return JEDA_ICON;
-    }
-
-    public static Image getJedaImage() {
-        if (JEDA_IMAGE == null) {
-            JEDA_IMAGE = ImageUtilities.loadImage(ICON);
-        }
-
-        return JEDA_IMAGE;
-    }
-
-    public static boolean isJedaProject(Project project) {
-        return project.getProjectDirectory().getFileObject(PROJECT_FILE) != null;
+    public static void closeProject(Project project) {
+        OpenProjects.getDefault().close(new Project[]{project});
     }
 
     public static void log(String message) {
-        System.out.println("NBJeda: " + message);
+        Logger.getLogger("NbJeda").log(Level.INFO, message);
+    }
+
+    public static InputStream openResource(String resourcePath) throws IOException {
+        ClassLoader cl = Lookup.getDefault().lookup(ClassLoader.class);
+        URL url = cl.getResource(resourcePath);
+        return url.openStream();
     }
 }

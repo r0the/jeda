@@ -16,6 +16,7 @@
  */
 package ch.jeda.netbeans.java.template;
 
+import ch.jeda.netbeans.JavaProjectWrapper;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +67,8 @@ public class JedaProjectWizardIterator implements WizardDescriptor.Instantiating
 
         FileObject template = Templates.getTemplate(wiz);
         FileObject dir = FileUtil.toFileObject(dirF);
-        new JedaProjectTemplateUnpacker(dir).unpack(template.getInputStream());
+        
+        new JavaProjectWrapper(dir).init();
 
         // Always open top dir as a project:
         resultSet.add(dir);

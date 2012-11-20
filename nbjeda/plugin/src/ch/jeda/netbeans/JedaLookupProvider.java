@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.netbeans.java;
+package ch.jeda.netbeans;
 
-import ch.jeda.netbeans.Util;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.LookupProvider;
 import org.openide.util.Lookup;
@@ -26,9 +25,8 @@ public class JedaLookupProvider implements LookupProvider {
 
     @Override
     public Lookup createAdditionalLookup(Lookup lookup) {
-
-        Project project = lookup.lookup(Project.class);
-        if (Util.isJedaProject(project)) {
+        ProjectWrapper wrapper = ProjectWrapper.forProject(lookup.lookup(Project.class));
+        if (wrapper.isJedaProject()) {
             return Lookups.fixed(new JedaProjectIconAnnotator());
         }
         else {

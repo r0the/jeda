@@ -29,30 +29,19 @@
             </manifest>
         </jar>
         
-        <!-- Update Library Module -->
-
+        <!-- BEGIN Update Jeda Library in NBJeda -->
         <copy file="${dist.jar}" tofile="${jeda.library.release.dir}/lib/jeda.jar"/>
         <zip basedir="${jeda.core.dir}/dist/javadoc" destfile="${jeda.javadoc.zip}"/>
 
         <zip basedir="${jeda.core.dir}/src" destfile="${jeda.source.jar}"/>
         <zip basedir="${src.dir}" update="true" destfile="${jeda.source.jar}"/>
+        <!-- END Update Jeda Library in NBJeda -->
 
-        <!-- Update Project Module -->
-        <property name="template.java.zipfile" value="${jeda.nbjeda.dir}/src/ch/jeda/netbeans/java/template/JedaProjectTemplate.zip"/>
-        <property name="template.java.dir" value="../template-java"/>
-
-        <delete file="${template.java.zipfile}"/>
-        <mkdir dir="${template.java.dir}/src"/>
-        <zip basedir="${template.java.dir}" destfile="${template.java.zipfile}">
-            <exclude name="**/build/"/>
-            <exclude name="**/dist/"/>
-            <exclude name="**/nbproject/private/"/>
-        </zip>
-
-        <!-- Update Jeda version in Module Suite -->
+        <!-- BEGIN Update Jeda version in nbjeda -->
         <manifest file="${jeda.nbjeda.dir}/manifest.mf" mode="update">
             <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
         </manifest>
+        <!-- END Update Jeda version in nbjeda -->
         
         <!-- Directly update installed library files -->
         <copy file="${dist.jar}" tofile="${user.home}/.netbeans/7.0/lib/jeda.jar"/>
