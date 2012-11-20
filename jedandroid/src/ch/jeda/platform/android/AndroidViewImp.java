@@ -24,7 +24,6 @@ import java.util.EnumSet;
 
 public class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
 
-    private final AndroidEventsImp eventsImp;
     private final ViewManager viewManager;
 
     static AndroidViewImp create(ViewManager viewManager, boolean doubleBuffered) {
@@ -37,7 +36,6 @@ public class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
     }
 
     private AndroidViewImp(ViewManager viewManager) {
-        this.eventsImp = new AndroidEventsImp();
         this.viewManager = viewManager;
         this.setSize(this.viewManager.getSize());
     }
@@ -52,7 +50,7 @@ public class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
 
     @Override
     public EventsImp getEventsImp() {
-        return this.eventsImp;
+        return this.viewManager.getEventsImp();
     }
 
     @Override
@@ -68,6 +66,7 @@ public class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
     @Override
     public void update() {
         this.viewManager.setBitmap(this.getBitmap());
+        this.viewManager.getEventsImp().update();
     }
 
     private static class SingleBufferedAndroidViewImp extends AndroidViewImp {

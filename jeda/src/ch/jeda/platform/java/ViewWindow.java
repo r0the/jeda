@@ -17,6 +17,7 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Size;
+import ch.jeda.platform.EventsImp;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -25,18 +26,21 @@ import javax.swing.JFrame;
 public class ViewWindow extends JFrame implements JedaWindow {
 
     private final ImageCanvas canvas;
+    private final JavaEventsImp eventsImp;
     private final boolean fullscreen;
     private final Size size;
 
     protected ViewWindow(Size size, boolean fullscreen) {
         super(GUI.graphicsConfiguration());
+        this.canvas = new ImageCanvas(size);
+        this.eventsImp = new JavaEventsImp(this.canvas);
         this.fullscreen = fullscreen;
         this.size = size;
         this.setIgnoreRepaint(true);
         this.setResizable(false);
-        this.canvas = new ImageCanvas(size);
         this.getContentPane().add(this.canvas);
         this.pack();
+        this.canvas.requestFocus();
         GUI.center(this);
         GUI.setIcon(this);
     }
@@ -46,20 +50,25 @@ public class ViewWindow extends JFrame implements JedaWindow {
         this.setVisible(false);
     }
 
-    Size getImageSize() {
-        return this.size;
+    EventsImp getEventsImp() {
+        return this.eventsImp;
     }
 
-    void setImage(BufferedImage image) {
-        this.canvas.setImage(image);
+    Size getImageSize() {
+        return this.size;
     }
 
     boolean isFullscreen() {
         return this.fullscreen;
     }
 
+    void setImage(BufferedImage image) {
+        this.canvas.setImage(image);
+    }
+
     void update() {
         this.canvas.repaint();
+        this.eventsImp.update();
     }
 
     private static class ImageCanvas extends java.awt.Canvas {

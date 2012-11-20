@@ -14,24 +14,36 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.platform;
+package ch.jeda.platform.android;
 
-import ch.jeda.Location;
-import ch.jeda.ui.Key;
+import android.view.InputEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-public interface EventsImp {
+class EventQueue<T extends InputEvent> implements Iterable<T> {
 
-    Location getPointerLocation();
+    private List<T> listenQueue;
+    private List<T> readQueue;
 
-    Set<Key> getPressedKeys();
+    EventQueue() {
+        this.listenQueue = new ArrayList();
+        this.readQueue = new ArrayList();
+    }
 
-    String getTypedChars();
+    synchronized void swap() {
+        List<T> temp = this.listenQueue;
+        this.listenQueue = this.readQueue;
+        this.readQueue = temp;
+        this.listenQueue.clear();
+    }
 
-    List<Key> getTypedKeys();
+    protected synchronized void add(T event) {
+        this.listenQueue.add(event);
+    }
 
-    boolean isClicked();
-
-    boolean isPointerAvailable();
+    @Override
+    public Iterator<T> iterator() {
+        return this.readQueue.iterator();
+    }
 }

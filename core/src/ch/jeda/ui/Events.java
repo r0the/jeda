@@ -16,6 +16,7 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.Location;
 import ch.jeda.platform.EventsImp;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,17 @@ import java.util.Set;
 public class Events {
 
     private EventsImp imp;
+
+    /**
+     * Returns the current screen location of the pointing device. The result
+     * of this method is only valid if {@link #isPointerAvailable()} returns
+     * <code>true</code>.
+     * 
+     * @return current location of the pointer.
+     */
+    public Location getPointerLocation() {
+        return this.imp.getPointerLocation();
+    }
 
     /**
      * Returns a set of all keys that are currently pressed.
@@ -61,6 +73,15 @@ public class Events {
     }
 
     /**
+     * Check whether the Jeda window has been clicked by a pointing device.
+     * 
+     * @return 
+     */
+    public boolean isClicked() {
+        return this.imp.isClicked();
+    }
+
+    /**
      * Checks whether the specified key is currently pressed.
      *
      * @param key the key to check for
@@ -90,6 +111,25 @@ public class Events {
         }
 
         return this.imp.getTypedKeys().contains(key);
+    }
+
+    /**
+     * Checks whether a pointer location is currently available. If this method
+     * returns <code>true</code>, the method {@link #getPointerLocation()}
+     * returns the current location of the pointer.
+     * 
+     * On a device with a mouse pointer, this method only returns
+     * <code>true</code>, if the mouse pointer is currently inside the Jeda 
+     * window.
+     * On a device with touch screen, this method returns only 
+     * <code>true</code>, if the screen is currently touched by the pointing
+     * device (pen or finger).
+     * 
+     * @return <code>true</code> if pointer location is available, <code>false
+     * </code> otherwise.
+     */
+    public boolean isPointerAvailable() {
+        return this.imp.isPointerAvailable();
     }
 
     @Deprecated

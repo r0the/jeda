@@ -16,11 +16,13 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.Location;
 import ch.jeda.platform.EventsImp;
 import ch.jeda.ui.Key;
 import java.awt.Component;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,25 +36,33 @@ public final class JavaEventsImp implements EventsImp {
     private static final Map<Integer, Key> KEY_MAP = initKeyMap();
     private final FocusEventQueue focusEventQueue;
     private final KeyboardEventQueue keyboardEventQueue;
+    private final MouseEventQueue mouseEventQueue;
     private final Set<Key> pressedKeys;
     private final List<Key> typedKeys;
+    private boolean clicked;
     private String typedChars;
+    private Location pointerLocation;
+    private boolean pointerAvailable;
 
     JavaEventsImp(Component component) {
         this.focusEventQueue = new FocusEventQueue();
         this.keyboardEventQueue = new KeyboardEventQueue();
+        this.mouseEventQueue = new MouseEventQueue();
         this.pressedKeys = new HashSet();
         this.typedKeys = new ArrayList();
         this.typedChars = "";
+        this.pointerLocation = Location.ORIGIN;
 
-        // Keyboard needs to listen to all ancestors of the component,
-        // because the keyboard focus might be set to an ancestor.
-        while (component != null) {
-            component.addFocusListener(this.focusEventQueue);
-            component.addKeyListener(this.keyboardEventQueue);
-            component = component.getParent();
-        }
+        component.addFocusListener(this.focusEventQueue);
+        component.addKeyListener(this.keyboardEventQueue);
+        component.addMouseListener(this.mouseEventQueue);
+        component.addMouseMotionListener(this.mouseEventQueue);
+        component.addMouseWheelListener(this.mouseEventQueue);
+    }
 
+    @Override
+    public Location getPointerLocation() {
+        return this.pointerLocation;
     }
 
     @Override
@@ -70,17 +80,33 @@ public final class JavaEventsImp implements EventsImp {
         return Collections.unmodifiableList(this.typedKeys);
     }
 
+    @Override
+    public boolean isClicked() {
+        return this.clicked;
+    }
+
+    @Override
+    public boolean isPointerAvailable() {
+        return this.pointerAvailable;
+    }
+
     void update() {
+        this.clicked = false;
         this.typedChars = "";
         this.typedKeys.clear();
         this.keyboardEventQueue.swap();
         this.focusEventQueue.swap();
+        this.mouseEventQueue.swap();
         for (KeyEvent event : this.keyboardEventQueue) {
             this.handleKeyEvent(event);
         }
 
         for (FocusEvent event : this.focusEventQueue) {
             this.handleFocusEvent(event);
+        }
+
+        for (MouseEvent event : this.mouseEventQueue) {
+            this.handleMouseEvent(event);
         }
     }
 
@@ -102,6 +128,39 @@ public final class JavaEventsImp implements EventsImp {
                 this.keyTyped(event.getKeyChar());
                 break;
         }
+    }
+
+    private void handleMouseEvent(MouseEvent event) {
+        int button = event.getButton();
+        switch (event.getID()) {
+            case MouseEvent.MOUSE_CLICKED:
+                this.clicked = true;
+                break;
+            case MouseEvent.MOUSE_DRAGGED:
+                break;
+            case MouseEvent.MOUSE_ENTERED:
+                this.pointerAvailable = true;
+                break;
+            case MouseEvent.MOUSE_EXITED:
+                this.pointerAvailable = false;
+                break;
+            case MouseEvent.MOUSE_MOVED:
+                this.pointerAvailable = true;
+                break;
+            case MouseEvent.MOUSE_PRESSED:
+//                this.recentlyPressedButtons.add(MOUSE_BUTTON_MAP.get(button));
+//                this.currentlyPressedButtons.add(MOUSE_BUTTON_MAP.get(button));
+                break;
+            case MouseEvent.MOUSE_RELEASED:
+//                this.recentlyReleasedButtons.add(MOUSE_BUTTON_MAP.get(button));
+//                this.currentlyPressedButtons.remove(MOUSE_BUTTON_MAP.get(button));
+                break;
+            case MouseEvent.MOUSE_WHEEL:
+//                this.wheel = this.wheel + ((MouseWheelEvent) event).getWheelRotation();
+                break;
+        }
+
+        this.pointerLocation = new Location(event.getX(), event.getY());
     }
 
     private void keyPressed(int keyCode) {

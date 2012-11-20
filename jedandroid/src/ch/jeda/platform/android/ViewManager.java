@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import ch.jeda.Size;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
@@ -32,7 +31,7 @@ class ViewManager implements SurfaceHolder.Callback {
     private final Object surfaceLock;
     private boolean surfaceAvailable;
     private SurfaceHolder surfaceHolder;
-    private SurfaceView surfaceView;
+    private JedaSurfaceView surfaceView;
     private Size surfaceSize;
 
     public ViewManager(Activity activity) {
@@ -79,12 +78,16 @@ class ViewManager implements SurfaceHolder.Callback {
         }
     }
 
+    AndroidEventsImp getEventsImp() {
+        return this.surfaceView.getEventsImp();
+    }
+
     Size getSize() {
         return this.surfaceSize;
     }
 
     void onCreate() {
-        this.surfaceView = new SurfaceView(this.activity);
+        this.surfaceView = new JedaSurfaceView(this.activity);
         this.surfaceHolder = this.surfaceView.getHolder();
         this.activity.setContentView(this.surfaceView);
         this.surfaceHolder.addCallback(this);

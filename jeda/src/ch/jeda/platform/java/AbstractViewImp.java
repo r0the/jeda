@@ -30,12 +30,10 @@ abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
 
     private static final Map<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
     private final EnumSet<Window.Feature> features;
-    private final JavaEventsImp eventsImp;
     protected final ViewWindow viewWindow;
 
     protected AbstractViewImp(ViewWindow viewWindow, boolean doubleBuffered) {
         this.features = EnumSet.noneOf(Window.Feature.class);
-        this.eventsImp = new JavaEventsImp(viewWindow);
         this.viewWindow = viewWindow;
 
         if (this.viewWindow.isFullscreen()) {
@@ -54,7 +52,7 @@ abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
 
     @Override
     public EventsImp getEventsImp() {
-        return this.eventsImp;
+        return this.viewWindow.getEventsImp();
     }
 
     @Override
@@ -76,7 +74,6 @@ abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
 
     @Override
     public final void update() {
-        this.eventsImp.update();
         this.doUpdate();
     }
 
