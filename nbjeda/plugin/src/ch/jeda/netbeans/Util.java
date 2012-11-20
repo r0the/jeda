@@ -48,4 +48,8 @@ public class Util {
     public static boolean isJedaProject(Project project) {
         return project.getProjectDirectory().getFileObject(PROJECT_FILE) != null;
     }
+
+    public static void log(String message) {
+        System.out.println("NBJeda: " + message);
+    }
 }
