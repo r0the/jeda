@@ -78,15 +78,20 @@ public class WindowManager {
     }
 
     private ViewWindow createViewWindow(ViewInfo viewInfo) {
+        Size size = viewInfo.getSize();
+        if (size.isEmpty()) {
+            size = new Size(800, 600);
+        }
+
         if (viewInfo.hasFeature(Feature.Fullscreen) && this.fullscreenWindow == null) {
-            DisplayMode displayMode = GUI.findDisplayMode(viewInfo.getSize());
-            Size size = new Size(displayMode.getWidth(), displayMode.getHeight());
+            DisplayMode displayMode = GUI.findDisplayMode(size);
+            size = new Size(displayMode.getWidth(), displayMode.getHeight());
             this.fullscreenWindow = new ViewWindow(size, true);
             GUI.setFullscreenMode(this.fullscreenWindow, displayMode);
             return this.fullscreenWindow;
         }
         else {
-            return new ViewWindow(viewInfo.getSize(), false);
+            return new ViewWindow(size, false);
         }
     }
 

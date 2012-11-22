@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2011, 2012 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,7 +32,7 @@ import java.util.List;
  * {@link ch.jeda.ui.Window}.
  */
 public class BlockWorld extends Simulation {
-    
+
     private final RenderContext renderContext;
     private final Window window;
     private BlockMap currentMap;
@@ -41,33 +41,37 @@ public class BlockWorld extends Simulation {
     /**
      * Creates a new block world with a default-sized window.
      *
-     * @see Window#DEFAULT_WIDTH
-     * @see Window#DEFAULT_HEIGHT
+     * @see Window#Window()
      */
     protected BlockWorld() {
-        this(Window.DEFAULT_WIDTH, Window.DEFAULT_HEIGHT);
+        this(Size.EMPTY);
     }
 
     /**
      * Creates a new block world with a window that has a drawing area of the
      * specified size.
      *
-     * @param width width of the window's drawing area
-     * @param height height of the window's drawing area
+     * @param width the width of the window's drawing area
+     * @param height the height of the window's drawing area
      *
      * @throws IllegalArgumentException if width or height are smaller than 1
      */
     public BlockWorld(int width, int height) {
-        if (width < 1) {
-            throw new IllegalArgumentException("width");
-        }
-        
-        if (height < 1) {
-            throw new IllegalArgumentException("height");
-        }
-        
-        this.window = new Window(width, height, Window.Feature.DoubleBuffered);
-        this.renderContext = new RenderContext(width, height);
+        this(new Size(width, height));
+    }
+
+    /**
+     * Creates a new block world with a window that has a drawing area of the
+     * specified size.
+     *
+     * @param size the size of the window's drawing area
+     *
+     * @throws NullPointerException if size is <code>null</code>
+     * @throws IllegalArgumentException if size is empty
+     */
+    public BlockWorld(Size size) {
+        this.window = new Window(size, Window.Feature.DoubleBuffered);
+        this.renderContext = new RenderContext(size);
         this.renderContext.setBorder(50, 200, 50, 50);
         this.renderContext.scroll(-50, -50);
     }
@@ -85,11 +89,11 @@ public class BlockWorld extends Simulation {
         if (blockType == null) {
             throw new NullPointerException("blockType");
         }
-        
+
         if (image == null) {
             throw new NullPointerException("image");
         }
-        
+
         this.renderContext.addImage(blockType, image);
     }
 
@@ -107,7 +111,7 @@ public class BlockWorld extends Simulation {
         if (this.currentMap != null) {
             this.currentMap.dispose();
         }
-        
+
         this.currentMap = new BlockMap(size);
         this.currentMap.setScrollLock(this.scrollLock);
         this.renderContext.setMapSize(this.currentMap.getSize());
@@ -127,7 +131,7 @@ public class BlockWorld extends Simulation {
         if (blockType == null) {
             throw new NullPointerException("blockType");
         }
-        
+
         this.createMap(sizeX, sizeY);
         for (int x = 0; x < sizeX; ++x) {
             for (int y = 0; y < sizeY; ++y) {
@@ -135,11 +139,11 @@ public class BlockWorld extends Simulation {
             }
         }
     }
-    
+
     public final List<Entity> entities() {
         return this.currentMap.entities();
     }
-    
+
     public final Field fieldAt(int x, int y) {
         Location location = new Location(x, y);
         if (this.currentMap.isValidCoordinate(location)) {
@@ -166,7 +170,7 @@ public class BlockWorld extends Simulation {
         }
         return this.renderContext.getBlockImage(blockType);
     }
-    
+
     public final Events getEvents() {
         return this.window.getEvents();
     }
@@ -190,14 +194,14 @@ public class BlockWorld extends Simulation {
     public final boolean isFullscreen() {
         return this.window.hasFeature(Window.Feature.Fullscreen);
     }
-    
+
     public final void scrollLock(Entity entity) {
         this.scrollLock = entity;
         if (this.currentMap != null) {
             this.currentMap.setScrollLock(entity);
         }
     }
-    
+
     public final void scroll(int dx, int dy) {
         this.currentMap.addEvent(new ScrollEvent(dx, dy, this.renderContext));
     }
@@ -238,7 +242,7 @@ public class BlockWorld extends Simulation {
     public final int sizeY() {
         return this.currentMap.getSize().height;
     }
-    
+
     @Override
     protected void init() {
     }
@@ -254,24 +258,24 @@ public class BlockWorld extends Simulation {
             this.currentMap.updateEntities(this);
             this.currentMap.update(this.renderContext);
         }
-        
+
         this.drawBackground(window);
         this.window.setAlpha(255);
         if (this.currentMap != null) {
             this.window.drawImage(0, 0, this.renderContext.getImage());
         }
-        
+
         this.drawOverlay(this.window);
         // User actions at the end, because user actions of init() must be resolved
         // first.
         this.update();
     }
-    
+
     protected void drawBackground(Canvas canvas) {
         canvas.setColor(Color.WHITE);
         canvas.fill();
     }
-    
+
     protected void drawOverlay(Canvas canvas) {
     }
 

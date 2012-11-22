@@ -20,13 +20,21 @@ import java.io.Serializable;
 
 public class Size implements Serializable {
 
+    /**
+     * An empty <code>Size</code>. Both width and height of this objects are
+     * 0.
+     */
+    public static final Size EMPTY = new Size();
+    /**
+     * The width of this size.
+     */
     public final int width;
+    /**
+     * The height of this size.
+     */
     public final int height;
 
-    /**
-     * Creates a new Size object with a width and height of 0.
-     */
-    public Size() {
+    private Size() {
         this(0, 0);
     }
 

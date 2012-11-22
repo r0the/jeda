@@ -19,6 +19,7 @@ package ch.jeda.ui;
 import ch.jeda.Engine;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.Size;
+import java.util.Arrays;
 import java.util.EnumSet;
 
 /**
@@ -35,61 +36,78 @@ public class Window extends Canvas {
 
         DoubleBuffered, Fullscreen
     }
-    /**
-     * The default height of the drawing area of a window.
-     *
-     * @since 1.0
-     */
-    public static final int DEFAULT_HEIGHT = 600;
-    /**
-     * The default width of the drawing area of a window.
-     *
-     * @since 1.0
-     */
-    public static final int DEFAULT_WIDTH = 800;
     private final Events events;
     private ViewImp imp;
-    private Size size;
     private String title;
 
     /**
-     * Creates a new window that has a drawing area of default size as defined
-     * by {@link #DEFAULT_WIDTH} and {@link #DEFAULT_HEIGHT}.
+     * Creates a new window with an automatically sized drawing area.
+     * On the Android platform, the drawing area is adjusted to the screen
+     * size.
+     * On the Java platform, the drawing area has a width of 800 and a height
+     * of 600 pixels.
      *
      * @since 1.0
      */
     public Window() {
-        this(new Size());
+        this(Size.EMPTY);
     }
 
+    /**
+     * Creates a new window with an automatically sized drawing area.
+     * On the Android platform, the drawing area is adjusted to the screen
+     * size.
+     * On the Java platform, the drawing area has a width of 800 and a height
+     * of 600 pixels.
+     * The specified window features are activated.
+     *
+     * @param features the features of this window
+     *
+     * @since 1.0
+     */
     public Window(Feature... features) {
-        this(new Size(), features);
+        this(Size.EMPTY, features);
     }
 
     /**
      * Creates a new window that has a drawing with the specified width and
      * height in pixels.
+     * On the Android platform, the size parameter has no effect.
+     * The specified window features are activated.
      *
-     * @param width width of the drawing area in pixels
-     * @param height height of the drawing area in pixels
+     * @param width the width of the drawing area in pixels
+     * @param height the height of the drawing area in pixels
+     * @param features the features of this window
      *
      * @throws IllegalArgumentException if width or height are smaller than 1
+     * 
      * @since 1.0
      */
     public Window(int width, int height, Feature... features) {
         this(new Size(width, height), features);
     }
 
-    private Window(Size size, Feature... features) {
-        super();
-        this.events = new Events();
-        if (size.isEmpty()) {
-            size = new Size(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    /**
+     * Creates a new window that has a drawing with the specified size in
+     * pixels.
+     * On the Android platform, the size parameter has no effect.
+     * The specified window features are activated.
+     *
+     * @param size the size of the drawing area in pixels
+     * @param features the features of this window
+     *
+     * @throws NullPointerException if size is <code>null</code>
+     * 
+     * @since 1.0
+     */
+    public Window(Size size, Feature... features) {
+        if (size == null) {
+            throw new NullPointerException("size");
         }
 
-        this.size = size;
+        this.events = new Events();
         this.title = Thread.currentThread().getName();
-        this.resetImp(toSet(features));
+        this.resetImp(size, toSet(features));
     }
 
     /**
@@ -103,11 +121,11 @@ public class Window extends Canvas {
 
     /**
      * Returns an object holding the events that are taking place on this
-     * window. The #Events object returned by this method stays valid as long
-     * as the window is open. The #Events object is updated only by a call to
-     * the #update() method.
+     * window. The {@link Events} object returned by this method stays valid as
+     * long as the window is open. The {@link Events} object is updated only by
+     * a call to the {@link #update()} method.
      * 
-     * @return #Events object representing the events on this window
+     * @return {@link Events} object representing the events on this window
      * 
      * @since 1.0
      */
@@ -129,7 +147,8 @@ public class Window extends Canvas {
     /**
      * Checks whether this window has the specified feature.
      *
-     * @return true if the window has the specified feature.
+     * @return <code>true</code> if the window has the specified feature, 
+     *         otherwise returns <code>false</code>
      * @see #setFeatures(Feature...)
      * 
      * @since 1.0
@@ -147,11 +166,11 @@ public class Window extends Canvas {
             featureSet.remove(feature);
         }
 
-        this.resetImp(featureSet);
+        this.resetImp(this.getSize(), featureSet);
     }
 
     public void setFeatures(Feature... features) {
-        this.resetImp(toSet(features));
+        this.resetImp(this.getSize(), toSet(features));
     }
 
     /**
@@ -198,12 +217,12 @@ public class Window extends Canvas {
         this.imp.update();
     }
 
-    private void resetImp(EnumSet<Feature> features) {
+    private void resetImp(Size size, EnumSet<Feature> features) {
         if (this.imp != null) {
             this.imp.close();
         }
 
-        this.imp = Engine.getCurrentEngine().showView(this.size, features);
+        this.imp = Engine.getCurrentEngine().showView(size, features);
         this.events.setImp(this.imp.getEventsImp());
         this.imp.setTitle(this.title);
         if (!this.hasFeature(Feature.DoubleBuffered)) {
@@ -217,10 +236,7 @@ public class Window extends Canvas {
 
     private static EnumSet<Feature> toSet(Feature... features) {
         EnumSet<Feature> result = EnumSet.noneOf(Feature.class);
-        for (Feature feature : features) {
-            result.add(feature);
-        }
-
+        result.addAll(Arrays.asList(features));
         return result;
     }
 }

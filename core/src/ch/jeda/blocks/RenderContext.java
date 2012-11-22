@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2011, 2012 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -40,11 +40,11 @@ class RenderContext {
     private Location renderPos;
     private int shadowPosY;
 
-    RenderContext(int width, int height) {
+    RenderContext(Size size) {
         this.blockSet = new BlockSet();
-        this.canvas = new Canvas(width, height);
+        this.canvas = new Canvas(size);
         this.maxY = this.canvas.getSize().height + this.blockSet.brickSizeZ() + this.blockSet.brickSizeY();
-        this.mapSize = new Size();
+        this.mapSize = Size.EMPTY;
         this.scrollPos = Location.ORIGIN;
     }
 
@@ -200,15 +200,15 @@ class RenderContext {
 
     private void checkScrollLock(Vector3D entityPos) {
         double x = entityPos.x * this.blockSet.brickSizeX() - this.canvas.getWidth() / 2;
-        double y = entityPos.y * this.blockSet.brickSizeY()
-                   - entityPos.z * this.blockSet.brickSizeZ() - this.blockSet.brickSizeY() - this.canvas.getHeight() / 2;
+        double y = entityPos.y * this.blockSet.brickSizeY() -
+                 entityPos.z * this.blockSet.brickSizeZ() - this.blockSet.brickSizeY() - this.canvas.getHeight() / 2;
         this.scrollPos = new Location((int) x, (int) y);
     }
 
     private Location mapToScreen(Vector3D pos) {
         double x = pos.x * this.blockSet.brickSizeX() - this.scrollPos.x;
-        double y = pos.y * this.blockSet.brickSizeY()
-                   - pos.z * this.blockSet.brickSizeZ() - this.scrollPos.y;
+        double y = pos.y * this.blockSet.brickSizeY() -
+                 pos.z * this.blockSet.brickSizeZ() - this.scrollPos.y;
         return new Location((int) x, (int) y);
     }
 
