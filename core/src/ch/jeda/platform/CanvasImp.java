@@ -55,8 +55,6 @@ public interface CanvasImp {
 
     Size getSize();
 
-    Transformation getTransformation();
-
     void setAlpha(int alpha);
 
     void setColor(Color color);

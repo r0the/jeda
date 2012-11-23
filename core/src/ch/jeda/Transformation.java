@@ -16,34 +16,70 @@
  */
 package ch.jeda;
 
-public class Transformation {
+import java.io.Serializable;
 
-    private final double[] values;
+public class Transformation implements Serializable {
 
-    public Transformation() {
-        this.values = new double[6];
-        for (int i = 0; i < 6; ++i) {
-            this.values[i] = 0f;
+    public static final Transformation IDENTITY = new Transformation();
+    public final double scaleX;
+    public final double skewX;
+    public final double translateX;
+    public final double skewY;
+    public final double scaleY;
+    public final double translateY;
+
+    private Transformation() {
+        this(1d, 0d, 0d, 0d, 1d, 0d);
+    }
+
+    private Transformation(double scaleX, double skewX, double translateX,
+                           double skewY, double scaleY, double translateY) {
+        this.scaleX = scaleX;
+        this.skewX = skewX;
+        this.translateX = translateX;
+        this.skewY = skewY;
+        this.scaleY = scaleY;
+        this.translateY = translateY;
+    }
+
+    public Transformation inverted() {
+        double d = this.scaleX * this.scaleY - this.skewX * this.skewY;
+
+        if (Math.abs(d) <= Double.MIN_VALUE) {
+            throw new IllegalStateException("Transformation is not invertible.");
         }
+
+        return new Transformation(
+                this.scaleY / d, -this.skewX / d,
+                (this.skewX * this.translateY - this.scaleY * this.translateX) / d,
+                -this.skewY / d, this.scaleX / d,
+                (this.skewY * this.translateX - this.scaleX * this.translateY) / d);
     }
 
-    public Transformation(double scaleX, double skewX, double translateX,
-                          double scaleY, double skewY, double translateY) {
-        this.values = new double[6];
-        for (int i = 0; i < 6; ++i) {
-            this.values[i] = 0f;
-        }
+    public Transformation rotatedBy(double angle) {
+        double a = Math.toRadians(angle);
+        double sin = Math.sin(a);
+        double cos = Math.cos(a);
+
+        return new Transformation(
+                cos * this.scaleX + sin * this.skewX, -sin * this.scaleX + cos * this.skewX, this.translateX,
+                cos * this.skewY + sin * this.scaleY, -sin * this.skewY + cos * this.scaleY, this.translateY);
     }
 
-    public Transformation inverse() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-//    public Vector transform(Vector vector) {
-//        throw new UnsupportedOperationException("Not supported yet.");
+//    public Transformation rotatedBy90() {
+//        return new Transformation(
+//                this.skewX, -this.scaleX, this.translateX,
+//                this.scaleY, -this.skewY, this.translateY);
 //    }
+    public Vector transform(Vector v) {
+        return new Vector(
+                this.scaleX * v.x + this.skewX * v.y + this.translateX,
+                this.skewY * v.x + this.scaleY * v.y + this.translateY);
+    }
 
-    public double[] toArray() {
-        return this.values;
+    public Transformation translatedBy(Vector v) {
+        return new Transformation(
+                this.scaleX, this.skewX, this.translateX + v.x,
+                this.skewY, this.scaleY, this.translateY + v.y);
     }
 }

@@ -206,13 +206,6 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public Transformation getTransformation() {
-        AffineTransform at = this.graphics.getTransform();
-        return new Transformation(at.getScaleX(), at.getShearX(), at.getTranslateX(),
-                at.getScaleY(), at.getShearY(), at.getTranslateY());
-    }
-
-    @Override
     public void setAlpha(int alpha) {
         assert 0 <= alpha && alpha <= 255;
 
@@ -261,8 +254,10 @@ class JavaCanvasImp implements CanvasImp {
     public void setTransformation(Transformation transformation) {
         assert transformation != null;
 
-        AffineTransform at = new AffineTransform(transformation.toArray());
-        this.graphics.setTransform(at);
+        this.graphics.setTransform(new AffineTransform(
+                transformation.scaleX, transformation.skewY,
+                transformation.skewX, transformation.scaleY,
+                transformation.translateX, transformation.translateY));
     }
 
     @Override

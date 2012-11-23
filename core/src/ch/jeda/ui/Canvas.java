@@ -23,6 +23,7 @@ import ch.jeda.Size;
 import ch.jeda.Transformation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * This class represents a drawing surface.
@@ -40,15 +41,19 @@ public class Canvas {
 
     private static final int DEFAULT_FONT_SIZE = 16;
     private static final Color DEFAULT_FOREGROUND = Color.BLACK;
+    private final Stack<Transformation> transformationStack;
     private int alpha;
     private Color color;
     private int fontSize;
     private CanvasImp imp;
+    private Transformation transformation;
 
     Canvas() {
+        this.transformationStack = new Stack();
         this.alpha = 255;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
+        this.transformation = Transformation.IDENTITY;
     }
 
     /**
@@ -82,9 +87,12 @@ public class Canvas {
             throw new IllegalArgumentException("size");
         }
 
+        this.transformationStack = new Stack();
         this.alpha = 255;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
+        this.transformation = Transformation.IDENTITY;
+
         this.imp = Engine.getCurrentEngine().createCanvasImp(size);
     }
 
@@ -658,12 +666,14 @@ public class Canvas {
     }
 
     /**
-     * Returns the current affine transformation of this surface.
+     * Returns the current affine transformation of this canvas.
      * 
+     * @see #popTransformation()
+     * @see #pushTransformation(ch.jeda.Transformation)
      * @return the current transformation
      */
     public Transformation getTransformation() {
-        return this.imp.getTransformation();
+        return this.transformation;
     }
 
     /**
@@ -675,6 +685,52 @@ public class Canvas {
      */
     public int getWidth() {
         return this.imp.getSize().width;
+    }
+
+    /**
+     * Pops a transfromation from the stack and sets it as current affine
+     * transformation of this canvas.
+     * All subsequent drawing operations will be affected by the current affine
+     * transformation.
+     * 
+     * @throws IllegalStateException if there is no element on the 
+     *         transformation stack.
+     * 
+     * @see #getTransformation() 
+     * @see #pushTransformation(ch.jeda.Transformation)
+     * @since 1.0
+     */
+    public void popTransformation() {
+        if (this.transformationStack.isEmpty()) {
+            throw new IllegalStateException("Empty transformation stack.");
+        }
+
+        this.transformation = this.transformationStack.pop();
+        this.imp.setTransformation(this.transformation);
+    }
+
+    /**
+     * Pushes the current transformation to the transformation stack and sets
+     * the specified transformation as current affine transformation of this
+     * canvas.
+     * All subsequent drawing operations will be affected by the current affine
+     * transformation.
+     * 
+     * @param transformation the new transformation
+     * @throws NullPointerException if transformation is <code>null</code>
+     * 
+     * @see #getTransformation()
+     * @see #popTransformation()
+     * @since 1.0
+     */
+    public void pushTransformation(Transformation transformation) {
+        if (transformation == null) {
+            throw new NullPointerException("transformation");
+        }
+
+        this.transformationStack.push(this.transformation);
+        this.transformation = transformation;
+        this.imp.setTransformation(this.transformation);
     }
 
     /**
@@ -769,15 +825,6 @@ public class Canvas {
     }
 
     /**
-     * Sets the transformation for this surface
-     * 
-     * @param transformation the transformation
-     */
-    public void setTransformation(Transformation transformation) {
-        this.imp.setTransformation(transformation);
-    }
-
-    /**
      * Creates an image that contains a copy of the contents of this canvas.
      *
      * @return Image containing a copy of this canvas
@@ -805,6 +852,7 @@ public class Canvas {
         this.imp.setAlpha(this.alpha);
         this.imp.setColor(this.color);
         this.imp.setFontSize(this.fontSize);
+        this.imp.setTransformation(this.transformation);
     }
 
     private static Iterable<Location> createPoints(int x1, int y1, int x2, int y2, int x3, int y3) {

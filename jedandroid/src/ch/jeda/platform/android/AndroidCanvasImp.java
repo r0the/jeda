@@ -19,6 +19,7 @@ package ch.jeda.platform.android;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -30,7 +31,7 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.ui.Color;
 
 class AndroidCanvasImp implements CanvasImp {
-    
+
     private final Paint fillPaint;
     private final Paint pixelPaint;
     private final Paint strokePaint;
@@ -38,7 +39,7 @@ class AndroidCanvasImp implements CanvasImp {
     private Bitmap bitmap;
     private Canvas canvas;
     private Size size;
-    
+
     AndroidCanvasImp() {
         this.fillPaint = new Paint();
         this.fillPaint.setStyle(Paint.Style.FILL);
@@ -49,179 +50,210 @@ class AndroidCanvasImp implements CanvasImp {
         this.strokePaint.setAntiAlias(true);
         this.textPaint = new Paint();
     }
-    
+
+    @Override
     public void clear() {
         this.canvas.drawColor(0);
     }
-    
+
+    @Override
     public void copyFrom(Location location, CanvasImp source) {
         assert location != null;
         assert source != null;
-        
+
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
+    @Override
     public void drawCircle(Location center, int radius) {
         assert center != null;
         assert radius > 0;
-        
+
         this.canvas.drawCircle(center.x, center.y, radius, this.strokePaint);
         this.modified();
     }
-    
+
+    @Override
     public void drawImage(Location topLeft, ImageImp image) {
         assert topLeft != null;
         assert image != null;
         assert image instanceof AndroidImageImp;
-        
+
         this.canvas.drawBitmap(((AndroidImageImp) image).getBitmap(),
                 topLeft.x, topLeft.y, this.fillPaint);
         this.modified();
     }
-    
+
+    @Override
     public void drawLine(Location start, Location end) {
         assert start != null;
         assert end != null;
-        
+
         this.canvas.drawLine(start.x, start.y, end.x, end.y, this.strokePaint);
         this.modified();
     }
-    
+
+    @Override
     public void drawPolygon(Iterable<Location> edges) {
         assert edges != null;
-        
+
         this.canvas.drawPath(createPath(edges), this.strokePaint);
         this.modified();
     }
-    
+
+    @Override
     public void drawRectangle(Location topLeft, Size size) {
         assert topLeft != null;
         assert size != null;
-        
+
         int right = topLeft.x + size.width;
         int bottom = topLeft.y + size.height;
         this.canvas.drawRect(topLeft.x, topLeft.y, right, bottom, this.strokePaint);
         this.modified();
     }
-    
+
+    @Override
     public void drawString(Location topLeft, String text) {
         assert topLeft != null;
         assert text != null;
-        
+
         this.canvas.drawText(text, topLeft.x, topLeft.y, this.textPaint);
         this.modified();
     }
-    
+
+    @Override
     public void fill() {
         this.canvas.drawColor(this.fillPaint.getColor());
         this.modified();
     }
-    
+
+    @Override
     public void fillCircle(Location center, int radius) {
         assert center != null;
         assert radius > 0;
-        
+
         this.canvas.drawCircle(center.x, center.y, radius, this.fillPaint);
         this.modified();
     }
-    
+
+    @Override
     public void fillPolygon(Iterable<Location> edges) {
         assert edges != null;
-        
+
         this.canvas.drawPath(createPath(edges), this.fillPaint);
         this.modified();
     }
-    
+
+    @Override
     public void fillRectangle(Location topLeft, Size size) {
         assert topLeft != null;
         assert size != null;
-        
+
         int right = topLeft.x + size.width;
         int bottom = topLeft.y + size.height;
         this.canvas.drawRect(topLeft.x, topLeft.y, right, bottom, this.fillPaint);
         this.modified();
     }
-    
+
+    @Override
     public void floodFill(Location pos, Color oldColor, Color newColor) {
         assert pos != null;
         assert oldColor != null;
         assert newColor != null;
-        
+
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
+    @Override
     public double getLineWidth() {
         return this.strokePaint.getStrokeWidth();
     }
-    
+
+    @Override
     public Color getPixelAt(Location location) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
+    @Override
     public Size getSize() {
         return this.size;
     }
-    
-    public Transformation getTransformation() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
+
+    @Override
     public void setAlpha(int alpha) {
         assert 0 <= alpha && alpha <= 255;
-        
+
         this.fillPaint.setAlpha(alpha);
     }
-    
+
     public void setColor(Color color) {
         this.fillPaint.setColor(color.getValue());
         this.strokePaint.setColor(color.getValue());
         this.textPaint.setColor(color.getValue());
     }
-    
+
+    @Override
     public void setFontSize(int size) {
         this.strokePaint.setTextSize(size);
     }
-    
+
+    @Override
     public void setLineWidth(double width) {
         this.strokePaint.setStrokeWidth((float) width);
     }
-    
+
+    @Override
     public void setPixelAt(Location location, Color color) {
         this.pixelPaint.setColor(color.getValue());
         this.canvas.drawPoint(location.x, location.y, this.pixelPaint);
     }
-    
+
+    @Override
     public void setTransformation(Transformation transformation) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        float[] array = new float[9];
+        array[Matrix.MSCALE_X] = (float) transformation.scaleX;
+        array[Matrix.MSCALE_Y] = (float) transformation.scaleY;
+        array[Matrix.MSKEW_X] = (float) transformation.skewX;
+        array[Matrix.MSKEW_Y] = (float) transformation.skewY;
+        array[Matrix.MTRANS_X] = (float) transformation.translateX;
+        array[Matrix.MTRANS_Y] = (float) transformation.translateY;
+        array[Matrix.MPERSP_0] = 0f;
+        array[Matrix.MPERSP_1] = 0f;
+        array[Matrix.MPERSP_2] = 1f;
+        Matrix matrix = new Matrix();
+        matrix.setValues(array);
+        this.canvas.setMatrix(matrix);
     }
-    
+
+    @Override
     public ImageImp takeSnapshot() {
         return new AndroidImageImp(Bitmap.createBitmap(this.bitmap));
     }
-    
+
+    @Override
     public Size textSize(String text) {
         Rect bounds = new Rect();
         this.strokePaint.getTextBounds(text, 0, text.length() - 1, bounds);
         return new Size(bounds.width(), bounds.height());
     }
-    
+
     Canvas getCanvas() {
         return this.canvas;
     }
-    
+
     void modified() {
     }
-    
+
     Bitmap getBitmap() {
         return this.bitmap;
     }
-    
+
     final void setSize(Size size) {
         this.size = size;
         this.bitmap = Bitmap.createBitmap(size.width, size.height, Config.ARGB_8888);
         this.canvas = new Canvas(this.bitmap);
     }
-    
+
     private static Path createPath(Iterable<Location> edges) {
         Path result = new Path();
         boolean first = true;
@@ -234,7 +266,7 @@ class AndroidCanvasImp implements CanvasImp {
                 result.lineTo(edge.x, edge.y);
             }
         }
-        
+
         result.close();
         return result;
     }
