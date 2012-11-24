@@ -20,10 +20,9 @@ import ch.jeda.Location;
 import ch.jeda.Simulation;
 import ch.jeda.Size;
 import ch.jeda.ui.Canvas;
-import ch.jeda.ui.Color;
 import ch.jeda.ui.Image;
-import ch.jeda.ui.Events;
 import ch.jeda.ui.Window;
+import ch.jeda.ui.VisualSimulation;
 import java.util.List;
 
 /**
@@ -31,10 +30,9 @@ import java.util.List;
  * class and implements a simulation loop that renders a block world to a
  * {@link ch.jeda.ui.Window}.
  */
-public class BlockWorld extends Simulation {
+public class BlockWorld extends VisualSimulation {
 
     private final RenderContext renderContext;
-    private final Window window;
     private BlockMap currentMap;
     private Entity scrollLock;
 
@@ -70,8 +68,8 @@ public class BlockWorld extends Simulation {
      * @throws IllegalArgumentException if size is empty
      */
     public BlockWorld(Size size) {
-        this.window = new Window(size, Window.Feature.DoubleBuffered);
-        this.renderContext = new RenderContext(size);
+        super(size);
+        this.renderContext = new RenderContext(this.getCanvasSize());
         this.renderContext.setBorder(50, 200, 50, 50);
         this.renderContext.scroll(-50, -50);
     }
@@ -171,30 +169,6 @@ public class BlockWorld extends Simulation {
         return this.renderContext.getBlockImage(blockType);
     }
 
-    public final Events getEvents() {
-        return this.window.getEvents();
-    }
-
-    /**
-     * Returns the window's current title.
-     *
-     * @return current window title
-     * @see #setTitle(java.lang.String)
-     */
-    public final String getTitle() {
-        return this.window.getTitle();
-    }
-
-    /**
-     * Checks whether the window is in fullscreen mode.
-     *
-     * @return <code>true</code> if the window is in fullscreen mode
-     * @see #setFullscreen(boolean)
-     */
-    public final boolean isFullscreen() {
-        return this.window.hasFeature(Window.Feature.Fullscreen);
-    }
-
     public final void scrollLock(Entity entity) {
         this.scrollLock = entity;
         if (this.currentMap != null) {
@@ -204,29 +178,6 @@ public class BlockWorld extends Simulation {
 
     public final void scroll(int dx, int dy) {
         this.currentMap.addEvent(new ScrollEvent(dx, dy, this.renderContext));
-    }
-
-    /**
-     * Enables/disables the fullscreen mode.
-     *
-     * @param fullscreen <code>true</code> to enable fullscreen mode,
-     *                   <code>false</code> to disable it
-     * @see #isFullscreen()
-     */
-    public final void setFullscreen(boolean fullscreen) {
-        this.window.setFeature(Window.Feature.Fullscreen, fullscreen);
-    }
-
-    /**
-     * Sets the window's title.
-     *
-     * @param title new title of the window
-     * @throws NullPointerException if title is null
-     *
-     * @see #getTitle()
-     */
-    public final void setTitle(String title) {
-        this.window.setTitle(title);
     }
 
     /**
@@ -247,43 +198,25 @@ public class BlockWorld extends Simulation {
     protected void init() {
     }
 
-    /**
-     * This method is overridden to implement the simulation step for a block
-     * world. Use {@link #update()} to change the behavior of a block world.
-     */
     @Override
-    protected final void step() {
-        this.window.update();
+    protected final void beforeUpdate() {
         if (this.currentMap != null) {
             this.currentMap.updateEntities(this);
             this.currentMap.update(this.renderContext);
         }
-
-        this.drawBackground(window);
-        this.window.setAlpha(255);
-        if (this.currentMap != null) {
-            this.window.drawImage(0, 0, this.renderContext.getImage());
-        }
-
-        this.drawOverlay(this.window);
-        // User actions at the end, because user actions of init() must be resolved
-        // first.
-        this.update();
     }
 
-    protected void drawBackground(Canvas canvas) {
-        canvas.setColor(Color.WHITE);
-        canvas.fill();
+    @Override
+    protected final void drawForeground(Canvas canvas) {
+        if (this.currentMap != null) {
+            canvas.setAlpha(255);
+            canvas.drawImage(0, 0, this.renderContext.getImage());
+
+        }
+
+        this.drawOverlay(canvas);
     }
 
     protected void drawOverlay(Canvas canvas) {
-    }
-
-    /**
-     * This method is called once every simulation step before the world is
-     * drawn. Override this method to implement your own behavior of a block
-     * world.
-     */
-    protected void update() {
     }
 }
