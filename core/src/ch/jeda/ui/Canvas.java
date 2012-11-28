@@ -648,7 +648,7 @@ public class Canvas {
             throw new NullPointerException("location");
         }
 
-        if (location.isInside(Location.ORIGIN, this.getSize())) {
+        if (this.getSize().contains(location)) {
             return this.imp.getPixelAt(location);
         }
         else {
@@ -819,7 +819,7 @@ public class Canvas {
             throw new NullPointerException("color");
         }
 
-        if (location.isInside(Location.ORIGIN, this.getSize())) {
+        if (this.getSize().contains(location)) {
             this.imp.setPixelAt(location, color);
         }
     }

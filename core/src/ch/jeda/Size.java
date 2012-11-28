@@ -58,6 +58,15 @@ public class Size implements Serializable {
         this.height = height;
     }
 
+    public boolean contains(Location location) {
+        if (location == null) {
+            throw new NullPointerException("location");
+        }
+
+        return 0 <= location.x && location.x < this.width &&
+               0 <= location.y && location.y < this.height;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object instanceof Size) {

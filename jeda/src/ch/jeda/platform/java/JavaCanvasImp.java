@@ -195,7 +195,7 @@ class JavaCanvasImp implements CanvasImp {
     @Override
     public Color getPixelAt(Location location) {
         assert location != null;
-        assert location.isInside(Location.ORIGIN, this.size);
+        assert this.size.contains(location);
 
         return new Color(this.buffer.getRGB(location.x, location.y));
     }
@@ -243,7 +243,7 @@ class JavaCanvasImp implements CanvasImp {
     @Override
     public void setPixelAt(Location location, Color color) {
         assert location != null;
-        assert location.isInside(Location.ORIGIN, this.size);
+        assert this.size.contains(location);
         assert color != null;
 
         this.buffer.setRGB(location.x, location.y, color.getValue());

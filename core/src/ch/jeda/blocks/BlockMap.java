@@ -53,7 +53,7 @@ class BlockMap {
     }
 
     boolean isValidCoordinate(Location location) {
-        return location.isInside(Location.ORIGIN, this.size);
+        return this.size.contains(location);
     }
 
     void addEvent(MapEvent event) {

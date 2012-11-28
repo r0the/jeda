@@ -62,7 +62,7 @@ public final class Location implements Serializable {
         }
 
         return new Location(Math.max(min.x, Math.min(this.x, max.x)),
-                Math.max(min.y, Math.min(this.y, max.y)));
+                            Math.max(min.y, Math.min(this.y, max.y)));
     }
 
     @Override
@@ -88,35 +88,6 @@ public final class Location implements Serializable {
         return new Location(-this.x, -this.y);
     }
 
-    public boolean isInside(Location min, Size size) {
-        if (min == null) {
-            throw new NullPointerException("min");
-        }
-
-        if (size == null) {
-            throw new NullPointerException("size");
-        }
-
-        return min.x <= this.x && this.x < min.x + size.width
-               && min.y <= this.y && this.y < min.y + size.height;
-    }
-
-    public boolean isInside(Location min, Location max) {
-        if (min == null) {
-            throw new NullPointerException("min");
-        }
-
-        if (max == null) {
-            throw new NullPointerException("max");
-        }
-
-        return min.x <= this.x && this.x < max.x && min.y <= this.y && this.y < max.y;
-    }
-
-    public boolean isInside(int minX, int minY, int maxX, int maxY) {
-        return minX <= this.x && this.x < maxX && minY <= this.y && this.y < maxY;
-    }
-
     /**
      * Returns the Manhattan distance from this location to the
      * <code>other</code> location.
@@ -139,6 +110,10 @@ public final class Location implements Serializable {
         }
 
         return new Location(this.x + size.width, this.y + size.width);
+    }
+
+    public Location relativeTo(Location other) {
+        return new Location(this.x - other.x, this.y - other.y);
     }
 
     @Override
