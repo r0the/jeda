@@ -17,6 +17,7 @@
 package ch.jeda.platform.android;
 
 import android.graphics.Bitmap;
+import ch.jeda.Location;
 import ch.jeda.Log;
 import ch.jeda.Size;
 import ch.jeda.platform.ImageImp;
@@ -33,18 +34,26 @@ public class AndroidImageImp implements ImageImp {
         this.size = new Size(this.bitmap.getWidth(), this.bitmap.getHeight());
     }
 
+    @Override
     public ImageImp createScaledImage(Size newSize) {
         assert newSize != null;
 
-        return new AndroidImageImp(
-                Bitmap.createScaledBitmap(this.bitmap,
-                newSize.width, newSize.height, false));
+        return new AndroidImageImp(Bitmap.createScaledBitmap(
+                this.bitmap, newSize.width, newSize.height, false));
     }
 
+    @Override
+    public ImageImp createSubImage(Location topLeft, Size size) {
+        return new AndroidImageImp(Bitmap.createBitmap(
+                this.bitmap, topLeft.x, topLeft.y, size.width, size.height));
+    }
+
+    @Override
     public Size getSize() {
         return this.size;
     }
 
+    @Override
     public ImageImp replacePixels(Color oldColor, Color newColor) {
         assert oldColor != null;
         assert newColor != null;
@@ -52,6 +61,7 @@ public class AndroidImageImp implements ImageImp {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public boolean save(String filePath) {
         boolean result = false;
         try {

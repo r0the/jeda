@@ -16,12 +16,15 @@
  */
 package ch.jeda.platform;
 
+import ch.jeda.Location;
 import ch.jeda.Size;
 import ch.jeda.ui.Color;
 
 public interface ImageImp {
 
     ImageImp createScaledImage(Size newSize);
+
+    ImageImp createSubImage(Location topLeft, Size size);
 
     Size getSize();
 
