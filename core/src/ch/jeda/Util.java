@@ -17,6 +17,7 @@
 package ch.jeda;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Util {
@@ -57,7 +58,7 @@ public class Util {
      * @return a list of double values
      */
     public static List<Double> doubleList(double... values) {
-        ArrayList<Double> result = new ArrayList<Double>();
+        ArrayList<Double> result = new ArrayList();
         for (double value : values) {
             result.add(value);
         }
@@ -72,7 +73,7 @@ public class Util {
      * @return a list of int values
      */
     public static List<Integer> intList(int... values) {
-        ArrayList<Integer> result = new ArrayList<Integer>();
+        ArrayList<Integer> result = new ArrayList();
         for (int value : values) {
             result.add(value);
         }
@@ -97,10 +98,6 @@ public class Util {
      * @return a list of String values
      */
     public static List<String> stringList(String... values) {
-        ArrayList<String> result = new ArrayList<String>();
-        for (String value : values) {
-            result.add(value);
-        }
-        return result;
+        return Arrays.asList(values);
     }
 }
