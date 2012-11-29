@@ -40,9 +40,11 @@ public final class JavaEventsImp implements EventsImp {
     private final Set<Key> pressedKeys;
     private final List<Key> typedKeys;
     private boolean clicked;
-    private String typedChars;
+    private boolean dragging;
+    private Location pointerLastLocation;
     private Location pointerLocation;
-    private boolean pointerAvailable;
+    private Location pointerMovement;
+    private String typedChars;
 
     JavaEventsImp(Component component) {
         this.focusEventQueue = new FocusEventQueue();
@@ -50,8 +52,8 @@ public final class JavaEventsImp implements EventsImp {
         this.mouseEventQueue = new MouseEventQueue();
         this.pressedKeys = new HashSet();
         this.typedKeys = new ArrayList();
+
         this.typedChars = "";
-        this.pointerLocation = Location.ORIGIN;
 
         component.addFocusListener(this.focusEventQueue);
         component.addKeyListener(this.keyboardEventQueue);
@@ -63,6 +65,11 @@ public final class JavaEventsImp implements EventsImp {
     @Override
     public Location getPointerLocation() {
         return this.pointerLocation;
+    }
+
+    @Override
+    public Location getPointerMovement() {
+        return this.pointerMovement;
     }
 
     @Override
@@ -86,17 +93,21 @@ public final class JavaEventsImp implements EventsImp {
     }
 
     @Override
-    public boolean isPointerAvailable() {
-        return this.pointerAvailable;
+    public boolean isDragging() {
+        return this.dragging;
     }
 
     void update() {
-        this.clicked = false;
         this.typedChars = "";
         this.typedKeys.clear();
+
+        this.clicked = false;
+        this.pointerLastLocation = this.pointerLocation;
+
         this.keyboardEventQueue.swap();
         this.focusEventQueue.swap();
         this.mouseEventQueue.swap();
+
         for (KeyEvent event : this.keyboardEventQueue) {
             this.handleKeyEvent(event);
         }
@@ -107,6 +118,13 @@ public final class JavaEventsImp implements EventsImp {
 
         for (MouseEvent event : this.mouseEventQueue) {
             this.handleMouseEvent(event);
+        }
+
+        if (this.pointerLocation != null && this.pointerLastLocation != null) {
+            this.pointerMovement = this.pointerLocation.relativeTo(this.pointerLastLocation);
+        }
+        else {
+            this.pointerMovement = Location.ORIGIN;
         }
     }
 
@@ -131,36 +149,34 @@ public final class JavaEventsImp implements EventsImp {
     }
 
     private void handleMouseEvent(MouseEvent event) {
-        int button = event.getButton();
         switch (event.getID()) {
             case MouseEvent.MOUSE_CLICKED:
+                this.updatePointerLocation(event);
                 this.clicked = true;
                 break;
             case MouseEvent.MOUSE_DRAGGED:
+                this.dragging = true;
+                this.updatePointerLocation(event);
                 break;
             case MouseEvent.MOUSE_ENTERED:
-                this.pointerAvailable = true;
+                this.updatePointerLocation(event);
                 break;
             case MouseEvent.MOUSE_EXITED:
-                this.pointerAvailable = false;
+                this.pointerLocation = null;
                 break;
             case MouseEvent.MOUSE_MOVED:
-                this.pointerAvailable = true;
+                this.updatePointerLocation(event);
                 break;
             case MouseEvent.MOUSE_PRESSED:
-//                this.recentlyPressedButtons.add(MOUSE_BUTTON_MAP.get(button));
-//                this.currentlyPressedButtons.add(MOUSE_BUTTON_MAP.get(button));
                 break;
             case MouseEvent.MOUSE_RELEASED:
-//                this.recentlyReleasedButtons.add(MOUSE_BUTTON_MAP.get(button));
-//                this.currentlyPressedButtons.remove(MOUSE_BUTTON_MAP.get(button));
+                this.dragging = false;
                 break;
             case MouseEvent.MOUSE_WHEEL:
 //                this.wheel = this.wheel + ((MouseWheelEvent) event).getWheelRotation();
                 break;
         }
 
-        this.pointerLocation = new Location(event.getX(), event.getY());
     }
 
     private void keyPressed(int keyCode) {
@@ -182,6 +198,10 @@ public final class JavaEventsImp implements EventsImp {
         if (ch >= 32 && ch != 127) {
             this.typedChars = this.typedChars + ch;
         }
+    }
+
+    private void updatePointerLocation(MouseEvent event) {
+        this.pointerLocation = new Location(event.getX(), event.getY());
     }
 
     private static Map<Integer, Key> initKeyMap() {

@@ -25,6 +25,8 @@ public interface EventsImp {
 
     Location getPointerLocation();
 
+    Location getPointerMovement();
+
     Set<Key> getPressedKeys();
 
     String getTypedChars();
@@ -33,5 +35,5 @@ public interface EventsImp {
 
     boolean isClicked();
 
-    boolean isPointerAvailable();
+    boolean isDragging();
 }

@@ -25,26 +25,47 @@ import java.util.Set;
  * This class represents events that are taking place on this window. These
  * are typically keys pressed or typed by the user or motion events such as
  * moving or clicking with a mouse, trackball, pen or finger.
+ * 
+ * @since 1.0
  */
-public class Events {
+public final class Events {
 
     private EventsImp imp;
 
     /**
-     * Returns the current screen location of the pointing device. The result
-     * of this method is only valid if {@link #isPointerAvailable()} returns
-     * <code>true</code>.
+     * Returns the current location of the pointing device in window
+     * coordinates. Returns <code>null</code> if no pointing device is
+     * available.
      * 
-     * @return current location of the pointer.
+     * @return current location of the pointing device
+     * 
+     * @see #isPointerAvailable()
+     * @since 1.0
      */
     public Location getPointerLocation() {
         return this.imp.getPointerLocation();
     }
 
     /**
+     * Returns the location of the pointing device relative to it's last
+     * location. Returns <code>Location.ORIGIN</code> if no pointing device
+     * is available or no movement has occurred since the last call to
+     * {@link Window#update()}.
+     * 
+     * @return relative location of the pointing device
+     * 
+     * @see #getPointerLocation()
+     * @since 1.0
+     */
+    public Location getPointerMovement() {
+        return this.imp.getPointerMovement();
+    }
+
+    /**
      * Returns a set of all keys that are currently pressed.
      *
      * @return set of all keys that are pressed.
+     * 
      * @since 1.0
      */
     public Set<Key> getPressedKeys() {
@@ -58,6 +79,8 @@ public class Events {
      * no characters have been typed since the last call to {@link Window#update()}.
      *
      * @return recently typed characters or ""
+     * 
+     * @since 1.0
      */
     public String getTypedChars() {
         return this.imp.getTypedChars();
@@ -67,18 +90,36 @@ public class Events {
      * Returns a set of all keys that have been typed recently.
      * 
      * @return recently typed keys
+     * 
+     * @since 1.0
      */
     public List<Key> getTypedKeys() {
         return this.imp.getTypedKeys();
     }
 
     /**
-     * Check whether the Jeda window has been clicked by a pointing device.
+     * Checks whether the Jeda window has been clicked by a pointing device.
      * 
-     * @return 
+     * @return <code>true</code> if a click with a pointing device has been
+     *         performed, otherwise <code>false</code> 
+     * 
+     * @since 1.0
      */
     public boolean isClicked() {
         return this.imp.isClicked();
+    }
+
+    /**
+     * Checks whether a pointing device is currently dragged over the Jeda
+     * window.
+     * 
+     * @return <code>true</code> if a a pointing device is dragged dragged,
+     *         otherwise <code>false</code> 
+     * 
+     * @since 1.0
+     */
+    public boolean isDragging() {
+        return this.imp.isDragging();
     }
 
     /**
@@ -87,6 +128,7 @@ public class Events {
      * @param key the key to check for
      * @return <code>true</code> if specified key is currently pressed
      * @throws NullPointerException when key is null
+     * 
      * @since 1.0
      */
     public boolean isKeyPressed(Key key) {
@@ -103,6 +145,7 @@ public class Events {
      * @param key key to check
      * @return <code>true</code> if specified key was typed recently
      * @throws NullPointerException when key is null
+     * 
      * @since 1.0
      */
     public boolean isKeyTyped(Key key) {
@@ -117,34 +160,21 @@ public class Events {
      * Checks whether a pointer location is currently available. If this method
      * returns <code>true</code>, the method {@link #getPointerLocation()}
      * returns the current location of the pointer.
-     * 
+     *
      * On a device with a mouse pointer, this method only returns
      * <code>true</code>, if the mouse pointer is currently inside the Jeda 
      * window.
      * On a device with touch screen, this method returns only 
      * <code>true</code>, if the screen is currently touched by the pointing
      * device (pen or finger).
-     * 
+     *
      * @return <code>true</code> if pointer location is available, <code>false
      * </code> otherwise.
+     * 
+     * @since 1.0
      */
     public boolean isPointerAvailable() {
-        return this.imp.isPointerAvailable();
-    }
-
-    @Deprecated
-    public Set<Key> pressedKeys() {
-        return this.imp.getPressedKeys();
-    }
-
-    @Deprecated
-    public String typedChars() {
-        return this.imp.getTypedChars();
-    }
-
-    @Deprecated
-    public List<Key> typedKeys() {
-        return this.imp.getTypedKeys();
+        return this.imp.getPointerLocation() != null;
     }
 
     void setImp(EventsImp imp) {

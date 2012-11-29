@@ -28,26 +28,32 @@ import java.util.Set;
 
 public class AndroidEventsImp implements EventsImp {
 
+    private final EventQueue<MotionEvent> motionEventQueue;
     private final Set<Key> pressedKeys;
     private final List<Key> typedKeys;
+    private boolean clickCandidate;
     private boolean clicked;
-    private Location downLocation;
-    private String typedChars;
-    private EventQueue<MotionEvent> motionEventQueue;
+    private Location pointerLastLocation;
     private Location pointerLocation;
-    private boolean pointerAvailable;
+    private Location pointerMovement;
+    private String typedChars;
 
     AndroidEventsImp() {
         this.motionEventQueue = new EventQueue();
         this.pressedKeys = new HashSet();
         this.typedKeys = new ArrayList();
+
         this.typedChars = "";
-        this.pointerLocation = Location.ORIGIN;
     }
 
     @Override
     public Location getPointerLocation() {
         return this.pointerLocation;
+    }
+
+    @Override
+    public Location getPointerMovement() {
+        return this.pointerMovement;
     }
 
     @Override
@@ -70,9 +76,8 @@ public class AndroidEventsImp implements EventsImp {
         return this.clicked;
     }
 
-    @Override
-    public boolean isPointerAvailable() {
-        return this.pointerAvailable;
+    public boolean isDragging() {
+        return this.pointerLocation != null && !this.clickCandidate;
     }
 
     void addMotionEvent(MotionEvent event) {
@@ -80,40 +85,49 @@ public class AndroidEventsImp implements EventsImp {
     }
 
     void update() {
-        this.clicked = false;
         this.typedChars = "";
         this.typedKeys.clear();
+
+        this.clicked = false;
+        this.pointerLastLocation = this.pointerLocation;
+
         this.motionEventQueue.swap();
+
         for (MotionEvent event : this.motionEventQueue) {
             this.handleMotionEvent(event);
+        }
+
+        if (this.pointerLocation != null && this.pointerLastLocation != null) {
+            this.pointerMovement = this.pointerLocation.relativeTo(this.pointerLastLocation);
+        }
+        else {
+            this.pointerMovement = Location.ORIGIN;
+        }
+
+        if (!this.pointerMovement.isOrigin()) {
+            this.clickCandidate = false;
         }
     }
 
     private void handleMotionEvent(MotionEvent event) {
-
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 this.updatePointerLocation(event);
-                if (this.downLocation == null) {
-                    this.downLocation = this.pointerLocation;
-                }
-
-                this.pointerAvailable = true;
+                this.clickCandidate = true;
                 break;
             case MotionEvent.ACTION_MOVE:
                 this.updatePointerLocation(event);
-                this.pointerAvailable = true;
                 break;
             case MotionEvent.ACTION_CANCEL:
+                this.pointerLocation = null;
+                this.clickCandidate = false;
+                break;
             case MotionEvent.ACTION_UP:
-                this.updatePointerLocation(event);
-                if (this.downLocation != null) {
-                    if (this.downLocation.manhattanDistanceTo(this.pointerLocation) < 50) {
-                        this.clicked = true;
-                    }
+                this.pointerLocation = null;
+                if (this.clickCandidate) {
+                    this.clicked = true;
                 }
 
-                this.pointerAvailable = false;
                 break;
         }
     }
