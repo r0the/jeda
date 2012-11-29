@@ -264,28 +264,31 @@ public class Canvas {
     /**
      * Draws a rectangle using the current color.
      * The top left corner is a the coordinates (<code>x</code>, <code>y</code>).
+     * Has no effect if <code>width</code> or <code>height</code> are not
+     * positive.
      *
      * @param x the x coordinate of the rectangle's top left corner
      * @param y the y  coordinate of the rectangle's top left corner
      * @param width the width of the rectangle
      * @param height the height of the rectangle
-     * @throws IllegalArgumentException if <code>width</code> or <code>height</code> are negative
      *
      * @since 1.0
      */
     public void drawRectangle(int x, int y, int width, int height) {
-        this.drawRectangle(new Location(x, y), new Size(width, height), Alignment.TOP_LEFT);
+        if (width > 0 && height > 0) {
+            this.drawRectangle(new Location(x, y), new Size(width, height), Alignment.TOP_LEFT);
+        }
     }
 
     /**
      * Draws a rectangle using the current color.
      * The top left corner is a the coordinates <code>topLeft</code>.
+     * Has no effect if size is empty.
      *
      * @param topLeft the coordinates of the rectangle's top left corner
      * @param size the size of the rectangle
      * @throws NullPointerException if <code>topLeft</code> is <code>null</code>
      * @throws NullPointerException if <code>size</code> is <code>null</code>
-     * @throws IllegalArgumentException if <code>
      *
      * @since 1.0
      */
@@ -296,6 +299,8 @@ public class Canvas {
     /**
      * Draws a rectangle using the current color.
      * The rectangle is aligned relative to the coordinates (<code>x</code>, <code>y</code>).
+     * Has no effect if <code>width</code> or <code>height</code> are not
+     * positive.
      *
      * @param x the x coordinate of the alignment point
      * @param y the y coordinate of the alignment point
@@ -307,12 +312,15 @@ public class Canvas {
      * @since 1.0
      */
     public void drawRectangle(int x, int y, int width, int height, Alignment alignment) {
-        this.drawRectangle(new Location(x, y), new Size(width, height), alignment);
+        if (width > 0 && height > 0) {
+            this.drawRectangle(new Location(x, y), new Size(width, height), alignment);
+        }
     }
 
     /**
      * Draws a rectangle using the current color.
      * The rectangle is aligned relative to <code>anchor</code>.
+     * Has no effect if size is empty.
      *
      * @param anchor the alignment point
      * @param size the size of the rectangle
@@ -336,7 +344,9 @@ public class Canvas {
             throw new NullPointerException("alignment");
         }
 
-        this.imp.drawRectangle(alignment.align(anchor, size), size);
+        if (!size.isEmpty()) {
+            this.imp.drawRectangle(alignment.align(anchor, size), size);
+        }
     }
 
     /**
@@ -434,6 +444,7 @@ public class Canvas {
 
     /**
      * Fills the entire canvas using the current color.
+     * 
      * @since 1.0
      */
     public void fill() {
@@ -477,6 +488,8 @@ public class Canvas {
     /**
      * Draws and fills a rectangle using the current color.
      * The top left corner is a the coordinates (<code>x</code>, <code>y</code>).
+     * Has no effect if <code>width</code> or <code>height</code> are not
+     * positive.
      *
      * @param x the x coordinate of the rectangle's top left corner
      * @param y the y  coordinate of the rectangle's top left corner
@@ -486,12 +499,15 @@ public class Canvas {
      * @since 1.0
      */
     public void fillRectangle(int x, int y, int width, int height) {
-        this.fillRectangle(new Location(x, y), new Size(width, height), Alignment.TOP_LEFT);
+        if (width > 0 && height > 0) {
+            this.fillRectangle(new Location(x, y), new Size(width, height), Alignment.TOP_LEFT);
+        }
     }
 
     /**
      * Draws and fills a rectangle using the current color.
      * The top left corner is a the coordinates <code>topLeft</code>.
+     * Has no effect if size is empty.
      *
      * @param topLeft the coordinates of the rectangle's top left corner
      * @param size the size of the rectangle
@@ -507,6 +523,8 @@ public class Canvas {
     /**
      * Draws and fills a rectangle using the current color.
      * The rectangle is aligned relative to the coordinates (<code>x</code>, <code>y</code>).
+     * Has no effect if <code>width</code> or <code>height</code> are not
+     * positive.
      *
      * @param x the x coordinate of the alignment point
      * @param y the y coordinate of the alignment point
@@ -518,12 +536,15 @@ public class Canvas {
      * @since 1.0
      */
     public void fillRectangle(int x, int y, int width, int height, Alignment alignment) {
-        this.fillRectangle(new Location(x, y), new Size(width, height), alignment);
+        if (width > 0 && height > 0) {
+            this.fillRectangle(new Location(x, y), new Size(width, height), alignment);
+        }
     }
 
     /**
      * Draws and fills a rectangle using the current color.
      * The rectangle is aligned relative to <code>anchor</code>.
+     * Has no effect if size is empty.
      *
      * @param anchor the alignment point
      * @param size the size of the rectangle
@@ -547,7 +568,9 @@ public class Canvas {
             throw new NullPointerException("alignment");
         }
 
-        this.imp.fillRectangle(alignment.align(anchor, size), size);
+        if (!size.isEmpty()) {
+            this.imp.fillRectangle(alignment.align(anchor, size), size);
+        }
     }
 
     /**
@@ -632,8 +655,8 @@ public class Canvas {
      * {@link ch.jeda.ui.Color#NONE} when the pixel is outside the
      * canvas.
      *
-     * @param x x coordinate of the pixel
-     * @param y y coordinate of the pixel
+     * @param x the x coordinate of the pixel
+     * @param y the y coordinate of the pixel
      * @return the color of the pixel at (x, y)
      *
      * @see #setPixelAt(int, int, ch.jeda.ui.Color)
@@ -643,6 +666,17 @@ public class Canvas {
         return this.getPixelAt(new Location(x, y));
     }
 
+    /**
+     * Returns the color of the pixel at the specified location. Returns
+     * {@link ch.jeda.ui.Color#NONE} when the pixel is outside the
+     * canvas.
+     *
+     * @param location the location of the pixel
+     * @return the color of the pixel at the specified location
+     *
+     * @see #setPixelAt(ch.jeda.Location, ch.jeda.ui.Color)
+     * @since 1.0
+     */
     public Color getPixelAt(Location location) {
         if (location == null) {
             throw new NullPointerException("location");
@@ -800,8 +834,8 @@ public class Canvas {
      * Sets the color of the pixel at the coordinates (x, y). Has no effect
      * when the pixel is outside the canvas.
      *
-     * @param x x coordinate of the pixel
-     * @param y y coordinate of the pixel
+     * @param x the x coordinate of the pixel
+     * @param y the y coordinate of the pixel
      * @param color new color of the pixel
      *
      * @see #getPixelAt(int, int)
@@ -811,10 +845,21 @@ public class Canvas {
         this.imp.setPixelAt(new Location(x, y), color);
     }
 
+    /**
+     * Sets the color of the pixel at the specified location. Has no effect
+     * when the pixel is outside the canvas.
+     * 
+     * @param location the location of the pixel
+     * @param color the new color of the pixel
+     * 
+     * @see #getPixelAt(ch.jeda.Location)
+     * @since 1.0
+     */
     public void setPixelAt(Location location, Color color) {
         if (location == null) {
             throw new NullPointerException("location");
         }
+
         if (color == null) {
             throw new NullPointerException("color");
         }
