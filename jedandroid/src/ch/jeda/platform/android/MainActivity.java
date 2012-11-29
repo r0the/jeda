@@ -117,7 +117,9 @@ public class MainActivity extends Activity implements Platform {
     }
 
     private void onSelectedFromList(int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
+        // data or this.selectionRequest might be null (Occured during testing,
+        // not sure why.
+        if (resultCode == RESULT_OK && this.selectionRequest != null && data != null) {
             this.selectionRequest.setSelectedIndex(data.getIntExtra(SelectionActivity.SELECTED_INDEX, -1));
         }
         else {
