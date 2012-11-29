@@ -39,6 +39,7 @@ public class ViewWindow extends JFrame implements JedaWindow {
         this.setIgnoreRepaint(true);
         this.setResizable(false);
         this.getContentPane().add(this.canvas);
+        this.setUndecorated(fullscreen);
         this.pack();
         this.canvas.requestFocus();
         GUI.center(this);
