@@ -21,7 +21,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -39,10 +41,28 @@ public class LogActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.textView = new TextView(this);
-        setContentView(R.layout.log);
 
-        this.button = (Button) this.findViewById(R.id.Button);
+        this.textView = new TextView(this);
+        this.textView.setLayoutParams(createFillLayout());
+
+        this.scrollView = new ScrollView(this);
+        this.scrollView.setLayoutParams(createRelativeLayout(
+                RelativeLayout.LayoutParams.FILL_PARENT,
+                RelativeLayout.ALIGN_PARENT_TOP));
+        this.scrollView.addView(this.textView);
+
+        this.button = new Button(this);
+        this.button.setLayoutParams(createRelativeLayout(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.ALIGN_PARENT_BOTTOM));
+
+        RelativeLayout layout = new RelativeLayout(this);
+        layout.setLayoutParams(createFillLayout());
+        layout.addView(this.scrollView);
+        layout.addView(this.button);
+
+        setContentView(layout);
+
         this.button.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -51,8 +71,6 @@ public class LogActivity extends Activity {
             }
         });
 
-        this.scrollView = (ScrollView) this.findViewById(R.id.ScrollView);
-        this.textView = (TextView) this.findViewById(R.id.TextView);
         Intent intent = this.getIntent();
         if (intent != null) {
             this.setTitle(intent.getStringExtra(PARAM_TITLE));
@@ -74,5 +92,17 @@ public class LogActivity extends Activity {
         outState.putCharSequence(LOG_TEXT_STATE, this.textView.getText());
         outState.putInt(LOG_POS_STATE, this.scrollView.getScrollY());
         super.onSaveInstanceState(outState);
+    }
+
+    private static ViewGroup.LayoutParams createFillLayout() {
+        return new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+    }
+
+    private static RelativeLayout.LayoutParams createRelativeLayout(int verticalFill, int parentAlign) {
+        RelativeLayout.LayoutParams result = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.FILL_PARENT, verticalFill);
+        result.addRule(parentAlign);
+        return result;
     }
 }
