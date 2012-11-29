@@ -89,6 +89,16 @@ public final class Location implements Serializable {
     }
 
     /**
+     * Checks if this location is the origin.
+     * 
+     * @return <code>true</code> if this location is the origin, 
+     *         <code>false</code> otherwise.
+     */
+    public boolean isOrigin() {
+        return this.x == 0 && this.y == 0;
+    }
+
+    /**
      * Returns the Manhattan distance from this location to the
      * <code>other</code> location.
      * 
