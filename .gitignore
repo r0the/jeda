@@ -26,7 +26,4 @@ jedandroid/libs/
 jedandroid/gen/
 jedandroid/nbandroid/
 
-# template-android generated files
-
-template-android/bin/
-template-android/gen/
+jedandroid/local.properties
