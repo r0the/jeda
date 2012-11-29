@@ -50,10 +50,6 @@ class ViewManager implements SurfaceHolder.Callback {
             this.surfaceSize = new Size(width, height);
             this.surfaceLock.notify();
         }
-
-//        if (this.activeView != null) {
-//            this.activeView.setSize(new Size(width, height));
-//        }
     }
 
     @Override
@@ -103,8 +99,10 @@ class ViewManager implements SurfaceHolder.Callback {
     }
 
     void setBitmap(Bitmap bitmap) {
-        Canvas canvas = this.surfaceHolder.lockCanvas();
-        canvas.drawBitmap(bitmap, 0f, 0f, null);
-        this.surfaceHolder.unlockCanvasAndPost(canvas);
+        if (this.surfaceAvailable) {
+            Canvas canvas = this.surfaceHolder.lockCanvas();
+            canvas.drawBitmap(bitmap, 0f, 0f, null);
+            this.surfaceHolder.unlockCanvasAndPost(canvas);
+        }
     }
 }
