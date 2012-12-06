@@ -17,7 +17,6 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Location;
-import ch.jeda.Log;
 import ch.jeda.Size;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.ui.Color;
@@ -30,8 +29,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
-import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import javax.imageio.ImageIO;
 
 class JavaImageImp implements ch.jeda.platform.ImageImp {
@@ -51,7 +50,8 @@ class JavaImageImp implements ch.jeda.platform.ImageImp {
         assert newSize != null;
 
         BufferedImage result = createImage(newSize);
-        result.createGraphics().drawImage(this.bufferedImage, 0, 0, newSize.width, newSize.height, null);
+        result.createGraphics().drawImage(
+                this.bufferedImage, 0, 0, newSize.width, newSize.height, null);
         return new JavaImageImp(result);
     }
 
@@ -81,23 +81,23 @@ class JavaImageImp implements ch.jeda.platform.ImageImp {
     }
 
     @Override
-    public boolean save(String filePath) {
-        boolean result = false;
-        try {
-            result = ImageIO.write(this.bufferedImage, "png", new File(filePath));
-            if (!result) {
-                Log.warning("jeda.gui.image.format.error", filePath, "png");
-            }
-        }
-        catch (IOException ex) {
-            Log.warning("jeda.fs.image.write.error", filePath);
-        }
-
-        return result;
+    public boolean write(OutputStream out, Encoding encoding) throws IOException {
+        return ImageIO.write(this.bufferedImage, convertEncoding(encoding), out);
     }
 
     BufferedImage getBufferedImage() {
         return this.bufferedImage;
+    }
+
+    private static String convertEncoding(Encoding encoding) {
+        switch (encoding) {
+            case JPEG:
+                return "jpg";
+            case PNG:
+                return "png";
+            default:
+                return null;
+        }
     }
 
     private static BufferedImage createImage(Size size) {

@@ -19,8 +19,15 @@ package ch.jeda.platform;
 import ch.jeda.Location;
 import ch.jeda.Size;
 import ch.jeda.ui.Color;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public interface ImageImp {
+
+    enum Encoding {
+
+        JPEG, PNG
+    }
 
     ImageImp createScaledImage(Size newSize);
 
@@ -30,5 +37,5 @@ public interface ImageImp {
 
     ImageImp replacePixels(Color oldColor, Color newColor);
 
-    boolean save(String filePath);
+    boolean write(OutputStream out, Encoding encoding) throws IOException;
 }

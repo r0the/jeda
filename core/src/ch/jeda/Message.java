@@ -24,6 +24,10 @@ public class Message {
     public static final String CHOOSE_PROGRAM_ERROR = "jeda.error.init.programs";
     public static final String CHOOSE_PROGRAM_TITLE = "jeda.gui.programchooser.title";
     public static final String ENGINE_THREAD_NAME = "jeda.engine.thread.name";
+    public static final String FILE_NOT_FOUND_ERROR = "jeda.file.not.found.error";
+    public static final String IMAGE_FORMAT_ERROR = "jeda.image.format.error";
+    public static final String IMAGE_READ_ERROR = "jeda.image.read.error";
+    public static final String IMAGE_WRITE_ERROR = "jeda.image.write.error";
     public static final String INPUT_REQUEST_TITLE = "jeda.gui.inputrequest.title";
     public static final String LOAD_PROPERTIES_ERROR = "jeda.error.init.properties";
     public static final String LOG_BUTTON = "jeda.gui.log.button";
@@ -35,7 +39,6 @@ public class Message {
     public static final String CLASS_NOT_FOUND_ERROR = "jeda.classnotfound.error";
     public static final String GUI_CLOSE_BUTTON = "jeda.gui.close.button";
     public static final String LIST_RESOURCES_ERROR = "jeda.listclasses.error";
-    public static final String IMAGE_READ_ERROR = "jeda.gui.image.read.error";
     public static final String SUBSYSTEM_CREATE_ERROR = "jeda.subsystem.create.error";
     public static final String SUBSYSTEM_INIT_ERROR = "jeda.subsystem.init.error";
     public static final String SUBSYSTEM_THREAD_NAME = "jeda.subsystem.shutdown.threadname";
@@ -47,6 +50,10 @@ public class Message {
         put(CHOOSE_PROGRAM_ERROR, "Fehler beim Laden der Program-Klassen.");
         put(CHOOSE_PROGRAM_TITLE, "Jeda Programmauswahl");
         put(ENGINE_THREAD_NAME, "Jeda Engine");
+        put(FILE_NOT_FOUND_ERROR, "Datei {0} nicht gefunden.");
+        put(IMAGE_FORMAT_ERROR, "Bilddatei '{0}' kann nicht im unbekannten Bildformat '{1}' gespeichert werden.");
+        put(IMAGE_READ_ERROR, "Fehler beim Lesen der Bilddatei '{0}': {1}");
+        put(IMAGE_WRITE_ERROR, "Fehler beim Schreiben der Bilddatei '{0}': {1}");
         put(INPUT_REQUEST_TITLE, "Jeda Eingabe");
         put(LOAD_PROPERTIES_ERROR, "Fehler beim Laden der Property-Dateien.");
         put(LOG_BUTTON, "Schliessen");
@@ -59,9 +66,6 @@ public class Message {
         put("jeda.file.resource.error", "'{0}' ist kein gültiger Resourcenpfad.");
         put("jeda.file.file.error", "'{0}' ist kein gültiger Dateipfad.");
         put(CLASS_NOT_FOUND_ERROR, "Kann Klasse '{0}' nicht finden.");
-        put("jeda.gui.image.format.error", "Bilddatei '{0}' kann nicht im unbekannten Bildformat '{1}' gespeichert werden.");
-        put("jeda.gui.image.read.error", "Fehler beim Lesen der Bilddatei '{0}'.");
-        put("jeda.gui.image.write.error", "Fehler beim Schreiben der Bilddatei '{0}'.");
         put(GUI_CLOSE_BUTTON, "Schliessen");
         put("jeda.gui.programchooser.run", "Programm Starten");
         put("jeda.gui.programchooser.cancel", "Beenden");
@@ -75,9 +79,6 @@ public class Message {
         put("jeda.net.server.port.error", "Der Server kann nicht gestartet werden, der Port {0} ist schon in Gebrauch.");
         put("jeda.net.server.started", "Server an Port {0} gestartet.");
         put("jeda.net.server.stopped", "Server an Port {0} gestopps.");
-        put("jeda.programrunner.create", "Jeda-Program '{0}' wird erstellt.");
-        put("jeda.programrunner.start", "Jeda-Programm '{0}' wird gestartet.");
-        put("jeda.programrunner.start.error", "Kann Programm '{0}' nicht zu diesem Zeitpunkt starten.");
         put("jeda.sound.open.format.error", "Das Format der Audiodatei '{0}' wird nicht unterstützt.");
         put("jeda.sound.open.read.error", "Fehler beim Lesen der Audiodatei '{0}'.");
         put("jeda.sound.playback.format.error", "Das Format '{0}' wird nicht unterstützt.");

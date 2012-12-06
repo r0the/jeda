@@ -49,14 +49,14 @@ class FileSystem {
             ImageImp result = null;
             URL url = this.urlForFile(filePath);
             if (url == null) {
-                Log.warning("Datei {0} nicht gefunden.", filePath);
+                Log.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
             }
 
             try {
                 result = this.platform.loadImageImp(url);
             }
             catch (Exception ex) {
-                Log.warning(Message.IMAGE_READ_ERROR, filePath);
+                Log.warning(Message.IMAGE_READ_ERROR, filePath, ex);
             }
 
             if (result == null) {

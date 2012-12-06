@@ -17,10 +17,16 @@
 package ch.jeda.ui;
 
 import ch.jeda.Engine;
+import ch.jeda.FileProxy;
 import ch.jeda.Location;
 import ch.jeda.Log;
+import ch.jeda.Message;
 import ch.jeda.Size;
 import ch.jeda.platform.ImageImp;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class represents an image. An image can be loaded from an image file or
@@ -31,6 +37,7 @@ public final class Image {
     public static final String JEDA_LOGO_16x16 = ":ch/jeda/resources/logo-16x16.png";
     public static final String JEDA_LOGO_48x48 = ":ch/jeda/resources/logo-48x48.png";
     public static final String JEDA_LOGO_64x64 = ":ch/jeda/resources/logo-64x64.png";
+    private static final Map<String, ImageImp.Encoding> FORMAT_MAP = initFormatMap();
     private final ImageImp imp;
 
     /**
@@ -186,22 +193,53 @@ public final class Image {
 
     /**
      * Saves the contents of this image to a file. Saving to a resource file
-     * (i.e. a file paht starting with ':') is not allowed. The file path
-     * must end with ".png".
+     * (i.e. a file path starting with ':') is not allowed.
+     * The file path must end with a valid image file extension.
+     * Currently, the extension ".jpeg", ".jpg", and ".png" are supported.
      * 
      * @param filePath file to save to
      * @return <code>true</code> if file has been saved sucessfully
+     * @throws NullPointerException if <code>filePath</code> is <code>null</code>
      */
     public boolean save(String filePath) {
-        if (!filePath.endsWith(".png")) {
-            Log.warning("jeda.gui.image.format.error", filePath, "png");
+        FileProxy file = new FileProxy(filePath);
+        String extension = file.getExtension().toLowerCase();
+        if (!FORMAT_MAP.containsKey(extension)) {
+            Log.warning(Message.IMAGE_FORMAT_ERROR, filePath, extension);
             return false;
         }
 
-        return this.imp.save(filePath);
+        file.makeDirectories();
+        OutputStream out = null;
+        try {
+            out = file.openForWrite();
+            return this.imp.write(out, FORMAT_MAP.get(extension));
+        }
+        catch (IOException ex) {
+            Log.warning(Message.IMAGE_WRITE_ERROR, filePath, ex.getMessage());
+            return false;
+        }
+        finally {
+            if (out != null) {
+                try {
+                    out.close();
+                }
+                catch (IOException ex) {
+                    // ignore
+                }
+            }
+        }
     }
 
     ImageImp getImp() {
         return this.imp;
+    }
+
+    private static Map<String, ImageImp.Encoding> initFormatMap() {
+        Map<String, ImageImp.Encoding> result = new HashMap();
+        result.put(".jpeg", ImageImp.Encoding.JPEG);
+        result.put(".jpg", ImageImp.Encoding.JPEG);
+        result.put(".png", ImageImp.Encoding.PNG);
+        return result;
     }
 }

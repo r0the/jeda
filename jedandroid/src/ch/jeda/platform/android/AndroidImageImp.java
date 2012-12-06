@@ -18,11 +18,11 @@ package ch.jeda.platform.android;
 
 import android.graphics.Bitmap;
 import ch.jeda.Location;
-import ch.jeda.Log;
 import ch.jeda.Size;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.ui.Color;
-import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class AndroidImageImp implements ImageImp {
 
@@ -62,23 +62,22 @@ public class AndroidImageImp implements ImageImp {
     }
 
     @Override
-    public boolean save(String filePath) {
-        boolean result = false;
-        try {
-            FileOutputStream out = new FileOutputStream(filePath);
-            result = this.bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-            if (!result) {
-                Log.warning("jeda.gui.image.format.error", filePath, "png");
-            }
-        }
-        catch (Exception ex) {
-            Log.warning("jeda.fs.image.write.error", filePath);
-        }
-
-        return result;
+    public boolean write(OutputStream out, Encoding encoding) throws IOException {
+        return this.bitmap.compress(convertEncoding(encoding), 100, out);
     }
 
     Bitmap getBitmap() {
         return this.bitmap;
+    }
+
+    private static Bitmap.CompressFormat convertEncoding(Encoding encoding) {
+        switch (encoding) {
+            case JPEG:
+                return Bitmap.CompressFormat.JPEG;
+            case PNG:
+                return Bitmap.CompressFormat.PNG;
+            default:
+                return null;
+        }
     }
 }
