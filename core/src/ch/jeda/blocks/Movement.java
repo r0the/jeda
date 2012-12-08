@@ -16,6 +16,8 @@
  */
 package ch.jeda.blocks;
 
+import ch.jeda.Direction;
+
 class Movement {
 
     enum State {

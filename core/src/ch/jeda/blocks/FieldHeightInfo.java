@@ -16,6 +16,7 @@
  */
 package ch.jeda.blocks;
 
+import ch.jeda.Direction;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

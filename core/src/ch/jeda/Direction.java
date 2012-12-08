@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.blocks;
+package ch.jeda;
 
-import ch.jeda.Location;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

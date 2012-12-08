@@ -16,6 +16,8 @@
  */
 package ch.jeda.blocks;
 
+import ch.jeda.Direction;
+
 class EntityMoveEvent extends MapEvent {
 
     private final Direction direction;

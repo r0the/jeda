@@ -16,6 +16,7 @@
  */
 package ch.jeda.blocks;
 
+import ch.jeda.Direction;
 import ch.jeda.Location;
 import java.util.ArrayList;
 import java.util.Collections;

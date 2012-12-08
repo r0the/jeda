@@ -16,6 +16,8 @@
  */
 package ch.jeda.blocks;
 
+import ch.jeda.Direction;
+
 interface EntityListener {
 
     void entityChanged(Entity entity);

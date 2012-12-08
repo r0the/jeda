@@ -16,6 +16,7 @@
  */
 package ch.jeda.blocks;
 
+import ch.jeda.Direction;
 import ch.jeda.Engine;
 import ch.jeda.Properties;
 import ch.jeda.ui.Image;
