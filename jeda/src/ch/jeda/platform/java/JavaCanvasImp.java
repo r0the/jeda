@@ -197,7 +197,7 @@ class JavaCanvasImp implements CanvasImp {
         assert location != null;
         assert this.size.contains(location);
 
-        return new Color(this.buffer.getRGB(location.x, location.y));
+        return Color.from(this.buffer.getRGB(location.x, location.y));
     }
 
     @Override

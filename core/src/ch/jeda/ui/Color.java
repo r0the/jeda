@@ -130,12 +130,56 @@ public final class Color implements Serializable {
     private final int value;
 
     /**
-     * Creates a new color from the specified value.
+     * Returns a color from the specified value.
      * 
      * @since 1.0
      */
-    public Color(int value) {
-        this.value = value;
+    public static Color from(int value) {
+        return new Color(value);
+    }
+
+    /**
+     * Returns a color with the specified red, green, and blue components.
+     *
+     * @param red color's red component
+     * @param green color's green component
+     * @param blue color's blue component
+     * 
+     * @since 1.0
+     */
+    public static Color fromRGB(int red, int green, int blue) {
+        return fromRGBA(red, green, blue, 255);
+    }
+
+    /**
+     * Returns a color with the specified red, green, and blue componentns,
+     * and the specified opacity.
+     *
+     * @param red color's red component
+     * @param green color's green component
+     * @param blue color's blue component
+     * @param alpha color's opacity
+     * 
+     * @since 1.0
+     */
+    public static Color fromRGBA(int red, int green, int blue, int alpha) {
+        if (red < 0 || 255 < red) {
+            throw new IllegalArgumentException("red");
+        }
+
+        if (green < 0 || 255 < green) {
+            throw new IllegalArgumentException("green");
+        }
+
+        if (blue < 0 || 255 < blue) {
+            throw new IllegalArgumentException("blue");
+        }
+
+        if (alpha < 0 || 255 < alpha) {
+            throw new IllegalArgumentException("alpha");
+        }
+
+        return from((alpha << 24) | (red << 16) | (green << 8) | blue);
     }
 
     /**
@@ -144,8 +188,6 @@ public final class Color implements Serializable {
      * @param red color's red component
      * @param green color's green component
      * @param blue color's blue component
-     * 
-     * @since 1.0
      */
     public Color(int red, int green, int blue) {
         this(red, green, blue, 255);
@@ -159,8 +201,6 @@ public final class Color implements Serializable {
      * @param green color's green component
      * @param blue color's blue component
      * @param alpha color's opacity
-     * 
-     * @since 1.0
      */
     public Color(int red, int green, int blue, int alpha) {
         if (red < 0 || 255 < red) {
@@ -248,5 +288,9 @@ public final class Color implements Serializable {
         }
         result.append(")");
         return result.toString();
+    }
+
+    private Color(int value) {
+        this.value = value;
     }
 }
