@@ -85,7 +85,7 @@ public final class Image {
      * @see #createScaledImage(Size)
      */
     public Image createScaledImage(int width, int height) {
-        return this.createScaledImage(new Size(width, height));
+        return this.createScaledImage(Size.from(width, height));
     }
 
     /**
@@ -117,7 +117,7 @@ public final class Image {
      *         <code>height</code> are smaller than 1
      */
     public Image createSubImage(int x, int y, int width, int height) {
-        return this.createSubImage(new Location(x, y), new Size(width, height));
+        return this.createSubImage(Location.from(x, y), Size.from(width, height));
     }
 
     /**

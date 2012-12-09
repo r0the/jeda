@@ -178,10 +178,10 @@ class JavaCanvasImp implements CanvasImp {
             pos = stack.pop();
             if (this.buffer.getRGB(pos.x, pos.y) == oldCol) {
                 this.buffer.setRGB(pos.x, pos.y, newCol);
-                stack.push(new Location(pos.x, pos.y + 1));
-                stack.push(new Location(pos.x, pos.y - 1));
-                stack.push(new Location(pos.x + 1, pos.y));
-                stack.push(new Location(pos.x - 1, pos.y));
+                stack.push(Location.from(pos.x, pos.y + 1));
+                stack.push(Location.from(pos.x, pos.y - 1));
+                stack.push(Location.from(pos.x + 1, pos.y));
+                stack.push(Location.from(pos.x - 1, pos.y));
             }
         }
         this.modified();
@@ -272,18 +272,18 @@ class JavaCanvasImp implements CanvasImp {
         assert text != null;
 
         Rectangle2D bounds = textLayout(text).getBounds();
-        return new Size((int) bounds.getWidth(), (int) bounds.getHeight());
+        return Size.from((int) bounds.getWidth(), (int) bounds.getHeight());
     }
 
     private TextLayout textLayout(String text) {
         FontRenderContext frc = this.graphics.getFontRenderContext();
         java.awt.Font font = this.graphics.getFont();
         if (!this.textLayoutCache.containsKey(frc)) {
-            this.textLayoutCache.put(frc, new HashMap<java.awt.Font, Map<String, TextLayout>>());
+            this.textLayoutCache.put(frc, new HashMap());
         }
         Map<java.awt.Font, Map<String, TextLayout>> cacheByFont = this.textLayoutCache.get(frc);
         if (!cacheByFont.containsKey(font)) {
-            cacheByFont.put(font, new HashMap<String, TextLayout>());
+            cacheByFont.put(font, new HashMap());
         }
         Map<String, TextLayout> byText = cacheByFont.get(font);
         if (!byText.containsKey(text)) {
@@ -311,7 +311,7 @@ class JavaCanvasImp implements CanvasImp {
             this.graphics.setComposite(oldComposite);
             this.graphics.setFont(oldFont);
         }
-        this.size = new Size(buffer.getWidth(), buffer.getHeight());
+        this.size = Size.from(buffer.getWidth(), buffer.getHeight());
     }
 
     private static Polygon createPolygon(Iterable<Location> edges) {

@@ -72,7 +72,7 @@ public class Transformation implements Serializable {
 //                this.scaleY, -this.skewY, this.translateY);
 //    }
     public Vector transform(Vector v) {
-        return new Vector(
+        return Vector.from(
                 this.scaleX * v.x + this.skewX * v.y + this.translateX,
                 this.skewY * v.x + this.scaleY * v.y + this.translateY);
     }

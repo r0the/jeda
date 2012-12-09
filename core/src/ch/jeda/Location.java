@@ -26,8 +26,8 @@ import java.io.Serializable;
 public final class Location implements Serializable {
 
     /**
-     * <code>Location</code> representing the origin. Both coordinates of this
-     * location are zero.
+     * <code>Location</code> representing the origin of the coordinate system.
+     * Both coordinates of this location are zero.
      */
     public static final Location ORIGIN = new Location(0, 0);
     /**
@@ -47,9 +47,13 @@ public final class Location implements Serializable {
      * @param x the x coordinate of this location
      * @param y the y coordinate of this location
      */
-    public Location(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public static Location from(int x, int y) {
+        if (x == 0 && y == 0) {
+            return ORIGIN;
+        }
+        else {
+            return new Location(x, y);
+        }
     }
 
     public Location ensureRange(Location min, Location max) {
@@ -61,8 +65,8 @@ public final class Location implements Serializable {
             throw new NullPointerException("max");
         }
 
-        return new Location(Math.max(min.x, Math.min(this.x, max.x)),
-                            Math.max(min.y, Math.min(this.y, max.y)));
+        return from(Math.max(min.x, Math.min(this.x, max.x)),
+                    Math.max(min.y, Math.min(this.y, max.y)));
     }
 
     @Override
@@ -85,7 +89,7 @@ public final class Location implements Serializable {
     }
 
     public Location inverse() {
-        return new Location(-this.x, -this.y);
+        return from(-this.x, -this.y);
     }
 
     /**
@@ -119,17 +123,17 @@ public final class Location implements Serializable {
             throw new NullPointerException("size");
         }
 
-        return new Location(this.x + size.width, this.y + size.width);
+        return from(this.x + size.width, this.y + size.width);
     }
 
     public Location relativeTo(Location other) {
-        return new Location(this.x - other.x, this.y - other.y);
+        return from(this.x - other.x, this.y - other.y);
     }
 
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append("Location(");
+        result.append('(');
         result.append(this.x);
         result.append(", ");
         result.append(this.y);
@@ -143,6 +147,11 @@ public final class Location implements Serializable {
      * @return <code>Vector</code> representing this location
      */
     public Vector toVector() {
-        return new Vector(this.x, this.y);
+        return Vector.from(this.x, this.y);
+    }
+
+    private Location(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }

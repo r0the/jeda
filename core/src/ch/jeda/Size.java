@@ -24,7 +24,7 @@ public class Size implements Serializable {
      * An empty <code>Size</code>. Both width and height of this objects are
      * 0.
      */
-    public static final Size EMPTY = new Size();
+    public static final Size EMPTY = new Size(0, 0);
     /**
      * The width of this size.
      */
@@ -37,6 +37,25 @@ public class Size implements Serializable {
 
     public static Size max(Size a, Size b) {
         return new Size(Math.max(a.width, b.width), Math.max(a.height, b.height));
+    }
+
+    /**
+     * Creates a new Size object.
+     *
+     * @param width the width
+     * @param height the height
+     * @throws IllegalArgumentException if width or height are smaller than 0
+     */
+    public static Size from(int width, int height) {
+        if (width < 0) {
+            throw new IllegalArgumentException("width");
+        }
+
+        if (height < 0) {
+            throw new IllegalArgumentException("height");
+        }
+
+        return new Size(width, height);
     }
 
     /**
@@ -58,7 +77,7 @@ public class Size implements Serializable {
             int height = Integer.parseInt(text.substring(pos + 1));
 
             if (width > 0 && height > 0) {
-                return new Size(width, height);
+                return from(width, height);
             }
             else {
                 return null;
@@ -67,30 +86,6 @@ public class Size implements Serializable {
         catch (NumberFormatException ex) {
             return null;
         }
-    }
-
-    /**
-     * Creates a new Size object.
-     *
-     * @param width the width
-     * @param height the height
-     * @throws IllegalArgumentException if width or height are smaller than 0
-     */
-    public Size(int width, int height) {
-        if (width < 0) {
-            throw new IllegalArgumentException("width");
-        }
-
-        if (height < 0) {
-            throw new IllegalArgumentException("height");
-        }
-
-        this.width = width;
-        this.height = height;
-    }
-
-    private Size() {
-        this(0, 0);
     }
 
     public int area() {
@@ -137,5 +132,10 @@ public class Size implements Serializable {
         result.append('x');
         result.append(this.height);
         return result.toString();
+    }
+
+    private Size(int width, int height) {
+        this.width = width;
+        this.height = height;
     }
 }

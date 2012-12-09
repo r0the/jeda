@@ -31,7 +31,7 @@ public class AndroidImageImp implements ImageImp {
 
     public AndroidImageImp(Bitmap bitmap) {
         this.bitmap = bitmap;
-        this.size = new Size(this.bitmap.getWidth(), this.bitmap.getHeight());
+        this.size = Size.from(this.bitmap.getWidth(), this.bitmap.getHeight());
     }
 
     @Override

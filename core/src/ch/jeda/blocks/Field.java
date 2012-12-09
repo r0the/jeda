@@ -39,7 +39,7 @@ public class Field {
         this.entityMap = new TypeMap<Entity>(Entity.class);
         this.heightInfo = new FieldHeightInfo(this);
         this.map = map;
-        this.position = new Location(x, y);
+        this.position = Location.from(x, y);
         this.renderEntities = new ArrayList<Entity>();
         this.isDirty = false;
     }

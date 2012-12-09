@@ -47,7 +47,7 @@ class ViewManager implements SurfaceHolder.Callback {
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         synchronized (this.surfaceLock) {
             this.surfaceAvailable = true;
-            this.surfaceSize = new Size(width, height);
+            this.surfaceSize = Size.from(width, height);
             this.surfaceLock.notify();
         }
     }

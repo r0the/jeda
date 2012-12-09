@@ -66,7 +66,7 @@ public class Canvas {
      * @since 1.0
      */
     public Canvas(int width, int height) {
-        this(new Size(width, height));
+        this(Size.from(width, height));
     }
 
     /**
@@ -125,7 +125,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawCircle(int x, int y, int radius) {
-        this.drawCircle(new Location(x, y), radius);
+        this.drawCircle(Location.from(x, y), radius);
     }
 
     /**
@@ -161,7 +161,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawImage(int x, int y, Image image) {
-        this.drawImage(new Location(x, y), image, Alignment.TOP_LEFT);
+        this.drawImage(Location.from(x, y), image, Alignment.TOP_LEFT);
     }
 
     /**
@@ -193,7 +193,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawImage(int x, int y, Image image, Alignment alignment) {
-        this.drawImage(new Location(x, y), image, alignment);
+        this.drawImage(Location.from(x, y), image, alignment);
     }
 
     /**
@@ -235,7 +235,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawLine(int x1, int y1, int x2, int y2) {
-        this.drawLine(new Location(x1, y1), new Location(x2, y2));
+        this.drawLine(Location.from(x1, y1), Location.from(x2, y2));
     }
 
     /**
@@ -276,7 +276,7 @@ public class Canvas {
      */
     public void drawRectangle(int x, int y, int width, int height) {
         if (width > 0 && height > 0) {
-            this.drawRectangle(new Location(x, y), new Size(width, height), Alignment.TOP_LEFT);
+            this.drawRectangle(Location.from(x, y), Size.from(width, height), Alignment.TOP_LEFT);
         }
     }
 
@@ -313,7 +313,7 @@ public class Canvas {
      */
     public void drawRectangle(int x, int y, int width, int height, Alignment alignment) {
         if (width > 0 && height > 0) {
-            this.drawRectangle(new Location(x, y), new Size(width, height), alignment);
+            this.drawRectangle(Location.from(x, y), Size.from(width, height), alignment);
         }
     }
 
@@ -361,7 +361,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawString(int x, int y, String text) {
-        this.drawString(new Location(x, y), text, Alignment.TOP_LEFT);
+        this.drawString(Location.from(x, y), text, Alignment.TOP_LEFT);
     }
 
     /**
@@ -393,7 +393,7 @@ public class Canvas {
      * @since 1.0
      */
     public final void drawString(int x, int y, String text, Alignment alignment) {
-        this.drawString(new Location(x, y), text, alignment);
+        this.drawString(Location.from(x, y), text, alignment);
     }
 
     /**
@@ -462,7 +462,7 @@ public class Canvas {
      * @since 1.0
      */
     public void fillCircle(int x, int y, int radius) {
-        this.fillCircle(new Location(x, y), radius);
+        this.fillCircle(Location.from(x, y), radius);
     }
 
     /**
@@ -500,7 +500,7 @@ public class Canvas {
      */
     public void fillRectangle(int x, int y, int width, int height) {
         if (width > 0 && height > 0) {
-            this.fillRectangle(new Location(x, y), new Size(width, height), Alignment.TOP_LEFT);
+            this.fillRectangle(Location.from(x, y), Size.from(width, height), Alignment.TOP_LEFT);
         }
     }
 
@@ -537,7 +537,7 @@ public class Canvas {
      */
     public void fillRectangle(int x, int y, int width, int height, Alignment alignment) {
         if (width > 0 && height > 0) {
-            this.fillRectangle(new Location(x, y), new Size(width, height), alignment);
+            this.fillRectangle(Location.from(x, y), Size.from(width, height), alignment);
         }
     }
 
@@ -591,7 +591,7 @@ public class Canvas {
     }
 
     public void floodFill(int x, int y, Color oldColor, Color newColor) {
-        this.imp.floodFill(new Location(x, y), oldColor, newColor);
+        this.imp.floodFill(Location.from(x, y), oldColor, newColor);
     }
 
     /**
@@ -663,7 +663,7 @@ public class Canvas {
      * @since 1.0
      */
     public Color getPixelAt(int x, int y) {
-        return this.getPixelAt(new Location(x, y));
+        return this.getPixelAt(Location.from(x, y));
     }
 
     /**
@@ -842,7 +842,7 @@ public class Canvas {
      * @since 1.0
      */
     public void setPixelAt(int x, int y, Color color) {
-        this.imp.setPixelAt(new Location(x, y), color);
+        this.imp.setPixelAt(Location.from(x, y), color);
     }
 
     /**
@@ -902,9 +902,9 @@ public class Canvas {
 
     private static Iterable<Location> createPoints(int x1, int y1, int x2, int y2, int x3, int y3) {
         List result = new ArrayList<Location>();
-        result.add(new Location(x1, y1));
-        result.add(new Location(x2, y2));
-        result.add(new Location(x3, y3));
+        result.add(Location.from(x1, y1));
+        result.add(Location.from(x2, y2));
+        result.add(Location.from(x3, y3));
         return result;
     }
 }

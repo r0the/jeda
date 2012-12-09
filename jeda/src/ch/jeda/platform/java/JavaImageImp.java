@@ -42,7 +42,7 @@ class JavaImageImp implements ch.jeda.platform.ImageImp {
         assert bufferedImage != null;
 
         this.bufferedImage = bufferedImage;
-        this.size = new Size(bufferedImage.getWidth(), bufferedImage.getHeight());
+        this.size = Size.from(bufferedImage.getWidth(), bufferedImage.getHeight());
     }
 
     @Override

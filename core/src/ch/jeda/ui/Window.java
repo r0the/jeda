@@ -84,7 +84,7 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public Window(int width, int height, Feature... features) {
-        this(new Size(width, height), features);
+        this(Size.from(width, height), features);
     }
 
     /**

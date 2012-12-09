@@ -201,7 +201,7 @@ public final class JavaEventsImp implements EventsImp {
     }
 
     private void updatePointerLocation(MouseEvent event) {
-        this.pointerLocation = new Location(event.getX(), event.getY());
+        this.pointerLocation = Location.from(event.getX(), event.getY());
     }
 
     private static Map<Integer, Key> initKeyMap() {

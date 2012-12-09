@@ -27,7 +27,7 @@ import ch.jeda.Location;
 public class Entity {
 
     public static final String INVISIBLE = "Invisible";
-    private static final Location INVALID = new Location(-1, -1);
+    private static final Location INVALID = Location.from(-1, -1);
     private static final double MESSAGE_TIMEOUT = 2d;
     private Field field;
     private String imageName;

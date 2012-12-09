@@ -133,6 +133,6 @@ public class AndroidEventsImp implements EventsImp {
     }
 
     private void updatePointerLocation(MotionEvent event) {
-        this.pointerLocation = new Location((int) event.getX(), (int) event.getY());
+        this.pointerLocation = Location.from((int) event.getX(), (int) event.getY());
     }
 }

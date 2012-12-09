@@ -95,7 +95,7 @@ public final class Alignment implements Serializable {
     }
 
     Location align(Location anchor, Size size) {
-        return new Location(
+        return Location.from(
                 this.horizontal.align(anchor.x, size.width),
                 this.vertical.align(anchor.y, size.height));
     }

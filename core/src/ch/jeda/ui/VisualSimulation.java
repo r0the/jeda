@@ -52,7 +52,7 @@ public abstract class VisualSimulation extends Simulation {
      * @since 1.0
      */
     public VisualSimulation(int width, int height) {
-        this(new Size(width, height));
+        this(Size.from(width, height));
     }
 
     /**

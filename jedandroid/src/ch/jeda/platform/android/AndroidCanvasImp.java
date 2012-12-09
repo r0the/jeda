@@ -234,7 +234,7 @@ class AndroidCanvasImp implements CanvasImp {
     public Size textSize(String text) {
         Rect bounds = new Rect();
         this.strokePaint.getTextBounds(text, 0, text.length() - 1, bounds);
-        return new Size(bounds.width(), bounds.height());
+        return Size.from(bounds.width(), bounds.height());
     }
 
     Canvas getCanvas() {

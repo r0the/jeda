@@ -31,6 +31,18 @@ public class Vector implements Serializable {
     public static Vector UNIT_Y = new Vector(0d, 1d);
 
     /**
+     * Creates a new Vector with the specified x and y coordinates.
+     *
+     * @param x x coordinate of the new vector
+     * @param y y coordinate of the new vector
+     *
+     * @since 1.0
+     */
+    public static Vector from(double x, double y) {
+        return new Vector(x, y);
+    }
+
+    /**
      * Creates a new Vector from polar coordinates.
      * 
      * @param length the length of the new vector
@@ -45,43 +57,8 @@ public class Vector implements Serializable {
                           direction);
     }
 
-    public static Vector fromCartesian(double x, double y) {
-        return new Vector(x, y);
-    }
-
-    /**
-     * Initializes a new Vector to a direction of 0 degrees (to the north) and
-     * a length of 0.
-     */
-    private Vector() {
-        this.x = 0d;
-        this.y = 0d;
-        this.direction = 0d;
-    }
-
-    /**
-     * Initializes a new Vector with the specified x and y coordinates.
-     *
-     * @param x x coordinate of the new vector
-     * @param y y coordinate of the new vector
-     *
-     * @since 1.0
-     */
-    public Vector(double x, double y) {
-        this.x = x;
-        this.y = y;
-        this.direction = Double.NaN;
-    }
-
-    private Vector(double x, double y, double direction) {
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
-    }
-
     public double enclosedAngle(Vector other) {
         return angle(Math.abs(other.x - this.x), Math.abs(other.y - this.y));
-//        return Math.toDegrees(Math.acos(this.dot(other) / (this.length() * other.length())));
     }
 
     /**
@@ -123,7 +100,7 @@ public class Vector implements Serializable {
      * @return inverse of this vector
      */
     public Vector inverse() {
-        return new Vector(-this.x, -this.y);
+        return from(-this.x, -this.y);
     }
 
     /**
@@ -136,11 +113,11 @@ public class Vector implements Serializable {
     }
 
     public Vector minus(Vector other) {
-        return new Vector(this.x + (-other.x), this.y + (-other.y));
+        return from(this.x + (-other.x), this.y + (-other.y));
     }
 
     public Vector normal() {
-        return new Vector(-this.y, this.x);
+        return from(-this.y, this.x);
     }
 
     public Vector normalized() {
@@ -150,7 +127,7 @@ public class Vector implements Serializable {
     }
 
     public Vector plus(Vector other) {
-        return new Vector(this.x + other.x, this.y + other.y);
+        return from(this.x + other.x, this.y + other.y);
     }
 
     /**
@@ -171,7 +148,7 @@ public class Vector implements Serializable {
     }
 
     public Vector times(double v) {
-        return new Vector(this.x * v, this.y * v);
+        return from(this.x * v, this.y * v);
     }
 
     public Vector withLength(double length) {
@@ -189,7 +166,7 @@ public class Vector implements Serializable {
     }
 
     public Location toLocation() {
-        return new Location((int) Math.round(this.x), (int) Math.round(this.y));
+        return Location.from((int) Math.round(this.x), (int) Math.round(this.y));
     }
 
     @Override
@@ -205,6 +182,28 @@ public class Vector implements Serializable {
         result.append(this.length());
         result.append(")");
         return result.toString();
+    }
+
+    /**
+     * Initializes a new Vector to a direction of 0 degrees (to the north) and
+     * a length of 0.
+     */
+    private Vector() {
+        this.x = 0d;
+        this.y = 0d;
+        this.direction = 0d;
+    }
+
+    private Vector(double x, double y) {
+        this.x = x;
+        this.y = y;
+        this.direction = Double.NaN;
+    }
+
+    private Vector(double x, double y, double direction) {
+        this.x = x;
+        this.y = y;
+        this.direction = direction;
     }
 
     private static double asHeading(double radians) {

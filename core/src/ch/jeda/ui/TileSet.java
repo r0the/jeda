@@ -50,8 +50,8 @@ public class TileSet {
 
         this.image = image;
         this.tileSize = tileSize;
-        this.size = new Size(this.image.getWidth() / this.tileSize.width,
-                             this.image.getHeight() / this.tileSize.height);
+        this.size = Size.from(this.image.getWidth() / this.tileSize.width,
+                              this.image.getHeight() / this.tileSize.height);
         this.tiles = new Image[this.size.width * this.size.height];
     }
 
@@ -60,7 +60,7 @@ public class TileSet {
     }
 
     public Image getTileAt(int x, int y) {
-        return this.getTileAt(new Location(x, y));
+        return this.getTileAt(Location.from(x, y));
     }
 
     public Image getTileAt(Location location) {
@@ -85,8 +85,8 @@ public class TileSet {
     }
 
     private Image createSubImage(Location location) {
-        location = new Location(location.x * this.tileSize.width,
-                                location.y * this.tileSize.height);
+        location = Location.from(location.x * this.tileSize.width,
+                                 location.y * this.tileSize.height);
         return this.image.createSubImage(location, this.tileSize);
     }
 

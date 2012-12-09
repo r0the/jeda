@@ -80,12 +80,12 @@ public class WindowManager {
     private ViewWindow createViewWindow(ViewInfo viewInfo) {
         Size size = viewInfo.getSize();
         if (size.isEmpty()) {
-            size = new Size(800, 600);
+            size = Size.from(800, 600);
         }
 
         if (viewInfo.hasFeature(Feature.Fullscreen) && this.fullscreenWindow == null) {
             DisplayMode displayMode = GUI.findDisplayMode(size);
-            size = new Size(displayMode.getWidth(), displayMode.getHeight());
+            size = Size.from(displayMode.getWidth(), displayMode.getHeight());
             this.fullscreenWindow = new ViewWindow(size, true);
             GUI.setFullscreenMode(this.fullscreenWindow, displayMode);
             return this.fullscreenWindow;
