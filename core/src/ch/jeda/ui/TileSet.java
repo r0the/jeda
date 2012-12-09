@@ -36,7 +36,7 @@ public class TileSet {
     }
 
     public TileSet(String filePath, Size tileSize) {
-        this(new Image(filePath), tileSize);
+        this(Image.load(filePath), tileSize);
     }
 
     public TileSet(Image image, Size tileSize) {

@@ -48,14 +48,6 @@ public class Canvas {
     private CanvasImp imp;
     private Transformation transformation;
 
-    Canvas() {
-        this.transformationStack = new Stack();
-        this.alpha = 255;
-        this.color = DEFAULT_FOREGROUND;
-        this.fontSize = DEFAULT_FONT_SIZE;
-        this.transformation = Transformation.IDENTITY;
-    }
-
     /**
      * Initializes this Canvas.
      *
@@ -65,8 +57,8 @@ public class Canvas {
      * 
      * @since 1.0
      */
-    public Canvas(int width, int height) {
-        this(Size.from(width, height));
+    public static Canvas create(int width, int height) {
+        return create(Size.from(width, height));
     }
 
     /**
@@ -78,7 +70,7 @@ public class Canvas {
      * 
      * @since 1.0
      */
-    public Canvas(Size size) {
+    public static Canvas create(Size size) {
         if (size == null) {
             throw new NullPointerException("size");
         }
@@ -87,13 +79,7 @@ public class Canvas {
             throw new IllegalArgumentException("size");
         }
 
-        this.transformationStack = new Stack();
-        this.alpha = 255;
-        this.color = DEFAULT_FOREGROUND;
-        this.fontSize = DEFAULT_FONT_SIZE;
-        this.transformation = Transformation.IDENTITY;
-
-        this.imp = Engine.getCurrentEngine().createCanvasImp(size);
+        return new Canvas(size);
     }
 
     /**
@@ -892,7 +878,25 @@ public class Canvas {
         return this.imp.textSize(text);
     }
 
-    protected void setImp(CanvasImp imp) {
+    Canvas() {
+        this.transformationStack = new Stack();
+        this.alpha = 255;
+        this.color = DEFAULT_FOREGROUND;
+        this.fontSize = DEFAULT_FONT_SIZE;
+        this.transformation = Transformation.IDENTITY;
+    }
+
+    private Canvas(Size size) {
+        this.transformationStack = new Stack();
+        this.alpha = 255;
+        this.color = DEFAULT_FOREGROUND;
+        this.fontSize = DEFAULT_FONT_SIZE;
+        this.transformation = Transformation.IDENTITY;
+
+        this.imp = Engine.getCurrentEngine().createCanvasImp(size);
+    }
+
+    void setImp(CanvasImp imp) {
         this.imp = imp;
         this.imp.setAlpha(this.alpha);
         this.imp.setColor(this.color);

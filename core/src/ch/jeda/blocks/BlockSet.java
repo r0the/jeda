@@ -135,6 +135,6 @@ final class BlockSet {
     }
 
     private Image loadImage(String name) {
-        return new Image(this.imageBasePath + "/" + name + IMAGE_EXTENSION);
+        return Image.load(this.imageBasePath + "/" + name + IMAGE_EXTENSION);
     }
 }

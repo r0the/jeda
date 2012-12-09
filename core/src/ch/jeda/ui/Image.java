@@ -48,12 +48,8 @@ public final class Image {
      *
      * @param filePath path to the image file
      */
-    public Image(String filePath) {
-        this(Engine.getCurrentEngine().loadImageImp(filePath));
-    }
-
-    Image(ImageImp imp) {
-        this.imp = imp;
+    public static Image load(String filePath) {
+        return new Image(Engine.getCurrentEngine().loadImageImp(filePath));
     }
 
     /**
@@ -229,6 +225,10 @@ public final class Image {
                 }
             }
         }
+    }
+
+    Image(ImageImp imp) {
+        this.imp = imp;
     }
 
     ImageImp getImp() {
