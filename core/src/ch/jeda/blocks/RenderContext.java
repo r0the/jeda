@@ -98,7 +98,7 @@ class RenderContext {
         List<String> lines = lineBreak(entity.getMessage(), 90);
         y = y - 75;
         for (String line : lines) {
-            this.canvas.drawString(x + 15, y, line, Alignment.BOTTOM_LEFT);
+            this.canvas.drawText(x + 15, y, line, Alignment.BOTTOM_LEFT);
             y = y + 20;
         }
     }

@@ -343,11 +343,87 @@ public class Canvas {
      * @param x the x coordinate of the top left corner
      * @param y the y coordinate of the top left corner
      * @param text the text to draw
+     * @deprecated user {@link #drawText(int, int, java.lang.String)} instead
+     */
+    @Deprecated
+    public void drawString(int x, int y, String text) {
+        this.drawString(Location.from(x, y), text, Alignment.TOP_LEFT);
+    }
+
+    /**
+     * Draws a text using the current color and font size.
+     * Text text's top left corner is at <code>topLeft</code>.
+     * Has no effect is <code>text</code> is <code>null</code>.
+     *
+     * @param topLeft the coordinates of the top left corner
+     * @param text the text to draw
+     * @throws NullPointerException if <code>topLeft</code> is <code>null</code>
+     * @deprecated user {@link #drawText(ch.jeda.Location, java.lang.String)} instead
+     */
+    @Deprecated
+    public void drawString(Location topLeft, String text) {
+        this.drawString(topLeft, text, Alignment.TOP_LEFT);
+    }
+
+    /**
+     * Draws a text using the current color and font size.
+     * The text is aligned relative to the coordinates (<code>x</code>, <code>y</code>).
+     * Has no effect is <code>text</code> is <code>null</code>.
+     *
+     * @param x the x coordinate of the alignment point
+     * @param y the y coordinate of the alignment point
+     * @param text the text to draw
+     * @param alignment specifies how to align the text relative to (<code>x</code>, <code>y</code>)
+     * @throws NullPointerException if <code>alignment</code> is <code>null</code>
+     * @deprecated user {@link #drawText(int, int, java.lang.String, ch.jeda.ui.Alignment)} instead
+     */
+    @Deprecated
+    public final void drawString(int x, int y, String text, Alignment alignment) {
+        this.drawString(Location.from(x, y), text, alignment);
+    }
+
+    /**
+     * Draws a text using the current color and font size.
+     * The text is aligned relative to <code>anchor</code>.
+     * Has no effect is <code>text</code> is <code>null</code>.
+     *
+     * @param anchor the alignment point
+     * @param text the text to draw
+     * @param alignment specifies how to align the text relative to <code>anchor</code>
+     * @throws NullPointerException if <code>anchor</code> is <code>null</code>
+     * @throws NullPointerException if <code>alignment</code> is <code>null</code>
+     * @deprecated user {@link #drawText(ch.jeda.Location, java.lang.String, ch.jeda.ui.Alignment)} instead
+     */
+    @Deprecated
+    public void drawString(Location anchor, String text, Alignment alignment) {
+        if (anchor == null) {
+            throw new NullPointerException("anchor");
+        }
+
+        if (alignment == null) {
+            throw new NullPointerException("alignment");
+        }
+
+        if (text == null || text.length() == 0) {
+            return;
+        }
+
+        this.imp.drawString(alignment.align(anchor, this.imp.textSize(text)), text);
+    }
+
+    /**
+     * Draws a text using the current color and font size.
+     * Text text's top left corner is at the coordinates (x, y).
+     * Has no effect is <code>text</code> is <code>null</code>.
+     *
+     * @param x the x coordinate of the top left corner
+     * @param y the y coordinate of the top left corner
+     * @param text the text to draw
      *
      * @since 1.0
      */
-    public void drawString(int x, int y, String text) {
-        this.drawString(Location.from(x, y), text, Alignment.TOP_LEFT);
+    public void drawText(int x, int y, String text) {
+        this.drawText(Location.from(x, y), text, Alignment.TOP_LEFT);
     }
 
     /**
@@ -361,8 +437,8 @@ public class Canvas {
      *
      * @since 1.0
      */
-    public void drawString(Location topLeft, String text) {
-        this.drawString(topLeft, text, Alignment.TOP_LEFT);
+    public void drawText(Location topLeft, String text) {
+        this.drawText(topLeft, text, Alignment.TOP_LEFT);
     }
 
     /**
@@ -378,8 +454,8 @@ public class Canvas {
      *
      * @since 1.0
      */
-    public final void drawString(int x, int y, String text, Alignment alignment) {
-        this.drawString(Location.from(x, y), text, alignment);
+    public final void drawText(int x, int y, String text, Alignment alignment) {
+        this.drawText(Location.from(x, y), text, alignment);
     }
 
     /**
@@ -395,7 +471,7 @@ public class Canvas {
      *
      * @since 1.0
      */
-    public void drawString(Location anchor, String text, Alignment alignment) {
+    public void drawText(Location anchor, String text, Alignment alignment) {
         if (anchor == null) {
             throw new NullPointerException("anchor");
         }
