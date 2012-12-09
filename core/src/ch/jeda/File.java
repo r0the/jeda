@@ -16,27 +16,24 @@
  */
 package ch.jeda;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-public class FileProxy {
+public class File {
 
-    private final File file;
+    private final java.io.File file;
     private final String filePath;
 
-    public FileProxy(String filePath) {
+    public File(String filePath) {
         if (filePath == null) {
             throw new NullPointerException("filePath");
         }
 
-        this.file = new File(filePath);
+        this.file = new java.io.File(filePath);
         this.filePath = filePath;
-    }
-
-    public OutputStream openForWrite() throws IOException {
-        return new FileOutputStream(this.file);
     }
 
     public String getExtension() {
@@ -49,13 +46,34 @@ public class FileProxy {
         }
     }
 
+    public String getName() {
+        return this.file.getName();
+    }
+
+    public String getPath() {
+        return this.filePath;
+    }
+
+    public Iterable<File> listFiles() {
+        List<File> result = new ArrayList();
+        for (java.io.File item : this.file.listFiles()) {
+            result.add(new File(item.getAbsolutePath()));
+        }
+
+        return result;
+    }
+
     public boolean makeDirectories() {
-        File dir = this.file.getParentFile();
+        java.io.File dir = this.file.getParentFile();
         if (dir == null) {
             return true;
         }
         else {
             return dir.mkdirs();
         }
+    }
+
+    public OutputStream openForWrite() throws IOException {
+        return new FileOutputStream(this.file);
     }
 }

@@ -17,7 +17,7 @@
 package ch.jeda.ui;
 
 import ch.jeda.Engine;
-import ch.jeda.FileProxy;
+import ch.jeda.File;
 import ch.jeda.Location;
 import ch.jeda.Log;
 import ch.jeda.Message;
@@ -202,7 +202,7 @@ public final class Image {
      * @throws NullPointerException if <code>filePath</code> is <code>null</code>
      */
     public boolean save(String filePath) {
-        FileProxy file = new FileProxy(filePath);
+        File file = new File(filePath);
         String extension = file.getExtension().toLowerCase();
         if (!FORMAT_MAP.containsKey(extension)) {
             Log.warning(Message.IMAGE_FORMAT_ERROR, filePath, extension);
