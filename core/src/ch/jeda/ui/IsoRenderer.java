@@ -19,20 +19,22 @@ package ch.jeda.ui;
 import ch.jeda.Location;
 import ch.jeda.Size;
 import ch.jeda.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IsoRenderer {
 
-    private final Canvas canvas;
     private final Size mapSize;
     private final Location maxScrollPos;
     private final Location minScrollPos;
-    private final Image[] tiles;
+    private final List<Image[]> layers;
     private final Size tileSize;
+    private final Size viewPort;
     private Location scrollPos;
 
-    public IsoRenderer(Canvas canvas, Size mapSize, Size tileSize) {
-        if (canvas == null) {
-            throw new NullPointerException("canvas");
+    public IsoRenderer(Size viewPort, Size mapSize, Size tileSize) {
+        if (viewPort == null) {
+            throw new NullPointerException("viewPort");
         }
 
         if (mapSize == null) {
@@ -43,43 +45,55 @@ public class IsoRenderer {
             throw new NullPointerException("tileSize");
         }
 
-        this.canvas = canvas;
+        this.viewPort = viewPort;
         this.mapSize = mapSize;
         this.tileSize = tileSize;
-        this.tiles = new Image[mapSize.width * mapSize.height];
-        this.scrollPos = new Location(this.canvas.getWidth() / 2, 0);
+        this.layers = new ArrayList();
+
+        this.scrollPos = new Location(this.viewPort.width / 2, 0);
 
         int w = this.tileSize.width * this.mapSize.width / 2;
         int h = this.tileSize.height * this.mapSize.height;
         this.maxScrollPos = new Location(w, 0);
-        this.minScrollPos = new Location(this.canvas.getWidth() - w,
-                                         this.canvas.getHeight() - h);
+        this.minScrollPos = new Location(this.viewPort.width - w,
+                                         this.viewPort.height - h);
 
     }
 
-    public void draw() {
-        this.canvas.setColor(Color.BLACK);
-        int startX = this.scrollPos.x;
-        int startY = this.scrollPos.y;
-        int x = startX;
-        int y = startY;
-        for (int tileY = 0; tileY < this.mapSize.height; ++tileY) {
-            for (int tileX = 0; tileX < this.mapSize.width; ++tileX) {
-                this.canvas.drawImage(x, y, this.tiles[tileX + this.mapSize.width * tileY], Alignment.TOP_CENTER);
-                x = x + this.tileSize.width / 2;
-                y = y + this.tileSize.height / 2;
-            }
+    public void drawOn(Canvas canvas) {
+        canvas.setColor(Color.BLACK);
+        int startX = 0;
+        int startY = 0;
+        int x = 0;
+        int y = 0;
 
-            startX = startX - tileSize.width / 2;
-            startY = startY + tileSize.height / 2;
-            x = startX;
-            y = startY;
+        for (Image[] layer : this.layers) {
+            startX = this.scrollPos.x;
+            startY = this.scrollPos.y;
+
+            for (int tileY = 0; tileY < this.mapSize.height; ++tileY) {
+                x = startX;
+                y = startY;
+
+                for (int tileX = 0; tileX < this.mapSize.width; ++tileX) {
+                    canvas.drawImage(x, y, layer[tileX + this.mapSize.width * tileY], Alignment.TOP_CENTER);
+                    x = x + this.tileSize.width / 2;
+                    y = y + this.tileSize.height / 2;
+                }
+
+                startX = startX - tileSize.width / 2;
+                startY = startY + tileSize.height / 2;
+                x = startX;
+                y = startY;
+            }
         }
     }
 
-    public void fill(Image image) {
-        for (int i = 0; i < this.tiles.length; ++i) {
-            this.tiles[i] = image;
+    public void fill(int layerIndex, Image image) {
+        this.ensureLayer(layerIndex);
+        Image[] layer = this.layers.get(layerIndex);
+        for (int i = 0; i < layer.length; ++i) {
+            layer[i] = image;
         }
     }
 
@@ -92,11 +106,7 @@ public class IsoRenderer {
         this.checkScrollPos();
     }
 
-    public void setTile(int x, int y, Image image) {
-        this.setTile(new Location(x, y), image);
-    }
-
-    public void setTile(Location location, Image image) {
+    public void setTile(int layerIndex, Location location, Image image) {
         if (location == null) {
             throw new NullPointerException("location");
         }
@@ -105,7 +115,14 @@ public class IsoRenderer {
             throw new IllegalArgumentException("location");
         }
 
-        this.tiles[location.x + this.mapSize.width * location.y] = image;
+        this.ensureLayer(layerIndex);
+        this.layers.get(layerIndex)[location.x + this.mapSize.width * location.y] = image;
+    }
+
+    public Vector toMap(Location canvasLocation) {
+        double a = (canvasLocation.x - this.scrollPos.x) / (double) this.tileSize.width;
+        double b = (canvasLocation.y - this.scrollPos.y) / (double) this.tileSize.height;
+        return new Vector(a + b - 0.5, b - a - 0.5);
     }
 
     public Location toCanvas(Vector mapLocation) {
@@ -116,5 +133,11 @@ public class IsoRenderer {
 
     private void checkScrollPos() {
         this.scrollPos = this.scrollPos.ensureRange(this.minScrollPos, this.maxScrollPos);
+    }
+
+    private void ensureLayer(int layerIndex) {
+        while (this.layers.size() <= layerIndex) {
+            this.layers.add(new Image[this.mapSize.width * this.mapSize.height]);
+        }
     }
 }
