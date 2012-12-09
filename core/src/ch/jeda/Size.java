@@ -33,9 +33,40 @@ public class Size implements Serializable {
      * The height of this size.
      */
     public final int height;
+    private static final char SEPARATOR = 'x';
 
-    private Size() {
-        this(0, 0);
+    public static Size max(Size a, Size b) {
+        return new Size(Math.max(a.width, b.width), Math.max(a.height, b.height));
+    }
+
+    /**
+     * Parses a size from a string. The string must contain two positivie
+     * integers separated by an 'x', e.g. "800x600". Returns <code>null</code>
+     * if the string does not represent a valid size.
+     * 
+     * @param text the string to parse
+     * @return the parsed size or <code>null</code>
+     */
+    public static Size parse(String text) {
+        int pos = text.indexOf(SEPARATOR);
+        if (pos == -1) {
+            return null;
+        }
+
+        try {
+            int width = Integer.parseInt(text.substring(0, pos));
+            int height = Integer.parseInt(text.substring(pos + 1));
+
+            if (width > 0 && height > 0) {
+                return new Size(width, height);
+            }
+            else {
+                return null;
+            }
+        }
+        catch (NumberFormatException ex) {
+            return null;
+        }
     }
 
     /**
@@ -56,6 +87,14 @@ public class Size implements Serializable {
 
         this.width = width;
         this.height = height;
+    }
+
+    private Size() {
+        this(0, 0);
+    }
+
+    public int area() {
+        return this.width * this.height;
     }
 
     public boolean contains(Location location) {
@@ -94,11 +133,9 @@ public class Size implements Serializable {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append("Size(");
         result.append(this.width);
-        result.append(", ");
+        result.append('x');
         result.append(this.height);
-        result.append(')');
         return result.toString();
     }
 }
