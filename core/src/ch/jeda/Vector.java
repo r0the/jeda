@@ -42,7 +42,7 @@ public class Vector implements Serializable {
     public static Vector fromPolar(double length, double direction) {
         direction = normalizeDegrees(direction);
         return new Vector(length * cos(direction), -length * sin(direction),
-                direction);
+                          direction);
     }
 
     public static Vector fromCartesian(double x, double y) {
@@ -189,7 +189,7 @@ public class Vector implements Serializable {
     }
 
     public Location toLocation() {
-        return new Location((int) this.x, (int) this.y);
+        return new Location((int) Math.round(this.x), (int) Math.round(this.y));
     }
 
     @Override
