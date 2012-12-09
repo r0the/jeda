@@ -49,8 +49,8 @@ public class Window extends Canvas {
      *
      * @since 1.0
      */
-    public Window() {
-        this(Size.EMPTY);
+    public static Window create() {
+        return new Window();
     }
 
     /**
@@ -65,8 +65,8 @@ public class Window extends Canvas {
      *
      * @since 1.0
      */
-    public Window(Feature... features) {
-        this(Size.EMPTY, features);
+    public static Window create(Feature... features) {
+        return new Window(Size.EMPTY, features);
     }
 
     /**
@@ -83,8 +83,8 @@ public class Window extends Canvas {
      * 
      * @since 1.0
      */
-    public Window(int width, int height, Feature... features) {
-        this(Size.from(width, height), features);
+    public static Window create(int width, int height, Feature... features) {
+        return new Window(Size.from(width, height), features);
     }
 
     /**
@@ -100,14 +100,53 @@ public class Window extends Canvas {
      * 
      * @since 1.0
      */
-    public Window(Size size, Feature... features) {
+    public static Window create(Size size, Feature... features) {
         if (size == null) {
             throw new NullPointerException("size");
         }
 
-        this.events = new Events();
-        this.title = Thread.currentThread().getName();
-        this.resetImp(size, toSet(features));
+        return new Window(size, features);
+    }
+
+    /**
+     * Creates a new window with an automatically sized drawing area.
+     * On the Android platform, the drawing area is adjusted to the screen
+     * size.
+     * On the Java platform, the drawing area has a width of 800 and a height
+     * of 600 pixels.
+     */
+    public Window() {
+        this(Size.EMPTY);
+    }
+
+    /**
+     * Creates a new window with an automatically sized drawing area.
+     * On the Android platform, the drawing area is adjusted to the screen
+     * size.
+     * On the Java platform, the drawing area has a width of 800 and a height
+     * of 600 pixels.
+     * The specified window features are activated.
+     *
+     * @param features the features of this window
+     */
+    public Window(Feature... features) {
+        this(Size.EMPTY, features);
+    }
+
+    /**
+     * Creates a new window that has a drawing with the specified width and
+     * height in pixels.
+     * On the Android platform, the size parameter has no effect.
+     * The specified window features are activated.
+     *
+     * @param width the width of the drawing area in pixels
+     * @param height the height of the drawing area in pixels
+     * @param features the features of this window
+     *
+     * @throws IllegalArgumentException if width or height are smaller than 1
+     */
+    public Window(int width, int height, Feature... features) {
+        this(Size.from(width, height), features);
     }
 
     /**
@@ -215,6 +254,12 @@ public class Window extends Canvas {
      */
     public void update() {
         this.imp.update();
+    }
+
+    private Window(Size size, Feature... features) {
+        this.events = new Events();
+        this.title = Thread.currentThread().getName();
+        this.resetImp(size, toSet(features));
     }
 
     private void resetImp(Size size, EnumSet<Feature> features) {

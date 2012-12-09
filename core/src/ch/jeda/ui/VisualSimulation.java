@@ -67,7 +67,7 @@ public abstract class VisualSimulation extends Simulation {
      * @since 1.0
      */
     public VisualSimulation(Size size) {
-        this.window = new Window(size, Window.Feature.DoubleBuffered);
+        this.window = Window.create(size, Window.Feature.DoubleBuffered);
     }
 
     /**
