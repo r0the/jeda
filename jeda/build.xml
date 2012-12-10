@@ -13,7 +13,7 @@
 
     <target name="-post-jar">
         <!-- Load jeda version -->
-        <property file="${jeda.core.dir}/src/ch/jeda/resources/jeda.properties"/>
+        <property file="${jeda.core.dir}/src/ch/jeda/jeda.properties"/>
         
         <!-- Add core library to jar -->
         <jar update="true" jarfile="${dist.jar}">

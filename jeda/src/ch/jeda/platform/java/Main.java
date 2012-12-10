@@ -68,11 +68,6 @@ public class Main implements Platform {
     }
 
     @Override
-    public Iterable<String> listPropertyFiles() throws Exception {
-        return this.resourceFinder.findPropertyFiles();
-    }
-
-    @Override
     public ImageImp loadImageImp(URL url) throws Exception {
         return new JavaImageImp(ImageIO.read(url));
     }

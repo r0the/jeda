@@ -27,23 +27,16 @@ import java.util.jar.JarInputStream;
 class ResourceFinder {
 
     private final List<String> classNames;
-    private final List<String> propertyFiles;
     private boolean done;
 
     ResourceFinder() {
         this.classNames = new ArrayList();
-        this.propertyFiles = new ArrayList();
         this.done = false;
     }
 
     List<String> findClassNames() throws Exception {
         this.ensureResources();
         return this.classNames;
-    }
-
-    List<String> findPropertyFiles() throws Exception {
-        this.ensureResources();
-        return this.propertyFiles;
     }
 
     private void checkDirectory(File directory, String directoryName) {
@@ -71,10 +64,7 @@ class ResourceFinder {
     }
 
     private void checkResource(String resourceName) {
-        if (resourceName.endsWith(".properties")) {
-            this.propertyFiles.add(resourceName);
-        }
-        else if (resourceName.endsWith(".class") && !resourceName.contains("$")) {
+        if (resourceName.endsWith(".class") && !resourceName.contains("$")) {
             String className = resourceName.substring(0, resourceName.length() - 6);
             className = className.replace("/", ".");
             this.classNames.add(className);

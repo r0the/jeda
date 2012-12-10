@@ -62,7 +62,9 @@ public class Properties {
 
     void loadFromResource(String filePath) throws IOException {
         URL resource = Thread.currentThread().getContextClassLoader().getResource(filePath);
-        this.imp.load(resource.openStream());
+        if (resource != null) {
+            this.imp.load(resource.openStream());
+        }
     }
 
     void loadFromSystem() {

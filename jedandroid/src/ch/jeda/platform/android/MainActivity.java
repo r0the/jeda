@@ -63,11 +63,6 @@ public class MainActivity extends Activity implements Platform {
     }
 
     @Override
-    public Iterable<String> listPropertyFiles() throws Exception {
-        return this.resourceFinder.findPropertyFiles();
-    }
-
-    @Override
     public ImageImp loadImageImp(URL url) throws Exception {
         return new AndroidImageImp(BitmapFactory.decodeStream(url.openStream()));
     }

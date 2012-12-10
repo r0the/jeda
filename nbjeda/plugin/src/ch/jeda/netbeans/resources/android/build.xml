@@ -41,10 +41,15 @@
 
     <target name="-pre-build">
         <mkdir dir="res/values" />
+        <copy file="jeda.properties" todir="src"/>
         <echoxml file="res/values/strings.xml" append="false">
             <resources>
                 <string name="app_name">${jeda.application.title}</string>
             </resources>
         </echoxml>
+    </target>
+    
+    <target name="-post-build">
+        <delete file="src/jeda.properties"/>
     </target>
 </project>

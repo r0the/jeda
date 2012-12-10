@@ -36,7 +36,9 @@ public final class Engine {
 
     private static final ThreadLocal<Engine> CURRENT_ENGINE = new ThreadLocal();
     private static final String DEFAULT_PROGRAM_PROPERTY = "jeda.default.program";
-    private static final String JEDA_PROPERTIES_FILE = "ch/jeda/resources/jeda.properties";
+    private static final String JEDA_APPLICATION_PROPERTIES_FILE = "jeda.properties";
+    private static final String JEDA_PLATFORM_PROPERTIES_FILE = "ch/jeda/platform/jeda.properties";
+    private static final String JEDA_SYSTEM_PROPERTIES_FILE = "ch/jeda/jeda.properties";
     private static final Class<?>[] NO_PARAMS = new Class<?>[0];
     private final FileSystem fileSystem;
     private final EngineThread thread;
@@ -316,13 +318,11 @@ public final class Engine {
 
         private void loadProperties() {
             try {
-                for (String propertyFile : this.engine.platform.listPropertyFiles()) {
-                    this.engine.properties.loadFromResource(propertyFile);
-                }
-
-                // Load official Jeda properties file again to prevent manipulation
-                this.engine.properties.loadFromResource(JEDA_PROPERTIES_FILE);
-                // Load system properties now to prevent manipulation
+                // Load application properties first to prevent them to
+                // overwrite system properties.
+                this.engine.properties.loadFromResource(JEDA_APPLICATION_PROPERTIES_FILE);
+                this.engine.properties.loadFromResource(JEDA_PLATFORM_PROPERTIES_FILE);
+                this.engine.properties.loadFromResource(JEDA_SYSTEM_PROPERTIES_FILE);
                 this.engine.properties.loadFromSystem();
             }
             catch (Exception ex) {

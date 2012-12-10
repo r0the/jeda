@@ -25,8 +25,6 @@ public interface Platform {
 
     Iterable<String> listClassNames() throws Exception;
 
-    Iterable<String> listPropertyFiles() throws Exception;
-
     ImageImp loadImageImp(URL url) throws Exception;
 
     void log(String text);

@@ -26,24 +26,17 @@ public class ResourceFinder {
 
     private final Activity activity;
     private final List<String> classNames;
-    private final List<String> propertyFiles;
     private boolean done;
 
     ResourceFinder(Activity activity) {
         this.activity = activity;
         this.classNames = new ArrayList();
-        this.propertyFiles = new ArrayList();
         this.done = false;
     }
 
     List<String> findClassNames() throws Exception {
         this.ensureResources();
         return this.classNames;
-    }
-
-    List<String> findPropertyFiles() throws Exception {
-        this.ensureResources();
-        return this.propertyFiles;
     }
 
     private void ensureResources() throws Exception {
@@ -60,10 +53,7 @@ public class ResourceFinder {
         Enumeration<String> e = dx.entries();
         while (e.hasMoreElements()) {
             String resourceName = e.nextElement();
-            if (resourceName.endsWith(".properties")) {
-                this.propertyFiles.add(resourceName);
-            }
-            else if (!resourceName.contains("$")) {
+            if (!resourceName.contains("$")) {
                 this.classNames.add(resourceName);
             }
         }
