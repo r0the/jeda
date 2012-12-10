@@ -25,8 +25,8 @@ import ch.jeda.Size;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.LogInfo;
 import ch.jeda.platform.Platform;
+import ch.jeda.platform.Request;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
@@ -34,14 +34,18 @@ import java.net.URL;
 
 public class MainActivity extends Activity implements Platform {
 
-    private static final int SELECT_FROM_LIST = 1;
+    private static final int LOG_ACTIVITY = 1;
+    private static final int SELECT_FROM_LIST_ACTIVITY = 2;
     private final Engine engine;
+    private final StringBuilder log;
     private final ResourceFinder resourceFinder;
     private final ViewManager viewManager;
-    private SelectionRequest selectionRequest;
+    private Request currentRequest;
+    private boolean logVisible;
 
     public MainActivity() {
         this.engine = new Engine(this);
+        this.log = new StringBuilder();
         this.resourceFinder = new ResourceFinder(this);
         this.viewManager = new ViewManager(this);
     }
@@ -69,6 +73,17 @@ public class MainActivity extends Activity implements Platform {
     }
 
     @Override
+    public void log(String text) {
+        this.log.append(text);
+        this.log.append('\n');
+        if (this.logVisible) {
+            Intent intent = new Intent(LogActivity.class.getName());
+            intent.putExtra(LogActivity.PARAM_LOG_CONTENT, text);
+            MainActivity.this.sendBroadcast(intent);
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.viewManager.onCreate();
@@ -82,20 +97,25 @@ public class MainActivity extends Activity implements Platform {
 
     @Override
     public void showSelectionRequest(SelectionRequest selectionRequest) {
-        this.selectionRequest = selectionRequest;
+        if (this.currentRequest != null) {
+            return;
+        }
+
+        this.currentRequest = selectionRequest;
         Intent intent = new Intent(this, SelectionActivity.class);
         intent.putExtra(SelectionActivity.TITLE, selectionRequest.getTitle());
         intent.putExtra(SelectionActivity.ITEMS, selectionRequest.getDisplayItems());
-        this.startActivityForResult(intent, SELECT_FROM_LIST);
+        this.startActivityForResult(intent, SELECT_FROM_LIST_ACTIVITY);
     }
 
     @Override
-    public void showLog(LogInfo logInfo) {
-        Intent intent = new Intent(this, LogActivity.class);
-        intent.putExtra(LogActivity.PARAM_BUTTON_TEXT, logInfo.getButtonText());
-        intent.putExtra(LogActivity.PARAM_LOG_CONTENT, logInfo.getLog());
-        intent.putExtra(LogActivity.PARAM_TITLE, logInfo.getTitle());
-        this.startActivity(intent);
+    public void showLog() {
+        if (!this.logVisible) {
+            this.logVisible = true;
+            Intent intent = new Intent(MainActivity.this, LogActivity.class);
+            intent.putExtra(LogActivity.PARAM_LOG_CONTENT, this.log.toString());
+            MainActivity.this.startActivityForResult(intent, LOG_ACTIVITY);
+        }
     }
 
     public ViewImp showView(ViewInfo viewInfo) {
@@ -110,20 +130,25 @@ public class MainActivity extends Activity implements Platform {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case SELECT_FROM_LIST:
+            case SELECT_FROM_LIST_ACTIVITY:
                 this.onSelectedFromList(resultCode, data);
                 return;
+            case LOG_ACTIVITY:
+                this.logVisible = false;
         }
     }
 
     private void onSelectedFromList(int resultCode, Intent data) {
-        // data or this.selectionRequest might be null (Occured during testing,
-        // not sure why.
-        if (resultCode == RESULT_OK && this.selectionRequest != null && data != null) {
-            this.selectionRequest.setSelectedIndex(data.getIntExtra(SelectionActivity.SELECTED_INDEX, -1));
-        }
-        else {
-            this.selectionRequest.cancelRequest();
+        if (this.currentRequest instanceof SelectionRequest) {
+            SelectionRequest selectionRequest = (SelectionRequest) this.currentRequest;
+            // data or this.selectionRequest might be null (Occured during testing,
+            // not sure why.
+            if (resultCode == RESULT_OK && data != null) {
+                selectionRequest.setSelectedIndex(data.getIntExtra(SelectionActivity.SELECTED_INDEX, -1));
+            }
+            else {
+                selectionRequest.cancelRequest();
+            }
         }
     }
 }

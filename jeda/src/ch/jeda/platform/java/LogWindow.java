@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.platform.LogInfo;
+import ch.jeda.Message;
 
 class LogWindow extends javax.swing.JFrame implements JedaWindow {
 
@@ -24,6 +24,8 @@ class LogWindow extends javax.swing.JFrame implements JedaWindow {
         initComponents();
         GUI.center(this);
         GUI.setIcon(this);
+        this.setTitle(Message.translate(Message.LOG_TITLE));
+        this.closeButton.setText(Message.translate(Message.LOG_BUTTON));
     }
 
     @Override
@@ -31,12 +33,10 @@ class LogWindow extends javax.swing.JFrame implements JedaWindow {
         this.setVisible(false);
     }
 
-    void setLogInfo(LogInfo logInfo) {
-        this.setTitle(logInfo.getTitle());
-        this.closeButton.setText(logInfo.getButtonText());
-        String log = logInfo.getLog();
-        this.logTextArea.setText(log);
-        this.logTextArea.setCaretPosition(log.length() - 1);
+    void log(String text) {
+        this.logTextArea.append(text);
+        this.logTextArea.append("\n");
+        this.logTextArea.setCaretPosition(this.logTextArea.getText().length() - 1);
     }
 
     @SuppressWarnings("unchecked")

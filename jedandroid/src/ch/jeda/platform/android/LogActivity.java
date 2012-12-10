@@ -17,52 +17,45 @@
 package ch.jeda.platform.android;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import ch.jeda.Message;
 
 public class LogActivity extends Activity {
 
-    public static final String PARAM_BUTTON_TEXT = "Button";
-    public static final String PARAM_LOG_CONTENT = "Log";
-    public static final String PARAM_TITLE = "Title";
+    static final String PARAM_BUTTON_TEXT = "Button";
+    static final String PARAM_LOG_CONTENT = "Log";
+    static final String PARAM_TITLE = "Title";
     private static final String LOG_TEXT_STATE = "ch.jeda.log.text";
     private static final String LOG_POS_STATE = "ch.jeda.log.pos";
     private Button button;
     private ScrollView scrollView;
     private TextView textView;
+    private BroadcastReceiver receiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.setTitle(Message.translate(Message.LOG_TITLE));
+
         this.textView = new TextView(this);
         this.textView.setLayoutParams(createFillLayout());
 
         this.scrollView = new ScrollView(this);
-        this.scrollView.setLayoutParams(createRelativeLayout(
-                RelativeLayout.LayoutParams.FILL_PARENT,
-                RelativeLayout.ALIGN_PARENT_TOP));
         this.scrollView.addView(this.textView);
 
-        this.button = new Button(this);
-        this.button.setLayoutParams(createRelativeLayout(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.ALIGN_PARENT_BOTTOM));
-
-        RelativeLayout layout = new RelativeLayout(this);
-        layout.setLayoutParams(createFillLayout());
-        layout.addView(this.scrollView);
-        layout.addView(this.button);
-
-        setContentView(layout);
-
+        DialogLayout layout = new DialogLayout(this, this.scrollView);
+        this.button = layout.addButton(Message.translate(Message.LOG_BUTTON));
         this.button.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -71,13 +64,26 @@ public class LogActivity extends Activity {
             }
         });
 
-        Intent intent = this.getIntent();
-        if (intent != null) {
-            this.setTitle(intent.getStringExtra(PARAM_TITLE));
-            this.button.setText(intent.getStringExtra(PARAM_BUTTON_TEXT));
-            this.textView.setText(intent.getStringExtra(PARAM_LOG_CONTENT));
-            this.scrollView.fullScroll(View.FOCUS_DOWN);
-        }
+        this.updateUI(this.getIntent());
+        this.receiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                updateUI(intent);
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.registerReceiver(this.receiver, new IntentFilter(this.getClass().getName()));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.unregisterReceiver(this.receiver);
     }
 
     @Override
@@ -94,15 +100,15 @@ public class LogActivity extends Activity {
         super.onSaveInstanceState(outState);
     }
 
+    private void updateUI(Intent intent) {
+        if (intent != null) {
+            this.textView.append(intent.getStringExtra(PARAM_LOG_CONTENT));
+            this.scrollView.fullScroll(View.FOCUS_DOWN);
+        }
+    }
+
     private static ViewGroup.LayoutParams createFillLayout() {
         return new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-    }
-
-    private static RelativeLayout.LayoutParams createRelativeLayout(int verticalFill, int parentAlign) {
-        RelativeLayout.LayoutParams result = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.FILL_PARENT, verticalFill);
-        result.addRule(parentAlign);
-        return result;
     }
 }

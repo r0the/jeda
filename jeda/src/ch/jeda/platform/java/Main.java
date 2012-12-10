@@ -22,7 +22,6 @@ import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
-import ch.jeda.platform.LogInfo;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
@@ -79,6 +78,11 @@ public class Main implements Platform {
     }
 
     @Override
+    public void log(String text) {
+        this.windowManager.getLogWindow().log(text);
+    }
+
+    @Override
     public void showInputRequest(InputRequest inputRequest) {
         InputWindow window = this.windowManager.getInputWindow();
         window.setRequest(inputRequest);
@@ -86,16 +90,14 @@ public class Main implements Platform {
     }
 
     @Override
-    public  void showSelectionRequest(SelectionRequest selectionRequest) {
-        SelectionWindow window = this.windowManager.getSelectionWindow();
-        window.setListInfo(selectionRequest);
-        window.setVisible(true);
+    public void showLog() {
+        this.windowManager.getLogWindow().setVisible(true);
     }
 
     @Override
-    public void showLog(LogInfo logInfo) {
-        LogWindow window = this.windowManager.getLogWindow();
-        window.setLogInfo(logInfo);
+    public void showSelectionRequest(SelectionRequest selectionRequest) {
+        SelectionWindow window = this.windowManager.getSelectionWindow();
+        window.setListInfo(selectionRequest);
         window.setVisible(true);
     }
 

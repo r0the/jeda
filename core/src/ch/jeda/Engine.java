@@ -21,7 +21,6 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.InputType;
 import ch.jeda.platform.SelectionRequest;
-import ch.jeda.platform.LogInfo;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
@@ -40,7 +39,6 @@ public final class Engine {
     private static final String JEDA_PROPERTIES_FILE = "ch/jeda/resources/jeda.properties";
     private static final Class<?>[] NO_PARAMS = new Class<?>[0];
     private final FileSystem fileSystem;
-    private final StringBuilder log;
     private final EngineThread thread;
     private Log.Level logLevel;
     private final Platform platform;
@@ -57,7 +55,6 @@ public final class Engine {
         }
 
         this.fileSystem = new FileSystem(platform);
-        this.log = new StringBuilder();
         this.thread = new EngineThread(this);
 
         this.logLevel = Log.Level.Warning;
@@ -113,11 +110,11 @@ public final class Engine {
 
     void log(Log.Level level, String message, Throwable exception) {
         if (this.matchesLogLevel(level)) {
-            this.writeLine(level.toString() + ": " + message);
+            this.platform.log(level.toString() + ": " + message);
             if (exception != null) {
-                this.writeLine(exception.toString());
+                this.platform.log(exception.toString());
                 for (StackTraceElement el : exception.getStackTrace()) {
-                    this.writeLine("   " + el.toString());
+                    this.platform.log("   " + el.toString());
                 }
             }
         }
@@ -151,8 +148,8 @@ public final class Engine {
     }
 
     void write(String message, Object... args) {
-        this.writeLine(Util.args(message, args));
-        this.showLog();
+        this.platform.log(Util.args(message, args));
+        this.platform.showLog();
     }
 
     private Program createProgram(Class<Program> programClass) {
@@ -193,7 +190,7 @@ public final class Engine {
 
     private void fatalError(Throwable exception, String messageKey, Object... args) {
         this.log(Log.Level.Error, Util.args(Message.translate(messageKey), args), exception);
-        this.showLog();
+        this.platform.showLog();
         this.platform.stop();
     }
 
@@ -210,14 +207,6 @@ public final class Engine {
             default:
                 return false;
         }
-    }
-
-    private void showLog() {
-        LogInfo logInfo = new LogInfo();
-        logInfo.setButtonText(Message.translate(Message.LOG_BUTTON));
-        logInfo.setLog(this.log.toString());
-        logInfo.setTitle(Message.translate(Message.LOG_TITLE));
-        this.platform.showLog(logInfo);
     }
 
     private void startProgram() {
@@ -276,12 +265,6 @@ public final class Engine {
             programThread.setName(programInfo.getName());
             programThread.start();
         }
-    }
-
-    private void writeLine(String line) {
-        this.log.append(line);
-        this.log.append('\n');
-        System.out.println(line);
     }
 
     private static boolean isProgramClass(Class cls) {

@@ -29,11 +29,13 @@ public interface Platform {
 
     ImageImp loadImageImp(URL url) throws Exception;
 
+    void log(String text);
+
     void showInputRequest(InputRequest inputRequest);
 
-    void showSelectionRequest(SelectionRequest selectionRequest);
+    void showLog();
 
-    void showLog(LogInfo logInfo);
+    void showSelectionRequest(SelectionRequest selectionRequest);
 
     ViewImp showView(ViewInfo viewInfo);
 
