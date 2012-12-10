@@ -21,27 +21,34 @@ import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
 import java.awt.Cursor;
+import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
+abstract class JavaViewImp extends JavaCanvasImp implements ViewImp {
 
     private static final Map<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
     private final EnumSet<Window.Feature> features;
     protected final ViewWindow viewWindow;
 
-    protected AbstractViewImp(ViewWindow viewWindow, boolean doubleBuffered) {
-        this.features = EnumSet.noneOf(Window.Feature.class);
+    static JavaViewImp create(ViewWindow viewWindow, boolean doubleBuffered) {
+        if (doubleBuffered) {
+            return new DoubleBufferedViewImp(viewWindow);
+        }
+        else {
+            return new SingleBufferedViewImp(viewWindow);
+        }
+    }
+
+    JavaViewImp(ViewWindow viewWindow, Window.Feature... features) {
+        this.features = EnumSet.copyOf(Arrays.asList(features));
         this.viewWindow = viewWindow;
 
         if (this.viewWindow.isFullscreen()) {
             this.features.add(Window.Feature.Fullscreen);
-        }
-
-        if (doubleBuffered) {
-            this.features.add(Window.Feature.DoubleBuffered);
         }
     }
 
@@ -94,5 +101,51 @@ abstract class AbstractViewImp extends JavaCanvasImp implements ViewImp {
         int[] pixels = new int[16 * 16];
         java.awt.Image image = toolkit.createImage(new MemoryImageSource(16, 16, pixels, 0, 16));
         return toolkit.createCustomCursor(image, new java.awt.Point(0, 0), "invisibleCursor");
+    }
+
+    private static class DoubleBufferedViewImp extends JavaViewImp {
+
+        private BufferedImage backBuffer;
+        private BufferedImage frontBuffer;
+
+        public DoubleBufferedViewImp(ViewWindow viewWindow) {
+            super(viewWindow, Window.Feature.DoubleBuffered);
+            this.backBuffer = GUI.createBufferedImage(viewWindow.getImageSize());
+            this.frontBuffer = GUI.createBufferedImage(viewWindow.getImageSize());
+            viewWindow.setImage(this.frontBuffer);
+            this.setBuffer(this.backBuffer);
+        }
+
+        @Override
+        void doUpdate() {
+            BufferedImage temp = this.frontBuffer;
+            this.frontBuffer = this.backBuffer;
+            this.backBuffer = temp;
+            super.setBuffer(this.backBuffer);
+            this.viewWindow.setImage(this.frontBuffer);
+            this.viewWindow.update();
+        }
+    }
+
+    private static class SingleBufferedViewImp extends JavaViewImp {
+
+        private final BufferedImage buffer;
+
+        public SingleBufferedViewImp(ViewWindow viewWindow) {
+            super(viewWindow);
+            this.buffer = GUI.createBufferedImage(viewWindow.getImageSize());
+            viewWindow.setImage(this.buffer);
+            this.setBuffer(this.buffer);
+        }
+
+        @Override
+        void doUpdate() {
+            this.viewWindow.update();
+        }
+
+        @Override
+        void modified() {
+            this.viewWindow.update();
+        }
     }
 }

@@ -69,12 +69,7 @@ public class WindowManager {
         ViewWindow window = this.createViewWindow(viewInfo);
         this.registerWindow(window);
         window.setVisible(true);
-        if (viewInfo.hasFeature(Feature.DoubleBuffered)) {
-            return new DoubleBufferedViewImp(window);
-        }
-        else {
-            return new DefaultViewImp(window);
-        }
+        return JavaViewImp.create(window, viewInfo.hasFeature(Feature.DoubleBuffered));
     }
 
     private ViewWindow createViewWindow(ViewInfo viewInfo) {
