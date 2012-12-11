@@ -32,7 +32,7 @@ public class IsoRenderer {
     private final Size viewPort;
     private Location scrollPos;
 
-    public IsoRenderer(Size viewPort, Size mapSize, Size tileSize) {
+    public static IsoRenderer create(Size viewPort, Size mapSize, Size tileSize) {
         if (viewPort == null) {
             throw new NullPointerException("viewPort");
         }
@@ -45,22 +45,14 @@ public class IsoRenderer {
             throw new NullPointerException("tileSize");
         }
 
-        this.viewPort = viewPort;
-        this.mapSize = mapSize;
-        this.tileSize = tileSize;
-        this.layers = new ArrayList();
-
-        this.scrollPos = Location.from(this.viewPort.width / 2, 0);
-
-        int w = this.tileSize.width * this.mapSize.width / 2;
-        int h = this.tileSize.height * this.mapSize.height;
-        this.maxScrollPos = Location.from(w, 0);
-        this.minScrollPos = Location.from(this.viewPort.width - w,
-                                          this.viewPort.height - h);
-
+        return new IsoRenderer(viewPort, mapSize, tileSize);
     }
 
     public void drawOn(Canvas canvas) {
+        if (canvas == null) {
+            throw new NullPointerException("canvas");
+        }
+
         canvas.setColor(Color.BLACK);
         int startX = 0;
         int startY = 0;
@@ -129,6 +121,21 @@ public class IsoRenderer {
         double x = this.scrollPos.x + this.tileSize.width * (mapLocation.x - mapLocation.y) * 0.5;
         double y = this.scrollPos.y + this.tileSize.height * (2.0 + mapLocation.x + mapLocation.y) * 0.5;
         return Location.from((int) x, (int) y);
+    }
+
+    private IsoRenderer(Size viewPort, Size mapSize, Size tileSize) {
+        this.viewPort = viewPort;
+        this.mapSize = mapSize;
+        this.tileSize = tileSize;
+        this.layers = new ArrayList();
+
+        this.scrollPos = Location.from(this.viewPort.width / 2, 0);
+
+        int w = this.tileSize.width * this.mapSize.width / 2;
+        int h = this.tileSize.height * this.mapSize.height;
+        this.maxScrollPos = Location.from(w, 0);
+        this.minScrollPos = Location.from(this.viewPort.width - w,
+                                          this.viewPort.height - h);
     }
 
     private void checkScrollPos() {

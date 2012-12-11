@@ -73,6 +73,22 @@ public class Window extends Canvas {
      * Creates a new window that has a drawing with the specified width and
      * height in pixels.
      * On the Android platform, the size parameter has no effect.
+     *
+     * @param width the width of the drawing area in pixels
+     * @param height the height of the drawing area in pixels
+     *
+     * @throws IllegalArgumentException if width or height are smaller than 1
+     * 
+     * @since 1.0
+     */
+    public static Window create(int width, int height) {
+        return new Window(Size.from(width, height));
+    }
+
+    /**
+     * Creates a new window that has a drawing with the specified width and
+     * height in pixels.
+     * On the Android platform, the size parameter has no effect.
      * The specified window features are activated.
      *
      * @param width the width of the drawing area in pixels

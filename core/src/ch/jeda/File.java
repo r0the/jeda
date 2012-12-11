@@ -27,13 +27,12 @@ public class File {
     private final java.io.File file;
     private final String filePath;
 
-    public File(String filePath) {
+    public static File from(String filePath) {
         if (filePath == null) {
             throw new NullPointerException("filePath");
         }
 
-        this.file = new java.io.File(filePath);
-        this.filePath = filePath;
+        return new File(filePath);
     }
 
     public String getExtension() {
@@ -57,7 +56,7 @@ public class File {
     public Iterable<File> listFiles() {
         List<File> result = new ArrayList();
         for (java.io.File item : this.file.listFiles()) {
-            result.add(new File(item.getAbsolutePath()));
+            result.add(File.from(item.getAbsolutePath()));
         }
 
         return result;
@@ -75,5 +74,10 @@ public class File {
 
     public OutputStream openForWrite() throws IOException {
         return new FileOutputStream(this.file);
+    }
+
+    private File(String filePath) {
+        this.file = new java.io.File(filePath);
+        this.filePath = filePath;
     }
 }

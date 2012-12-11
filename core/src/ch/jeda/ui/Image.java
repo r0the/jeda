@@ -198,7 +198,7 @@ public final class Image {
      * @throws NullPointerException if <code>filePath</code> is <code>null</code>
      */
     public boolean save(String filePath) {
-        File file = new File(filePath);
+        File file = File.from(filePath);
         String extension = file.getExtension().toLowerCase();
         if (!FORMAT_MAP.containsKey(extension)) {
             Log.warning(Message.IMAGE_FORMAT_ERROR, filePath, extension);

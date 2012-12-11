@@ -27,19 +27,7 @@ public class TileSet {
     private final Size tileSize;
     private final Image[] tiles;
 
-    public TileSet(File file) {
-        this(file.getPath());
-    }
-
-    public TileSet(String filePath) {
-        this(filePath, parseSize(filePath));
-    }
-
-    public TileSet(String filePath, Size tileSize) {
-        this(Image.load(filePath), tileSize);
-    }
-
-    public TileSet(Image image, Size tileSize) {
+    public static TileSet create(Image image, Size tileSize) {
         if (image == null) {
             throw new NullPointerException("image");
         }
@@ -48,11 +36,15 @@ public class TileSet {
             throw new NullPointerException("tileSize");
         }
 
-        this.image = image;
-        this.tileSize = tileSize;
-        this.size = Size.from(this.image.getWidth() / this.tileSize.width,
-                              this.image.getHeight() / this.tileSize.height);
-        this.tiles = new Image[this.size.width * this.size.height];
+        return new TileSet(image, tileSize);
+    }
+
+    public static TileSet load(String filePath) {
+        return TileSet.load(filePath, TileSet.parseSize(filePath));
+    }
+
+    public static TileSet load(String filePath, Size tileSize) {
+        return TileSet.create(Image.load(filePath), tileSize);
     }
 
     public Size getSize() {
@@ -84,6 +76,14 @@ public class TileSet {
         return this.tileSize;
     }
 
+    private TileSet(Image image, Size tileSize) {
+        this.image = image;
+        this.tileSize = tileSize;
+        this.size = Size.from(this.image.getWidth() / this.tileSize.width,
+                              this.image.getHeight() / this.tileSize.height);
+        this.tiles = new Image[this.size.width * this.size.height];
+    }
+
     private Image createSubImage(Location location) {
         location = Location.from(location.x * this.tileSize.width,
                                  location.y * this.tileSize.height);
@@ -101,12 +101,12 @@ public class TileSet {
             return null;
         }
 
-        while (startPos > 0 && isDigit(filePath.charAt(startPos - 1))) {
+        while (startPos > 0 && TileSet.isDigit(filePath.charAt(startPos - 1))) {
             --startPos;
         }
 
         --startPos;
-        while (startPos > 0 && isDigit(filePath.charAt(startPos - 1))) {
+        while (startPos > 0 && TileSet.isDigit(filePath.charAt(startPos - 1))) {
             --startPos;
         }
 
