@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="jedacore" default="default" basedir=".">
-    <description>Builds, tests, and runs the project jedacore.</description>
+<project name="core" default="default" basedir=".">
+    <description>Builds, tests, and runs the project core.</description>
     <import file="nbproject/build-impl.xml"/>
 
     <target name="-post-jar" depends="javadoc">
-        <!-- Add version and sound services to library -->
-        <jar update="true" destfile="${dist.jar}">
-            <manifest>
-                <attribute name="Implementation-Title" value="Jeda Core Library"/>
-                <attribute name="Implementation-URL" value="http://jeda.ch"/>
-                <attribute name="Implementation-Version" value="${jeda.version}"/>
-            </manifest>
-        </jar>
-
         <copy file="${dist.jar}" todir="../jedandroid/libs/"/>
     </target>
 </project>
