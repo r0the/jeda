@@ -17,47 +17,20 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.platform.InputRequest;
-import javax.swing.JDialog;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-class InputWindow extends JDialog implements JedaWindow,
-                                             DocumentListener {
+class InputWindow extends JedaWindow {
 
     private InputRequest inputRequest;
 
-    InputWindow() {
+    InputWindow(WindowManager manager) {
+        super(manager);
         this.initComponents();
-        GUI.center(this);
-        GUI.setIcon(this);
-        this.getRootPane().setDefaultButton(this.acceptButton);
-        this.inputTextField.getDocument().addDocumentListener(this);
+        this.setDefaultButton(this.acceptButton);
+        this.inputTextField.getDocument().addDocumentListener(new DocumentListenerImp(this));
         this.errorLabel.setVisible(false);
-    }
-
-    @Override
-    public void onHide() {
-        if (this.inputRequest != null) {
-            this.inputRequest.cancelRequest();
-            this.inputRequest = null;
-        }
-
-        this.setVisible(false);
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent event) {
-        this.validateInput();
-    }
-
-    @Override
-    public void insertUpdate(DocumentEvent event) {
-        this.validateInput();
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent event) {
-        this.validateInput();
+        this.init();
     }
 
     void setRequest(InputRequest inputRequest) {
@@ -66,16 +39,46 @@ class InputWindow extends JDialog implements JedaWindow,
         this.messageLabel.setText(inputRequest.getMessage());
         this.inputTextField.setText("");
         this.validateInput();
+        this.inputTextField.requestFocus();
     }
 
-    private void accept() {
-        this.setVisible(false);
+    @Override
+    protected void onAccept() {
         this.inputRequest.setResult(this.inputRequest.getInputType().parse(this.inputTextField.getText()));
+    }
+
+    @Override
+    protected void onCancel() {
+        this.inputRequest.cancelRequest();
     }
 
     private void validateInput() {
         boolean valid = this.inputRequest.getInputType().validate(this.inputTextField.getText());
         this.acceptButton.setEnabled(valid);
+    }
+
+    private static final class DocumentListenerImp implements DocumentListener {
+
+        private InputWindow window;
+
+        DocumentListenerImp(InputWindow window) {
+            this.window = window;
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent event) {
+            this.window.validateInput();
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent event) {
+            this.window.validateInput();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent event) {
+            this.window.validateInput();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -154,7 +157,7 @@ class InputWindow extends JDialog implements JedaWindow,
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        this.dispose();
+        this.cancel();
     }//GEN-LAST:event_cancelButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;

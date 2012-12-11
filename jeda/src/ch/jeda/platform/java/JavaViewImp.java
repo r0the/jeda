@@ -23,7 +23,6 @@ import ch.jeda.ui.Window;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,9 +42,13 @@ abstract class JavaViewImp extends JavaCanvasImp implements ViewImp {
         }
     }
 
-    JavaViewImp(ViewWindow viewWindow, Window.Feature... features) {
-        this.features = EnumSet.copyOf(Arrays.asList(features));
+    JavaViewImp(ViewWindow viewWindow, boolean doubleBuffered) {
         this.viewWindow = viewWindow;
+
+        this.features = EnumSet.noneOf(Window.Feature.class);
+        if (doubleBuffered) {
+            this.features.add(Window.Feature.DoubleBuffered);
+        }
 
         if (this.viewWindow.isFullscreen()) {
             this.features.add(Window.Feature.Fullscreen);
@@ -86,6 +89,13 @@ abstract class JavaViewImp extends JavaCanvasImp implements ViewImp {
 
     abstract void doUpdate();
 
+    private static Cursor createInvisibleCursor() {
+        java.awt.Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
+        int[] pixels = new int[16 * 16];
+        java.awt.Image image = toolkit.createImage(new MemoryImageSource(16, 16, pixels, 0, 16));
+        return toolkit.createCustomCursor(image, new java.awt.Point(0, 0), "invisibleCursor");
+    }
+
     private static Map<MouseCursor, Cursor> initCursorMap() {
         Map<MouseCursor, Cursor> result = new HashMap();
         result.put(MouseCursor.CROSSHAIR, new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -96,20 +106,13 @@ abstract class JavaViewImp extends JavaCanvasImp implements ViewImp {
         return result;
     }
 
-    private static Cursor createInvisibleCursor() {
-        java.awt.Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
-        int[] pixels = new int[16 * 16];
-        java.awt.Image image = toolkit.createImage(new MemoryImageSource(16, 16, pixels, 0, 16));
-        return toolkit.createCustomCursor(image, new java.awt.Point(0, 0), "invisibleCursor");
-    }
-
     private static class DoubleBufferedViewImp extends JavaViewImp {
 
         private BufferedImage backBuffer;
         private BufferedImage frontBuffer;
 
         public DoubleBufferedViewImp(ViewWindow viewWindow) {
-            super(viewWindow, Window.Feature.DoubleBuffered);
+            super(viewWindow, true);
             this.backBuffer = GUI.createBufferedImage(viewWindow.getImageSize());
             this.frontBuffer = GUI.createBufferedImage(viewWindow.getImageSize());
             viewWindow.setImage(this.frontBuffer);
@@ -132,7 +135,7 @@ abstract class JavaViewImp extends JavaCanvasImp implements ViewImp {
         private final BufferedImage buffer;
 
         public SingleBufferedViewImp(ViewWindow viewWindow) {
-            super(viewWindow);
+            super(viewWindow, false);
             this.buffer = GUI.createBufferedImage(viewWindow.getImageSize());
             viewWindow.setImage(this.buffer);
             this.setBuffer(this.buffer);

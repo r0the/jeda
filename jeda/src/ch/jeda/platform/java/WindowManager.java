@@ -18,13 +18,12 @@ package ch.jeda.platform.java;
 
 import ch.jeda.Engine;
 import ch.jeda.Size;
+import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
 import ch.jeda.ui.Window.Feature;
 import java.awt.DisplayMode;
-import java.awt.Window;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +32,6 @@ public class WindowManager {
 
     private final Engine engine;
     private final InputWindow inputWindow;
-    private final WindowListener listener;
     private final LogWindow logWindow;
     private final SelectionWindow selectionWindow;
     private final Set<JedaWindow> windows;
@@ -42,15 +40,14 @@ public class WindowManager {
 
     public WindowManager(Engine engine) {
         this.engine = engine;
-        this.inputWindow = new InputWindow();
-        this.listener = new WindowListener(this);
-        this.logWindow = new LogWindow();
-        this.selectionWindow = new SelectionWindow();
+        this.inputWindow = new InputWindow(this);
+        this.logWindow = new LogWindow(this);
+        this.selectionWindow = new SelectionWindow(this);
         this.windows = new HashSet();
 
-        this.registerWindow(this.inputWindow);
-        this.registerWindow(this.logWindow);
-        this.registerWindow(this.selectionWindow);
+        this.windows.add(this.inputWindow);
+        this.windows.add(this.logWindow);
+        this.windows.add(this.selectionWindow);
     }
 
     void finish() {
@@ -58,7 +55,6 @@ public class WindowManager {
 
         for (JedaWindow window : new ArrayList<JedaWindow>(this.windows)) {
             if (!window.isVisible()) {
-                window.removeWindowListener(this.listener);
                 window.dispose();
                 this.windows.remove(window);
             }
@@ -67,7 +63,7 @@ public class WindowManager {
 
     ViewImp createViewImp(ViewInfo viewInfo) {
         ViewWindow window = this.createViewWindow(viewInfo);
-        this.registerWindow(window);
+        this.windows.add(window);
         window.setVisible(true);
         return JavaViewImp.create(window, viewInfo.hasFeature(Feature.DoubleBuffered));
     }
@@ -81,73 +77,58 @@ public class WindowManager {
         if (viewInfo.hasFeature(Feature.Fullscreen) && this.fullscreenWindow == null) {
             DisplayMode displayMode = GUI.findDisplayMode(size);
             size = Size.from(displayMode.getWidth(), displayMode.getHeight());
-            this.fullscreenWindow = new ViewWindow(size, true);
+            this.fullscreenWindow = new ViewWindow(this, size, true);
             GUI.setFullscreenMode(this.fullscreenWindow, displayMode);
             return this.fullscreenWindow;
         }
         else {
-            return new ViewWindow(size, false);
+            return new ViewWindow(this, size, false);
         }
     }
 
-    InputWindow getInputWindow() {
-        return this.inputWindow;
+    void log(String text) {
+        this.logWindow.log(text);
     }
 
-    LogWindow getLogWindow() {
-        return this.logWindow;
+    void showInputRequest(InputRequest inputRequest) {
+        this.inputWindow.setRequest(inputRequest);
+        this.inputWindow.setVisible(true);
     }
 
-    SelectionWindow getSelectionWindow() {
-        return this.selectionWindow;
+    void showLog() {
+        this.logWindow.setVisible(true);
     }
 
-    private void registerWindow(JedaWindow window) {
-        window.addWindowListener(this.listener);
-        this.windows.add(window);
+    void showSelectionRequest(SelectionRequest selectionRequest) {
+        this.selectionWindow.setListInfo(selectionRequest);
+        this.selectionWindow.setVisible(true);
     }
 
-    private void windowClosing(Window window) {
-        JedaWindow jw = (JedaWindow) window;
+    boolean isShuttingDown() {
+        return this.finished;
+    }
 
+    void notifyDisposing(JedaWindow window) {
+        if (window.equals(this.fullscreenWindow)) {
+            this.fullscreenWindow = null;
+            GUI.finishFullscreenMode();
+        }
+        this.windows.remove(window);
+    }
+
+    void notifyHidden(JedaWindow window) {
         if (window.equals(this.fullscreenWindow)) {
             this.fullscreenWindow = null;
             GUI.finishFullscreenMode();
         }
 
-        if (this.finished) {
-            jw.removeWindowListener(this.listener);
-            jw.dispose();
-            this.windows.remove(jw);
-        }
-        else {
-            jw.onHide();
-        }
-
-        this.checkStopRequest();
-    }
-
-    private void checkStopRequest() {
-        for (JedaWindow window : this.windows) {
-            if (window.isVisible()) {
+        // If no windows are visible, then we request Jeda to stop.
+        for (JedaWindow w : this.windows) {
+            if (w.isVisible()) {
                 return;
             }
         }
 
         this.engine.requestStop();
-    }
-
-    private static class WindowListener extends WindowAdapter {
-
-        protected WindowManager windowManager;
-
-        public WindowListener(WindowManager windowManager) {
-            this.windowManager = windowManager;
-        }
-
-        @Override
-        public void windowClosing(WindowEvent event) {
-            this.windowManager.windowClosing(event.getWindow());
-        }
     }
 }

@@ -16,17 +16,75 @@
  */
 package ch.jeda.platform.java;
 
-import java.awt.event.WindowListener;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
-interface JedaWindow {
+class JedaWindow extends JFrame {
 
-    void addWindowListener(WindowListener listener);
+    private final WindowManager manager;
 
-    void dispose();
+    public JedaWindow(WindowManager manager) {
+        super(graphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration());
+        this.manager = manager;
+        this.addWindowListener(new WindowListener(this));
+    }
 
-    boolean isVisible();
+    protected final void accept() {
+        this.close();
+        this.onAccept();
+    }
 
-    void onHide();
+    protected final void cancel() {
+        this.close();
+        this.onCancel();
+    }
 
-    void removeWindowListener(WindowListener listener);
+    protected void onAccept() {
+    }
+
+    protected void onCancel() {
+    }
+
+    protected final void init() {
+        Point center = graphicsEnvironment().getCenterPoint();
+        this.setLocation(center.x - this.getWidth() / 2, center.y - this.getHeight() / 2);
+        GUI.setIcon(this);
+    }
+
+    protected final void setDefaultButton(JButton button) {
+        this.getRootPane().setDefaultButton(button);
+    }
+
+    private void close() {
+        if (this.manager.isShuttingDown()) {
+            this.manager.notifyDisposing(this);
+            this.dispose();
+        }
+        else {
+            this.setVisible(false);
+            this.manager.notifyHidden(this);
+        }
+    }
+
+    private static GraphicsEnvironment graphicsEnvironment() {
+        return GraphicsEnvironment.getLocalGraphicsEnvironment();
+    }
+
+    private static class WindowListener extends WindowAdapter {
+
+        protected JedaWindow window;
+
+        public WindowListener(JedaWindow window) {
+            this.window = window;
+        }
+
+        @Override
+        public void windowClosing(WindowEvent event) {
+            this.window.cancel();
+        }
+    }
 }

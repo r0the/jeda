@@ -19,25 +19,17 @@ package ch.jeda.platform.java;
 import ch.jeda.platform.SelectionRequest;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JDialog;
 
-class SelectionWindow extends JDialog implements JedaWindow {
+class SelectionWindow extends JedaWindow {
 
     private SelectionRequest listInfo;
 
-    SelectionWindow() {
-        initComponents();
-        GUI.center(this);
-        GUI.setIcon(this);
-
-        this.list.addMouseListener(new MouseListener(this));
-        this.getRootPane().setDefaultButton(this.acceptButton);
-    }
-
-    @Override
-    public void onHide() {
-        this.setVisible(false);
-        this.listInfo.cancelRequest();
+    SelectionWindow(WindowManager manager) {
+        super(manager);
+        this.initComponents();
+        this.list.addMouseListener(new MouseListenerImp(this));
+        this.setDefaultButton(this.acceptButton);
+        this.init();
     }
 
     void setListInfo(SelectionRequest listInfo) {
@@ -49,23 +41,28 @@ class SelectionWindow extends JDialog implements JedaWindow {
         }
     }
 
-    private void accept() {
-        this.setVisible(false);
+    @Override
+    protected void onAccept() {
         this.listInfo.setSelectedIndex(this.list.getSelectedIndex());
     }
 
-    private static class MouseListener extends MouseAdapter {
+    @Override
+    protected void onCancel() {
+        this.listInfo.cancelRequest();
+    }
 
-        protected SelectionWindow dialog;
+    private static class MouseListenerImp extends MouseAdapter {
 
-        public MouseListener(SelectionWindow dialog) {
-            this.dialog = dialog;
+        protected SelectionWindow window;
+
+        public MouseListenerImp(SelectionWindow dialog) {
+            this.window = dialog;
         }
 
         @Override
         public void mouseClicked(MouseEvent event) {
             if (event.getClickCount() == 2) {
-                this.dialog.accept();
+                this.window.accept();
             }
         }
     }
@@ -135,7 +132,7 @@ class SelectionWindow extends JDialog implements JedaWindow {
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        this.dispose();
+        this.cancel();
     }//GEN-LAST:event_cancelButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;

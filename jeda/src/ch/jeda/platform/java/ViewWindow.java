@@ -21,34 +21,27 @@ import ch.jeda.platform.EventsImp;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import javax.swing.JFrame;
 
-public class ViewWindow extends JFrame implements JedaWindow {
+public class ViewWindow extends JedaWindow {
 
     private final ImageCanvas canvas;
     private final JavaEventsImp eventsImp;
     private final boolean fullscreen;
     private final Size size;
 
-    protected ViewWindow(Size size, boolean fullscreen) {
-        super(GUI.graphicsConfiguration());
+    protected ViewWindow(WindowManager manager, Size size, boolean fullscreen) {
+        super(manager);
         this.canvas = new ImageCanvas(size);
         this.eventsImp = new JavaEventsImp(this.canvas);
         this.fullscreen = fullscreen;
         this.size = size;
-        this.setIgnoreRepaint(true);
         this.setResizable(false);
+        this.setIgnoreRepaint(true);
         this.getContentPane().add(this.canvas);
         this.setUndecorated(fullscreen);
         this.pack();
+        this.init();
         this.canvas.requestFocus();
-        GUI.center(this);
-        GUI.setIcon(this);
-    }
-
-    @Override
-    public void onHide() {
-        this.setVisible(false);
     }
 
     EventsImp getEventsImp() {

@@ -74,26 +74,22 @@ public class Main implements Platform {
 
     @Override
     public void log(String text) {
-        this.windowManager.getLogWindow().log(text);
+        this.windowManager.log(text);
     }
 
     @Override
     public void showInputRequest(InputRequest inputRequest) {
-        InputWindow window = this.windowManager.getInputWindow();
-        window.setRequest(inputRequest);
-        window.setVisible(true);
+        this.windowManager.showInputRequest(inputRequest);
     }
 
     @Override
     public void showLog() {
-        this.windowManager.getLogWindow().setVisible(true);
+        this.windowManager.showLog();
     }
 
     @Override
     public void showSelectionRequest(SelectionRequest selectionRequest) {
-        SelectionWindow window = this.windowManager.getSelectionWindow();
-        window.setListInfo(selectionRequest);
-        window.setVisible(true);
+        this.windowManager.showSelectionRequest(selectionRequest);
     }
 
     @Override

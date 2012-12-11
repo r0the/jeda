@@ -18,24 +18,19 @@ package ch.jeda.platform.java;
 
 import ch.jeda.Message;
 
-class LogWindow extends javax.swing.JFrame implements JedaWindow {
+class LogWindow extends JedaWindow {
 
-    LogWindow() {
-        initComponents();
-        GUI.center(this);
-        GUI.setIcon(this);
+    LogWindow(WindowManager manager) {
+        super(manager);
+        this.initComponents();
         this.setTitle(Message.translate(Message.LOG_TITLE));
         this.closeButton.setText(Message.translate(Message.LOG_BUTTON));
-    }
-
-    @Override
-    public void onHide() {
-        this.setVisible(false);
+        this.setDefaultButton(this.closeButton);
+        this.init();
     }
 
     void log(String text) {
         this.logTextArea.append(text);
-        this.logTextArea.append("\n");
         this.logTextArea.setCaretPosition(this.logTextArea.getText().length() - 1);
     }
 
