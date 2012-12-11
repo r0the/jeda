@@ -23,21 +23,23 @@ public class Size implements Serializable {
     /**
      * An empty <code>Size</code>. Both width and height of this objects are
      * 0.
+     * 
+     * @since 1.0
      */
     public static final Size EMPTY = new Size(0, 0);
     /**
      * The width of this size.
+     * 
+     * @since 1.0
      */
     public final int width;
     /**
      * The height of this size.
+     * 
+     * @since 1.0
      */
     public final int height;
     private static final char SEPARATOR = 'x';
-
-    public static Size max(Size a, Size b) {
-        return new Size(Math.max(a.width, b.width), Math.max(a.height, b.height));
-    }
 
     /**
      * Creates a new Size object.
@@ -45,6 +47,8 @@ public class Size implements Serializable {
      * @param width the width
      * @param height the height
      * @throws IllegalArgumentException if width or height are smaller than 0
+     * 
+     * @since 1.0
      */
     public static Size from(int width, int height) {
         if (width < 0) {
@@ -65,6 +69,8 @@ public class Size implements Serializable {
      * 
      * @param text the string to parse
      * @return the parsed size or <code>null</code>
+     * 
+     * @since 1.0
      */
     public static Size parse(String text) {
         int pos = text.indexOf(SEPARATOR);
@@ -77,7 +83,7 @@ public class Size implements Serializable {
             int height = Integer.parseInt(text.substring(pos + 1));
 
             if (width > 0 && height > 0) {
-                return from(width, height);
+                return Size.from(width, height);
             }
             else {
                 return null;
@@ -88,10 +94,26 @@ public class Size implements Serializable {
         }
     }
 
+    /**
+     * Returns the area of a rectangle described by this size. More specific,
+     * returns the product of <code>width</code> and <code>height</code>.
+     * 
+     * @return area
+     * 
+     * @since 1.0
+     */
     public int area() {
         return this.width * this.height;
     }
 
+    /**
+     * Checks whether the specified location lies within a rectangle described
+     * by this size.
+     * 
+     * @param location the location to check
+     * @return <code>true</code> if location lies within, otherwise
+     *         <code>false</code>
+     */
     public boolean contains(Location location) {
         if (location == null) {
             throw new NullPointerException("location");
@@ -104,11 +126,11 @@ public class Size implements Serializable {
     @Override
     public boolean equals(Object object) {
         if (object instanceof Size) {
-            Size other = (Size) object;
+            final Size other = (Size) object;
             return this.width == other.width && this.height == other.height;
         }
         else {
-            return super.equals(object);
+            return false;
         }
     }
 
@@ -122,7 +144,8 @@ public class Size implements Serializable {
     }
 
     public Size scaled(double factor) {
-        return new Size((int) (this.width * factor), (int) (this.height * factor));
+        return Size.from((int) Math.round(this.width * factor),
+                         (int) Math.round(this.height * factor));
     }
 
     @Override

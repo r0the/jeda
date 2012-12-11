@@ -40,15 +40,6 @@ public abstract class Program {
     }
 
     /**
-     * Returns the Jeda system properties.
-     * 
-     * @return Jeda system properties.
-     */
-    public final Properties getProperties() {
-        return Engine.getCurrentEngine().getProperties();
-    }
-
-    /**
      * Request this program to stop. After a call to this method, the method
      * {@link #stopRequested()} will return <code>true</code>.
      *
@@ -67,6 +58,15 @@ public abstract class Program {
      * @since 1.0
      */
     public abstract void run();
+
+    /**
+     * Returns the Jeda system properties.
+     * 
+     * @return Jeda system properties.
+     */
+    protected final Properties getProperties() {
+        return Engine.getCurrentEngine().getProperties();
+    }
 
     /**
      * Checks whether stop has been requested. This method returns <code>

@@ -112,11 +112,11 @@ public final class Engine {
 
     void log(Log.Level level, String message, Throwable exception) {
         if (this.matchesLogLevel(level)) {
-            this.platform.log(level.toString() + ": " + message);
+            this.platform.log(level.toString() + ": " + message + '\n');
             if (exception != null) {
-                this.platform.log(exception.toString());
+                this.platform.log(exception.toString() + '\n');
                 for (StackTraceElement el : exception.getStackTrace()) {
-                    this.platform.log("   " + el.toString());
+                    this.platform.log("   " + el.toString() + '\n');
                 }
             }
         }
