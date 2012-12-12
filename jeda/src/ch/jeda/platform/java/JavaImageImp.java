@@ -118,8 +118,8 @@ class JavaImageImp implements ch.jeda.platform.ImageImp {
         }
 
         ReplaceColorFilter(Color oldColor, Color newColor) {
-            this.oldColor = oldColor.getValue();
-            this.newColor = oldColor.getValue();
+            this.oldColor = oldColor.value;
+            this.newColor = oldColor.value;
         }
 
         @Override

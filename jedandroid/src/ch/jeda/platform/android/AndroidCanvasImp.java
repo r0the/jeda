@@ -187,9 +187,9 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     public void setColor(Color color) {
-        this.fillPaint.setColor(color.getValue());
-        this.strokePaint.setColor(color.getValue());
-        this.textPaint.setColor(color.getValue());
+        this.fillPaint.setColor(color.value);
+        this.strokePaint.setColor(color.value);
+        this.textPaint.setColor(color.value);
     }
 
     @Override
@@ -204,7 +204,7 @@ class AndroidCanvasImp implements CanvasImp {
 
     @Override
     public void setPixelAt(Location location, Color color) {
-        this.pixelPaint.setColor(color.getValue());
+        this.pixelPaint.setColor(color.value);
         this.canvas.drawPoint(location.x, location.y, this.pixelPaint);
     }
 

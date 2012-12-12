@@ -23,62 +23,62 @@ import java.io.Serializable;
  * values for the red, green, and blue part, and an alpha value defining
  * the color's opacity. Each can be a number between 0 and 255.
  *
- * @version 1.0
+ * @version 1
  */
 public final class Color implements Serializable {
 
     /**
      * The VGA color <i>aqua</i>. Same as <tt>new Color(0, 255, 255)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color AQUA = new Color(0, 255, 255);
     /**
      * The VGA color <i>black</i>. Same as <tt>new Color(0, 0, 0)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color BLACK = new Color(0, 0, 0);
     /**
      * The VGA color <i>blue</i>. Same as <tt>new Color(0, 0, 255)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color BLUE = new Color(0, 0, 255);
     /**
      * The VGA color <i>fuchsia</i>. Same as <tt>new Color(255, 0, 255)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color FUCHSIA = new Color(255, 0, 255);
     /**
      * The VGA color <i>gray</i>. Same as <tt>new Color(128, 128, 128)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color GRAY = new Color(128, 128, 128);
     /**
      * The VGA color <i>green</i>. Same as <tt>new Color(0, 128, 0)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color GREEN = new Color(0, 128, 0);
     /**
      * The VGA color <i>lime</i>. Same as <tt>new Color(0, 255, 0)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color LIME = new Color(0, 255, 0);
     /**
      * The VGA color <i>maroon</i>. Same as <tt>new Color(128, 0, 0)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color MAROON = new Color(128, 0, 0);
     /**
      * The VGA color <i>navy</i>. Same as <tt>new Color(0, 0, 128)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color NAVY = new Color(0, 0, 128);
     /**
@@ -88,51 +88,54 @@ public final class Color implements Serializable {
     /**
      * The VGA color <i>olive</i>. Same as <tt>new Color(128, 128, 0)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color OLIVE = new Color(128, 128, 0);
     /**
      * The VGA color <i>purple</i>. Same as <tt>new Color(128, 0, 128)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color PURPLE = new Color(128, 0, 128);
     /**
      * The VGA color <i>red</i>. Same as <tt>new Color(255, 0, 0)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color RED = new Color(255, 0, 0);
     /**
      * The VGA color <i>silver</i>. Same as <tt>new Color(192, 192, 192)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color SILVER = new Color(192, 192, 192);
     /**
      * The VGA color <i>teal</i>. Same as <tt>new Color(0, 128, 128)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color TEAL = new Color(0, 128, 128);
     /**
      * The VGA color <i>white</i>. Same as <tt>new Color(255, 255, 255)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color WHITE = new Color(255, 255, 255);
     /**
      * The VGA color <i>yellow</i>. Same as <tt>new Color(255, 255, 0)</tt>.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Color YELLOW = new Color(255, 255, 0);
-    private final int value;
+    /**
+     * @since 1
+     */
+    public final int value;
 
     /**
      * Returns a color from the specified value.
      * 
-     * @since 1.0
+     * @since 1
      */
     public static Color from(int value) {
         return new Color(value);
@@ -145,7 +148,7 @@ public final class Color implements Serializable {
      * @param green color's green component
      * @param blue color's blue component
      * 
-     * @since 1.0
+     * @since 1
      */
     public static Color fromRGB(int red, int green, int blue) {
         return fromRGBA(red, green, blue, 255);
@@ -160,7 +163,7 @@ public final class Color implements Serializable {
      * @param blue color's blue component
      * @param alpha color's opacity
      * 
-     * @since 1.0
+     * @since 1
      */
     public static Color fromRGBA(int red, int green, int blue, int alpha) {
         if (red < 0 || 255 < red) {
@@ -234,7 +237,7 @@ public final class Color implements Serializable {
 
     /**
      * 
-     * @since 1.0
+     * @since 1
      */
     public int getAlpha() {
         return 255 & (this.value >> 24);
@@ -242,30 +245,26 @@ public final class Color implements Serializable {
 
     /**
      * 
-     * @since 1.0
+     * @since 1
      */
     public int getBlue() {
         return 255 & this.value;
     }
 
+    /**
+     * 
+     * @since 1
+     */
     public int getGreen() {
         return 255 & (this.value >> 8);
     }
 
     /**
      * 
-     * @since 1.0
+     * @since 1
      */
     public int getRed() {
         return 255 & (this.value >> 16);
-    }
-
-    /**
-     * 
-     * @since 1.0
-     */
-    public int getValue() {
-        return this.value;
     }
 
     @Override

@@ -172,8 +172,8 @@ class JavaCanvasImp implements CanvasImp {
 
         Stack<Location> stack = new Stack<Location>();
         stack.push(pos);
-        int oldCol = oldColor.getValue();
-        int newCol = newColor.getValue();
+        int oldCol = oldColor.value;
+        int newCol = newColor.value;
         while (!stack.isEmpty()) {
             pos = stack.pop();
             if (this.buffer.getRGB(pos.x, pos.y) == oldCol) {
@@ -224,8 +224,8 @@ class JavaCanvasImp implements CanvasImp {
     public void setColor(Color color) {
         assert color != null;
 
-        this.graphics.setBackground(new java.awt.Color(color.getValue(), true));
-        this.graphics.setColor(new java.awt.Color(color.getValue(), true));
+        this.graphics.setBackground(new java.awt.Color(color.value, true));
+        this.graphics.setColor(new java.awt.Color(color.value, true));
     }
 
     @Override
@@ -246,7 +246,7 @@ class JavaCanvasImp implements CanvasImp {
         assert this.size.contains(location);
         assert color != null;
 
-        this.buffer.setRGB(location.x, location.y, color.getValue());
+        this.buffer.setRGB(location.x, location.y, color.value);
         this.modified();
     }
 
