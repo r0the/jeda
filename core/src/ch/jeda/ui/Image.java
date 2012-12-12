@@ -31,6 +31,8 @@ import java.util.Map;
 /**
  * This class represents an image. An image can be loaded from an image file or
  * be obtained by making a snapshot of a {@link Canvas}.
+ * 
+ * @since 1
  */
 public final class Image {
 
@@ -41,12 +43,21 @@ public final class Image {
     private final ImageImp imp;
 
     /**
+     * @deprecated Use {@link #load(java.lang.String)} instead.
+     */
+    public Image(String filePath) {
+        this(Engine.getCurrentEngine().loadImageImp(filePath));
+    }
+
+    /**
      * Reads an image file and creates a new image from the contents of the
      * file.
      *
      * To read a resource file, put ':' in front of the file path.
      *
      * @param filePath path to the image file
+     * 
+     * @since 1
      */
     public static Image load(String filePath) {
         return new Image(Engine.getCurrentEngine().loadImageImp(filePath));
@@ -61,6 +72,8 @@ public final class Image {
      * 
      * @see #createScaledImage(int, int)
      * @see #createScaledImage(Size)
+     * 
+     * @since 1
      */
     public Image createScaledImage(double factor) {
         return this.createScaledImage(this.getSize().scaled(factor));
@@ -79,6 +92,8 @@ public final class Image {
      * 
      * @see #createScaledImage(double)
      * @see #createScaledImage(Size)
+     * 
+     * @since 1
      */
     public Image createScaledImage(int width, int height) {
         return this.createScaledImage(Size.from(width, height));
@@ -111,6 +126,8 @@ public final class Image {
      * @return specified part of image
      * @throws IllegalArgumentException if <code>width</code> or
      *         <code>height</code> are smaller than 1
+     * 
+     * @since 1
      */
     public Image createSubImage(int x, int y, int width, int height) {
         return this.createSubImage(Location.from(x, y), Size.from(width, height));
@@ -124,6 +141,8 @@ public final class Image {
      * @return specified part of image
      * @throws NullPointerException if <code>location</code> is <code>null</code>
      * @throws NullPointerException if <code>size</code> is <code>null</code>
+     * 
+     * @since 1
      */
     public Image createSubImage(Location location, Size size) {
         if (location == null) {
@@ -144,7 +163,8 @@ public final class Image {
      * 
      * @see #getHeight()
      * @see #getWidth()
-     * @since 1.0
+     * 
+     * @since 1
      */
     public Size getSize() {
         return this.imp.getSize();
@@ -157,7 +177,7 @@ public final class Image {
      * 
      * @see #getSize()
      * @see #getWidth()
-     * @since 1.0
+     * @since 1
      */
     public int getHeight() {
         return this.imp.getSize().height;
@@ -170,7 +190,7 @@ public final class Image {
      *
      * @see #getHeight()
      * @see #getSize()
-     * @since 1.0
+     * @since 1
      */
     public int getWidth() {
         return this.imp.getSize().width;
@@ -182,6 +202,8 @@ public final class Image {
      *
      * @param oldColor color to be replaced
      * @param newColor color to replace oldColor
+     * 
+     * @since 1
      */
     public Image replacePixels(Color oldColor, Color newColor) {
         return new Image(this.imp.replacePixels(oldColor, newColor));
@@ -196,6 +218,8 @@ public final class Image {
      * @param filePath file to save to
      * @return <code>true</code> if file has been saved sucessfully
      * @throws NullPointerException if <code>filePath</code> is <code>null</code>
+     * 
+     * @since 1
      */
     public boolean save(String filePath) {
         File file = File.from(filePath);
