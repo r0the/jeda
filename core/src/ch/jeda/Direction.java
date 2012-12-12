@@ -23,124 +23,202 @@ import java.util.List;
 
 /**
  * This class represents the eight compass directions. Each direction has a
- * unique <code>int</code> value ranging from 0 for east counterclockwise to
- * 7 for south east.
+ * unique <code>int</code> number ranging from 0 for north clockwise to 7 for
+ * north west.
+ * 
+ * @since 1
  */
 public final class Direction implements Serializable {
 
     /**
      * The direction east. This direction has the value 2.
+     * 
+     * @since 1
      */
     public static final Direction EAST = new Direction(1, 0, "East", 2);
     /**
      * The direction north. This direction has the value 0.
+     * 
+     * @since 1
      */
     public static final Direction NORTH = new Direction(0, -1, "North", 0);
     /**
      * The direction north east. This direction has the value 1.
+     * 
+     * @since 1
      */
     public static final Direction NORTH_EAST = new Direction(1, -1, "NorthEast", 1);
     /**
      * The direction north west. This direction has the value 7.
+     * 
+     * @since 1
      */
     public static final Direction NORTH_WEST = new Direction(-1, -1, "NorthWest", 7);
     /**
      * The direction south. This direction has the value 4.
+     * 
+     * @since 1
      */
     public static final Direction SOUTH = new Direction(0, 1, "South", 4);
     /**
      * The direction south east. This direction has the value 3.
+     * 
+     * @since 1
      */
     public static final Direction SOUTH_EAST = new Direction(1, 1, "SouthEast", 3);
     /**
      * The direction south west. This direction has the value 5.
+     * 
+     * @since 1
      */
     public static final Direction SOUTH_WEST = new Direction(-1, 1, "SouthWest", 5);
     /**
      * The direction west. This direction has the value 6.
+     * 
+     * @since 1
      */
     public static final Direction WEST = new Direction(-1, 0, "West", 6);
     public static final List<Direction> LIST = initAllDirections();
     /**
      * A iterator of all eight directions. it starts with north and iterates
      * clockwise through all directions.
+     * 
+     * @since 1
      */
     public static final Iterable<Direction> ALL = LIST;
+    /**
+     * The number of this direction.
+     * 
+     * @since 1
+     */
+    public final int number;
     private final int dx;
     private final int dy;
-    private final int value;
     private final String name;
 
-    private Direction(int dx, int dy, String name, int value) {
-        this.dx = dx;
-        this.dy = dy;
-        this.name = name;
-        this.value = value;
-    }
-
     /**
-     * Returns the value of this direction.
+     * Returns the direction for the specified number.
+     * Returns <code>null</code> if the specified number is not between 0 and 7.
      * 
-     * @return the value of this direction
+     * @param number the number of a direction
+     * @return direction for the specified number or <code>null</code>
+     * 
+     * @since 1
      */
-    public int getValue() {
-        return this.value;
+    public static Direction from(int number) {
+        if (number < 0 || number > 7) {
+            return null;
+        }
+        else {
+            return LIST.get(number);
+        }
     }
 
     /**
-     * Returns the direction to the left of this direction by 
-     * <code>amount</code> steps.
+     * Returns the direction for the specified name.
+     * Returns <code>null</code> if the specified name is not valid.
+     * 
+     * @param name the name of a direction
+     * @return direction for the specified number or <code>null</code>
+     * 
+     * @since 1
+     */
+    public static Direction parse(String name) {
+        for (Direction direction : LIST) {
+            if (direction.name.equals(name)) {
+                return direction;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the direction that lies <code>amount</code> steps clockwise
+     * of this direction.
+     * For example, <code>NORTH.right(2)</code> will return <code>EAST</code>
+     * 
+     * @param amount the number of steps to turn
+     * @return the new direction
+     * 
+     * @since 1
+     */
+    public Direction clockwise(int amount) {
+        if (amount < 0) {
+            return this.counterclockwise(-amount);
+        }
+        else {
+            return LIST.get((number + amount) % 8);
+        }
+    }
+
+    /**
+     * Returns the direction that lies <code>amount</code> steps
+     * counterclockwise of this direction.
      * For example, <code>NORTH.left(2)</code> will return <code>WEST</code>
      * 
      * @param amount the number of steps to turn
      * @return the new direction
+     * 
+     * @since 1
      */
-    public Direction left(int amount) {
+    public Direction counterclockwise(int amount) {
         if (amount < 0) {
-            return this.right(-amount);
+            return this.clockwise(-amount);
         }
         else {
-            return LIST.get((value + 8 - (amount % 8)) % 8);
+            return LIST.get((number + 8 - (amount % 8)) % 8);
         }
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Direction) {
+            final Direction other = (Direction) object;
+            return this.number == other.number;
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return 17 * this.number;
     }
 
     /**
      * Returns the direction opposite to this direction.
      * 
      * @return the opposite direction
+     * 
+     * @since 1
      */
     public Direction opposite() {
-        return this.left(4);
-    }
-
-    /**
-     * Returns the direction to the right of this direction by 
-     * <code>amount</code> steps.
-     * For example, <code>NORTH.right(2)</code> will return <code>EAST</code>
-     * 
-     * @param amount the number of steps to turn
-     * @return the new direction
-     */
-    public Direction right(int amount) {
-        if (amount < 0) {
-            return this.left(-amount);
-        }
-        else {
-            return LIST.get((value + amount) % 8);
-        }
+        return this.clockwise(4);
     }
 
     public Location targetLocation(Location origin) {
         return Location.from(origin.x + this.dx, origin.y + this.dy);
     }
 
-    public Location getDelta() {
-        return Location.from(dx, dy);
-    }
-
+    /**
+     * Returns the name of this direction.
+     * 
+     * @return the name of this direction
+     * 
+     * @since 1
+     */
     @Override
     public String toString() {
         return this.name;
+    }
+
+    private Direction(int dx, int dy, String name, int value) {
+        this.dx = dx;
+        this.dy = dy;
+        this.name = name;
+        this.number = value;
     }
 
     private static List<Direction> initAllDirections() {
