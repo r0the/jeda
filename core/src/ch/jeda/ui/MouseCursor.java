@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2011, 2012 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,53 +16,50 @@
  */
 package ch.jeda.ui;
 
+import java.io.Serializable;
+
 /**
  * Represents a mouse cursor (the small picture that indicates the location of
  * the mouse on the screen). Mouse cursors can be changed using the
  * {@link Window#setMouseCursor(ch.jeda.ui.MouseCursor)} method.
  *
- * @version 1.0
  * @see Window
+ * @since 1
  */
-public final class MouseCursor {
+public final class MouseCursor implements Serializable {
 
     /**
      * A crosshair mouse cursor.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final MouseCursor CROSSHAIR = new MouseCursor(1, "Crosshair");
     /**
      * The default mouse cursor (an arrow).
      *
-     * @since 1.0
+     * @since 1
      */
     public static final MouseCursor DEFAULT = new MouseCursor(0, "Default");
     /**
      * A hand mouse cursor.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final MouseCursor HAND = new MouseCursor(12, "Hand");
     /**
      * An invisible mouse cursor.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final MouseCursor INVISIBLE = new MouseCursor(0, "Invisible");
     /**
      * A text input mouse cursor (the shape of an I).
      *
-     * @since 1.0
+     * @since 1
      */
     public static final MouseCursor TEXT = new MouseCursor(2, "Text");
     private final int cursor;
     private final String name;
-
-    private MouseCursor(int cursor, String name) {
-        this.cursor = cursor;
-        this.name = name;
-    }
 
     @Override
     public boolean equals(Object object) {
@@ -82,5 +79,10 @@ public final class MouseCursor {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    private MouseCursor(int cursor, String name) {
+        this.cursor = cursor;
+        this.name = name;
     }
 }

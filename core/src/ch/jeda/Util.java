@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Util {
+public final class Util {
 
     /**
      * Replaces placeholders in a string with the corresponding arguments. The
@@ -50,6 +50,23 @@ public class Util {
         }
         return result;
     }
+    
+//    public static String concat(Iterable<String> elements, String separator) {
+//        StringBuilder result = new StringBuilder();
+//        boolean first = true;
+//        for (String element : elements) {
+//            if (first) {
+//                first = false;
+//            }
+//            else {
+//                result.append(separator);
+//            }
+//
+//            result.append(element);
+//        }
+//
+//        return result.toString();
+//    }
 
     /**
      * Creates and returns a list of double values.

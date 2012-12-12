@@ -18,7 +18,7 @@ package ch.jeda;
 
 import java.io.Serializable;
 
-public class Transformation implements Serializable {
+public final class Transformation implements Serializable {
 
     public static final Transformation IDENTITY = new Transformation();
     public final double scaleX;

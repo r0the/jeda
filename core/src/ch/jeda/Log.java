@@ -16,7 +16,7 @@
  */
 package ch.jeda;
 
-public class Log {
+public final class Log {
 
     public enum Level {
 

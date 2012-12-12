@@ -25,7 +25,7 @@ import java.io.Serializable;
  * drawing on a {@link Canvas}. The alignment specified how the element to be
  * drawn is positioned relative to the given coordinates (the alignment point).
  *
- * @version 1.0
+ * @version 1
  */
 public final class Alignment implements Serializable {
 
@@ -35,69 +35,69 @@ public final class Alignment implements Serializable {
     /**
      * Align at the bottom vertically  and center horizontally.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Alignment BOTTOM_CENTER = new Alignment(CENTER_IMPL, RIGHT_BOTTOM_IMPL);
     /**
      * Align at the bottom vertically  and left horizontally.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Alignment BOTTOM_LEFT = new Alignment(LEFT_TOP_IMPL, RIGHT_BOTTOM_IMPL);
     /**
      * Align at the bottom vertically  and right horizontally.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Alignment BOTTOM_RIGHT = new Alignment(RIGHT_BOTTOM_IMPL, RIGHT_BOTTOM_IMPL);
     /**
      * Center both vertically and horizontally.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Alignment CENTER = new Alignment(CENTER_IMPL, CENTER_IMPL);
     /**
      * Center vertically and align left horizontally.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Alignment LEFT = new Alignment(LEFT_TOP_IMPL, CENTER_IMPL);
     /**
      * Center vertically and align right horizontally.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Alignment RIGHT = new Alignment(RIGHT_BOTTOM_IMPL, CENTER_IMPL);
     /**
      * Align at the top vertically and center horizontally.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Alignment TOP_CENTER = new Alignment(CENTER_IMPL, LEFT_TOP_IMPL);
     /**
      * Align at the top vertically and left horizontally.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Alignment TOP_LEFT = new Alignment(LEFT_TOP_IMPL, LEFT_TOP_IMPL);
     /**
      * Align at the top vertically and right horizontally.
      *
-     * @since 1.0
+     * @since 1
      */
     public static final Alignment TOP_RIGHT = new Alignment(RIGHT_BOTTOM_IMPL, LEFT_TOP_IMPL);
     private final Align horizontal;
     private final Align vertical;
 
-    private Alignment(Align horizontal, Align vertical) {
-        this.horizontal = horizontal;
-        this.vertical = vertical;
-    }
-
     Location align(Location anchor, Size size) {
         return Location.from(
                 this.horizontal.align(anchor.x, size.width),
                 this.vertical.align(anchor.y, size.height));
+    }
+
+    private Alignment(Align horizontal, Align vertical) {
+        this.horizontal = horizontal;
+        this.vertical = vertical;
     }
 
     private static abstract class Align implements Serializable {

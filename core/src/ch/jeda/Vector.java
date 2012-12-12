@@ -21,7 +21,7 @@ import java.io.Serializable;
 /**
  * This class represents a two-dimensional vector.
  */
-public class Vector implements Serializable {
+public final class Vector implements Serializable {
 
     public final double x;
     public final double y;
