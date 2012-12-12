@@ -38,7 +38,7 @@ public abstract class VisualSimulation extends Simulation {
      * @since 1.0
      */
     protected VisualSimulation() {
-        this(Size.EMPTY);
+        this(null);
     }
 
     /**

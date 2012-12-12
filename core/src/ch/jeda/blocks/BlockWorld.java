@@ -42,7 +42,7 @@ public class BlockWorld extends VisualSimulation {
      * @see Window#Window()
      */
     protected BlockWorld() {
-        this(Size.EMPTY);
+        this(null);
     }
 
     /**

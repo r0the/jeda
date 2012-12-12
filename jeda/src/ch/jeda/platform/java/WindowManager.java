@@ -70,7 +70,7 @@ public class WindowManager {
 
     private ViewWindow createViewWindow(ViewInfo viewInfo) {
         Size size = viewInfo.getSize();
-        if (size.isEmpty()) {
+        if (size == null) {
             size = Size.from(800, 600);
         }
 

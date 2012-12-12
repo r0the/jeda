@@ -45,7 +45,7 @@ class RenderContext {
         this.blockSet = new BlockSet();
         this.canvas = Canvas.create(size);
         this.maxY = this.canvas.getSize().height + this.blockSet.brickSizeZ() + this.blockSet.brickSizeY();
-        this.mapSize = Size.EMPTY;
+        this.mapSize = null;
         this.scrollPos = Location.ORIGIN;
     }
 

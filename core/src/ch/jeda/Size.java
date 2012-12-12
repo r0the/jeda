@@ -18,59 +18,51 @@ package ch.jeda;
 
 import java.io.Serializable;
 
-public class Size implements Serializable {
+public final class Size implements Serializable {
 
-    /**
-     * An empty <code>Size</code>. Both width and height of this objects are
-     * 0.
-     * 
-     * @since 1.0
-     */
-    public static final Size EMPTY = new Size(0, 0);
     /**
      * The width of this size.
      * 
-     * @since 1.0
+     * @since 1
      */
     public final int width;
     /**
      * The height of this size.
      * 
-     * @since 1.0
+     * @since 1
      */
     public final int height;
     private static final char SEPARATOR = 'x';
 
     /**
-     * Creates a new Size object.
+     * Returns a Size object.
+     * Returns <code>null</code> if <code>width</code> or <code>height</code>
+     * are smaller than 1.
      *
      * @param width the width
      * @param height the height
-     * @throws IllegalArgumentException if width or height are smaller than 0
+     * @return a size with the specified width and height or <code>null</code>
      * 
-     * @since 1.0
+     * @since 1
      */
     public static Size from(int width, int height) {
-        if (width < 0) {
-            throw new IllegalArgumentException("width");
+        if (width < 0 || height < 0) {
+            return null;
         }
-
-        if (height < 0) {
-            throw new IllegalArgumentException("height");
+        else {
+            return new Size(width, height);
         }
-
-        return new Size(width, height);
     }
 
     /**
      * Parses a size from a string. The string must contain two positivie
      * integers separated by an 'x', e.g. "800x600". Returns <code>null</code>
-     * if the string does not represent a valid size.
+     * if <code>text</code> does not represent a valid size.
      * 
      * @param text the string to parse
      * @return the parsed size or <code>null</code>
      * 
-     * @since 1.0
+     * @since 1
      */
     public static Size parse(String text) {
         int pos = text.indexOf(SEPARATOR);
@@ -100,7 +92,7 @@ public class Size implements Serializable {
      * 
      * @return area
      * 
-     * @since 1.0
+     * @since 1
      */
     public int area() {
         return this.width * this.height;
@@ -113,6 +105,8 @@ public class Size implements Serializable {
      * @param location the location to check
      * @return <code>true</code> if location lies within, otherwise
      *         <code>false</code>
+     * 
+     * @since 1
      */
     public boolean contains(Location location) {
         if (location == null) {
@@ -139,15 +133,30 @@ public class Size implements Serializable {
         return 13 * this.width + this.height;
     }
 
-    public boolean isEmpty() {
-        return this.width <= 0 || this.height <= 0;
-    }
-
+    /**
+     * Returns a scaled variant of this size. Both width and height of this
+     * size are scaled and rounded. If both width and height are positive,
+     * a resulting size is returned. Otherwise, <code>null</code> is returned.
+     * 
+     * @param factor the factor by which to scale this size.
+     * @return the scaled size or <code>null</code>
+     * 
+     * @since 1
+     */
     public Size scaled(double factor) {
         return Size.from((int) Math.round(this.width * factor),
                          (int) Math.round(this.height * factor));
     }
 
+    /**
+     * Returns a string representation of this size. The string representation
+     * has the form "WxH" where W is replaced by the width and H by the height
+     * of this size.
+     * 
+     * @return string representation of this size
+     * 
+     * @since 1
+     */
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

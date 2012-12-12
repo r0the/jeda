@@ -19,7 +19,6 @@ package ch.jeda.ui;
 import ch.jeda.Engine;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.Size;
-import java.util.Arrays;
 import java.util.EnumSet;
 
 /**
@@ -29,6 +28,8 @@ import java.util.EnumSet;
  *   <li> double buffering: the window supports a double buffering mode for animations.
  *   <li> user input: the window provides means to query keyboard and mouse input.
  * </ul>
+ * 
+ * @since 1
  */
 public class Window extends Canvas {
 
@@ -36,6 +37,7 @@ public class Window extends Canvas {
 
         DoubleBuffered, Fullscreen
     }
+    private static final EnumSet<Feature> NO_FEATURES = EnumSet.noneOf(Feature.class);
     private final Events events;
     private ViewImp imp;
     private String title;
@@ -47,10 +49,10 @@ public class Window extends Canvas {
      * On the Java platform, the drawing area has a width of 800 and a height
      * of 600 pixels.
      *
-     * @since 1.0
+     * @since 1
      */
     public static Window create() {
-        return new Window();
+        return new Window(null, NO_FEATURES);
     }
 
     /**
@@ -63,10 +65,10 @@ public class Window extends Canvas {
      *
      * @param features the features of this window
      *
-     * @since 1.0
+     * @since 1
      */
     public static Window create(Feature... features) {
-        return new Window(Size.EMPTY, features);
+        return new Window(null, toSet(features));
     }
 
     /**
@@ -79,10 +81,10 @@ public class Window extends Canvas {
      *
      * @throws IllegalArgumentException if width or height are smaller than 1
      * 
-     * @since 1.0
+     * @since 1
      */
     public static Window create(int width, int height) {
-        return new Window(Size.from(width, height));
+        return new Window(Size.from(width, height), NO_FEATURES);
     }
 
     /**
@@ -97,10 +99,10 @@ public class Window extends Canvas {
      *
      * @throws IllegalArgumentException if width or height are smaller than 1
      * 
-     * @since 1.0
+     * @since 1
      */
     public static Window create(int width, int height, Feature... features) {
-        return new Window(Size.from(width, height), features);
+        return new Window(Size.from(width, height), toSet(features));
     }
 
     /**
@@ -113,15 +115,9 @@ public class Window extends Canvas {
      * @param features the features of this window
      *
      * @throws NullPointerException if size is <code>null</code>
-     * 
-     * @since 1.0
      */
     public static Window create(Size size, Feature... features) {
-        if (size == null) {
-            throw new NullPointerException("size");
-        }
-
-        return new Window(size, features);
+        return new Window(size, toSet(features));
     }
 
     /**
@@ -132,7 +128,7 @@ public class Window extends Canvas {
      * of 600 pixels.
      */
     public Window() {
-        this(Size.EMPTY);
+        this(null, NO_FEATURES);
     }
 
     /**
@@ -146,7 +142,7 @@ public class Window extends Canvas {
      * @param features the features of this window
      */
     public Window(Feature... features) {
-        this(Size.EMPTY, features);
+        this(null, toSet(features));
     }
 
     /**
@@ -162,13 +158,13 @@ public class Window extends Canvas {
      * @throws IllegalArgumentException if width or height are smaller than 1
      */
     public Window(int width, int height, Feature... features) {
-        this(Size.from(width, height), features);
+        this(Size.from(width, height), toSet(features));
     }
 
     /**
      * Closes this window and destroys the window object.
      *
-     * @since 1.0
+     * @since 1
      */
     public void close() {
         this.imp.close();
@@ -182,7 +178,7 @@ public class Window extends Canvas {
      * 
      * @return {@link Events} object representing the events on this window
      * 
-     * @since 1.0
+     * @since 1
      */
     public Events getEvents() {
         return this.events;
@@ -192,8 +188,9 @@ public class Window extends Canvas {
      * Returns the window's current title.
      *
      * @return current window title
+     * 
      * @see #setTitle(java.lang.String)
-     * @since 1.0
+     * @since 1
      */
     public String getTitle() {
         return this.title;
@@ -206,7 +203,7 @@ public class Window extends Canvas {
      *         otherwise returns <code>false</code>
      * @see #setFeatures(Feature...)
      * 
-     * @since 1.0
+     * @since 1
      */
     public boolean hasFeature(Feature feature) {
         return this.imp.getFeatures().contains(feature);
@@ -236,7 +233,20 @@ public class Window extends Canvas {
         this.setFeature(Feature.Fullscreen, fullscreen);
     }
 
+    /**
+     * Sets the shape of the mouse cursor.
+     * 
+     * @param mouseCursor new shape of mouse cursor
+     * @throws NullPointerException if <code>mouseCursor</code> is 
+     *         <code>null</code>
+     * 
+     * @since 1
+     */
     public void setMouseCursor(MouseCursor mouseCursor) {
+        if (mouseCursor == null) {
+            throw new NullPointerException("mouseCursor");
+        }
+
         this.imp.setMouseCursor(mouseCursor);
     }
 
@@ -244,14 +254,16 @@ public class Window extends Canvas {
      * Sets the window's title.
      *
      * @param title new title of the window
-     * @throws NullPointerException if title is null
+     * @throws NullPointerException if <code>title</code> is <code>null</code>
+     * 
      * @see #getTitle()
-     * @since 1.0
+     * @since 1
      */
     public void setTitle(String title) {
         if (title == null) {
             throw new NullPointerException("title");
         }
+
         this.title = title;
         this.imp.setTitle(title);
     }
@@ -266,16 +278,16 @@ public class Window extends Canvas {
      *   <li> In BufferMode.SingleLazy, it updates the display.
      * </ul>
      *
-     * @since 1.0
+     * @since 1
      */
     public void update() {
         this.imp.update();
     }
 
-    private Window(Size size, Feature... features) {
+    private Window(Size size, EnumSet<Feature> features) {
         this.events = new Events();
         this.title = Thread.currentThread().getName();
-        this.resetImp(size, toSet(features));
+        this.resetImp(size, features);
     }
 
     private void resetImp(Size size, EnumSet<Feature> features) {
@@ -297,7 +309,10 @@ public class Window extends Canvas {
 
     private static EnumSet<Feature> toSet(Feature... features) {
         EnumSet<Feature> result = EnumSet.noneOf(Feature.class);
-        result.addAll(Arrays.asList(features));
+        for (Feature feature : features) {
+            result.add(feature);
+        }
+
         return result;
     }
 }

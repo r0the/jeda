@@ -91,10 +91,6 @@ public final class Engine {
     }
 
     public ViewImp showView(Size size, EnumSet<Window.Feature> features) {
-        if (size == null) {
-            throw new NullPointerException("size");
-        }
-
         if (features == null) {
             throw new NullPointerException("features");
         }
