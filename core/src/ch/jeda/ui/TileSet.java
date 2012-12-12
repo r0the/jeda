@@ -16,7 +16,6 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.File;
 import ch.jeda.Location;
 import ch.jeda.Size;
 

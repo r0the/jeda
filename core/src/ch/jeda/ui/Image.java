@@ -17,12 +17,13 @@
 package ch.jeda.ui;
 
 import ch.jeda.Engine;
-import ch.jeda.File;
 import ch.jeda.Location;
 import ch.jeda.Log;
 import ch.jeda.Message;
 import ch.jeda.Size;
 import ch.jeda.platform.ImageImp;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -222,17 +223,29 @@ public final class Image {
      * @since 1
      */
     public boolean save(String filePath) {
-        File file = File.from(filePath);
-        String extension = file.getExtension().toLowerCase();
+        if (filePath == null) {
+            throw new NullPointerException("filePath");
+        }
+
+        int pos = filePath.indexOf('.');
+        if (pos == -1) {
+            return false;
+        }
+
+        String extension = filePath.substring(pos + 1).toLowerCase();
         if (!FORMAT_MAP.containsKey(extension)) {
             Log.warning(Message.IMAGE_FORMAT_ERROR, filePath, extension);
             return false;
         }
 
-        file.makeDirectories();
+        java.io.File dir = new File(filePath).getParentFile();
+        if (dir != null) {
+            dir.mkdirs();
+        }
+
         OutputStream out = null;
         try {
-            out = file.openForWrite();
+            out = new FileOutputStream(filePath);
             return this.imp.write(out, FORMAT_MAP.get(extension));
         }
         catch (IOException ex) {
