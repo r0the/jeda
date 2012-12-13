@@ -17,9 +17,11 @@
 package ch.jeda.platform.java;
 
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -52,7 +54,7 @@ class JedaWindow extends JFrame {
     protected final void init() {
         Point center = graphicsEnvironment().getCenterPoint();
         this.setLocation(center.x - this.getWidth() / 2, center.y - this.getHeight() / 2);
-        GUI.setIcon(this);
+        this.setIconImage(loadImage("ch/jeda/resources/logo-16x16.png"));
     }
 
     protected final void setDefaultButton(JButton button) {
@@ -72,6 +74,10 @@ class JedaWindow extends JFrame {
 
     private static GraphicsEnvironment graphicsEnvironment() {
         return GraphicsEnvironment.getLocalGraphicsEnvironment();
+    }
+
+    private static Image loadImage(String path) {
+        return new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(path)).getImage();
     }
 
     private static class WindowListener extends WindowAdapter {

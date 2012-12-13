@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import javax.imageio.ImageIO;
 
-class JavaImageImp implements ch.jeda.platform.ImageImp {
+class JavaImageImp implements ImageImp {
 
     private final BufferedImage bufferedImage;
     private final Size size;

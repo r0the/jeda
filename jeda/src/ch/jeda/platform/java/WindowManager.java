@@ -24,12 +24,16 @@ import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewInfo;
 import ch.jeda.ui.Window.Feature;
 import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class WindowManager {
 
+    private static final GraphicsDevice GRAPHICS_DEVICE =
+            GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private final Engine engine;
     private final InputWindow inputWindow;
     private final LogWindow logWindow;
@@ -75,10 +79,11 @@ public class WindowManager {
         }
 
         if (viewInfo.hasFeature(Feature.Fullscreen) && this.fullscreenWindow == null) {
-            DisplayMode displayMode = GUI.findDisplayMode(size);
+            DisplayMode displayMode = findDisplayMode(size);
             size = Size.from(displayMode.getWidth(), displayMode.getHeight());
             this.fullscreenWindow = new ViewWindow(this, size, true);
-            GUI.setFullscreenMode(this.fullscreenWindow, displayMode);
+            GRAPHICS_DEVICE.setFullScreenWindow(this.fullscreenWindow);
+            GRAPHICS_DEVICE.setDisplayMode(displayMode);
             return this.fullscreenWindow;
         }
         else {
@@ -111,15 +116,16 @@ public class WindowManager {
     void notifyDisposing(JedaWindow window) {
         if (window.equals(this.fullscreenWindow)) {
             this.fullscreenWindow = null;
-            GUI.finishFullscreenMode();
+            GRAPHICS_DEVICE.setFullScreenWindow(window);
         }
+
         this.windows.remove(window);
     }
 
     void notifyHidden(JedaWindow window) {
         if (window.equals(this.fullscreenWindow)) {
             this.fullscreenWindow = null;
-            GUI.finishFullscreenMode();
+            GRAPHICS_DEVICE.setFullScreenWindow(window);
         }
 
         // If no windows are visible, then we request Jeda to stop.
@@ -130,5 +136,28 @@ public class WindowManager {
         }
 
         this.engine.requestStop();
+    }
+
+    private static DisplayMode findDisplayMode(Size size) {
+        DisplayMode result = null;
+        int fdx = Integer.MAX_VALUE;
+        int fdy = Integer.MAX_VALUE;
+        int fcolor = Integer.MIN_VALUE;
+        for (DisplayMode candidate : GRAPHICS_DEVICE.getDisplayModes()) {
+            int dx = candidate.getWidth() - size.width;
+            int dy = candidate.getHeight() - size.height;
+            if (dx >= 0 && dy >= 0 && (dx < fdx || dy < fdy || candidate.getBitDepth() > fcolor)) {
+                result = candidate;
+                fdx = dx;
+                fdy = dy;
+                fcolor = result.getBitDepth();
+            }
+        }
+
+        if (result == null) {
+            result = GRAPHICS_DEVICE.getDisplayMode();
+        }
+
+        return result;
     }
 }
