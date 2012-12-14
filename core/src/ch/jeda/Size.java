@@ -75,7 +75,7 @@ public final class Size implements Serializable {
             int height = Integer.parseInt(text.substring(pos + 1));
 
             if (width > 0 && height > 0) {
-                return Size.from(width, height);
+                return from(width, height);
             }
             else {
                 return null;
@@ -144,8 +144,8 @@ public final class Size implements Serializable {
      * @since 1
      */
     public Size scaled(double factor) {
-        return Size.from((int) Math.round(this.width * factor),
-                         (int) Math.round(this.height * factor));
+        return from((int) Math.round(this.width * factor),
+                    (int) Math.round(this.height * factor));
     }
 
     /**

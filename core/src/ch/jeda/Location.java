@@ -22,6 +22,8 @@ import java.io.Serializable;
  * This class represents a location on a two-dimensional integral grid with two
  * integer coordinates. It is used to refer to the location of a pixel on a
  * drawing surface or a field on a board game.
+ * 
+ * @since 1
  */
 public final class Location implements Serializable {
 
@@ -32,10 +34,14 @@ public final class Location implements Serializable {
     public static final Location ORIGIN = new Location(0, 0);
     /**
      * The x coordinate of this location.
+     * 
+     * @since 1
      */
     public final int x;
     /**
      * The y coordinate of this location.
+     * 
+     * @since 1
      */
     public final int y;
 
@@ -46,6 +52,8 @@ public final class Location implements Serializable {
      * 
      * @param x the x coordinate of this location
      * @param y the y coordinate of this location
+     * 
+     * @since 1
      */
     public static Location from(int x, int y) {
         if (x == 0 && y == 0) {
@@ -53,6 +61,22 @@ public final class Location implements Serializable {
         }
         else {
             return new Location(x, y);
+        }
+    }
+
+    /**
+     * 
+     * @param vector
+     * @return 
+     * 
+     * @since 1
+     */
+    public static Location from(Vector vector) {
+        if (vector == null) {
+            return null;
+        }
+        else {
+            return from((int) Math.round(vector.x), (int) Math.round(vector.y));
         }
     }
 
@@ -139,15 +163,6 @@ public final class Location implements Serializable {
         result.append(this.y);
         result.append(')');
         return result.toString();
-    }
-
-    /**
-     * Converts this location to a {@link ch.jeda.Vector}.
-     * 
-     * @return <code>Vector</code> representing this location
-     */
-    public Vector toVector() {
-        return Vector.from(this.x, this.y);
     }
 
     private Location(int x, int y) {

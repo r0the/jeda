@@ -20,6 +20,8 @@ import java.io.Serializable;
 
 /**
  * This class represents a two-dimensional vector.
+ * 
+ * @since 1
  */
 public final class Vector implements Serializable {
 
@@ -27,8 +29,8 @@ public final class Vector implements Serializable {
     public final double y;
     private double direction;
     public static Vector NULL = new Vector();
-    public static Vector UNIT_X = new Vector(1d, 0d);
-    public static Vector UNIT_Y = new Vector(0d, 1d);
+    public static Vector UNIT_X = new Vector(1.0, 0.0);
+    public static Vector UNIT_Y = new Vector(0.0, 1.0);
 
     /**
      * Creates a new Vector with the specified x and y coordinates.
@@ -36,10 +38,21 @@ public final class Vector implements Serializable {
      * @param x x coordinate of the new vector
      * @param y y coordinate of the new vector
      *
-     * @since 1.0
+     * @since 1
      */
     public static Vector from(double x, double y) {
         return new Vector(x, y);
+    }
+
+    /**
+     * 
+     * @param location
+     * @return 
+     * 
+     * @since 1
+     */
+    public static Vector from(Location location) {
+        return new Vector(location.x, location.y);
     }
 
     /**
@@ -49,7 +62,7 @@ public final class Vector implements Serializable {
      * @param direction the direction of the new vector in degrees
      * @return new vector
      * 
-     * @since 1.0
+     * @since 1
      */
     public static Vector fromPolar(double length, double direction) {
         direction = normalizeDegrees(direction);
@@ -57,6 +70,13 @@ public final class Vector implements Serializable {
                           direction);
     }
 
+    /**
+     * 
+     * @param other
+     * @return 
+     * 
+     * @since 1
+     */
     public double enclosedAngle(Vector other) {
         return angle(Math.abs(other.x - this.x), Math.abs(other.y - this.y));
     }
@@ -69,7 +89,7 @@ public final class Vector implements Serializable {
      *
      * @return current direction
      *
-     * @since 1.0
+     * @since 1
      */
     public double direction() {
         if (Double.isNaN(this.direction)) {
@@ -84,7 +104,7 @@ public final class Vector implements Serializable {
      * @param other
      * @return dot product
      *
-     * @since 1.0
+     * @since 1
      */
     public double dot(final Vector other) {
         if (other == null) {
@@ -98,6 +118,8 @@ public final class Vector implements Serializable {
      * same length as this vector pointing in the opposite direction.
      *
      * @return inverse of this vector
+     * 
+     * @since 1
      */
     public Vector inverse() {
         return from(-this.x, -this.y);
@@ -107,27 +129,55 @@ public final class Vector implements Serializable {
      * Returns the current length. The length of a vector is never negative.
      *
      * @return current length
+     * 
+     * @since 1
      */
     public double length() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
+    /**
+     * 
+     * @param other
+     * @return 
+     * 
+     * @since 1
+     */
     public Vector minus(Vector other) {
         return from(this.x + (-other.x), this.y + (-other.y));
     }
 
+    /**
+     * 
+     * @return 
+     * 
+     * @since 1
+     */
     public Vector normal() {
         return from(-this.y, this.x);
     }
 
+    /**
+     * 
+     * @return 
+     * 
+     * @since 1
+     */
     public Vector normalized() {
-        Vector result = this.times(1d / this.length());
-        assert Math.abs(result.length()) < 1E23;
+        Vector result = this.times(1.0 / this.length());
+        assert Math.abs(result.length()) < 1.0E23;
         return result;
     }
 
+    /**
+     * 
+     * @param other
+     * @return 
+     * 
+     * @since 1
+     */
     public Vector plus(Vector other) {
-        return from(this.x + other.x, this.y + other.y);
+        return Vector.from(this.x + other.x, this.y + other.y);
     }
 
     /**
@@ -137,20 +187,43 @@ public final class Vector implements Serializable {
      *
      * @param other vector to be projected on
      * @return projection of this on other
+     * 
+     * @since 1
      */
     public Vector projectOn(Vector other) {
-        Vector on = other.normalized();
+        final Vector on = other.normalized();
         return on.times(this.dot(on));
     }
 
+    /**
+     * 
+     * @param angle
+     * @return 
+     * 
+     * @since 1
+     */
     public Vector rotatedBy(double angle) {
-        return fromPolar(this.length(), this.direction() + angle);
+        return Vector.fromPolar(this.length(), this.direction() + angle);
     }
 
+    /**
+     * 
+     * @param v
+     * @return 
+     * 
+     * @since 1
+     */
     public Vector times(double v) {
-        return from(this.x * v, this.y * v);
+        return Vector.from(this.x * v, this.y * v);
     }
 
+    /**
+     * 
+     * @param length
+     * @return 
+     * 
+     * @since 1
+     */
     public Vector withLength(double length) {
         double myLength = this.x * this.x + this.y * this.y;
         if (myLength == 0) {
@@ -163,10 +236,6 @@ public final class Vector implements Serializable {
 
     public Vector withDirection(double direction) {
         return fromPolar(this.length(), direction);
-    }
-
-    public Location toLocation() {
-        return Location.from((int) Math.round(this.x), (int) Math.round(this.y));
     }
 
     @Override
@@ -189,9 +258,9 @@ public final class Vector implements Serializable {
      * a length of 0.
      */
     private Vector() {
-        this.x = 0d;
-        this.y = 0d;
-        this.direction = 0d;
+        this.x = 0.0;
+        this.y = 0.0;
+        this.direction = 0.0;
     }
 
     private Vector(double x, double y) {
