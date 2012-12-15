@@ -20,7 +20,7 @@ import ch.jeda.platform.InputRequest;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-class InputWindow extends JedaWindow {
+class InputWindow extends BaseWindow {
 
     private InputRequest inputRequest;
 

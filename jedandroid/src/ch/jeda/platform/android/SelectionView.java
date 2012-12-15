@@ -17,57 +17,127 @@
 package ch.jeda.platform.android;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.DataSetObserver;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import ch.jeda.platform.SelectionRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SelectionActivity<T> extends android.app.ListActivity {
+class SelectionView extends DialogView {
 
     static final String TITLE = "Title";
     static final String ITEMS = "Items";
     static final String SELECTED_INDEX = "SelectedIndex";
-    private MyListAdapter listAdapter;
+    private final ListAdapterImp listAdapter;
+    private final ListView listView;
+    private SelectionRequest request;
+    private int selectedItemPosition;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.listAdapter = new MyListAdapter(this);
-        this.setListAdapter(this.listAdapter);
-        Intent intent = this.getIntent();
-        if (intent != null) {
-            this.setTitle(intent.getStringExtra(TITLE));
-            this.listAdapter.setItems(intent.getStringArrayListExtra(ITEMS));
-        }
+    SelectionView(ViewManager manager) {
+        super(manager);
+        this.listView = new ListView(this.getContext());
+        this.addContent(this.listView);
+        this.listAdapter = new ListAdapterImp(this.getContext());
+        this.listView.setAdapter(this.listAdapter);
+        this.listView.setOnItemClickListener(new OnItemClickListenerImp(this));
+    }
+
+    void setSelectionRequest(SelectionRequest request) {
+        this.request = request;
+        this.setTitle(request.getTitle());
+        this.listAdapter.setItems(request.getDisplayItems());
     }
 
     @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        Intent data = new Intent();
-        data.putExtra(SELECTED_INDEX, position);
-        this.setResult(RESULT_OK, data);
-        this.finish();
+    protected void onAccept() {
+        this.request.setSelectedIndex(selectedItemPosition);
     }
 
-    private static class MyListAdapter implements ListAdapter {
+    private static class ListAdapterImp implements ListAdapter {
 
         private static final int TEXT_VIEW_ID = 1;
         private final Context context;
         private final List<String> items;
         private final Set<DataSetObserver> observers;
 
-        MyListAdapter(Context context) {
+        @Override
+        public boolean areAllItemsEnabled() {
+            return true;
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return true;
+        }
+
+        @Override
+        public void registerDataSetObserver(DataSetObserver observer) {
+            this.observers.add(observer);
+        }
+
+        @Override
+        public void unregisterDataSetObserver(DataSetObserver observer) {
+            this.observers.remove(observer);
+        }
+
+        @Override
+        public int getCount() {
+            return this.items.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return this.items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View result = convertView;
+            if (result == null) {
+                result = this.createRowView();
+            }
+
+            ((TextView) result.findViewById(TEXT_VIEW_ID)).setText(this.items.get(position));
+            return result;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return 0;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 1;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return this.items.isEmpty();
+        }
+
+        ListAdapterImp(Context context) {
             this.context = context;
             this.observers = new HashSet();
             this.items = new ArrayList();
@@ -81,60 +151,6 @@ public class SelectionActivity<T> extends android.app.ListActivity {
             }
         }
 
-        public boolean areAllItemsEnabled() {
-            return true;
-        }
-
-        public boolean isEnabled(int position) {
-            return true;
-        }
-
-        public void registerDataSetObserver(DataSetObserver observer) {
-            this.observers.add(observer);
-        }
-
-        public void unregisterDataSetObserver(DataSetObserver observer) {
-            this.observers.remove(observer);
-        }
-
-        public int getCount() {
-            return this.items.size();
-        }
-
-        public Object getItem(int position) {
-            return this.items.get(position);
-        }
-
-        public long getItemId(int position) {
-            return position;
-        }
-
-        public boolean hasStableIds() {
-            return true;
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View result = convertView;
-            if (result == null) {
-                result = this.createRowView();
-            }
-
-            ((TextView) result.findViewById(TEXT_VIEW_ID)).setText(this.items.get(position));
-            return result;
-        }
-
-        public int getItemViewType(int position) {
-            return 0;
-        }
-
-        public int getViewTypeCount() {
-            return 1;
-        }
-
-        public boolean isEmpty() {
-            return this.items.isEmpty();
-        }
-
         private View createRowView() {
             LinearLayout result = new LinearLayout(this.context);
             result.setOrientation(LinearLayout.HORIZONTAL);
@@ -146,6 +162,21 @@ public class SelectionActivity<T> extends android.app.ListActivity {
             textView.setTextSize(20);
             result.addView(textView);
             return result;
+        }
+    }
+
+    private static class OnItemClickListenerImp implements OnItemClickListener {
+
+        private final SelectionView selectionView;
+
+        public OnItemClickListenerImp(SelectionView selectionView) {
+            this.selectionView = selectionView;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            this.selectionView.selectedItemPosition = position;
+            this.selectionView.accept();
         }
     }
 }

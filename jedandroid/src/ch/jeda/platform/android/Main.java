@@ -14,23 +14,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.platform;
+package ch.jeda.platform.android;
 
-import ch.jeda.ui.MouseCursor;
-import ch.jeda.ui.Window;
-import java.util.EnumSet;
+import android.app.Activity;
+import android.os.Bundle;
 
-public interface ViewImp extends CanvasImp {
+public final class Main extends Activity {
 
-    void close();
-
-    EnumSet<Window.Feature> getFeatures();
-
-    EventsImp getEventsImp();
-
-    void setMouseCursor(MouseCursor mouseCursor);
-
-    void setTitle(String title);
-
-    void update();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        new AndroidPlatform(this).start();
+    }
 }

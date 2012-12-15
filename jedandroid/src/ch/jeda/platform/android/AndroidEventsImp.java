@@ -38,14 +38,6 @@ public class AndroidEventsImp implements EventsImp {
     private Location pointerMovement;
     private String typedChars;
 
-    AndroidEventsImp() {
-        this.motionEventQueue = new EventQueue();
-        this.pressedKeys = new HashSet();
-        this.typedKeys = new ArrayList();
-
-        this.typedChars = "";
-    }
-
     @Override
     public Location getPointerLocation() {
         return this.pointerLocation;
@@ -76,8 +68,17 @@ public class AndroidEventsImp implements EventsImp {
         return this.clicked;
     }
 
+    @Override
     public boolean isDragging() {
         return this.pointerLocation != null && !this.clickCandidate;
+    }
+
+    AndroidEventsImp() {
+        this.motionEventQueue = new EventQueue();
+        this.pressedKeys = new HashSet();
+        this.typedKeys = new ArrayList();
+
+        this.typedChars = "";
     }
 
     void addMotionEvent(MotionEvent event) {

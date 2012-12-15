@@ -17,92 +17,95 @@
 package ch.jeda.platform.android;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.view.SurfaceHolder;
-import ch.jeda.Size;
-import ch.jeda.platform.ViewImp;
-import ch.jeda.platform.ViewInfo;
-import ch.jeda.ui.Window.Feature;
+import android.content.Context;
+import ch.jeda.platform.SelectionRequest;
+import ch.jeda.platform.WindowRequest;
+import java.util.Stack;
 
-class ViewManager implements SurfaceHolder.Callback {
+class ViewManager {
 
     private final Activity activity;
-    private final Object surfaceLock;
-    private boolean surfaceAvailable;
-    private SurfaceHolder surfaceHolder;
-    private JedaSurfaceView surfaceView;
-    private Size surfaceSize;
+    private final LogView logView;
+    private final SelectionView selectionView;
+    private final Stack<BaseView> visibleViews;
+    private boolean stopped;
 
-    public ViewManager(Activity activity) {
+    ViewManager(Activity activity) {
         this.activity = activity;
-        this.surfaceLock = new Object();
+        // Stack must be instantiated before any views
+        this.visibleViews = new Stack();
+        this.logView = new LogView(this);
+        this.selectionView = new SelectionView(this);
     }
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
+    Context getContext() {
+        return this.activity;
     }
 
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        synchronized (this.surfaceLock) {
-            this.surfaceAvailable = true;
-            this.surfaceSize = Size.from(width, height);
-            this.surfaceLock.notify();
+    void closing(BaseView view) {
+        this.visibleViews.remove(view);
+        if (this.visibleViews.empty()) {
+            this.checkStop();
+        }
+        else {
+            this.activateView(this.visibleViews.peek());
         }
     }
 
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        synchronized (this.surfaceLock) {
-            this.surfaceAvailable = false;
-            this.surfaceLock.notify();
-        }
+    void log(final String text) {
+        this.logView.log(text);
     }
 
-    ViewImp createViewImp(ViewInfo viewInfo) {
-        synchronized (this.surfaceLock) {
-            while (!this.surfaceAvailable) {
-                try {
-                    this.surfaceLock.wait();
+    void showLog() {
+        this.show(ViewManager.this.logView);
+    }
+
+    void showSelectionRequest(final SelectionRequest selectionRequest) {
+        this.selectionView.setSelectionRequest(selectionRequest);
+        this.show(ViewManager.this.selectionView);
+    }
+
+    void showWindow(WindowRequest request) {
+        CanvasView displayView = new CanvasView(this, request);
+        this.show(displayView);
+    }
+
+    void stop() {
+        this.stopped = true;
+        this.checkStop();
+    }
+
+    void titleChanged(final BaseView view) {
+        if (this.isTopView(view)) {
+            this.activity.runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    activity.setTitle(view.getTitle());
                 }
-                catch (InterruptedException ex) {
-                }
-            }
-
-            return AndroidViewImp.create(this, viewInfo.hasFeature(Feature.DoubleBuffered));
+            });
         }
     }
 
-    AndroidEventsImp getEventsImp() {
-        return this.surfaceView.getEventsImp();
+    private void activateView(BaseView view) {
+        this.activity.setContentView(view);
+        this.activity.setTitle(view.getTitle());
     }
 
-    Size getSize() {
-        return this.surfaceSize;
-    }
-
-    void onCreate() {
-        this.surfaceView = new JedaSurfaceView(this.activity);
-        this.surfaceHolder = this.surfaceView.getHolder();
-        this.activity.setContentView(this.surfaceView);
-        this.surfaceHolder.addCallback(this);
-    }
-
-    void setTitle(final String title) {
-        this.activity.runOnUiThread(new Runnable() {
-
-            public void run() {
-                activity.setTitle(title);
-            }
-        });
-    }
-
-    void setBitmap(Bitmap bitmap) {
-        if (this.surfaceAvailable) {
-            Canvas canvas = this.surfaceHolder.lockCanvas();
-            canvas.drawBitmap(bitmap, 0f, 0f, null);
-            this.surfaceHolder.unlockCanvasAndPost(canvas);
+    private void checkStop() {
+        if (this.visibleViews.empty() && this.stopped) {
+            this.activity.finish();
         }
+    }
+
+    private void show(BaseView view) {
+        if (!this.isTopView(view)) {
+            this.visibleViews.push(view);
+            this.activateView(view);
+        }
+    }
+
+    private boolean isTopView(BaseView view) {
+        return !this.visibleViews.isEmpty() && view.equals(this.visibleViews.peek());
     }
 }

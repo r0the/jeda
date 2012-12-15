@@ -35,7 +35,7 @@ public interface Platform {
 
     void showSelectionRequest(SelectionRequest selectionRequest);
 
-    ViewImp showView(ViewInfo viewInfo);
+    void showWindow(WindowRequest windowRequest);
 
     void stop();
 }

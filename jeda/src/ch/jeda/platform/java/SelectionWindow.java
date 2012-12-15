@@ -20,7 +20,7 @@ import ch.jeda.platform.SelectionRequest;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-class SelectionWindow extends JedaWindow {
+class SelectionWindow extends BaseWindow {
 
     private SelectionRequest listInfo;
 

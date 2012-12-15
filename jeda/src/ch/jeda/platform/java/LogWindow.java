@@ -18,7 +18,7 @@ package ch.jeda.platform.java;
 
 import ch.jeda.Message;
 
-class LogWindow extends JedaWindow {
+class LogWindow extends BaseWindow {
 
     LogWindow(WindowManager manager) {
         super(manager);

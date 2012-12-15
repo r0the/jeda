@@ -23,8 +23,7 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
-import ch.jeda.platform.ViewImp;
-import ch.jeda.platform.ViewInfo;
+import ch.jeda.platform.WindowRequest;
 import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.UIManager;
@@ -72,13 +71,13 @@ class JavaPlatform implements Platform {
     }
 
     @Override
-    public ViewImp showView(ViewInfo viewInfo) {
-        return this.windowManager.createViewImp(viewInfo);
+    public void showWindow(WindowRequest windowRequest) {
+        this.windowManager.showWindow(windowRequest);
     }
 
     @Override
     public void stop() {
-        this.windowManager.finish();
+        this.windowManager.stop();
     }
 
     JavaPlatform(String[] args) {

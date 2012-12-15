@@ -17,7 +17,7 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.platform.EventsImp;
-import ch.jeda.platform.ViewImp;
+import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
 import java.awt.Cursor;
@@ -27,33 +27,11 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract class JavaViewImp extends JavaCanvasImp implements ViewImp {
+abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
     private static final Map<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
     private final EnumSet<Window.Feature> features;
-    protected final ViewWindow viewWindow;
-
-    static JavaViewImp create(ViewWindow viewWindow, boolean doubleBuffered) {
-        if (doubleBuffered) {
-            return new DoubleBufferedViewImp(viewWindow);
-        }
-        else {
-            return new SingleBufferedViewImp(viewWindow);
-        }
-    }
-
-    JavaViewImp(ViewWindow viewWindow, boolean doubleBuffered) {
-        this.viewWindow = viewWindow;
-
-        this.features = EnumSet.noneOf(Window.Feature.class);
-        if (doubleBuffered) {
-            this.features.add(Window.Feature.DoubleBuffered);
-        }
-
-        if (this.viewWindow.isFullscreen()) {
-            this.features.add(Window.Feature.Fullscreen);
-        }
-    }
+    protected final CanvasWindow viewWindow;
 
     @Override
     public void close() {
@@ -87,6 +65,28 @@ abstract class JavaViewImp extends JavaCanvasImp implements ViewImp {
         this.doUpdate();
     }
 
+    static JavaWindowImp create(CanvasWindow viewWindow, boolean doubleBuffered) {
+        if (doubleBuffered) {
+            return new DoubleBufferedWindowImp(viewWindow);
+        }
+        else {
+            return new SingleBufferedWindowImp(viewWindow);
+        }
+    }
+
+    JavaWindowImp(CanvasWindow viewWindow, boolean doubleBuffered) {
+        this.viewWindow = viewWindow;
+
+        this.features = EnumSet.noneOf(Window.Feature.class);
+        if (doubleBuffered) {
+            this.features.add(Window.Feature.DoubleBuffered);
+        }
+
+        if (this.viewWindow.isFullscreen()) {
+            this.features.add(Window.Feature.Fullscreen);
+        }
+    }
+
     abstract void doUpdate();
 
     private static Cursor createInvisibleCursor() {
@@ -106,12 +106,12 @@ abstract class JavaViewImp extends JavaCanvasImp implements ViewImp {
         return result;
     }
 
-    private static class DoubleBufferedViewImp extends JavaViewImp {
+    private static class DoubleBufferedWindowImp extends JavaWindowImp {
 
         private BufferedImage backBuffer;
         private BufferedImage frontBuffer;
 
-        public DoubleBufferedViewImp(ViewWindow viewWindow) {
+        public DoubleBufferedWindowImp(CanvasWindow viewWindow) {
             super(viewWindow, true);
             this.backBuffer = GUI.createBufferedImage(viewWindow.getImageSize());
             this.frontBuffer = GUI.createBufferedImage(viewWindow.getImageSize());
@@ -130,11 +130,11 @@ abstract class JavaViewImp extends JavaCanvasImp implements ViewImp {
         }
     }
 
-    private static class SingleBufferedViewImp extends JavaViewImp {
+    private static class SingleBufferedWindowImp extends JavaWindowImp {
 
         private final BufferedImage buffer;
 
-        public SingleBufferedViewImp(ViewWindow viewWindow) {
+        public SingleBufferedWindowImp(CanvasWindow viewWindow) {
             super(viewWindow, false);
             this.buffer = GUI.createBufferedImage(viewWindow.getImageSize());
             viewWindow.setImage(this.buffer);

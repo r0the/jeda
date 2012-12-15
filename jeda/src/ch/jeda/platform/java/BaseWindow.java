@@ -25,23 +25,25 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-class JedaWindow extends JFrame {
+class BaseWindow extends JFrame {
 
     private final WindowManager manager;
 
-    public JedaWindow(WindowManager manager) {
+    public BaseWindow(WindowManager manager) {
         super(graphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration());
         this.manager = manager;
         this.addWindowListener(new WindowListener(this));
     }
 
     protected final void accept() {
-        this.close();
+        this.setVisible(false);
+        this.manager.windowClosed(this);
         this.onAccept();
     }
 
     protected final void cancel() {
-        this.close();
+        this.setVisible(false);
+        this.manager.windowClosed(this);
         this.onCancel();
     }
 
@@ -61,17 +63,6 @@ class JedaWindow extends JFrame {
         this.getRootPane().setDefaultButton(button);
     }
 
-    private void close() {
-        if (this.manager.isShuttingDown()) {
-            this.manager.notifyDisposing(this);
-            this.dispose();
-        }
-        else {
-            this.setVisible(false);
-            this.manager.notifyHidden(this);
-        }
-    }
-
     private static GraphicsEnvironment graphicsEnvironment() {
         return GraphicsEnvironment.getLocalGraphicsEnvironment();
     }
@@ -82,9 +73,9 @@ class JedaWindow extends JFrame {
 
     private static class WindowListener extends WindowAdapter {
 
-        protected JedaWindow window;
+        protected BaseWindow window;
 
-        public WindowListener(JedaWindow window) {
+        public WindowListener(BaseWindow window) {
             this.window = window;
         }
 

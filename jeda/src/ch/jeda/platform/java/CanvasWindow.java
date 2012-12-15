@@ -22,14 +22,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-public class ViewWindow extends JedaWindow {
+public class CanvasWindow extends BaseWindow {
 
     private final ImageCanvas canvas;
     private final JavaEventsImp eventsImp;
     private final boolean fullscreen;
     private final Size size;
 
-    protected ViewWindow(WindowManager manager, Size size, boolean fullscreen) {
+    protected CanvasWindow(WindowManager manager, Size size, boolean fullscreen) {
         super(manager);
         this.canvas = new ImageCanvas(size);
         this.eventsImp = new JavaEventsImp(this.canvas);

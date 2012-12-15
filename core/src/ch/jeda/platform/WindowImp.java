@@ -16,25 +16,21 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.Size;
+import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
 import java.util.EnumSet;
 
-public class ViewInfo {
+public interface WindowImp extends CanvasImp {
 
-    private final Size size;
-    private final EnumSet<Window.Feature> features;
+    void close();
 
-    public ViewInfo(Size size, EnumSet<Window.Feature> features) {
-        this.size = size;
-        this.features = features;
-    }
+    EnumSet<Window.Feature> getFeatures();
 
-    public boolean hasFeature(Window.Feature mode) {
-        return this.features.contains(mode);
-    }
+    EventsImp getEventsImp();
 
-    public Size getSize() {
-        return this.size;
-    }
+    void setMouseCursor(MouseCursor mouseCursor);
+
+    void setTitle(String title);
+
+    void update();
 }

@@ -40,17 +40,6 @@ class AndroidCanvasImp implements CanvasImp {
     private Canvas canvas;
     private Size size;
 
-    AndroidCanvasImp() {
-        this.fillPaint = new Paint();
-        this.fillPaint.setStyle(Paint.Style.FILL);
-        this.fillPaint.setAntiAlias(true);
-        this.pixelPaint = new Paint();
-        this.strokePaint = new Paint();
-        this.strokePaint.setStyle(Paint.Style.STROKE);
-        this.strokePaint.setAntiAlias(true);
-        this.textPaint = new Paint();
-    }
-
     @Override
     public void clear() {
         this.canvas.drawColor(0);
@@ -80,7 +69,7 @@ class AndroidCanvasImp implements CanvasImp {
         assert image instanceof AndroidImageImp;
 
         this.canvas.drawBitmap(((AndroidImageImp) image).getBitmap(),
-                topLeft.x, topLeft.y, this.fillPaint);
+                               topLeft.x, topLeft.y, this.fillPaint);
         this.modified();
     }
 
@@ -235,6 +224,17 @@ class AndroidCanvasImp implements CanvasImp {
         Rect bounds = new Rect();
         this.strokePaint.getTextBounds(text, 0, text.length() - 1, bounds);
         return Size.from(bounds.width(), bounds.height());
+    }
+
+    AndroidCanvasImp() {
+        this.fillPaint = new Paint();
+        this.fillPaint.setStyle(Paint.Style.FILL);
+        this.fillPaint.setAntiAlias(true);
+        this.pixelPaint = new Paint();
+        this.strokePaint = new Paint();
+        this.strokePaint.setStyle(Paint.Style.STROKE);
+        this.strokePaint.setAntiAlias(true);
+        this.textPaint = new Paint();
     }
 
     Canvas getCanvas() {

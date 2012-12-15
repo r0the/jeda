@@ -24,15 +24,10 @@ import ch.jeda.ui.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class AndroidImageImp implements ImageImp {
+class AndroidImageImp implements ImageImp {
 
     private final Bitmap bitmap;
     private final Size size;
-
-    public AndroidImageImp(Bitmap bitmap) {
-        this.bitmap = bitmap;
-        this.size = Size.from(this.bitmap.getWidth(), this.bitmap.getHeight());
-    }
 
     @Override
     public ImageImp createScaledImage(Size newSize) {
@@ -64,6 +59,11 @@ public class AndroidImageImp implements ImageImp {
     @Override
     public boolean write(OutputStream out, Encoding encoding) throws IOException {
         return this.bitmap.compress(convertEncoding(encoding), 100, out);
+    }
+
+    AndroidImageImp(Bitmap bitmap) {
+        this.bitmap = bitmap;
+        this.size = Size.from(this.bitmap.getWidth(), this.bitmap.getHeight());
     }
 
     Bitmap getBitmap() {

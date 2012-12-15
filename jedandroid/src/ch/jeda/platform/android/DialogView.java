@@ -16,22 +16,22 @@
  */
 package ch.jeda.platform.android;
 
-import android.app.Activity;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-class DialogLayout {
+/**
+ * A view with a button panel at the bottom.
+ */
+class DialogView extends BaseView {
 
     private final LinearLayout buttonPanel;
-    private final RelativeLayout main;
 
-    DialogLayout(Activity activity, View content) {
-        // Create button panel
-        this.buttonPanel = new LinearLayout(activity);
+    DialogView(ViewManager manager) {
+        super(manager);
+        this.buttonPanel = new LinearLayout(this.getContext());
         this.buttonPanel.setId(1);
         this.buttonPanel.setOrientation(LinearLayout.HORIZONTAL);
         this.buttonPanel.setGravity(Gravity.CENTER);
@@ -41,28 +41,10 @@ class DialogLayout {
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         buttonPanelParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         this.buttonPanel.setLayoutParams(buttonPanelParams);
-
-        // Create main layout
-        this.main = new RelativeLayout(activity);
-        this.main.setId(1);
-        this.main.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.FILL_PARENT,
-                ViewGroup.LayoutParams.FILL_PARENT));
-
-        // Layout content
-        RelativeLayout.LayoutParams contentParams =
-                new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.FILL_PARENT,
-                RelativeLayout.LayoutParams.FILL_PARENT);
-        contentParams.addRule(RelativeLayout.ABOVE, this.buttonPanel.getId());
-        content.setLayoutParams(contentParams);
-
-        this.main.addView(content);
-        this.main.addView(this.buttonPanel);
-        activity.setContentView(this.main);
+        this.addView(this.buttonPanel);
     }
 
-    Button addButton(String text) {
+    protected Button addButton(String text) {
         Button result = new Button(this.buttonPanel.getContext());
         result.setText(text);
         result.setLayoutParams(new LinearLayout.LayoutParams(
@@ -70,5 +52,15 @@ class DialogLayout {
                 LinearLayout.LayoutParams.WRAP_CONTENT));
         this.buttonPanel.addView(result);
         return result;
+    }
+
+    protected void addContent(View content) {
+        RelativeLayout.LayoutParams contentParams =
+                new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.FILL_PARENT,
+                RelativeLayout.LayoutParams.FILL_PARENT);
+        contentParams.addRule(RelativeLayout.ABOVE, this.buttonPanel.getId());
+        content.setLayoutParams(contentParams);
+        this.addView(content);
     }
 }

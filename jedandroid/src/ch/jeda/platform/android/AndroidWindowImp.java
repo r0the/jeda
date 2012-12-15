@@ -17,28 +17,14 @@
 package ch.jeda.platform.android;
 
 import ch.jeda.platform.EventsImp;
-import ch.jeda.platform.ViewImp;
+import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
 import java.util.EnumSet;
 
-public class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
+class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
 
-    private final ViewManager viewManager;
-
-    static AndroidViewImp create(ViewManager viewManager, boolean doubleBuffered) {
-        if (doubleBuffered) {
-            return new AndroidViewImp(viewManager);
-        }
-        else {
-            return new SingleBufferedAndroidViewImp(viewManager);
-        }
-    }
-
-    private AndroidViewImp(ViewManager viewManager) {
-        this.viewManager = viewManager;
-        this.setSize(this.viewManager.getSize());
-    }
+    private final CanvasView canvasView;
 
     @Override
     public void close() {
@@ -50,7 +36,7 @@ public class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
 
     @Override
     public EventsImp getEventsImp() {
-        return this.viewManager.getEventsImp();
+        return this.canvasView.getEventsImp();
     }
 
     @Override
@@ -60,19 +46,33 @@ public class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
 
     @Override
     public void setTitle(final String title) {
-        this.viewManager.setTitle(title);
+        this.canvasView.setTitle(title);
     }
 
     @Override
     public void update() {
-        this.viewManager.setBitmap(this.getBitmap());
-        this.viewManager.getEventsImp().update();
+        this.canvasView.setBitmap(this.getBitmap());
+        this.canvasView.getEventsImp().update();
     }
 
-    private static class SingleBufferedAndroidViewImp extends AndroidViewImp {
+    static AndroidWindowImp create(CanvasView displayView, boolean doubleBuffered) {
+        if (doubleBuffered) {
+            return new AndroidWindowImp(displayView);
+        }
+        else {
+            return new SingleBufferedAndroidViewImp(displayView);
+        }
+    }
 
-        SingleBufferedAndroidViewImp(ViewManager viewManager) {
-            super(viewManager);
+    private AndroidWindowImp(CanvasView displayView) {
+        this.canvasView = displayView;
+        this.setSize(this.canvasView.getSize());
+    }
+
+    private static class SingleBufferedAndroidViewImp extends AndroidWindowImp {
+
+        SingleBufferedAndroidViewImp(CanvasView displayView) {
+            super(displayView);
         }
 
         @Override

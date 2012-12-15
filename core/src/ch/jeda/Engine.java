@@ -22,8 +22,8 @@ import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.InputType;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.Platform;
-import ch.jeda.platform.ViewImp;
-import ch.jeda.platform.ViewInfo;
+import ch.jeda.platform.WindowImp;
+import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.Window;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -90,12 +90,15 @@ public final class Engine {
         this.logLevel = value;
     }
 
-    public ViewImp showView(Size size, EnumSet<Window.Feature> features) {
+    public WindowImp showWindow(Size size, EnumSet<Window.Feature> features) {
         if (features == null) {
             throw new NullPointerException("features");
         }
 
-        return this.platform.showView(new ViewInfo(size, features));
+        WindowRequest request = new WindowRequest(size, features);
+        this.platform.showWindow(request);
+        request.waitForResult();
+        return request.getResult();
     }
 
     public void start() {

@@ -17,7 +17,7 @@
 package ch.jeda.ui;
 
 import ch.jeda.Engine;
-import ch.jeda.platform.ViewImp;
+import ch.jeda.platform.WindowImp;
 import ch.jeda.Size;
 import java.util.EnumSet;
 
@@ -39,7 +39,7 @@ public class Window extends Canvas {
     }
     private static final EnumSet<Feature> NO_FEATURES = EnumSet.noneOf(Feature.class);
     private final Events events;
-    private ViewImp imp;
+    private WindowImp imp;
     private String title;
 
     /**
@@ -295,7 +295,7 @@ public class Window extends Canvas {
             this.imp.close();
         }
 
-        this.imp = Engine.getCurrentEngine().showView(size, features);
+        this.imp = Engine.getCurrentEngine().showWindow(size, features);
         this.events.setImp(this.imp.getEventsImp());
         this.imp.setTitle(this.title);
         if (!this.hasFeature(Feature.DoubleBuffered)) {
