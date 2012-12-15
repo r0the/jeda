@@ -34,7 +34,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 class JavaCanvasImp implements CanvasImp {
 
@@ -64,13 +63,9 @@ class JavaCanvasImp implements CanvasImp {
     public void copyFrom(Location topLeft, CanvasImp source) {
         assert topLeft != null;
         assert source != null;
+        assert source instanceof JavaCanvasImp;
 
-        if (source instanceof JavaCanvasImp) {
-            this.graphics.drawImage(((JavaCanvasImp) source).buffer, topLeft.x, topLeft.y, null);
-        }
-        else {
-            throw new RuntimeException("Invalid source type");
-        }
+        this.graphics.drawImage(((JavaCanvasImp) source).buffer, topLeft.x, topLeft.y, null);
     }
 
     @Override
@@ -121,7 +116,7 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawString(Location topLeft, String text) {
+    public void drawText(Location topLeft, String text) {
         assert topLeft != null;
         assert text != null;
 
@@ -161,29 +156,6 @@ class JavaCanvasImp implements CanvasImp {
         assert size != null;
 
         this.graphics.fillRect(topLeft.x, topLeft.y, size.width, size.height);
-        this.modified();
-    }
-
-    @Override
-    public void floodFill(Location pos, Color oldColor, Color newColor) {
-        assert pos != null;
-        assert oldColor != null;
-        assert newColor != null;
-
-        Stack<Location> stack = new Stack<Location>();
-        stack.push(pos);
-        int oldCol = oldColor.value;
-        int newCol = newColor.value;
-        while (!stack.isEmpty()) {
-            pos = stack.pop();
-            if (this.buffer.getRGB(pos.x, pos.y) == oldCol) {
-                this.buffer.setRGB(pos.x, pos.y, newCol);
-                stack.push(Location.from(pos.x, pos.y + 1));
-                stack.push(Location.from(pos.x, pos.y - 1));
-                stack.push(Location.from(pos.x + 1, pos.y));
-                stack.push(Location.from(pos.x - 1, pos.y));
-            }
-        }
         this.modified();
     }
 

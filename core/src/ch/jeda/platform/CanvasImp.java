@@ -37,7 +37,7 @@ public interface CanvasImp {
 
     void drawRectangle(Location topLeft, Size size);
 
-    void drawString(Location anchor, String text);
+    void drawText(Location topLeft, String text);
 
     void fill();
 
@@ -46,8 +46,6 @@ public interface CanvasImp {
     void fillPolygon(Iterable<Location> edges);
 
     void fillRectangle(Location topLeft, Size size);
-
-    void floodFill(Location location, Color oldColor, Color newColor);
 
     public double getLineWidth();
 

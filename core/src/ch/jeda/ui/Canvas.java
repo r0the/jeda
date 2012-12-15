@@ -408,7 +408,7 @@ public class Canvas {
             return;
         }
 
-        this.imp.drawString(alignment.align(anchor, this.imp.textSize(text)), text);
+        this.imp.drawText(alignment.align(anchor, this.imp.textSize(text)), text);
     }
 
     /**
@@ -484,7 +484,7 @@ public class Canvas {
             return;
         }
 
-        this.imp.drawString(alignment.align(anchor, this.imp.textSize(text)), text);
+        this.imp.drawText(alignment.align(anchor, this.imp.textSize(text)), text);
     }
 
     /**
@@ -651,7 +651,34 @@ public class Canvas {
     }
 
     public void floodFill(int x, int y, Color oldColor, Color newColor) {
-        this.imp.floodFill(Location.from(x, y), oldColor, newColor);
+        this.floodFill(Location.from(x, y), oldColor, newColor);
+    }
+
+    public void floodFill(Location location, Color oldColor, Color newColor) {
+        if (location == null) {
+            throw new NullPointerException("location");
+        }
+
+        if (oldColor == null) {
+            throw new NullPointerException("oldColor");
+        }
+
+        if (newColor == null) {
+            throw new NullPointerException("newColor");
+        }
+
+        Stack<Location> stack = new Stack();
+        stack.push(location);
+        while (!stack.isEmpty()) {
+            location = stack.pop();
+            if (this.getPixelAt(location).equals(oldColor)) {
+                this.setPixelAt(location, newColor);
+                stack.push(Location.from(location.x, location.y + 1));
+                stack.push(Location.from(location.x, location.y - 1));
+                stack.push(Location.from(location.x + 1, location.y));
+                stack.push(Location.from(location.x - 1, location.y));
+            }
+        }
     }
 
     /**

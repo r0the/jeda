@@ -46,11 +46,13 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void copyFrom(Location location, CanvasImp source) {
-        assert location != null;
+    public void copyFrom(Location topLeft, CanvasImp source) {
+        assert topLeft != null;
         assert source != null;
+        assert source instanceof AndroidCanvasImp;
 
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.canvas.drawBitmap(((AndroidCanvasImp) source).bitmap,
+                               topLeft.x, topLeft.y, this.fillPaint);
     }
 
     @Override
@@ -102,11 +104,13 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawString(Location topLeft, String text) {
+    public void drawText(Location topLeft, String text) {
         assert topLeft != null;
         assert text != null;
 
-        this.canvas.drawText(text, topLeft.x, topLeft.y, this.textPaint);
+        this.canvas.drawText(text, topLeft.x,
+                             topLeft.y - (int) this.textPaint.ascent(),
+                             this.textPaint);
         this.modified();
     }
 
@@ -145,22 +149,16 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void floodFill(Location pos, Color oldColor, Color newColor) {
-        assert pos != null;
-        assert oldColor != null;
-        assert newColor != null;
-
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public double getLineWidth() {
         return this.strokePaint.getStrokeWidth();
     }
 
     @Override
     public Color getPixelAt(Location location) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        assert location != null;
+        assert this.size.contains(location);
+
+        return Color.from(this.bitmap.getPixel(location.x, location.y));
     }
 
     @Override
@@ -193,6 +191,10 @@ class AndroidCanvasImp implements CanvasImp {
 
     @Override
     public void setPixelAt(Location location, Color color) {
+        assert location != null;
+        assert this.size.contains(location);
+        assert color != null;
+
         this.pixelPaint.setColor(color.value);
         this.canvas.drawPoint(location.x, location.y, this.pixelPaint);
     }
