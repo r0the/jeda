@@ -74,8 +74,7 @@ public class WindowManager {
         CanvasWindow window = this.createCanvasWindow(viewRequest);
         this.windows.add(window);
         window.setVisible(true);
-        viewRequest.setResult(JavaWindowImp.create(
-                window, viewRequest.hasFeature(Feature.DoubleBuffered)));
+        viewRequest.setResult(JavaWindowImp.create(window));
     }
 
     void stop() {
@@ -120,16 +119,16 @@ public class WindowManager {
             size = Size.from(800, 600);
         }
 
-        if (viewRequest.hasFeature(Feature.Fullscreen) && this.fullscreenWindow == null) {
+        if (viewRequest.getFeatures().contains(Feature.Fullscreen) && this.fullscreenWindow == null) {
             DisplayMode displayMode = findDisplayMode(size);
             size = Size.from(displayMode.getWidth(), displayMode.getHeight());
-            this.fullscreenWindow = new CanvasWindow(this, size, true);
+            this.fullscreenWindow = new CanvasWindow(this, size, viewRequest.getFeatures());
             GRAPHICS_DEVICE.setFullScreenWindow(this.fullscreenWindow);
             GRAPHICS_DEVICE.setDisplayMode(displayMode);
             return this.fullscreenWindow;
         }
         else {
-            return new CanvasWindow(this, size, false);
+            return new CanvasWindow(this, size, viewRequest.getFeatures());
         }
     }
 

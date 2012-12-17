@@ -26,11 +26,11 @@ public interface WindowImp extends CanvasImp {
 
     EnumSet<Window.Feature> getFeatures();
 
-    EventsImp getEventsImp();
+    void setFeature(Window.Feature feature, boolean enabled);
 
     void setMouseCursor(MouseCursor mouseCursor);
 
     void setTitle(String title);
 
-    void update();
+    Iterable<Event> update();
 }

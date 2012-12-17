@@ -35,9 +35,10 @@ public class Window extends Canvas {
 
     public enum Feature {
 
-        DoubleBuffered, Fullscreen
+        DoubleBuffered, Fullscreen, HoveringPointer
     }
     private static final EnumSet<Feature> NO_FEATURES = EnumSet.noneOf(Feature.class);
+    private static final EnumSet<Feature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
     private final Events events;
     private WindowImp imp;
     private String title;
@@ -202,27 +203,49 @@ public class Window extends Canvas {
      * @return <code>true</code> if the window has the specified feature, 
      *         otherwise returns <code>false</code>
      * @see #setFeatures(Feature...)
+     * @throws NullPointerException if <code>feature</code> is <code>null</code>
      * 
+     * @see #setFeature(ch.jeda.ui.Window.Feature, boolean)
      * @since 1
      */
     public boolean hasFeature(Feature feature) {
+        if (feature == null) {
+            throw new NullPointerException("feature");
+        }
+
         return this.imp.getFeatures().contains(feature);
     }
 
+    /**
+     * Enables or disables the specified feature of this window.
+     * 
+     * @param feature the feature to be enabled or disabled
+     * @param enabled <code>true</code> to enable the feature,
+     *                <code>false</code> to disable it
+     * @throws NullPointerException if <code>feature</code> is <code>null</code>
+     * 
+     * @see #hasFeature(ch.jeda.ui.Window.Feature)
+     * @since 1
+     */
     public void setFeature(Feature feature, boolean enabled) {
-        EnumSet<Feature> featureSet = EnumSet.copyOf(this.imp.getFeatures());
-        if (enabled) {
-            featureSet.add(feature);
+        if (feature == null) {
+            throw new NullPointerException("feature");
+        }
+
+        if (IMP_CHANGING_FEATURES.contains(feature)) {
+            EnumSet<Feature> featureSet = EnumSet.copyOf(this.imp.getFeatures());
+            if (enabled) {
+                featureSet.add(feature);
+            }
+            else {
+                featureSet.remove(feature);
+            }
+
+            this.resetImp(this.getSize(), featureSet);
         }
         else {
-            featureSet.remove(feature);
+            this.imp.setFeature(feature, enabled);
         }
-
-        this.resetImp(this.getSize(), featureSet);
-    }
-
-    public void setFeatures(Feature... features) {
-        this.resetImp(this.getSize(), toSet(features));
     }
 
     /**
@@ -281,7 +304,7 @@ public class Window extends Canvas {
      * @since 1
      */
     public void update() {
-        this.imp.update();
+        this.events.digestEvents(this.imp.update());
     }
 
     private Window(Size size, EnumSet<Feature> features) {
@@ -296,7 +319,7 @@ public class Window extends Canvas {
         }
 
         this.imp = Engine.getCurrentEngine().showWindow(size, features);
-        this.events.setImp(this.imp.getEventsImp());
+        this.events.reset();
         this.imp.setTitle(this.title);
         if (!this.hasFeature(Feature.DoubleBuffered)) {
             this.imp.setColor(Color.WHITE);
@@ -305,6 +328,13 @@ public class Window extends Canvas {
 
         super.setImp(this.imp);
         this.update();
+    }
+
+    private static EnumSet<Feature> initImpChangingFeatures() {
+        EnumSet<Feature> result = EnumSet.noneOf(Feature.class);
+        result.add(Feature.DoubleBuffered);
+        result.add(Feature.Fullscreen);
+        return result;
     }
 
     private static EnumSet<Feature> toSet(Feature... features) {

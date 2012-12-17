@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.platform.EventsImp;
+import ch.jeda.platform.Event;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
@@ -30,43 +30,43 @@ import java.util.Map;
 abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
     private static final Map<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
-    private final EnumSet<Window.Feature> features;
-    protected final CanvasWindow viewWindow;
+    protected final CanvasWindow canvasWindow;
 
     @Override
     public void close() {
-        this.viewWindow.dispose();
-    }
-
-    @Override
-    public EventsImp getEventsImp() {
-        return this.viewWindow.getEventsImp();
+        this.canvasWindow.dispose();
     }
 
     @Override
     public EnumSet<Window.Feature> getFeatures() {
-        return this.features;
+        return this.canvasWindow.getFeatures();
+    }
+
+    @Override
+    public void setFeature(Window.Feature feature, boolean enabled) {
+        this.canvasWindow.setFeature(feature, enabled);
     }
 
     @Override
     public void setMouseCursor(MouseCursor mouseCursor) {
         assert mouseCursor != null;
 
-        this.viewWindow.setCursor(MOUSE_CURSOR_MAP.get(mouseCursor));
+        this.canvasWindow.setCursor(MOUSE_CURSOR_MAP.get(mouseCursor));
     }
 
     @Override
     public void setTitle(String title) {
-        this.viewWindow.setTitle(title);
+        this.canvasWindow.setTitle(title);
     }
 
     @Override
-    public final void update() {
+    public final Iterable<Event> update() {
         this.doUpdate();
+        return this.canvasWindow.fetchEvents();
     }
 
-    static JavaWindowImp create(CanvasWindow viewWindow, boolean doubleBuffered) {
-        if (doubleBuffered) {
+    static JavaWindowImp create(CanvasWindow viewWindow) {
+        if (viewWindow.getFeatures().contains(Window.Feature.DoubleBuffered)) {
             return new DoubleBufferedWindowImp(viewWindow);
         }
         else {
@@ -74,17 +74,8 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         }
     }
 
-    JavaWindowImp(CanvasWindow viewWindow, boolean doubleBuffered) {
-        this.viewWindow = viewWindow;
-
-        this.features = EnumSet.noneOf(Window.Feature.class);
-        if (doubleBuffered) {
-            this.features.add(Window.Feature.DoubleBuffered);
-        }
-
-        if (this.viewWindow.isFullscreen()) {
-            this.features.add(Window.Feature.Fullscreen);
-        }
+    JavaWindowImp(CanvasWindow viewWindow) {
+        this.canvasWindow = viewWindow;
     }
 
     abstract void doUpdate();
@@ -111,11 +102,11 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         private BufferedImage backBuffer;
         private BufferedImage frontBuffer;
 
-        public DoubleBufferedWindowImp(CanvasWindow viewWindow) {
-            super(viewWindow, true);
-            this.backBuffer = GUI.createBufferedImage(viewWindow.getImageSize());
-            this.frontBuffer = GUI.createBufferedImage(viewWindow.getImageSize());
-            viewWindow.setImage(this.frontBuffer);
+        public DoubleBufferedWindowImp(CanvasWindow canvasWindow) {
+            super(canvasWindow);
+            this.backBuffer = GUI.createBufferedImage(canvasWindow.getImageSize());
+            this.frontBuffer = GUI.createBufferedImage(canvasWindow.getImageSize());
+            canvasWindow.setImage(this.frontBuffer);
             this.setBuffer(this.backBuffer);
         }
 
@@ -125,8 +116,8 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
             this.frontBuffer = this.backBuffer;
             this.backBuffer = temp;
             super.setBuffer(this.backBuffer);
-            this.viewWindow.setImage(this.frontBuffer);
-            this.viewWindow.update();
+            this.canvasWindow.setImage(this.frontBuffer);
+            this.canvasWindow.update();
         }
     }
 
@@ -134,21 +125,21 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
         private final BufferedImage buffer;
 
-        public SingleBufferedWindowImp(CanvasWindow viewWindow) {
-            super(viewWindow, false);
-            this.buffer = GUI.createBufferedImage(viewWindow.getImageSize());
-            viewWindow.setImage(this.buffer);
+        public SingleBufferedWindowImp(CanvasWindow canvasWindow) {
+            super(canvasWindow);
+            this.buffer = GUI.createBufferedImage(canvasWindow.getImageSize());
+            canvasWindow.setImage(this.buffer);
             this.setBuffer(this.buffer);
         }
 
         @Override
         void doUpdate() {
-            this.viewWindow.update();
+            this.canvasWindow.update();
         }
 
         @Override
         void modified() {
-            this.viewWindow.update();
+            this.canvasWindow.update();
         }
     }
 }

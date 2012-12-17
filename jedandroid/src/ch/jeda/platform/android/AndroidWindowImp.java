@@ -16,10 +16,11 @@
  */
 package ch.jeda.platform.android;
 
-import ch.jeda.platform.EventsImp;
+import ch.jeda.platform.Event;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
+import ch.jeda.ui.Window.Feature;
 import java.util.EnumSet;
 
 class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
@@ -30,13 +31,14 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     public void close() {
     }
 
+    @Override
     public EnumSet<Window.Feature> getFeatures() {
-        return EnumSet.noneOf(Window.Feature.class);
+        return this.canvasView.getFeatures();
     }
 
     @Override
-    public EventsImp getEventsImp() {
-        return this.canvasView.getEventsImp();
+    public void setFeature(Feature feature, boolean enabled) {
+        this.canvasView.setFeature(feature, enabled);
     }
 
     @Override
@@ -50,22 +52,22 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     }
 
     @Override
-    public void update() {
+    public Iterable<Event> update() {
         this.canvasView.setBitmap(this.getBitmap());
-        this.canvasView.getEventsImp().update();
+        return this.canvasView.fetchEvents();
     }
 
-    static AndroidWindowImp create(CanvasView displayView, boolean doubleBuffered) {
-        if (doubleBuffered) {
-            return new AndroidWindowImp(displayView);
+    static AndroidWindowImp create(CanvasView canvasView) {
+        if (canvasView.getFeatures().contains(Window.Feature.DoubleBuffered)) {
+            return new AndroidWindowImp(canvasView);
         }
         else {
-            return new SingleBufferedAndroidViewImp(displayView);
+            return new SingleBufferedAndroidViewImp(canvasView);
         }
     }
 
-    private AndroidWindowImp(CanvasView displayView) {
-        this.canvasView = displayView;
+    private AndroidWindowImp(CanvasView canvasView) {
+        this.canvasView = canvasView;
         this.setSize(this.canvasView.getSize());
     }
 

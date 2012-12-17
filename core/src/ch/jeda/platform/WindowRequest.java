@@ -37,8 +37,8 @@ public final class WindowRequest {
         return this.result;
     }
 
-    public boolean hasFeature(Window.Feature mode) {
-        return this.features.contains(mode);
+    public EnumSet<Window.Feature> getFeatures() {
+        return this.features;
     }
 
     public Size getSize() {

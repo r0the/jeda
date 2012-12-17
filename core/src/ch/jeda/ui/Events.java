@@ -16,9 +16,13 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.Location;
-import ch.jeda.platform.EventsImp;
+import ch.jeda.platform.Event;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -26,39 +30,33 @@ import java.util.Set;
  * are typically keys pressed or typed by the user or motion events such as
  * moving or clicking with a mouse, trackball, pen or finger.
  * 
- * @since 1.0
+ * @since 1
  */
 public final class Events {
 
-    private EventsImp imp;
+    private final List<Pointer> newPointers;
+    private final Map<Integer, Pointer> pointers;
+    private final Set<Key> pressedKeys;
+    private final List<Key> typedKeys;
+    private StringBuilder typedChars;
 
     /**
-     * Returns the current location of the pointing device in window
-     * coordinates. Returns <code>null</code> if no pointing device is
-     * available.
+     * Returns all pointers that are currently available in the window.
      * 
-     * @return current location of the pointing device
-     * 
-     * @see #isPointerAvailable()
-     * @since 1.0
+     * @return 
      */
-    public Location getPointerLocation() {
-        return this.imp.getPointerLocation();
+    public Iterable<Pointer> getPointers() {
+        return this.pointers.values();
     }
 
     /**
-     * Returns the location of the pointing device relative to it's last
-     * location. Returns <code>Location.ORIGIN</code> if no pointing device
-     * is available or no movement has occurred since the last call to
-     * {@link Window#update()}.
+     * Returns all pointers that have become available in the window since the
+     * last call to {@link Window#update()}.
      * 
-     * @return relative location of the pointing device
-     * 
-     * @see #getPointerLocation()
-     * @since 1.0
+     * @return 
      */
-    public Location getPointerMovement() {
-        return this.imp.getPointerMovement();
+    public Iterable<Pointer> getNewPointers() {
+        return this.newPointers;
     }
 
     /**
@@ -66,10 +64,10 @@ public final class Events {
      *
      * @return set of all keys that are pressed.
      * 
-     * @since 1.0
+     * @since 1
      */
     public Set<Key> getPressedKeys() {
-        return this.imp.getPressedKeys();
+        return Collections.unmodifiableSet(this.pressedKeys);
     }
 
     /**
@@ -80,10 +78,10 @@ public final class Events {
      *
      * @return recently typed characters or ""
      * 
-     * @since 1.0
+     * @since 1
      */
     public String getTypedChars() {
-        return this.imp.getTypedChars();
+        return this.typedChars.toString();
     }
 
     /**
@@ -91,35 +89,10 @@ public final class Events {
      * 
      * @return recently typed keys
      * 
-     * @since 1.0
+     * @since 1
      */
     public List<Key> getTypedKeys() {
-        return this.imp.getTypedKeys();
-    }
-
-    /**
-     * Checks whether the Jeda window has been clicked by a pointing device.
-     * 
-     * @return <code>true</code> if a click with a pointing device has been
-     *         performed, otherwise <code>false</code> 
-     * 
-     * @since 1.0
-     */
-    public boolean isClicked() {
-        return this.imp.isClicked();
-    }
-
-    /**
-     * Checks whether a pointing device is currently dragged over the Jeda
-     * window.
-     * 
-     * @return <code>true</code> if a a pointing device is dragged dragged,
-     *         otherwise <code>false</code> 
-     * 
-     * @since 1.0
-     */
-    public boolean isDragging() {
-        return this.imp.isDragging();
+        return Collections.unmodifiableList(this.typedKeys);
     }
 
     /**
@@ -129,14 +102,14 @@ public final class Events {
      * @return <code>true</code> if specified key is currently pressed
      * @throws NullPointerException when key is null
      * 
-     * @since 1.0
+     * @since 1
      */
     public boolean isKeyPressed(Key key) {
         if (key == null) {
             throw new NullPointerException("key");
         }
 
-        return this.imp.getPressedKeys().contains(key);
+        return this.pressedKeys.contains(key);
     }
 
     /**
@@ -146,38 +119,83 @@ public final class Events {
      * @return <code>true</code> if specified key was typed recently
      * @throws NullPointerException when key is null
      * 
-     * @since 1.0
+     * @since 1
      */
     public boolean isKeyTyped(Key key) {
         if (key == null) {
             throw new NullPointerException("key");
         }
 
-        return this.imp.getTypedKeys().contains(key);
+        return this.typedKeys.contains(key);
     }
 
-    /**
-     * Checks whether a pointer location is currently available. If this method
-     * returns <code>true</code>, the method {@link #getPointerLocation()}
-     * returns the current location of the pointer.
-     *
-     * On a device with a mouse pointer, this method only returns
-     * <code>true</code>, if the mouse pointer is currently inside the Jeda 
-     * window.
-     * On a device with touch screen, this method returns only 
-     * <code>true</code>, if the screen is currently touched by the pointing
-     * device (pen or finger).
-     *
-     * @return <code>true</code> if pointer location is available, <code>false
-     * </code> otherwise.
-     * 
-     * @since 1.0
-     */
-    public boolean isPointerAvailable() {
-        return this.imp.getPointerLocation() != null;
+    Events() {
+        this.newPointers = new ArrayList();
+        this.pointers = new HashMap();
+        this.pressedKeys = new HashSet();
+        this.typedKeys = new ArrayList();
+
+        this.typedChars = new StringBuilder();
     }
 
-    void setImp(EventsImp imp) {
-        this.imp = imp;
+    void digestEvents(Iterable<Event> events) {
+        this.typedChars = new StringBuilder();
+        this.typedKeys.clear();
+        this.newPointers.clear();
+        Pointer pointer = null;
+        for (Pointer p : this.pointers.values()) {
+            p.prepare();
+        }
+
+        for (Event event : events) {
+            switch (event.type) {
+                case KeyPressed:
+                    this.typedKeys.add(event.key);
+                    this.pressedKeys.add(event.key);
+                    break;
+                case KeyReleased:
+                    this.pressedKeys.remove(event.key);
+                    break;
+                case KeyTyped:
+                    this.typedChars.append(event.keyChar);
+                    break;
+                case PointerAvailable:
+                    if (!this.pointers.containsKey(event.pointerId)) {
+                        this.pointers.put(event.pointerId, new Pointer(event.pointerId));
+                    }
+
+                    pointer = this.pointers.get(event.pointerId);
+                    this.newPointers.add(pointer);
+                    pointer.setLocation(event.location);
+                    break;
+                case PointerUnavailable:
+                    pointer = this.pointers.get(event.pointerId);
+                    if (pointer != null) {
+                        pointer.setLocation(null);
+                        this.pointers.remove(event.pointerId);
+                    }
+
+                    this.newPointers.remove(pointer);
+                    break;
+                case PointerMoved:
+                    pointer = this.pointers.get(event.pointerId);
+                    if (pointer != null) {
+                        pointer.setLocation(event.location);
+                    }
+
+                    break;
+                case WindowFocusLost:
+                    this.pressedKeys.clear();
+                    break;
+            }
+        }
+    }
+
+    void reset() {
+        this.typedChars = new StringBuilder();
+        this.typedKeys.clear();
+        this.pressedKeys.clear();
+        this.pointers.clear();
+        this.newPointers.clear();
     }
 }
