@@ -941,7 +941,7 @@ public class Canvas {
      * @since 1
      */
     public void setPixelAt(int x, int y, Color color) {
-        this.imp.setPixelAt(Location.from(x, y), color);
+        this.setPixelAt(Location.from(x, y), color);
     }
 
     /**
