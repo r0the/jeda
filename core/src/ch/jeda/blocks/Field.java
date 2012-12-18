@@ -98,7 +98,7 @@ public class Field {
         if (direction == null) {
             throw new NullPointerException("direction");
         }
-        Location neighborPos = direction.targetLocation(this.position);
+        Location neighborPos = this.position.neighbor(direction);
         if (this.map.isValidCoordinate(neighborPos)) {
             return this.map.fieldAt(neighborPos);
         }
@@ -214,6 +214,6 @@ public class Field {
     }
 
     private Field uncheckedNeighbor(Direction direction) {
-        return this.map.uncheckedFieldAt(direction.targetLocation(this.position));
+        return this.map.uncheckedFieldAt(this.position.neighbor(direction));
     }
 }

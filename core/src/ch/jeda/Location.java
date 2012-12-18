@@ -46,17 +46,17 @@ public final class Location implements Serializable {
     public final int y;
 
     /**
-     * Creates a new <code>Location</code> object with the specified
-     * <code>x</code> and <code>y</code>
-     * coordinates.
+     * Returns a <code>Location</code> object with the specified
+     * <code>x</code> and <code>y</code> coordinates.
      * 
-     * @param x the x coordinate of this location
-     * @param y the y coordinate of this location
+     * @param x the x coordinate of the location
+     * @param y the y coordinate of the location
+     * @return location with specified coordinates
      * 
      * @since 1
      */
     public static Location from(int x, int y) {
-        if (x == 0 && y == 0) {
+        if (x == 0 & y == 0) {
             return ORIGIN;
         }
         else {
@@ -80,6 +80,12 @@ public final class Location implements Serializable {
         }
     }
 
+    public double distanceTo(Location location) {
+        double dx = this.x - location.x;
+        double dy = this.y - location.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
     public Location ensureRange(Location min, Location max) {
         if (min == null) {
             throw new NullPointerException("min");
@@ -96,7 +102,7 @@ public final class Location implements Serializable {
     @Override
     public boolean equals(Object object) {
         if (object instanceof Location) {
-            Location other = (Location) object;
+            final Location other = (Location) object;
             return this.x == other.x && this.y == other.y;
         }
         else {
@@ -110,10 +116,6 @@ public final class Location implements Serializable {
         hash = 17 * hash + this.x;
         hash = 17 * hash + this.y;
         return hash;
-    }
-
-    public Location inverse() {
-        return from(-this.x, -this.y);
     }
 
     /**
@@ -142,12 +144,15 @@ public final class Location implements Serializable {
         return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
     }
 
-    public Location plus(Size size) {
-        if (size == null) {
-            throw new NullPointerException("size");
-        }
-
-        return from(this.x + size.width, this.y + size.width);
+    /**
+     * Returns the neighbor location of this location in the specified
+     * direction.
+     * 
+     * @param direction
+     * @return neighbor location
+     */
+    public Location neighbor(Direction direction) {
+        return from(this.x + direction.dx, this.y + direction.dy);
     }
 
     public Location relativeTo(Location other) {

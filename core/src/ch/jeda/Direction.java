@@ -92,8 +92,8 @@ public final class Direction implements Serializable {
      * @since 1
      */
     public final int number;
-    private final int dx;
-    private final int dy;
+    final int dx;
+    final int dy;
     private final String name;
 
     /**
@@ -196,10 +196,6 @@ public final class Direction implements Serializable {
      */
     public Direction opposite() {
         return this.clockwise(4);
-    }
-
-    public Location targetLocation(Location origin) {
-        return Location.from(origin.x + this.dx, origin.y + this.dy);
     }
 
     /**
