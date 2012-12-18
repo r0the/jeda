@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="${ProjectName}" default="help">
-    <property file="local.properties" />
-    <property file="ant.properties" />
-    <property environment="env" />
+    <property file="local.properties"/>
+    <property file="ant.properties"/>
+    <property environment="env"/>
     <condition property="sdk.dir" value="${env.ANDROID_HOME}">
-        <isset property="env.ANDROID_HOME" />
+        <isset property="env.ANDROID_HOME"/>
     </condition>
-    <loadproperties srcFile="project.properties" />
-    <loadproperties srcFile="jeda.properties" />
-    <fail
-            message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
-            unless="sdk.dir"
-    />
+    <loadproperties srcFile="project.properties"/>
+    <loadproperties srcFile="jeda.properties"/>
+    <fail message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable." unless="sdk.dir"/>
 
     <!-- Write AndroidManifest.xml. -->
     <!-- This cannot be done with the echoxml task because of namespace problems. -->
@@ -20,27 +17,26 @@
       package="]]>${jeda.application.package}<![CDATA["
       android:versionCode="]]>${jeda.application.version.code}<![CDATA["
       android:versionName="]]>${jeda.application.version.name}<![CDATA[">
-    <application android:label="@string/app_name" >
-        <activity android:name="ch.jeda.platform.android.MainActivity"
+    <application android:label="@string/app_name"
+                 android:icon="@drawable/icon">
+        <activity android:name="ch.jeda.platform.android.Main"
                   android:icon="@drawable/icon"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:configChanges="orientation">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="ch.jeda.platform.android.LogActivity" />    
-        <activity android:name="ch.jeda.platform.android.SelectionActivity" />
     </application>
 </manifest>
-]]>
-    </echo>
+]]></echo>
 
-    <import file="custom_rules.xml" optional="true" />
-    <import file="${sdk.dir}/tools/ant/build.xml" />
+    <import file="custom_rules.xml" optional="true"/>
+    <import file="${sdk.dir}/tools/ant/build.xml"/>
 
     <target name="-pre-build">
-        <mkdir dir="res/values" />
+        <mkdir dir="res/values"/>
         <copy file="jeda.properties" todir="src"/>
         <echoxml file="res/values/strings.xml" append="false">
             <resources>
@@ -48,7 +44,7 @@
             </resources>
         </echoxml>
     </target>
-    
+
     <target name="-post-build">
         <delete file="src/jeda.properties"/>
     </target>
