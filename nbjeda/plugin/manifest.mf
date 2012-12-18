@@ -4,5 +4,5 @@ Created-By: 1.7.0_03-b21 (Oracle Corporation)
 OpenIDE-Module: ch.jeda.netbeans
 OpenIDE-Module-Layer: ch/jeda/netbeans/layer.xml
 OpenIDE-Module-Localizing-Bundle: ch/jeda/netbeans/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.9.3
+OpenIDE-Module-Specification-Version: 0.9.4
 
