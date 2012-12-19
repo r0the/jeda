@@ -24,7 +24,8 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.FilterNode;
 
-@NodeFactory.Registration(projectType = "org-netbeans-modules-java-j2seproject")
+@NodeFactory.Registration(projectType = {"org-netbeans-modules-java-j2seproject",
+                                         "org-netbeans-modules-android-project"})
 public class ConfigNodeFactory implements NodeFactory {
 
     @Override
