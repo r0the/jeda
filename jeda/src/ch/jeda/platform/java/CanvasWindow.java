@@ -66,7 +66,6 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void keyPressed(KeyEvent event) {
-        System.out.println("code=" + event.getKeyCode() + " ext code=" + event.getExtendedKeyCode() + " loc=" + event.getKeyLocation());
         final Key key = mapKey(event);
         if (key != null) {
             this.eventsIn.add(Event.createKeyPressed(key));
