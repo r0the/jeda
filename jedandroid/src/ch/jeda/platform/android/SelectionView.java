@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -62,6 +63,10 @@ class SelectionView extends DialogView {
     @Override
     protected void onAccept() {
         this.request.setSelectedIndex(selectedItemPosition);
+    }
+
+    @Override
+    protected void onButtonClicked(Button button) {
     }
 
     private static class ListAdapterImp implements ListAdapter {

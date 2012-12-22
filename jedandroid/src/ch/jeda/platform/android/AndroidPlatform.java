@@ -80,7 +80,8 @@ class AndroidPlatform implements Platform {
 
     @Override
     public void showInputRequest(InputRequest inputRequest) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.activity.runOnUiThread(new ShowInputRequestTask(
+                this.viewManager, inputRequest));
     }
 
     @Override
@@ -128,6 +129,22 @@ class AndroidPlatform implements Platform {
         LogTask(ViewManager viewManager, String text) {
             this.viewManager = viewManager;
             this.text = text;
+        }
+    }
+
+    private static class ShowInputRequestTask implements Runnable {
+
+        private final ViewManager viewManager;
+        private final InputRequest inputRequest;
+
+        @Override
+        public void run() {
+            this.viewManager.showInputRequest(this.inputRequest);
+        }
+
+        ShowInputRequestTask(ViewManager viewManager, InputRequest inputRequest) {
+            this.viewManager = viewManager;
+            this.inputRequest = inputRequest;
         }
     }
 

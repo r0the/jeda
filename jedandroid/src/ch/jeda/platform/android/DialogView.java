@@ -25,9 +25,10 @@ import android.widget.RelativeLayout;
 /**
  * A view with a button panel at the bottom.
  */
-class DialogView extends BaseView {
+abstract class DialogView extends BaseView {
 
     private final LinearLayout buttonPanel;
+    private final OnClickListener onClickListener;
 
     DialogView(ViewManager manager) {
         super(manager);
@@ -42,15 +43,19 @@ class DialogView extends BaseView {
         buttonPanelParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         this.buttonPanel.setLayoutParams(buttonPanelParams);
         this.addView(this.buttonPanel);
+        this.onClickListener = new OnClickListenerImp(this);
     }
 
     protected Button addButton(String text) {
         Button result = new Button(this.buttonPanel.getContext());
         result.setText(text);
-        result.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.FILL_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.weight = 1f;
+        result.setLayoutParams(layoutParams);
         this.buttonPanel.addView(result);
+        result.setOnClickListener(this.onClickListener);
         return result;
     }
 
@@ -62,5 +67,21 @@ class DialogView extends BaseView {
         contentParams.addRule(RelativeLayout.ABOVE, this.buttonPanel.getId());
         content.setLayoutParams(contentParams);
         this.addView(content);
+    }
+
+    protected abstract void onButtonClicked(Button button);
+
+    private static class OnClickListenerImp implements OnClickListener {
+
+        private final DialogView view;
+
+        public OnClickListenerImp(DialogView view) {
+            this.view = view;
+        }
+
+        @Override
+        public void onClick(View view) {
+            this.view.onButtonClicked((Button) view);
+        }
     }
 }

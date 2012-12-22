@@ -38,8 +38,7 @@ class LogView extends DialogView {
         this.scrollView.addView(this.textView);
         this.addContent(this.scrollView);
 
-        Button button = this.addButton(Message.translate(Message.LOG_BUTTON));
-        button.setOnClickListener(new OnClickListenerImp(this));
+        this.addButton(Message.translate(Message.LOG_BUTTON));
     }
 
     void log(String text) {
@@ -47,17 +46,8 @@ class LogView extends DialogView {
         this.scrollView.fullScroll(View.FOCUS_DOWN);
     }
 
-    private static class OnClickListenerImp implements OnClickListener {
-
-        private final LogView view;
-
-        public OnClickListenerImp(LogView view) {
-            this.view = view;
-        }
-
-        @Override
-        public void onClick(View view) {
-            this.view.cancel();
-        }
+    @Override
+    protected void onButtonClicked(Button button) {
+        this.cancel();
     }
 }

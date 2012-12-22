@@ -18,6 +18,7 @@ package ch.jeda.platform.android;
 
 import android.app.Activity;
 import android.content.Context;
+import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
 import java.util.Stack;
@@ -25,6 +26,7 @@ import java.util.Stack;
 class ViewManager {
 
     private final Activity activity;
+    private final InputView inputView;
     private final LogView logView;
     private final SelectionView selectionView;
     private final Stack<BaseView> visibleViews;
@@ -34,6 +36,8 @@ class ViewManager {
         this.activity = activity;
         // Stack must be instantiated before any views
         this.visibleViews = new Stack();
+
+        this.inputView = new InputView(this);
         this.logView = new LogView(this);
         this.selectionView = new SelectionView(this);
     }
@@ -56,13 +60,18 @@ class ViewManager {
         this.logView.log(text);
     }
 
+    void showInputRequest(final InputRequest inputRequest) {
+        this.inputView.setInputRequest(inputRequest);
+        this.show(this.inputView);
+    }
+
     void showLog() {
-        this.show(ViewManager.this.logView);
+        this.show(this.logView);
     }
 
     void showSelectionRequest(final SelectionRequest selectionRequest) {
         this.selectionView.setSelectionRequest(selectionRequest);
-        this.show(ViewManager.this.selectionView);
+        this.show(this.selectionView);
     }
 
     void showWindow(WindowRequest request) {
@@ -90,6 +99,7 @@ class ViewManager {
     private void activateView(BaseView view) {
         this.activity.setContentView(view);
         this.activity.setTitle(view.getTitle());
+        view.requestFocus();
     }
 
     private void checkStop() {
