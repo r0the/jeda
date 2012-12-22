@@ -53,6 +53,7 @@ class JavaPlatform implements Platform {
     @Override
     public void log(String text) {
         this.windowManager.log(text);
+        System.out.print(text);
     }
 
     @Override
