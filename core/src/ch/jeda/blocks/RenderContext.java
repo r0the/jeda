@@ -219,9 +219,11 @@ class RenderContext {
     }
 
     private void checkScrollPos() {
-        Location min = Location.from(-this.borderLeft, -this.borderTop);
-        int maxX = this.blockSet.brickSizeX() * this.mapSize.width - this.canvas.getWidth() + this.borderRight;
-        int maxY = this.blockSet.brickSizeY() * this.mapSize.height - this.canvas.getHeight() + this.borderBottom;
-        this.scrollPos = this.scrollPos.ensureRange(min, Location.from(maxX, maxY));
+        if (this.mapSize != null) {
+            Location min = Location.from(-this.borderLeft, -this.borderTop);
+            int maxX = this.blockSet.brickSizeX() * this.mapSize.width - this.canvas.getWidth() + this.borderRight;
+            int maxY = this.blockSet.brickSizeY() * this.mapSize.height - this.canvas.getHeight() + this.borderBottom;
+            this.scrollPos = this.scrollPos.ensureRange(min, Location.from(maxX, maxY));
+        }
     }
 }
