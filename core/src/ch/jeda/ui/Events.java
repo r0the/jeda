@@ -43,7 +43,9 @@ public final class Events {
     /**
      * Returns all pointers that are currently available in the window.
      * 
-     * @return 
+     * @return all pointers
+     * 
+     * @since 1
      */
     public Iterable<Pointer> getPointers() {
         return this.pointers.values();
@@ -53,7 +55,9 @@ public final class Events {
      * Returns all pointers that have become available in the window since the
      * last call to {@link Window#update()}.
      * 
-     * @return 
+     * @return all new pointers
+     * 
+     * @since 1
      */
     public Iterable<Pointer> getNewPointers() {
         return this.newPointers;

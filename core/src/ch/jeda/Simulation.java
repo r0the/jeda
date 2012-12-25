@@ -18,6 +18,8 @@ package ch.jeda;
 
 /**
  * A Simulation is a program that executes a method at a certain frequency.
+ * 
+ * @since 1
  */
 public abstract class Simulation extends Program {
 
@@ -27,6 +29,8 @@ public abstract class Simulation extends Program {
     /**
      * Initializes a new Simulation object. The target frame rate is set to 60
      * Hertz.
+     * 
+     * @since 1
      */
     protected Simulation() {
         this.frequencyMeter = new FrequencyMeter();
@@ -39,8 +43,10 @@ public abstract class Simulation extends Program {
      * second.
      *
      * @return measured simulation frequency
+     * 
      * @see #getFrequency()
      * @see #setFrequency(int)
+     * @since 1
      */
     public final int getCurrentFrequency() {
         return this.frequencyMeter.getFrequency();
@@ -60,8 +66,10 @@ public abstract class Simulation extends Program {
      * Returns the desired simulation frequency in Hertz.
      *
      * @return the desired frequency
+     * 
      * @see #getCurrentFrequency()
      * @see #setFrequency(int)
+     * @since 1
      */
     public final int getFrequency() {
         return this.timer.getFrequency();
@@ -70,6 +78,8 @@ public abstract class Simulation extends Program {
     /**
      * Calls {@link #init()} and then starts the simulation. Returns
      * immediately after the simulation has been started.
+     * 
+     * @since 1
      */
     @Override
     public final void run() {
@@ -87,8 +97,10 @@ public abstract class Simulation extends Program {
      * in which the method {@link #step()} will be called.
      *
      * @param hertz new frequency in hertz
+     * 
      * @see #getCurrentFrequency()
      * @see #getFrequency()
+     * @since 1
      */
     public final void setFrequency(int hertz) {
         this.timer.setFrequency(hertz);
@@ -97,14 +109,14 @@ public abstract class Simulation extends Program {
     /**
      * Override this method to initialize the simulation.
      * 
-     * @since 1.0
+     * @since 1
      */
     protected abstract void init();
 
     /**
      * Override this method to perform a simulation step.
      * 
-     * @since 1.0
+     * @since 1
      */
     protected abstract void step();
 }

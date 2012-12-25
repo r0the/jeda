@@ -79,7 +79,6 @@ public class Window extends Canvas {
      *
      * @param width the width of the drawing area in pixels
      * @param height the height of the drawing area in pixels
-     *
      * @throws IllegalArgumentException if width or height are smaller than 1
      * 
      * @since 1
@@ -97,7 +96,6 @@ public class Window extends Canvas {
      * @param width the width of the drawing area in pixels
      * @param height the height of the drawing area in pixels
      * @param features the features of this window
-     *
      * @throws IllegalArgumentException if width or height are smaller than 1
      * 
      * @since 1
@@ -114,8 +112,9 @@ public class Window extends Canvas {
      *
      * @param size the size of the drawing area in pixels
      * @param features the features of this window
-     *
      * @throws NullPointerException if size is <code>null</code>
+     * 
+     * @since 1
      */
     public static Window create(Size size, Feature... features) {
         return new Window(size, toSet(features));
@@ -202,7 +201,6 @@ public class Window extends Canvas {
      *
      * @return <code>true</code> if the window has the specified feature, 
      *         otherwise returns <code>false</code>
-     * @see #setFeatures(Feature...)
      * @throws NullPointerException if <code>feature</code> is <code>null</code>
      * 
      * @see #setFeature(ch.jeda.ui.Window.Feature, boolean)
@@ -292,14 +290,9 @@ public class Window extends Canvas {
     }
 
     /**
-     * Updates this window. Depending on the current bufferMode of this window,
-     * this method has different effects.
-     * <ul>
-     *   <li> It always updated the keyboard and mouse state of this window.
-     *   <li> In BufferMode.Double, it flips the hidden and visible screen
-     *        buffers.
-     *   <li> In BufferMode.SingleLazy, it updates the display.
-     * </ul>
+     * Updates this window. Updates the {@link Events} of this window. When
+     * this window has the feature {@link Feature#DoubleBuffered} activiated,
+     * also flips foreground and background buffer.
      *
      * @since 1
      */

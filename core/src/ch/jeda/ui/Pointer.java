@@ -44,7 +44,7 @@ public final class Pointer {
      * 
      * @return current location of this pointer or <code>null</code>
      * 
-     * @see #isPresent()
+     * @see #isAvailable()
      * @see #getX()
      * @see #getY()
      * @since 1
