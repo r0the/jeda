@@ -55,6 +55,28 @@ public final class Size implements Serializable {
     }
 
     /**
+     * Returns a size corresponding to the specified {@link Vector}. The
+     * resulting size's width and height are the rounded absolute coordinates
+     * of the vector. Returns <code>null</code> if the specified vector is
+     * <code>null</code>.
+     * 
+     * @param vector
+     * @return size corresponding to specified {@link Vector} or
+     *         <code>null</code>
+     * 
+     * @since 1
+     */
+    public static Size from(Vector vector) {
+        if (vector == null) {
+            return null;
+        }
+        else {
+            return from((int) Math.round(Math.abs(vector.x)),
+                        (int) Math.round(Math.abs(vector.y)));
+        }
+    }
+
+    /**
      * Parses a size from a string. The string must contain two positivie
      * integers separated by an 'x', e.g. "800x600". Returns <code>null</code>
      * if <code>text</code> does not represent a valid size.

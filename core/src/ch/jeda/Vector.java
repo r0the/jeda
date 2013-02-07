@@ -56,6 +56,17 @@ public final class Vector implements Serializable {
     }
 
     /**
+     * 
+     * @param size
+     * @return 
+     * 
+     * @since 1
+     */
+    public static Vector from(Size size) {
+        return new Vector(size.width, size.height);
+    }
+
+    /**
      * Creates a new Vector from polar coordinates.
      * 
      * @param length the length of the new vector
