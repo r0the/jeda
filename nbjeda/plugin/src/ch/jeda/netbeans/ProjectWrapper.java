@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,6 +28,8 @@ import java.io.PrintWriter;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -44,6 +46,7 @@ public class ProjectWrapper {
     protected static final String JEDA_PROPERTIES = "jeda.properties";
     protected static final String NB_PROJECT = "nbproject";
     protected static final String RES_ICON_PNG = "ch/jeda/netbeans/resources/logo-16x16.png";
+    private static final String DEFAULT_PACKAGE = "src/ch/jeda/project";
     private static final String RES_JEDA_PROPERTIES = "ch/jeda/netbeans/resources/jeda.properties";
     private final FileObject projectRoot;
     private Project project;
@@ -73,14 +76,14 @@ public class ProjectWrapper {
         this.project = project;
     }
 
-    public final ProjectWrapper convertTo(Platform platform) {
+    public final void convertTo(Platform platform) {
         switch (platform) {
             case Android:
-                return this.convertTo(new AndroidProjectWrapper(this.projectRoot));
+                this.convertTo(new AndroidProjectWrapper(this.projectRoot));
+                break;
             case Java:
-                return this.convertTo(new JavaProjectWrapper(this.projectRoot));
-            default:
-                return null;
+                this.convertTo(new JavaProjectWrapper(this.projectRoot));
+                break;
         }
     }
 
@@ -98,12 +101,13 @@ public class ProjectWrapper {
 
     public final void init() {
         try {
-            this.addDir("src");
+            this.addDir(DEFAULT_PACKAGE);
             this.addFile(JEDA_PROPERTIES, RES_JEDA_PROPERTIES);
             this.doInit();
         }
         catch (Exception ex) {
             Exceptions.printStackTrace(ex);
+            this.showError("Error while initializing project: " + ex.toString());
         }
     }
 
@@ -111,19 +115,22 @@ public class ProjectWrapper {
         return this.getPlatform() != Platform.Unknown;
     }
 
-    protected void doCleanup() throws Exception {
-    }
-
-    protected void doInit() throws Exception {
-    }
-
     protected final void addDir(String targetPath) throws IOException {
-        // Do not overwrite existing files
-        if (this.projectRoot.getFileObject(targetPath) != null) {
-            return;
-        }
+        final String[] dirs = targetPath.split("/");
+        FileObject fo = this.projectRoot;
+        int i = 0;
 
-        this.projectRoot.createFolder(targetPath);
+        while (i < dirs.length) {
+            final FileObject child = fo.getFileObject(dirs[i]);
+            if (child != null) {
+                fo = child;
+            }
+            else {
+                fo = fo.createFolder(dirs[i]);
+            }
+
+            ++i;
+        }
     }
 
     protected final void addFile(String targetPath, String resourcePath) throws IOException {
@@ -162,11 +169,21 @@ public class ProjectWrapper {
 
     }
 
+    protected boolean checkConvert() {
+        return true;
+    }
+
     protected final void deleteFile(String name) throws IOException {
         FileObject fo = this.projectRoot.getFileObject(name);
         if (fo != null) {
             fo.delete();
         }
+    }
+
+    protected void doCleanup() throws Exception {
+    }
+
+    protected void doInit() throws Exception {
     }
 
     protected final String getName() {
@@ -186,11 +203,21 @@ public class ProjectWrapper {
         this.addFile(targetPath, resourcePath);
     }
 
+    protected final void showError(String message) {
+        NotifyDescriptor nd = new NotifyDescriptor.Message(message,
+                                                           NotifyDescriptor.ERROR_MESSAGE);
+        DialogDisplayer.getDefault().notify(nd);
+    }
+
     private void close() {
         OpenProjects.getDefault().close(new Project[]{this.project});
     }
 
-    public final ProjectWrapper convertTo(ProjectWrapper target) {
+    private void convertTo(ProjectWrapper target) {
+        if (!target.checkConvert()) {
+            return;
+        }
+
         this.close();
         try {
             this.doCleanup();
@@ -199,14 +226,13 @@ public class ProjectWrapper {
         }
         catch (Exception ex) {
             Exceptions.printStackTrace(ex);
+            this.showError("Cannot switch target platform: " + ex.getMessage());
+            //this.open();
         }
-
-        return target;
     }
 
     private void open() {
         try {
-            Util.log("Opening project " + this.projectRoot.getName());
             this.projectRoot.getParent().refresh();
             this.project = ProjectManager.getDefault().findProject(this.projectRoot);
             OpenProjects.getDefault().open(new Project[]{this.project}, false);
@@ -214,6 +240,7 @@ public class ProjectWrapper {
         }
         catch (Exception ex) {
             Exceptions.printStackTrace(ex);
+            this.showError("Could not open project '" + this.projectRoot.getName() + "'. Please open it manually.");
         }
     }
 
@@ -236,10 +263,10 @@ public class ProjectWrapper {
 
         @Override
         protected final void execute(InputStream is, OutputStream os) throws Exception {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             FileUtil.copy(is, baos);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(baos.toByteArray())));
-            PrintWriter writer = new PrintWriter(os);
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(baos.toByteArray())));
+            final PrintWriter writer = new PrintWriter(os);
             try {
                 while (reader.ready()) {
                     writer.println(this.filterLine(reader.readLine()));

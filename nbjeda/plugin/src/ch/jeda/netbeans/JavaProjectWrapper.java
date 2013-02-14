@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,7 +29,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 public class JavaProjectWrapper extends ProjectWrapper {
-    
+
     private static final String PROJECT_PROPERTIES = "nbproject/project.properties";
     private static final String PROJECT_XML = "nbproject/project.xml";
     private static final String RES_BUILD_XML = "ch/jeda/netbeans/resources/java/build.xml";
@@ -37,49 +37,49 @@ public class JavaProjectWrapper extends ProjectWrapper {
     private static final String RES_PROJECT_PROPERTIES = "ch/jeda/netbeans/resources/java/project.properties";
     private static final String RES_PROJECT_XML = "ch/jeda/netbeans/resources/java/project.xml";
     private static Image ICON;
-    
+
     public JavaProjectWrapper(FileObject projectRoot) {
         super(projectRoot, null);
     }
-    
+
     public JavaProjectWrapper(FileObject projectRoot, Project project) {
         super(projectRoot, project);
     }
-    
+
     @Override
     public Image getIcon() {
         if (ICON == null) {
             ICON = ImageUtilities.loadImage(RES_ICON_JAVA_PNG);
         }
-        
+
         return ICON;
     }
-    
+
     @Override
     public Platform getPlatform() {
         return Platform.Java;
     }
-    
+
     @Override
     protected void doCleanup() throws Exception {
         this.deleteFile(NB_PROJECT);
         this.deleteFile(BUILD_XML);
     }
-    
+
     @Override
     protected void doInit() throws Exception {
         this.addFile(BUILD_XML, RES_BUILD_XML, new TextFileFilter() {
-            
+
             @Override
             protected String filterLine(String line) {
                 return line.replace("${ProjectName}", this.getProjectWrapper().getName());
             }
         });
-        
+
         this.addFile(PROJECT_XML, RES_PROJECT_XML, new ProjectXmlFilter());
-        
+
         this.addFile(PROJECT_PROPERTIES, RES_PROJECT_PROPERTIES, new TextFileFilter() {
-            
+
             @Override
             protected String filterLine(String line) {
                 if (line.startsWith("application.title=")) {
@@ -94,9 +94,9 @@ public class JavaProjectWrapper extends ProjectWrapper {
             }
         });
     }
-    
+
     protected static class ProjectXmlFilter extends FileFilter {
-        
+
         @Override
         protected void execute(InputStream is, OutputStream os) throws Exception {
             Document doc = XMLUtil.parse(new InputSource(is), false, false, null, null);
@@ -109,12 +109,12 @@ public class JavaProjectWrapper extends ProjectWrapper {
                         if (nl2.getLength() > 0) {
                             nl2.item(0).setNodeValue(this.getProjectWrapper().getName());
                         }
-                        
+
                         break;
                     }
                 }
             }
-            
+
             XMLUtil.write(doc, os, "UTF-8");
         }
     }

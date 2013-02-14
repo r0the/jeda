@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +17,7 @@
 package ch.jeda.netbeans;
 
 import java.awt.Image;
+import java.io.File;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -66,7 +67,20 @@ public class AndroidProjectWrapper extends ProjectWrapper {
     }
 
     @Override
+    protected boolean checkConvert() {
+        File targetDir = new File(new File(this.getRootDir()).getParentFile(), this.getName() + ANDROID_SUFFIX);
+        if (targetDir.exists()) {
+            this.showError("Cannot convert project, directory '" + targetDir + "' already exists.");
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
     protected void doInit() throws Exception {
+
+
         this.replaceFile(ANDROID_MANIFEST_XML, RES_ANDROID_MANIFEST_XML);
         this.addFile(BUILD_XML, RES_BUILD_XML, new TextFileFilter() {
 
