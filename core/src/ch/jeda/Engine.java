@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -107,6 +107,10 @@ public final class Engine {
         }
 
         this.thread.start();
+    }
+
+    List<String> loadTextFile(String filePath) {
+        return this.fileSystem.loadTextFile(filePath);
     }
 
     void log(Log.Level level, String message, Throwable exception) {

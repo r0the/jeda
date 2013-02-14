@@ -18,10 +18,15 @@ package ch.jeda;
 
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.Platform;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 class FileSystem {
@@ -39,6 +44,28 @@ class FileSystem {
 
     void init() {
         this.defaultImage = this.loadImageImp(DEFAULT_IMAGE_PATH);
+    }
+
+    List<String> loadTextFile(String filePath) {
+        URL url = this.urlForFile(filePath);
+        if (url == null) {
+            Log.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
+            return null;
+        }
+
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            List<String> result = new ArrayList();
+            while (reader.ready()) {
+                result.add(reader.readLine());
+            }
+
+            return result;
+        }
+        catch (IOException ex) {
+            Log.warning(Message.FILE_READ_ERROR, filePath, ex);
+            return null;
+        }
     }
 
     ImageImp loadImageImp(String filePath) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,6 +25,7 @@ public class Message {
     public static final String CHOOSE_PROGRAM_TITLE = "jeda.gui.programchooser.title";
     public static final String ENGINE_THREAD_NAME = "jeda.engine.thread.name";
     public static final String FILE_NOT_FOUND_ERROR = "jeda.file.not.found.error";
+    public static final String FILE_READ_ERROR = "jeda.file.read.error";
     public static final String IMAGE_FORMAT_ERROR = "jeda.image.format.error";
     public static final String IMAGE_READ_ERROR = "jeda.image.read.error";
     public static final String IMAGE_WRITE_ERROR = "jeda.image.write.error";
@@ -50,6 +51,7 @@ public class Message {
         put(CHOOSE_PROGRAM_ERROR, "Fehler beim Laden der Program-Klassen.");
         put(CHOOSE_PROGRAM_TITLE, "Jeda Programmauswahl");
         put(ENGINE_THREAD_NAME, "Jeda Engine");
+        put(FILE_READ_ERROR, "Fehler beim Lesen der Datei '{0}': {1}");
         put(FILE_NOT_FOUND_ERROR, "Datei {0} nicht gefunden.");
         put(IMAGE_FORMAT_ERROR, "Bilddatei '{0}' kann nicht im unbekannten Bildformat '{1}' gespeichert werden.");
         put(IMAGE_READ_ERROR, "Fehler beim Lesen der Bilddatei '{0}': {1}");

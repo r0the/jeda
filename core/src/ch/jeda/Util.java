@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -50,7 +50,7 @@ public final class Util {
         }
         return result;
     }
-    
+
 //    public static String concat(Iterable<String> elements, String separator) {
 //        StringBuilder result = new StringBuilder();
 //        boolean first = true;
@@ -67,7 +67,6 @@ public final class Util {
 //
 //        return result.toString();
 //    }
-
     /**
      * Creates and returns a list of double values.
      *
@@ -96,6 +95,21 @@ public final class Util {
         }
 
         return result;
+    }
+
+    /**
+     * Loads a text file and returns the content as a list of Strings. Each
+     * line of the text file will be represented by a String in the returned
+     * list. Returns <code>null</code> if the file is not present or cannot be
+     * read.
+     *
+     * To read a resource file, put ':' in front of the file path.
+     *
+     * @param filePath path to the file
+     * @return lines of the file as a String list
+     */
+    public static List<String> loadTextFile(String filePath) {
+        return Engine.getCurrentEngine().loadTextFile(filePath);
     }
 
     /**
