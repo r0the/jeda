@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +17,9 @@
 package ch.jeda;
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * This class represents a location on a two-dimensional integral grid with two
@@ -25,11 +28,14 @@ import java.io.Serializable;
  * 
  * @since 1
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public final class Location implements Serializable {
 
     /**
      * <code>Location</code> representing the origin of the coordinate system.
      * Both coordinates of this location are zero.
+     * 
+     * @since 1
      */
     public static final Location ORIGIN = new Location(0, 0);
     /**
@@ -37,17 +43,19 @@ public final class Location implements Serializable {
      * 
      * @since 1
      */
+    @XmlElement
     public final int x;
     /**
      * The y coordinate of this location.
      * 
      * @since 1
      */
+    @XmlElement
     public final int y;
 
     /**
-     * Returns a <code>Location</code> object with the specified
-     * <code>x</code> and <code>y</code> coordinates.
+     * Returns a location with the specified <code>x</code> and <code>y</code>
+     * coordinates.
      * 
      * @param x the x coordinate of the location
      * @param y the y coordinate of the location
@@ -65,9 +73,14 @@ public final class Location implements Serializable {
     }
 
     /**
+     * Returns a location corresponding to the specified {@link Vector}. The
+     * resulting location's coordinates are the rounded coordinates of the
+     * vector. Returns <code>null</code> if the specified vector is
+     * <code>null</code>.
      * 
      * @param vector
-     * @return 
+     * @return location corresponding to specified {@link Vector} or
+     *         <code>null</code>
      * 
      * @since 1
      */
@@ -80,9 +93,18 @@ public final class Location implements Serializable {
         }
     }
 
+    /**
+     * Returns the Euclidean distance between this location and the specified
+     * location.
+     * 
+     * @param location the other location
+     * @return distance between this and other location
+     * 
+     * @since 1
+     */
     public double distanceTo(Location location) {
-        double dx = this.x - location.x;
-        double dy = this.y - location.y;
+        final double dx = this.x - location.x;
+        final double dy = this.y - location.y;
         return Math.sqrt(dx * dx + dy * dy);
     }
 
@@ -119,22 +141,14 @@ public final class Location implements Serializable {
     }
 
     /**
-     * Checks if this location is the origin.
-     * 
-     * @return <code>true</code> if this location is the origin, 
-     *         <code>false</code> otherwise.
-     */
-    public boolean isOrigin() {
-        return this.x == 0 && this.y == 0;
-    }
-
-    /**
      * Returns the Manhattan distance from this location to the
      * <code>other</code> location.
      * 
      * @param other the other location
      * @return Manhattan distance from this to <code>other</code> location.
      * @throws NullPointerException if the value of <code>other</code> is <code>null</code>
+     * 
+     * @since 1
      */
     public int manhattanDistanceTo(Location other) {
         if (other == null) {
@@ -150,6 +164,8 @@ public final class Location implements Serializable {
      * 
      * @param direction
      * @return neighbor location
+     * 
+     * @since 1
      */
     public Location neighbor(Direction direction) {
         return from(this.x + direction.dx, this.y + direction.dy);
@@ -161,7 +177,7 @@ public final class Location implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder();
         result.append('(');
         result.append(this.x);
         result.append(", ");
@@ -173,5 +189,11 @@ public final class Location implements Serializable {
     private Location(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    // Required for JAXB
+    private Location() {
+        this.x = 0;
+        this.y = 0;
     }
 }

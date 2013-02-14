@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +17,9 @@
 package ch.jeda.ui;
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Represents a color in the RGBA color model. A color is defined by three
@@ -25,6 +28,7 @@ import java.io.Serializable;
  *
  * @version 1
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public final class Color implements Serializable {
 
     /**
@@ -130,6 +134,7 @@ public final class Color implements Serializable {
     /**
      * @since 1
      */
+    @XmlElement
     public final int value;
 
     /**
@@ -318,6 +323,11 @@ public final class Color implements Serializable {
 
         result.append(")");
         return result.toString();
+    }
+
+    // Required for JAXB
+    private Color() {
+        this.value = 0;
     }
 
     private Color(int value) {

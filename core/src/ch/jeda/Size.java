@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,11 @@
 package ch.jeda;
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
+@XmlAccessorType(XmlAccessType.NONE)
 public final class Size implements Serializable {
 
     /**
@@ -25,12 +29,14 @@ public final class Size implements Serializable {
      * 
      * @since 1
      */
+    @XmlElement
     public final int width;
     /**
      * The height of this size.
      * 
      * @since 1
      */
+    @XmlElement
     public final int height;
     private static final char SEPARATOR = 'x';
 
@@ -191,5 +197,11 @@ public final class Size implements Serializable {
     private Size(int width, int height) {
         this.width = width;
         this.height = height;
+    }
+
+    // Required for JAXB
+    private Size() {
+        this.width = 0;
+        this.height = 0;
     }
 }

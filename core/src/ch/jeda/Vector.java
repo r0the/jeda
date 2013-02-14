@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,17 +17,28 @@
 package ch.jeda;
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * This class represents a two-dimensional vector.
  * 
  * @since 1
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public final class Vector implements Serializable {
 
+    @XmlElement
     public final double x;
+    @XmlElement
     public final double y;
+    @XmlElement
     private double direction;
+    /**
+     * Vector with a direction of 0 degrees (to the north) and
+     * a length of 0.
+     */
     public static Vector NULL = new Vector();
     public static Vector UNIT_X = new Vector(1.0, 0.0);
     public static Vector UNIT_Y = new Vector(0.0, 1.0);
@@ -264,10 +275,6 @@ public final class Vector implements Serializable {
         return result.toString();
     }
 
-    /**
-     * Initializes a new Vector to a direction of 0 degrees (to the north) and
-     * a length of 0.
-     */
     private Vector() {
         this.x = 0.0;
         this.y = 0.0;
