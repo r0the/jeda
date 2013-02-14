@@ -41,7 +41,7 @@ public final class Direction implements Serializable {
      * 
      * @since 1
      */
-    public static final Direction NORTH = new Direction(0, -1, "North", 0);
+    public static final Direction NORTH = new Direction(0, -1, "North", 2);
     /**
      * The direction north east. This direction has the value 1.
      * 
