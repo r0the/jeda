@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +28,7 @@ import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
 import dalvik.system.DexFile;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -69,8 +69,8 @@ class AndroidPlatform implements Platform {
     }
 
     @Override
-    public ImageImp loadImageImp(URL url) throws Exception {
-        return new AndroidImageImp(BitmapFactory.decodeStream(url.openStream()));
+    public ImageImp loadImageImp(InputStream in) throws Exception {
+        return new AndroidImageImp(BitmapFactory.decodeStream(in));
     }
 
     @Override

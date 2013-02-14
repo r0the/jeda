@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
 package ch.jeda.platform;
 
 import ch.jeda.Size;
-import java.net.URL;
+import java.io.InputStream;
 
 public interface Platform {
 
@@ -25,7 +25,7 @@ public interface Platform {
 
     Iterable<String> listClassNames() throws Exception;
 
-    ImageImp loadImageImp(URL url) throws Exception;
+    ImageImp loadImageImp(InputStream in) throws Exception;
 
     void log(String text);
 

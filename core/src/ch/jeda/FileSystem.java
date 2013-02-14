@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -53,7 +53,7 @@ class FileSystem {
             }
 
             try {
-                result = this.platform.loadImageImp(url);
+                result = this.platform.loadImageImp(url.openStream());
             }
             catch (Exception ex) {
                 Log.warning(Message.IMAGE_READ_ERROR, filePath, ex);
