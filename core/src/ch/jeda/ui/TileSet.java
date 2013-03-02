@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,7 +26,15 @@ public class TileSet {
     private final Size tileSize;
     private final Image[] tiles;
 
-    public static TileSet create(Image image, Size tileSize) {
+    public TileSet(String filePath) {
+        this(filePath, TileSet.parseSize(filePath));
+    }
+
+    public TileSet(String filePath, Size tileSize) {
+        this(new Image(filePath), tileSize);
+    }
+
+    public TileSet(Image image, Size tileSize) {
         if (image == null) {
             throw new NullPointerException("image");
         }
@@ -35,15 +43,11 @@ public class TileSet {
             throw new NullPointerException("tileSize");
         }
 
-        return new TileSet(image, tileSize);
-    }
-
-    public static TileSet load(String filePath) {
-        return TileSet.load(filePath, TileSet.parseSize(filePath));
-    }
-
-    public static TileSet load(String filePath, Size tileSize) {
-        return TileSet.create(Image.load(filePath), tileSize);
+        this.image = image;
+        this.tileSize = tileSize;
+        this.size = new Size(this.image.getWidth() / this.tileSize.width,
+                             this.image.getHeight() / this.tileSize.height);
+        this.tiles = new Image[this.size.width * this.size.height];
     }
 
     public Size getSize() {
@@ -51,7 +55,7 @@ public class TileSet {
     }
 
     public Image getTileAt(int x, int y) {
-        return this.getTileAt(Location.from(x, y));
+        return this.getTileAt(new Location(x, y));
     }
 
     public Image getTileAt(Location location) {
@@ -75,17 +79,9 @@ public class TileSet {
         return this.tileSize;
     }
 
-    private TileSet(Image image, Size tileSize) {
-        this.image = image;
-        this.tileSize = tileSize;
-        this.size = Size.from(this.image.getWidth() / this.tileSize.width,
-                              this.image.getHeight() / this.tileSize.height);
-        this.tiles = new Image[this.size.width * this.size.height];
-    }
-
     private Image createSubImage(Location location) {
-        location = Location.from(location.x * this.tileSize.width,
-                                 location.y * this.tileSize.height);
+        location = new Location(location.x * this.tileSize.width,
+                                location.y * this.tileSize.height);
         return this.image.createSubImage(location, this.tileSize);
     }
 
@@ -97,7 +93,7 @@ public class TileSet {
         int endPos = filePath.lastIndexOf('.');;
         int startPos = endPos;
         if (startPos == -1) {
-            return null;
+            return new Size();
         }
 
         while (startPos > 0 && TileSet.isDigit(filePath.charAt(startPos - 1))) {
@@ -109,6 +105,6 @@ public class TileSet {
             --startPos;
         }
 
-        return Size.parse(filePath.substring(startPos, endPos));
+        return new Size(filePath.substring(startPos, endPos));
     }
 }

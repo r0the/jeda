@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -42,7 +42,7 @@ class JavaImageImp implements ImageImp {
         assert bufferedImage != null;
 
         this.bufferedImage = bufferedImage;
-        this.size = Size.from(bufferedImage.getWidth(), bufferedImage.getHeight());
+        this.size = new Size(bufferedImage.getWidth(), bufferedImage.getHeight());
     }
 
     @Override

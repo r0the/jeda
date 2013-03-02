@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -169,7 +169,7 @@ class JavaCanvasImp implements CanvasImp {
         assert location != null;
         assert this.size.contains(location);
 
-        return Color.from(this.buffer.getRGB(location.x, location.y));
+        return new Color(this.buffer.getRGB(location.x, location.y));
     }
 
     @Override
@@ -244,7 +244,7 @@ class JavaCanvasImp implements CanvasImp {
         assert text != null;
 
         Rectangle2D bounds = textLayout(text).getBounds();
-        return Size.from((int) bounds.getWidth(), (int) bounds.getHeight());
+        return new Size((int) bounds.getWidth(), (int) bounds.getHeight());
     }
 
     private TextLayout textLayout(String text) {
@@ -283,7 +283,7 @@ class JavaCanvasImp implements CanvasImp {
             this.graphics.setComposite(oldComposite);
             this.graphics.setFont(oldFont);
         }
-        this.size = Size.from(buffer.getWidth(), buffer.getHeight());
+        this.size = new Size(buffer.getWidth(), buffer.getHeight());
     }
 
     private static Polygon createPolygon(Iterable<Location> edges) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -49,7 +49,7 @@ public class Canvas {
     private Transformation transformation;
 
     /**
-     * Initializes this Canvas.
+     * Creates a new Canvas with the specified width and height in pixels.
      *
      * @param width the width of this canvas in pixels
      * @param height the height of this canvas in pixels
@@ -57,16 +57,8 @@ public class Canvas {
      * 
      * @since 1
      */
-    public static Canvas create(int width, int height) {
-        if (width < 1) {
-            throw new IllegalArgumentException("width");
-        }
-
-        if (height < 1) {
-            throw new IllegalArgumentException("height");
-        }
-
-        return new Canvas(Size.from(width, height));
+    public Canvas(int width, int height) {
+        this(new Size(width, height));
     }
 
     /**
@@ -74,15 +66,25 @@ public class Canvas {
      *
      * @param size the size of this canvas in pixels
      * @throws NullPointerException if size is <code>null</code>
+     * @throws IllegalArgumentException if size is <code>empty</code>
      * 
      * @since 1
      */
-    public static Canvas create(Size size) {
+    public Canvas(Size size) {
         if (size == null) {
             throw new NullPointerException("size");
         }
 
-        return new Canvas(size);
+        if (size.isEmpty()) {
+            throw new IllegalArgumentException("size");
+        }
+
+        this.transformationStack = new Stack();
+        this.alpha = 255;
+        this.color = DEFAULT_FOREGROUND;
+        this.fontSize = DEFAULT_FONT_SIZE;
+        this.transformation = Transformation.IDENTITY;
+        this.imp = Engine.getCurrentEngine().createCanvasImp(size);
     }
 
     /**
@@ -114,7 +116,7 @@ public class Canvas {
      * @since 1
      */
     public void drawCircle(int x, int y, int radius) {
-        this.drawCircle(Location.from(x, y), radius);
+        this.drawCircle(new Location(x, y), radius);
     }
 
     /**
@@ -150,7 +152,7 @@ public class Canvas {
      * @since 1
      */
     public void drawImage(int x, int y, Image image) {
-        this.drawImage(Location.from(x, y), image, Alignment.TOP_LEFT);
+        this.drawImage(new Location(x, y), image, Alignment.TOP_LEFT);
     }
 
     /**
@@ -182,7 +184,7 @@ public class Canvas {
      * @since 1
      */
     public void drawImage(int x, int y, Image image, Alignment alignment) {
-        this.drawImage(Location.from(x, y), image, alignment);
+        this.drawImage(new Location(x, y), image, alignment);
     }
 
     /**
@@ -224,7 +226,7 @@ public class Canvas {
      * @since 1
      */
     public void drawLine(int x1, int y1, int x2, int y2) {
-        this.drawLine(Location.from(x1, y1), Location.from(x2, y2));
+        this.drawLine(new Location(x1, y1), new Location(x2, y2));
     }
 
     /**
@@ -265,7 +267,7 @@ public class Canvas {
      */
     public void drawRectangle(int x, int y, int width, int height) {
         if (width > 0 && height > 0) {
-            this.drawRectangle(Location.from(x, y), Size.from(width, height), Alignment.TOP_LEFT);
+            this.drawRectangle(new Location(x, y), new Size(width, height), Alignment.TOP_LEFT);
         }
     }
 
@@ -302,7 +304,7 @@ public class Canvas {
      */
     public void drawRectangle(int x, int y, int width, int height, Alignment alignment) {
         if (width > 0 && height > 0) {
-            this.drawRectangle(Location.from(x, y), Size.from(width, height), alignment);
+            this.drawRectangle(new Location(x, y), new Size(width, height), alignment);
         }
     }
 
@@ -347,7 +349,7 @@ public class Canvas {
      */
     @Deprecated
     public void drawString(int x, int y, String text) {
-        this.drawString(Location.from(x, y), text, Alignment.TOP_LEFT);
+        this.drawString(new Location(x, y), text, Alignment.TOP_LEFT);
     }
 
     /**
@@ -379,7 +381,7 @@ public class Canvas {
      */
     @Deprecated
     public final void drawString(int x, int y, String text, Alignment alignment) {
-        this.drawString(Location.from(x, y), text, alignment);
+        this.drawString(new Location(x, y), text, alignment);
     }
 
     /**
@@ -423,7 +425,7 @@ public class Canvas {
      * @since 1
      */
     public void drawText(int x, int y, String text) {
-        this.drawText(Location.from(x, y), text, Alignment.TOP_LEFT);
+        this.drawText(new Location(x, y), text, Alignment.TOP_LEFT);
     }
 
     /**
@@ -455,7 +457,7 @@ public class Canvas {
      * @since 1
      */
     public final void drawText(int x, int y, String text, Alignment alignment) {
-        this.drawText(Location.from(x, y), text, alignment);
+        this.drawText(new Location(x, y), text, alignment);
     }
 
     /**
@@ -524,7 +526,7 @@ public class Canvas {
      * @since 1
      */
     public void fillCircle(int x, int y, int radius) {
-        this.fillCircle(Location.from(x, y), radius);
+        this.fillCircle(new Location(x, y), radius);
     }
 
     /**
@@ -562,7 +564,7 @@ public class Canvas {
      */
     public void fillRectangle(int x, int y, int width, int height) {
         if (width > 0 && height > 0) {
-            this.fillRectangle(Location.from(x, y), Size.from(width, height), Alignment.TOP_LEFT);
+            this.fillRectangle(new Location(x, y), new Size(width, height), Alignment.TOP_LEFT);
         }
     }
 
@@ -599,7 +601,7 @@ public class Canvas {
      */
     public void fillRectangle(int x, int y, int width, int height, Alignment alignment) {
         if (width > 0 && height > 0) {
-            this.fillRectangle(Location.from(x, y), Size.from(width, height), alignment);
+            this.fillRectangle(new Location(x, y), new Size(width, height), alignment);
         }
     }
 
@@ -651,7 +653,7 @@ public class Canvas {
     }
 
     public void floodFill(int x, int y, Color oldColor, Color newColor) {
-        this.floodFill(Location.from(x, y), oldColor, newColor);
+        this.floodFill(new Location(x, y), oldColor, newColor);
     }
 
     public void floodFill(Location location, Color oldColor, Color newColor) {
@@ -673,10 +675,10 @@ public class Canvas {
             location = stack.pop();
             if (this.getPixelAt(location).equals(oldColor)) {
                 this.setPixelAt(location, newColor);
-                stack.push(Location.from(location.x, location.y + 1));
-                stack.push(Location.from(location.x, location.y - 1));
-                stack.push(Location.from(location.x + 1, location.y));
-                stack.push(Location.from(location.x - 1, location.y));
+                stack.push(new Location(location.x, location.y + 1));
+                stack.push(new Location(location.x, location.y - 1));
+                stack.push(new Location(location.x + 1, location.y));
+                stack.push(new Location(location.x - 1, location.y));
             }
         }
     }
@@ -752,7 +754,7 @@ public class Canvas {
      * @since 1
      */
     public Color getPixelAt(int x, int y) {
-        return this.getPixelAt(Location.from(x, y));
+        return this.getPixelAt(new Location(x, y));
     }
 
     /**
@@ -941,7 +943,7 @@ public class Canvas {
      * @since 1
      */
     public void setPixelAt(int x, int y, Color color) {
-        this.setPixelAt(Location.from(x, y), color);
+        this.setPixelAt(new Location(x, y), color);
     }
 
     /**
@@ -999,16 +1001,6 @@ public class Canvas {
         this.transformation = Transformation.IDENTITY;
     }
 
-    private Canvas(Size size) {
-        this.transformationStack = new Stack();
-        this.alpha = 255;
-        this.color = DEFAULT_FOREGROUND;
-        this.fontSize = DEFAULT_FONT_SIZE;
-        this.transformation = Transformation.IDENTITY;
-
-        this.imp = Engine.getCurrentEngine().createCanvasImp(size);
-    }
-
     void setImp(CanvasImp imp) {
         this.imp = imp;
         this.imp.setAlpha(this.alpha);
@@ -1019,9 +1011,9 @@ public class Canvas {
 
     private static Iterable<Location> createPoints(int x1, int y1, int x2, int y2, int x3, int y3) {
         List result = new ArrayList<Location>();
-        result.add(Location.from(x1, y1));
-        result.add(Location.from(x2, y2));
-        result.add(Location.from(x3, y3));
+        result.add(new Location(x1, y1));
+        result.add(new Location(x2, y2));
+        result.add(new Location(x3, y3));
         return result;
     }
 }

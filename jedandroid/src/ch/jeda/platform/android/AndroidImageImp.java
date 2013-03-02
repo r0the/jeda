@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -63,7 +63,7 @@ class AndroidImageImp implements ImageImp {
 
     AndroidImageImp(Bitmap bitmap) {
         this.bitmap = bitmap;
-        this.size = Size.from(this.bitmap.getWidth(), this.bitmap.getHeight());
+        this.size = new Size(this.bitmap.getWidth(), this.bitmap.getHeight());
     }
 
     Bitmap getBitmap() {

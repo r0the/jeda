@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -77,7 +77,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
                 index = event.getActionIndex();
                 this.eventsIn.add(Event.createPointerAvailable(
                         event.getPointerId(index),
-                        Location.from((int) event.getX(index), (int) event.getY(index))));
+                        new Location((int) event.getX(index), (int) event.getY(index))));
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -91,7 +91,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
                 for (index = 0; index < event.getPointerCount(); ++index) {
                     this.eventsIn.add(Event.createPointerMoved(
                             event.getPointerId(index),
-                            Location.from((int) event.getX(index), (int) event.getY(index))));
+                            new Location((int) event.getX(index), (int) event.getY(index))));
                 }
 
                 break;
@@ -106,7 +106,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        this.surfaceSize = Size.from(width, height);
+        this.surfaceSize = new Size(width, height);
         if (this.request != null) {
             this.request.setResult(AndroidWindowImp.create(this));
             this.request = null;

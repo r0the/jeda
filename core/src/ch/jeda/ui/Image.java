@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -44,13 +44,6 @@ public final class Image {
     private final ImageImp imp;
 
     /**
-     * @deprecated Use {@link #load(java.lang.String)} instead.
-     */
-    public Image(String filePath) {
-        this(Engine.getCurrentEngine().loadImageImp(filePath));
-    }
-
-    /**
      * Reads an image file and creates a new image from the contents of the
      * file.
      *
@@ -60,8 +53,8 @@ public final class Image {
      * 
      * @since 1
      */
-    public static Image load(String filePath) {
-        return new Image(Engine.getCurrentEngine().loadImageImp(filePath));
+    public Image(String filePath) {
+        this(Engine.getCurrentEngine().loadImageImp(filePath));
     }
 
     /**
@@ -97,7 +90,7 @@ public final class Image {
      * @since 1
      */
     public Image createScaledImage(int width, int height) {
-        return this.createScaledImage(Size.from(width, height));
+        return this.createScaledImage(new Size(width, height));
     }
 
     /**
@@ -131,7 +124,7 @@ public final class Image {
      * @since 1
      */
     public Image createSubImage(int x, int y, int width, int height) {
-        return this.createSubImage(Location.from(x, y), Size.from(width, height));
+        return this.createSubImage(new Location(x, y), new Size(width, height));
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -55,7 +55,7 @@ public class BlockWorld extends VisualSimulation {
      * @throws IllegalArgumentException if width or height are smaller than 1
      */
     public BlockWorld(int width, int height) {
-        this(Size.from(width, height));
+        this(new Size(width, height));
     }
 
     /**
@@ -105,7 +105,7 @@ public class BlockWorld extends VisualSimulation {
      * @throws IllegalArgumentException if sizeX or sizeY are smaller than 1
      */
     public final void createMap(int sizeX, int sizeY) {
-        Size size = Size.from(sizeX, sizeY);
+        Size size = new Size(sizeX, sizeY);
         if (this.currentMap != null) {
             this.currentMap.dispose();
         }
@@ -143,7 +143,7 @@ public class BlockWorld extends VisualSimulation {
     }
 
     public final Field fieldAt(int x, int y) {
-        Location location = Location.from(x, y);
+        Location location = new Location(x, y);
         if (this.currentMap.isValidCoordinate(location)) {
             return this.currentMap.fieldAt(location);
         }

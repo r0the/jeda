@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -39,7 +39,7 @@ public class Field {
         this.entityMap = new TypeMap<Entity>(Entity.class);
         this.heightInfo = new FieldHeightInfo(this);
         this.map = map;
-        this.position = Location.from(x, y);
+        this.position = new Location(x, y);
         this.renderEntities = new ArrayList<Entity>();
         this.isDirty = false;
     }

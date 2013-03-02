@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -52,7 +52,7 @@ public abstract class VisualSimulation extends Simulation {
      * @since 1.0
      */
     public VisualSimulation(int width, int height) {
-        this(Size.from(width, height));
+        this(new Size(width, height));
     }
 
     /**
@@ -67,7 +67,7 @@ public abstract class VisualSimulation extends Simulation {
      * @since 1.0
      */
     public VisualSimulation(Size size) {
-        this.window = Window.create(size, Window.Feature.DoubleBuffered);
+        this.window = new Window(size, Window.Feature.DoubleBuffered);
     }
 
     /**

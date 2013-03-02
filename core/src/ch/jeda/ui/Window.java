@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -44,16 +44,37 @@ public class Window extends Canvas {
     private String title;
 
     /**
-     * Creates a new window with an automatically sized drawing area.
-     * On the Android platform, the drawing area is adjusted to the screen
-     * size.
-     * On the Java platform, the drawing area has a width of 800 and a height
-     * of 600 pixels.
-     *
-     * @since 1
+     * @deprecated Use {@link Window()} instead.
      */
     public static Window create() {
-        return new Window(null, NO_FEATURES);
+        return new Window();
+    }
+
+    /**
+     * @deprecated Use {@link Window(Feature... )} instead.
+     */
+    public static Window create(Feature... features) {
+        return new Window(features);
+    }
+
+    /**
+     * @deprecated Use {@link Window(int, int, Feature... )} instead.
+     */
+    public static Window create(int width, int height, Feature... features) {
+        return new Window(width, height, features);
+    }
+
+    /**
+     * Creates a new window with an automatically sized drawing area.
+     * On the Android platform, the drawing area is adjusted to the screen
+     * size.
+     * On the Java platform, the drawing area has a width of 800 and a height
+     * of 600 pixels.
+     * 
+     * @since 1
+     */
+    public Window() {
+        this(new Size(), NO_FEATURES);
     }
 
     /**
@@ -65,100 +86,44 @@ public class Window extends Canvas {
      * The specified window features are activated.
      *
      * @param features the features of this window
-     *
-     * @since 1
-     */
-    public static Window create(Feature... features) {
-        return new Window(null, toSet(features));
-    }
-
-    /**
-     * Creates a new window that has a drawing with the specified width and
-     * height in pixels.
-     * On the Android platform, the size parameter has no effect.
-     *
-     * @param width the width of the drawing area in pixels
-     * @param height the height of the drawing area in pixels
-     * @throws IllegalArgumentException if width or height are smaller than 1
      * 
      * @since 1
      */
-    public static Window create(int width, int height) {
-        return new Window(Size.from(width, height), NO_FEATURES);
+    public Window(Feature... features) {
+        this(new Size(), toSet(features));
     }
 
     /**
-     * Creates a new window that has a drawing with the specified width and
-     * height in pixels.
-     * On the Android platform, the size parameter has no effect.
+     * Creates a new window that has a drawing area with the specified width
+     * and height in pixels.
+     * On the Android platform, the width and height parameters have no effect.
      * The specified window features are activated.
      *
      * @param width the width of the drawing area in pixels
      * @param height the height of the drawing area in pixels
      * @param features the features of this window
+     *
      * @throws IllegalArgumentException if width or height are smaller than 1
-     * 
      * @since 1
      */
-    public static Window create(int width, int height, Feature... features) {
-        return new Window(Size.from(width, height), toSet(features));
+    public Window(int width, int height, Feature... features) {
+        this(new Size(width, height), toSet(features));
     }
 
     /**
-     * Creates a new window that has a drawing with the specified size in
-     * pixels.
+     * Creates a new window that has a drawing with the specified size in pixels.
      * On the Android platform, the size parameter has no effect.
      * The specified window features are activated.
      *
      * @param size the size of the drawing area in pixels
      * @param features the features of this window
-     * @throws NullPointerException if size is <code>null</code>
-     * 
+     *
+     * @throws IllegalArgumentException if size.width or size.height are
+     *         smaller than 1.
      * @since 1
      */
-    public static Window create(Size size, Feature... features) {
-        return new Window(size, toSet(features));
-    }
-
-    /**
-     * Creates a new window with an automatically sized drawing area.
-     * On the Android platform, the drawing area is adjusted to the screen
-     * size.
-     * On the Java platform, the drawing area has a width of 800 and a height
-     * of 600 pixels.
-     */
-    public Window() {
-        this(null, NO_FEATURES);
-    }
-
-    /**
-     * Creates a new window with an automatically sized drawing area.
-     * On the Android platform, the drawing area is adjusted to the screen
-     * size.
-     * On the Java platform, the drawing area has a width of 800 and a height
-     * of 600 pixels.
-     * The specified window features are activated.
-     *
-     * @param features the features of this window
-     */
-    public Window(Feature... features) {
-        this(null, toSet(features));
-    }
-
-    /**
-     * Creates a new window that has a drawing with the specified width and
-     * height in pixels.
-     * On the Android platform, the size parameter has no effect.
-     * The specified window features are activated.
-     *
-     * @param width the width of the drawing area in pixels
-     * @param height the height of the drawing area in pixels
-     * @param features the features of this window
-     *
-     * @throws IllegalArgumentException if width or height are smaller than 1
-     */
-    public Window(int width, int height, Feature... features) {
-        this(Size.from(width, height), toSet(features));
+    public Window(Size size, Feature... features) {
+        this(size, toSet(features));
     }
 
     /**
@@ -301,6 +266,10 @@ public class Window extends Canvas {
     }
 
     private Window(Size size, EnumSet<Feature> features) {
+        if (size == null) {
+            throw new NullPointerException("size");
+        }
+
         this.events = new Events();
         this.title = Thread.currentThread().getName();
         this.resetImp(size, features);

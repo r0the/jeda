@@ -54,57 +54,67 @@ public final class Location implements Serializable {
     public final int y;
 
     /**
-     * Returns a location with the specified <code>x</code> and <code>y</code>
-     * coordinates.
-     * 
-     * @param x the x coordinate of the location
-     * @param y the y coordinate of the location
-     * @return location with specified coordinates
+     * Creates a new location representing the origin. Both coordinates of this
+     * location are 0.
      * 
      * @since 1
      */
-    public static Location from(int x, int y) {
-        if (x == 0 & y == 0) {
-            return ORIGIN;
-        }
-        else {
-            return new Location(x, y);
-        }
+    public Location() {
+        this.x = 0;
+        this.y = 0;
     }
 
     /**
-     * Returns a location corresponding to the specified {@link Vector}. The
-     * resulting location's coordinates are the rounded coordinates of the
-     * vector. Returns <code>null</code> if the specified vector is
-     * <code>null</code>.
+     * Creates a new location with the specified <code>x</code> and
+     * <code>y</code> coordinates.
+     * 
+     * @param x the x coordinate of the location
+     * @param y the y coordinate of the location
+     * 
+     * @since 1
+     */
+    public Location(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
+     * Creates a new location from a vector. The locations coordinates
+     * correspond to the vector's rounded coordinates.
      * 
      * @param vector
-     * @return location corresponding to specified {@link Vector} or
+     * @throws NullPointerException if the value of <code>vector</code> is 
      *         <code>null</code>
      * 
      * @since 1
      */
-    public static Location from(Vector vector) {
+    public Location(Vector vector) {
         if (vector == null) {
-            return null;
+            throw new NullPointerException("vector");
         }
-        else {
-            return from((int) Math.round(vector.x), (int) Math.round(vector.y));
-        }
+
+        this.x = (int) Math.round(vector.x);
+        this.y = (int) Math.round(vector.y);
     }
 
     /**
      * Returns the Euclidean distance between this location and the specified
      * location.
      * 
-     * @param location the other location
+     * @param other the other location
      * @return distance between this and other location
+     * @throws NullPointerException if the value of <code>other</code> is 
+     *         <code>null</code>
      * 
      * @since 1
      */
-    public double distanceTo(Location location) {
-        final double dx = this.x - location.x;
-        final double dy = this.y - location.y;
+    public double distanceTo(Location other) {
+        if (other == null) {
+            throw new NullPointerException("other");
+        }
+
+        final double dx = this.x - other.x;
+        final double dy = this.y - other.y;
         return Math.sqrt(dx * dx + dy * dy);
     }
 
@@ -117,8 +127,8 @@ public final class Location implements Serializable {
             throw new NullPointerException("max");
         }
 
-        return from(Math.max(min.x, Math.min(this.x, max.x)),
-                    Math.max(min.y, Math.min(this.y, max.y)));
+        return new Location(Math.max(min.x, Math.min(this.x, max.x)),
+                            Math.max(min.y, Math.min(this.y, max.y)));
     }
 
     @Override
@@ -146,7 +156,8 @@ public final class Location implements Serializable {
      * 
      * @param other the other location
      * @return Manhattan distance from this to <code>other</code> location.
-     * @throws NullPointerException if the value of <code>other</code> is <code>null</code>
+     * @throws NullPointerException if the value of <code>other</code> is 
+     *         <code>null</code>
      * 
      * @since 1
      */
@@ -156,6 +167,10 @@ public final class Location implements Serializable {
         }
 
         return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
+    }
+
+    public Location minus(Location other) {
+        return new Location(this.x - other.x, this.y - other.y);
     }
 
     /**
@@ -168,11 +183,11 @@ public final class Location implements Serializable {
      * @since 1
      */
     public Location neighbor(Direction direction) {
-        return from(this.x + direction.dx, this.y + direction.dy);
+        return new Location(this.x + direction.dx, this.y + direction.dy);
     }
 
-    public Location relativeTo(Location other) {
-        return from(this.x - other.x, this.y - other.y);
+    public Location plus(Location other) {
+        return new Location(this.x + other.x, this.y + other.y);
     }
 
     @Override
@@ -184,16 +199,5 @@ public final class Location implements Serializable {
         result.append(this.y);
         result.append(')');
         return result.toString();
-    }
-
-    private Location(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    // Required for JAXB
-    private Location() {
-        this.x = 0;
-        this.y = 0;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,7 +32,7 @@ public class IsoRenderer {
     private final Size viewPort;
     private Location scrollPos;
 
-    public static IsoRenderer create(Size viewPort, Size mapSize, Size tileSize) {
+    public IsoRenderer(Size viewPort, Size mapSize, Size tileSize) {
         if (viewPort == null) {
             throw new NullPointerException("viewPort");
         }
@@ -45,7 +45,18 @@ public class IsoRenderer {
             throw new NullPointerException("tileSize");
         }
 
-        return new IsoRenderer(viewPort, mapSize, tileSize);
+        this.viewPort = viewPort;
+        this.mapSize = mapSize;
+        this.tileSize = tileSize;
+        this.layers = new ArrayList();
+
+        this.scrollPos = new Location(this.viewPort.width / 2, 0);
+
+        int w = this.tileSize.width * this.mapSize.width / 2;
+        int h = this.tileSize.height * this.mapSize.height;
+        this.maxScrollPos = new Location(w, 0);
+        this.minScrollPos = new Location(this.viewPort.width - w,
+                                         this.viewPort.height - h);
     }
 
     public void drawOn(Canvas canvas) {
@@ -94,7 +105,7 @@ public class IsoRenderer {
             throw new NullPointerException("delta");
         }
 
-        this.scrollPos = Location.from(this.scrollPos.x + delta.x, this.scrollPos.y + delta.y);
+        this.scrollPos = new Location(this.scrollPos.x + delta.x, this.scrollPos.y + delta.y);
         this.checkScrollPos();
     }
 
@@ -120,22 +131,7 @@ public class IsoRenderer {
     public Location toCanvas(Vector mapLocation) {
         double x = this.scrollPos.x + this.tileSize.width * (mapLocation.x - mapLocation.y) * 0.5;
         double y = this.scrollPos.y + this.tileSize.height * (2.0 + mapLocation.x + mapLocation.y) * 0.5;
-        return Location.from((int) x, (int) y);
-    }
-
-    private IsoRenderer(Size viewPort, Size mapSize, Size tileSize) {
-        this.viewPort = viewPort;
-        this.mapSize = mapSize;
-        this.tileSize = tileSize;
-        this.layers = new ArrayList();
-
-        this.scrollPos = Location.from(this.viewPort.width / 2, 0);
-
-        int w = this.tileSize.width * this.mapSize.width / 2;
-        int h = this.tileSize.height * this.mapSize.height;
-        this.maxScrollPos = Location.from(w, 0);
-        this.minScrollPos = Location.from(this.viewPort.width - w,
-                                          this.viewPort.height - h);
+        return new Location((int) x, (int) y);
     }
 
     private void checkScrollPos() {

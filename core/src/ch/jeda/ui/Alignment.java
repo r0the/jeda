@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -90,7 +90,7 @@ public final class Alignment implements Serializable {
     private final Align vertical;
 
     Location align(Location anchor, Size size) {
-        return Location.from(
+        return new Location(
                 this.horizontal.align(anchor.x, size.width),
                 this.vertical.align(anchor.y, size.height));
     }

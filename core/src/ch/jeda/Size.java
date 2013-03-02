@@ -41,45 +41,57 @@ public final class Size implements Serializable {
     private static final char SEPARATOR = 'x';
 
     /**
-     * Returns a Size object.
-     * Returns <code>null</code> if <code>width</code> or <code>height</code>
-     * are smaller than 1.
+     * Creates a new empty size object. The object has a width and height of 0.
      *
-     * @param width the width
-     * @param height the height
-     * @return a size with the specified width and height or <code>null</code>
-     * 
      * @since 1
      */
-    public static Size from(int width, int height) {
-        if (width < 0 || height < 0) {
-            return null;
-        }
-        else {
-            return new Size(width, height);
-        }
+    public Size() {
+        this.width = 0;
+        this.height = 0;
     }
 
     /**
-     * Returns a size corresponding to the specified {@link Vector}. The
-     * resulting size's width and height are the rounded absolute coordinates
-     * of the vector. Returns <code>null</code> if the specified vector is
-     * <code>null</code>.
+     * Creates a new size object with the specified width and height.
+     *
+     * @param width the width
+     * @param height the height
+     * @throws IllegalArgumentException if width or height are smaller than 0
+     * 
+     * @since 1
+     */
+    public Size(int width, int height) {
+        if (width < 0) {
+            throw new IllegalArgumentException("width");
+        }
+
+        if (height < 0) {
+            throw new IllegalArgumentException("height");
+        }
+
+        this.width = width;
+        this.height = height;
+    }
+
+    /**
+     * Create a new size corresponding to the specified {@link Vector}. The
+     * resulting size's width and height are the rounded absolute values of
+     * the vector's coordinates.
      * 
      * @param vector
      * @return size corresponding to specified {@link Vector} or
      *         <code>null</code>
+     * @throws NullPointerException if <code>vector</code> has the value
+     *         <code>null</code>
      * 
      * @since 1
      */
-    public static Size from(Vector vector) {
+    public Size(Vector vector) {
         if (vector == null) {
-            return null;
+            throw new NullPointerException("vector");
         }
-        else {
-            return from((int) Math.round(Math.abs(vector.x)),
-                        (int) Math.round(Math.abs(vector.y)));
-        }
+
+        this.width = (int) Math.round(Math.abs(vector.x));
+        this.height = (int) Math.round(Math.abs(vector.y));
     }
 
     /**
@@ -88,30 +100,32 @@ public final class Size implements Serializable {
      * if <code>text</code> does not represent a valid size.
      * 
      * @param text the string to parse
-     * @return the parsed size or <code>null</code>
+     * @throws NullPointerException if <code>text</code> has the value
+     *         <code>null</code>
      * 
      * @since 1
      */
-    public static Size parse(String text) {
-        int pos = text.indexOf(SEPARATOR);
-        if (pos == -1) {
-            return null;
+    public Size(String text) {
+        if (text == null) {
+            throw new NullPointerException("text");
         }
 
-        try {
-            int width = Integer.parseInt(text.substring(0, pos));
-            int height = Integer.parseInt(text.substring(pos + 1));
+        int w = 0;
+        int h = 0;
+        final int pos = text.indexOf(SEPARATOR);
+        if (pos >= 0) {
+            try {
+                w = Integer.parseInt(text.substring(0, pos));
+                h = Integer.parseInt(text.substring(pos + 1));
+            }
+            catch (NumberFormatException ex) {
+                w = 0;
+                h = 0;
+            }
+        }
 
-            if (width > 0 && height > 0) {
-                return from(width, height);
-            }
-            else {
-                return null;
-            }
-        }
-        catch (NumberFormatException ex) {
-            return null;
-        }
+        this.width = w;
+        this.height = h;
     }
 
     /**
@@ -162,6 +176,16 @@ public final class Size implements Serializable {
     }
 
     /**
+     * Checks if this size is empty. A size is empty if it's area is zero.
+     * 
+     * @return <code>true</code> if size is empty, otherwise
+     *         <code>false</code>
+     */
+    public boolean isEmpty() {
+        return this.width <= 0 || this.height <= 0;
+    }
+
+    /**
      * Returns a scaled variant of this size. Both width and height of this
      * size are scaled and rounded. If both width and height are positive,
      * a resulting size is returned. Otherwise, <code>null</code> is returned.
@@ -172,8 +196,8 @@ public final class Size implements Serializable {
      * @since 1
      */
     public Size scaled(double factor) {
-        return from((int) Math.round(this.width * factor),
-                    (int) Math.round(this.height * factor));
+        return new Size((int) Math.round(this.width * factor),
+                        (int) Math.round(this.height * factor));
     }
 
     /**
@@ -187,21 +211,10 @@ public final class Size implements Serializable {
      */
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder();
         result.append(this.width);
         result.append('x');
         result.append(this.height);
         return result.toString();
-    }
-
-    private Size(int width, int height) {
-        this.width = width;
-        this.height = height;
-    }
-
-    // Required for JAXB
-    private Size() {
-        this.width = 0;
-        this.height = 0;
     }
 }

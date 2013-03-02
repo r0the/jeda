@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -115,13 +115,13 @@ public class WindowManager {
 
     private CanvasWindow createCanvasWindow(WindowRequest viewRequest) {
         Size size = viewRequest.getSize();
-        if (size == null) {
-            size = Size.from(800, 600);
+        if (size.isEmpty()) {
+            size = new Size(800, 600);
         }
 
         if (viewRequest.getFeatures().contains(Feature.Fullscreen) && this.fullscreenWindow == null) {
             DisplayMode displayMode = findDisplayMode(size);
-            size = Size.from(displayMode.getWidth(), displayMode.getHeight());
+            size = new Size(displayMode.getWidth(), displayMode.getHeight());
             this.fullscreenWindow = new CanvasWindow(this, size, viewRequest.getFeatures());
             GRAPHICS_DEVICE.setFullScreenWindow(this.fullscreenWindow);
             GRAPHICS_DEVICE.setDisplayMode(displayMode);

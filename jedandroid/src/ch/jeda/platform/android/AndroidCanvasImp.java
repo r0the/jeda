@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -158,7 +158,7 @@ class AndroidCanvasImp implements CanvasImp {
         assert location != null;
         assert this.size.contains(location);
 
-        return Color.from(this.bitmap.getPixel(location.x, location.y));
+        return new Color(this.bitmap.getPixel(location.x, location.y));
     }
 
     @Override
@@ -225,7 +225,7 @@ class AndroidCanvasImp implements CanvasImp {
     public Size textSize(String text) {
         Rect bounds = new Rect();
         this.strokePaint.getTextBounds(text, 0, text.length(), bounds);
-        return Size.from(bounds.width(), bounds.height());
+        return new Size(bounds.width(), bounds.height());
     }
 
     AndroidCanvasImp() {

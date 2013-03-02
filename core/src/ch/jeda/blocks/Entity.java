@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,7 +27,7 @@ import ch.jeda.Location;
 public class Entity {
 
     public static final String INVISIBLE = "Invisible";
-    private static final Location INVALID = Location.from(-1, -1);
+    private static final Location INVALID = new Location(-1, -1);
     private static final double MESSAGE_TIMEOUT = 2d;
     private Field field;
     private String imageName;

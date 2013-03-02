@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -43,7 +43,7 @@ class RenderContext {
 
     RenderContext(Size size) {
         this.blockSet = new BlockSet();
-        this.canvas = Canvas.create(size);
+        this.canvas = new Canvas(size);
         this.maxY = this.canvas.getSize().height + this.blockSet.brickSizeZ() + this.blockSet.brickSizeY();
         this.mapSize = null;
         this.scrollPos = Location.ORIGIN;
@@ -74,7 +74,7 @@ class RenderContext {
                                   Alignment.BOTTOM_LEFT);
         }
         this.shadowPosY = this.renderPos.y;
-        this.renderPos = Location.from(
+        this.renderPos = new Location(
                 this.renderPos.x,
                 this.renderPos.y - this.blockSet.brickSizeZ());
     }
@@ -133,7 +133,7 @@ class RenderContext {
     }
 
     Location end() {
-        return Location.from(
+        return new Location(
                 Math.min(this.mapSize.width, start().x + this.canvas.getWidth() / this.blockSet.brickSizeX() + 1) + 1,
                 this.mapSize.height + 1);
     }
@@ -143,7 +143,7 @@ class RenderContext {
     }
 
     Location start() {
-        return Location.from(
+        return new Location(
                 Math.max(0, (this.scrollPos.x) / this.blockSet.brickSizeX()) - 1,
                 Math.max(0, (this.scrollPos.y) / this.blockSet.brickSizeY()) - 1);
     }
@@ -160,7 +160,7 @@ class RenderContext {
     }
 
     Location screenToMap(Location screenPos, BlockMap map) {
-        Location location = Location.from(
+        Location location = new Location(
                 screenPos.x + this.scrollPos.x,
                 screenPos.y + this.scrollPos.y);
         if (location.x < 0 || location.y > (map.getSize().height - 1) * this.blockSet.brickSizeY()) {
@@ -183,11 +183,11 @@ class RenderContext {
             topY = (y - 1) * this.blockSet.brickSizeY() - this.scrollPos.y - map.fieldAt(x, y).height() * this.blockSet.brickSizeZ();
         }
 
-        return Location.from(x, y);
+        return new Location(x, y);
     }
 
     void scroll(int dx, int dy) {
-        this.scrollPos = Location.from(this.scrollPos.x + dx, this.scrollPos.y + dy);
+        this.scrollPos = new Location(this.scrollPos.x + dx, this.scrollPos.y + dy);
         this.checkScrollPos();
     }
 
@@ -203,27 +203,27 @@ class RenderContext {
         double x = entityPos.x * this.blockSet.brickSizeX() - this.canvas.getWidth() / 2;
         double y = entityPos.y * this.blockSet.brickSizeY() -
                    entityPos.z * this.blockSet.brickSizeZ() - this.blockSet.brickSizeY() - this.canvas.getHeight() / 2;
-        this.scrollPos = Location.from((int) x, (int) y);
+        this.scrollPos = new Location((int) x, (int) y);
     }
 
     private Location mapToScreen(Vector3D pos) {
         double x = pos.x * this.blockSet.brickSizeX() - this.scrollPos.x;
         double y = pos.y * this.blockSet.brickSizeY() -
                    pos.z * this.blockSet.brickSizeZ() - this.scrollPos.y;
-        return Location.from((int) x, (int) y);
+        return new Location((int) x, (int) y);
     }
 
     private Location mapToScreen(Location mapCoors) {
-        return Location.from(mapCoors.x * this.blockSet.brickSizeX() - this.scrollPos.x,
-                             mapCoors.y * this.blockSet.brickSizeY() - this.scrollPos.y);
+        return new Location(mapCoors.x * this.blockSet.brickSizeX() - this.scrollPos.x,
+                            mapCoors.y * this.blockSet.brickSizeY() - this.scrollPos.y);
     }
 
     private void checkScrollPos() {
         if (this.mapSize != null) {
-            Location min = Location.from(-this.borderLeft, -this.borderTop);
+            Location min = new Location(-this.borderLeft, -this.borderTop);
             int maxX = this.blockSet.brickSizeX() * this.mapSize.width - this.canvas.getWidth() + this.borderRight;
             int maxY = this.blockSet.brickSizeY() * this.mapSize.height - this.canvas.getHeight() + this.borderBottom;
-            this.scrollPos = this.scrollPos.ensureRange(min, Location.from(maxX, maxY));
+            this.scrollPos = this.scrollPos.ensureRange(min, new Location(maxX, maxY));
         }
     }
 }
