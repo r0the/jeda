@@ -17,15 +17,19 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.platform.Event;
+import ch.jeda.platform.InputDeviceImp;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import net.java.games.input.ControllerEnvironment;
 
 abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
@@ -35,6 +39,17 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     @Override
     public void close() {
         this.canvasWindow.dispose();
+    }
+
+    @Override
+    public Iterable<InputDeviceImp> detectInputDevices() {
+        List<InputDeviceImp> result = new ArrayList();
+        ControllerEnvironment env = ControllerEnvironment.getDefaultEnvironment();
+        for (net.java.games.input.Controller controller : env.getControllers()) {
+            result.add(new JavaGamepad(controller));
+        }
+
+        return result;
     }
 
     @Override

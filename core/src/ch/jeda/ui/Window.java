@@ -17,9 +17,13 @@
 package ch.jeda.ui;
 
 import ch.jeda.Engine;
+import ch.jeda.platform.InputDeviceImp;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.Size;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Provides a drawing window. The window class has the follwoing functionality:
@@ -40,6 +44,7 @@ public class Window extends Canvas {
     private static final EnumSet<Feature> NO_FEATURES = EnumSet.noneOf(Feature.class);
     private static final EnumSet<Feature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
     private final Events events;
+    private final List<InputDevice> inputDevices;
     private WindowImp imp;
     private String title;
 
@@ -133,6 +138,21 @@ public class Window extends Canvas {
      */
     public void close() {
         this.imp.close();
+    }
+
+    /**
+     * Detects input devices and returns a list of all available devices.
+     * 
+     * @return list of available input devices
+     * @see InputDevice
+     */
+    public List<InputDevice> detectInputDevices() {
+        this.inputDevices.clear();
+        for (InputDeviceImp imp : this.imp.detectInputDevices()) {
+            this.inputDevices.add(new InputDevice(imp));
+        }
+
+        return Collections.unmodifiableList(this.inputDevices);
     }
 
     /**
@@ -263,6 +283,9 @@ public class Window extends Canvas {
      */
     public void update() {
         this.events.digestEvents(this.imp.update());
+        for (InputDevice inputDevice : this.inputDevices) {
+            inputDevice.update();
+        }
     }
 
     private Window(Size size, EnumSet<Feature> features) {
@@ -271,6 +294,7 @@ public class Window extends Canvas {
         }
 
         this.events = new Events();
+        this.inputDevices = new ArrayList();
         this.title = Thread.currentThread().getName();
         this.resetImp(size, features);
     }

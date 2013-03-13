@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,23 +16,20 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.ui.MouseCursor;
-import ch.jeda.ui.Window;
-import java.util.EnumSet;
+import ch.jeda.ui.Axis;
+import ch.jeda.ui.Button;
 
-public interface WindowImp extends CanvasImp {
+public interface InputDeviceImp {
 
-    void close();
+    Iterable<Axis> getAxes();
 
-    Iterable<InputDeviceImp> detectInputDevices();
+    double getAxisValue(Axis axis);
 
-    EnumSet<Window.Feature> getFeatures();
+    Iterable<Button> getButtons();
 
-    void setFeature(Window.Feature feature, boolean enabled);
+    String getName();
 
-    void setMouseCursor(MouseCursor mouseCursor);
+    boolean isButtonPressed(Button button);
 
-    void setTitle(String title);
-
-    Iterable<Event> update();
+    void poll();
 }

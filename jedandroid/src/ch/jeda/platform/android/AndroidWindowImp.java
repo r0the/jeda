@@ -17,10 +17,12 @@
 package ch.jeda.platform.android;
 
 import ch.jeda.platform.Event;
+import ch.jeda.platform.InputDeviceImp;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
 import ch.jeda.ui.Window.Feature;
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
@@ -29,6 +31,11 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
 
     @Override
     public void close() {
+    }
+
+    @Override
+    public Iterable<InputDeviceImp> detectInputDevices() {
+        return new ArrayList();
     }
 
     @Override

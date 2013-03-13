@@ -14,12 +14,18 @@
     <target name="-post-jar">
         <!-- Load jeda version -->
         <property file="${jeda.core.dir}/src/ch/jeda/jeda.properties"/>
-        
+
         <!-- Add core library to jar -->
         <jar update="true" jarfile="${dist.jar}">
-            <zipfileset src="${jeda.core.dir}/dist/core.jar" />
+            <zipfileset src="${jeda.core.dir}/dist/core.jar"/>
         </jar>
 
+        <!-- Add jinput native libraries to jar -->
+        <jar update="true" jarfile="${dist.jar}">
+            <zipfileset src="lib/jinput/jinput.jar"/>
+            <fileset dir="lib/jinput/native"/>
+        </jar>
+        
         <!-- Add information to library manifest -->
         <jar update="true" destfile="${dist.jar}">
             <manifest>
@@ -28,7 +34,7 @@
                 <attribute name="Implementation-Version" value="${jeda.version}"/>
             </manifest>
         </jar>
-        
+
         <!-- BEGIN Update Jeda Library in NBJeda -->
         <copy file="${dist.jar}" tofile="${jeda.library.release.dir}/lib/jeda.jar"/>
         <zip basedir="${jeda.core.dir}/dist/javadoc" destfile="${jeda.javadoc.zip}"/>
@@ -42,7 +48,7 @@
             <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
         </manifest>
         <!-- END Update Jeda version in nbjeda -->
-        
+
         <!-- Directly update installed library files -->
         <copy file="${dist.jar}" tofile="${user.home}/.netbeans/7.0/lib/jeda.jar"/>
         <copy file="${jeda.library.release.dir}/docs/jeda-api.zip" tofile="${user.home}/.netbeans/7.0/docs/jeda-api.zip/"/>

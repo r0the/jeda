@@ -24,6 +24,8 @@ import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.UIManager;
@@ -86,10 +88,39 @@ class JavaPlatform implements Platform {
         this.engine = new Engine(this);
         this.resourceFinder = new ResourceFinder();
         this.windowManager = new WindowManager(this.engine);
+        loadNativeLibrary("jinput-dx8.dll");
+        loadNativeLibrary("jinput-dx8_64.dll");
+        loadNativeLibrary("jinput-raw_64.dll");
+        loadNativeLibrary("jinput-raw.dll");
+        loadNativeLibrary("jinput-wintab.dll");
+        loadNativeLibrary("libjinput-linux.so");
+        loadNativeLibrary("libjinput-linux64.so");
+        loadNativeLibrary("libjinput-osx.jnilib");
     }
 
     void start() {
         this.engine.start();
+    }
+
+    private static void loadNativeLibrary(String libraryName) {
+        InputStream inputStream = JavaPlatform.class.getClassLoader().getResourceAsStream(libraryName);
+        try {
+            String tempDir = System.getProperty("java.io.tmpdir");
+            System.setProperty("net.java.games.input.librarypath", tempDir);
+            File libraryFile = new File(tempDir, libraryName);
+            libraryFile.deleteOnExit();
+            FileOutputStream fileOutputStream = new FileOutputStream(libraryFile);
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) > 0) {
+                fileOutputStream.write(buffer, 0, bytesRead);
+            }
+            fileOutputStream.close();
+            inputStream.close();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private static void setLookAndFeel() {
@@ -102,17 +133,17 @@ class JavaPlatform implements Platform {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
         }
-        catch (UnsupportedLookAndFeelException e) {
-            // TODO: handle exception
+        catch (UnsupportedLookAndFeelException ex) {
+            ex.printStackTrace();
         }
-        catch (ClassNotFoundException e) {
-            // TODO: handle exception
+        catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
         }
-        catch (InstantiationException e) {
-            // TODO: handle exception
+        catch (InstantiationException ex) {
+            ex.printStackTrace();
         }
-        catch (IllegalAccessException e) {
-            // TODO: handle exception
+        catch (IllegalAccessException ex) {
+            ex.printStackTrace();
         }
     }
 }
