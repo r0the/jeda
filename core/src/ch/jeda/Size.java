@@ -73,28 +73,6 @@ public final class Size implements Serializable {
     }
 
     /**
-     * Create a new size corresponding to the specified {@link Vector}. The
-     * resulting size's width and height are the rounded absolute values of
-     * the vector's coordinates.
-     * 
-     * @param vector
-     * @return size corresponding to specified {@link Vector} or
-     *         <code>null</code>
-     * @throws NullPointerException if <code>vector</code> has the value
-     *         <code>null</code>
-     * 
-     * @since 1
-     */
-    public Size(Vector vector) {
-        if (vector == null) {
-            throw new NullPointerException("vector");
-        }
-
-        this.width = (int) Math.round(Math.abs(vector.x));
-        this.height = (int) Math.round(Math.abs(vector.y));
-    }
-
-    /**
      * Parses a size from a string. The string must contain two positivie
      * integers separated by an 'x', e.g. "800x600". Returns <code>null</code>
      * if <code>text</code> does not represent a valid size.
@@ -180,6 +158,8 @@ public final class Size implements Serializable {
      * 
      * @return <code>true</code> if size is empty, otherwise
      *         <code>false</code>
+     * 
+     * @since 1
      */
     public boolean isEmpty() {
         return this.width <= 0 || this.height <= 0;

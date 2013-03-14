@@ -260,6 +260,32 @@ public final class Vector implements Serializable {
         return fromPolar(this.length(), direction);
     }
 
+    /**
+     * Converts this vector to a location. The locations coordinates
+     * correspond to the vector's rounded coordinates.
+     * 
+     * @return location corresponding to this vector
+     * 
+     * @since 1
+     */
+    public Location toLocation() {
+        return new Location((int) Math.round(this.x),
+                            (int) Math.round(this.y));
+    }
+
+    /**
+     * Converts this vector to a size. The resulting size's width and height
+     * are the rounded absolute values of this vector's coordinates.
+     * 
+     * @return size corresponding to this vector
+     * 
+     * @since 1
+     */
+    public Size toSize() {
+        return new Size((int) Math.round(Math.abs(this.x)),
+                        (int) Math.round(Math.abs(this.y)));
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

@@ -79,25 +79,6 @@ public final class Location implements Serializable {
     }
 
     /**
-     * Creates a new location from a vector. The locations coordinates
-     * correspond to the vector's rounded coordinates.
-     * 
-     * @param vector
-     * @throws NullPointerException if the value of <code>vector</code> is 
-     *         <code>null</code>
-     * 
-     * @since 1
-     */
-    public Location(Vector vector) {
-        if (vector == null) {
-            throw new NullPointerException("vector");
-        }
-
-        this.x = (int) Math.round(vector.x);
-        this.y = (int) Math.round(vector.y);
-    }
-
-    /**
      * Returns the Euclidean distance between this location and the specified
      * location.
      * 
