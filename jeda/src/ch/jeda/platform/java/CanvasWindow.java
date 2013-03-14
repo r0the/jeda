@@ -82,7 +82,7 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void keyTyped(KeyEvent event) {
-        char ch = event.getKeyChar();
+        final char ch = event.getKeyChar();
         if (ch >= 32 && ch != 127) {
             this.eventsIn.add(Event.createKeyTyped(ch));
         }
@@ -124,7 +124,7 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void mousePressed(MouseEvent event) {
-        Key key = BUTTON_MAP.get(event.getButton());
+        final Key key = BUTTON_MAP.get(event.getButton());
         if (key != null) {
             this.eventsIn.add(Event.createKeyPressed(key));
         }
@@ -137,7 +137,7 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void mouseReleased(MouseEvent event) {
-        Key key = BUTTON_MAP.get(event.getButton());
+        final Key key = BUTTON_MAP.get(event.getButton());
         if (key != null) {
             this.eventsIn.add(Event.createKeyReleased(key));
         }
@@ -179,7 +179,7 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
     }
 
     Iterable<Event> fetchEvents() {
-        List<Event> temp = this.eventsIn;
+        final List<Event> temp = this.eventsIn;
         this.eventsIn = this.eventsOut;
         this.eventsOut = temp;
         this.eventsIn.clear();
@@ -216,7 +216,7 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
         private BufferedImage buffer;
 
         ImageCanvas(Size size) {
-            Dimension d = new Dimension(size.width, size.height);
+            final Dimension d = new Dimension(size.width, size.height);
             this.setPreferredSize(d);
             this.setSize(d);
         }
@@ -239,7 +239,7 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
     }
 
     private static Map<Integer, Key> initButtonMap() {
-        Map<Integer, Key> result = new HashMap();
+        final Map<Integer, Key> result = new HashMap();
         result.put(MouseEvent.BUTTON1, Key.MOUSE_PRIMARY);
         result.put(MouseEvent.BUTTON2, Key.MOUSE_MIDDLE);
         result.put(MouseEvent.BUTTON3, Key.MOUSE_SECONDARY);
@@ -257,12 +257,12 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
     }
 
     private static Map<Integer, Map<Integer, Key>> initKeyMap() {
-        Map<Integer, Map<Integer, Key>> result = new HashMap();
-        Map<Integer, Key> standard = new HashMap();
-        Map<Integer, Key> left = new HashMap();
-        Map<Integer, Key> numpad = new HashMap();
-        Map<Integer, Key> right = new HashMap();
-        Map<Integer, Key> unknown = new HashMap();
+        final Map<Integer, Map<Integer, Key>> result = new HashMap();
+        final Map<Integer, Key> standard = new HashMap();
+        final Map<Integer, Key> left = new HashMap();
+        final Map<Integer, Key> numpad = new HashMap();
+        final Map<Integer, Key> right = new HashMap();
+        final Map<Integer, Key> unknown = new HashMap();
 
         standard.put(KeyEvent.VK_A, Key.A);
         left.put(KeyEvent.VK_ALT, Key.ALT_LEFT);

@@ -103,18 +103,19 @@ class JavaPlatform implements Platform {
     }
 
     private static void loadNativeLibrary(String libraryName) {
-        InputStream inputStream = JavaPlatform.class.getClassLoader().getResourceAsStream(libraryName);
+        final InputStream inputStream = JavaPlatform.class.getClassLoader().getResourceAsStream(libraryName);
         try {
-            String tempDir = System.getProperty("java.io.tmpdir");
+            final String tempDir = System.getProperty("java.io.tmpdir");
             System.setProperty("net.java.games.input.librarypath", tempDir);
-            File libraryFile = new File(tempDir, libraryName);
+            final File libraryFile = new File(tempDir, libraryName);
             libraryFile.deleteOnExit();
             FileOutputStream fileOutputStream = new FileOutputStream(libraryFile);
-            byte[] buffer = new byte[8192];
+            final byte[] buffer = new byte[8192];
             int bytesRead;
             while ((bytesRead = inputStream.read(buffer)) > 0) {
                 fileOutputStream.write(buffer, 0, bytesRead);
             }
+
             fileOutputStream.close();
             inputStream.close();
         }
@@ -125,7 +126,7 @@ class JavaPlatform implements Platform {
 
     private static void setLookAndFeel() {
         try {
-            String defaultLaf = System.getProperty("swing.defaultlaf");
+            final String defaultLaf = System.getProperty("swing.defaultlaf");
             if (defaultLaf != null) {
                 UIManager.setLookAndFeel(defaultLaf);
             }

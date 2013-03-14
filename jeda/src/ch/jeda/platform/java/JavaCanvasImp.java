@@ -73,7 +73,7 @@ class JavaCanvasImp implements CanvasImp {
         assert center != null;
         assert radius > 0;
 
-        int diameter = 2 * radius;
+        final int diameter = 2 * radius;
         this.graphics.drawOval(center.x - radius, center.y - radius, diameter, diameter);
         this.modified();
     }
@@ -84,7 +84,7 @@ class JavaCanvasImp implements CanvasImp {
         assert image != null;
         assert image instanceof JavaImageImp;
 
-        BufferedImage awtImage = ((JavaImageImp) image).getBufferedImage();
+        final BufferedImage awtImage = ((JavaImageImp) image).getBufferedImage();
         this.graphics.drawImage(awtImage, topLeft.x, topLeft.y, null);
         this.modified();
     }
@@ -120,8 +120,8 @@ class JavaCanvasImp implements CanvasImp {
         assert topLeft != null;
         assert text != null;
 
-        TextLayout textLayout = this.textLayout(text);
-        Rectangle2D bounds = textLayout.getBounds();
+        final TextLayout textLayout = this.textLayout(text);
+        final Rectangle2D bounds = textLayout.getBounds();
         textLayout.draw(this.graphics, topLeft.x, topLeft.y - (int) bounds.getMinY());
         this.modified();
     }
@@ -137,7 +137,7 @@ class JavaCanvasImp implements CanvasImp {
         assert center != null;
         assert radius > 0;
 
-        int diameter = 2 * radius;
+        final int diameter = 2 * radius;
         this.graphics.fillOval(center.x - radius, center.y - radius, diameter, diameter);
         this.modified();
     }
@@ -234,7 +234,7 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public ImageImp takeSnapshot() {
-        BufferedImage result = GUI.createBufferedImage(this.size);
+        final BufferedImage result = GUI.createBufferedImage(this.size);
         result.createGraphics().drawImage(this.buffer, 0, 0, this.size.width, this.size.height, null);
         return new JavaImageImp(result);
     }
@@ -243,24 +243,27 @@ class JavaCanvasImp implements CanvasImp {
     public Size textSize(String text) {
         assert text != null;
 
-        Rectangle2D bounds = textLayout(text).getBounds();
+        final Rectangle2D bounds = textLayout(text).getBounds();
         return new Size((int) bounds.getWidth(), (int) bounds.getHeight());
     }
 
     private TextLayout textLayout(String text) {
-        FontRenderContext frc = this.graphics.getFontRenderContext();
-        java.awt.Font font = this.graphics.getFont();
+        final FontRenderContext frc = this.graphics.getFontRenderContext();
+        final java.awt.Font font = this.graphics.getFont();
         if (!this.textLayoutCache.containsKey(frc)) {
             this.textLayoutCache.put(frc, new HashMap());
         }
-        Map<java.awt.Font, Map<String, TextLayout>> cacheByFont = this.textLayoutCache.get(frc);
+
+        final Map<java.awt.Font, Map<String, TextLayout>> cacheByFont = this.textLayoutCache.get(frc);
         if (!cacheByFont.containsKey(font)) {
             cacheByFont.put(font, new HashMap());
         }
-        Map<String, TextLayout> byText = cacheByFont.get(font);
+
+        final Map<String, TextLayout> byText = cacheByFont.get(font);
         if (!byText.containsKey(text)) {
             byText.put(text, new TextLayout(text, font, frc));
         }
+
         return byText.get(text);
     }
 
@@ -276,6 +279,7 @@ class JavaCanvasImp implements CanvasImp {
             oldComposite = this.graphics.getComposite();
             oldFont = this.graphics.getFont();
         }
+
         this.buffer = buffer;
         this.graphics = buffer.createGraphics();
         if (oldColor != null) {
@@ -283,14 +287,16 @@ class JavaCanvasImp implements CanvasImp {
             this.graphics.setComposite(oldComposite);
             this.graphics.setFont(oldFont);
         }
+
         this.size = new Size(buffer.getWidth(), buffer.getHeight());
     }
 
     private static Polygon createPolygon(Iterable<Location> edges) {
-        Polygon result = new Polygon();
+        final Polygon result = new Polygon();
         for (Location edge : edges) {
             result.addPoint(edge.x, edge.y);
         }
+
         return result;
     }
 }

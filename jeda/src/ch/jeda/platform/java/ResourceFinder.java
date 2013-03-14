@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -79,7 +79,7 @@ class ResourceFinder {
     }
 
     private void findResources() throws Exception {
-        String[] classPaths = System.getProperty("java.class.path").split(File.pathSeparator);
+        final String[] classPaths = System.getProperty("java.class.path").split(File.pathSeparator);
         for (String classPath : classPaths) {
             this.findResources(classPath);
         }
@@ -96,7 +96,7 @@ class ResourceFinder {
     }
 
     private void findJarResources(String jarFile) throws IOException {
-        JarInputStream jarStream = new JarInputStream(new FileInputStream(jarFile));
+        final JarInputStream jarStream = new JarInputStream(new FileInputStream(jarFile));
         JarEntry element = jarStream.getNextJarEntry();
         while (element != null) {
             this.checkResource(element.getName());

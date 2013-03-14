@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -43,8 +43,8 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
     @Override
     public Iterable<InputDeviceImp> detectInputDevices() {
-        List<InputDeviceImp> result = new ArrayList();
-        ControllerEnvironment env = ControllerEnvironment.getDefaultEnvironment();
+        final List<InputDeviceImp> result = new ArrayList();
+        final ControllerEnvironment env = ControllerEnvironment.getDefaultEnvironment();
         for (net.java.games.input.Controller controller : env.getControllers()) {
             result.add(new JavaGamepad(controller));
         }
@@ -96,14 +96,14 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     abstract void doUpdate();
 
     private static Cursor createInvisibleCursor() {
-        java.awt.Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
-        int[] pixels = new int[16 * 16];
-        java.awt.Image image = toolkit.createImage(new MemoryImageSource(16, 16, pixels, 0, 16));
+        final java.awt.Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
+        final int[] pixels = new int[16 * 16];
+        final java.awt.Image image = toolkit.createImage(new MemoryImageSource(16, 16, pixels, 0, 16));
         return toolkit.createCustomCursor(image, new java.awt.Point(0, 0), "invisibleCursor");
     }
 
     private static Map<MouseCursor, Cursor> initCursorMap() {
-        Map<MouseCursor, Cursor> result = new HashMap();
+        final Map<MouseCursor, Cursor> result = new HashMap();
         result.put(MouseCursor.CROSSHAIR, new Cursor(Cursor.CROSSHAIR_CURSOR));
         result.put(MouseCursor.DEFAULT, new Cursor(Cursor.DEFAULT_CURSOR));
         result.put(MouseCursor.HAND, new Cursor(Cursor.HAND_CURSOR));
@@ -127,7 +127,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
         @Override
         void doUpdate() {
-            BufferedImage temp = this.frontBuffer;
+            final BufferedImage temp = this.frontBuffer;
             this.frontBuffer = this.backBuffer;
             this.backBuffer = temp;
             super.setBuffer(this.backBuffer);

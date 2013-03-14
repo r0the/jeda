@@ -49,7 +49,7 @@ class JavaImageImp implements ImageImp {
     public JavaImageImp createScaledImage(Size newSize) {
         assert newSize != null;
 
-        BufferedImage result = createImage(newSize);
+        final BufferedImage result = createImage(newSize);
         result.createGraphics().drawImage(
                 this.bufferedImage, 0, 0, newSize.width, newSize.height, null);
         return new JavaImageImp(result);
@@ -74,8 +74,8 @@ class JavaImageImp implements ImageImp {
         assert oldColor != null;
         assert newColor != null;
 
-        Image image = ReplaceColorFilter.replaceColor(this.bufferedImage, oldColor, newColor);
-        BufferedImage result = createImage(this.size);
+        final Image image = ReplaceColorFilter.replaceColor(this.bufferedImage, oldColor, newColor);
+        final BufferedImage result = createImage(this.size);
         result.getGraphics().drawImage(image, 0, 0, null);
         return new JavaImageImp(result);
     }
@@ -101,7 +101,7 @@ class JavaImageImp implements ImageImp {
     }
 
     private static BufferedImage createImage(Size size) {
-        GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().
+        final GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().
                 getDefaultScreenDevice().getDefaultConfiguration();
         return gc.createCompatibleImage(size.width, size.height, Transparency.TRANSLUCENT);
     }
@@ -112,8 +112,8 @@ class JavaImageImp implements ImageImp {
         private final int newColor;
 
         public static java.awt.Image replaceColor(BufferedImage image, Color oldColor, Color newColor) {
-            ImageFilter filter = new ReplaceColorFilter(oldColor, newColor);
-            FilteredImageSource filteredSrc = new FilteredImageSource(image.getSource(), filter);
+            final ImageFilter filter = new ReplaceColorFilter(oldColor, newColor);
+            final FilteredImageSource filteredSrc = new FilteredImageSource(image.getSource(), filter);
             return Toolkit.getDefaultToolkit().createImage(filteredSrc);
         }
 

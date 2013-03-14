@@ -71,7 +71,7 @@ public class WindowManager {
     }
 
     void showWindow(WindowRequest viewRequest) {
-        CanvasWindow window = this.createCanvasWindow(viewRequest);
+        final CanvasWindow window = this.createCanvasWindow(viewRequest);
         this.windows.add(window);
         window.setVisible(true);
         viewRequest.setResult(JavaWindowImp.create(window));

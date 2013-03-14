@@ -27,9 +27,9 @@ public class JavaGamepad implements InputDeviceImp {
 
     private static final Map<Component.Identifier, Axis> AXIS_MAP = initAxisMap();
     private static final Map<Component.Identifier, Button> BUTTON_MAP = initButtonMap();
+    private final Map<Axis, Component> axisMap;
+    private final Map<Button, Component> buttonMap;
     private final net.java.games.input.Controller imp;
-    private Map<Axis, Component> axisMap;
-    private Map<Button, Component> buttonMap;
 
     @Override
     public Iterable<Axis> getAxes() {

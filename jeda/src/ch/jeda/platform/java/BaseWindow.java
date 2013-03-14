@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -54,7 +54,7 @@ class BaseWindow extends JFrame {
     }
 
     protected final void init() {
-        Point center = graphicsEnvironment().getCenterPoint();
+        final Point center = graphicsEnvironment().getCenterPoint();
         this.setLocation(center.x - this.getWidth() / 2, center.y - this.getHeight() / 2);
         this.setIconImage(loadImage("ch/jeda/resources/logo-16x16.png"));
     }
