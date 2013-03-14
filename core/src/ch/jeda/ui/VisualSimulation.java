@@ -25,7 +25,7 @@ import ch.jeda.Size;
  * class and implements a simulation loop that renders to a
  * {@link ch.jeda.ui.Window}.
  * 
- * @since 1.0
+ * @since 1
  */
 public abstract class VisualSimulation extends Simulation {
 
@@ -35,10 +35,10 @@ public abstract class VisualSimulation extends Simulation {
      * Creates a new visual simulation with a default-sized window.
      *
      * @see Window#Window()
-     * @since 1.0
+     * @since 1
      */
     protected VisualSimulation() {
-        this(null);
+        this(new Size());
     }
 
     /**
@@ -49,7 +49,7 @@ public abstract class VisualSimulation extends Simulation {
      * @param height the height of the window's drawing area
      * @throws IllegalArgumentException if width or height are smaller than 1
      * 
-     * @since 1.0
+     * @since 1
      */
     public VisualSimulation(int width, int height) {
         this(new Size(width, height));
@@ -64,30 +64,19 @@ public abstract class VisualSimulation extends Simulation {
      * @throws NullPointerException if size is <code>null</code>
      * @throws IllegalArgumentException if size is empty
      * 
-     * @since 1.0
+     * @since 1
      */
     public VisualSimulation(Size size) {
         this.window = new Window(size, Window.Feature.DoubleBuffered);
     }
 
     /**
-     * Returns an object holding the user input events that are taking place on 
-     * the window of this visual simulation.
-     *
-     * @return {@link #Events} object representing the events on the window
-     * 
-     * @since 1.0
-     */
-//    public final Events getEvents() {
-//        return this.window.getEvents();
-//    }
-    /**
      * Returns the title of this simulation's window.
      *
      * @return current window title
      * 
      * @see #setTitle(java.lang.String)
-     * @since 1.0
+     * @since 1
      */
     public final String getTitle() {
         return this.window.getTitle();
@@ -103,7 +92,7 @@ public abstract class VisualSimulation extends Simulation {
      * @return <code>true</code> if the window is in fullscreen mode
      * 
      * @see #setFullscreen(boolean)
-     * @since 1.0
+     * @since 1
      */
     public final boolean isFullscreen() {
         return this.window.hasFeature(Window.Feature.Fullscreen);
@@ -116,7 +105,7 @@ public abstract class VisualSimulation extends Simulation {
      *                   <code>false</code> to disable it
      * 
      * @see #isFullscreen()
-     * @since 1.0
+     * @since 1
      */
     public final void setFullscreen(boolean fullscreen) {
         this.window.setFeature(Window.Feature.Fullscreen, fullscreen);
@@ -129,7 +118,7 @@ public abstract class VisualSimulation extends Simulation {
      * @throws NullPointerException if title is null
      *
      * @see #getTitle()
-     * @since 1.0
+     * @since 1
      */
     public final void setTitle(String title) {
         this.window.setTitle(title);
@@ -194,7 +183,7 @@ public abstract class VisualSimulation extends Simulation {
      * 
      * @param canvas the canvas on which the background is drawn
      * 
-     * @since 1.0
+     * @since 1
      */
     protected void drawBackground(Canvas canvas) {
         canvas.setColor(Color.WHITE);
@@ -207,7 +196,7 @@ public abstract class VisualSimulation extends Simulation {
      * 
      * @param canvas the canvas on which the foreground is drawn
      * 
-     * @since 1.0
+     * @since 1
      */
     protected abstract void drawForeground(Canvas canvas);
 
@@ -218,7 +207,7 @@ public abstract class VisualSimulation extends Simulation {
      * @param events the user input events that occured since the last call to
      *               this method
      * 
-     * @since 1.0
+     * @since 1
      */
     protected void update(Events events) {
     }
