@@ -14,10 +14,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.blocks;
 
 import ch.jeda.Simulation;
 import ch.jeda.Size;
+import ch.jeda.ui.Canvas;
+import ch.jeda.ui.Color;
+import ch.jeda.ui.Events;
+import ch.jeda.ui.Window;
 
 /**
  * This class represents a visual simulation, which is a simulation with a 
@@ -27,7 +31,7 @@ import ch.jeda.Size;
  * 
  * @since 1
  */
-public abstract class VisualSimulation extends Simulation {
+abstract class VisualSimulation extends Simulation {
 
     private final Window window;
 

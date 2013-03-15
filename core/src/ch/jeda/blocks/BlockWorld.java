@@ -22,7 +22,6 @@ import ch.jeda.Size;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Image;
 import ch.jeda.ui.Window;
-import ch.jeda.ui.VisualSimulation;
 import java.util.List;
 
 /**
