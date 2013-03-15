@@ -16,54 +16,68 @@
  */
 package ch.jeda.ui;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Represents a button of an {@link InputDevice}.
  */
-public final class Button {
+@XmlAccessorType(XmlAccessType.NONE)
+public final class Button implements Serializable {
 
-    private static final Map<String, Button> NAME_BUTTON_MAP = new HashMap();
-    private static final Map<Button, String> BUTTON_NAME_MAP = new HashMap();
+    private static final Map<Integer, String> ID_NAME_MAP = new HashMap();
+    private static final Map<String, Integer> NAME_ID_MAP = new HashMap();
+    private static int NEXT_ID = 0;
     /**
      * The gamepad "A" button.
      */
-    public static final Button A = new Button(1, "A");
+    public static final Button A = register("A");
     /**
      * The gamepad "B" button.
      */
-    public static final Button B = new Button(2, "B");
+    public static final Button B = register("B");
     /**
      * The gamepad left index finger button (top left shoulder button on Xbox
      * compatible controller).
      */
-    public static final Button LEFT_INDEX = new Button(3, "LeftIndex");
-    public static final Button LEFT_THUMB = new Button(4, "LeftThumb");
-    public static final Button MODE = new Button(5, "Mode");
+    public static final Button LEFT_INDEX = register("LeftIndex");
+    public static final Button LEFT_THUMB = register("LeftThumb");
+    public static final Button MODE = register("Mode");
     /**
      * The gamepad right index finger button (top right shoulder button on Xbox
      * compatible controller).
      */
-    public static final Button RIGHT_INDEX = new Button(6, "RightIndex");
-    public static final Button RIGHT_THUMB = new Button(7, "RightThumb");
+    public static final Button RIGHT_INDEX = register("RightIndex");
+    public static final Button RIGHT_THUMB = register("RightThumb");
     /**
      * The gamepad "select" button.
      */
-    public static final Button SELECT = new Button(8, "Select");
+    public static final Button SELECT = register("Select");
     /**
      * The gamepad "start" button.
      */
-    public static final Button START = new Button(9, "Start");
+    public static final Button START = register("Start");
     /**
      * The gamepad "X" button.
      */
-    public static final Button X = new Button(10, "X");
+    public static final Button X = register("X");
     /**
      * The gamepad "Y" button.
      */
-    public static final Button Y = new Button(11, "Y");
-    private final int id;
+    public static final Button Y = register("Y");
+    /**
+     * @since 1
+     */
+    @XmlElement
+    public final int id;
+
+    public Button(String name) {
+        this(NAME_ID_MAP.get(name));
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -77,17 +91,26 @@ public final class Button {
 
     @Override
     public int hashCode() {
-        return this.id;
+        return 23 * this.id;
     }
 
     @Override
     public String toString() {
-        return BUTTON_NAME_MAP.get(this);
+        return ID_NAME_MAP.get(this.id);
     }
 
-    private Button(int id, String name) {
+    private Button() {
+        this(0);
+    }
+
+    private Button(int id) {
         this.id = id;
-        NAME_BUTTON_MAP.put(name, this);
-        BUTTON_NAME_MAP.put(this, name);
+    }
+
+    private static Button register(String name) {
+        final int id = ++NEXT_ID;
+        ID_NAME_MAP.put(id, name);
+        NAME_ID_MAP.put(name, id);
+        return new Button(id);
     }
 }

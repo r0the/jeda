@@ -16,24 +16,38 @@
  */
 package ch.jeda.ui;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Represents an axis of an {@link InputDevice}.
  */
-public final class Axis {
+@XmlAccessorType(XmlAccessType.NONE)
+public final class Axis implements Serializable {
 
-    private static final Map<String, Axis> NAME_AXIS_MAP = new HashMap();
-    private static final Map<Axis, String> AXIS_NAME_MAP = new HashMap();
-    public static final Axis LEFT_X = new Axis(1, "LeftX");
-    public static final Axis LEFT_Y = new Axis(2, "LeftY");
-    public static final Axis LEFT_Z = new Axis(3, "LeftZ");
-    public static final Axis RIGHT_X = new Axis(4, "RightX");
-    public static final Axis RIGHT_Y = new Axis(5, "RightY");
-    public static final Axis RIGHT_Z = new Axis(6, "RightZ");
-    public static final Axis POV = new Axis(7, "POV");
-    private final int id;
+    private static final Map<Integer, String> ID_NAME_MAP = new HashMap();
+    private static final Map<String, Integer> NAME_ID_MAP = new HashMap();
+    private static int NEXT_ID = 0;
+    public static final Axis LEFT_X = register("LeftX");
+    public static final Axis LEFT_Y = register("LeftY");
+    public static final Axis LEFT_Z = register("LeftZ");
+    public static final Axis RIGHT_X = register("RightX");
+    public static final Axis RIGHT_Y = register("RightY");
+    public static final Axis RIGHT_Z = register("RightZ");
+    public static final Axis POV = register("POV");
+    /**
+     * @since 1
+     */
+    @XmlElement
+    public final int id;
+
+    public Axis(String name) {
+        this(NAME_ID_MAP.get(name));
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -47,17 +61,26 @@ public final class Axis {
 
     @Override
     public int hashCode() {
-        return this.id;
+        return 23 * this.id;
     }
 
     @Override
     public String toString() {
-        return AXIS_NAME_MAP.get(this);
+        return ID_NAME_MAP.get(this.id);
     }
 
-    private Axis(int id, String name) {
+    private Axis() {
+        this(0);
+    }
+
+    private Axis(int id) {
         this.id = id;
-        NAME_AXIS_MAP.put(name, this);
-        AXIS_NAME_MAP.put(this, name);
+    }
+
+    private static Axis register(String name) {
+        final int id = ++NEXT_ID;
+        ID_NAME_MAP.put(id, name);
+        NAME_ID_MAP.put(name, id);
+        return new Axis(id);
     }
 }
