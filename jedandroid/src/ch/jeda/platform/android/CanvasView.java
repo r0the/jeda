@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.android;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.KeyEvent;
@@ -149,7 +150,15 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
 
     @Override
     int getOrientation() {
-        return super.getOrientation();
+        if (this.features.contains(Window.Feature.OrientationLandscape)) {
+            return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        }
+        else if (this.features.contains(Window.Feature.OrientationPortrait)) {
+            return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        }
+        else {
+            return ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
+        }
     }
 
     Size getSize() {

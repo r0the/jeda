@@ -39,7 +39,8 @@ public class Window extends Canvas {
 
     public enum Feature {
 
-        DoubleBuffered, Fullscreen, HoveringPointer
+        DoubleBuffered, Fullscreen, HoveringPointer, OrientationLandscape,
+        OrientationPortrait
     }
     private static final EnumSet<Feature> NO_FEATURES = EnumSet.noneOf(Feature.class);
     private static final EnumSet<Feature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
