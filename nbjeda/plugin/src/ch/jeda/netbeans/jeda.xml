@@ -14,6 +14,7 @@
     </volume>
     <volume>
         <type>javadoc</type>
+        <resource>http://www.jeda.ch/api/</resource>
         <resource>jar:nbinst://ch.jeda.netbeans/docs/jeda-api.zip!/</resource>
     </volume>
 </library>
