@@ -131,6 +131,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         this.surfaceView.setOnTouchListener(this);
         this.surfaceHolder = this.surfaceView.getHolder();
         this.surfaceHolder.addCallback(this);
+
         this.addView(this.surfaceView);
     }
 
@@ -144,6 +145,11 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
 
     EnumSet<Window.Feature> getFeatures() {
         return this.features;
+    }
+
+    @Override
+    int getOrientation() {
+        return super.getOrientation();
     }
 
     Size getSize() {

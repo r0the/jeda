@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.android;
 
+import android.content.pm.ActivityInfo;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -24,10 +25,10 @@ import android.widget.RelativeLayout;
  * by the view manager.
  */
 class BaseView extends RelativeLayout {
-    
+
     private final ViewManager manager;
     private String title;
-    
+
     BaseView(ViewManager manager) {
         super(manager.getContext());
         this.manager = manager;
@@ -35,37 +36,41 @@ class BaseView extends RelativeLayout {
                 ViewGroup.LayoutParams.FILL_PARENT,
                 ViewGroup.LayoutParams.FILL_PARENT));
     }
-    
+
+    int getOrientation() {
+        return ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+    }
+
     final String getTitle() {
         return this.title;
     }
-    
+
     final void setTitle(String value) {
         this.title = value;
         this.manager.titleChanged(this);
     }
-    
+
     protected final void accept() {
         this.close();
         this.onAccept();
     }
-    
+
     protected final void cancel() {
         System.out.println("Cancelled " + this.getClass());
         this.close();
         this.onCancel();
     }
-    
+
     protected void onAccept() {
     }
-    
+
     protected void onCancel() {
     }
-    
+
     private void close() {
         this.manager.closing(this);
     }
-    
+
     protected static ViewGroup.LayoutParams createFillLayout() {
         return new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);

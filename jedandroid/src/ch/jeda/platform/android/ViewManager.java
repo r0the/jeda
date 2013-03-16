@@ -98,6 +98,7 @@ class ViewManager {
 
     private void activateView(BaseView view) {
         this.activity.setContentView(view);
+        this.activity.setRequestedOrientation(view.getOrientation());
         this.activity.setTitle(view.getTitle());
         view.requestFocus();
     }

@@ -221,13 +221,12 @@ public class ProjectWrapper {
         this.close();
         try {
             this.doCleanup();
-            target.init();
+            target.doInit();
             target.open();
         }
         catch (Exception ex) {
             Exceptions.printStackTrace(ex);
             this.showError("Cannot switch target platform: " + ex.getMessage());
-            //this.open();
         }
     }
 
