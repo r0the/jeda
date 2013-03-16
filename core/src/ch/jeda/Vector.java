@@ -17,31 +17,33 @@
 package ch.jeda;
 
 import java.io.Serializable;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 
 /**
- * This class represents a two-dimensional vector.
+ * Represents a two-dimensional vector.
  * 
  * @since 1
  */
-@XmlAccessorType(XmlAccessType.NONE)
 public final class Vector implements Serializable {
 
-    @XmlElement
+    /**
+     * The x component of this vector.
+     */
     public final double x;
-    @XmlElement
+    /**
+     * The y component of this vector.
+     */
     public final double y;
-    @XmlElement
     private double direction;
     /**
-     * Vector with a direction of 0 degrees (to the north) and
-     * a length of 0.
+     * The null vector. Both components of this vector are 0.
      */
-    public static Vector NULL = new Vector();
-    public static Vector UNIT_X = new Vector(1.0, 0.0);
-    public static Vector UNIT_Y = new Vector(0.0, 1.0);
+    public static final Vector NULL = new Vector();
+
+    public Vector() {
+        this.x = 0.0;
+        this.y = 0.0;
+        this.direction = 0.0;
+    }
 
     /**
      * Creates a new Vector with the specified x and y coordinates.
@@ -51,30 +53,10 @@ public final class Vector implements Serializable {
      *
      * @since 1
      */
-    public static Vector from(double x, double y) {
-        return new Vector(x, y);
-    }
-
-    /**
-     * 
-     * @param location
-     * @return 
-     * 
-     * @since 1
-     */
-    public static Vector from(Location location) {
-        return new Vector(location.x, location.y);
-    }
-
-    /**
-     * 
-     * @param size
-     * @return 
-     * 
-     * @since 1
-     */
-    public static Vector from(Size size) {
-        return new Vector(size.width, size.height);
+    public Vector(double x, double y) {
+        this.x = x;
+        this.y = y;
+        this.direction = Double.NaN;
     }
 
     /**
@@ -121,10 +103,10 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Returns the dot product of this vector and other.
+     * Returns the dot product of this vector and <code>other</code>.
      *
-     * @param other
-     * @return dot product
+     * @param other other vector
+     * @return dot product of both vectors
      *
      * @since 1
      */
@@ -136,7 +118,7 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Returns the inverse vector of this vector, which is the Vector with the
+     * Returns the inverse vector of this vector, which is the vector with the
      * same length as this vector pointing in the opposite direction.
      *
      * @return inverse of this vector
@@ -144,7 +126,7 @@ public final class Vector implements Serializable {
      * @since 1
      */
     public Vector inverse() {
-        return from(-this.x, -this.y);
+        return new Vector(-this.x, -this.y);
     }
 
     /**
@@ -166,7 +148,7 @@ public final class Vector implements Serializable {
      * @since 1
      */
     public Vector minus(Vector other) {
-        return from(this.x + (-other.x), this.y + (-other.y));
+        return new Vector(this.x + (-other.x), this.y + (-other.y));
     }
 
     /**
@@ -176,7 +158,7 @@ public final class Vector implements Serializable {
      * @since 1
      */
     public Vector normal() {
-        return from(-this.y, this.x);
+        return new Vector(-this.y, this.x);
     }
 
     /**
@@ -186,9 +168,7 @@ public final class Vector implements Serializable {
      * @since 1
      */
     public Vector normalized() {
-        Vector result = this.times(1.0 / this.length());
-        assert Math.abs(result.length()) < 1.0E23;
-        return result;
+        return this.times(1.0 / this.length());
     }
 
     /**
@@ -199,7 +179,7 @@ public final class Vector implements Serializable {
      * @since 1
      */
     public Vector plus(Vector other) {
-        return Vector.from(this.x + other.x, this.y + other.y);
+        return new Vector(this.x + other.x, this.y + other.y);
     }
 
     /**
@@ -209,7 +189,6 @@ public final class Vector implements Serializable {
      *
      * @param other vector to be projected on
      * @return projection of this on other
-     * 
      * @since 1
      */
     public Vector projectOn(Vector other) {
@@ -236,7 +215,7 @@ public final class Vector implements Serializable {
      * @since 1
      */
     public Vector times(double v) {
-        return Vector.from(this.x * v, this.y * v);
+        return new Vector(this.x * v, this.y * v);
     }
 
     /**
@@ -299,18 +278,6 @@ public final class Vector implements Serializable {
         result.append(this.length());
         result.append(")");
         return result.toString();
-    }
-
-    private Vector() {
-        this.x = 0.0;
-        this.y = 0.0;
-        this.direction = 0.0;
-    }
-
-    private Vector(double x, double y) {
-        this.x = x;
-        this.y = y;
-        this.direction = Double.NaN;
     }
 
     private Vector(double x, double y, double direction) {

@@ -125,7 +125,7 @@ public class IsoRenderer {
     public Vector toMap(Location canvasLocation) {
         double a = (canvasLocation.x - this.scrollPos.x) / (double) this.tileSize.width;
         double b = (canvasLocation.y - this.scrollPos.y) / (double) this.tileSize.height;
-        return Vector.from(a + b - 0.5, b - a - 0.5);
+        return new Vector(a + b - 0.5, b - a - 0.5);
     }
 
     public Location toCanvas(Vector mapLocation) {
