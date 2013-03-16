@@ -25,7 +25,7 @@ import java.io.Serializable;
  * drawing on a {@link Canvas}. The alignment specified how the element to be
  * drawn is positioned relative to the given coordinates (the alignment point).
  *
- * @version 1
+ * @since 1
  */
 public final class Alignment implements Serializable {
 

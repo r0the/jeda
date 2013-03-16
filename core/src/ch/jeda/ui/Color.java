@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlElement;
  * values for the red, green, and blue part, and an alpha value defining
  * the color's opacity. Each can be a number between 0 and 255.
  *
- * @version 1
+ * @since 1
  */
 @XmlAccessorType(XmlAccessType.NONE)
 public final class Color implements Serializable {

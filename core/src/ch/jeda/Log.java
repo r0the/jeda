@@ -16,6 +16,9 @@
  */
 package ch.jeda;
 
+/**
+ * <b>Internal</b>. Do not use this class.<p>
+ */
 public final class Log {
 
     public enum Level {

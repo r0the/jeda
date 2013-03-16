@@ -35,7 +35,7 @@ import java.util.Stack;
  *      font size is 16.
  * </ul>
  *
- * @version 1
+ * @since 1
  */
 public class Canvas {
 

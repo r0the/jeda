@@ -19,6 +19,9 @@ package ch.jeda;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <b>Internal</b>. Do not use this class.<p>
+ */
 public class Message {
 
     public static final String CHOOSE_PROGRAM_ERROR = "jeda.error.init.programs";

@@ -22,9 +22,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 /**
- * This class represents a location on a two-dimensional integral grid with two
- * integer coordinates. It is used to refer to the location of a pixel on a
- * drawing surface or a field on a board game.
+ * Represents a location on a two-dimensional integral grid with two integer 
+ * coordinates. It is used to refer to the location of a pixel on a drawing 
+ * surface or a field on a board game.
  * 
  * @since 1
  */
@@ -70,7 +70,6 @@ public final class Location implements Serializable {
      * 
      * @param x the x coordinate of the location
      * @param y the y coordinate of the location
-     * 
      * @since 1
      */
     public Location(int x, int y) {
@@ -80,13 +79,12 @@ public final class Location implements Serializable {
 
     /**
      * Returns the Euclidean distance between this location and the specified
-     * location.
+     * other location.
      * 
      * @param other the other location
      * @return distance between this and other location
      * @throws NullPointerException if the value of <code>other</code> is 
      *         <code>null</code>
-     * 
      * @since 1
      */
     public double distanceTo(Location other) {
@@ -132,14 +130,13 @@ public final class Location implements Serializable {
     }
 
     /**
-     * Returns the Manhattan distance from this location to the
-     * <code>other</code> location.
+     * Returns the Manhattan distance from this location to the specified
+     * other location.
      * 
      * @param other the other location
      * @return Manhattan distance from this to <code>other</code> location.
      * @throws NullPointerException if the value of <code>other</code> is 
      *         <code>null</code>
-     * 
      * @since 1
      */
     public int manhattanDistanceTo(Location other) {
@@ -160,7 +157,6 @@ public final class Location implements Serializable {
      * 
      * @param direction
      * @return neighbor location
-     * 
      * @since 1
      */
     public Location neighbor(Direction direction) {

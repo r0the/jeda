@@ -49,21 +49,21 @@ public class Window extends Canvas {
     private String title;
 
     /**
-     * @deprecated Use {@link Window()} instead.
+     * @deprecated Use {@link #Window()} instead.
      */
     public static Window create() {
         return new Window();
     }
 
     /**
-     * @deprecated Use {@link Window(Feature... )} instead.
+     * @deprecated Use {@link #Window(Feature... )} instead.
      */
     public static Window create(Feature... features) {
         return new Window(features);
     }
 
     /**
-     * @deprecated Use {@link Window(int, int, Feature... )} instead.
+     * @deprecated Use {@link #Window(int, int, Feature... )} instead.
      */
     public static Window create(int width, int height, Feature... features) {
         return new Window(width, height, features);

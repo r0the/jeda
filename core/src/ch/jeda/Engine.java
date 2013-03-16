@@ -32,6 +32,9 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+/**
+ * <b>Internal</b>. Do not use this class.<p>
+ */
 public final class Engine {
 
     private static final ThreadLocal<Engine> CURRENT_ENGINE = new ThreadLocal();
