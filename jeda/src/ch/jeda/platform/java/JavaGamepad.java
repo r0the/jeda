@@ -22,11 +22,12 @@ import ch.jeda.ui.Button;
 import java.util.HashMap;
 import java.util.Map;
 import net.java.games.input.Component;
+import net.java.games.input.Component.Identifier;
 
 public class JavaGamepad implements InputDeviceImp {
 
-    private static final Map<Component.Identifier, Axis> AXIS_MAP = initAxisMap();
-    private static final Map<Component.Identifier, Button> BUTTON_MAP = initButtonMap();
+    private static final Map<Component.Identifier, Axis> DEFAULT_AXIS_MAP = initDefaultAxisMap();
+    private static final Map<String, Profile> PROFILE_MAP = initProfileMap();
     private final Map<Axis, Component> axisMap;
     private final Map<Button, Component> buttonMap;
     private final net.java.games.input.Controller imp;
@@ -65,13 +66,14 @@ public class JavaGamepad implements InputDeviceImp {
         this.imp = imp;
         this.axisMap = new HashMap();
         this.buttonMap = new HashMap();
+        Profile profile = PROFILE_MAP.get(imp.getName());
 
         for (Component component : this.imp.getComponents()) {
-            if (AXIS_MAP.containsKey(component.getIdentifier())) {
-                this.axisMap.put(AXIS_MAP.get(component.getIdentifier()), component);
+            if (profile.hasAxis(component.getIdentifier())) {
+                this.axisMap.put(profile.getAxis(component.getIdentifier()), component);
             }
-            else if (BUTTON_MAP.containsKey(component.getIdentifier())) {
-                this.buttonMap.put(BUTTON_MAP.get(component.getIdentifier()), component);
+            else if (profile.hasButton(component.getIdentifier())) {
+                this.buttonMap.put(profile.getButton(component.getIdentifier()), component);
             }
             else {
                 System.out.println(component.getIdentifier());
@@ -79,7 +81,34 @@ public class JavaGamepad implements InputDeviceImp {
         }
     }
 
-    private static Map<Component.Identifier, Axis> initAxisMap() {
+    private static class Profile {
+
+        private final Map<Component.Identifier, Axis> axisMap;
+        private final Map<Component.Identifier, Button> buttonMap;
+
+        public Profile(Map<Identifier, Axis> axisMap, Map<Identifier, Button> buttonMap) {
+            this.axisMap = axisMap;
+            this.buttonMap = buttonMap;
+        }
+
+        Axis getAxis(Component.Identifier identifier) {
+            return axisMap.get(identifier);
+        }
+
+        Button getButton(Component.Identifier identifier) {
+            return buttonMap.get(identifier);
+        }
+
+        boolean hasAxis(Component.Identifier identifier) {
+            return axisMap.containsKey(identifier);
+        }
+
+        boolean hasButton(Component.Identifier identifier) {
+            return buttonMap.containsKey(identifier);
+        }
+    }
+
+    private static Map<Component.Identifier, Axis> initDefaultAxisMap() {
         Map<Component.Identifier, Axis> result = new HashMap();
         result.put(Component.Identifier.Axis.X, Axis.LEFT_X);
         result.put(Component.Identifier.Axis.Y, Axis.LEFT_Y);
@@ -91,19 +120,40 @@ public class JavaGamepad implements InputDeviceImp {
         return result;
     }
 
-    private static Map<Component.Identifier, Button> initButtonMap() {
-        Map<Component.Identifier, Button> result = new HashMap();
-        result.put(Component.Identifier.Button.A, Button.A);
-        result.put(Component.Identifier.Button.B, Button.B);
-        result.put(Component.Identifier.Button.LEFT_THUMB, Button.LEFT_INDEX);
-        result.put(Component.Identifier.Button.LEFT_THUMB3, Button.LEFT_THUMB);
-        result.put(Component.Identifier.Button.MODE, Button.MODE);
-        result.put(Component.Identifier.Button.RIGHT_THUMB, Button.RIGHT_INDEX);
-        result.put(Component.Identifier.Button.RIGHT_THUMB3, Button.RIGHT_THUMB);
-        result.put(Component.Identifier.Button.SELECT, Button.SELECT);
-        result.put(Component.Identifier.Button.START, Button.START);
-        result.put(Component.Identifier.Button.X, Button.X);
-        result.put(Component.Identifier.Button.Y, Button.Y);
+    private static Map<String, Profile> initProfileMap() {
+        final Map<String, Profile> result = new HashMap();
+        result.put("Generic X-Box pad", createXBoxPadProfile());
+        result.put("Gamepad F310 (Controller)", createLogitechF310Profile());
         return result;
+    }
+
+    private static Profile createXBoxPadProfile() {
+        Map<Component.Identifier, Button> buttonMap = new HashMap();
+        buttonMap.put(Component.Identifier.Button.A, Button.A);
+        buttonMap.put(Component.Identifier.Button.B, Button.B);
+        buttonMap.put(Component.Identifier.Button.LEFT_THUMB, Button.LEFT_INDEX);
+        buttonMap.put(Component.Identifier.Button.LEFT_THUMB3, Button.LEFT_THUMB);
+        buttonMap.put(Component.Identifier.Button.RIGHT_THUMB, Button.RIGHT_INDEX);
+        buttonMap.put(Component.Identifier.Button.RIGHT_THUMB3, Button.RIGHT_THUMB);
+        buttonMap.put(Component.Identifier.Button.SELECT, Button.SELECT);
+        buttonMap.put(Component.Identifier.Button.START, Button.START);
+        buttonMap.put(Component.Identifier.Button.X, Button.X);
+        buttonMap.put(Component.Identifier.Button.Y, Button.Y);
+        return new Profile(DEFAULT_AXIS_MAP, buttonMap);
+    }
+
+    private static Profile createLogitechF310Profile() {
+        Map<Component.Identifier, Button> buttonMap = new HashMap();
+        buttonMap.put(Component.Identifier.Button._0, Button.A);
+        buttonMap.put(Component.Identifier.Button._1, Button.B);
+        buttonMap.put(Component.Identifier.Button._2, Button.X);
+        buttonMap.put(Component.Identifier.Button._3, Button.Y);
+        buttonMap.put(Component.Identifier.Button._4, Button.LEFT_INDEX);
+        buttonMap.put(Component.Identifier.Button._5, Button.RIGHT_INDEX);
+        buttonMap.put(Component.Identifier.Button._6, Button.SELECT);
+        buttonMap.put(Component.Identifier.Button._7, Button.START);
+        buttonMap.put(Component.Identifier.Button._8, Button.LEFT_THUMB);
+        buttonMap.put(Component.Identifier.Button._9, Button.RIGHT_THUMB);
+        return new Profile(DEFAULT_AXIS_MAP, buttonMap);
     }
 }

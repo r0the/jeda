@@ -25,7 +25,7 @@
             <zipfileset src="lib/jinput/jinput.jar"/>
             <fileset dir="lib/jinput/native"/>
         </jar>
-        
+
         <!-- Add information to library manifest -->
         <jar update="true" destfile="${dist.jar}">
             <manifest>
