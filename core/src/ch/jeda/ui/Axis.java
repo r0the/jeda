@@ -19,14 +19,10 @@ package ch.jeda.ui;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Represents an axis of an {@link InputDevice}.
  */
-@XmlAccessorType(XmlAccessType.NONE)
 public final class Axis implements Serializable {
 
     private static final Map<Integer, String> ID_NAME_MAP = new HashMap();
@@ -42,7 +38,6 @@ public final class Axis implements Serializable {
     /**
      * @since 1
      */
-    @XmlElement
     public final int id;
 
     public Axis(String name) {

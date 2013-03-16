@@ -19,9 +19,6 @@ package ch.jeda.ui;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Represents a key that can be typed by the user. Key values are used by the 
@@ -31,7 +28,6 @@ import javax.xml.bind.annotation.XmlElement;
  *
  * @see Events
  */
-@XmlAccessorType(XmlAccessType.NONE)
 public final class Key implements Serializable {
 
     private static final Map<Integer, String> ID_NAME_MAP = new HashMap();
@@ -466,7 +462,6 @@ public final class Key implements Serializable {
     /**
      * @since 1
      */
-    @XmlElement
     public final int id;
 
     public Key(String name) {

@@ -17,9 +17,6 @@
 package ch.jeda.ui;
 
 import java.io.Serializable;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Represents a color in the RGBA color model. A color is defined by three
@@ -28,7 +25,6 @@ import javax.xml.bind.annotation.XmlElement;
  *
  * @since 1
  */
-@XmlAccessorType(XmlAccessType.NONE)
 public final class Color implements Serializable {
 
     /**
@@ -134,7 +130,6 @@ public final class Color implements Serializable {
     /**
      * @since 1
      */
-    @XmlElement
     public final int value;
 
     /**

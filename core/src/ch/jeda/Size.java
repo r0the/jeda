@@ -17,11 +17,7 @@
 package ch.jeda;
 
 import java.io.Serializable;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 
-@XmlAccessorType(XmlAccessType.NONE)
 public final class Size implements Serializable {
 
     /**
@@ -29,14 +25,12 @@ public final class Size implements Serializable {
      * 
      * @since 1
      */
-    @XmlElement
     public final int width;
     /**
      * The height of this size.
      * 
      * @since 1
      */
-    @XmlElement
     public final int height;
     private static final char SEPARATOR = 'x';
 

@@ -17,9 +17,6 @@
 package ch.jeda;
 
 import java.io.Serializable;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Represents a location on a two-dimensional integral grid with two integer 
@@ -28,7 +25,6 @@ import javax.xml.bind.annotation.XmlElement;
  * 
  * @since 1
  */
-@XmlAccessorType(XmlAccessType.NONE)
 public final class Location implements Serializable {
 
     /**
@@ -43,14 +39,12 @@ public final class Location implements Serializable {
      * 
      * @since 1
      */
-    @XmlElement
     public final int x;
     /**
      * The y coordinate of this location.
      * 
      * @since 1
      */
-    @XmlElement
     public final int y;
 
     /**
