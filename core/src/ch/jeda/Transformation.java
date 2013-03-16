@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,22 +28,12 @@ public final class Transformation implements Serializable {
     public final double scaleY;
     public final double translateY;
 
-    private Transformation() {
-        this(1d, 0d, 0d, 0d, 1d, 0d);
-    }
-
-    private Transformation(double scaleX, double skewX, double translateX,
-                           double skewY, double scaleY, double translateY) {
-        this.scaleX = scaleX;
-        this.skewX = skewX;
-        this.translateX = translateX;
-        this.skewY = skewY;
-        this.scaleY = scaleY;
-        this.translateY = translateY;
+    public static Transformation scale(double scaleX, double scaleY) {
+        return new Transformation(scaleX, 0.0, 0.0, 0.0, scaleY, 0.0);
     }
 
     public Transformation inverted() {
-        double d = this.scaleX * this.scaleY - this.skewX * this.skewY;
+        final double d = this.scaleX * this.scaleY - this.skewX * this.skewY;
 
         if (Math.abs(d) <= Double.MIN_VALUE) {
             throw new IllegalStateException("Transformation is not invertible.");
@@ -57,29 +47,61 @@ public final class Transformation implements Serializable {
     }
 
     public Transformation rotatedBy(double angle) {
-        double a = Math.toRadians(angle);
-        double sin = Math.sin(a);
-        double cos = Math.cos(a);
+        final double a = Math.toRadians(angle);
+        final double sin = Math.sin(angle);
+        final double cos = Math.cos(angle);
 
         return new Transformation(
                 cos * this.scaleX + sin * this.skewX, -sin * this.scaleX + cos * this.skewX, this.translateX,
                 cos * this.skewY + sin * this.scaleY, -sin * this.skewY + cos * this.scaleY, this.translateY);
     }
 
+    public Transformation scaledBy(double sx, double sy) {
+        return new Transformation(
+                this.scaleX * sx, this.skewX, this.translateX,
+                this.skewY, this.scaleY * sy, this.translateY);
+    }
 //    public Transformation rotatedBy90() {
 //        return new Transformation(
 //                this.skewX, -this.scaleX, this.translateX,
 //                this.scaleY, -this.skewY, this.translateY);
 //    }
+
     public Vector transform(Vector v) {
-        return Vector.from(
+        return new Vector(
                 this.scaleX * v.x + this.skewX * v.y + this.translateX,
                 this.skewY * v.x + this.scaleY * v.y + this.translateY);
+    }
+
+    public Vector transformSize(Vector v) {
+        return new Vector(
+                this.scaleX * v.x + this.skewX * v.y,
+                this.skewY * v.x + this.scaleY * v.y);
+    }
+
+    public Transformation translatedBy(double dx, double dy) {
+        return new Transformation(
+                this.scaleX, this.skewX, this.translateX + dx,
+                this.skewY, this.scaleY, this.translateY + dy);
     }
 
     public Transformation translatedBy(Vector v) {
         return new Transformation(
                 this.scaleX, this.skewX, this.translateX + v.x,
                 this.skewY, this.scaleY, this.translateY + v.y);
+    }
+
+    private Transformation() {
+        this(1d, 0d, 0d, 0d, 1d, 0d);
+    }
+
+    private Transformation(double scaleX, double skewX, double translateX,
+                           double skewY, double scaleY, double translateY) {
+        this.scaleX = scaleX;
+        this.skewX = skewX;
+        this.translateX = translateX;
+        this.skewY = skewY;
+        this.scaleY = scaleY;
+        this.translateY = translateY;
     }
 }
