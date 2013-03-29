@@ -25,9 +25,15 @@ import ch.jeda.platform.Platform;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.Window;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -38,16 +44,18 @@ import java.util.List;
 public final class Engine {
 
     private static final ThreadLocal<Engine> CURRENT_ENGINE = new ThreadLocal();
+    private static final String DEFAULT_IMAGE_PATH = ":ch/jeda/resources/logo-64x64.png";
     private static final String DEFAULT_PROGRAM_PROPERTY = "jeda.default.program";
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = "jeda.properties";
-    private static final String JEDA_PLATFORM_PROPERTIES_FILE = "ch/jeda/platform/jeda.properties";
-    private static final String JEDA_SYSTEM_PROPERTIES_FILE = "ch/jeda/jeda.properties";
+    private static final String JEDA_PLATFORM_PROPERTIES_FILE = ":ch/jeda/platform/jeda.properties";
+    private static final String JEDA_SYSTEM_PROPERTIES_FILE = ":ch/jeda/jeda.properties";
+    private static final String RESOURCE_PREFIX = ":";
     private static final Class<?>[] NO_PARAMS = new Class<?>[0];
-    private final FileSystem fileSystem;
     private final EngineThread thread;
-    private Log.Level logLevel;
     private final Platform platform;
     private final Properties properties;
+    private ImageImp defaultImage;
+    private Log.Level logLevel;
     private Program program;
 
     public static Engine getCurrentEngine() {
@@ -59,12 +67,11 @@ public final class Engine {
             throw new NullPointerException("platform");
         }
 
-        this.fileSystem = new FileSystem(platform);
+        this.platform = platform;
+        this.properties = new Properties();
         this.thread = new EngineThread(this);
 
         this.logLevel = Log.Level.Warning;
-        this.platform = platform;
-        this.properties = new Properties();
     }
 
     public CanvasImp createCanvasImp(Size size) {
@@ -80,7 +87,22 @@ public final class Engine {
     }
 
     public ImageImp loadImageImp(String filePath) {
-        return this.fileSystem.loadImageImp(filePath);
+        ImageImp result = null;
+        try {
+            final InputStream in = openInputStream(filePath);
+            if (in != null) {
+                result = this.platform.loadImageImp(in);
+            }
+        }
+        catch (Exception ex) {
+            Log.warning(Message.IMAGE_READ_ERROR, filePath, ex);
+        }
+
+        if (result == null) {
+            result = this.defaultImage;
+        }
+
+        return result;
     }
 
     public void requestStop() {
@@ -98,7 +120,7 @@ public final class Engine {
             throw new NullPointerException("features");
         }
 
-        WindowRequest request = new WindowRequest(size, features);
+        final WindowRequest request = new WindowRequest(size, features);
         this.platform.showWindow(request);
         request.waitForResult();
         return request.getResult();
@@ -113,7 +135,25 @@ public final class Engine {
     }
 
     List<String> loadTextFile(String filePath) {
-        return this.fileSystem.loadTextFile(filePath);
+        try {
+            final InputStream in = this.openInputStream(filePath);
+            if (in == null) {
+                Log.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
+                return null;
+            }
+
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            final List<String> result = new ArrayList();
+            while (reader.ready()) {
+                result.add(reader.readLine());
+            }
+
+            return result;
+        }
+        catch (IOException ex) {
+            Log.warning(Message.FILE_READ_ERROR, filePath, ex);
+            return null;
+        }
     }
 
     void log(Log.Level level, String message, Throwable exception) {
@@ -125,6 +165,27 @@ public final class Engine {
                     this.platform.log("   " + el.toString() + '\n');
                 }
             }
+        }
+    }
+
+    InputStream openInputStream(String filePath) throws IOException {
+        if (filePath == null) {
+            throw new NullPointerException("filePath");
+        }
+
+        if (filePath.startsWith(RESOURCE_PREFIX)) {
+            final URL url = Thread.currentThread().getContextClassLoader().
+                    getResource(filePath.substring(RESOURCE_PREFIX.length()));
+            if (url == null) {
+                Log.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
+                return null;
+            }
+            else {
+                return url.openStream();
+            }
+        }
+        else {
+            return new FileInputStream(filePath);
         }
     }
 
@@ -317,7 +378,7 @@ public final class Engine {
         @Override
         public void run() {
             CURRENT_ENGINE.set(this.engine);
-            this.engine.fileSystem.init();
+            this.engine.defaultImage = this.engine.loadImageImp(DEFAULT_IMAGE_PATH);
             this.loadProperties();
             this.engine.startProgram();
         }
@@ -326,9 +387,9 @@ public final class Engine {
             try {
                 // Load application properties first to prevent them to
                 // overwrite system properties.
-                this.engine.properties.loadFromResource(JEDA_APPLICATION_PROPERTIES_FILE);
-                this.engine.properties.loadFromResource(JEDA_PLATFORM_PROPERTIES_FILE);
-                this.engine.properties.loadFromResource(JEDA_SYSTEM_PROPERTIES_FILE);
+                this.engine.properties.load(this.engine.openInputStream(JEDA_APPLICATION_PROPERTIES_FILE));
+                this.engine.properties.load(this.engine.openInputStream(JEDA_PLATFORM_PROPERTIES_FILE));
+                this.engine.properties.load(this.engine.openInputStream(JEDA_SYSTEM_PROPERTIES_FILE));
                 this.engine.properties.loadFromSystem();
             }
             catch (Exception ex) {

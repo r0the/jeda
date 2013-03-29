@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,13 +17,23 @@
 package ch.jeda;
 
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class Properties {
 
     private final java.util.Properties imp;
+
+    public Properties(String filePath) {
+        this();
+        try {
+            this.load(Engine.getCurrentEngine().openInputStream(filePath));
+        }
+        catch (Exception ex) {
+            Log.warning(Message.FILE_READ_ERROR, filePath, ex.getMessage());
+        }
+    }
 
     Properties() {
         this.imp = new java.util.Properties();
@@ -60,11 +70,8 @@ public class Properties {
         return result;
     }
 
-    void loadFromResource(String filePath) throws IOException {
-        URL resource = Thread.currentThread().getContextClassLoader().getResource(filePath);
-        if (resource != null) {
-            this.imp.load(resource.openStream());
-        }
+    final void load(InputStream in) throws IOException {
+        this.imp.load(in);
     }
 
     void loadFromSystem() {

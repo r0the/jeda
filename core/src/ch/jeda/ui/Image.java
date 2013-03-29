@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * This class represents an image. An image can be loaded from an image file or
  * be obtained by making a snapshot of a {@link Canvas}.
- * 
+ *
  * @since 1
  */
 public final class Image {
@@ -40,6 +40,7 @@ public final class Image {
     public static final String JEDA_LOGO_16x16 = ":ch/jeda/resources/logo-16x16.png";
     public static final String JEDA_LOGO_48x48 = ":ch/jeda/resources/logo-48x48.png";
     public static final String JEDA_LOGO_64x64 = ":ch/jeda/resources/logo-64x64.png";
+    private static final Map<String, ImageImp> CACHE = new HashMap();
     private static final Map<String, ImageImp.Encoding> FORMAT_MAP = initFormatMap();
     private final ImageImp imp;
 
@@ -50,23 +51,23 @@ public final class Image {
      * To read a resource file, put ':' in front of the file path.
      *
      * @param filePath path to the image file
-     * 
+     *
      * @since 1
      */
     public Image(String filePath) {
-        this(Engine.getCurrentEngine().loadImageImp(filePath));
+        this(loadImp(filePath));
     }
 
     /**
-     * Create a scaled copy of this image.
-     * Width and height are both scaled proportionally.
+     * Create a scaled copy of this image. Width and height are both scaled
+     * proportionally.
      *
      * @param factor the scaling factor
      * @return scaled image
-     * 
+     *
      * @see #createScaledImage(int, int)
      * @see #createScaledImage(Size)
-     * 
+     *
      * @since 1
      */
     public Image createScaledImage(double factor) {
@@ -74,19 +75,18 @@ public final class Image {
     }
 
     /**
-     * Creates a scaled copy of this image.
-     * A both width and height of the new image can be specified, the aspect
-     * ratio may not be preserved.
+     * Creates a scaled copy of this image. A both width and height of the new
+     * image can be specified, the aspect ratio may not be preserved.
      *
      * @param width the width of the new image
      * @param height the height of the new image
      * @return scaled image
      * @throws IllegalArgumentException if <code>width</code> or
-     *         <code>height</code> are smaller than 1
-     * 
+     * <code>height</code> are smaller than 1
+     *
      * @see #createScaledImage(double)
      * @see #createScaledImage(Size)
-     * 
+     *
      * @since 1
      */
     public Image createScaledImage(int width, int height) {
@@ -95,6 +95,7 @@ public final class Image {
 
     /**
      * Creates a scaled copy of this image.
+     *
      * @param size
      * @throws NullPointerException if <code>size</code> is <code>null</code>
      * @return scaled image
@@ -112,15 +113,15 @@ public final class Image {
 
     /**
      * Returns a rectangular part of this image as a new image.
-     * 
+     *
      * @param x the x coordinate of the top left corner of the part
      * @param y the y coordinate of the top left corner of the part
      * @param width the width of the part
      * @param height the height of the part
      * @return specified part of image
      * @throws IllegalArgumentException if <code>width</code> or
-     *         <code>height</code> are smaller than 1
-     * 
+     * <code>height</code> are smaller than 1
+     *
      * @since 1
      */
     public Image createSubImage(int x, int y, int width, int height) {
@@ -129,13 +130,13 @@ public final class Image {
 
     /**
      * Returns a rectangular part of this image as a new image.
-     * 
+     *
      * @param location the top left corner of the part
      * @param size the size of the part
      * @return specified part of image
-     * @throws NullPointerException if <code>location</code> is <code>null</code>
+     * @throws NullPointerException if <code>location</code> * *      * is <code>null</code>
      * @throws NullPointerException if <code>size</code> is <code>null</code>
-     * 
+     *
      * @since 1
      */
     public Image createSubImage(Location location, Size size) {
@@ -152,12 +153,12 @@ public final class Image {
 
     /**
      * Returns the size of this image in pixels.
-     * 
+     *
      * @return size of this image
-     * 
+     *
      * @see #getHeight()
      * @see #getWidth()
-     * 
+     *
      * @since 1
      */
     public Size getSize() {
@@ -166,9 +167,9 @@ public final class Image {
 
     /**
      * Returns the height of the image in pixels.
-     * 
+     *
      * @return height of image in pixels
-     * 
+     *
      * @see #getSize()
      * @see #getWidth()
      * @since 1
@@ -191,12 +192,12 @@ public final class Image {
     }
 
     /**
-     * Replaces all pixels of one specific color with another color. This can
-     * be useful for creating transparent images.
+     * Replaces all pixels of one specific color with another color. This can be
+     * useful for creating transparent images.
      *
      * @param oldColor color to be replaced
      * @param newColor color to replace oldColor
-     * 
+     *
      * @since 1
      */
     public Image replacePixels(Color oldColor, Color newColor) {
@@ -205,14 +206,14 @@ public final class Image {
 
     /**
      * Saves the contents of this image to a file. Saving to a resource file
-     * (i.e. a file path starting with ':') is not allowed.
-     * The file path must end with a valid image file extension.
-     * Currently, the extension ".jpeg", ".jpg", and ".png" are supported.
-     * 
+     * (i.e. a file path starting with ':') is not allowed. The file path must
+     * end with a valid image file extension. Currently, the extension ".jpeg",
+     * ".jpg", and ".png" are supported.
+     *
      * @param filePath file to save to
      * @return <code>true</code> if file has been saved sucessfully
-     * @throws NullPointerException if <code>filePath</code> is <code>null</code>
-     * 
+     * @throws NullPointerException if <code>filePath</code> * *      * is <code>null</code>
+     *
      * @since 1
      */
     public boolean save(String filePath) {
@@ -271,5 +272,13 @@ public final class Image {
         result.put(".jpg", ImageImp.Encoding.JPEG);
         result.put(".png", ImageImp.Encoding.PNG);
         return result;
+    }
+
+    private static ImageImp loadImp(String filePath) {
+        if (!CACHE.containsKey(filePath)) {
+            CACHE.put(filePath, Engine.getCurrentEngine().loadImageImp(filePath));
+        }
+
+        return CACHE.get(filePath);
     }
 }
