@@ -21,9 +21,16 @@ import ch.jeda.Size;
 import java.io.Serializable;
 
 /**
- * This class implements alignment as a transformation that is applied when
- * drawing on a {@link Canvas}. The alignment specified how the element to be
- * drawn is positioned relative to the given coordinates (the alignment point).
+ * This class provides constants to specify alignment when drawing on a
+ * {@link Canvas}. The alignment specifies how the element to be drawn is
+ * positioned relative to the given coordinates (the alignment point).
+ * <p>
+ * <strong>Example:</strong>
+ * <pre><code> Window window = new Window(200, 200);
+ * window.drawString(190, 100, "Alignment Example", Alignment.TOP_RIGHT);
+ * window.fillRectangle(190, 100, 50, 50, Alignment.BOTTOM_RIGHT);
+ * window.setColor(Color.RED);
+ * window.fillCircle(190, 100, 4);</code></pre>
  *
  * @since 1
  */
@@ -33,19 +40,19 @@ public final class Alignment implements Serializable {
     private static final Align RIGHT_BOTTOM_IMPL = new AlignRightBottom();
     private static final Align CENTER_IMPL = new AlignCenter();
     /**
-     * Align at the bottom vertically  and center horizontally.
+     * Align at the bottom vertically and center horizontally.
      *
      * @since 1
      */
     public static final Alignment BOTTOM_CENTER = new Alignment(CENTER_IMPL, RIGHT_BOTTOM_IMPL);
     /**
-     * Align at the bottom vertically  and left horizontally.
+     * Align at the bottom vertically and left horizontally.
      *
      * @since 1
      */
     public static final Alignment BOTTOM_LEFT = new Alignment(LEFT_TOP_IMPL, RIGHT_BOTTOM_IMPL);
     /**
-     * Align at the bottom vertically  and right horizontally.
+     * Align at the bottom vertically and right horizontally.
      *
      * @since 1
      */

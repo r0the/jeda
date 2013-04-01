@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,10 +26,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class represents events that are taking place on this window. These
- * are typically keys pressed or typed by the user or motion events such as
- * moving or clicking with a mouse, trackball, pen or finger.
- * 
+ * This class represents events that are taking place on this window. These are
+ * typically keys pressed or typed by the user or motion events such as moving
+ * or clicking with a mouse, trackball, pen or finger.
+ *
+ * <p>
+ * <strong>Example:</strong>
+ * <pre><code>Events events = window.getEvents();
+ * if (events.isKeyPressed(Key.A)) {
+ *     window.drawText(10, 10, "Taste A ist gedrückt.");
+ * }</code></pre>
+ *
  * @since 1
  */
 public final class Events {
@@ -42,9 +49,9 @@ public final class Events {
 
     /**
      * Returns all pointers that are currently available in the window.
-     * 
+     *
      * @return all pointers
-     * 
+     *
      * @since 1
      */
     public Iterable<Pointer> getPointers() {
@@ -54,9 +61,9 @@ public final class Events {
     /**
      * Returns all pointers that have become available in the window since the
      * last call to {@link Window#update()}.
-     * 
+     *
      * @return all new pointers
-     * 
+     *
      * @since 1
      */
     public Iterable<Pointer> getNewPointers() {
@@ -67,7 +74,7 @@ public final class Events {
      * Returns a set of all keys that are currently pressed.
      *
      * @return set of all keys that are pressed.
-     * 
+     *
      * @since 1
      */
     public Set<Key> getPressedKeys() {
@@ -78,10 +85,11 @@ public final class Events {
      * Returns a String representing the recently typed characters. When a
      * character is typed, it is appended to the String. The string is cleared
      * when {@link Window#update()} is called. Returns an empty String ("") when
-     * no characters have been typed since the last call to {@link Window#update()}.
+     * no characters have been typed since the last call to
+     * {@link Window#update()}.
      *
      * @return recently typed characters or ""
-     * 
+     *
      * @since 1
      */
     public String getTypedChars() {
@@ -90,9 +98,9 @@ public final class Events {
 
     /**
      * Returns a set of all keys that have been typed recently.
-     * 
+     *
      * @return recently typed keys
-     * 
+     *
      * @since 1
      */
     public List<Key> getTypedKeys() {
@@ -105,7 +113,7 @@ public final class Events {
      * @param key the key to check for
      * @return <code>true</code> if specified key is currently pressed
      * @throws NullPointerException when key is null
-     * 
+     *
      * @since 1
      */
     public boolean isKeyPressed(Key key) {
@@ -122,7 +130,7 @@ public final class Events {
      * @param key key to check
      * @return <code>true</code> if specified key was typed recently
      * @throws NullPointerException when key is null
-     * 
+     *
      * @since 1
      */
     public boolean isKeyTyped(Key key) {

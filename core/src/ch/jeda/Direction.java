@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,59 +22,59 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * This class represents the eight compass directions. Each direction has a
- * unique <code>int</code> number ranging from 0 for east counterclockwise to 7
- * for south east.
- * 
+ * Represents the eight compass directions. Each direction has a unique
+ * <code>int</code> number ranging from 0 for east counterclockwise to 7 for
+ * south east.
+ *
  * @since 1
  */
 public final class Direction implements Serializable {
 
     /**
      * The direction east. This direction has the value 0.
-     * 
+     *
      * @since 1
      */
     public static final Direction EAST = new Direction(1, 0, "East", 0);
     /**
      * The direction north. This direction has the value 2.
-     * 
+     *
      * @since 1
      */
     public static final Direction NORTH = new Direction(0, -1, "North", 2);
     /**
      * The direction north east. This direction has the value 1.
-     * 
+     *
      * @since 1
      */
     public static final Direction NORTH_EAST = new Direction(1, -1, "NorthEast", 1);
     /**
      * The direction north west. This direction has the value 3.
-     * 
+     *
      * @since 1
      */
     public static final Direction NORTH_WEST = new Direction(-1, -1, "NorthWest", 3);
     /**
      * The direction south. This direction has the value 6.
-     * 
+     *
      * @since 1
      */
     public static final Direction SOUTH = new Direction(0, 1, "South", 6);
     /**
      * The direction south east. This direction has the value 7.
-     * 
+     *
      * @since 1
      */
     public static final Direction SOUTH_EAST = new Direction(1, 1, "SouthEast", 7);
     /**
      * The direction south west. This direction has the value 5.
-     * 
+     *
      * @since 1
      */
     public static final Direction SOUTH_WEST = new Direction(-1, 1, "SouthWest", 5);
     /**
      * The direction west. This direction has the value 4.
-     * 
+     *
      * @since 1
      */
     public static final Direction WEST = new Direction(-1, 0, "West", 4);
@@ -82,13 +82,13 @@ public final class Direction implements Serializable {
     /**
      * A iterator of all eight directions. it starts with north and iterates
      * clockwise through all directions.
-     * 
+     *
      * @since 1
      */
     public static final Iterable<Direction> ALL = LIST;
     /**
      * The number of this direction.
-     * 
+     *
      * @since 1
      */
     public final int number;
@@ -97,12 +97,12 @@ public final class Direction implements Serializable {
     private final String name;
 
     /**
-     * Returns the direction for the specified number.
-     * Returns <code>null</code> if the specified number is not between 0 and 7.
-     * 
+     * Returns the direction for the specified number. Returns
+     * <code>null</code> if the specified number is not between 0 and 7.
+     *
      * @param number the number of a direction
      * @return direction for the specified number or <code>null</code>
-     * 
+     *
      * @since 1
      */
     public static Direction from(int number) {
@@ -115,12 +115,12 @@ public final class Direction implements Serializable {
     }
 
     /**
-     * Returns the direction for the specified name.
-     * Returns <code>null</code> if the specified name is not valid.
-     * 
+     * Returns the direction for the specified name. Returns
+     * <code>null</code> if the specified name is not valid.
+     *
      * @param name the name of a direction
      * @return direction for the specified number or <code>null</code>
-     * 
+     *
      * @since 1
      */
     public static Direction parse(String name) {
@@ -134,14 +134,14 @@ public final class Direction implements Serializable {
     }
 
     /**
-     * Returns the direction that lies <code>amount</code> steps clockwise
-     * of this direction.
-     * For example, <code>NORTH.clockwise(2)</code> will return
+     * Returns the direction that lies
+     * <code>amount</code> steps clockwise of this direction. For example,
+     * <code>NORTH.clockwise(2)</code> will return
      * <code>EAST</code>
-     * 
+     *
      * @param amount the number of steps to turn
      * @return the new direction
-     * 
+     *
      * @since 1
      */
     public Direction clockwise(int amount) {
@@ -154,14 +154,15 @@ public final class Direction implements Serializable {
     }
 
     /**
-     * Returns the direction that lies <code>amount</code> steps
-     * counterclockwise of this direction.
-     * For example, <code>NORTH.counterclockwise(2)</code> will return
+     * Returns the direction that lies
+     * <code>amount</code> steps counterclockwise of this direction. For
+     * example,
+     * <code>NORTH.counterclockwise(2)</code> will return
      * <code>WEST</code>
-     * 
+     *
      * @param amount the number of steps to turn
      * @return the new direction
-     * 
+     *
      * @since 1
      */
     public Direction counterclockwise(int amount) {
@@ -191,9 +192,9 @@ public final class Direction implements Serializable {
 
     /**
      * Returns the direction opposite to this direction.
-     * 
+     *
      * @return the opposite direction
-     * 
+     *
      * @since 1
      */
     public Direction opposite() {
@@ -202,9 +203,9 @@ public final class Direction implements Serializable {
 
     /**
      * Returns the name of this direction.
-     * 
+     *
      * @return the name of this direction
-     * 
+     *
      * @since 1
      */
     @Override

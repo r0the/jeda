@@ -19,38 +19,41 @@ package ch.jeda;
 import java.io.Serializable;
 
 /**
- * Represents a location on a two-dimensional integral grid with two integer 
- * coordinates. It is used to refer to the location of a pixel on a drawing 
- * surface or a field on a board game.
- * 
+ * Represents a pair of two-dimensional, integral coordinates. Location objects
+ * can be used to refer to the location of a pixel on a drawing surface or a
+ * field on a board game.
+ * <p>
+ * <tt>Location</tt> objects are immutable. That means that their value cannot
+ * be changed.
+ *
  * @since 1
  */
 public final class Location implements Serializable {
 
     /**
-     * <code>Location</code> representing the origin of the coordinate system.
-     * Both coordinates of this location are zero.
-     * 
+     * The origin of the coordinate system. Both coordinates of this location
+     * are zero.
+     *
      * @since 1
      */
-    public static final Location ORIGIN = new Location(0, 0);
+    public static final Location ORIGIN = new Location();
     /**
-     * The x coordinate of this location.
-     * 
+     * The x coordinate of the location.
+     *
      * @since 1
      */
     public final int x;
     /**
-     * The y coordinate of this location.
-     * 
+     * The y coordinate of the location.
+     *
      * @since 1
      */
     public final int y;
 
     /**
-     * Creates a new location representing the origin. Both coordinates of this
-     * location are 0.
-     * 
+     * Constructs a location. The location represents the origin. Both
+     * coordinates of this location are zero.
+     *
      * @since 1
      */
     public Location() {
@@ -59,11 +62,12 @@ public final class Location implements Serializable {
     }
 
     /**
-     * Creates a new location with the specified <code>x</code> and
-     * <code>y</code> coordinates.
-     * 
+     * Constructs a location. The location will have the specified <tt>x</tt>
+     * and <tt>y</tt> coordinates.
+     *
      * @param x the x coordinate of the location
      * @param y the y coordinate of the location
+     *
      * @since 1
      */
     public Location(int x, int y) {
@@ -72,13 +76,13 @@ public final class Location implements Serializable {
     }
 
     /**
-     * Returns the Euclidean distance between this location and the specified
-     * other location.
-     * 
+     * Calculates the Euclidean distance. Calculates and returns the Euclidean
+     * distance from the location to the specified other location.
+     *
      * @param other the other location
-     * @return distance between this and other location
-     * @throws NullPointerException if the value of <code>other</code> is 
-     *         <code>null</code>
+     * @return Euclidean distance between this and other location
+     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
+     *
      * @since 1
      */
     public double distanceTo(Location other) {
@@ -124,13 +128,13 @@ public final class Location implements Serializable {
     }
 
     /**
-     * Returns the Manhattan distance from this location to the specified
-     * other location.
-     * 
+     * Calculates the Manhattan distance. Calculates and returns the Manhattan
+     * distance from the location to the specified other location.
+     *
      * @param other the other location
-     * @return Manhattan distance from this to <code>other</code> location.
-     * @throws NullPointerException if the value of <code>other</code> is 
-     *         <code>null</code>
+     * @return Manhattan distance from this to <tt>other</tt> location.
+     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
+     *
      * @since 1
      */
     public int manhattanDistanceTo(Location other) {
@@ -142,23 +146,49 @@ public final class Location implements Serializable {
     }
 
     public Location minus(Location other) {
+        if (other == null) {
+            throw new NullPointerException("other");
+        }
+
         return new Location(this.x - other.x, this.y - other.y);
     }
 
     /**
-     * Returns the neighbor location of this location in the specified
-     * direction.
-     * 
+     * Returns a neighbour of this location. Returns the neighbour location of
+     * the location in the specified direction.
+     *
      * @param direction
      * @return neighbor location
+     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
+     *
      * @since 1
      */
     public Location neighbor(Direction direction) {
+        if (direction == null) {
+            throw new NullPointerException("direction");
+        }
+
         return new Location(this.x + direction.dx, this.y + direction.dy);
     }
 
     public Location plus(Location other) {
+        if (other == null) {
+            throw new NullPointerException("other");
+        }
+
         return new Location(this.x + other.x, this.y + other.y);
+    }
+
+    /**
+     * Converts the location to a vector. Returns a vector with the same
+     * coordinates as the location.
+     *
+     * @return vector representation of the location
+     *
+     * @since 1
+     */
+    public Vector toVector() {
+        return new Vector(this.x, this.y);
     }
 
     @Override

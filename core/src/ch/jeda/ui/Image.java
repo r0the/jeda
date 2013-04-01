@@ -30,8 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class represents an image. An image can be loaded from an image file or
- * be obtained by making a snapshot of a {@link Canvas}.
+ * Represents a bitmap image. A bitmap image can be loaded from an image file or
+ * be obtained by making a snapshot of a {@link Canvas}. Simple image
+ * transformations are also supported.
  *
  * @since 1
  */
@@ -45,10 +46,16 @@ public final class Image {
     private final ImageImp imp;
 
     /**
-     * Reads an image file and creates a new image from the contents of the
-     * file.
+     * Constructs an image from a file. Loads the contents of the specified
+     * image file. Currently, the image file formats JPEG, and PNG are
+     * supported.
+     * <p>
+     * The file can either be located on the local computer, or in the project.
+     * To read a file located in the project, put ':' in front of the file path.
+     * For example, use the following code to load an image located in the
+     * <tt>ch.jeda.samples</tt> package of the project:
      *
-     * To read a resource file, put ':' in front of the file path.
+     * <pre><code>Image sample = new Image("src/ch/jeda/samples/sample.png");</code></pre>
      *
      * @param filePath path to the image file
      *
@@ -59,7 +66,7 @@ public final class Image {
     }
 
     /**
-     * Create a scaled copy of this image. Width and height are both scaled
+     * Creates a scaled copy of the image. Width and height are both scaled
      * proportionally.
      *
      * @param factor the scaling factor
@@ -75,14 +82,14 @@ public final class Image {
     }
 
     /**
-     * Creates a scaled copy of this image. A both width and height of the new
-     * image can be specified, the aspect ratio may not be preserved.
+     * Creates a scaled copy of the image. Both width and height of the new
+     * image can be specified. The aspect ratio may not be preserved.
      *
      * @param width the width of the new image
      * @param height the height of the new image
      * @return scaled image
-     * @throws IllegalArgumentException if <code>width</code> or
-     * <code>height</code> are smaller than 1
+     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are
+     * smaller than 1
      *
      * @see #createScaledImage(double)
      * @see #createScaledImage(Size)
@@ -94,10 +101,10 @@ public final class Image {
     }
 
     /**
-     * Creates a scaled copy of this image.
+     * Creates a scaled copy of the image.
      *
      * @param size
-     * @throws NullPointerException if <code>size</code> is <code>null</code>
+     * @throws NullPointerException if <tt>size</tt> is <tt>null</tt>
      * @return scaled image
      *
      * @see #createScaledImage(int, int)
@@ -112,15 +119,15 @@ public final class Image {
     }
 
     /**
-     * Returns a rectangular part of this image as a new image.
+     * Returns a rectangular part of the image as a new image.
      *
      * @param x the x coordinate of the top left corner of the part
      * @param y the y coordinate of the top left corner of the part
      * @param width the width of the part
      * @param height the height of the part
      * @return specified part of image
-     * @throws IllegalArgumentException if <code>width</code> or
-     * <code>height</code> are smaller than 1
+     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are
+     * smaller than 1
      *
      * @since 1
      */
@@ -129,13 +136,13 @@ public final class Image {
     }
 
     /**
-     * Returns a rectangular part of this image as a new image.
+     * Returns a rectangular part of the image as a new image.
      *
      * @param location the top left corner of the part
      * @param size the size of the part
      * @return specified part of image
-     * @throws NullPointerException if <code>location</code> * *      * is <code>null</code>
-     * @throws NullPointerException if <code>size</code> is <code>null</code>
+     * @throws NullPointerException if <tt>location</tt> is <tt>null</tt>
+     * @throws NullPointerException if <tt>size</tt> is <tt>null</tt>
      *
      * @since 1
      */
@@ -152,9 +159,9 @@ public final class Image {
     }
 
     /**
-     * Returns the size of this image in pixels.
+     * Returns the size of the image in pixels.
      *
-     * @return size of this image
+     * @return size of image
      *
      * @see #getHeight()
      * @see #getWidth()
@@ -168,7 +175,7 @@ public final class Image {
     /**
      * Returns the height of the image in pixels.
      *
-     * @return height of image in pixels
+     * @return height of image
      *
      * @see #getSize()
      * @see #getWidth()
@@ -181,7 +188,7 @@ public final class Image {
     /**
      * Returns the width of the image in pixels.
      *
-     * @return width of image in pixels
+     * @return width of image
      *
      * @see #getHeight()
      * @see #getSize()
@@ -205,14 +212,14 @@ public final class Image {
     }
 
     /**
-     * Saves the contents of this image to a file. Saving to a resource file
+     * Saves the contents of the image to a file. Saving to a resource file
      * (i.e. a file path starting with ':') is not allowed. The file path must
      * end with a valid image file extension. Currently, the extension ".jpeg",
      * ".jpg", and ".png" are supported.
      *
      * @param filePath file to save to
-     * @return <code>true</code> if file has been saved sucessfully
-     * @throws NullPointerException if <code>filePath</code> * *      * is <code>null</code>
+     * @return <tt>true</tt> if file has been saved sucessfully
+     * @throws NullPointerException if <tt>filePath</tt> is <tt>null</tt>
      *
      * @since 1
      */

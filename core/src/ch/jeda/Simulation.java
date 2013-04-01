@@ -17,8 +17,11 @@
 package ch.jeda;
 
 /**
- * A Simulation is a program that executes a method at a certain frequency.
- * 
+ * Represents a simulation. When run, the simulation initializes itself by
+ * calling the {@link #init()} method. Then, the simulation calls the
+ * {@link #step()} method repeatedly to perform a simulation step. The target
+ * frequency with which the {@link #step()} method is called can be adjusted.
+ *
  * @since 1
  */
 public abstract class Simulation extends Program {
@@ -27,9 +30,9 @@ public abstract class Simulation extends Program {
     private final Timer timer;
 
     /**
-     * Initializes a new Simulation object. The target frame rate is set to 60
+     * Creates a new simulation . The target simulation frequency is set to 60
      * Hertz.
-     * 
+     *
      * @since 1
      */
     protected Simulation() {
@@ -43,7 +46,7 @@ public abstract class Simulation extends Program {
      * second.
      *
      * @return measured simulation frequency
-     * 
+     *
      * @see #getFrequency()
      * @see #setFrequency(int)
      * @since 1
@@ -53,8 +56,8 @@ public abstract class Simulation extends Program {
     }
 
     /**
-     * Returns the duration of the last simulation step in seconds. This
-     * value can be used to calculate smooth movements.
+     * Returns the duration of the last simulation step in seconds. This value
+     * can be used to calculate smooth movements.
      *
      * @return duration of last simulation step in seconds
      */
@@ -63,10 +66,10 @@ public abstract class Simulation extends Program {
     }
 
     /**
-     * Returns the desired simulation frequency in Hertz.
+     * Returns the target simulation frequency in Hertz.
      *
      * @return the desired frequency
-     * 
+     *
      * @see #getCurrentFrequency()
      * @see #setFrequency(int)
      * @since 1
@@ -76,9 +79,10 @@ public abstract class Simulation extends Program {
     }
 
     /**
-     * Calls {@link #init()} and then starts the simulation. Returns
-     * immediately after the simulation has been started.
-     * 
+     * Calls {@link #init()} and then starts the simulation. Calls
+     * {@link #step()} repeatedly until the simulation has been stopped by
+     * calling {@link #requestStop()}.
+     *
      * @since 1
      */
     @Override
@@ -93,11 +97,11 @@ public abstract class Simulation extends Program {
     }
 
     /**
-     * Sets the desired simulation frequency in Hertz. This is the frequency
-     * in which the method {@link #step()} will be called.
+     * Sets the target simulation frequency in Hertz. This is the frequency in
+     * which the method {@link #step()} will be called.
      *
      * @param hertz new frequency in hertz
-     * 
+     *
      * @see #getCurrentFrequency()
      * @see #getFrequency()
      * @since 1
@@ -107,15 +111,17 @@ public abstract class Simulation extends Program {
     }
 
     /**
-     * Override this method to initialize the simulation.
-     * 
+     * Initializes the simulation. Override this method to initialize the
+     * simulation.
+     *
      * @since 1
      */
     protected abstract void init();
 
     /**
-     * Override this method to perform a simulation step.
-     * 
+     * Performs a simulation step. Override this method to perform a simulation
+     * step.
+     *
      * @since 1
      */
     protected abstract void step();

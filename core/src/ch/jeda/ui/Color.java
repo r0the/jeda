@@ -20,8 +20,8 @@ import java.io.Serializable;
 
 /**
  * Represents a color in the RGBA color model. A color is defined by three
- * values for the red, green, and blue part, and an alpha value defining
- * the color's opacity. Each can be a number between 0 and 255.
+ * values for the red, green, and blue part, and an alpha value defining the
+ * color's opacity. Each value can be a number between 0 and 255.
  *
  * @since 1
  */
@@ -128,22 +128,15 @@ public final class Color implements Serializable {
      */
     public static final Color YELLOW = new Color(255, 255, 0);
     /**
+     * The internal value of the color.
+     *
      * @since 1
      */
     public final int value;
 
     /**
-     * Creates the fully opaque color black.
-     * 
-     * @since 1
-     */
-    private Color() {
-        this(0, 0, 0);
-    }
-
-    /**
-     * Creates a color from a specified value.
-     * 
+     * Constructs a color from a specified value.
+     *
      * @since 1
      */
     public Color(int value) {
@@ -151,14 +144,16 @@ public final class Color implements Serializable {
     }
 
     /**
-     * Creates a new color with the specified red, green, and blue components.
+     * Constructs an RGB color. The values for the red, green, and blue
+     * components of the color can be specified. All values must be in the range
+     * from 0 to 255.
      *
      * @param red color's red component
      * @param green color's green component
      * @param blue color's blue component
-     * 
+     *
      * @throws IllegalArgumentException if not all component values are valid
-     * (in the range of 0 to 255).
+     * (in the range from 0 to 255).
      * @since 1
      */
     public Color(int red, int green, int blue) {
@@ -166,14 +161,15 @@ public final class Color implements Serializable {
     }
 
     /**
-     * Creates a new color with the specified red, green, and blue componentns,
-     * and the specified opacity.
+     * Constructs an RGBA color. The values for the red, green, blue, and alpha
+     * components of the color can be specified. All values must be in the range
+     * from 0 to 255.
      *
      * @param red color's red component
      * @param green color's green component
      * @param blue color's blue component
-     * @param alpha color's opacity
-     * 
+     * @param alpha color's alpha component (opacity)
+     *
      * @throws IllegalArgumentException if not all component values are valid
      * (in the range of 0 to 255).
      * @since 1
@@ -210,10 +206,10 @@ public final class Color implements Serializable {
     }
 
     /**
-     * Returns the alpha component of this color.
-     * 
-     * @return the alpha component of this color
-     * 
+     * Returns the alpha component.
+     *
+     * @return the alpha component of the color
+     *
      * @since 1
      */
     public int getAlpha() {
@@ -221,10 +217,10 @@ public final class Color implements Serializable {
     }
 
     /**
-     * Returns the blue component of this color.
-     * 
-     * @return the blue component of this color
-     * 
+     * Returns the blue component.
+     *
+     * @return the blue component of the color
+     *
      * @since 1
      */
     public int getBlue() {
@@ -232,10 +228,10 @@ public final class Color implements Serializable {
     }
 
     /**
-     * Returns the green component of this color.
-     * 
-     * @return the green component of this color
-     * 
+     * Returns the green component.
+     *
+     * @return the green component of the color
+     *
      * @since 1
      */
     public int getGreen() {
@@ -243,10 +239,10 @@ public final class Color implements Serializable {
     }
 
     /**
-     * Returns the red component of this color.
-     * 
-     * @return the red component of this color
-     * 
+     * Returns the red component.
+     *
+     * @return the red component of the color
+     *
      * @since 1
      */
     public int getRed() {
@@ -259,12 +255,13 @@ public final class Color implements Serializable {
     }
 
     /**
-     * Returns a CSS 3 color specification of this color. It has the form
-     * "rgb(R, G, B)" or "rgba(R, G, B, A)" where R, G, and B are the red,
-     * green, and blue components ranging from 0 to 255 and A ist the alpha
-     * component ranging from 0 to 1.
-     * 
-     * @return CSS 3 color specification of this color
+     * Returns a text representation of the color. The returned text is a CSS 3
+     * color specification of the color. It has the form <tt>"rgb(R, G, B)"</tt>
+     * or <tt>"rgba(R, G, B, A)"</tt> where R, G, and B are the red, green, and
+     * blue components ranging from 0 to 255 and A ist the alpha component
+     * ranging from 0 to 1.
+     *
+     * @return CSS 3 color specification of the color
      */
     @Override
     public String toString() {

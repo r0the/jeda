@@ -26,20 +26,78 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * Provides a drawing window. The window class has the follwoing functionality:
+ * Represents a drawing window. The window class has the follwoing
+ * functionality:
  * <ul>
- *   <li> fullscreen: the window can be displayed in framed or fullscreen mode.
- *   <li> double buffering: the window supports a double buffering mode for animations.
- *   <li> user input: the window provides means to query keyboard and mouse input.
+ * <li> fullscreen: the window can be displayed in framed or fullscreen mode.
+ * <li> double buffering: the window supports a double buffering mode for
+ * animations.
+ * <li> user input: the window provides means to query keyboard and mouse input.
  * </ul>
- * 
+ *
  * @since 1
  */
 public class Window extends Canvas {
 
     public enum Feature {
 
-        DoubleBuffered, Fullscreen, HoveringPointer, OrientationLandscape,
+        /**
+         * Enables double buffering in a window. A double-buffered window
+         * performs drawing operations in an off-screen buffer. The
+         * {@link Window#update()} method must be called to display the contents
+         * of this buffer. This prevents flickering in animations.
+         *
+         * @see Window#update()
+         * @since 1
+         */
+        DoubleBuffered,
+        /**
+         * Sets fullscreen mode for a window. The behaviour of this feature
+         * depends on the platform:
+         * <p>
+         * <img src="../../../windows.png"> <img src="../../../linux.png">
+         * Displays the window in fullscreen mode. The screen resolution is
+         * automatically selected to fit the window size as closely as possible.
+         * <p>
+         * <img src="../../../android.png"> Fullscreen mode is not yet supported
+         * on Android devices.
+         *
+         * @since 1
+         */
+        Fullscreen,
+        /**
+         *
+         * @see Window#update()
+         * @since 1
+         */
+        HoveringPointer,
+        /**
+         * Set landscape orientation for a window. The behaviour of this feature
+         * depends on the platform:
+         * <p>
+         * <img src="../../../windows.png"> <img src="../../../linux.png"> Has
+         * no effect.
+         * <p>
+         * <img src="../../../android.png"> The screen orientation of the device
+         * is set to landscape. Thus, the width of the window's drawing area is
+         * larger than it's height.
+         *
+         * @since 1
+         */
+        OrientationLandscape,
+        /**
+         * Set portrait orientation for a window. The behaviour of this feature
+         * depends on the platform:
+         * <p>
+         * <img src="../../../windows.png"> <img src="../../../linux.png"> Has
+         * no effect.
+         * <p>
+         * <img src="../../../android.png"> The screen orientation of the device
+         * is set to portrait. Thus, the width of the window's drawing area is
+         * smaller than it's height.
+         *
+         * @since 1
+         */
         OrientationPortrait
     }
     private static final EnumSet<Feature> NO_FEATURES = EnumSet.noneOf(Feature.class);
@@ -52,6 +110,7 @@ public class Window extends Canvas {
     /**
      * @deprecated Use {@link #Window()} instead.
      */
+    @Deprecated
     public static Window create() {
         return new Window();
     }
@@ -59,6 +118,7 @@ public class Window extends Canvas {
     /**
      * @deprecated Use {@link #Window(Feature... )} instead.
      */
+    @Deprecated
     public static Window create(Feature... features) {
         return new Window(features);
     }
@@ -66,17 +126,25 @@ public class Window extends Canvas {
     /**
      * @deprecated Use {@link #Window(int, int, Feature... )} instead.
      */
+    @Deprecated
     public static Window create(int width, int height, Feature... features) {
         return new Window(width, height, features);
     }
 
     /**
-     * Creates a new window with an automatically sized drawing area.
-     * On the Android platform, the drawing area is adjusted to the screen
-     * size.
-     * On the Java platform, the drawing area has a width of 800 and a height
-     * of 600 pixels.
-     * 
+     * Constructs a window. The window is shown on the screen. All drawing
+     * methods inherited from {@link Canvas} are supported.
+     * <p>
+     * The size of the window's drawing area depends on the platform:
+     * <p>
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The
+     * drawing area of the window has a width of 800 pixels and a height of 600
+     * pixels.
+     * <p>
+     * <img src="../../../android.png"> The size drawing area depends on the
+     * screen size of the device.
+     *
      * @since 1
      */
     public Window() {
@@ -84,15 +152,22 @@ public class Window extends Canvas {
     }
 
     /**
-     * Creates a new window with an automatically sized drawing area.
-     * On the Android platform, the drawing area is adjusted to the screen
-     * size.
-     * On the Java platform, the drawing area has a width of 800 and a height
-     * of 600 pixels.
-     * The specified window features are activated.
+     * Constructs a window. The window is shown on the screen. All drawing
+     * methods inherited from {@link Canvas} are supported. The specified
+     * features will be enabled for the window.
+     * <p>
+     * The size of the window's drawing area depends on the platform:
+     * <p>
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The
+     * drawing area of the window has a width of 800 pixels and a height of 600
+     * pixels.
+     * <p>
+     * <img src="../../../android.png"> The size drawing area depends on the
+     * screen size of the device.
      *
-     * @param features the features of this window
-     * 
+     * @param features the features of the window
+     *
      * @since 1
      */
     public Window(Feature... features) {
@@ -100,16 +175,25 @@ public class Window extends Canvas {
     }
 
     /**
-     * Creates a new window that has a drawing area with the specified width
-     * and height in pixels.
-     * On the Android platform, the width and height parameters have no effect.
-     * The specified window features are activated.
+     * Constructs a window. The window is shown on the screen. All drawing
+     * methods inherited from {@link Canvas} are supported. The specified
+     * features will be enabled for the window.
+     * <p>
+     * The size of the window's drawing area depends on the platform:
+     * <p>
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The
+     * drawing area of the window has the specified <tt>width</tt> and
+     * <tt>height</tt>.
+     * <p>
+     * <img src="../../../android.png"> The size drawing area depends on the
+     * screen size of the device.
      *
      * @param width the width of the drawing area in pixels
      * @param height the height of the drawing area in pixels
-     * @param features the features of this window
-     *
+     * @param features the features of the window
      * @throws IllegalArgumentException if width or height are smaller than 1
+     *
      * @since 1
      */
     public Window(int width, int height, Feature... features) {
@@ -117,15 +201,23 @@ public class Window extends Canvas {
     }
 
     /**
-     * Creates a new window that has a drawing with the specified size in pixels.
-     * On the Android platform, the size parameter has no effect.
-     * The specified window features are activated.
+     * Constructs a window. The window is shown on the screen. All drawing
+     * methods inherited from {@link Canvas} are supported. The specified
+     * features will be enabled for the window.
+     * <p>
+     * The size of the window's drawing area depends on the platform:
+     * <p>
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The
+     * drawing area of the window has the specified <tt>size</tt>.
+     * <p>
+     * <img src="../../../android.png"> The size drawing area depends on the
+     * screen size of the device.
      *
      * @param size the size of the drawing area in pixels
-     * @param features the features of this window
+     * @param features the features of the window
+     * @throws IllegalArgumentException if width or height are smaller than 1
      *
-     * @throws IllegalArgumentException if size.width or size.height are
-     *         smaller than 1.
      * @since 1
      */
     public Window(Size size, Feature... features) {
@@ -133,7 +225,8 @@ public class Window extends Canvas {
     }
 
     /**
-     * Closes this window and destroys the window object.
+     * Closes the window. The window becomes invalid, all subsequent method
+     * calls to the window will cause an error.
      *
      * @since 1
      */
@@ -142,8 +235,8 @@ public class Window extends Canvas {
     }
 
     /**
-     * Detects input devices and returns a list of all available devices.
-     * 
+     * Detects input devices. Returns a list of all available devices.
+     *
      * @return list of available input devices
      * @see InputDevice
      */
@@ -157,13 +250,13 @@ public class Window extends Canvas {
     }
 
     /**
-     * Returns an object holding the events that are taking place on this
-     * window. The {@link Events} object returned by this method stays valid as
-     * long as the window is open. The {@link Events} object is updated only by
-     * a call to the {@link #update()} method.
-     * 
-     * @return {@link Events} object representing the events on this window
-     * 
+     * Returns an object holding the events that are taking place on the window.
+     * The {@link Events} object returned by this method stays valid as long as
+     * the window is open. The {@link Events} object is updated only by a call
+     * to the {@link #update()} method.
+     *
+     * @return {@link Events} object representing the events on the window
+     *
      * @since 1
      */
     public Events getEvents() {
@@ -171,10 +264,10 @@ public class Window extends Canvas {
     }
 
     /**
-     * Returns the window's current title.
+     * Returns the current window title.
      *
      * @return current window title
-     * 
+     *
      * @see #setTitle(java.lang.String)
      * @since 1
      */
@@ -183,12 +276,13 @@ public class Window extends Canvas {
     }
 
     /**
-     * Checks whether this window has the specified feature.
+     * Checks for a window feature. Returns <tt>true</tt> if the specified
+     * feature is currently enabled for the window.
      *
-     * @return <code>true</code> if the window has the specified feature, 
-     *         otherwise returns <code>false</code>
-     * @throws NullPointerException if <code>feature</code> is <code>null</code>
-     * 
+     * @return <tt>true</tt> if the feature is enabled, otherwise returns
+     * <tt>false</tt>
+     * @throws NullPointerException if <tt>feature</tt> is <tt>null</tt>
+     *
      * @see #setFeature(ch.jeda.ui.Window.Feature, boolean)
      * @since 1
      */
@@ -201,13 +295,13 @@ public class Window extends Canvas {
     }
 
     /**
-     * Enables or disables the specified feature of this window.
-     * 
+     * Enables or disables a window feature.
+     *
      * @param feature the feature to be enabled or disabled
-     * @param enabled <code>true</code> to enable the feature,
-     *                <code>false</code> to disable it
-     * @throws NullPointerException if <code>feature</code> is <code>null</code>
-     * 
+     * @param enabled <tt>true</tt> to enable the feature,
+     * <tt>false</tt> to disable it
+     * @throws NullPointerException if <tt>feature</tt> is <tt>null</tt>
+     *
      * @see #hasFeature(ch.jeda.ui.Window.Feature)
      * @since 1
      */
@@ -217,7 +311,7 @@ public class Window extends Canvas {
         }
 
         if (IMP_CHANGING_FEATURES.contains(feature)) {
-            EnumSet<Feature> featureSet = EnumSet.copyOf(this.imp.getFeatures());
+            final EnumSet<Feature> featureSet = EnumSet.copyOf(this.imp.getFeatures());
             if (enabled) {
                 featureSet.add(feature);
             }
@@ -233,7 +327,8 @@ public class Window extends Canvas {
     }
 
     /**
-     * @deprecated use #setFeature(Feature.Fullscreen, fullscreen) instead
+     * @deprecated use #setFeature(Window.Feature.Fullscreen, fullscreen)
+     * instead
      */
     @Deprecated
     public void setFullscreen(boolean fullscreen) {
@@ -242,11 +337,12 @@ public class Window extends Canvas {
 
     /**
      * Sets the shape of the mouse cursor.
-     * 
+     *
      * @param mouseCursor new shape of mouse cursor
-     * @throws NullPointerException if <code>mouseCursor</code> is 
-     *         <code>null</code>
-     * 
+     * @throws NullPointerException if <tt>mouseCursor</tt> is
+     * <tt>null</tt>
+     *
+     * @see MouseCursor
      * @since 1
      */
     public void setMouseCursor(MouseCursor mouseCursor) {
@@ -258,11 +354,11 @@ public class Window extends Canvas {
     }
 
     /**
-     * Sets the window's title.
+     * Sets the window title.
      *
      * @param title new title of the window
-     * @throws NullPointerException if <code>title</code> is <code>null</code>
-     * 
+     * @throws NullPointerException if <tt>title</tt> is <tt>null</tt>
+     *
      * @see #getTitle()
      * @since 1
      */
@@ -276,9 +372,9 @@ public class Window extends Canvas {
     }
 
     /**
-     * Updates this window. Updates the {@link Events} of this window. When
-     * this window has the feature {@link Feature#DoubleBuffered} activiated,
-     * also flips foreground and background buffer.
+     * Updates the window. Updates the {@link Events} of the window. If the
+     * window has the feature {@link Feature#DoubleBuffered} activiated, also
+     * flips foreground and background buffer.
      *
      * @since 1
      */
@@ -318,14 +414,14 @@ public class Window extends Canvas {
     }
 
     private static EnumSet<Feature> initImpChangingFeatures() {
-        EnumSet<Feature> result = EnumSet.noneOf(Feature.class);
+        final EnumSet<Feature> result = EnumSet.noneOf(Feature.class);
         result.add(Feature.DoubleBuffered);
         result.add(Feature.Fullscreen);
         return result;
     }
 
     private static EnumSet<Feature> toSet(Feature... features) {
-        EnumSet<Feature> result = EnumSet.noneOf(Feature.class);
+        final EnumSet<Feature> result = EnumSet.noneOf(Feature.class);
         for (Feature feature : features) {
             result.add(feature);
         }

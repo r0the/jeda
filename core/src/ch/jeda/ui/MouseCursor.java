@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,9 +19,10 @@ package ch.jeda.ui;
 import java.io.Serializable;
 
 /**
- * Represents a mouse cursor (the small picture that indicates the location of
- * the mouse on the screen). Mouse cursors can be changed using the
- * {@link Window#setMouseCursor(ch.jeda.ui.MouseCursor)} method.
+ * Represents a mouse cursor. The mouse cursor is the small picture that
+ * indicates the location of the mouse on the screen). Mouse cursors can be
+ * changed using the {@link Window#setMouseCursor(ch.jeda.ui.MouseCursor)}
+ * method.
  *
  * @see Window
  * @since 1
