@@ -63,6 +63,12 @@ public class AndroidProjectWrapper extends ProjectWrapper {
     protected void doCleanup() throws Exception {
         this.deleteFile(ANDROID_MANIFEST_XML);
         this.deleteFile(BUILD_XML);
+        this.deleteFile("bin");
+        this.deleteFile("gen");
+        this.deleteFile("libs/jedandroid.jar");
+        this.deleteFile("local.properties");
+        this.deleteFile("nbandroid");
+        this.deleteFile("project.properties");
         this.rename(this.getName().replace(ANDROID_SUFFIX, ""));
     }
 
@@ -79,11 +85,8 @@ public class AndroidProjectWrapper extends ProjectWrapper {
 
     @Override
     protected void doInit() throws Exception {
-
-
         this.replaceFile(ANDROID_MANIFEST_XML, RES_ANDROID_MANIFEST_XML);
         this.addFile(BUILD_XML, RES_BUILD_XML, new TextFileFilter() {
-
             @Override
             protected String filterLine(String line) {
                 return line.replace("${ProjectName}", this.getProjectWrapper().getName());

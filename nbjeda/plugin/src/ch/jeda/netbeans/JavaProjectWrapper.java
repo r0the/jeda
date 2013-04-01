@@ -64,6 +64,8 @@ public class JavaProjectWrapper extends ProjectWrapper {
     protected void doCleanup() throws Exception {
         this.deleteFile(NB_PROJECT);
         this.deleteFile(BUILD_XML);
+        this.deleteFile("build");
+        this.deleteFile("dist");
     }
 
     @Override
