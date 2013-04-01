@@ -5,5 +5,8 @@
 
     <target name="-post-jar" depends="javadoc">
         <copy file="${dist.jar}" todir="../jedandroid/libs/"/>
+        <copy todir="dist/javadoc">
+            <fileset dir="../artwork/javadoc-icons"/>
+        </copy>
     </target>
 </project>
