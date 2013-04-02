@@ -27,6 +27,7 @@ import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.Window;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -185,7 +186,13 @@ public final class Engine {
             }
         }
         else {
-            return new FileInputStream(filePath);
+            try {
+                return new FileInputStream(filePath);
+            }
+            catch (FileNotFoundException ex) {
+                Log.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
+                return null;
+            }
         }
     }
 
