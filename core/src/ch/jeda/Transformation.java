@@ -52,42 +52,42 @@ public final class Transformation implements Serializable {
      *
      * @since 1
      */
-    public final double scaleX;
+    public final float scaleX;
     /**
      * The skew factor along the x-axis. This value corresponds to the element
      * m01 of the transformation matrix.
      *
      * @since 1
      */
-    public final double skewX;
+    public final float skewX;
     /**
      * The translation along the x-axis. This value corresponds to the element
      * m02 of the transformation matrix.
      *
      * @since 1
      */
-    public final double translateX;
+    public final float translateX;
     /**
      * The skew factor along the y-axis. This value corresponds to the element
      * m10 of the transformation matrix.
      *
      * @since 1
      */
-    public final double skewY;
+    public final float skewY;
     /**
      * The scale factor along the y-axis. This value corresponds to the element
      * m11 of the transformation matrix.
      *
      * @since 1
      */
-    public final double scaleY;
+    public final float scaleY;
     /**
      * The translation along the y-axis. This value corresponds to the element
      * m12 of the transformation matrix.
      *
      * @since 1
      */
-    public final double translateY;
+    public final float translateY;
 
     /**
      * Creates a new rotation transformation. The returned transformation
@@ -106,10 +106,10 @@ public final class Transformation implements Serializable {
      * @since 1
      */
     public static Transformation rotate(double angle) {
-        final double sin = Math.sin(angle);
-        final double cos = Math.cos(angle);
+        final float sin = (float) Math.sin(angle);
+        final float cos = (float) Math.cos(angle);
 
-        return new Transformation(cos, -sin, 0.0, sin, cos, 0.0);
+        return new Transformation(cos, -sin, 0f, sin, cos, 0f);
     }
 
     /**
@@ -123,7 +123,7 @@ public final class Transformation implements Serializable {
      * @since 1
      */
     public static Transformation scale(double sx, double sy) {
-        return new Transformation(sx, 0.0, 0.0, 0.0, sy, 0.0);
+        return new Transformation((float) sx, 0f, 0f, 0f, (float) sy, 0f);
     }
 
     /**
@@ -136,7 +136,7 @@ public final class Transformation implements Serializable {
      * @since 1
      */
     public static Transformation translate(Vector t) {
-        return new Transformation(1.0, 0.0, t.x, 0.0, 1.0, t.y);
+        return new Transformation(1f, 0f, (float) t.x, 0f, 1f, (float) t.y);
     }
 
     /**
@@ -151,7 +151,7 @@ public final class Transformation implements Serializable {
      * @since 1
      */
     public static Transformation translate(double tx, double ty) {
-        return new Transformation(1.0, 0.0, tx, 0.0, 1.0, ty);
+        return new Transformation(1f, 0f, (float) tx, 0f, 1f, (float) ty);
     }
 
     /**
@@ -196,7 +196,7 @@ public final class Transformation implements Serializable {
      * @since 1
      */
     public Transformation inverted() {
-        final double d = this.scaleX * this.scaleY - this.skewX * this.skewY;
+        final float d = this.scaleX * this.scaleY - this.skewX * this.skewY;
 
         if (Math.abs(d) <= Double.MIN_VALUE) {
             throw new IllegalStateException("Transformation is not invertible.");
@@ -222,8 +222,8 @@ public final class Transformation implements Serializable {
      * @since 1
      */
     public Transformation rotatedBy(double angle) {
-        final double sin = Math.sin(angle);
-        final double cos = Math.cos(angle);
+        final float sin = (float) Math.sin(angle);
+        final float cos = (float) Math.cos(angle);
 
         return new Transformation(
                 cos * this.scaleX + sin * this.skewX,
@@ -249,8 +249,8 @@ public final class Transformation implements Serializable {
      */
     public Transformation scaledBy(double sx, double sy) {
         return new Transformation(
-                this.scaleX * sx, this.skewX, this.translateX,
-                this.skewY, this.scaleY * sy, this.translateY);
+                this.scaleX * (float) sx, this.skewX, this.translateX,
+                this.skewY, this.scaleY * (float) sy, this.translateY);
     }
 
     /**
@@ -298,16 +298,35 @@ public final class Transformation implements Serializable {
         }
 
         return new Transformation(
-                this.scaleX, this.skewX, this.translateX + t.x,
-                this.skewY, this.scaleY, this.translateY + t.y);
+                this.scaleX, this.skewX, this.translateX + (float) t.x,
+                this.skewY, this.scaleY, this.translateY + (float) t.y);
+    }
+
+    /**
+     * Adds a translation to the transformation. Calculates and returns a new
+     * transformation that results from adding a translation after this
+     * transformation.
+     * <p>
+     * Same as <tt>combinedWidth(Translation.translate(tx, ty)</tt>
+     *
+     * @param tx the translation in direction of the x-axis
+     * @param ty the translation in direction of the y-axis
+     * @return the combined new transformation
+     *
+     * @since 1
+     */
+    public Transformation translatedBy(double tx, double ty) {
+        return new Transformation(
+                this.scaleX, this.skewX, this.translateX + (float) tx,
+                this.skewY, this.scaleY, this.translateY + (float) ty);
     }
 
     private Transformation() {
-        this(1.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        this(1f, 0f, 0f, 0f, 1f, 0f);
     }
 
-    private Transformation(double scaleX, double skewX, double translateX,
-                           double skewY, double scaleY, double translateY) {
+    private Transformation(float scaleX, float skewX, float translateX,
+                           float skewY, float scaleY, float translateY) {
         this.scaleX = scaleX;
         this.skewX = skewX;
         this.translateX = translateX;

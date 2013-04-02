@@ -43,6 +43,9 @@ import java.util.Stack;
  * <li> <b>alpha</b>: The opaqueness of drawing operations. Initially, the alpha
  * value is set to 255 (fully opaque). The value can be changed with
  * {@link #setAlpha(int)}.
+ * <lI> <b>transformation</b>: The canvas has an affine transformation that is
+ * applied to all drawing operations. The default transformation is the identity
+ * ({@link ch.jeda.Transformation#IDENTITY});
  * </ul>
  * <strong>Example:</strong>
  * <pre><code> Canvas canvas = new Canvas(100, 100);
@@ -126,7 +129,7 @@ public class Canvas {
             throw new NullPointerException("canvas");
         }
 
-        this.imp.copyFrom(Location.ORIGIN, canvas.imp);
+        this.imp.copyFrom(0, 0, canvas.imp);
     }
 
     /**
@@ -141,7 +144,7 @@ public class Canvas {
      */
     public void drawCircle(int x, int y, int radius) {
         if (radius > 0) {
-            this.imp.drawCircle(new Location(x, y), radius);
+            this.imp.drawCircle(x, y, radius);
         }
     }
 
@@ -161,7 +164,7 @@ public class Canvas {
         }
 
         if (radius > 0) {
-            this.imp.drawCircle(center, radius);
+            this.imp.drawCircle(center.x, center.y, radius);
         }
     }
 
@@ -178,7 +181,7 @@ public class Canvas {
      */
     public void drawImage(int x, int y, Image image) {
         if (image != null) {
-            this.imp.drawImage(new Location(x, y), image.getImp());
+            this.imp.drawImage(x, y, image.getImp());
         }
     }
 
@@ -199,7 +202,7 @@ public class Canvas {
         }
 
         if (image != null) {
-            this.imp.drawImage(topLeft, image.getImp());
+            this.imp.drawImage(topLeft.x, topLeft.y, image.getImp());
         }
     }
 
@@ -223,7 +226,11 @@ public class Canvas {
         }
 
         if (image != null) {
-            this.imp.drawImage(alignment.align(new Location(x, y), image.getSize()), image.getImp());
+            final Size size = image.getSize();
+            this.imp.drawImage(
+                    alignment.alignX(x, size.width),
+                    alignment.alignY(y, size.height),
+                    image.getImp());
         }
     }
 
@@ -251,7 +258,11 @@ public class Canvas {
         }
 
         if (image != null) {
-            this.imp.drawImage(alignment.align(anchor, image.getSize()), image.getImp());
+            final Size size = image.getSize();
+            this.imp.drawImage(
+                    alignment.alignX(anchor.x, size.width),
+                    alignment.alignY(anchor.y, size.height),
+                    image.getImp());
         }
     }
 
@@ -268,7 +279,7 @@ public class Canvas {
      * @since 1
      */
     public void drawLine(int x1, int y1, int x2, int y2) {
-        this.imp.drawLine(new Location(x1, y1), new Location(x2, y2));
+        this.imp.drawLine(x1, y1, x2, y2);
     }
 
     /**
@@ -292,7 +303,7 @@ public class Canvas {
             throw new NullPointerException("to");
         }
 
-        this.imp.drawLine(from, to);
+        this.imp.drawLine(from.x, from.y, to.x, to.y);
     }
 
     /**
@@ -310,7 +321,7 @@ public class Canvas {
      */
     public void drawRectangle(int x, int y, int width, int height) {
         if (width > 0 && height > 0) {
-            this.imp.drawRectangle(new Location(x, y), new Size(width, height));
+            this.imp.drawRectangle(x, y, width, height);
         }
     }
 
@@ -337,7 +348,7 @@ public class Canvas {
         }
 
         if (!size.isEmpty()) {
-            this.imp.drawRectangle(topLeft, size);
+            this.imp.drawRectangle(topLeft.x, topLeft.y, size.width, size.height);
         }
     }
 
@@ -363,8 +374,9 @@ public class Canvas {
         }
 
         if (width > 0 && height > 0) {
-            final Size size = new Size(width, height);
-            this.imp.drawRectangle(alignment.align(new Location(x, y), size), size);
+            this.imp.drawRectangle(alignment.alignX(x, width),
+                                   alignment.alignY(y, height),
+                                   width, height);
         }
     }
 
@@ -397,7 +409,9 @@ public class Canvas {
         }
 
         if (!size.isEmpty()) {
-            this.imp.drawRectangle(alignment.align(anchor, size), size);
+            this.imp.drawRectangle(alignment.alignX(anchor.x, size.width),
+                                   alignment.alignY(anchor.y, size.height),
+                                   size.width, size.height);
         }
     }
 
@@ -406,7 +420,7 @@ public class Canvas {
      */
     @Deprecated
     public void drawString(int x, int y, String text) {
-        this.drawString(new Location(x, y), text, Alignment.TOP_LEFT);
+        this.drawText(new Location(x, y), text, Alignment.TOP_LEFT);
     }
 
     /**
@@ -415,7 +429,7 @@ public class Canvas {
      */
     @Deprecated
     public void drawString(Location topLeft, String text) {
-        this.drawString(topLeft, text, Alignment.TOP_LEFT);
+        this.drawText(topLeft, text, Alignment.TOP_LEFT);
     }
 
     /**
@@ -425,7 +439,7 @@ public class Canvas {
      */
     @Deprecated
     public final void drawString(int x, int y, String text, Alignment alignment) {
-        this.drawString(new Location(x, y), text, alignment);
+        this.drawText(new Location(x, y), text, alignment);
     }
 
     /**
@@ -435,19 +449,7 @@ public class Canvas {
      */
     @Deprecated
     public void drawString(Location anchor, String text, Alignment alignment) {
-        if (anchor == null) {
-            throw new NullPointerException("anchor");
-        }
-
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (text == null || text.length() == 0) {
-            return;
-        }
-
-        this.imp.drawText(alignment.align(anchor, this.imp.textSize(text)), text);
+        this.drawText(anchor, text, alignment);
     }
 
     /**
@@ -464,7 +466,7 @@ public class Canvas {
      */
     public void drawText(int x, int y, String text) {
         if (text != null && !text.isEmpty()) {
-            this.imp.drawText(new Location(x, y), text);
+            this.imp.drawText(x, y, text);
         }
     }
 
@@ -486,7 +488,7 @@ public class Canvas {
         }
 
         if (text != null && !text.isEmpty()) {
-            this.imp.drawText(topLeft, text);
+            this.imp.drawText(topLeft.x, topLeft.y, text);
         }
     }
 
@@ -511,7 +513,10 @@ public class Canvas {
         }
 
         if (text != null && !text.isEmpty()) {
-            this.imp.drawText(alignment.align(new Location(x, y), this.imp.textSize(text)), text);
+            final Size size = this.imp.textSize(text);
+            this.imp.drawText(alignment.alignX(x, size.width),
+                              alignment.alignY(y, size.height),
+                              text);
         }
     }
 
@@ -540,7 +545,10 @@ public class Canvas {
         }
 
         if (text != null && !text.isEmpty()) {
-            this.imp.drawText(alignment.align(anchor, this.imp.textSize(text)), text);
+            final Size size = this.imp.textSize(text);
+            this.imp.drawText(alignment.alignX(anchor.x, size.width),
+                              alignment.alignY(anchor.y, size.height),
+                              text);
         }
     }
 
@@ -585,7 +593,7 @@ public class Canvas {
      */
     public void fillCircle(int x, int y, int radius) {
         if (radius > 0) {
-            this.imp.fillCircle(new Location(x, y), radius);
+            this.imp.fillCircle(x, y, radius);
         }
     }
 
@@ -605,7 +613,7 @@ public class Canvas {
         }
 
         if (radius > 0) {
-            this.imp.fillCircle(center, radius);
+            this.imp.fillCircle(center.x, center.y, radius);
         }
     }
 
@@ -624,7 +632,7 @@ public class Canvas {
      */
     public void fillRectangle(int x, int y, int width, int height) {
         if (width > 0 && height > 0) {
-            this.imp.fillRectangle(new Location(x, y), new Size(width, height));
+            this.imp.fillRectangle(x, y, width, height);
         }
     }
 
@@ -650,7 +658,7 @@ public class Canvas {
         }
 
         if (!size.isEmpty()) {
-            this.imp.fillRectangle(topLeft, size);
+            this.imp.fillRectangle(topLeft.x, topLeft.y, size.width, size.height);
         }
     }
 
@@ -677,8 +685,9 @@ public class Canvas {
         }
 
         if (width > 0 && height > 0) {
-            final Size size = new Size(width, height);
-            this.imp.fillRectangle(alignment.align(new Location(x, y), size), size);
+            this.imp.fillRectangle(alignment.alignX(x, width),
+                                   alignment.alignY(y, height),
+                                   width, height);
         }
     }
 
@@ -711,7 +720,9 @@ public class Canvas {
         }
 
         if (!size.isEmpty()) {
-            this.imp.fillRectangle(alignment.align(anchor, size), size);
+            this.imp.fillRectangle(alignment.alignX(anchor.x, size.width),
+                                   alignment.alignY(anchor.y, size.height),
+                                   size.width, size.height);
         }
     }
 
@@ -843,7 +854,12 @@ public class Canvas {
      * @since 1
      */
     public Color getPixelAt(int x, int y) {
-        return this.getPixelAt(new Location(x, y));
+        if (this.getSize().contains(x, y)) {
+            return this.imp.getPixelAt(x, y);
+        }
+        else {
+            return Color.NONE;
+        }
     }
 
     /**
@@ -864,7 +880,7 @@ public class Canvas {
         }
 
         if (this.getSize().contains(location)) {
-            return this.imp.getPixelAt(location);
+            return this.imp.getPixelAt(location.x, location.y);
         }
         else {
             return Color.NONE;
@@ -911,17 +927,10 @@ public class Canvas {
     }
 
     /**
-     * Pops a transformation from the stack. Pops the top transformation from
-     * the transformation stack and sets it as current transformation for the
-     * canvas. All subsequent drawing operations will be affected by the current
-     * transformation.
-     *
-     * @throws IllegalStateException if the transformation stack is empty
-     *
-     * @see #getTransformation()
-     * @see #pushTransformation(ch.jeda.Transformation)
-     * @since 1
+     * @deprecated Use {@link #getTransformation()} to retrieve and store the
+     * current transformation.
      */
+    @Deprecated
     public void popTransformation() {
         if (this.transformationStack.isEmpty()) {
             throw new IllegalStateException("Empty transformation stack.");
@@ -932,18 +941,10 @@ public class Canvas {
     }
 
     /**
-     * Sets a transformation for the canvas. Pushes the current transformation
-     * to the transformation stack and installs the specified transformation as
-     * current transformation for the canvas. All subsequent drawing operations
-     * will be affected by the current transformation.
-     *
-     * @param transformation the additional transformation
-     * @throws NullPointerException if <tt>transformation</tt> is <tt>null</tt>
-     *
-     * @see #getTransformation()
-     * @see #popTransformation()
-     * @since 1
+     * @deprecated Use {@link #setTransformation(ch.jeda.Transformation)}
+     * instead.
      */
+    @Deprecated
     public void pushTransformation(Transformation transformation) {
         if (transformation == null) {
             throw new NullPointerException("transformation");
@@ -961,7 +962,7 @@ public class Canvas {
      * operations. The alpha value must be in the range from 0 (fully
      * transparent) to 255 (fully opaque).
      *
-     * @param alpha new alpha value
+     * @param alpha the new alpha value
      * @throws IllegalArgumentException if alpha value is outside the valid
      * range
      *
@@ -973,8 +974,10 @@ public class Canvas {
             throw new IllegalArgumentException("alpha");
         }
 
-        this.alpha = alpha;
-        this.imp.setAlpha(this.alpha);
+        if (this.alpha != alpha) {
+            this.alpha = alpha;
+            this.imp.setAlpha(this.alpha);
+        }
     }
 
     /**
@@ -992,15 +995,17 @@ public class Canvas {
             throw new NullPointerException("color");
         }
 
-        this.color = color;
-        this.imp.setColor(this.color);
+        if (!this.color.equals(color)) {
+            this.color = color;
+            this.imp.setColor(this.color);
+        }
     }
 
     /**
      * Sets the font size. The font size set by this method is applied to all
      * subsequent <tt>drawText(...)</tt> operations.
      *
-     * @param size new font size
+     * @param size the new font size
      * @throws IllegalArgumentException if <tt>size</tt> is not positive
      *
      * @see #getFontSize()
@@ -1012,15 +1017,17 @@ public class Canvas {
             throw new IllegalArgumentException("size");
         }
 
-        this.fontSize = size;
-        this.imp.setFontSize(this.fontSize);
+        if (this.fontSize != size) {
+            this.fontSize = size;
+            this.imp.setFontSize(this.fontSize);
+        }
     }
 
     /**
      * Sets the line width. The line width set by this method is applied to all
      * subsequent <tt>draw...</tt> operations.
      *
-     * @param width new line width
+     * @param width the new line width
      *
      * @throws IllegalArgumentException if <tt>lineWidth</tt> is not positive
      *
@@ -1049,7 +1056,13 @@ public class Canvas {
      * @since 1
      */
     public void setPixelAt(int x, int y, Color color) {
-        this.setPixelAt(new Location(x, y), color);
+        if (color == null) {
+            throw new NullPointerException("color");
+        }
+
+        if (this.getSize().contains(x, y)) {
+            this.imp.setPixelAt(x, y, color);
+        }
     }
 
     /**
@@ -1075,8 +1088,27 @@ public class Canvas {
         }
 
         if (this.getSize().contains(location)) {
-            this.imp.setPixelAt(location, color);
+            this.imp.setPixelAt(location.x, location.y, color);
         }
+    }
+
+    /**
+     * Sets the affine transformation. The transformation set by this method is
+     * applied to all subsequent drawing operations.
+     *
+     * @param transformation the new transformation
+     * @throws NullPointerException if <tt>transformation</tt> is <tt>null</tt>
+     *
+     * @see #getTransformation()
+     * @since 1
+     */
+    public void setTransformation(Transformation transformation) {
+        if (transformation == null) {
+            throw new NullPointerException("transformation");
+        }
+
+        this.transformation = transformation;
+        this.imp.setTransformation(this.transformation);
     }
 
     /**

@@ -96,10 +96,12 @@ public final class Alignment implements Serializable {
     private final Align horizontal;
     private final Align vertical;
 
-    Location align(Location anchor, Size size) {
-        return new Location(
-                this.horizontal.align(anchor.x, size.width),
-                this.vertical.align(anchor.y, size.height));
+    int alignX(int x, int width) {
+        return this.horizontal.align(x, width);
+    }
+
+    int alignY(int y, int height) {
+        return this.vertical.align(y, height);
     }
 
     private Alignment(Align horizontal, Align vertical) {

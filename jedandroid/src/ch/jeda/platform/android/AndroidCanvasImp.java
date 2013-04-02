@@ -33,6 +33,8 @@ import ch.jeda.ui.Color;
 class AndroidCanvasImp implements CanvasImp {
 
     private final Paint fillPaint;
+    private final Matrix matrix;
+    private final float[] matrixArray;
     private final Paint pixelPaint;
     private final Paint strokePaint;
     private final Paint textPaint;
@@ -46,41 +48,35 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void copyFrom(Location topLeft, CanvasImp source) {
-        assert topLeft != null;
+    public void copyFrom(int x, int y, CanvasImp source) {
         assert source != null;
         assert source instanceof AndroidCanvasImp;
 
         this.canvas.drawBitmap(((AndroidCanvasImp) source).bitmap,
-                               topLeft.x, topLeft.y, this.fillPaint);
+                               x, y, this.fillPaint);
     }
 
     @Override
-    public void drawCircle(Location center, int radius) {
-        assert center != null;
+    public void drawCircle(int x, int y, int radius) {
         assert radius > 0;
 
-        this.canvas.drawCircle(center.x, center.y, radius, this.strokePaint);
+        this.canvas.drawCircle(x, y, radius, this.strokePaint);
         this.modified();
     }
 
     @Override
-    public void drawImage(Location topLeft, ImageImp image) {
-        assert topLeft != null;
+    public void drawImage(int x, int y, ImageImp image) {
         assert image != null;
         assert image instanceof AndroidImageImp;
 
         this.canvas.drawBitmap(((AndroidImageImp) image).getBitmap(),
-                               topLeft.x, topLeft.y, this.fillPaint);
+                               x, y, this.fillPaint);
         this.modified();
     }
 
     @Override
-    public void drawLine(Location start, Location end) {
-        assert start != null;
-        assert end != null;
-
-        this.canvas.drawLine(start.x, start.y, end.x, end.y, this.strokePaint);
+    public void drawLine(int x1, int y1, int x2, int y2) {
+        this.canvas.drawLine(x1, y1, x2, y2, this.strokePaint);
         this.modified();
     }
 
@@ -93,23 +89,16 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawRectangle(Location topLeft, Size size) {
-        assert topLeft != null;
-        assert size != null;
-
-        int right = topLeft.x + size.width;
-        int bottom = topLeft.y + size.height;
-        this.canvas.drawRect(topLeft.x, topLeft.y, right, bottom, this.strokePaint);
+    public void drawRectangle(int x, int y, int width, int height) {
+        this.canvas.drawRect(x, y, x + width, y + height, this.strokePaint);
         this.modified();
     }
 
     @Override
-    public void drawText(Location topLeft, String text) {
-        assert topLeft != null;
+    public void drawText(int x, int y, String text) {
         assert text != null;
 
-        this.canvas.drawText(text, topLeft.x,
-                             topLeft.y - (int) this.textPaint.ascent(),
+        this.canvas.drawText(text, x, y - (int) this.textPaint.ascent(),
                              this.textPaint);
         this.modified();
     }
@@ -121,11 +110,10 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillCircle(Location center, int radius) {
-        assert center != null;
+    public void fillCircle(int x, int y, int radius) {
         assert radius > 0;
 
-        this.canvas.drawCircle(center.x, center.y, radius, this.fillPaint);
+        this.canvas.drawCircle(x, y, radius, this.fillPaint);
         this.modified();
     }
 
@@ -138,13 +126,8 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillRectangle(Location topLeft, Size size) {
-        assert topLeft != null;
-        assert size != null;
-
-        int right = topLeft.x + size.width;
-        int bottom = topLeft.y + size.height;
-        this.canvas.drawRect(topLeft.x, topLeft.y, right, bottom, this.fillPaint);
+    public void fillRectangle(int left, int top, int width, int height) {
+        this.canvas.drawRect(left, top, left + width, top + height, this.fillPaint);
         this.modified();
     }
 
@@ -154,11 +137,10 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public Color getPixelAt(Location location) {
-        assert location != null;
-        assert this.size.contains(location);
+    public Color getPixelAt(int x, int y) {
+        assert this.size.contains(x, y);
 
-        return new Color(this.bitmap.getPixel(location.x, location.y));
+        return new Color(this.bitmap.getPixel(x, y));
     }
 
     @Override
@@ -190,30 +172,24 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setPixelAt(Location location, Color color) {
-        assert location != null;
-        assert this.size.contains(location);
+    public void setPixelAt(int x, int y, Color color) {
+        assert this.size.contains(x, y);
         assert color != null;
 
         this.pixelPaint.setColor(color.value);
-        this.canvas.drawPoint(location.x, location.y, this.pixelPaint);
+        this.canvas.drawPoint(x, y, this.pixelPaint);
     }
 
     @Override
     public void setTransformation(Transformation transformation) {
-        float[] array = new float[9];
-        array[Matrix.MSCALE_X] = (float) transformation.scaleX;
-        array[Matrix.MSCALE_Y] = (float) transformation.scaleY;
-        array[Matrix.MSKEW_X] = (float) transformation.skewX;
-        array[Matrix.MSKEW_Y] = (float) transformation.skewY;
-        array[Matrix.MTRANS_X] = (float) transformation.translateX;
-        array[Matrix.MTRANS_Y] = (float) transformation.translateY;
-        array[Matrix.MPERSP_0] = 0f;
-        array[Matrix.MPERSP_1] = 0f;
-        array[Matrix.MPERSP_2] = 1f;
-        Matrix matrix = new Matrix();
-        matrix.setValues(array);
-        this.canvas.setMatrix(matrix);
+        this.matrixArray[Matrix.MSCALE_X] = transformation.scaleX;
+        this.matrixArray[Matrix.MSCALE_Y] = transformation.scaleY;
+        this.matrixArray[Matrix.MSKEW_X] = transformation.skewX;
+        this.matrixArray[Matrix.MSKEW_Y] = transformation.skewY;
+        this.matrixArray[Matrix.MTRANS_X] = transformation.translateX;
+        this.matrixArray[Matrix.MTRANS_Y] = transformation.translateY;
+        this.matrix.setValues(this.matrixArray);
+        this.canvas.setMatrix(this.matrix);
     }
 
     @Override
@@ -232,6 +208,11 @@ class AndroidCanvasImp implements CanvasImp {
         this.fillPaint = new Paint();
         this.fillPaint.setStyle(Paint.Style.FILL);
         this.fillPaint.setAntiAlias(true);
+        this.matrix = new Matrix();
+        this.matrixArray = new float[9];
+        this.matrixArray[Matrix.MPERSP_0] = 0f;
+        this.matrixArray[Matrix.MPERSP_1] = 0f;
+        this.matrixArray[Matrix.MPERSP_2] = 1f;
         this.pixelPaint = new Paint();
         this.strokePaint = new Paint();
         this.strokePaint.setStyle(Paint.Style.STROKE);

@@ -60,41 +60,35 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void copyFrom(Location topLeft, CanvasImp source) {
-        assert topLeft != null;
+    public void copyFrom(int x, int y, CanvasImp source) {
         assert source != null;
         assert source instanceof JavaCanvasImp;
 
-        this.graphics.drawImage(((JavaCanvasImp) source).buffer, topLeft.x, topLeft.y, null);
+        this.graphics.drawImage(((JavaCanvasImp) source).buffer, x, y, null);
     }
 
     @Override
-    public void drawCircle(Location center, int radius) {
-        assert center != null;
+    public void drawCircle(int x, int y, int radius) {
         assert radius > 0;
 
         final int diameter = 2 * radius;
-        this.graphics.drawOval(center.x - radius, center.y - radius, diameter, diameter);
+        this.graphics.drawOval(x - radius, y - radius, diameter, diameter);
         this.modified();
     }
 
     @Override
-    public void drawImage(Location topLeft, ImageImp image) {
-        assert topLeft != null;
+    public void drawImage(int x, int y, ImageImp image) {
         assert image != null;
         assert image instanceof JavaImageImp;
 
         final BufferedImage awtImage = ((JavaImageImp) image).getBufferedImage();
-        this.graphics.drawImage(awtImage, topLeft.x, topLeft.y, null);
+        this.graphics.drawImage(awtImage, x, y, null);
         this.modified();
     }
 
     @Override
-    public void drawLine(Location start, Location end) {
-        assert start != null;
-        assert end != null;
-
-        this.graphics.drawLine(start.x, start.y, end.x, end.y);
+    public void drawLine(int x1, int y1, int x2, int y2) {
+        this.graphics.drawLine(x1, y1, x2, y2);
         this.modified();
     }
 
@@ -107,22 +101,18 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawRectangle(Location topLeft, Size size) {
-        assert topLeft != null;
-        assert size != null;
-
-        this.graphics.drawRect(topLeft.x, topLeft.y, size.width, size.height);
+    public void drawRectangle(int x, int y, int width, int height) {
+        this.graphics.drawRect(x, y, width, height);
         this.modified();
     }
 
     @Override
-    public void drawText(Location topLeft, String text) {
-        assert topLeft != null;
+    public void drawText(int x, int y, String text) {
         assert text != null;
 
         final TextLayout textLayout = this.textLayout(text);
         final Rectangle2D bounds = textLayout.getBounds();
-        textLayout.draw(this.graphics, topLeft.x, topLeft.y - (int) bounds.getMinY());
+        textLayout.draw(this.graphics, x, y - (int) bounds.getMinY());
         this.modified();
     }
 
@@ -133,12 +123,11 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillCircle(Location center, int radius) {
-        assert center != null;
+    public void fillCircle(int x, int y, int radius) {
         assert radius > 0;
 
         final int diameter = 2 * radius;
-        this.graphics.fillOval(center.x - radius, center.y - radius, diameter, diameter);
+        this.graphics.fillOval(x - radius, y - radius, diameter, diameter);
         this.modified();
     }
 
@@ -151,11 +140,8 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillRectangle(Location topLeft, Size size) {
-        assert topLeft != null;
-        assert size != null;
-
-        this.graphics.fillRect(topLeft.x, topLeft.y, size.width, size.height);
+    public void fillRectangle(int x, int y, int width, int height) {
+        this.graphics.fillRect(x, y, width, height);
         this.modified();
     }
 
@@ -165,11 +151,10 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public Color getPixelAt(Location location) {
-        assert location != null;
-        assert this.size.contains(location);
+    public Color getPixelAt(int x, int y) {
+        assert this.size.contains(x, y);
 
-        return new Color(this.buffer.getRGB(location.x, location.y));
+        return new Color(this.buffer.getRGB(x, y));
     }
 
     @Override
@@ -213,19 +198,17 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setPixelAt(Location location, Color color) {
-        assert location != null;
-        assert this.size.contains(location);
+    public void setPixelAt(int x, int y, Color color) {
+        assert this.size.contains(x, y);
         assert color != null;
 
-        this.buffer.setRGB(location.x, location.y, color.value);
+        this.buffer.setRGB(x, y, color.value);
         this.modified();
     }
 
     @Override
     public void setTransformation(Transformation transformation) {
         assert transformation != null;
-
         this.graphics.setTransform(new AffineTransform(
                 transformation.scaleX, transformation.skewY,
                 transformation.skewX, transformation.scaleY,

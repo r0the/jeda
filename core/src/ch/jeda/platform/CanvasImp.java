@@ -25,31 +25,31 @@ public interface CanvasImp {
 
     void clear();
 
-    void copyFrom(Location topLeft, CanvasImp source);
+    void copyFrom(int x, int y, CanvasImp source);
 
-    void drawCircle(Location center, int radius);
+    void drawCircle(int x, int y, int radius);
 
-    void drawImage(Location topLeft, ImageImp image);
+    void drawImage(int x, int y, ImageImp image);
 
-    void drawLine(Location start, Location end);
+    void drawLine(int x1, int y1, int x2, int y2);
 
     void drawPolygon(Iterable<Location> edges);
 
-    void drawRectangle(Location topLeft, Size size);
+    void drawRectangle(int x, int y, int width, int height);
 
-    void drawText(Location topLeft, String text);
+    void drawText(int x, int y, String text);
 
     void fill();
 
-    void fillCircle(Location center, int radius);
+    void fillCircle(int x, int y, int radius);
 
     void fillPolygon(Iterable<Location> edges);
 
-    void fillRectangle(Location topLeft, Size size);
+    void fillRectangle(int x, int y, int width, int height);
 
     public double getLineWidth();
 
-    Color getPixelAt(Location location);
+    Color getPixelAt(int x, int y);
 
     Size getSize();
 
@@ -61,7 +61,7 @@ public interface CanvasImp {
 
     void setLineWidth(double width);
 
-    void setPixelAt(Location location, Color color);
+    void setPixelAt(int x, int y, Color color);
 
     void setTransformation(Transformation transformation);
 

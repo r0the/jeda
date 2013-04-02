@@ -150,6 +150,10 @@ public final class Size implements Serializable {
                0 <= location.y && location.y < this.height;
     }
 
+    public boolean contains(int x, int y) {
+        return 0 <= x && x < this.width && 0 <= y && y < this.height;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object instanceof Size) {
