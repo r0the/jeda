@@ -148,7 +148,7 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window() {
-        this(new Size(), NO_FEATURES);
+        this(Size.EMPTY, NO_FEATURES);
     }
 
     /**
@@ -171,7 +171,7 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window(Feature... features) {
-        this(new Size(), toSet(features));
+        this(Size.EMPTY, toSet(features));
     }
 
     /**

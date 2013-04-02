@@ -1102,7 +1102,7 @@ public class Canvas {
      */
     public Size textSize(String text) {
         if (text == null || text.isEmpty()) {
-            return new Size();
+            return Size.EMPTY;
         }
         else {
             return this.imp.textSize(text);

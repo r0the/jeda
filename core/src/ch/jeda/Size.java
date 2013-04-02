@@ -18,39 +18,92 @@ package ch.jeda;
 
 import java.io.Serializable;
 
+/**
+ * Represents a two-dimensional size. <tt>Size</tt> objects can for example be
+ * used to specify the size of a rectangle to be drawn on a
+ * {@link ch.jeda.ui.Canvas}. <tt>Size</tt> objects are returned by some methods
+ * to inform about the size of an object (for example
+ * {@link ch.jeda.ui.Image#getSize()}.
+ * <p>
+ * A size has a width and a height which cannot be negative. A size with both a
+ * width and a height of zero is called empty.
+ * <p>
+ * <tt>Size</tt> objects are immutable. That means that their value cannot be
+ * changed.
+ *
+ * @since 1
+ */
 public final class Size implements Serializable {
 
+    private static final char SEPARATOR = 'x';
     /**
-     * The width of this size.
-     * 
+     * The empty size. This size has both a width and a height of zero.
+     */
+    public static final Size EMPTY = new Size();
+    /**
+     * The width of the size.
+     *
      * @since 1
      */
     public final int width;
     /**
-     * The height of this size.
-     * 
-     * @since 1
-     */
-    public final int height;
-    private static final char SEPARATOR = 'x';
-
-    /**
-     * Creates a new empty size object. The object has a width and height of 0.
+     * The height of the size.
      *
      * @since 1
      */
+    public final int height;
+
+    /**
+     * Parses a size from a string. The string must consist of two positivie
+     * integers separated by an 'x', e.g. "800x600". Returns <tt>Size.EMPTY</tt>
+     * if <tt>text</tt> does not represent a valid size.
+     *
+     * @param text the string to parse
+     *
+     * @since 1
+     */
+    public static Size parse(String text) {
+        if (text == null) {
+            return Size.EMPTY;
+        }
+
+        final int pos = text.indexOf(SEPARATOR);
+        if (pos == -1) {
+            return Size.EMPTY;
+        }
+
+        try {
+            int width = Integer.parseInt(text.substring(0, pos));
+            int height = Integer.parseInt(text.substring(pos + 1));
+            if (width > 0 && height > 0) {
+                return new Size(width, height);
+            }
+            else {
+                return Size.EMPTY;
+            }
+        }
+        catch (NumberFormatException ex) {
+            return Size.EMPTY;
+        }
+    }
+
+    /**
+     * @deprecated Use {@link Size#EMPTY} instead.
+     */
+    @Deprecated
     public Size() {
         this.width = 0;
         this.height = 0;
     }
 
     /**
-     * Creates a new size object with the specified width and height.
+     * Constructs a size. The size has the specified width and height. The
+     * values of <tt>width</tt> and <tt>height</tt> may not be negative.
      *
      * @param width the width
      * @param height the height
      * @throws IllegalArgumentException if width or height are smaller than 0
-     * 
+     *
      * @since 1
      */
     public Size(int width, int height) {
@@ -67,45 +120,11 @@ public final class Size implements Serializable {
     }
 
     /**
-     * Parses a size from a string. The string must contain two positivie
-     * integers separated by an 'x', e.g. "800x600". Returns <code>null</code>
-     * if <code>text</code> does not represent a valid size.
-     * 
-     * @param text the string to parse
-     * @throws NullPointerException if <code>text</code> has the value
-     *         <code>null</code>
-     * 
-     * @since 1
-     */
-    public Size(String text) {
-        if (text == null) {
-            throw new NullPointerException("text");
-        }
-
-        int w = 0;
-        int h = 0;
-        final int pos = text.indexOf(SEPARATOR);
-        if (pos >= 0) {
-            try {
-                w = Integer.parseInt(text.substring(0, pos));
-                h = Integer.parseInt(text.substring(pos + 1));
-            }
-            catch (NumberFormatException ex) {
-                w = 0;
-                h = 0;
-            }
-        }
-
-        this.width = w;
-        this.height = h;
-    }
-
-    /**
-     * Returns the area of a rectangle described by this size. More specific,
-     * returns the product of <code>width</code> and <code>height</code>.
-     * 
-     * @return area
-     * 
+     * Returns the area of a rectangle described by the size. More specific,
+     * returns the product of <tt>width</tt> and <tt>height</tt>.
+     *
+     * @return product of <tt>width</tt> and <tt>height</tt>
+     *
      * @since 1
      */
     public int area() {
@@ -115,11 +134,11 @@ public final class Size implements Serializable {
     /**
      * Checks whether the specified location lies within a rectangle described
      * by this size.
-     * 
+     *
      * @param location the location to check
-     * @return <code>true</code> if location lies within, otherwise
-     *         <code>false</code>
-     * 
+     * @return <tt>true</tt> if location lies within, otherwise <tt>false</tt>
+     * @throws NullPointerException if <tt>location</tt> is <tt>null</tt>
+     *
      * @since 1
      */
     public boolean contains(Location location) {
@@ -148,11 +167,10 @@ public final class Size implements Serializable {
     }
 
     /**
-     * Checks if this size is empty. A size is empty if it's area is zero.
-     * 
-     * @return <code>true</code> if size is empty, otherwise
-     *         <code>false</code>
-     * 
+     * Checks if the size is empty. A size is empty if it's area is zero.
+     *
+     * @return <tt>true</tt> if size is empty, otherwise <tt>false</tt>
+     *
      * @since 1
      */
     public boolean isEmpty() {
@@ -160,13 +178,13 @@ public final class Size implements Serializable {
     }
 
     /**
-     * Returns a scaled variant of this size. Both width and height of this
-     * size are scaled and rounded. If both width and height are positive,
-     * a resulting size is returned. Otherwise, <code>null</code> is returned.
-     * 
+     * Returns a scaled variant of this size. Both width and height of this size
+     * are scaled and rounded. If both width and height are positive, a
+     * resulting size is returned. Otherwise, <tt>null</tt> is returned.
+     *
      * @param factor the factor by which to scale this size.
-     * @return the scaled size or <code>null</code>
-     * 
+     * @return the scaled size or <tt>null</tt>
+     *
      * @since 1
      */
     public Size scaled(double factor) {
@@ -176,11 +194,11 @@ public final class Size implements Serializable {
 
     /**
      * Returns a string representation of this size. The string representation
-     * has the form "WxH" where W is replaced by the width and H by the height
-     * of this size.
-     * 
+     * has the form <tt>"WxH"</tt> where <tt>W</tt> is replaced by the width and
+     * <tt>H</tt> by the height of this size.
+     *
      * @return string representation of this size
-     * 
+     *
      * @since 1
      */
     @Override
@@ -190,5 +208,9 @@ public final class Size implements Serializable {
         result.append('x');
         result.append(this.height);
         return result.toString();
+    }
+
+    public Vector toVector() {
+        return new Vector(this.width, this.height);
     }
 }

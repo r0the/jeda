@@ -93,7 +93,7 @@ public class TileSet {
         int endPos = filePath.lastIndexOf('.');;
         int startPos = endPos;
         if (startPos == -1) {
-            return new Size();
+            return Size.EMPTY;
         }
 
         while (startPos > 0 && TileSet.isDigit(filePath.charAt(startPos - 1))) {
@@ -105,6 +105,6 @@ public class TileSet {
             --startPos;
         }
 
-        return new Size(filePath.substring(startPos, endPos));
+        return Size.parse(filePath.substring(startPos, endPos));
     }
 }
