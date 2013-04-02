@@ -885,10 +885,8 @@ public class Canvas {
     }
 
     /**
-     * Returns the current affine transformation of the canvas.
+     * Returns the current transformation for the canvas.
      *
-     * @see #popTransformation()
-     * @see #pushTransformation(ch.jeda.Transformation)
      * @return the current transformation
      *
      * @see #popTransformation()
@@ -913,12 +911,12 @@ public class Canvas {
     }
 
     /**
-     * Pops a transfromation from the stack and sets it as current affine
-     * transformation of the canvas. All subsequent drawing operations will be
-     * affected by the current affine transformation.
+     * Pops a transformation from the stack. Pops the top transformation from
+     * the transformation stack and sets it as current transformation for the
+     * canvas. All subsequent drawing operations will be affected by the current
+     * transformation.
      *
-     * @throws IllegalStateException if there is no element on the
-     * transformation stack.
+     * @throws IllegalStateException if the transformation stack is empty
      *
      * @see #getTransformation()
      * @see #pushTransformation(ch.jeda.Transformation)
@@ -934,13 +932,13 @@ public class Canvas {
     }
 
     /**
-     * Pushes the current transformation to the transformation stack and sets
-     * the specified transformation as current affine transformation of the
-     * canvas. All subsequent drawing operations will be affected by the current
-     * affine transformation.
+     * Sets a transformation for the canvas. Pushes the current transformation
+     * to the transformation stack and installs the specified transformation as
+     * current transformation for the canvas. All subsequent drawing operations
+     * will be affected by the current transformation.
      *
-     * @param transformation the new transformation
-     * @throws NullPointerException if transformation is <code>null</code>
+     * @param transformation the additional transformation
+     * @throws NullPointerException if <tt>transformation</tt> is <tt>null</tt>
      *
      * @see #getTransformation()
      * @see #popTransformation()
