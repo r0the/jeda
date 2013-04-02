@@ -68,13 +68,8 @@ public class Message {
         put(PROGRAM_RUN_ERROR, "Fehler beim Ausführen von Programm '{0}'.");
         // -- TODO --
         put(NO_TRANSLATION_ERROR, "Es ist keine Übersetzung für '{0}' vorhanden.");
-        put("jeda.file.resource.error", "'{0}' ist kein gültiger Resourcenpfad.");
-        put("jeda.file.file.error", "'{0}' ist kein gültiger Dateipfad.");
         put(CLASS_NOT_FOUND_ERROR, "Kann Klasse '{0}' nicht finden.");
         put(GUI_CLOSE_BUTTON, "Schliessen");
-        put("jeda.gui.programchooser.run", "Programm Starten");
-        put("jeda.gui.programchooser.cancel", "Beenden");
-        put("jeda.gui.programchooser.text", "In diesem Projekt sind mehrere Programme definiert. Wählen Sie das gewünschte aus:");
         put(LIST_RESOURCES_ERROR, "Fehler beim Suchen nach Ressourcen.");
         put("jeda.net.connection.init.error", "Fehler beim Erstellen einer Verbindung.");
         put("jeda.net.server.accept", "Verbindung von {0} akzeptiert.");
