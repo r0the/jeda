@@ -16,32 +16,18 @@
  */
 package ch.jeda.geometry;
 
-import ch.jeda.Location;
 import ch.jeda.Vector;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 
+/**
+ * OK
+ */
 public class Point extends Shape {
 
     private static final int MARKER_RADIUS = 10;
-    private static final Location NORTH = new Location(0, -MARKER_RADIUS);
-    private static final Location SOUTH = new Location(0, MARKER_RADIUS);
-    private static final Location WEST = new Location(-MARKER_RADIUS, 0);
-    private static final Location EAST = new Location(MARKER_RADIUS, 0);
 
     public Point() {
-    }
-
-    @Override
-    public String toString() {
-        final Vector center = origin();
-        final StringBuilder result = new StringBuilder();
-        result.append("Point(x=");
-        result.append(center.x);
-        result.append(", y=");
-        result.append(center.y);
-        result.append(")");
-        return result.toString();
     }
 
     @Override
@@ -54,19 +40,14 @@ public class Point extends Shape {
         final Color outlineColor = this.getOutlineColor();
         if (outlineColor != null) {
             canvas.setColor(outlineColor);
-            canvas.drawLine(NORTH, SOUTH);
-            canvas.drawLine(EAST, WEST);
+            canvas.drawLine(0, -MARKER_RADIUS, 0, MARKER_RADIUS);
+            canvas.drawLine(-MARKER_RADIUS, 0, MARKER_RADIUS, 0);
         }
     }
 
     @Override
     protected Collision doCollideWithCircle(Circle other) {
-        return other.doCollideWithPoint(this).inverted();
-    }
-
-    @Override
-    protected Collision doCollideWithHalfPlane(HalfPlane other) {
-        return other.doCollideWithPoint(this).inverted();
+        return other.doCollideWithPoint(this).invert();
     }
 
     @Override
@@ -81,11 +62,11 @@ public class Point extends Shape {
 
     @Override
     protected Collision doCollideWithRectangle(Rectangle other) {
-        return other.doCollideWithPoint(this).inverted();
+        return other.doCollideWithPoint(this).invert();
     }
 
     @Override
     protected Collision doCollideWithShape(Shape other) {
-        return other.doCollideWithPoint(this).inverted();
+        return other.doCollideWithPoint(this).invert();
     }
 }

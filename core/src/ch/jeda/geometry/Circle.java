@@ -16,70 +16,35 @@
  */
 package ch.jeda.geometry;
 
-import ch.jeda.Location;
 import ch.jeda.Vector;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 
+/**
+ * OK
+ */
 public class Circle extends Shape {
 
-    private final double radius;
+    private final float radius;
 
     public Circle(double radius) {
         if (radius <= 0.0) {
             throw new IllegalArgumentException("radius");
         }
 
-        this.radius = radius;
+        this.radius = (float) radius;
     }
 
-    public double getRadius() {
+    public float getRadius() {
         return this.radius;
     }
 
     @Override
-    public String toString() {
-        final Vector center = this.origin();
-        final StringBuilder result = new StringBuilder();
-        result.append("Circle(x=");
-        result.append(center.x);
-        result.append(", y=");
-        result.append(center.y);
-        result.append(", r=");
-        result.append(this.radius);
-        result.append(")");
-        return result.toString();
-    }
-
-    @Override
-    protected void doDraw(Canvas canvas) {
-        final Color fillColor = this.getFillColor();
-        if (fillColor != null) {
-            canvas.setColor(fillColor);
-            canvas.fillCircle(Location.ORIGIN, (int) this.radius);
-        }
-
-        final Color outlineColor = this.getOutlineColor();
-        if (outlineColor != null) {
-            canvas.setColor(outlineColor);
-            canvas.drawCircle(Location.ORIGIN, (int) this.radius);
-        }
-    }
-
-    @Override
-    protected boolean doesContain(Vector point) {
-        return point.dot(point) < this.radius * this.radius;
-    }
-
-    @Override
     protected Collision doCollideWithCircle(Circle other) {
-        final Vector otherCenter = this.toLocal(other.origin());
+        final Vector otherCenter = new Vector();
+        other.localToWorld(otherCenter);
+        this.worldToLocal(otherCenter);
         return this.intersectCircle(otherCenter, this.radius + other.radius - otherCenter.length());
-    }
-
-    @Override
-    protected Collision doCollideWithHalfPlane(HalfPlane other) {
-        return other.doCollideWithCircle(this).inverted();
     }
 
     @Override
@@ -89,25 +54,49 @@ public class Circle extends Shape {
 
     @Override
     protected Collision doCollideWithPoint(Point other) {
-        final Vector normal = this.toLocal(other.origin());
-        return this.intersectCircle(normal, this.radius - normal.length());
+        final Vector otherLocation = new Vector();
+        other.localToWorld(otherLocation);
+        this.worldToLocal(otherLocation);
+        return this.intersectCircle(otherLocation, this.radius - otherLocation.length());
     }
 
     @Override
     protected Collision doCollideWithRectangle(Rectangle other) {
-        return other.doCollideWithCircle(this).inverted();
+        return other.doCollideWithCircle(this).invert();
     }
 
     @Override
     protected Collision doCollideWithShape(Shape other) {
-        return other.doCollideWithCircle(this).inverted();
+        return other.doCollideWithCircle(this).invert();
+    }
+
+    @Override
+    protected void doDraw(Canvas canvas) {
+        final Color fillColor = this.getFillColor();
+        if (fillColor != null) {
+            canvas.setColor(fillColor);
+            canvas.fillCircle(0, 0, (int) this.radius);
+        }
+
+        final Color outlineColor = this.getOutlineColor();
+        if (outlineColor != null) {
+            canvas.setColor(outlineColor);
+            canvas.drawCircle(0, 0, (int) this.radius);
+        }
+    }
+
+    @Override
+    protected boolean doesContain(Vector point) {
+        this.worldToLocal(point);
+        return point.dot(point) < this.radius * this.radius;
     }
 
     private Collision intersectCircle(Vector normal, double penetrationDepth) {
         if (penetrationDepth > 0) {
-            final Vector p = normal.withLength(this.radius);
-            final Vector n = normal.withLength(-penetrationDepth);
-            return this.createCollision(p, n);
+            final Vector p = new Vector(normal);
+            p.setLength(this.radius);
+            normal.setLength(-penetrationDepth);
+            return this.createCollision(p, normal);
         }
         else {
             return Collision.NULL;

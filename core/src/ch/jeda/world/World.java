@@ -19,6 +19,7 @@ package ch.jeda.world;
 import ch.jeda.Log;
 import ch.jeda.Simulation;
 import ch.jeda.Size;
+import ch.jeda.Transformation;
 import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
@@ -38,15 +39,15 @@ import java.util.Set;
  * @since 1
  */
 public class World extends Simulation {
-
+    
     private static final EnumSet<Window.Feature> NO_FEATURES = EnumSet.noneOf(Window.Feature.class);
     protected static final Color DEBUG_FILL_COLOR = new Color(255, 0, 0, 70);
     protected static final Color DEBUG_OUTLINE_COLOR = Color.RED;
     protected static final Color DEBUG_TEXT_COLOR = Color.BLACK;
-
+    
     public enum DebugFeature {
-
-        FRAMERATE
+        
+        FRAMERATE, ENTITY_OVERLAY
     }
     private final Set<DebugFeature> debugFeatures;
     private final Entities entities;
@@ -55,12 +56,12 @@ public class World extends Simulation {
     private final Window window;
     private boolean paused;
     private WorldState state;
-
+    
     public final void addEntity(Entity entity) {
         if (entity == null) {
             throw new NullPointerException("entity");
         }
-
+        
         this.entities.add(entity);
     }
 
@@ -84,15 +85,15 @@ public class World extends Simulation {
     public final <T extends Entity> List<T> collidingEntities(Shape shape, Class<T> type) {
         return this.entities.getIntersectingActors(shape, type);
     }
-
+    
     public final <T extends Entity> List<T> collidingEntities(Entity entity, Class<T> type) {
         return collidingEntities(entity.getCollisionShape(), type);
     }
-
+    
     public final <T extends Entity> List<T> entities(Class<T> type) {
         return this.entities.byType(type);
     }
-
+    
     public final Events getEvents() {
         return this.window.getEvents();
     }
@@ -129,10 +130,10 @@ public class World extends Simulation {
         if (feature == null) {
             return false;
         }
-
+        
         return this.debugFeatures.contains(feature);
     }
-
+    
     public void removeEntity(Entity entity) {
         this.entities.remove(entity);
     }
@@ -156,20 +157,20 @@ public class World extends Simulation {
             this.debugFeatures.remove(feature);
         }
     }
-
+    
     public final void setPaused(boolean paused) {
         this.paused = paused;
     }
-
+    
     public final void setState(Class<? extends WorldState> state) {
         if (state == null) {
             throw new NullPointerException("state");
         }
-
+        
         if (!this.states.containsKey(state)) {
             Log.error("jeda.game.state.error", state);
         }
-
+        
         this.nextState = state;
     }
 
@@ -192,7 +193,7 @@ public class World extends Simulation {
      * @since 1
      */
     protected World() {
-        this(new Size());
+        this(Size.EMPTY);
     }
 
     /**
@@ -207,7 +208,7 @@ public class World extends Simulation {
     protected World(int width, int height) {
         this(new Size(width, height));
     }
-
+    
     protected World(int width, int height, Window.Feature... features) {
         this(new Size(width, height), toSet(features));
     }
@@ -225,23 +226,23 @@ public class World extends Simulation {
     protected World(Size size) {
         this(size, NO_FEATURES);
     }
-
+    
     protected final void addState(WorldState state) {
         if (state == null) {
             throw new NullPointerException("state");
         }
-
+        
         this.states.put(state.getClass(), state);
     }
-
+    
     protected void drawBackground(Canvas canvas) {
         canvas.setColor(Color.WHITE);
         canvas.fill();
     }
-
+    
     protected void drawOverlay(Canvas canvas) {
     }
-
+    
     @Override
     protected void init() {
     }
@@ -273,10 +274,13 @@ public class World extends Simulation {
         for (Entity entity : this.entities.paintOrderIterator()) {
             entity.draw(this.window);
         }
-
+        
+        this.window.setTransformation(Transformation.IDENTITY);
         // 4.3 Draw debug overlay for entities
-        for (Entity entity : this.entities.paintOrderIterator()) {
-            entity.drawDebugOverlay(this.window);
+        if (this.hasDebugFeature(DebugFeature.ENTITY_OVERLAY)) {
+            for (Entity entity : this.entities.paintOrderIterator()) {
+                entity.drawDebugOverlay(this.window);
+            }
         }
 
         // 4.4 Draw state overlay
@@ -287,10 +291,10 @@ public class World extends Simulation {
         // 5. Update window
         this.window.update();
     }
-
+    
     protected void update(Events events) {
     }
-
+    
     private World(Size size, EnumSet<Window.Feature> features) {
         features.add(Window.Feature.DoubleBuffered);
         this.debugFeatures = EnumSet.noneOf(DebugFeature.class);
@@ -301,7 +305,7 @@ public class World extends Simulation {
         this.state.notifyEnter(this);
         this.states = new HashMap();
     }
-
+    
     private void drawDebugOverlay() {
         if (hasDebugFeature(DebugFeature.FRAMERATE)) {
             this.window.setColor(new Color(255, 200, 200));
@@ -312,12 +316,12 @@ public class World extends Simulation {
                                          "ms, Entities: " + this.entities.getEntityCount());
         }
     }
-
+    
     private void checkState() {
         if (this.nextState == null) {
             return;
         }
-
+        
         this.state.notifyExit();
         if (this.states.containsKey(this.nextState)) {
             this.state = this.states.get(this.nextState);
@@ -325,17 +329,17 @@ public class World extends Simulation {
         else {
             this.state = WorldState.NULL;
         }
-
+        
         this.nextState = null;
         this.state.notifyEnter(this);
     }
-
+    
     private static EnumSet<Window.Feature> toSet(Window.Feature... features) {
         final EnumSet<Window.Feature> result = EnumSet.noneOf(Window.Feature.class);
         for (Window.Feature feature : features) {
             result.add(feature);
         }
-
+        
         return result;
     }
 }

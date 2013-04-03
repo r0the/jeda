@@ -21,21 +21,18 @@ import ch.jeda.Size;
 import ch.jeda.Vector;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Rectangle extends AbstractPolygon {
 
-    private static final List<Vector> AXES = initAxes();
     private final Circle circumscribedCircle;
-    private final double halfWidth;
-    private final double halfHeight;
+    private final float halfWidth;
+    private final float halfHeight;
     private final Location topLeft;
     private final Size size;
 
     public Rectangle(double width, double height) {
-        this.halfWidth = width / 2.0;
-        this.halfHeight = height / 2.0;
+        this.halfWidth = (float) width / 2f;
+        this.halfHeight = (float) height / 2f;
         final double radius = Math.sqrt(width * width + height * height) / 2.0;
         this.circumscribedCircle = new Circle(radius);
         this.topLeft = new Location((int) -this.halfWidth, (int) -this.halfHeight);
@@ -43,8 +40,15 @@ public class Rectangle extends AbstractPolygon {
     }
 
     @Override
-    protected List<Vector> axes() {
-        return AXES;
+    protected Vector[] axes() {
+        Vector[] result = new Vector[2];
+        result[0] = new Vector(1, 0);
+        result[1] = new Vector(0, 1);
+        for (Vector v : result) {
+            this.localToWorld(v);
+        }
+
+        return result;
     }
 
     @Override
@@ -63,62 +67,13 @@ public class Rectangle extends AbstractPolygon {
     }
 
     @Override
-    protected boolean doesContain(Vector point) {
-        return Math.abs(point.x) <= this.halfWidth &&
-               Math.abs(point.y) <= this.halfHeight;
-    }
-
-    @Override
     protected Collision doCollideWithCircle(Circle other) {
-        return this.intersectCircle(other.origin(), other.getRadius());
-    }
-
-    @Override
-    protected Collision doCollideWithHalfPlane(HalfPlane other) {
-        return Collision.NULL;
-//        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    protected Collision doCollideWithLineSegment(LineSegment other) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected Collision doCollideWithPoint(Point other) {
-        return this.intersectCircle(other.origin(), 0.0);
-    }
-
-    @Override
-    protected Collision doCollideWithRectangle(Rectangle other) {
-        // Do a fast first check using rectangles' circumscribed circles.
-        if (!this.circumscribedCircle.intersectsWith(other.circumscribedCircle)) {
-            return Collision.NULL;
-        }
-        else {
-            return this.doIntersectWithPolygon(other);
-        }
-    }
-
-    @Override
-    protected Collision doCollideWithShape(Shape other) {
-        return other.doCollideWithRectangle(this).inverted();
-    }
-
-    @Override
-    protected List<Vector> vertices() {
-        final List<Vector> result = new ArrayList();
-        result.add(this.transformLocation(new Vector(this.halfWidth, this.halfHeight)));
-        result.add(this.transformLocation(new Vector(this.halfWidth, -this.halfHeight)));
-        result.add(this.transformLocation(new Vector(-this.halfWidth, -this.halfHeight)));
-        result.add(this.transformLocation(new Vector(-this.halfWidth, this.halfHeight)));
-        return result;
-    }
-
-    private Collision intersectCircle(Vector center, double radius) {
-        center = this.toLocal(center);
-        final double dx = Math.abs(center.x) - this.halfWidth;
-        final double dy = Math.abs(center.y) - this.halfHeight;
+        final Vector center = new Vector();
+        other.localToWorld(center);
+        this.worldToLocal(center);
+        final float radius = other.getRadius();
+        final float dx = Math.abs(center.x) - this.halfWidth;
+        final float dy = Math.abs(center.y) - this.halfHeight;
         if (dx > radius) {
             return Collision.NULL;
         }
@@ -152,19 +107,83 @@ public class Rectangle extends AbstractPolygon {
 
         if (dx * dx + dy * dy <= radius * radius) {
             final Vector p = new Vector(this.halfWidth * Math.signum(center.x),
-                                        this.halfHeight * Math.signum(center.y));
-            final Vector n = center.minus(p);
-            return this.createCollision(p, n.withLength(Math.sqrt(dx * dx + dy * dy) - radius));
+                                          this.halfHeight * Math.signum(center.y));
+            final Vector n = new Vector(center);
+            n.subtract(p);
+            n.setLength(Math.sqrt(dx * dx + dy * dy) - radius);
+            return this.createCollision(p, n);
         }
         else {
             return Collision.NULL;
         }
     }
 
-    private static List<Vector> initAxes() {
-        final List<Vector> result = new ArrayList();
-        result.add(new Vector(1.0, 0.0));
-        result.add(new Vector(0.0, 1.0));
+    @Override
+    protected Collision doCollideWithLineSegment(LineSegment other) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    protected Collision doCollideWithPoint(Point other) {
+        final Vector otherLocation = new Vector();
+        other.localToWorld(otherLocation);
+        this.worldToLocal(otherLocation);
+        // Calculate negative penetration depth in both directions
+        final float px = Math.abs(otherLocation.x) - this.halfWidth;
+        final float py = Math.abs(otherLocation.y) - this.halfHeight;
+        if (px > 0 || py > 0) {
+            // No penetration
+            return Collision.NULL;
+        }
+        // Check if horizontal penetration is smaller (px and py are < 0)
+        else if (px > py) {
+            final float sig = Math.signum(otherLocation.x);
+            return this.createCollision(
+                    new Vector(this.halfWidth * sig, otherLocation.y),
+                    new Vector(px * sig, 0));
+        }
+        else {
+            final float sig = Math.signum(otherLocation.y);
+            return this.createCollision(
+                    new Vector(otherLocation.x, this.halfHeight * sig),
+                    new Vector(0, py * sig));
+        }
+    }
+
+    @Override
+    protected Collision doCollideWithRectangle(Rectangle other) {
+        // Do a fast first check using rectangles' circumscribed circles.
+        if (!this.circumscribedCircle.intersectsWith(other.circumscribedCircle)) {
+            return Collision.NULL;
+        }
+        else {
+            return this.doIntersectWithPolygon(other);
+        }
+    }
+
+    @Override
+    protected Collision doCollideWithShape(Shape other) {
+        return other.doCollideWithRectangle(this).invert();
+    }
+
+    @Override
+    protected boolean doesContain(Vector point) {
+        this.worldToLocal(point);
+        return Math.abs(point.x) <= this.halfWidth &&
+               Math.abs(point.y) <= this.halfHeight;
+    }
+
+    @Override
+    protected Vector[] vertices() {
+        Vector[] result = new Vector[4];
+        result[0] = new Vector(this.halfWidth, this.halfHeight);
+        result[1] = new Vector(this.halfWidth, -this.halfHeight);
+        result[2] = new Vector(-this.halfWidth, this.halfHeight);
+        result[3] = new Vector(-this.halfWidth, -this.halfHeight);
+        for (Vector v : result) {
+            this.localToWorld(v);
+        }
+
         return result;
     }
 }

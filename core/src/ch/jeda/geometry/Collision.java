@@ -23,25 +23,39 @@ import java.io.Serializable;
  * This class represents a collision between two shapes. It provides the
  * following information about the collision:
  * <ul>
- *  <li> The <b>collision point</b> is the point on the border of the second
- *       tested shape that realises the deepest penetratation of the first shape.</li>
- *  <li> The <b>collision normal</b> is the shortest path from the
- *       collision point to the border of the first shape. That means, that
- *       the collision can be resolved by moving the second shape by the
- *       collision normal. The length of the collision normal is the
- *       <b>penetration depth</b>.</li>
+ * <li> The <b>collision point</b> is the point on the border of the second
+ * tested shape that realises the deepest penetratation of the first shape.</li>
+ * <li> The <b>collision normal</b> is the shortest path from the collision
+ * point to the border of the first shape. This means that the collision can be
+ * resolved by moving the second shape by the collision normal. The length of
+ * the collision normal is the <b>penetration depth</b>.</li>
  * </ul>
  */
 public final class Collision implements Serializable {
 
     /**
-     * This constant represents a non-existing collision, it means that the
-     * concerned shapes do not collide.
+     * The non-existing collision. This collision value represents the non-
+     * collision. It's meaning is that the concerned shapes do not collide.
      */
     public static final Collision NULL = new Collision();
+    /**
+     * The collision point. This is the point on the border of the second shape
+     * that realises the deepest penetratation of the first shape.
+     */
     public final Vector point;
+    /**
+     * The collision normal. This is the shortest path from the collision point
+     * to the border of the first shape. This means that the collision can be
+     * resolved by moving the second shape by the collision normal. The length
+     * of the collision normal is the <b>penetration depth</b>.
+     */
     public final Vector normal;
 
+    /**
+     * Checks if this collision is a null collision.
+     *
+     * @return <tt>true</tt> is this collision is a null collision
+     */
     public boolean isNull() {
         return this.normal == null;
     }
@@ -51,13 +65,13 @@ public final class Collision implements Serializable {
         this.normal = normal;
     }
 
-    Collision inverted() {
-        if (this.isNull()) {
-            return NULL;
+    Collision invert() {
+        if (!this.isNull()) {
+            this.point.add(this.normal);
+            this.normal.invert();
         }
-        else {
-            return new Collision(this.point.plus(this.normal), this.normal.inverse());
-        }
+
+        return this;
     }
 
     private Collision() {

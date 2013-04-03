@@ -31,18 +31,8 @@ public class LineSegment extends Shape {
     }
 
     @Override
-    protected boolean doesContain(Vector point) {
-        return false;
-    }
-
-    @Override
     protected Collision doCollideWithCircle(Circle other) {
-        return other.doCollideWithLineSegment(this).inverted();
-    }
-
-    @Override
-    protected Collision doCollideWithHalfPlane(HalfPlane other) {
-        return other.doCollideWithLineSegment(this).inverted();
+        return other.doCollideWithLineSegment(this).invert();
     }
 
     @Override
@@ -57,12 +47,12 @@ public class LineSegment extends Shape {
 
     @Override
     protected Collision doCollideWithRectangle(Rectangle other) {
-        return other.doCollideWithLineSegment(this).inverted();
+        return other.doCollideWithLineSegment(this).invert();
     }
 
     @Override
     protected Collision doCollideWithShape(Shape other) {
-        return other.doCollideWithLineSegment(this).inverted();
+        return other.doCollideWithLineSegment(this).invert();
     }
 
     @Override
@@ -70,7 +60,13 @@ public class LineSegment extends Shape {
         final Color outlineColor = this.getOutlineColor();
         if (outlineColor != null) {
             canvas.setColor(outlineColor);
-            canvas.drawLine(this.start.toLocation(), this.end.toLocation());
+            canvas.drawLine((int) this.start.x, (int) this.start.y,
+                            (int) this.end.x, (int) this.end.y);
         }
+    }
+
+    @Override
+    protected boolean doesContain(Vector point) {
+        return false;
     }
 }

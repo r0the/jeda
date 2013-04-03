@@ -18,7 +18,6 @@ package ch.jeda.geometry;
 
 import ch.jeda.Location;
 import ch.jeda.Size;
-import ch.jeda.Vector;
 import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Image;

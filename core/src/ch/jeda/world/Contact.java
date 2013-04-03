@@ -24,7 +24,6 @@ public class Contact {
     private final Entity entity1;
     private final Entity entity2;
     private final Vector contactNormal;
-    private final Vector contactNormalE;
     private double penetration;
     private Vector movement1;
     private Vector movement2;
@@ -33,7 +32,7 @@ public class Contact {
         this.entity1 = entity1;
         this.entity2 = entity2;
         this.contactNormal = collision.normal;
-        this.contactNormalE = this.contactNormal.normalized();
+        this.contactNormal.normalize();
         this.penetration = collision.normal.length();
     }
 
@@ -43,16 +42,16 @@ public class Contact {
 
     public void updatePenetration(Contact contact) {
         if (this.entity1 == contact.entity1) {
-            this.penetration -= contact.movement1.dot(this.contactNormalE);
+            this.penetration -= contact.movement1.dot(this.contactNormal);
         }
         if (this.entity1 == contact.entity2) {
-            this.penetration -= contact.movement2.dot(this.contactNormalE);
+            this.penetration -= contact.movement2.dot(this.contactNormal);
         }
         if (this.entity2 == contact.entity1) {
-            this.penetration += contact.movement1.dot(this.contactNormalE);
+            this.penetration += contact.movement1.dot(this.contactNormal);
         }
         if (this.entity2 == contact.entity2) {
-            this.penetration += contact.movement2.dot(this.contactNormalE);
+            this.penetration += contact.movement2.dot(this.contactNormal);
         }
     }
 }

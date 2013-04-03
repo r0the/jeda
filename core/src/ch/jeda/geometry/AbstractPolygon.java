@@ -17,21 +17,22 @@
 package ch.jeda.geometry;
 
 import ch.jeda.Vector;
-import java.util.List;
 
 public abstract class AbstractPolygon extends Shape {
 
-    protected abstract List<Vector> axes();
+    protected abstract Vector[] axes();
 
-    protected abstract List<Vector> vertices();
+    protected abstract Vector[] vertices();
 
     protected Collision doIntersectWithPolygon(AbstractPolygon other) {
-        Vector minAxis = null;
+        Vector minAxis = new Vector();
+        final Vector[] theseVertices = this.vertices();
+        final Vector[] otherVertices = other.vertices();
         double minOverlap = Double.MAX_VALUE;
 
         for (Vector axis : this.axes()) {
-            final Interval p1 = this.project(axis);
-            final Interval p2 = other.project(axis);
+            final Interval p1 = project(axis, theseVertices);
+            final Interval p2 = project(axis, otherVertices);
             if (!p1.overlapsWith(p2)) {
                 return Collision.NULL;
             }
@@ -45,9 +46,10 @@ public abstract class AbstractPolygon extends Shape {
         }
 
         for (Vector axis : other.axes()) {
-            axis = this.toLocal(axis).normalized();
-            final Interval p1 = this.project(axis);
-            final Interval p2 = other.project(axis);
+            this.worldToLocal(axis);
+            axis.normalize();
+            final Interval p1 = project(axis, theseVertices);
+            final Interval p2 = project(axis, otherVertices);
             if (!p1.overlapsWith(p2)) {
                 return Collision.NULL;
             }
@@ -60,13 +62,14 @@ public abstract class AbstractPolygon extends Shape {
             }
         }
 
-        return this.createCollision(new Vector(), minAxis.withLength(minOverlap));
+        minAxis.setLength(minOverlap);
+        return this.createCollision(new Vector(), minAxis);
     }
 
-    private Interval project(Vector axis) {
+    private static Interval project(Vector axis, Vector[] vertices) {
         double min = Double.MAX_VALUE;
         double max = -Double.MAX_VALUE;
-        for (Vector vertex : this.vertices()) {
+        for (Vector vertex : vertices) {
             final double p = axis.dot(vertex);
             min = Math.min(min, p);
             max = Math.max(max, p);

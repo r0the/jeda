@@ -16,61 +16,60 @@
  */
 package ch.jeda.world;
 
-import ch.jeda.Vector;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 
-public class Particle extends MovingEntity {
+public class Particle extends Entity {
 
     private static final double DEFAULT_DAMPING = 0.9995;
-    private Vector acceleration;
     private double damping;
-    private Vector force;
+    private double fx;
+    private double fy;
     private final double inverseMass;
-    private Vector velocity;
+    private double vx;
+    private double vy;
 
-    public Particle(Vector location, double mass) {
-        this(location, mass, DEFAULT_DAMPING);
+    public Particle(double x, double y, double mass) {
+        this(x, y, mass, DEFAULT_DAMPING);
     }
 
-    public Particle(Vector location, double mass, double damping) {
-        super(location);
-        acceleration = Vector.NULL;
+    public Particle(double x, double y, double mass, double damping) {
+        super(x, y);
         this.damping = damping;
-        force = Vector.NULL;
         if (Double.isInfinite(mass)) {
             this.inverseMass = 0;
         }
         else {
             this.inverseMass = 1d / mass;
         }
-        velocity = Vector.NULL;
     }
 
-    public void addForce(Vector force) {
+    public void addForce(double fx, double fy) {
         if (!hasInfiniteMass()) {
-            this.force = this.force.plus(force);
+            this.fx = this.fx + fx;
+            this.fy = this.fy + fy;
         }
     }
 
-    public void addVelocity(Vector velocity) {
+    public void addVelocity(double vx, double vy) {
         if (!hasInfiniteMass()) {
-            this.velocity = this.velocity.plus(velocity);
+            this.vx = this.vx + vx;
+            this.vy = this.vy + vy;
         }
     }
 
     public void clearForce() {
-        this.force = Vector.NULL;
+        this.fx = 0;
+        this.fy = 0;
     }
 
     public final double getInverseMass() {
         return inverseMass;
     }
 
-    public final Vector getVelocity() {
-        return velocity;
-    }
-
+//    public final Vector getVelocity() {
+//        return new Vector();
+//    }
     public boolean hasInfiniteMass() {
         return inverseMass == 0;
     }
@@ -81,14 +80,14 @@ public class Particle extends MovingEntity {
 
     @Override
     protected void update(World world) {
-        if (!hasInfiniteMass()) {
-            double dt = world.getLastStepDuration();
-            Vector newPosition = getLocation().plus(velocity.times(dt));
-            Vector acc = acceleration.plus(force.times(inverseMass));
-            Vector newVelocity = velocity.plus(acc.times(dt));
-            setLocation(newPosition);
-            double damp = Math.pow(damping, dt);
-            velocity = newVelocity.times(damp);
+        if (!this.hasInfiniteMass()) {
+            final double dt = world.getLastStepDuration();
+            final double damp = Math.pow(damping, dt);
+            final double ax = this.fx * this.inverseMass;
+            final double ay = this.fy * this.inverseMass;
+            this.vx = (this.vx + ax * dt) * damp;
+            this.vy = (this.vy + ay * dt) * damp;
+            this.translate(this.vx * dt, this.vy * dt);
         }
     }
 
@@ -99,10 +98,6 @@ public class Particle extends MovingEntity {
         result.append("(");
         result.append("p=");
         result.append(getLocation());
-        result.append(", v=");
-        result.append(velocity);
-        result.append(", a=");
-        result.append(acceleration);
         result.append(")");
         return result.toString();
     }

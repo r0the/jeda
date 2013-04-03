@@ -16,12 +16,10 @@
  */
 package ch.jeda.world;
 
-import ch.jeda.Vector;
-import ch.jeda.geometry.Collision;
-import ch.jeda.geometry.AbstractFigure;
-import ch.jeda.geometry.Shape;
+import ch.jeda.Transformation;
+import ch.jeda.geometry.ProxyShape;
 import ch.jeda.ui.Canvas;
-import ch.jeda.ui.Events;
+import ch.jeda.ui.Color;
 
 /**
  * This class represents an object in a simulated world. An object has a
@@ -29,31 +27,17 @@ import ch.jeda.ui.Events;
  * it's location and orientation. It has a bounding shape that determines
  * whether it collides with other entities.
  */
-public abstract class Entity extends AbstractFigure {
+public abstract class Entity extends ProxyShape {
 
-    private Shape collisionShape;
+    protected static final Color DEBUG_FILL_COLOR = new Color(255, 0, 0, 70);
+    protected static final Color DEBUG_OUTLINE_COLOR = Color.RED;
+    protected static final Color DEBUG_TEXT_COLOR = Color.BLACK;
 
     public Entity() {
-        this(Vector.NULL);
     }
 
     public Entity(double x, double y) {
-        this(new Vector(x, y));
-    }
-
-    public Entity(Vector location) {
-        this.setLocation(location);
-    }
-
-    public final Shape getCollisionShape() {
-        return this.collisionShape;
-    }
-
-    public final void setCollisionShape(Shape shape) {
-        this.collisionShape = shape;
-        if (this.collisionShape != null) {
-            this.collisionShape.setLocation(this.getLocation());
-        }
+        this.setLocation(x, y);
     }
 
     @Override
@@ -62,28 +46,6 @@ public abstract class Entity extends AbstractFigure {
         result.append(getClass().getSimpleName());
         result.append(this.getLocation());
         return result.toString();
-    }
-
-    @Override
-    protected final boolean doesContain(Vector location) {
-        return this.collisionShape.contains(location);
-    }
-
-    @Override
-    protected final Collision doCollideWith(AbstractFigure other) {
-        return this.collisionShape.collideWith(other);
-    }
-
-    @Override
-    protected final Collision doCollideWithShape(Shape other) {
-        return this.collisionShape.collideWith(other);
-    }
-
-    @Override
-    protected void onLocationChanged() {
-        if (this.collisionShape != null) {
-            this.collisionShape.setLocation(this.getLocation());
-        }
     }
 
     /**
@@ -106,10 +68,13 @@ public abstract class Entity extends AbstractFigure {
     }
 
     void drawDebugOverlay(Canvas canvas) {
-        if (this.collisionShape != null) {
-            this.collisionShape.setFillColor(DEBUG_FILL_COLOR);
-            this.collisionShape.setOutlineColor(DEBUG_OUTLINE_COLOR);
-            this.collisionShape.draw(canvas);
+        if (this.getCollisionShape() != null) {
+            final Transformation oldTransformation = canvas.getTransformation();
+            canvas.setTransformation(this.worldTransformation());
+            this.getCollisionShape().setFillColor(DEBUG_FILL_COLOR);
+            this.getCollisionShape().setOutlineColor(DEBUG_OUTLINE_COLOR);
+            this.getCollisionShape().draw(canvas);
+            canvas.setTransformation(oldTransformation);
         }
     }
 }

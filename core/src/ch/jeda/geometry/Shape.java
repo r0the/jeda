@@ -21,10 +21,12 @@ import ch.jeda.ui.Color;
 
 /**
  * Represents a geometrical shape.
- *
  */
-public abstract class Shape extends AbstractFigure {
+public abstract class Shape extends Figure {
 
+    protected static final Color DEBUG_FILL_COLOR = new Color(255, 0, 0, 70);
+    protected static final Color DEBUG_OUTLINE_COLOR = Color.RED;
+    protected static final Color DEBUG_TEXT_COLOR = Color.BLACK;
     private Color outlineColor;
     private Color fillColor;
 
@@ -34,6 +36,15 @@ public abstract class Shape extends AbstractFigure {
 
     public final Color getOutlineColor() {
         return this.outlineColor;
+    }
+
+    public final boolean intersectsWith(Shape other) {
+        if (other == null || other == this) {
+            return false;
+        }
+        else {
+            return !this.doCollideWith(other).isNull();
+        }
     }
 
     public final void setFillColor(Color value) {
@@ -50,13 +61,11 @@ public abstract class Shape extends AbstractFigure {
     }
 
     @Override
-    protected final Collision doCollideWith(AbstractFigure other) {
-        return other.doCollideWithShape(this).inverted();
+    protected final Collision doCollideWith(Figure other) {
+        return other.doCollideWithShape(this).invert();
     }
 
     protected abstract Collision doCollideWithCircle(Circle other);
-
-    protected abstract Collision doCollideWithHalfPlane(HalfPlane other);
 
     protected abstract Collision doCollideWithLineSegment(LineSegment other);
 
@@ -65,6 +74,8 @@ public abstract class Shape extends AbstractFigure {
     protected abstract Collision doCollideWithRectangle(Rectangle other);
 
     protected final Collision createCollision(Vector point, Vector normal) {
-        return new Collision(this.transformLocation(point), this.transformDirection(normal));
+        this.localToWorld(point);
+        this.localToWorldDirection(normal);
+        return new Collision(point, normal);
     }
 }

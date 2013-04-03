@@ -16,7 +16,6 @@
  */
 package ch.jeda.world;
 
-import ch.jeda.Vector;
 import ch.jeda.geometry.Shape;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,17 +45,21 @@ class Entities {
     }
 
     void executePendingOperations() {
-        this.list.removeAll(this.pendingDeletions);
-        this.typeMap.removeAll(this.pendingDeletions);
-        this.updateOrder.removeAll(this.pendingDeletions);
-        this.paintOrder.removeAll(this.pendingDeletions);
-        this.pendingDeletions.clear();
+        if (!this.pendingDeletions.isEmpty()) {
+            this.list.removeAll(this.pendingDeletions);
+            this.typeMap.removeAll(this.pendingDeletions);
+            this.updateOrder.removeAll(this.pendingDeletions);
+            this.paintOrder.removeAll(this.pendingDeletions);
+            this.pendingDeletions.clear();
+        }
 
-        this.list.addAll(this.pendingInsertions);
-        this.typeMap.addAll(this.pendingInsertions);
-        this.updateOrder.addAll(this.pendingInsertions);
-        this.paintOrder.addAll(this.pendingInsertions);
-        this.pendingInsertions.clear();
+        if (!this.pendingInsertions.isEmpty()) {
+            this.list.addAll(this.pendingInsertions);
+            this.typeMap.addAll(this.pendingInsertions);
+            this.updateOrder.addAll(this.pendingInsertions);
+            this.paintOrder.addAll(this.pendingInsertions);
+            this.pendingInsertions.clear();
+        }
     }
 
     Entity get(int index) {
@@ -75,11 +78,10 @@ class Entities {
         return this.updateOrder;
     }
 
-     <T extends Entity> List<T> getByLocation(double x, double y, Class<T> type) {
+    <T extends Entity> List<T> getByLocation(double x, double y, Class<T> type) {
         final ArrayList<T> result = new ArrayList();
-        final Vector point = new Vector(x, y);
         for (T entity : this.byType(type)) {
-            if (entity.getCollisionShape().contains(point)) {
+            if (entity.getCollisionShape().contains(x, y)) {
                 result.add(entity);
             }
         }
@@ -87,7 +89,7 @@ class Entities {
         return result;
     }
 
-     <T extends Entity> List<T> getIntersectingActors(Shape shape, Class<T> type) {
+    <T extends Entity> List<T> getIntersectingActors(Shape shape, Class<T> type) {
         final ArrayList<T> result = new ArrayList();
         if (shape != null) {
             for (T entity : this.byType(type)) {
