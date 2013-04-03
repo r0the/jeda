@@ -24,8 +24,10 @@ import ch.jeda.Location;
 public final class Pointer {
 
     private final int id;
-    private Location lastLocation;
-    private Location location;
+    private int deltaX;
+    private int deltaY;
+    private int x;
+    private int y;
 
     @Override
     public boolean equals(Object object) {
@@ -35,6 +37,14 @@ public final class Pointer {
         else {
             return false;
         }
+    }
+
+    public int getDeltaX() {
+        return this.deltaX;
+    }
+
+    public int getDeltaY() {
+        return this.deltaY;
     }
 
     /**
@@ -48,8 +58,9 @@ public final class Pointer {
      * @see #getY()
      * @since 1
      */
+    @Deprecated
     public Location getLocation() {
-        return this.location;
+        return new Location(this.x, this.y);
     }
 
     /**
@@ -63,13 +74,9 @@ public final class Pointer {
      * @see #getLocation()
      * @since 1
      */
+    @Deprecated
     public Location getMovement() {
-        if (this.location == null || this.lastLocation == null) {
-            return Location.ORIGIN;
-        }
-        else {
-            return this.location.minus(this.lastLocation);
-        }
+        return new Location(this.deltaX, this.deltaY);
     }
 
     /**
@@ -82,12 +89,7 @@ public final class Pointer {
      * @since 1
      */
     public int getX() {
-        if (this.location == null) {
-            return -1;
-        }
-        else {
-            return this.location.x;
-        }
+        return this.x;
     }
 
     /**
@@ -100,12 +102,7 @@ public final class Pointer {
      * @since 1
      */
     public int getY() {
-        if (this.location == null) {
-            return -1;
-        }
-        else {
-            return this.location.y;
-        }
+        return this.y;
     }
 
     @Override
@@ -129,18 +126,33 @@ public final class Pointer {
      * otherwise
      */
     public boolean isAvailable() {
-        return this.location != null;
+        return this.x != -1;
     }
 
     Pointer(int id) {
         this.id = id;
+        this.x = -1;
+        this.y = -1;
+        this.deltaX = 0;
+        this.deltaY = 0;
     }
 
     void prepare() {
-        this.lastLocation = this.location;
+        this.deltaX = 0;
+        this.deltaY = 0;
     }
 
-    void setLocation(Location location) {
-        this.location = location;
+    void setLocation(int x, int y) {
+        this.deltaX = this.deltaX + x - this.x;
+        this.deltaY = this.deltaY + y - this.y;
+        this.x = x;
+        this.y = y;
+    }
+
+    void setUnavailable() {
+        this.x = -1;
+        this.y = -1;
+        this.deltaX = 0;
+        this.deltaY = 0;
     }
 }

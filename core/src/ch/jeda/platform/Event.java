@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.Location;
 import ch.jeda.ui.Key;
 
 public final class Event {
@@ -28,9 +27,10 @@ public final class Event {
     }
     public final Key key;
     public final char keyChar;
-    public final Location location;
     public final int pointerId;
     public final Type type;
+    public final int x;
+    public final int y;
 
     public static Event createKeyPressed(Key key) {
         assert key != null;
@@ -48,20 +48,16 @@ public final class Event {
         return new Event(Type.KeyTyped, null, keyChar);
     }
 
-    public static Event createPointerAvailable(int pointerId, Location location) {
-        assert location != null;
-
-        return new Event(Type.PointerAvailable, pointerId, location);
+    public static Event createPointerAvailable(int pointerId, int x, int y) {
+        return new Event(Type.PointerAvailable, pointerId, x, y);
     }
 
-    public static Event createPointerMoved(int pointerId, Location location) {
-        assert location != null;
-
-        return new Event(Type.PointerMoved, pointerId, location);
+    public static Event createPointerMoved(int pointerId, int x, int y) {
+        return new Event(Type.PointerMoved, pointerId, x, y);
     }
 
     public static Event createPointerUnavailable(int pointerId) {
-        return new Event(Type.PointerUnavailable, pointerId, null);
+        return new Event(Type.PointerUnavailable, pointerId, -1, -1);
     }
 
     public static Event createWindowFocusGained() {
@@ -73,22 +69,23 @@ public final class Event {
     }
 
     private Event(Type type) {
-        this(type, null, '\0', 0, null);
+        this(type, null, '\0', 0, -1, -1);
     }
 
     private Event(Type type, Key key, char keyChar) {
-        this(type, key, keyChar, 0, null);
+        this(type, key, keyChar, 0, -1, -1);
     }
 
-    private Event(Type type, int pointerId, Location location) {
-        this(type, null, '\0', pointerId, location);
+    private Event(Type type, int pointerId, int x, int y) {
+        this(type, null, '\0', pointerId, x, y);
     }
 
-    public Event(Type type, Key key, char keyChar, int pointerId, Location location) {
+    public Event(Type type, Key key, char keyChar, int pointerId, int x, int y) {
         this.key = key;
         this.keyChar = keyChar;
-        this.location = location;
         this.pointerId = pointerId;
         this.type = type;
+        this.x = x;
+        this.y = y;
     }
 }

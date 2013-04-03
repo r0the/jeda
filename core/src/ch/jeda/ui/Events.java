@@ -178,12 +178,12 @@ public final class Events {
 
                     pointer = this.pointers.get(event.pointerId);
                     this.newPointers.add(pointer);
-                    pointer.setLocation(event.location);
+                    pointer.setLocation(event.x, event.y);
                     break;
                 case PointerUnavailable:
                     pointer = this.pointers.get(event.pointerId);
                     if (pointer != null) {
-                        pointer.setLocation(null);
+                        pointer.setUnavailable();
                         this.pointers.remove(event.pointerId);
                     }
 
@@ -192,7 +192,7 @@ public final class Events {
                 case PointerMoved:
                     pointer = this.pointers.get(event.pointerId);
                     if (pointer != null) {
-                        pointer.setLocation(event.location);
+                        pointer.setLocation(event.x, event.y);
                     }
 
                     break;

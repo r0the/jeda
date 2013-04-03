@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.Location;
 import ch.jeda.Size;
 import ch.jeda.platform.Event;
 import ch.jeda.ui.Key;
@@ -96,14 +95,14 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
     @Override
     public void mouseDragged(MouseEvent event) {
         this.eventsIn.add(Event.createPointerMoved(
-                POINTER_ID, new Location(event.getX(), event.getY())));
+                POINTER_ID, event.getX(), event.getY()));
     }
 
     @Override
     public void mouseEntered(MouseEvent event) {
         if (this.features.contains(Window.Feature.HoveringPointer)) {
             this.eventsIn.add(Event.createPointerAvailable(
-                    POINTER_ID, new Location(event.getX(), event.getY())));
+                    POINTER_ID, event.getX(), event.getY()));
         }
     }
 
@@ -118,7 +117,7 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
     public void mouseMoved(MouseEvent event) {
         if (this.features.contains(Window.Feature.HoveringPointer)) {
             this.eventsIn.add(Event.createPointerMoved(
-                    POINTER_ID, new Location(event.getX(), event.getY())));
+                    POINTER_ID, event.getX(), event.getY()));
         }
     }
 
@@ -131,7 +130,7 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
 
         if (!this.features.contains(Window.Feature.HoveringPointer)) {
             this.eventsIn.add(Event.createPointerAvailable(
-                    POINTER_ID, new Location(event.getX(), event.getY())));
+                    POINTER_ID, event.getX(), event.getY()));
         }
     }
 

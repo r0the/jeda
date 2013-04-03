@@ -97,25 +97,19 @@ public final class Image {
      * @since 1
      */
     public Image createScaledImage(int width, int height) {
-        return this.createScaledImage(new Size(width, height));
+        return new Image(this.imp.createScaledImage(width, height));
     }
 
     /**
-     * Creates a scaled copy of the image.
-     *
-     * @param size
-     * @throws NullPointerException if <tt>size</tt> is <tt>null</tt>
-     * @return scaled image
-     *
-     * @see #createScaledImage(int, int)
-     * @see #createScaledImage(double)
+     * @deprecated Use {@link #createScaledImage(int, int)} instead.
      */
+    @Deprecated
     public Image createScaledImage(Size size) {
         if (size == null) {
             throw new NullPointerException("size");
         }
 
-        return new Image(this.imp.createScaledImage(size));
+        return new Image(this.imp.createScaledImage(size.width, size.height));
     }
 
     /**
@@ -132,20 +126,13 @@ public final class Image {
      * @since 1
      */
     public Image createSubImage(int x, int y, int width, int height) {
-        return this.createSubImage(new Location(x, y), new Size(width, height));
+        return new Image(this.imp.createSubImage(x, y, width, height));
     }
 
     /**
-     * Returns a rectangular part of the image as a new image.
-     *
-     * @param location the top left corner of the part
-     * @param size the size of the part
-     * @return specified part of image
-     * @throws NullPointerException if <tt>location</tt> is <tt>null</tt>
-     * @throws NullPointerException if <tt>size</tt> is <tt>null</tt>
-     *
-     * @since 1
+     * @deprecated Use {@link #createSubImage(int, int, int, int)} instead.
      */
+    @Deprecated
     public Image createSubImage(Location location, Size size) {
         if (location == null) {
             throw new NullPointerException("location");
@@ -155,7 +142,8 @@ public final class Image {
             throw new NullPointerException("size");
         }
 
-        return new Image(this.imp.createSubImage(location, size));
+        return new Image(this.imp.createSubImage(location.x, location.y,
+                                                 size.width, size.height));
     }
 
     /**
@@ -274,7 +262,7 @@ public final class Image {
     }
 
     private static Map<String, ImageImp.Encoding> initFormatMap() {
-        Map<String, ImageImp.Encoding> result = new HashMap();
+        final Map<String, ImageImp.Encoding> result = new HashMap();
         result.put(".jpeg", ImageImp.Encoding.JPEG);
         result.put(".jpg", ImageImp.Encoding.JPEG);
         result.put(".png", ImageImp.Encoding.PNG);

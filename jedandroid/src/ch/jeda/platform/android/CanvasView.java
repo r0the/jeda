@@ -24,7 +24,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import ch.jeda.Location;
 import ch.jeda.Size;
 import ch.jeda.platform.Event;
 import ch.jeda.platform.WindowRequest;
@@ -78,7 +77,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
                 index = event.getActionIndex();
                 this.eventsIn.add(Event.createPointerAvailable(
                         event.getPointerId(index),
-                        new Location((int) event.getX(index), (int) event.getY(index))));
+                        (int) event.getX(index), (int) event.getY(index)));
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -92,7 +91,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
                 for (index = 0; index < event.getPointerCount(); ++index) {
                     this.eventsIn.add(Event.createPointerMoved(
                             event.getPointerId(index),
-                            new Location((int) event.getX(index), (int) event.getY(index))));
+                            (int) event.getX(index), (int) event.getY(index)));
                 }
 
                 break;

@@ -17,7 +17,6 @@
 package ch.jeda.platform.android;
 
 import android.graphics.Bitmap;
-import ch.jeda.Location;
 import ch.jeda.Size;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.ui.Color;
@@ -30,17 +29,18 @@ class AndroidImageImp implements ImageImp {
     private final Size size;
 
     @Override
-    public ImageImp createScaledImage(Size newSize) {
-        assert newSize != null;
+    public ImageImp createScaledImage(int width, int height) {
+        assert width > 0;
+        assert height > 0;
 
         return new AndroidImageImp(Bitmap.createScaledBitmap(
-                this.bitmap, newSize.width, newSize.height, false));
+                this.bitmap, width, height, false));
     }
 
     @Override
-    public ImageImp createSubImage(Location topLeft, Size size) {
+    public ImageImp createSubImage(int x, int y, int width, int height) {
         return new AndroidImageImp(Bitmap.createBitmap(
-                this.bitmap, topLeft.x, topLeft.y, size.width, size.height));
+                this.bitmap, x, y, width, height));
     }
 
     @Override

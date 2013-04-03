@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.Location;
 import ch.jeda.Size;
 import ch.jeda.ui.Color;
 import java.io.IOException;
@@ -29,9 +28,9 @@ public interface ImageImp {
         JPEG, PNG
     }
 
-    ImageImp createScaledImage(Size newSize);
+    ImageImp createScaledImage(int width, int height);
 
-    ImageImp createSubImage(Location topLeft, Size size);
+    ImageImp createSubImage(int x, int y, int width, int height);
 
     Size getSize();
 

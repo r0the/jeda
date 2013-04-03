@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.Location;
 import ch.jeda.Size;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.ui.Color;
@@ -46,22 +45,23 @@ class JavaImageImp implements ImageImp {
     }
 
     @Override
-    public JavaImageImp createScaledImage(Size newSize) {
-        assert newSize != null;
+    public JavaImageImp createScaledImage(int width, int height) {
+        assert width > 0;
+        assert height > 0;
 
-        final BufferedImage result = createImage(newSize);
+        final BufferedImage result = createImage(width, height);
         result.createGraphics().drawImage(
-                this.bufferedImage, 0, 0, newSize.width, newSize.height, null);
+                this.bufferedImage, 0, 0, width, height, null);
         return new JavaImageImp(result);
     }
 
     @Override
-    public ImageImp createSubImage(Location topLeft, Size size) {
-        assert topLeft != null;
-        assert size != null;
+    public ImageImp createSubImage(int x, int y, int width, int height) {
+        assert width > 0;
+        assert height > 0;
 
-        return new JavaImageImp(this.bufferedImage.getSubimage(
-                topLeft.x, topLeft.y, size.width, size.height));
+        return new JavaImageImp(
+                this.bufferedImage.getSubimage(x, y, width, height));
     }
 
     @Override
@@ -75,7 +75,7 @@ class JavaImageImp implements ImageImp {
         assert newColor != null;
 
         final Image image = ReplaceColorFilter.replaceColor(this.bufferedImage, oldColor, newColor);
-        final BufferedImage result = createImage(this.size);
+        final BufferedImage result = createImage(this.size.width, this.size.height);
         result.getGraphics().drawImage(image, 0, 0, null);
         return new JavaImageImp(result);
     }
@@ -100,10 +100,10 @@ class JavaImageImp implements ImageImp {
         }
     }
 
-    private static BufferedImage createImage(Size size) {
+    private static BufferedImage createImage(int width, int height) {
         final GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().
                 getDefaultScreenDevice().getDefaultConfiguration();
-        return gc.createCompatibleImage(size.width, size.height, Transparency.TRANSLUCENT);
+        return gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
     private static class ReplaceColorFilter extends RGBImageFilter {
