@@ -20,120 +20,140 @@ import java.io.Serializable;
 
 /**
  * Represents a two-dimensional vector.
- * 
+ *
  * @since 1
  */
 public final class Vector implements Serializable {
 
     /**
-     * The x component of this vector.
+     * The x component of the vector.
      */
-    public final double x;
+    public float x;
     /**
-     * The y component of this vector.
+     * The y component of the vector.
      */
-    public final double y;
-    private double direction;
-    /**
-     * The null vector. Both components of this vector are 0.
-     */
-    public static final Vector NULL = new Vector();
+    public float y;
 
+    /**
+     * Constructs a vector. The constructed vector is the null vector (both
+     * coordinates are zero).
+     */
     public Vector() {
-        this.x = 0.0;
-        this.y = 0.0;
-        this.direction = 0.0;
+        this.x = 0f;
+        this.y = 0f;
     }
 
     /**
-     * Creates a new Vector with the specified x and y coordinates.
+     * Constructs a vector. The constructed vector has the specified x and y
+     * coordinates.
      *
-     * @param x x coordinate of the new vector
-     * @param y y coordinate of the new vector
+     * @param x the x coordinate of the vector
+     * @param y the y coordinate of the vector
      *
      * @since 1
      */
-    public Vector(double x, double y) {
+    public Vector(final float x, final float y) {
         this.x = x;
         this.y = y;
-        this.direction = Double.NaN;
     }
 
     /**
-     * Creates a new Vector from polar coordinates.
-     * 
-     * @param length the length of the new vector
-     * @param direction the direction of the new vector in degrees
-     * @return new vector
-     * 
-     * @since 1
-     */
-    public static Vector fromPolar(double length, double direction) {
-        direction = normalizeDegrees(direction);
-        return new Vector(length * cos(direction), -length * sin(direction),
-                          direction);
-    }
-
-    /**
-     * 
-     * @param other
-     * @return 
-     * 
-     * @since 1
-     */
-    public double enclosedAngle(Vector other) {
-        return angle(Math.abs(other.x - this.x), Math.abs(other.y - this.y));
-    }
-
-    /**
-     * Returns the current direction. The direction is value between 0 and 360
-     * degrees (including 0, excluding 360). A direction of 0 degrees
-     * points to the north, a direction of 90 degrees to the east. 180 degrees
-     * point to the south and 270 degrees to the west.
+     * Constructs a vector. The constructed vector has the specified x and y
+     * coordinates.
      *
-     * @return current direction
+     * @param x the x coordinate of the vector
+     * @param y the y coordinate of the vector
      *
      * @since 1
      */
-    public double direction() {
-        if (Double.isNaN(this.direction)) {
-            this.direction = angle(this.x, this.y);
+    public Vector(final double x, final double y) {
+        this.x = (float) x;
+        this.y = (float) y;
+    }
+
+    /**
+     * Constructs a vector. The constructed vector is a copy of the specified
+     * vector <tt>v</tt>.
+     *
+     * @param orig the original vector
+     * @throws NullPointerException if <tt>orig</tt> is <tt>null</tt>
+     *
+     * @since 1
+     */
+    public Vector(final Vector orig) {
+        if (orig == null) {
+            throw new NullPointerException("orig");
         }
-        return this.direction;
+
+        this.x = orig.x;
+        this.y = orig.y;
     }
 
     /**
-     * Returns the dot product of this vector and <code>other</code>.
+     * Adds a vector. The vector <tt>other</tt> is added to the vector.
      *
-     * @param other other vector
-     * @return dot product of both vectors
+     * @param other the vector to be added
+     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
      *
      * @since 1
      */
-    public double dot(final Vector other) {
+    public void add(final Vector other) {
         if (other == null) {
             throw new NullPointerException("other");
         }
+
+        this.x = this.x + other.x;
+        this.y = this.y + other.y;
+    }
+
+    /**
+     * Calculates the dot product of two vectors.
+     *
+     * @param other other vector
+     * @return dot product of both vectors
+     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
+     *
+     * @since 1
+     */
+    public float dot(final Vector other) {
+        if (other == null) {
+            throw new NullPointerException("other");
+        }
+
         return this.x * other.x + this.y * other.y;
     }
 
     /**
-     * Returns the inverse vector of this vector, which is the vector with the
-     * same length as this vector pointing in the opposite direction.
+     * Returns the angle enclosed by two vectors.
      *
-     * @return inverse of this vector
-     * 
+     * @param other the other vector
+     * @return angle enclosed by <tt>this</tt> and <tt>other</tt>
+     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
+     *
      * @since 1
      */
-    public Vector inverse() {
-        return new Vector(-this.x, -this.y);
+    public double enclosedAngle(final Vector other) {
+        if (other == null) {
+            throw new NullPointerException("other");
+        }
+
+        return Math.atan2(Math.abs(other.y - this.y), Math.abs(other.x - this.x));
     }
 
     /**
-     * Returns the current length. The length of a vector is never negative.
+     * Inverts the vector. The operation inverts the direction of the vector.
+     * The length of the vector remains unchanged.
+     */
+    public void invert() {
+        this.x = -this.x;
+        this.y = -this.y;
+    }
+
+    /**
+     * Returns the length. Calculates and returns the length of the vector.
      *
-     * @return current length
-     * 
+     * @return the length of the vector
+     *
      * @since 1
      */
     public double length() {
@@ -141,125 +161,212 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * 
-     * @param other
-     * @return 
-     * 
+     * Normalizes the vector. The operation sets the length of the vector to 1.
+     * The direction of the vector remains unchanged.
+     *
      * @since 1
      */
-    public Vector minus(Vector other) {
-        return new Vector(this.x + (-other.x), this.y + (-other.y));
+    public void normalize() {
+        final float length = (float) this.length();
+        this.x = this.x / length;
+        this.y = this.y / length;
     }
 
     /**
-     * 
-     * @return 
-     * 
-     * @since 1
+     * Scales the vector. The operations multiplies the length of the vector
+     * with <tt>factor</tt>. The direction of the vector remains unchanged.
+     *
+     * @param factor the scaling factor
      */
-    public Vector normal() {
-        return new Vector(-this.y, this.x);
+    public void scale(final float factor) {
+        this.x = this.x * factor;
+        this.y = this.y * factor;
     }
 
     /**
-     * 
-     * @return 
-     * 
-     * @since 1
+     * Scales the vector. The operations multiplies the length of the vector
+     * with <tt>factor</tt>. The direction of the vector remains unchanged.
+     *
+     * @param factor the scaling factor
      */
-    public Vector normalized() {
-        return this.times(1.0 / this.length());
+    public void scale(final double factor) {
+        final float f = (float) factor;
+        this.x = this.x * f;
+        this.y = this.y * f;
     }
 
     /**
-     * 
-     * @param other
-     * @return 
-     * 
+     * Sets the coordinates. Sets the coordinates of the vector to the specified
+     * values.
+     *
+     * @param x the new x coordinate
+     * @param y the new y coordinate
+     */
+    public void set(final double x, final double y) {
+        this.x = (float) x;
+        this.y = (float) y;
+    }
+
+    /**
+     * Sets the vector. Sets the coordinates of the vector to the coordinates of
+     * the specified vector.
+     *
+     * @param other the vector
+     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt.
+     */
+    public void set(final Vector other) {
+        if (other == null) {
+            throw new NullPointerException("other");
+        }
+
+        this.x = other.x;
+        this.y = other.y;
+    }
+
+    /**
+     * Sets the direction. Sets the direction of the vector as specified. The
+     * direction is measured mathematically. That means it is measured in
+     * radians, the x-axis has the direction 0 and the y-axis has the direction
+     * of π/2. The length of the vector remains unchanged.
+     * <p>
+     * Has no effect on the null vector.
+     *
+     * @param direction the new direction
+     */
+    public void setDirection(final double direction) {
+        final float length = (float) this.length();
+        this.x = length * (float) Math.sin(direction);
+        this.y = length * (float) Math.cos(direction);
+    }
+
+    /**
+     * Sets the length. The operations sets the length of the vector to the
+     * specified <tt>length</tt>. The direction of the vector remains unchanged.
+     *
+     * @param length the new length
+     */
+    public void setLength(final float length) {
+        final float factor = length / (float) this.length();
+        this.x = this.x * factor;
+        this.y = this.y * factor;
+    }
+
+    /**
+     * Sets the length. The operations sets the length of the vector to the
+     * specified <tt>length</tt>. The direction of the vector remains unchanged.
+     *
+     * @param length the new length
+     */
+    public void setLength(double length) {
+        final float factor = (float) (length / this.length());
+        this.x = this.x * factor;
+        this.y = this.y * factor;
+    }
+
+    /**
+     * Subtracts a vector. The vector <tt>other</tt> is subtracted from the
+     * vector.
+     *
+     * @param other the vector to be subtracted
+     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
+     *
      * @since 1
      */
-    public Vector plus(Vector other) {
-        return new Vector(this.x + other.x, this.y + other.y);
+    public void subtract(final Vector other) {
+        if (other == null) {
+            throw new NullPointerException("other");
+        }
+
+        this.x = this.x - other.x;
+        this.y = this.y - other.y;
+    }
+
+    /**
+     * Returns the direction. Calculates and returns the direction of the
+     * vector. The direction is measured mathematically. That means it is
+     * measured in radians, the x-axis has the direction 0 and the y-axis has
+     * the direction of π/2.
+     *
+     * @return current direction
+     *
+     * @since 1
+     */
+    public double direction() {
+        return Math.atan2(this.y, this.x);
+    }
+
+    /**
+     * Calculates the normal vector.
+     *
+     * @return the normal vector to this vector
+     *
+     * @since 1
+     */
+    @Deprecated
+    public void rotate90() {
+        final float temp = this.x;
+        this.x = -this.y;
+        this.y = temp;
     }
 
     /**
      * Projects this vector on the other vector. The resulting vector points in
-     * the same direction as other. The length of the resulting vector is
-     * equal to the dot product of this and other.
+     * the same direction as other. The length of the resulting vector is equal
+     * to the dot product of this and other.
      *
      * @param other vector to be projected on
      * @return projection of this on other
+     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
+     *
      * @since 1
      */
+    @Deprecated
     public Vector projectOn(Vector other) {
-        final Vector on = other.normalized();
-        return on.times(this.dot(on));
-    }
-
-    /**
-     * 
-     * @param angle
-     * @return 
-     * 
-     * @since 1
-     */
-    public Vector rotatedBy(double angle) {
-        return Vector.fromPolar(this.length(), this.direction() + angle);
-    }
-
-    /**
-     * 
-     * @param v
-     * @return 
-     * 
-     * @since 1
-     */
-    public Vector times(double v) {
-        return new Vector(this.x * v, this.y * v);
-    }
-
-    /**
-     * 
-     * @param length
-     * @return 
-     * 
-     * @since 1
-     */
-    public Vector withLength(double length) {
-        double myLength = this.x * this.x + this.y * this.y;
-        if (myLength == 0) {
-            return fromPolar(length, this.direction);
+        if (other == null) {
+            throw new NullPointerException("other");
         }
-        else {
-            return this.times(length / Math.sqrt(myLength));
-        }
+
+        final Vector result = new Vector(other);
+        result.normalize();
+        result.scale(this.dot(result));
+        return result;
     }
 
-    public Vector withDirection(double direction) {
-        return fromPolar(this.length(), direction);
+    public void transform(Transformation t) {
+        final float newX = t.scaleX * this.x + t.skewX * this.y + t.translateX;
+        this.y = t.skewY * this.x + t.scaleY * this.y + t.translateY;
+        this.x = newX;
+    }
+
+    public void transformSize(Transformation t) {
+        final float newX = t.scaleX * this.x + t.skewX * this.y;
+        this.y = t.skewY * this.x + t.scaleY * this.y;
+        this.x = newX;
     }
 
     /**
-     * Converts this vector to a location. The locations coordinates
-     * correspond to the vector's rounded coordinates.
-     * 
+     * Converts this vector to a location. The locations coordinates correspond
+     * to the vector's rounded coordinates.
+     *
      * @return location corresponding to this vector
-     * 
+     *
      * @since 1
      */
+    @Deprecated
     public Location toLocation() {
         return new Location((int) Math.round(this.x),
                             (int) Math.round(this.y));
     }
 
     /**
-     * Converts this vector to a size. The resulting size's width and height
-     * are the rounded absolute values of this vector's coordinates.
-     * 
+     * Converts this vector to a size. The resulting size's width and height are
+     * the rounded absolute values of this vector's coordinates.
+     *
      * @return size corresponding to this vector
-     * 
+     *
      * @since 1
      */
+    @Deprecated
     public Size toSize() {
         return new Size((int) Math.round(Math.abs(this.x)),
                         (int) Math.round(Math.abs(this.y)));
@@ -267,53 +374,12 @@ public final class Vector implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("(x=");
+        final StringBuilder result = new StringBuilder();
+        result.append('(');
         result.append(this.x);
-        result.append(", y=");
+        result.append(", ");
         result.append(this.y);
-        result.append(", dir=");
-        result.append(this.direction());
-        result.append(", len=");
-        result.append(this.length());
-        result.append(")");
+        result.append(')');
         return result.toString();
-    }
-
-    private Vector(double x, double y, double direction) {
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
-    }
-
-    private static double asHeading(double radians) {
-        return normalizeDegrees(90 - Math.toDegrees(radians));
-    }
-
-    private static double asAngle(double heading) {
-        return Math.toRadians(90 - heading);
-    }
-
-    private static double normalizeDegrees(double degrees) {
-        degrees %= 360;
-        if (degrees < 0) {
-            degrees += 360;
-        }
-        if (degrees == 360) {
-            return 0;
-        }
-        return degrees;
-    }
-
-    private static double cos(double degrees) {
-        return Math.cos(asAngle(degrees));
-    }
-
-    private static double sin(double degrees) {
-        return Math.sin(asAngle(degrees));
-    }
-
-    private static double angle(double x, double y) {
-        return asHeading(Math.atan2(-y, x));
     }
 }
