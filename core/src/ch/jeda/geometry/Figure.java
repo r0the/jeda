@@ -27,9 +27,11 @@ import ch.jeda.ui.Canvas;
 public abstract class Figure {
 
     private final Vector location;
+    private final Transformation worldTransformation;
+    private final Transformation inverse;
+    private boolean dirty;
     private Figure parent;
     private double rotation;
-    private Transformation worldTransformation;
 
     public final Collision collideWith(Figure other) {
         if (other == null || other == this) {
@@ -63,7 +65,7 @@ public abstract class Figure {
             throw new NullPointerException("canvas");
         }
 
-        canvas.setTransformation(this.worldTransformation());
+        this.setTransformation(canvas);
         this.doDraw(canvas);
     }
 
@@ -172,29 +174,22 @@ public abstract class Figure {
         this.changed();
     }
 
-    /**
-     * Returns the world transformation for the figure. This is the
-     * transformation that transforms local figure coordinates to world
-     * coordinates. The method {@link #draw(ch.jeda.ui.Canvas)} sets this
-     * transformation on the canvas prior to drawing.
-     *
-     * @return world transformation for the figure
-     */
-    protected Transformation worldTransformation() {
-        if (this.worldTransformation == null) {
-            if (this.parent != null) {
-                this.worldTransformation = this.parent.worldTransformation();
-            }
-            else {
-                this.worldTransformation = Transformation.IDENTITY;
-            }
-
-            this.worldTransformation = this.worldTransformation.
-                    translatedBy(this.location.x, this.location.y).
-                    rotatedBy(this.rotation);
+    protected void updateTransformation() {
+        if (!this.dirty) {
+            return;
         }
 
-        return this.worldTransformation;
+        if (this.parent != null) {
+            this.worldTransformation.set(this.parent.worldTransformation);
+        }
+        else {
+            this.worldTransformation.setIdentity();
+        }
+
+        this.worldTransformation.translate(this.location);
+        this.worldTransformation.rotate(this.rotation);
+        this.worldTransformation.invert(this.inverse);
+        this.dirty = false;
     }
 
     /**
@@ -202,10 +197,8 @@ public abstract class Figure {
      */
     protected Figure() {
         this.location = new Vector();
-    }
-
-    protected void changed() {
-        this.worldTransformation = null;
+        this.worldTransformation = Transformation.createIdentity();
+        this.inverse = Transformation.createIdentity();
     }
 
     protected abstract Collision doCollideWith(Figure other);
@@ -216,16 +209,28 @@ public abstract class Figure {
 
     protected abstract boolean doesContain(Vector point);
 
+    protected void changed() {
+        this.dirty = true;
+    }
+
+    protected void setTransformation(Canvas canvas) {
+        this.updateTransformation();
+        canvas.setTransformation(this.worldTransformation);
+    }
+
     void localToWorld(Vector v) {
-        v.transform(this.worldTransformation());
+        this.updateTransformation();
+        this.worldTransformation.transformPoint(v);
     }
 
     void localToWorldDirection(Vector v) {
-        v.transformSize(this.worldTransformation());
+        this.updateTransformation();
+        this.worldTransformation.transformDelta(v);
     }
 
     void worldToLocal(Vector v) {
-        v.transform(this.worldTransformation().inverted());
+        this.updateTransformation();
+        this.inverse.transformPoint(v);
     }
 
     void setParent(Figure value) {

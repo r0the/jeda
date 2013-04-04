@@ -29,7 +29,6 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -81,7 +80,7 @@ class JavaCanvasImp implements CanvasImp {
         assert image != null;
         assert image instanceof JavaImageImp;
 
-        final BufferedImage awtImage = ((JavaImageImp) image).getBufferedImage();
+        final BufferedImage awtImage = ((JavaImageImp) image).bufferedImage;
         this.graphics.drawImage(awtImage, x, y, null);
         this.modified();
     }
@@ -208,11 +207,9 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void setTransformation(Transformation transformation) {
-        assert transformation != null;
-        this.graphics.setTransform(new AffineTransform(
-                transformation.scaleX, transformation.skewY,
-                transformation.skewX, transformation.scaleY,
-                transformation.translateX, transformation.translateY));
+        assert transformation instanceof JavaTransformation;
+
+        this.graphics.setTransform(((JavaTransformation) transformation).matrix);
     }
 
     @Override

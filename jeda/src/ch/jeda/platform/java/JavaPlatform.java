@@ -18,6 +18,7 @@ package ch.jeda.platform.java;
 
 import ch.jeda.Engine;
 import ch.jeda.Size;
+import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
@@ -40,6 +41,11 @@ class JavaPlatform implements Platform {
     @Override
     public CanvasImp createCanvasImp(Size size) {
         return new JavaCanvasImp(size);
+    }
+
+    @Override
+    public Transformation createTransformation() {
+        return new JavaTransformation();
     }
 
     @Override

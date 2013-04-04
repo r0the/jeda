@@ -33,125 +33,14 @@ import java.io.Serializable;
  * transformation objects are created by applying a transformation to an
  * existing one, for example by calling {@link #rotatedBy(double)}.
  *
- * @see {@link ch.jeda.ui.Canvas#pushTransformation(ch.jeda.Transformation)}
- * @see {@link ch.jeda.ui.Canvas#popTransformation()}
+ * @see ch.jeda.ui.Canvas#setTransformation(ch.jeda.Transformation)
+ * @see ch.jeda.ui.Canvas#getTransformation()
  * @since 1
  */
-public final class Transformation implements Serializable {
+public abstract class Transformation implements Serializable {
 
-    /**
-     * The identity transformation. This transformation maps every point of the
-     * plane to itself.
-     *
-     * @since 1
-     */
-    public static final Transformation IDENTITY = new Transformation();
-    /**
-     * The scale factor along the x-axis. This value corresponds to the element
-     * m00 of the transformation matrix.
-     *
-     * @since 1
-     */
-    public final float scaleX;
-    /**
-     * The skew factor along the x-axis. This value corresponds to the element
-     * m01 of the transformation matrix.
-     *
-     * @since 1
-     */
-    public final float skewX;
-    /**
-     * The translation along the x-axis. This value corresponds to the element
-     * m02 of the transformation matrix.
-     *
-     * @since 1
-     */
-    public final float translateX;
-    /**
-     * The skew factor along the y-axis. This value corresponds to the element
-     * m10 of the transformation matrix.
-     *
-     * @since 1
-     */
-    public final float skewY;
-    /**
-     * The scale factor along the y-axis. This value corresponds to the element
-     * m11 of the transformation matrix.
-     *
-     * @since 1
-     */
-    public final float scaleY;
-    /**
-     * The translation along the y-axis. This value corresponds to the element
-     * m12 of the transformation matrix.
-     *
-     * @since 1
-     */
-    public final float translateY;
-
-    /**
-     * Creates a new rotation transformation. The returned transformation
-     * represents a clockwise rotation of the specified angle with the origin as
-     * fixed point.
-     * <p>
-     * The angle has to be specified in radians.
-     * <p>
-     * Note that this method uses the usual mathematical interpretation of a
-     * positive angle. The inverse rotation direction results from the y-axis
-     * pointing downwards.
-     *
-     * @param angle the rotation angle
-     * @return rotation transformation
-     *
-     * @since 1
-     */
-    public static Transformation rotate(double angle) {
-        final float sin = (float) Math.sin(angle);
-        final float cos = (float) Math.cos(angle);
-
-        return new Transformation(cos, -sin, 0f, sin, cos, 0f);
-    }
-
-    /**
-     * Creates a new scaling transformation. The returned transformation
-     * represents a scaling with the origin as fixed point.
-     *
-     * @param sx the scaling factor for the x-axis
-     * @param sy the scaling factor for the y-axis
-     * @return scaling transformation
-     *
-     * @since 1
-     */
-    public static Transformation scale(double sx, double sy) {
-        return new Transformation((float) sx, 0f, 0f, 0f, (float) sy, 0f);
-    }
-
-    /**
-     * Creates a new translation transformation. The returned transformation
-     * represents a translation by the specified vector.
-     *
-     * @param t the translation vector
-     * @return translation transformation
-     *
-     * @since 1
-     */
-    public static Transformation translate(Vector t) {
-        return new Transformation(1f, 0f, (float) t.x, 0f, 1f, (float) t.y);
-    }
-
-    /**
-     * Creates a new translation transformation. The returned transformation
-     * represents a translation by the specified values in direction of both
-     * axes.
-     *
-     * @param tx the translation in direction of the x-axis
-     * @param ty the translation in direction of the y-axis
-     * @return translation transformation
-     *
-     * @since 1
-     */
-    public static Transformation translate(double tx, double ty) {
-        return new Transformation(1f, 0f, (float) tx, 0f, 1f, (float) ty);
+    public static Transformation createIdentity() {
+        return Engine.getCurrentEngine().createTransformation();
     }
 
     /**
@@ -165,26 +54,7 @@ public final class Transformation implements Serializable {
      *
      * @since 1
      */
-    public Transformation combinedWith(Transformation other) {
-        if (other == null) {
-            throw new NullPointerException("other");
-        }
-        else if (this == IDENTITY) {
-            return other;
-        }
-        else if (other == IDENTITY) {
-            return this;
-        }
-        else {
-            return new Transformation(
-                    this.scaleX * other.scaleX + this.skewX * other.skewY,
-                    this.scaleX * other.skewX + this.skewX * other.scaleY,
-                    this.scaleX * other.translateX + this.skewX * other.translateY + this.translateX,
-                    this.skewY * other.scaleX + this.scaleY * other.skewY,
-                    this.skewY * other.skewX + this.scaleY * other.scaleX,
-                    this.skewY * other.translateX + this.scaleY * other.translateY + this.translateY);
-        }
-    }
+    public abstract void concatenate(Transformation other);
 
     /**
      * Inverts the transformation. Calculates and returns the inverse
@@ -195,19 +65,9 @@ public final class Transformation implements Serializable {
      *
      * @since 1
      */
-    public Transformation inverted() {
-        final float d = this.scaleX * this.scaleY - this.skewX * this.skewY;
+    public abstract boolean invert(Transformation inverse);
 
-        if (Math.abs(d) <= Double.MIN_VALUE) {
-            throw new IllegalStateException("Transformation is not invertible.");
-        }
-
-        return new Transformation(
-                this.scaleY / d, -this.skewX / d,
-                (this.skewX * this.translateY - this.scaleY * this.translateX) / d,
-                -this.skewY / d, this.scaleX / d,
-                (this.skewY * this.translateX - this.scaleX * this.translateY) / d);
-    }
+    public abstract boolean isIdentity();
 
     /**
      * Adds a rotation to the transformation. Calculates and returns a new
@@ -221,18 +81,7 @@ public final class Transformation implements Serializable {
      *
      * @since 1
      */
-    public Transformation rotatedBy(double angle) {
-        final float sin = (float) Math.sin(angle);
-        final float cos = (float) Math.cos(angle);
-
-        return new Transformation(
-                cos * this.scaleX + sin * this.skewX,
-                -sin * this.scaleX + cos * this.skewX,
-                this.translateX,
-                cos * this.skewY + sin * this.scaleY,
-                -sin * this.skewY + cos * this.scaleY,
-                this.translateY);
-    }
+    public abstract void rotate(double angle);
 
     /**
      * Adds a scaling to the transformation. Calculates and returns a new
@@ -247,60 +96,11 @@ public final class Transformation implements Serializable {
      *
      * @since 1
      */
-    public Transformation scaledBy(double sx, double sy) {
-        return new Transformation(
-                this.scaleX * (float) sx, this.skewX, this.translateX,
-                this.skewY, this.scaleY * (float) sy, this.translateY);
-    }
+    public abstract void scale(double sx, double sy);
 
-    /**
-     * Applies the transformation to a vector. Calculates and returns the
-     * resulting vector.
-     *
-     * @param v the vector to apply the transformation to
-     * @return the transformed vector
-     * @throws NullPointerException if <tt>v</tt> is <tt>null</tt>
-     *
-     * @since 1
-     */
-    public Vector transform(Vector v) {
-        if (v == null) {
-            throw new NullPointerException("v");
-        }
+    public abstract void set(Transformation other);
 
-        return new Vector(
-                this.scaleX * v.x + this.skewX * v.y + this.translateX,
-                this.skewY * v.x + this.scaleY * v.y + this.translateY);
-    }
-
-    public Vector transformSize(Vector v) {
-        return new Vector(
-                this.scaleX * v.x + this.skewX * v.y,
-                this.skewY * v.x + this.scaleY * v.y);
-    }
-
-    /**
-     * Adds a translation to the transformation. Calculates and returns a new
-     * transformation that results from adding a translation after this
-     * transformation.
-     * <p>
-     * Same as <tt>combinedWidth(Translation.translate(t)</tt>
-     *
-     * @param t the translation vector
-     * @return the combined new transformation
-     * @throws NullPointerException if <tt>t</tt> is <tt>null</tt>
-     *
-     * @since 1
-     */
-    public Transformation translatedBy(Vector t) {
-        if (t == null) {
-            throw new NullPointerException("t");
-        }
-
-        return new Transformation(
-                this.scaleX, this.skewX, this.translateX + (float) t.x,
-                this.skewY, this.scaleY, this.translateY + (float) t.y);
-    }
+    public abstract void setIdentity();
 
     /**
      * Adds a translation to the transformation. Calculates and returns a new
@@ -315,23 +115,34 @@ public final class Transformation implements Serializable {
      *
      * @since 1
      */
-    public Transformation translatedBy(double tx, double ty) {
-        return new Transformation(
-                this.scaleX, this.skewX, this.translateX + (float) tx,
-                this.skewY, this.scaleY, this.translateY + (float) ty);
+    public abstract void translate(double tx, double ty);
+
+    public final void translate(final Vector t) {
+        this.translate(t.x, t.y);
     }
 
-    private Transformation() {
-        this(1f, 0f, 0f, 0f, 1f, 0f);
+    public final void transformPoint(Vector point) {
+        float[] vec = new float[2];
+        vec[0] = point.x;
+        vec[1] = point.y;
+        this.transform(vec);
+        point.x = vec[0];
+        point.y = vec[1];
     }
 
-    private Transformation(float scaleX, float skewX, float translateX,
-                           float skewY, float scaleY, float translateY) {
-        this.scaleX = scaleX;
-        this.skewX = skewX;
-        this.translateX = translateX;
-        this.skewY = skewY;
-        this.scaleY = scaleY;
-        this.translateY = translateY;
+    public final void transformDelta(Vector delta) {
+        float[] vec = new float[2];
+        vec[0] = delta.x;
+        vec[1] = delta.y;
+        this.transformDelta(vec);
+        delta.x = vec[0];
+        delta.y = vec[1];
+    }
+
+    protected abstract void transform(float[] points);
+
+    protected abstract void transformDelta(float[] deltas);
+
+    protected Transformation() {
     }
 }

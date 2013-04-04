@@ -19,7 +19,6 @@ package ch.jeda.platform.android;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -33,8 +32,6 @@ import ch.jeda.ui.Color;
 class AndroidCanvasImp implements CanvasImp {
 
     private final Paint fillPaint;
-    private final Matrix matrix;
-    private final float[] matrixArray;
     private final Paint pixelPaint;
     private final Paint strokePaint;
     private final Paint textPaint;
@@ -182,14 +179,7 @@ class AndroidCanvasImp implements CanvasImp {
 
     @Override
     public void setTransformation(Transformation transformation) {
-        this.matrixArray[Matrix.MSCALE_X] = transformation.scaleX;
-        this.matrixArray[Matrix.MSCALE_Y] = transformation.scaleY;
-        this.matrixArray[Matrix.MSKEW_X] = transformation.skewX;
-        this.matrixArray[Matrix.MSKEW_Y] = transformation.skewY;
-        this.matrixArray[Matrix.MTRANS_X] = transformation.translateX;
-        this.matrixArray[Matrix.MTRANS_Y] = transformation.translateY;
-        this.matrix.setValues(this.matrixArray);
-        this.canvas.setMatrix(this.matrix);
+        this.canvas.setMatrix(((AndroidTransformation) transformation).matrix);
     }
 
     @Override
@@ -208,11 +198,6 @@ class AndroidCanvasImp implements CanvasImp {
         this.fillPaint = new Paint();
         this.fillPaint.setStyle(Paint.Style.FILL);
         this.fillPaint.setAntiAlias(true);
-        this.matrix = new Matrix();
-        this.matrixArray = new float[9];
-        this.matrixArray[Matrix.MPERSP_0] = 0f;
-        this.matrixArray[Matrix.MPERSP_1] = 0f;
-        this.matrixArray[Matrix.MPERSP_2] = 1f;
         this.pixelPaint = new Paint();
         this.strokePaint = new Paint();
         this.strokePaint.setStyle(Paint.Style.STROKE);

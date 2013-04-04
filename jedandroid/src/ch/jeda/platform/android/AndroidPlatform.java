@@ -21,6 +21,7 @@ import android.app.Application;
 import android.graphics.BitmapFactory;
 import ch.jeda.Engine;
 import ch.jeda.Size;
+import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
@@ -44,6 +45,11 @@ class AndroidPlatform implements Platform {
         final AndroidCanvasImp result = new AndroidCanvasImp();
         result.setSize(size);
         return result;
+    }
+
+    @Override
+    public Transformation createTransformation() {
+        return new AndroidTransformation();
     }
 
     /**

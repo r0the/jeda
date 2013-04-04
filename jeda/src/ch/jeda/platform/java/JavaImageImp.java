@@ -34,7 +34,7 @@ import javax.imageio.ImageIO;
 
 class JavaImageImp implements ImageImp {
 
-    private final BufferedImage bufferedImage;
+    final BufferedImage bufferedImage;
     private final Size size;
 
     JavaImageImp(BufferedImage bufferedImage) {
@@ -83,10 +83,6 @@ class JavaImageImp implements ImageImp {
     @Override
     public boolean write(OutputStream out, Encoding encoding) throws IOException {
         return ImageIO.write(this.bufferedImage, convertEncoding(encoding), out);
-    }
-
-    BufferedImage getBufferedImage() {
-        return this.bufferedImage;
     }
 
     private static String convertEncoding(Encoding encoding) {

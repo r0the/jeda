@@ -332,18 +332,6 @@ public final class Vector implements Serializable {
         return result;
     }
 
-    public void transform(Transformation t) {
-        final float newX = t.scaleX * this.x + t.skewX * this.y + t.translateX;
-        this.y = t.skewY * this.x + t.scaleY * this.y + t.translateY;
-        this.x = newX;
-    }
-
-    public void transformSize(Transformation t) {
-        final float newX = t.scaleX * this.x + t.skewX * this.y;
-        this.y = t.skewY * this.x + t.scaleY * this.y;
-        this.x = newX;
-    }
-
     /**
      * Converts this vector to a location. The locations coordinates correspond
      * to the vector's rounded coordinates.

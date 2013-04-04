@@ -17,11 +17,14 @@
 package ch.jeda.platform;
 
 import ch.jeda.Size;
+import ch.jeda.Transformation;
 import java.io.InputStream;
 
 public interface Platform {
 
     CanvasImp createCanvasImp(Size size);
+
+    Transformation createTransformation();
 
     Iterable<String> listClassNames() throws Exception;
 
