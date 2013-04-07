@@ -32,7 +32,7 @@ class ViewManager {
     private final Stack<BaseView> visibleViews;
     private boolean stopped;
 
-    ViewManager(Activity activity) {
+    ViewManager(final Activity activity) {
         this.activity = activity;
         // Stack must be instantiated before any views
         this.visibleViews = new Stack();
@@ -46,7 +46,7 @@ class ViewManager {
         return this.activity;
     }
 
-    void closing(BaseView view) {
+    void closing(final BaseView view) {
         this.visibleViews.remove(view);
         if (this.visibleViews.empty()) {
             this.checkStop();
@@ -74,7 +74,7 @@ class ViewManager {
         this.show(this.selectionView);
     }
 
-    void showWindow(WindowRequest request) {
+    void showWindow(final WindowRequest request) {
         CanvasView displayView = new CanvasView(this, request);
         this.show(displayView);
     }
@@ -87,7 +87,6 @@ class ViewManager {
     void titleChanged(final BaseView view) {
         if (this.isTopView(view)) {
             this.activity.runOnUiThread(new Runnable() {
-
                 @Override
                 public void run() {
                     activity.setTitle(view.getTitle());
@@ -96,7 +95,7 @@ class ViewManager {
         }
     }
 
-    private void activateView(BaseView view) {
+    private void activateView(final BaseView view) {
         this.activity.setContentView(view);
         this.activity.setRequestedOrientation(view.getOrientation());
         this.activity.setTitle(view.getTitle());
@@ -109,14 +108,15 @@ class ViewManager {
         }
     }
 
-    private void show(BaseView view) {
+    private void show(final BaseView view) {
         if (!this.isTopView(view)) {
             this.visibleViews.push(view);
             this.activateView(view);
         }
     }
 
-    private boolean isTopView(BaseView view) {
-        return !this.visibleViews.isEmpty() && view.equals(this.visibleViews.peek());
+    private boolean isTopView(final BaseView view) {
+        return !this.visibleViews.isEmpty() &&
+               view.equals(this.visibleViews.peek());
     }
 }

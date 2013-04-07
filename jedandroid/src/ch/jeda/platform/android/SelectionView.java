@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -45,7 +45,7 @@ class SelectionView extends DialogView {
     private SelectionRequest request;
     private int selectedItemPosition;
 
-    SelectionView(ViewManager manager) {
+    SelectionView(final ViewManager manager) {
         super(manager);
         this.listView = new ListView(this.getContext());
         this.addContent(this.listView);
@@ -54,7 +54,7 @@ class SelectionView extends DialogView {
         this.listView.setOnItemClickListener(new OnItemClickListenerImp(this));
     }
 
-    void setSelectionRequest(SelectionRequest request) {
+    void setSelectionRequest(final SelectionRequest request) {
         this.request = request;
         this.setTitle(request.getTitle());
         this.listAdapter.setItems(request.getDisplayItems());
@@ -66,7 +66,7 @@ class SelectionView extends DialogView {
     }
 
     @Override
-    protected void onButtonClicked(Button button) {
+    protected void onButtonClicked(final Button button) {
     }
 
     private static class ListAdapterImp implements ListAdapter {
@@ -82,17 +82,17 @@ class SelectionView extends DialogView {
         }
 
         @Override
-        public boolean isEnabled(int position) {
+        public boolean isEnabled(final int position) {
             return true;
         }
 
         @Override
-        public void registerDataSetObserver(DataSetObserver observer) {
+        public void registerDataSetObserver(final DataSetObserver observer) {
             this.observers.add(observer);
         }
 
         @Override
-        public void unregisterDataSetObserver(DataSetObserver observer) {
+        public void unregisterDataSetObserver(final DataSetObserver observer) {
             this.observers.remove(observer);
         }
 
@@ -102,12 +102,12 @@ class SelectionView extends DialogView {
         }
 
         @Override
-        public Object getItem(int position) {
+        public Object getItem(final int position) {
             return this.items.get(position);
         }
 
         @Override
-        public long getItemId(int position) {
+        public long getItemId(final int position) {
             return position;
         }
 
@@ -117,18 +117,20 @@ class SelectionView extends DialogView {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, final View convertView,
+                            final ViewGroup parent) {
             View result = convertView;
             if (result == null) {
                 result = this.createRowView();
             }
 
-            ((TextView) result.findViewById(TEXT_VIEW_ID)).setText(this.items.get(position));
+            ((TextView) result.findViewById(TEXT_VIEW_ID)).setText(
+                    this.items.get(position));
             return result;
         }
 
         @Override
-        public int getItemViewType(int position) {
+        public int getItemViewType(final int position) {
             return 0;
         }
 
@@ -142,13 +144,13 @@ class SelectionView extends DialogView {
             return this.items.isEmpty();
         }
 
-        ListAdapterImp(Context context) {
+        ListAdapterImp(final Context context) {
             this.context = context;
             this.observers = new HashSet();
             this.items = new ArrayList();
         }
 
-        void setItems(Collection<String> items) {
+        void setItems(final Collection<String> items) {
             this.items.clear();
             this.items.addAll(items);
             for (DataSetObserver observer : this.observers) {
@@ -157,11 +159,13 @@ class SelectionView extends DialogView {
         }
 
         private View createRowView() {
-            LinearLayout result = new LinearLayout(this.context);
+            final LinearLayout result = new LinearLayout(this.context);
             result.setOrientation(LinearLayout.HORIZONTAL);
-            TextView textView = new TextView(this.context);
+            final TextView textView = new TextView(this.context);
             textView.setId(TEXT_VIEW_ID);
-            textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            textView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
             textView.setGravity(Gravity.CENTER_VERTICAL);
             textView.setHeight(50);
             textView.setTextSize(20);
@@ -174,12 +178,14 @@ class SelectionView extends DialogView {
 
         private final SelectionView selectionView;
 
-        public OnItemClickListenerImp(SelectionView selectionView) {
+        public OnItemClickListenerImp(final SelectionView selectionView) {
             this.selectionView = selectionView;
         }
 
         @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        public void onItemClick(final AdapterView<?> adapterView,
+                                final View view, final int position,
+                                final long id) {
             this.selectionView.selectedItemPosition = position;
             this.selectionView.accept();
         }

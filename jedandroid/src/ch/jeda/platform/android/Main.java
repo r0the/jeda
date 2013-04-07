@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,9 +21,48 @@ import android.os.Bundle;
 
 public final class Main extends Activity {
 
+    private AndroidPlatform platform;
+
+    public Main() {
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new AndroidPlatform(this).start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.platform.onActivityPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.platform.onActivityResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.platform = new AndroidPlatform(this);
+        this.platform.onActivityStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.platform.onActivityStop();
     }
 }

@@ -30,13 +30,13 @@ abstract class DialogView extends BaseView {
     private final LinearLayout buttonPanel;
     private final OnClickListener onClickListener;
 
-    DialogView(ViewManager manager) {
+    DialogView(final ViewManager manager) {
         super(manager);
         this.buttonPanel = new LinearLayout(this.getContext());
         this.buttonPanel.setId(1);
         this.buttonPanel.setOrientation(LinearLayout.HORIZONTAL);
         this.buttonPanel.setGravity(Gravity.CENTER);
-        RelativeLayout.LayoutParams buttonPanelParams =
+        final RelativeLayout.LayoutParams buttonPanelParams =
                 new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.FILL_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -46,8 +46,8 @@ abstract class DialogView extends BaseView {
         this.onClickListener = new OnClickListenerImp(this);
     }
 
-    protected Button addButton(String text) {
-        Button result = new Button(this.buttonPanel.getContext());
+    protected Button addButton(final String text) {
+        final Button result = new Button(this.buttonPanel.getContext());
         result.setText(text);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -59,8 +59,8 @@ abstract class DialogView extends BaseView {
         return result;
     }
 
-    protected void addContent(View content) {
-        RelativeLayout.LayoutParams contentParams =
+    protected void addContent(final View content) {
+        final RelativeLayout.LayoutParams contentParams =
                 new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.FILL_PARENT,
                 RelativeLayout.LayoutParams.FILL_PARENT);
@@ -75,12 +75,12 @@ abstract class DialogView extends BaseView {
 
         private final DialogView view;
 
-        public OnClickListenerImp(DialogView view) {
+        public OnClickListenerImp(final DialogView view) {
             this.view = view;
         }
 
         @Override
-        public void onClick(View view) {
+        public void onClick(final View view) {
             this.view.onButtonClicked((Button) view);
         }
     }

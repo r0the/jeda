@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,7 +27,7 @@ class LogView extends DialogView {
     private final ScrollView scrollView;
     private final TextView textView;
 
-    LogView(ViewManager manager) {
+    LogView(final ViewManager manager) {
         super(manager);
         this.setTitle(Message.translate(Message.LOG_TITLE));
 
@@ -41,13 +41,13 @@ class LogView extends DialogView {
         this.addButton(Message.translate(Message.LOG_BUTTON));
     }
 
-    void log(String text) {
+    void log(final String text) {
         this.textView.append(text);
         this.scrollView.fullScroll(View.FOCUS_DOWN);
     }
 
     @Override
-    protected void onButtonClicked(Button button) {
+    protected void onButtonClicked(final Button button) {
         this.cancel();
     }
 }

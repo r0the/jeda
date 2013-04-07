@@ -28,12 +28,12 @@ public class AndroidTransformation extends Transformation {
     final Matrix matrix;
 
     @Override
-    public void concatenate(Transformation other) {
+    public void concatenate(final Transformation other) {
         this.matrix.postConcat(((AndroidTransformation) other).matrix);
     }
 
     @Override
-    public boolean invert(Transformation inverse) {
+    public boolean invert(final Transformation inverse) {
         return this.matrix.invert(((AndroidTransformation) inverse).matrix);
     }
 
@@ -43,17 +43,17 @@ public class AndroidTransformation extends Transformation {
     }
 
     @Override
-    public void rotate(double angle) {
+    public void rotate(final double angle) {
         this.matrix.postRotate((float) Math.toDegrees(angle));
     }
 
     @Override
-    public void scale(double sx, double sy) {
+    public void scale(final double sx, final double sy) {
         this.matrix.postScale((float) sx, (float) sy);
     }
 
     @Override
-    public void set(Transformation other) {
+    public void set(final Transformation other) {
         this.matrix.set(((AndroidTransformation) other).matrix);
     }
 
@@ -63,17 +63,17 @@ public class AndroidTransformation extends Transformation {
     }
 
     @Override
-    public void translate(double tx, double ty) {
+    public void translate(final double tx, final double ty) {
         this.matrix.postTranslate((float) tx, (float) ty);
     }
 
     @Override
-    protected void transform(float[] points) {
+    protected void transform(final float[] points) {
         this.matrix.mapPoints(points);
     }
 
     @Override
-    protected void transformDelta(float[] deltas) {
+    protected void transformDelta(final float[] deltas) {
         this.matrix.mapVectors(deltas);
     }
 

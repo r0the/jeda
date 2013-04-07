@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -44,12 +44,12 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     }
 
     @Override
-    public void setFeature(Feature feature, boolean enabled) {
+    public void setFeature(final Feature feature, final boolean enabled) {
         this.canvasView.setFeature(feature, enabled);
     }
 
     @Override
-    public void setMouseCursor(MouseCursor mouseCursor) {
+    public void setMouseCursor(final MouseCursor mouseCursor) {
         // ignore
     }
 
@@ -64,7 +64,7 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
         return this.canvasView.fetchEvents();
     }
 
-    static AndroidWindowImp create(CanvasView canvasView) {
+    static AndroidWindowImp create(final CanvasView canvasView) {
         if (canvasView.getFeatures().contains(Window.Feature.DoubleBuffered)) {
             return new AndroidWindowImp(canvasView);
         }
@@ -73,14 +73,14 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
         }
     }
 
-    private AndroidWindowImp(CanvasView canvasView) {
+    private AndroidWindowImp(final CanvasView canvasView) {
         this.canvasView = canvasView;
         this.setSize(this.canvasView.getSize());
     }
 
     private static class SingleBufferedAndroidViewImp extends AndroidWindowImp {
 
-        SingleBufferedAndroidViewImp(CanvasView displayView) {
+        SingleBufferedAndroidViewImp(final CanvasView displayView) {
             super(displayView);
         }
 

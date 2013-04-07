@@ -19,6 +19,7 @@ package ch.jeda.platform.android;
 import android.app.Activity;
 import android.app.Application;
 import android.graphics.BitmapFactory;
+import android.view.WindowManager;
 import ch.jeda.Engine;
 import ch.jeda.Size;
 import ch.jeda.Transformation;
@@ -41,7 +42,7 @@ class AndroidPlatform implements Platform {
     private final ViewManager viewManager;
 
     @Override
-    public CanvasImp createCanvasImp(Size size) {
+    public CanvasImp createCanvasImp(final Size size) {
         final AndroidCanvasImp result = new AndroidCanvasImp();
         result.setSize(size);
         return result;
@@ -75,17 +76,17 @@ class AndroidPlatform implements Platform {
     }
 
     @Override
-    public ImageImp loadImageImp(InputStream in) throws Exception {
+    public ImageImp loadImageImp(final InputStream in) throws Exception {
         return new AndroidImageImp(BitmapFactory.decodeStream(in));
     }
 
     @Override
-    public void log(String text) {
+    public void log(final String text) {
         this.activity.runOnUiThread(new LogTask(this.viewManager, text));
     }
 
     @Override
-    public void showInputRequest(InputRequest inputRequest) {
+    public void showInputRequest(final InputRequest inputRequest) {
         this.activity.runOnUiThread(new ShowInputRequestTask(
                 this.viewManager, inputRequest));
     }
@@ -96,13 +97,13 @@ class AndroidPlatform implements Platform {
     }
 
     @Override
-    public void showSelectionRequest(SelectionRequest selectionRequest) {
+    public void showSelectionRequest(final SelectionRequest selectionRequest) {
         this.activity.runOnUiThread(new ShowSelectionRequestTask(
                 this.viewManager, selectionRequest));
     }
 
     @Override
-    public void showWindow(WindowRequest windowRequest) {
+    public void showWindow(final WindowRequest windowRequest) {
         this.activity.runOnUiThread(new ShowWindowTask(
                 this.viewManager, windowRequest));
     }
@@ -114,12 +115,25 @@ class AndroidPlatform implements Platform {
 
     AndroidPlatform(Activity activity) {
         this.activity = activity;
+        // Adjust window when soft keyboard is shown.
+        this.activity.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         this.engine = new Engine(this);
         this.viewManager = new ViewManager(activity);
     }
 
-    void start() {
+    void onActivityPause() {
+    }
+
+    void onActivityResume() {
+    }
+
+    void onActivityStart() {
         this.engine.start();
+    }
+
+    void onActivityStop() {
+        this.engine.requestStop();
     }
 
     private static class LogTask implements Runnable {
@@ -132,7 +146,7 @@ class AndroidPlatform implements Platform {
             this.viewManager.log(this.text);
         }
 
-        LogTask(ViewManager viewManager, String text) {
+        LogTask(final ViewManager viewManager, final String text) {
             this.viewManager = viewManager;
             this.text = text;
         }
@@ -148,7 +162,8 @@ class AndroidPlatform implements Platform {
             this.viewManager.showInputRequest(this.inputRequest);
         }
 
-        ShowInputRequestTask(ViewManager viewManager, InputRequest inputRequest) {
+        ShowInputRequestTask(final ViewManager viewManager,
+                             final InputRequest inputRequest) {
             this.viewManager = viewManager;
             this.inputRequest = inputRequest;
         }
@@ -163,7 +178,7 @@ class AndroidPlatform implements Platform {
             this.viewManager.showLog();
         }
 
-        ShowLogTask(ViewManager viewManager) {
+        ShowLogTask(final ViewManager viewManager) {
             this.viewManager = viewManager;
         }
     }
@@ -178,7 +193,8 @@ class AndroidPlatform implements Platform {
             this.viewManager.showSelectionRequest(this.selectionRequest);
         }
 
-        ShowSelectionRequestTask(ViewManager viewManager, SelectionRequest selectionRequest) {
+        ShowSelectionRequestTask(final ViewManager viewManager,
+                                 final SelectionRequest selectionRequest) {
             this.viewManager = viewManager;
             this.selectionRequest = selectionRequest;
         }
@@ -194,7 +210,8 @@ class AndroidPlatform implements Platform {
             this.viewManager.showWindow(this.windowRequest);
         }
 
-        ShowWindowTask(ViewManager viewManager, WindowRequest windowRequest) {
+        ShowWindowTask(final ViewManager viewManager,
+                       final WindowRequest windowRequest) {
             this.viewManager = viewManager;
             this.windowRequest = windowRequest;
         }
@@ -209,7 +226,7 @@ class AndroidPlatform implements Platform {
             this.viewManager.stop();
         }
 
-        StopTask(ViewManager viewManager) {
+        StopTask(final ViewManager viewManager) {
             this.viewManager = viewManager;
         }
     }

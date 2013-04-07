@@ -50,8 +50,9 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     private Size surfaceSize;
 
     @Override
-    public boolean onKey(View view, int keyCode, KeyEvent event) {
-        Key key = KEY_MAP.get(keyCode);
+    public boolean onKey(final View view, final int keyCode,
+                         final KeyEvent event) {
+        final Key key = KEY_MAP.get(keyCode);
         if (key == null) {
             return false;
         }
@@ -69,7 +70,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent event) {
+    public boolean onTouch(final View view, final MotionEvent event) {
         int index = 0;
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
@@ -79,14 +80,12 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
                         event.getPointerId(index),
                         (int) event.getX(index), (int) event.getY(index)));
                 break;
-
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 index = event.getActionIndex();
                 this.eventsIn.add(Event.createPointerUnavailable(
                         event.getPointerId(index)));
                 break;
-
             case MotionEvent.ACTION_MOVE:
                 for (index = 0; index < event.getPointerCount(); ++index) {
                     this.eventsIn.add(Event.createPointerMoved(
@@ -100,12 +99,13 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder) {
+    public void surfaceCreated(final SurfaceHolder holder) {
         this.surfaceAvailable = true;
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    public void surfaceChanged(final SurfaceHolder holder, final int format,
+                               final int width, final int height) {
         this.surfaceSize = new Size(width, height);
         if (this.request != null) {
             this.request.setResult(AndroidWindowImp.create(this));
@@ -114,11 +114,11 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
+    public void surfaceDestroyed(final SurfaceHolder holder) {
         this.surfaceAvailable = false;
     }
 
-    CanvasView(ViewManager manager, WindowRequest request) {
+    CanvasView(final ViewManager manager, final WindowRequest request) {
         super(manager);
         this.features = request.getFeatures();
         this.eventsIn = new ArrayList();
@@ -131,12 +131,11 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         this.surfaceView.setOnTouchListener(this);
         this.surfaceHolder = this.surfaceView.getHolder();
         this.surfaceHolder.addCallback(this);
-
         this.addView(this.surfaceView);
     }
 
     Iterable<Event> fetchEvents() {
-        List<Event> temp = this.eventsIn;
+        final List<Event> temp = this.eventsIn;
         this.eventsIn = this.eventsOut;
         this.eventsOut = temp;
         this.eventsIn.clear();
@@ -164,7 +163,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         return this.surfaceSize;
     }
 
-    void setBitmap(Bitmap bitmap) {
+    void setBitmap(final Bitmap bitmap) {
         if (this.surfaceAvailable) {
             Canvas canvas = this.surfaceHolder.lockCanvas();
             canvas.drawBitmap(bitmap, 0f, 0f, null);
@@ -172,7 +171,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         }
     }
 
-    void setFeature(Window.Feature feature, boolean enabled) {
+    void setFeature(final Window.Feature feature, final boolean enabled) {
         if (enabled) {
             this.features.add(feature);
         }
@@ -182,7 +181,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     }
 
     private static Map<Integer, Key> initKeyMap() {
-        Map<Integer, Key> result = new HashMap();
+        final Map<Integer, Key> result = new HashMap();
         result.put(KeyEvent.KEYCODE_A, Key.A);
         result.put(KeyEvent.KEYCODE_ALT_LEFT, Key.ALT_LEFT);
         result.put(KeyEvent.KEYCODE_ALT_RIGHT, Key.ALT_RIGHT);

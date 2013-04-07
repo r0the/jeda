@@ -25,11 +25,11 @@ import java.io.OutputStream;
 
 class AndroidImageImp implements ImageImp {
 
-    private final Bitmap bitmap;
+    final Bitmap bitmap;
     private final Size size;
 
     @Override
-    public ImageImp createScaledImage(int width, int height) {
+    public ImageImp createScaledImage(final int width, final int height) {
         assert width > 0;
         assert height > 0;
 
@@ -38,7 +38,8 @@ class AndroidImageImp implements ImageImp {
     }
 
     @Override
-    public ImageImp createSubImage(int x, int y, int width, int height) {
+    public ImageImp createSubImage(final int x, final int y,
+                                   final int width, final int height) {
         return new AndroidImageImp(Bitmap.createBitmap(
                 this.bitmap, x, y, width, height));
     }
@@ -49,7 +50,7 @@ class AndroidImageImp implements ImageImp {
     }
 
     @Override
-    public ImageImp replacePixels(Color oldColor, Color newColor) {
+    public ImageImp replacePixels(final Color oldColor, final Color newColor) {
         assert oldColor != null;
         assert newColor != null;
 
@@ -57,17 +58,14 @@ class AndroidImageImp implements ImageImp {
     }
 
     @Override
-    public boolean write(OutputStream out, Encoding encoding) throws IOException {
+    public boolean write(final OutputStream out, final Encoding encoding)
+            throws IOException {
         return this.bitmap.compress(convertEncoding(encoding), 100, out);
     }
 
-    AndroidImageImp(Bitmap bitmap) {
+    AndroidImageImp(final Bitmap bitmap) {
         this.bitmap = bitmap;
         this.size = new Size(this.bitmap.getWidth(), this.bitmap.getHeight());
-    }
-
-    Bitmap getBitmap() {
-        return this.bitmap;
     }
 
     private static Bitmap.CompressFormat convertEncoding(Encoding encoding) {
