@@ -271,7 +271,7 @@ public final class Image {
 
     private static ImageImp loadImp(String filePath) {
         if (!CACHE.containsKey(filePath)) {
-            CACHE.put(filePath, Engine.getCurrentEngine().loadImageImp(filePath));
+            CACHE.put(filePath, Engine.getContext().loadImageImp(filePath));
         }
 
         return CACHE.get(filePath);

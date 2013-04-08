@@ -16,13 +16,12 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.Engine;
 import ch.jeda.Size;
 import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
+import ch.jeda.platform.ContextImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
 import java.io.File;
@@ -32,9 +31,8 @@ import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-class JavaPlatform implements Platform {
+class JavaContextImp implements ContextImp {
 
-    private final Engine engine;
     private final ResourceFinder resourceFinder;
     private final WindowManager windowManager;
 
@@ -85,15 +83,14 @@ class JavaPlatform implements Platform {
     }
 
     @Override
-    public void stop() {
-        this.windowManager.stop();
+    public void shutdown() {
+        this.windowManager.shutdown();
     }
 
-    JavaPlatform(String[] args) {
+    JavaContextImp(String[] args) {
         setLookAndFeel();
-        this.engine = new Engine(this);
         this.resourceFinder = new ResourceFinder();
-        this.windowManager = new WindowManager(this.engine);
+        this.windowManager = new WindowManager();
         loadNativeLibrary("jinput-dx8.dll");
         loadNativeLibrary("jinput-dx8_64.dll");
         loadNativeLibrary("jinput-raw_64.dll");
@@ -104,12 +101,8 @@ class JavaPlatform implements Platform {
         loadNativeLibrary("libjinput-osx.jnilib");
     }
 
-    void start() {
-        this.engine.start();
-    }
-
     private static void loadNativeLibrary(String libraryName) {
-        final InputStream inputStream = JavaPlatform.class.getClassLoader().getResourceAsStream(libraryName);
+        final InputStream inputStream = JavaContextImp.class.getClassLoader().getResourceAsStream(libraryName);
         try {
             final String tempDir = System.getProperty("java.io.tmpdir");
             System.setProperty("net.java.games.input.librarypath", tempDir);
@@ -126,7 +119,7 @@ class JavaPlatform implements Platform {
             inputStream.close();
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
 

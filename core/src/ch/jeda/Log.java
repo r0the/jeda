@@ -27,22 +27,22 @@ public final class Log {
     }
 
     public static void debug(String message) {
-        Engine.getCurrentEngine().log(Level.Debug, message, null);
+        Engine.getContext().log(Level.Debug, message, null);
     }
 
     public static void debug(String message, Object... args) {
-        Engine.getCurrentEngine().log(Level.Debug, Util.args(message, args), null);
+        Engine.getContext().log(Level.Debug, Util.args(message, args), null);
     }
 
     public static void error(String messageKey, Object... args) {
-        Engine.getCurrentEngine().log(Level.Error, Util.args(Message.translate(messageKey), args), null);
+        Engine.getContext().log(Level.Error, Util.args(Message.translate(messageKey), args), null);
     }
 
     public static void info(String messageKey, Object... args) {
-        Engine.getCurrentEngine().log(Level.Info, Util.args(Message.translate(messageKey), args), null);
+        Engine.getContext().log(Level.Info, Util.args(Message.translate(messageKey), args), null);
     }
 
     public static void warning(String messageKey, Object... args) {
-        Engine.getCurrentEngine().log(Level.Warning, Util.args(Message.translate(messageKey), args), null);
+        Engine.getContext().log(Level.Warning, Util.args(Message.translate(messageKey), args), null);
     }
 }

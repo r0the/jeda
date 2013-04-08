@@ -21,22 +21,37 @@ import java.io.InputStream;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Properties {
+/**
+ * Represents a map of keys to values.
+ */
+public final class Properties {
 
     private final java.util.Properties imp;
+
+    public Properties() {
+        this.imp = new java.util.Properties();
+    }
 
     public Properties(String filePath) {
         this();
         try {
-            this.load(Engine.getCurrentEngine().openInputStream(filePath));
+            this.imp.load(Engine.getContext().openInputStream(filePath));
         }
         catch (Exception ex) {
             Log.warning(Message.FILE_READ_ERROR, filePath, ex.getMessage());
         }
     }
 
-    Properties() {
-        this.imp = new java.util.Properties();
+    public void addAll(final Properties properties) {
+        this.imp.putAll(properties.imp);
+    }
+
+    public void clear() {
+        this.imp.clear();
+    }
+
+    public Direction getDirection(String key) {
+        return Direction.parse(this.getString(key));
     }
 
     public double getDouble(String key, double defaultValue) {
@@ -49,6 +64,7 @@ public class Properties {
     }
 
     public int getInt(String key, int defaultValue) {
+
         try {
             return Integer.parseInt(this.getString(key));
         }
@@ -62,7 +78,7 @@ public class Properties {
     }
 
     public Set<String> keys() {
-        Set<String> result = new TreeSet();
+        final Set<String> result = new TreeSet();
         for (Object key : this.imp.keySet()) {
             result.add(key.toString());
         }
@@ -70,8 +86,32 @@ public class Properties {
         return result;
     }
 
-    final void load(InputStream in) throws IOException {
-        this.imp.load(in);
+    public Set<String> sections() {
+        final Set<String> result = new TreeSet();
+        for (String key : this.keys()) {
+            final int pos = key.indexOf('.');
+            if (pos != -1) {
+                result.add(key.substring(0, pos));
+            }
+        }
+
+        return result;
+    }
+
+    public Properties section(String prefix) {
+        final int len = prefix.length() + 1;
+        final Properties result = new Properties();
+        for (String key : this.keys()) {
+            if (key.startsWith(prefix)) {
+                result.imp.put(key.substring(len), this.imp.get(key));
+            }
+        }
+
+        return result;
+    }
+
+    public void setDirection(String key, Direction value) {
+        this.imp.setProperty(key, value.toString());
     }
 
     void loadFromSystem() {
@@ -80,7 +120,7 @@ public class Properties {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder();
         for (String key : this.keys()) {
             result.append(key);
             result.append('=');

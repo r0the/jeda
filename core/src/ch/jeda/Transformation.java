@@ -40,7 +40,7 @@ import java.io.Serializable;
 public abstract class Transformation implements Serializable {
 
     public static Transformation createIdentity() {
-        return Engine.getCurrentEngine().createTransformation();
+        return Engine.getContext().createTransformation();
     }
 
     /**

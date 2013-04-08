@@ -17,9 +17,9 @@
 package ch.jeda.ui;
 
 import ch.jeda.Engine;
+import ch.jeda.Size;
 import ch.jeda.platform.InputDeviceImp;
 import ch.jeda.platform.WindowImp;
-import ch.jeda.Size;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -401,7 +401,7 @@ public class Window extends Canvas {
             this.imp.close();
         }
 
-        this.imp = Engine.getCurrentEngine().showWindow(size, features);
+        this.imp = Engine.getContext().showWindow(size, features);
         this.events.reset();
         this.imp.setTitle(this.title);
         if (!this.hasFeature(Feature.DoubleBuffered)) {

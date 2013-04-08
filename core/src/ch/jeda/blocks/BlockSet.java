@@ -74,7 +74,7 @@ final class BlockSet {
 
     BlockSet() {
         this.blockMap = new HashMap();
-        Properties p = Engine.getCurrentEngine().getProperties();
+        Properties p = Engine.getContext().getProperties();
         this.sizeX = p.getInt("ch.jeda.blocks.sizex", 1);
         this.sizeY = p.getInt("ch.jeda.blocks.sizey", 1);
         this.sizeZ = p.getInt("ch.jeda.blocks.sizez", 1);

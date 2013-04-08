@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,6 +26,7 @@ package ch.jeda;
  */
 public abstract class Simulation extends Program {
 
+    private final int PAUSE_SLEEP_MILLIS = 200;
     private final FrequencyMeter frequencyMeter;
     private final Timer timer;
 
@@ -89,10 +90,16 @@ public abstract class Simulation extends Program {
     public final void run() {
         this.init();
         this.timer.start();
-        while (!this.stopRequested()) {
-            this.frequencyMeter.count();
-            this.step();
-            this.timer.tick();
+        while (this.getState() != ProgramState.Stopped) {
+            if (this.getState() == ProgramState.Paused) {
+                this.sleep(PAUSE_SLEEP_MILLIS);
+                this.timer.start();
+            }
+            else {
+                this.frequencyMeter.count();
+                this.step();
+                this.timer.tick();
+            }
         }
     }
 
@@ -106,7 +113,7 @@ public abstract class Simulation extends Program {
      * @see #getFrequency()
      * @since 1
      */
-    public final void setFrequency(int hertz) {
+    public final void setFrequency(final int hertz) {
         this.timer.setFrequency(hertz);
     }
 

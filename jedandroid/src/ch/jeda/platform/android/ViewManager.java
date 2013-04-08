@@ -18,6 +18,7 @@ package ch.jeda.platform.android;
 
 import android.app.Activity;
 import android.content.Context;
+import ch.jeda.Engine;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
@@ -30,7 +31,7 @@ class ViewManager {
     private final LogView logView;
     private final SelectionView selectionView;
     private final Stack<BaseView> visibleViews;
-    private boolean stopped;
+    private boolean shutdown;
 
     ViewManager(final Activity activity) {
         this.activity = activity;
@@ -40,6 +41,20 @@ class ViewManager {
         this.inputView = new InputView(this);
         this.logView = new LogView(this);
         this.selectionView = new SelectionView(this);
+    }
+
+    /**
+     * Closes a view. If it is the last closed view, signal the Jeda engine to
+     * stop.
+     */
+    void closeView() {
+        if (!this.visibleViews.isEmpty()) {
+            final BaseView view = this.visibleViews.pop();
+            view.cancel();
+            if (this.visibleViews.isEmpty()) {
+                Engine.stop();
+            }
+        }
     }
 
     Context getContext() {
@@ -79,8 +94,8 @@ class ViewManager {
         this.show(displayView);
     }
 
-    void stop() {
-        this.stopped = true;
+    void shutdown() {
+        this.shutdown = true;
         this.checkStop();
     }
 
@@ -103,7 +118,7 @@ class ViewManager {
     }
 
     private void checkStop() {
-        if (this.visibleViews.empty() && this.stopped) {
+        if (this.visibleViews.empty() && this.shutdown) {
             this.activity.finish();
         }
     }
@@ -116,7 +131,6 @@ class ViewManager {
     }
 
     private boolean isTopView(final BaseView view) {
-        return !this.visibleViews.isEmpty() &&
-               view.equals(this.visibleViews.peek());
+        return !this.visibleViews.isEmpty() && view == this.visibleViews.peek();
     }
 }

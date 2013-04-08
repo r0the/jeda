@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,124 +16,128 @@
  */
 package ch.jeda;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
- * This is the base class for all programs written using the Jeda framework.
+ * Base class for all Jeda programs.
  * <p>
  * To write a Jeda program, create a class that inherits from ch.jeda.Program
  * and overwrite the {@link #run()} method.
  * <p>
- * @version 1.0
+ *
+ * @since 1
  */
 public abstract class Program {
 
-    private final AtomicBoolean stopRequested;
+    private final Object stateLock;
+    private ProgramState state;
 
     /**
-     * Initializes this Program object.
+     * Constructs a program.
      *
-     * @since 1.0
+     * @since 1
      */
     protected Program() {
-        this.stopRequested = new AtomicBoolean(false);
+        this.stateLock = new Object();
+        this.state = ProgramState.Created;
+    }
+
+    public final ProgramState getState() {
+        synchronized (this.stateLock) {
+            return this.state;
+        }
     }
 
     /**
-     * Request this program to stop. After a call to this method, the method
-     * {@link #stopRequested()} will return <code>true</code>.
-     *
-     * @see #stopRequested()
-     * @since 1.0
+     * @deprecated This method should not be called. Return from the
+     * <tt>run()</tt> method to stop a Jeda program.
      */
+    @Deprecated
     public final void requestStop() {
-        this.stopRequested.set(true);
+        this.setState(ProgramState.Stopped);
     }
 
     /**
-     * Override this method to implement the program. If the program contains
-     * a loop, the result of {@link #stopRequested()} should be used as a
-     * breaking condition.
+     * Executes the program. Override this method to implement the program. If
+     * the program contains a loop, the result of {@link #stopRequested()}
+     * should be used as a breaking condition.
      *
-     * @since 1.0
+     * @since 1
      */
     public abstract void run();
 
     /**
      * Returns the Jeda system properties.
-     * 
+     *
      * @return Jeda system properties.
+     * @see Properties
      */
     protected final Properties getProperties() {
-        return Engine.getCurrentEngine().getProperties();
+        return Engine.getContext().getProperties();
     }
 
     /**
-     * Checks whether stop has been requested. This method returns <code>
-     * true</code> if {@link #requestStop()} has been called at least once,
-     * otherwise it returns <code>false</code>.
-     * 
-     * @return <code>true</code> if <code>requestStop()</code> has been called.
-     * @see #requestStop()
-     * @since 1.0
+     * @deprecated Use <tt>this.getState() == ProgramState.Stopped</tt> instead.
      */
+    @Deprecated
     protected final boolean stopRequested() {
-        return this.stopRequested.get();
+        return this.getState() == ProgramState.Stopped;
     }
 
     /**
-     * Prompts the user to input a <code>double</code> value. The specified
+     * Prompts the user to input a
+     * <code>double</code> value. The specified
      * <code>message</code> is displayed to the user. It may be formatted using
-     * simple HTML. Returns <code>0d</code> if the user cancels the input
-     * prompt.
-     * 
+     * simple HTML. Returns
+     * <code>0d</code> if the user cancels the input prompt.
+     *
      * @param message the message displayed to the user
      * @return <code>double</code> value entered by the user
-     * 
+     *
      * @since 1.0
      */
     protected final double readDouble(String message) {
-        return Engine.getCurrentEngine().readDouble(message);
+        return Engine.getContext().readDouble(message);
     }
 
     /**
-     * Prompts the user to input an <code>int</code> value. The specified
+     * Prompts the user to input an
+     * <code>int</code> value. The specified
      * <code>message</code> is displayed to the user. It may be formatted using
-     * simple HTML. Returns <code>0d</code> if the user cancels the input
-     * prompt.
-     * 
+     * simple HTML. Returns
+     * <code>0d</code> if the user cancels the input prompt.
+     *
      * @param message the message displayed to the user
      * @return <code>int</code> value entered by the user
-     * 
+     *
      * @since 1.0
      */
     protected final int readInt(String message) {
-        return Engine.getCurrentEngine().readInt(message);
+        return Engine.getContext().readInt(message);
     }
 
     /**
-     * Prompts the user to input a <code>String</code> value. The specified
+     * Prompts the user to input a
+     * <code>String</code> value. The specified
      * <code>message</code> is displayed to the user. It may be formatted using
-     * simple HTML. Returns <code>0d</code> if the user cancels the input
-     * prompt.
-     * 
+     * simple HTML. Returns
+     * <code>0d</code> if the user cancels the input prompt.
+     *
      * @param message the message displayed to the user
      * @return <code>String</code> value entered by the user
-     * 
+     *
      * @since 1.0
      */
     protected final String readString(String message) {
-        return Engine.getCurrentEngine().readString(message);
+        return Engine.getContext().readString(message);
     }
 
     /**
      * Waits for the specified amount of time.
-     * 
+     *
      * @param milliseconds the amount of milliseconds to wait
-     * 
-     * @since 1.0
+     *
+     * @since 1
      */
-    protected final void sleep(int milliseconds) {
+    protected final void sleep(final int milliseconds) {
         try {
             Thread.sleep(milliseconds);
         }
@@ -143,20 +147,26 @@ public abstract class Program {
 
     /**
      * Writes a message to the Jeda log window.
-     * 
+     *
      * @param message the message to write
      */
     protected final void write(String message) {
-        Engine.getCurrentEngine().write(message);
+        Engine.getContext().write(message);
     }
 
     /**
      * Writes a message to the Jeda log window.
-     * 
+     *
      * @param message the message to write
-     * @param args 
+     * @param args
      */
     protected final void write(String message, Object... args) {
-        Engine.getCurrentEngine().write(message, args);
+        Engine.getContext().write(message, args);
+    }
+
+    final void setState(ProgramState value) {
+        synchronized (this.stateLock) {
+            this.state = value;
+        }
     }
 }

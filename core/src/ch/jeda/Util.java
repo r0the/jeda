@@ -98,10 +98,10 @@ public final class Util {
     }
 
     /**
-     * Loads a text file and returns the content as a list of Strings. Each
-     * line of the text file will be represented by a String in the returned
-     * list. Returns <code>null</code> if the file is not present or cannot be
-     * read.
+     * Loads a text file and returns the content as a list of Strings. Each line
+     * of the text file will be represented by a String in the returned list.
+     * Returns
+     * <code>null</code> if the file is not present or cannot be read.
      *
      * To read a resource file, put ':' in front of the file path.
      *
@@ -109,7 +109,7 @@ public final class Util {
      * @return lines of the file as a String list
      */
     public static List<String> loadTextFile(String filePath) {
-        return Engine.getCurrentEngine().loadTextFile(filePath);
+        return Engine.getContext().loadTextFile(filePath);
     }
 
     /**

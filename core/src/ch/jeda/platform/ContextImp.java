@@ -20,10 +20,16 @@ import ch.jeda.Size;
 import ch.jeda.Transformation;
 import java.io.InputStream;
 
-public interface Platform {
+public interface ContextImp {
 
     CanvasImp createCanvasImp(Size size);
 
+    /**
+     * Creates a transformation.
+     *
+     * @return new <tt>Transformation</tt>
+     * @see ch.jeda.Transformation
+     */
     Transformation createTransformation();
 
     Iterable<String> listClassNames() throws Exception;
@@ -40,5 +46,5 @@ public interface Platform {
 
     void showWindow(WindowRequest windowRequest);
 
-    void stop();
+    void shutdown();
 }

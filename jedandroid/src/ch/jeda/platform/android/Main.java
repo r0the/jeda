@@ -18,51 +18,42 @@ package ch.jeda.platform.android;
 
 import android.app.Activity;
 import android.os.Bundle;
+import ch.jeda.Engine;
 
 public final class Main extends Activity {
 
-    private AndroidPlatform platform;
+    private AndroidContextImp contextImp;
 
     public Main() {
     }
 
     @Override
+    public void onBackPressed() {
+        this.contextImp.closeView();
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.contextImp = new AndroidContextImp(this);
+        Engine.init(this.contextImp);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Engine.stop();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        this.platform.onActivityPause();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
+        Engine.pause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.platform.onActivityResume();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        this.platform = new AndroidPlatform(this);
-        this.platform.onActivityStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        this.platform.onActivityStop();
+        Engine.resume();
     }
 }

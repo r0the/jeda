@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,24 +14,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.platform.java;
+package ch.jeda;
 
-import ch.jeda.Engine;
+class ShutdownState extends EngineState {
 
-/**
- * This class is the main entry point for Jeda applications on the Java
- * platform. Be sure to specify this class as main class.
- *
- * @since 1
- */
-public class Main {
+    @Override
+    public void run() {
+        this.context.shutdown();
+    }
 
-    /**
-     * Entry point for Jeda framework.
-     *
-     * @since 1
-     */
-    public static void main(String[] args) {
-        Engine.init(new JavaContextImp(args));
+    ShutdownState(final Context context) {
+        super(context, Message.translate(Message.SHUTDOWN_THREAD_NAME));
+    }
+
+    @Override
+    void onPause() {
+    }
+
+    @Override
+    void onResume() {
+    }
+
+    @Override
+    void onStop() {
     }
 }

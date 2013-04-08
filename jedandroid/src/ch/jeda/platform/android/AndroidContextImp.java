@@ -20,13 +20,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.graphics.BitmapFactory;
 import android.view.WindowManager;
-import ch.jeda.Engine;
 import ch.jeda.Size;
 import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
+import ch.jeda.platform.ContextImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
 import dalvik.system.DexFile;
@@ -35,10 +34,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-class AndroidPlatform implements Platform {
+class AndroidContextImp implements ContextImp {
 
     private final Activity activity;
-    private final Engine engine;
     private final ViewManager viewManager;
 
     @Override
@@ -83,6 +81,7 @@ class AndroidPlatform implements Platform {
     @Override
     public void log(final String text) {
         this.activity.runOnUiThread(new LogTask(this.viewManager, text));
+        System.out.println(text);
     }
 
     @Override
@@ -109,31 +108,20 @@ class AndroidPlatform implements Platform {
     }
 
     @Override
-    public void stop() {
-        this.activity.runOnUiThread(new StopTask(this.viewManager));
+    public void shutdown() {
+        this.activity.runOnUiThread(new ShutdownTask(this.viewManager));
     }
 
-    AndroidPlatform(Activity activity) {
+    AndroidContextImp(Activity activity) {
         this.activity = activity;
         // Adjust window when soft keyboard is shown.
         this.activity.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        this.engine = new Engine(this);
         this.viewManager = new ViewManager(activity);
     }
 
-    void onActivityPause() {
-    }
-
-    void onActivityResume() {
-    }
-
-    void onActivityStart() {
-        this.engine.start();
-    }
-
-    void onActivityStop() {
-        this.engine.requestStop();
+    void closeView() {
+        this.viewManager.closeView();
     }
 
     private static class LogTask implements Runnable {
@@ -217,16 +205,16 @@ class AndroidPlatform implements Platform {
         }
     }
 
-    private static class StopTask implements Runnable {
+    private static class ShutdownTask implements Runnable {
 
         private final ViewManager viewManager;
 
         @Override
         public void run() {
-            this.viewManager.stop();
+            this.viewManager.shutdown();
         }
 
-        StopTask(final ViewManager viewManager) {
+        ShutdownTask(final ViewManager viewManager) {
             this.viewManager = viewManager;
         }
     }

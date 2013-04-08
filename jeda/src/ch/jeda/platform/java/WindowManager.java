@@ -32,16 +32,14 @@ public class WindowManager {
 
     private static final GraphicsDevice GRAPHICS_DEVICE =
             GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    private final Engine engine;
     private final InputWindow inputWindow;
     private final LogWindow logWindow;
     private final SelectionWindow selectionWindow;
     private final Set<BaseWindow> windows;
     private CanvasWindow fullscreenWindow;
-    private boolean stopped;
+    private boolean shutdown;
 
-    public WindowManager(Engine engine) {
-        this.engine = engine;
+    public WindowManager() {
         this.inputWindow = new InputWindow(this);
         this.logWindow = new LogWindow(this);
         this.selectionWindow = new SelectionWindow(this);
@@ -77,8 +75,8 @@ public class WindowManager {
         viewRequest.setResult(JavaWindowImp.create(window));
     }
 
-    void stop() {
-        this.stopped = true;
+    void shutdown() {
+        this.shutdown = true;
         this.checkWindowsClosed();
     }
 
@@ -99,17 +97,13 @@ public class WindowManager {
             }
         }
 
-        if (this.stopped) {
-            this.shutdown();
+        if (this.shutdown) {
+            for (BaseWindow window : this.windows) {
+                window.dispose();
+            }
         }
         else {
-            this.engine.requestStop();
-        }
-    }
-
-    private void shutdown() {
-        for (BaseWindow window : this.windows) {
-            window.dispose();
+            Engine.stop();
         }
     }
 
