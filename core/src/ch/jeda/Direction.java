@@ -19,163 +19,154 @@ package ch.jeda;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Represents the eight compass directions. Each direction has a unique
- * <code>int</code> number ranging from 0 for east counterclockwise to 7 for
- * south east.
+ * Represents the eight compass directions.
  *
  * @since 1
  */
 public final class Direction implements Serializable {
 
     /**
-     * The direction east. This direction has the value 0.
+     * The direction east. The text representation of this direction is
+     * <tt>"East"</tt>. Its number is <tt>0</tt>.
      *
      * @since 1
      */
     public static final Direction EAST = new Direction(1, 0, "East", 0);
     /**
-     * The direction north. This direction has the value 2.
+     * The direction north. The text representation of this direction is
+     * <tt>"North"</tt>. Its number is <tt>2</tt>.
      *
      * @since 1
      */
     public static final Direction NORTH = new Direction(0, -1, "North", 2);
     /**
-     * The direction north east. This direction has the value 1.
+     * The direction north east. The text representation of this direction is
+     * <tt>"NorthEast"</tt>. Its number is <tt>1</tt>.
      *
      * @since 1
      */
     public static final Direction NORTH_EAST = new Direction(1, -1, "NorthEast", 1);
     /**
-     * The direction north west. This direction has the value 3.
+     * The direction north west. The text representation of this direction is
+     * <tt>"NorthWest"</tt>. Its number is <tt>3</tt>.
      *
      * @since 1
      */
     public static final Direction NORTH_WEST = new Direction(-1, -1, "NorthWest", 3);
     /**
-     * The direction south. This direction has the value 6.
+     * The direction south. The text representation of this direction is
+     * <tt>"South"</tt>. Its number is <tt>6</tt>.
      *
      * @since 1
      */
     public static final Direction SOUTH = new Direction(0, 1, "South", 6);
     /**
-     * The direction south east. This direction has the value 7.
+     * The direction south east. The text representation of this direction is
+     * <tt>"SouthEast"</tt>. Its number is <tt>7</tt>.
      *
      * @since 1
      */
     public static final Direction SOUTH_EAST = new Direction(1, 1, "SouthEast", 7);
     /**
-     * The direction south west. This direction has the value 5.
+     * The direction south west. The text representation of this direction is
+     * <tt>"SouthWest"</tt>. Its number is <tt>5</tt>.
      *
      * @since 1
      */
     public static final Direction SOUTH_WEST = new Direction(-1, 1, "SouthWest", 5);
     /**
-     * The direction west. This direction has the value 4.
+     * The direction west. The text representation of this direction is
+     * <tt>"West"</tt>. Its number is <tt>4</tt>.
      *
      * @since 1
      */
     public static final Direction WEST = new Direction(-1, 0, "West", 4);
-    private static final List<Direction> LIST = initAllDirections();
     /**
-     * A iterator of all eight directions. it starts with north and iterates
-     * clockwise through all directions.
+     * A list of all eight directions. The list is ordered counterclickwise and
+     * starts with the direction {@link #EAST}.
      *
      * @since 1
      */
-    public static final Iterable<Direction> ALL = LIST;
+    public static final List<Direction> ALL = initAllDirections();
     /**
-     * The number of this direction.
+     * The number of the direction.
      *
      * @since 1
      */
     public final int number;
-    final int dx;
-    final int dy;
+    public final int dx;
+    public final int dy;
+    private static final Map<String, Direction> NAME_MAP = initNameMap();
     private final String name;
 
     /**
-     * Returns the direction for the specified number. Returns
-     * <code>null</code> if the specified number is not between 0 and 7.
-     *
-     * @param number the number of a direction
-     * @return direction for the specified number or <code>null</code>
-     *
-     * @since 1
-     */
-    public static Direction from(int number) {
-        if (number < 0 || number > 7) {
-            return null;
-        }
-        else {
-            return LIST.get(number);
-        }
-    }
-
-    /**
-     * Returns the direction for the specified name. Returns
-     * <code>null</code> if the specified name is not valid.
+     * Returns the direction for the specified name. Returns <tt>null</tt> if
+     * the specified name is not valid.
      *
      * @param name the name of a direction
-     * @return direction for the specified number or <code>null</code>
+     * @return direction for the specified number or <tt>null</tt>
      *
      * @since 1
      */
-    public static Direction parse(String name) {
-        for (Direction direction : LIST) {
-            if (direction.name.equals(name)) {
-                return direction;
-            }
+    public static Direction parse(final String name) {
+        if (NAME_MAP.containsKey(name)) {
+            return NAME_MAP.get(name);
         }
-
-        return null;
+        else {
+            return null;
+        }
     }
 
     /**
-     * Returns the direction that lies
-     * <code>amount</code> steps clockwise of this direction. For example,
-     * <code>NORTH.clockwise(2)</code> will return
-     * <code>EAST</code>
+     * Returns a direction clockwise of the direction. Returns the direction
+     * that lies <tt>amount</tt> steps clockwise of this direction.
+     * <p>
+     * For example, <tt>Direction.NORTH.clockwise(2)</tt> will return
+     * <tt>Direction.EAST</tt>.
      *
      * @param amount the number of steps to turn
      * @return the new direction
      *
      * @since 1
      */
-    public Direction clockwise(int amount) {
+    public Direction clockwise(final int amount) {
         if (amount < 0) {
             return this.counterclockwise(-amount);
         }
         else {
-            return LIST.get((number + 8 - (amount % 8)) % 8);
+            return ALL.get((this.number + 8 - (amount % 8)) % 8);
         }
     }
 
     /**
-     * Returns the direction that lies
-     * <code>amount</code> steps counterclockwise of this direction. For
-     * example,
-     * <code>NORTH.counterclockwise(2)</code> will return
-     * <code>WEST</code>
+     * Returns a direction counterclockwise of this direction. Returns the
+     * direction that lies <tt>amount</tt> steps counterclockwise of this
+     * direction.
+     * <p>
+     * For example, <tt>Direction.NORTH.counterclockwise(2)</tt> will return
+     * <tt>Direction.WEST</tt>.
      *
      * @param amount the number of steps to turn
      * @return the new direction
      *
      * @since 1
      */
-    public Direction counterclockwise(int amount) {
+    public Direction counterclockwise(final int amount) {
         if (amount < 0) {
             return this.clockwise(-amount);
         }
         else {
-            return LIST.get((number + amount) % 8);
+            return ALL.get((this.number + amount) % 8);
         }
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object instanceof Direction) {
             final Direction other = (Direction) object;
             return this.number == other.number;
@@ -187,11 +178,15 @@ public final class Direction implements Serializable {
 
     @Override
     public int hashCode() {
-        return 17 * this.number;
+        return 23 + 17 * this.number;
     }
 
     /**
-     * Returns the direction opposite to this direction.
+     * Returns the opposite direction. Returns the direction that points
+     * opposite to the direction.
+     * <p>
+     * For example, <tt>Direction.NORTH.opposite()</tt> will return
+     * <tt>Direction.SOUTH</tt>.
      *
      * @return the opposite direction
      *
@@ -213,7 +208,8 @@ public final class Direction implements Serializable {
         return this.name;
     }
 
-    private Direction(int dx, int dy, String name, int value) {
+    private Direction(final int dx, final int dy, final String name,
+                      final int value) {
         this.dx = dx;
         this.dy = dy;
         this.name = name;
@@ -221,7 +217,7 @@ public final class Direction implements Serializable {
     }
 
     private static List<Direction> initAllDirections() {
-        List<Direction> result = new ArrayList();
+        final List<Direction> result = new ArrayList<Direction>();
         result.add(EAST);
         result.add(NORTH_EAST);
         result.add(NORTH);
@@ -231,5 +227,14 @@ public final class Direction implements Serializable {
         result.add(SOUTH);
         result.add(SOUTH_EAST);
         return Collections.unmodifiableList(result);
+    }
+
+    private static Map<String, Direction> initNameMap() {
+        final Map<String, Direction> result = new HashMap<String, Direction>();
+        for (Direction direction : ALL) {
+            result.put(direction.toString(), direction);
+        }
+
+        return result;
     }
 }

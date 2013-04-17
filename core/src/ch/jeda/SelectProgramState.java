@@ -31,14 +31,14 @@ class SelectProgramState extends EngineState {
     public void run() {
         try {
             // Load all program classes
-            final List<ProgramInfo> programInfos = new ArrayList();
+            final List<ProgramInfo> programInfos = new ArrayList<ProgramInfo>();
             ProgramInfo defaultProgram = null;
             final String defaultProgramName = this.context.getProperties().
                     getString(DEFAULT_PROGRAM_PROPERTY);
             for (String className : this.context.listClassNames()) {
                 Class cls = loadClass(className);
                 if (isProgramClass(cls)) {
-                    ProgramInfo pi = createProgramInfo(cls);
+                    ProgramInfo pi = this.createProgramInfo(cls);
                     programInfos.add(pi);
                     if (cls.getName().equals(defaultProgramName)) {
                         defaultProgram = pi;
@@ -57,7 +57,7 @@ class SelectProgramState extends EngineState {
                 this.setShutdownState();
             }
             else {
-                final SelectionRequest<ProgramInfo> request = new SelectionRequest();
+                final SelectionRequest<ProgramInfo> request = new SelectionRequest<ProgramInfo>();
                 for (ProgramInfo programInfo : programInfos) {
                     request.addItem(programInfo.getName(), programInfo);
                 }
@@ -74,7 +74,7 @@ class SelectProgramState extends EngineState {
                 }
             }
         }
-        catch (Exception ex) {
+        catch (final Exception ex) {
             this.logError(ex, Message.CHOOSE_PROGRAM_ERROR);
             this.setShutdownState();
         }
@@ -102,19 +102,19 @@ class SelectProgramState extends EngineState {
             return programClass.getDeclaredConstructor(new Class[0]).
                     newInstance(new Object[0]);
         }
-        catch (NoSuchMethodException ex) {
+        catch (final NoSuchMethodException ex) {
             this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
         }
-        catch (IllegalAccessException ex) {
+        catch (final IllegalAccessException ex) {
             this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
         }
-        catch (InvocationTargetException ex) {
+        catch (final InvocationTargetException ex) {
             this.logError(ex.getCause(), Message.PROGRAM_CREATE_ERROR, programClass);
         }
-        catch (InstantiationException ex) {
+        catch (final InstantiationException ex) {
             this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
         }
-        catch (NoClassDefFoundError ex) {
+        catch (final NoClassDefFoundError ex) {
             this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
         }
 
@@ -140,7 +140,7 @@ class SelectProgramState extends EngineState {
         }
     }
 
-    private static boolean isProgramClass(final Class cls) {
+    private static boolean isProgramClass(final Class<?> cls) {
         if (!Program.class.isAssignableFrom(cls)) {
             return false;
         }
@@ -153,20 +153,20 @@ class SelectProgramState extends EngineState {
             int ctorModifiers = cls.getConstructor(NO_PARAMS).getModifiers();
             return Modifier.isPublic(ctorModifiers);
         }
-        catch (NoSuchMethodException ex) {
+        catch (final NoSuchMethodException ex) {
             return false;
         }
     }
 
-    private static Class loadClass(final String className) throws Exception {
+    private static Class<?> loadClass(final String className) throws Exception {
         try {
             return Class.forName(className);
         }
-        catch (NoClassDefFoundError ex) {
+        catch (final NoClassDefFoundError ex) {
             return Class.forName(className, false,
                                  Thread.currentThread().getContextClassLoader());
         }
-        catch (ExceptionInInitializerError ex) {
+        catch (final ExceptionInInitializerError ex) {
             return Class.forName(className, false,
                                  Thread.currentThread().getContextClassLoader());
         }

@@ -139,7 +139,7 @@ public final class Color implements Serializable {
      *
      * @since 1
      */
-    public Color(int value) {
+    public Color(final int value) {
         this.value = value;
     }
 
@@ -156,7 +156,7 @@ public final class Color implements Serializable {
      * (in the range from 0 to 255).
      * @since 1
      */
-    public Color(int red, int green, int blue) {
+    public Color(final int red, final int green, final int blue) {
         this(red, green, blue, 255);
     }
 
@@ -174,7 +174,8 @@ public final class Color implements Serializable {
      * (in the range of 0 to 255).
      * @since 1
      */
-    public Color(int red, int green, int blue, int alpha) {
+    public Color(final int red, final int green, final int blue,
+                 final int alpha) {
         if (red < 0 || 255 < red) {
             throw new IllegalArgumentException("red");
         }
@@ -195,7 +196,7 @@ public final class Color implements Serializable {
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object instanceof Color) {
             final Color other = (Color) object;
             return this.value == other.value;

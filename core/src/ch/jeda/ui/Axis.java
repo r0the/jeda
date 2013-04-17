@@ -25,8 +25,8 @@ import java.util.Map;
  */
 public final class Axis implements Serializable {
 
-    private static final Map<Integer, String> ID_NAME_MAP = new HashMap();
-    private static final Map<String, Integer> NAME_ID_MAP = new HashMap();
+    private static final Map<Integer, String> ID_NAME_MAP = new HashMap<Integer, String>();
+    private static final Map<String, Integer> NAME_ID_MAP = new HashMap<String, Integer>();
     private static int NEXT_ID = 0;
     public static final Axis LEFT_X = register("LeftX");
     public static final Axis LEFT_Y = register("LeftY");
@@ -40,12 +40,8 @@ public final class Axis implements Serializable {
      */
     public final int id;
 
-    public Axis(String name) {
-        this(NAME_ID_MAP.get(name));
-    }
-
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object instanceof Axis) {
             return this.id == ((Axis) object).id;
         }
@@ -68,11 +64,11 @@ public final class Axis implements Serializable {
         this(0);
     }
 
-    private Axis(int id) {
+    private Axis(final int id) {
         this.id = id;
     }
 
-    private static Axis register(String name) {
+    private static Axis register(final String name) {
         final int id = ++NEXT_ID;
         ID_NAME_MAP.put(id, name);
         NAME_ID_MAP.put(name, id);

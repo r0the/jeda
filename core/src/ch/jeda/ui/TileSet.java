@@ -25,11 +25,13 @@ public class TileSet {
     private final Image image;
     private final Image[] tiles;
 
-    public TileSet(String filePath, int tileWidth, int tileHeight) {
+    public TileSet(final String filePath,
+                   final int tileWidth, final int tileHeight) {
         this(new Image(filePath), tileWidth, tileHeight);
     }
 
-    public TileSet(Image image, int tileWidth, int tileHeight) {
+    public TileSet(final Image image,
+                   final int tileWidth, final int tileHeight) {
         if (image == null) {
             throw new NullPointerException("image");
         }
@@ -53,14 +55,16 @@ public class TileSet {
         return this.height;
     }
 
-    public Image getTileAt(int x, int y) {
+    public Image getTileAt(final int x, final int y) {
         if (!this.contains(x, y)) {
             throw new IllegalArgumentException("x, y");
         }
 
         int index = x + y * this.width;
         if (this.tiles[index] == null) {
-            this.tiles[index] = this.createSubImage(x, y);
+            this.tiles[index] = this.image.createSubImage(
+                    x * this.tileWidth, y * this.tileWidth,
+                    this.tileWidth, this.tileHeight);
         }
 
         return this.tiles[index];
@@ -78,13 +82,7 @@ public class TileSet {
         return this.width;
     }
 
-    private boolean contains(int x, int y) {
+    private boolean contains(final int x, final int y) {
         return 0 <= x && x < this.width && 0 <= y && y < this.height;
-    }
-
-    private Image createSubImage(int x, int y) {
-        return this.image.createSubImage(x * this.tileWidth,
-                                         y * this.tileWidth,
-                                         this.tileWidth, this.tileHeight);
     }
 }

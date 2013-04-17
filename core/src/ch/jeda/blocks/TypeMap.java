@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,40 +29,44 @@ class TypeMap<T> {
     private final Map<Class<?>, List<T>> map;
     private final Class<?> topClass;
 
-    public TypeMap(Class<T> baseClass) {
+    public TypeMap(final Class<T> baseClass) {
         this.emptyList = Collections.unmodifiableList(new ArrayList<T>());
         this.map = new HashMap<Class<?>, List<T>>();
         this.topClass = baseClass.getSuperclass();
     }
 
-    public void add(T item) {
+    public void add(final T item) {
         if (item == null) {
             throw new NullPointerException("item");
         }
+
         Class<?> key = item.getClass();
         do {
-            List<T> list = this.getList(key, true);
+            final List<T> list = this.getList(key, true);
             if (!list.contains(item)) {
                 list.add(item);
             }
+
             key = key.getSuperclass();
         }
         while (!key.equals(this.topClass));
     }
 
-    public void addAll(Collection<T> collection) {
+    public void addAll(final Collection<T> collection) {
         if (collection == null) {
             throw new NullPointerException("c");
         }
+
         for (T item : collection) {
             this.add(item);
         }
     }
 
-    public <S extends T> List<S> get(Class<S> key) {
+    public <S extends T> List<S> get(final Class<S> key) {
         if (key == null) {
             throw new NullPointerException("key");
         }
+
         List<S> list = (List<S>) this.getList(key, false);
         if (list != null) {
             return Collections.unmodifiableList(list);
@@ -72,13 +76,14 @@ class TypeMap<T> {
         }
     }
 
-    public void remove(T item) {
+    public void remove(final T item) {
         if (item == null) {
             throw new NullPointerException("item");
         }
+
         Class<?> key = item.getClass();
         do {
-            List<T> list = getList(key, false);
+            List<T> list = this.getList(key, false);
             if (list != null) {
                 list.remove(item);
             }
@@ -87,7 +92,7 @@ class TypeMap<T> {
         while (!key.equals(this.topClass));
     }
 
-    public void removeAll(Collection<T> c) {
+    public void removeAll(final Collection<T> c) {
         if (c == null) {
             throw new NullPointerException("c");
         }
@@ -97,13 +102,13 @@ class TypeMap<T> {
         }
     }
 
-    private List<T> getList(Class<?> key, boolean createList) {
+    private List<T> getList(final Class<?> key, final boolean createList) {
         if (this.map.containsKey(key)) {
             return this.map.get(key);
         }
         else {
             if (createList) {
-                List<T> result = new ArrayList<T>();
+                final List<T> result = new ArrayList<T>();
                 this.map.put(key, result);
                 return result;
             }

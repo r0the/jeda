@@ -53,7 +53,7 @@ public final class Context {
     private Properties properties;
     private Log.Level logLevel = Log.Level.Warning;
 
-    public CanvasImp createCanvasImp(int width, int height) {
+    public CanvasImp createCanvasImp(final int width, final int height) {
         return this.imp.createCanvasImp(width, height);
     }
 
@@ -61,7 +61,7 @@ public final class Context {
         return this.properties;
     }
 
-    public ImageImp loadImageImp(String filePath) {
+    public ImageImp loadImageImp(final String filePath) {
         ImageImp result = null;
         try {
             final InputStream in = this.openInputStream(filePath);
@@ -80,8 +80,8 @@ public final class Context {
         return result;
     }
 
-    public WindowImp showWindow(int width, int height,
-                                EnumSet<Window.Feature> features) {
+    public WindowImp showWindow(final int width, final int height,
+                                final EnumSet<Window.Feature> features) {
         if (features == null) {
             throw new NullPointerException("features");
         }
@@ -92,11 +92,11 @@ public final class Context {
         return request.getResult();
     }
 
-    public void setLogLevel(Log.Level value) {
+    public void setLogLevel(final Log.Level value) {
         this.logLevel = value;
     }
 
-    Context(ContextImp imp) {
+    Context(final ContextImp imp) {
         this.imp = imp;
         this.properties = new Properties();
     }
@@ -123,7 +123,7 @@ public final class Context {
         return this.imp.listClassNames();
     }
 
-    List<String> loadTextFile(String filePath) {
+    List<String> loadTextFile(final String filePath) {
         try {
             final InputStream in = this.openInputStream(filePath);
             if (in == null) {
@@ -132,7 +132,7 @@ public final class Context {
             }
 
             final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            final List<String> result = new ArrayList();
+            final List<String> result = new ArrayList<String>();
             while (reader.ready()) {
                 result.add(reader.readLine());
             }
@@ -145,7 +145,8 @@ public final class Context {
         }
     }
 
-    void log(Log.Level level, String message, Throwable exception) {
+    void log(final Log.Level level, final String message,
+             final Throwable exception) {
         if (this.matchesLogLevel(level)) {
             this.imp.log(level.toString() + ": " + message + '\n');
             if (exception != null) {
@@ -157,7 +158,7 @@ public final class Context {
         }
     }
 
-    InputStream openInputStream(String filePath) throws IOException {
+    InputStream openInputStream(final String filePath) throws IOException {
         if (filePath == null) {
             throw new NullPointerException("filePath");
         }
@@ -184,11 +185,11 @@ public final class Context {
         }
     }
 
-    void showInputRequest(InputRequest inputRequest) {
+    void showInputRequest(final InputRequest inputRequest) {
         this.imp.showInputRequest(inputRequest);
     }
 
-    void showSelectionRequest(SelectionRequest selectionRequest) {
+    void showSelectionRequest(final SelectionRequest selectionRequest) {
         this.imp.showSelectionRequest(selectionRequest);
     }
 
@@ -196,12 +197,12 @@ public final class Context {
         this.imp.shutdown();
     }
 
-    void write(String message, Object... args) {
+    void write(final String message, Object... args) {
         this.imp.log(Util.args(message, args));
         this.imp.showLog();
     }
 
-    private boolean matchesLogLevel(Log.Level messageLevel) {
+    private boolean matchesLogLevel(final Log.Level messageLevel) {
         switch (this.logLevel) {
             case Debug:
                 return true;

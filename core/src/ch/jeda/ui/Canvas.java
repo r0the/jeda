@@ -77,7 +77,7 @@ public class Canvas {
      *
      * @since 1
      */
-    public Canvas(int width, int height) {
+    public Canvas(final int width, final int height) {
         if (width < 1) {
             throw new IllegalArgumentException("width");
         }
@@ -86,7 +86,7 @@ public class Canvas {
             throw new IllegalArgumentException("height");
         }
 
-        this.transformationStack = new Stack();
+        this.transformationStack = new Stack<Transformation>();
         this.alpha = 255;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
@@ -113,7 +113,7 @@ public class Canvas {
     /**
      * <b>Experimental</b>
      */
-    public void copyFrom(Canvas canvas) {
+    public void copyFrom(final Canvas canvas) {
         if (canvas == null) {
             throw new NullPointerException("canvas");
         }
@@ -131,7 +131,7 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawCircle(int x, int y, int radius) {
+    public void drawCircle(final int x, final int y, final int radius) {
         if (radius > 0) {
             this.imp.drawCircle(x, y, radius);
         }
@@ -162,7 +162,7 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawImage(int x, int y, Image image) {
+    public void drawImage(final int x, final int y, final Image image) {
         if (image != null) {
             this.imp.drawImage(x, y, image.getImp());
         }
@@ -196,7 +196,8 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawImage(int x, int y, Image image, Alignment alignment) {
+    public void drawImage(final int x, final int y, final Image image,
+                          final Alignment alignment) {
         if (alignment == null) {
             throw new NullPointerException("alignment");
         }
@@ -242,7 +243,8 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawLine(int x1, int y1, int x2, int y2) {
+    public void drawLine(final int x1, final int y1,
+                         final int x2, final int y2) {
         this.imp.drawLine(x1, y1, x2, y2);
     }
 
@@ -275,7 +277,8 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawRectangle(int x, int y, int width, int height) {
+    public void drawRectangle(final int x, final int y,
+                              final int width, final int height) {
         if (width > 0 && height > 0) {
             this.imp.drawRectangle(x, y, width, height);
         }
@@ -315,8 +318,8 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawRectangle(int x, int y, int width, int height,
-                              Alignment alignment) {
+    public void drawRectangle(final int x, final int y, final int width,
+                              final int height, final Alignment alignment) {
         if (alignment == null) {
             throw new NullPointerException("alignment");
         }
@@ -402,7 +405,7 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawText(int x, int y, String text) {
+    public void drawText(final int x, final int y, final String text) {
         if (text != null && !text.isEmpty()) {
             this.imp.drawText(x, y, text);
         }
@@ -437,7 +440,8 @@ public class Canvas {
      *
      * @since 1
      */
-    public final void drawText(int x, int y, String text, Alignment alignment) {
+    public final void drawText(final int x, final int y, final String text,
+                               final Alignment alignment) {
         if (alignment == null) {
             throw new NullPointerException("alignment");
         }
@@ -487,7 +491,8 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
+    public void drawTriangle(final int x1, final int y1, final int x2,
+                             final int y2, final int x3, final int y3) {
         this.imp.drawPolygon(new int[]{x1, y1, x2, y2, x3, y3});
     }
 
@@ -511,7 +516,7 @@ public class Canvas {
      *
      * @since 1
      */
-    public void fillCircle(int x, int y, int radius) {
+    public void fillCircle(final int x, final int y, final int radius) {
         if (radius > 0) {
             this.imp.fillCircle(x, y, radius);
         }
@@ -544,7 +549,8 @@ public class Canvas {
      *
      * @since 1
      */
-    public void fillRectangle(int x, int y, int width, int height) {
+    public void fillRectangle(final int x, final int y,
+                              final int width, final int height) {
         if (width > 0 && height > 0) {
             this.imp.fillRectangle(x, y, width, height);
         }
@@ -585,7 +591,8 @@ public class Canvas {
      *
      * @since 1
      */
-    public void fillRectangle(int x, int y, int width, int height, Alignment alignment) {
+    public void fillRectangle(final int x, final int y, final int width,
+                              final int height, final Alignment alignment) {
         if (alignment == null) {
             throw new NullPointerException("alignment");
         }
@@ -637,14 +644,16 @@ public class Canvas {
      *
      * @since 1
      */
-    public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
+    public void fillTriangle(final int x1, final int y1, final int x2,
+                             final int y2, final int x3, final int y3) {
         this.imp.fillPolygon(new int[]{x1, y1, x2, y2, x3, y3});
     }
 
     /**
      * <b>Experimental</b>
      */
-    public void floodFill(int x, int y, Color oldColor, Color newColor) {
+    public void floodFill(int x, int y,
+                          final Color oldColor, final Color newColor) {
         if (oldColor == null) {
             throw new NullPointerException("oldColor");
         }
@@ -653,8 +662,8 @@ public class Canvas {
             throw new NullPointerException("newColor");
         }
 
-        Stack<Integer> stackX = new Stack();
-        Stack<Integer> stackY = new Stack();
+        Stack<Integer> stackX = new Stack<Integer>();
+        Stack<Integer> stackY = new Stack<Integer>();
         stackX.push(x);
         stackY.push(y);
         while (!stackX.isEmpty()) {
@@ -744,7 +753,7 @@ public class Canvas {
      * @see #setPixelAt(int, int, ch.jeda.ui.Color)
      * @since 1
      */
-    public Color getPixelAt(int x, int y) {
+    public Color getPixelAt(final int x, final int y) {
         if (this.contains(x, y)) {
             return this.imp.getPixelAt(x, y);
         }
@@ -849,7 +858,7 @@ public class Canvas {
      * @see #getAlpha()
      * @since 1
      */
-    public void setAlpha(int alpha) {
+    public void setAlpha(final int alpha) {
         if (alpha < 0 || 255 < alpha) {
             throw new IllegalArgumentException("alpha");
         }
@@ -870,7 +879,7 @@ public class Canvas {
      * @see #getColor()
      * @since 1
      */
-    public void setColor(Color color) {
+    public void setColor(final Color color) {
         if (color == null) {
             throw new NullPointerException("color");
         }
@@ -892,7 +901,7 @@ public class Canvas {
      *
      * @since 1
      */
-    public void setFontSize(int size) {
+    public void setFontSize(final int size) {
         if (size <= 0) {
             throw new IllegalArgumentException("size");
         }
@@ -913,7 +922,7 @@ public class Canvas {
      *
      * @since 1
      */
-    public void setLineWidth(double lineWidth) {
+    public void setLineWidth(final double lineWidth) {
         if (lineWidth <= 0.0) {
             throw new IllegalArgumentException("lineWidth");
         }
@@ -935,7 +944,7 @@ public class Canvas {
      * @see #getPixelAt(int, int)
      * @since 1
      */
-    public void setPixelAt(int x, int y, Color color) {
+    public void setPixelAt(final int x, final int y, final Color color) {
         if (color == null) {
             throw new NullPointerException("color");
         }
@@ -982,7 +991,7 @@ public class Canvas {
      * @see #getTransformation()
      * @since 1
      */
-    public void setTransformation(Transformation transformation) {
+    public void setTransformation(final Transformation transformation) {
         if (transformation == null) {
             throw new NullPointerException("transformation");
         }
@@ -1043,7 +1052,7 @@ public class Canvas {
      * @param text
      * @return width of text in pixels
      */
-    public int textWidth(String text) {
+    public int textWidth(final String text) {
         if (text == null || text.isEmpty()) {
             return 0;
         }
@@ -1053,14 +1062,14 @@ public class Canvas {
     }
 
     Canvas() {
-        this.transformationStack = new Stack();
+        this.transformationStack = new Stack<Transformation>();
         this.alpha = 255;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
         this.transformation = Transformation.createIdentity();
     }
 
-    void setImp(CanvasImp imp) {
+    void setImp(final CanvasImp imp) {
         this.imp = imp;
         this.imp.setAlpha(this.alpha);
         this.imp.setColor(this.color);
@@ -1069,7 +1078,7 @@ public class Canvas {
         this.imp.setTransformation(this.transformation);
     }
 
-    private boolean contains(int x, int y) {
+    private boolean contains(final int x, final int y) {
         return 0 <= x && x < this.getWidth() && 0 <= y && y < this.getHeight();
     }
 }

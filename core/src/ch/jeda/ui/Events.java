@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class represents events that are taking place on this window. These are
- * typically keys pressed or typed by the user or motion events such as moving
- * or clicking with a mouse, trackball, pen or finger.
+ * Represents events that are taking place on this window. These are typically
+ * keys pressed or typed by the user or motion events such as moving or clicking
+ * with a mouse, trackball, pen or finger.
  *
  * <p>
  * <strong>Example:</strong>
@@ -45,12 +45,41 @@ public final class Events {
     private final Map<Integer, Pointer> pointers;
     private final Set<Key> pressedKeys;
     private final List<Key> typedKeys;
+    private Pointer mainPointer;
     private StringBuilder typedChars;
 
     /**
-     * Returns all pointers that are currently available in the window.
+     * Returns the main pointer. The behaviour of this method depends on the
+     * platform:
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> Returns
+     * the pointer representing the mouse. Returns <tt>null</tt> if the mouse
+     * pointer is outside the window.
+     * <p>
+     * <img src="../../../android.png"> Returns the pointer that first touched
+     * the surface. Returns <tt>null</tt> if no pointer touches the surface.
      *
-     * @return all pointers
+     * @return main pointer
+     *
+     * @since 1
+     */
+    public Pointer getMainPointer() {
+        return this.mainPointer;
+    }
+
+    /**
+     * Returns a list of all pointers. The behaviour of this method depends on
+     * the platform:
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> Returns a
+     * list containing the pointer representing the mouse. Returns an empty list
+     * if the mouse pointer is outside the window.
+     * <p>
+     * <img src="../../../android.png"> Returns a list of all pointers that are
+     * touching the surface. Returns an empty list if no pointer touches the
+     * surface.
+     *
+     * @return list of all pointers
      *
      * @since 1
      */
@@ -71,7 +100,7 @@ public final class Events {
     }
 
     /**
-     * Returns a set of all keys that are currently pressed.
+     * Returns a set of all pressed keys.
      *
      * @return set of all keys that are pressed.
      *
@@ -97,7 +126,7 @@ public final class Events {
     }
 
     /**
-     * Returns a set of all keys that have been typed recently.
+     * Returns a list of all typed keys.
      *
      * @return recently typed keys
      *
@@ -108,15 +137,16 @@ public final class Events {
     }
 
     /**
-     * Checks whether the specified key is currently pressed.
+     * Checks if a key is pressed. Returns <tt>true</tt> if the specified key is
+     * pressed.
      *
      * @param key the key to check for
-     * @return <code>true</code> if specified key is currently pressed
-     * @throws NullPointerException when key is null
+     * @return <tt>true</tt> if specified key is currently pressed
+     * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>
      *
      * @since 1
      */
-    public boolean isKeyPressed(Key key) {
+    public boolean isKeyPressed(final Key key) {
         if (key == null) {
             throw new NullPointerException("key");
         }
@@ -125,15 +155,16 @@ public final class Events {
     }
 
     /**
-     * Checks whether a key was typed recently.
+     * Checks if a key was typed. Returns <tt>true</tt> if the specified key has
+     * been typed.
      *
-     * @param key key to check
-     * @return <code>true</code> if specified key was typed recently
-     * @throws NullPointerException when key is null
+     * @param key the key to check
+     * @return <tt>true</tt> if specified key ha been typed
+     * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>
      *
      * @since 1
      */
-    public boolean isKeyTyped(Key key) {
+    public boolean isKeyTyped(final Key key) {
         if (key == null) {
             throw new NullPointerException("key");
         }
@@ -142,19 +173,19 @@ public final class Events {
     }
 
     Events() {
-        this.newPointers = new ArrayList();
-        this.pointers = new HashMap();
-        this.pressedKeys = new HashSet();
-        this.typedKeys = new ArrayList();
+        this.newPointers = new ArrayList<Pointer>();
+        this.pointers = new HashMap<Integer, Pointer>();
+        this.pressedKeys = new HashSet<Key>();
+        this.typedKeys = new ArrayList<Key>();
 
         this.typedChars = new StringBuilder();
     }
 
-    void digestEvents(Iterable<Event> events) {
+    void digestEvents(final Iterable<Event> events) {
         this.typedChars = new StringBuilder();
         this.typedKeys.clear();
         this.newPointers.clear();
-        Pointer pointer = null;
+        Pointer pointer;
         for (Pointer p : this.pointers.values()) {
             p.prepare();
         }
@@ -179,6 +210,10 @@ public final class Events {
                     pointer = this.pointers.get(event.pointerId);
                     this.newPointers.add(pointer);
                     pointer.setLocation(event.x, event.y);
+                    if (this.mainPointer == null) {
+                        this.mainPointer = pointer;
+                    }
+
                     break;
                 case PointerUnavailable:
                     pointer = this.pointers.get(event.pointerId);
@@ -188,6 +223,10 @@ public final class Events {
                     }
 
                     this.newPointers.remove(pointer);
+                    if (this.mainPointer == pointer) {
+                        this.mainPointer = null;
+                    }
+
                     break;
                 case PointerMoved:
                     pointer = this.pointers.get(event.pointerId);

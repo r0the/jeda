@@ -32,7 +32,7 @@ class Entities {
 
     Entities() {
         this.list = new ArrayList<Entity>();
-        this.typeMap = new TypeMap(Entity.class);
+        this.typeMap = new TypeMap<Entity>(Entity.class);
         this.paintOrder = new SortedList<Entity>(new PaintOrderComparator());
         this.updateOrder = new SortedList<Entity>(new UpdateOrderComparator());
         this.pendingDeletions = new ArrayList<Entity>();
@@ -79,7 +79,7 @@ class Entities {
     }
 
     <T extends Entity> List<T> getByLocation(double x, double y, Class<T> type) {
-        final ArrayList<T> result = new ArrayList();
+        final ArrayList<T> result = new ArrayList<T>();
         for (T entity : this.byType(type)) {
             if (entity.getCollisionShape().contains(x, y)) {
                 result.add(entity);
@@ -90,7 +90,7 @@ class Entities {
     }
 
     <T extends Entity> List<T> getIntersectingActors(Shape shape, Class<T> type) {
-        final ArrayList<T> result = new ArrayList();
+        final ArrayList<T> result = new ArrayList<T>();
         if (shape != null) {
             for (T entity : this.byType(type)) {
                 if (shape.intersectsWith(entity.getCollisionShape())) {

@@ -27,7 +27,7 @@ public abstract class ContactGenerator {
     private final List<Contact> contacts;
 
     protected ContactGenerator() {
-        this.contacts = new ArrayList();
+        this.contacts = new ArrayList<Contact>();
     }
 
     public final Collection<Contact> detect(World world) {

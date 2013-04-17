@@ -301,7 +301,7 @@ public class World extends Simulation {
         this.nextState = null;
         this.state = WorldState.NULL;
         this.state.notifyEnter(this);
-        this.states = new HashMap();
+        this.states = new HashMap<Class<? extends WorldState>, WorldState>();
     }
 
     private void drawDebugOverlay() {

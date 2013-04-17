@@ -30,8 +30,8 @@ import java.util.Map;
  */
 public final class Key implements Serializable {
 
-    private static final Map<Integer, String> ID_NAME_MAP = new HashMap();
-    private static final Map<String, Integer> NAME_ID_MAP = new HashMap();
+    private static final Map<Integer, String> ID_NAME_MAP = new HashMap<Integer, String>();
+    private static final Map<String, Integer> NAME_ID_MAP = new HashMap<String, Integer>();
     private static int NEXT_ID = 0;
     /**
      * The "A" key.
@@ -689,7 +689,7 @@ public final class Key implements Serializable {
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object instanceof Key) {
             return this.id == ((Key) object).id;
         }
@@ -718,11 +718,11 @@ public final class Key implements Serializable {
         this(0);
     }
 
-    private Key(int id) {
+    private Key(final int id) {
         this.id = id;
     }
 
-    private static Key register(String name) {
+    private static Key register(final String name) {
         final int id = ++NEXT_ID;
         ID_NAME_MAP.put(id, name);
         NAME_ID_MAP.put(name, id);

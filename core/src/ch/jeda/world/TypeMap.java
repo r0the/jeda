@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,19 +23,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TypeMap<T> {
+class TypeMap<T> {
 
-    private final List<T> emptyList;
+    private final List<? extends T> emptyList;
     private final Map<Class<?>, List<T>> map;
     private final Class<?> topClass;
 
-    public TypeMap(Class<T> baseClass) {
+    TypeMap(Class<T> baseClass) {
         this.emptyList = Collections.unmodifiableList(new ArrayList<T>());
         this.map = new HashMap<Class<?>, List<T>>();
         this.topClass = baseClass.getSuperclass();
     }
 
-    public void add(T item) {
+    void add(T item) {
         if (item == null) {
             throw new NullPointerException("item");
         }
@@ -50,7 +50,7 @@ public class TypeMap<T> {
         while (!key.equals(this.topClass));
     }
 
-    public void addAll(Collection<T> collection) {
+    void addAll(Collection<T> collection) {
         if (collection == null) {
             throw new NullPointerException("c");
         }
@@ -59,7 +59,7 @@ public class TypeMap<T> {
         }
     }
 
-    public <S extends T> List<S> get(Class<S> key) {
+    <S extends T> List<S> get(Class<S> key) {
         if (key == null) {
             throw new NullPointerException("key");
         }
@@ -72,7 +72,7 @@ public class TypeMap<T> {
         }
     }
 
-    public void remove(T item) {
+    void remove(T item) {
         if (item == null) {
             throw new NullPointerException("item");
         }
@@ -87,7 +87,7 @@ public class TypeMap<T> {
         while (!key.equals(this.topClass));
     }
 
-    public void removeAll(Collection<T> c) {
+    void removeAll(Collection<T> c) {
         if (c == null) {
             throw new NullPointerException("c");
         }

@@ -25,8 +25,8 @@ import java.util.Map;
  */
 public final class Button implements Serializable {
 
-    private static final Map<Integer, String> ID_NAME_MAP = new HashMap();
-    private static final Map<String, Integer> NAME_ID_MAP = new HashMap();
+    private static final Map<Integer, String> ID_NAME_MAP = new HashMap<Integer, String>();
+    private static final Map<String, Integer> NAME_ID_MAP = new HashMap<String, Integer>();
     private static int NEXT_ID = 0;
     /**
      * The gamepad "A" button.
@@ -70,12 +70,13 @@ public final class Button implements Serializable {
      */
     public final int id;
 
+    @Deprecated
     public Button(String name) {
         this(NAME_ID_MAP.get(name));
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object instanceof Button) {
             return this.id == ((Button) object).id;
         }
@@ -98,11 +99,11 @@ public final class Button implements Serializable {
         this(0);
     }
 
-    private Button(int id) {
+    private Button(final int id) {
         this.id = id;
     }
 
-    private static Button register(String name) {
+    private static Button register(final String name) {
         final int id = ++NEXT_ID;
         ID_NAME_MAP.put(id, name);
         NAME_ID_MAP.put(name, id);

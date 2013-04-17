@@ -16,8 +16,6 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.Location;
-import ch.jeda.Size;
 import java.io.Serializable;
 
 /**
@@ -96,15 +94,15 @@ public final class Alignment implements Serializable {
     private final Align horizontal;
     private final Align vertical;
 
-    int alignX(int x, int width) {
+    int alignX(final int x, final int width) {
         return this.horizontal.align(x, width);
     }
 
-    int alignY(int y, int height) {
+    int alignY(final int y, final int height) {
         return this.vertical.align(y, height);
     }
 
-    private Alignment(Align horizontal, Align vertical) {
+    private Alignment(final Align horizontal, final Align vertical) {
         this.horizontal = horizontal;
         this.vertical = vertical;
     }
@@ -117,7 +115,7 @@ public final class Alignment implements Serializable {
     private static class AlignLeftTop extends Align {
 
         @Override
-        public int align(int pos, int size) {
+        public int align(final int pos, final int size) {
             return pos;
         }
     }
@@ -125,7 +123,7 @@ public final class Alignment implements Serializable {
     private static class AlignCenter extends Align {
 
         @Override
-        public int align(int pos, int size) {
+        public int align(final int pos, final int size) {
             return pos - size / 2;
         }
     }
@@ -133,7 +131,7 @@ public final class Alignment implements Serializable {
     private static class AlignRightBottom extends Align {
 
         @Override
-        public int align(int pos, int size) {
+        public int align(final int pos, final int size) {
             return pos - size;
         }
     }

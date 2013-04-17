@@ -63,7 +63,7 @@ public final class MouseCursor implements Serializable {
     private final String name;
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object instanceof MouseCursor) {
             return this.cursor == ((MouseCursor) object).cursor;
         }
@@ -82,7 +82,7 @@ public final class MouseCursor implements Serializable {
         return this.name;
     }
 
-    private MouseCursor(int cursor, String name) {
+    private MouseCursor(final int cursor, final String name) {
         this.cursor = cursor;
         this.name = name;
     }

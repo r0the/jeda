@@ -37,13 +37,14 @@ public class IsoRenderer {
     private int scrollX;
     private int scrollY;
 
-    public IsoRenderer(int viewPortWidth, int viewPortHeight, int mapWidth,
-                       int mapHeight, int tileWidth, int tileHeight) {
+    public IsoRenderer(final int viewPortWidth, final int viewPortHeight,
+                       final int mapWidth, final int mapHeight,
+                       final int tileWidth, final int tileHeight) {
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
-        this.layers = new ArrayList();
+        this.layers = new ArrayList<Image[]>();
 
         this.scrollX = viewPortWidth / 2;
         this.scrollY = 0;
@@ -56,7 +57,7 @@ public class IsoRenderer {
         this.minScrollY = viewPortHeight - h;
     }
 
-    public void drawOn(Canvas canvas) {
+    public void drawOn(final Canvas canvas) {
         if (canvas == null) {
             throw new NullPointerException("canvas");
         }
@@ -87,7 +88,7 @@ public class IsoRenderer {
         }
     }
 
-    public void fill(int layerIndex, Image image) {
+    public void fill(final int layerIndex, final Image image) {
         this.ensureLayer(layerIndex);
         Image[] layer = this.layers.get(layerIndex);
         for (int i = 0; i < layer.length; ++i) {
@@ -95,13 +96,14 @@ public class IsoRenderer {
         }
     }
 
-    public void scroll(int dx, int dy) {
+    public void scroll(final int dx, final int dy) {
         this.scrollX = this.scrollX + dx;
         this.scrollY = this.scrollY + dy;
         this.checkScrollPos();
     }
 
-    public void setTile(int layerIndex, int x, int y, Image image) {
+    public void setTile(final int layerIndex, final int x, final int y,
+                        final Image image) {
         if (!this.contains(x, y)) {
             throw new IllegalArgumentException("x/y");
         }
@@ -110,14 +112,14 @@ public class IsoRenderer {
         this.layers.get(layerIndex)[x + this.mapWidth * y] = image;
     }
 
-    public void toMap(Vector pos) {
+    public void toMap(final Vector pos) {
         final float a = (pos.x - this.scrollX) / (float) this.tileWidth;
         final float b = (pos.y - this.scrollY) / (float) this.tileHeight;
         pos.x = a + b - 0.5f;
         pos.y = b - a - 0.5f;
     }
 
-    public void toCanvas(Vector pos) {
+    public void toCanvas(final Vector pos) {
         final float x = this.scrollX + this.tileWidth * (pos.x - pos.y) * 0.5f;
         final float y = this.scrollY + this.tileHeight * (2.0f + pos.x + pos.y) * 0.5f;
         pos.x = x;
@@ -129,11 +131,11 @@ public class IsoRenderer {
         this.scrollY = Math.max(this.minScrollY, Math.min(this.scrollY, this.maxScrollY));
     }
 
-    private boolean contains(int x, int y) {
+    private boolean contains(final int x, final int y) {
         return 0 <= x && x < this.mapWidth && 0 <= y && y < this.mapHeight;
     }
 
-    private void ensureLayer(int layerIndex) {
+    private void ensureLayer(final int layerIndex) {
         while (this.layers.size() <= layerIndex) {
             this.layers.add(new Image[this.mapWidth * this.mapHeight]);
         }

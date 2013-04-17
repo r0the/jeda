@@ -114,7 +114,7 @@ public abstract class Program {
      * @since 1
      */
     protected final double readDouble(String message) {
-        InputRequest<Double> request = new InputRequest(InputType.forDouble(), 0d);
+        InputRequest<Double> request = new InputRequest<Double>(InputType.forDouble(), 0d);
         request.setMessage(message);
         request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
         Engine.getContext().showInputRequest(request);
@@ -151,7 +151,7 @@ public abstract class Program {
      * @since 1
      */
     protected final int readInt(String message) {
-        InputRequest<Integer> request = new InputRequest(InputType.forInt(), 0);
+        InputRequest<Integer> request = new InputRequest<Integer>(InputType.forInt(), 0);
         request.setMessage(message);
         request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
         Engine.getContext().showInputRequest(request);
@@ -188,7 +188,7 @@ public abstract class Program {
      * @since 1
      */
     protected final String readString(String message) {
-        InputRequest<String> request = new InputRequest(InputType.forString(), "");
+        InputRequest<String> request = new InputRequest<String>(InputType.forString(), "");
         request.setMessage(message);
         request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
         Engine.getContext().showInputRequest(request);

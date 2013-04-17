@@ -73,7 +73,7 @@ final class BlockSet {
     };
 
     BlockSet() {
-        this.blockMap = new HashMap();
+        this.blockMap = new HashMap<String, Image>();
         Properties p = Engine.getContext().getProperties();
         this.sizeX = p.getInt("ch.jeda.blocks.sizex", 1);
         this.sizeY = p.getInt("ch.jeda.blocks.sizey", 1);
@@ -85,7 +85,7 @@ final class BlockSet {
         }
 
         this.defaultBlock = getBlockImage(PLAIN_BLOCK);
-        this.shadows = new HashMap();
+        this.shadows = new HashMap<Direction, Image>();
         for (Direction direction : Direction.ALL) {
             this.addShadow(direction);
         }

@@ -41,7 +41,7 @@ public final class Image {
     public static final String JEDA_LOGO_16x16 = ":ch/jeda/resources/logo-16x16.png";
     public static final String JEDA_LOGO_48x48 = ":ch/jeda/resources/logo-48x48.png";
     public static final String JEDA_LOGO_64x64 = ":ch/jeda/resources/logo-64x64.png";
-    private static final Map<String, ImageImp> CACHE = new HashMap();
+    private static final Map<String, ImageImp> CACHE = new HashMap<String, ImageImp>();
     private static final Map<String, ImageImp.Encoding> FORMAT_MAP = initFormatMap();
     private final ImageImp imp;
 
@@ -61,7 +61,7 @@ public final class Image {
      *
      * @since 1
      */
-    public Image(String filePath) {
+    public Image(final String filePath) {
         this(loadImp(filePath));
     }
 
@@ -92,7 +92,7 @@ public final class Image {
      * @see #createScaledImage(double)
      * @since 1
      */
-    public Image createScaledImage(int width, int height) {
+    public Image createScaledImage(final int width, final int height) {
         return new Image(this.imp.createScaledImage(width, height));
     }
 
@@ -121,7 +121,8 @@ public final class Image {
      *
      * @since 1
      */
-    public Image createSubImage(int x, int y, int width, int height) {
+    public Image createSubImage(final int x, final int y,
+                                final int width, final int height) {
         return new Image(this.imp.createSubImage(x, y, width, height));
     }
 
@@ -185,7 +186,7 @@ public final class Image {
      *
      * @since 1
      */
-    public Image replacePixels(Color oldColor, Color newColor) {
+    public Image replacePixels(final Color oldColor, final Color newColor) {
         return new Image(this.imp.replacePixels(oldColor, newColor));
     }
 
@@ -201,7 +202,7 @@ public final class Image {
      *
      * @since 1
      */
-    public boolean save(String filePath) {
+    public boolean save(final String filePath) {
         if (filePath == null) {
             throw new NullPointerException("filePath");
         }
@@ -243,7 +244,7 @@ public final class Image {
         }
     }
 
-    Image(ImageImp imp) {
+    Image(final ImageImp imp) {
         this.imp = imp;
     }
 
@@ -252,14 +253,14 @@ public final class Image {
     }
 
     private static Map<String, ImageImp.Encoding> initFormatMap() {
-        final Map<String, ImageImp.Encoding> result = new HashMap();
+        final Map<String, ImageImp.Encoding> result = new HashMap<String, ImageImp.Encoding>();
         result.put(".jpeg", ImageImp.Encoding.JPEG);
         result.put(".jpg", ImageImp.Encoding.JPEG);
         result.put(".png", ImageImp.Encoding.PNG);
         return result;
     }
 
-    private static ImageImp loadImp(String filePath) {
+    private static ImageImp loadImp(final String filePath) {
         if (!CACHE.containsKey(filePath)) {
             CACHE.put(filePath, Engine.getContext().loadImageImp(filePath));
         }

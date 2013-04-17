@@ -149,7 +149,7 @@ public class Window extends Canvas {
      */
     public Window() {
         this.events = new Events();
-        this.inputDevices = new ArrayList();
+        this.inputDevices = new ArrayList<InputDevice>();
         this.title = Thread.currentThread().getName();
         this.resetImp(0, 0, NO_FEATURES);
     }
@@ -173,9 +173,9 @@ public class Window extends Canvas {
      *
      * @since 1
      */
-    public Window(Feature... features) {
+    public Window(final Feature... features) {
         this.events = new Events();
-        this.inputDevices = new ArrayList();
+        this.inputDevices = new ArrayList<InputDevice>();
         this.title = Thread.currentThread().getName();
         this.resetImp(0, 0, toSet(features));
     }
@@ -202,7 +202,8 @@ public class Window extends Canvas {
      *
      * @since 1
      */
-    public Window(int width, int height, Feature... features) {
+    public Window(final int width, final int height,
+                  final Feature... features) {
         if (width < 1) {
             throw new IllegalArgumentException("width");
         }
@@ -212,7 +213,7 @@ public class Window extends Canvas {
         }
 
         this.events = new Events();
-        this.inputDevices = new ArrayList();
+        this.inputDevices = new ArrayList<InputDevice>();
         this.title = Thread.currentThread().getName();
         this.resetImp(width, height, toSet(features));
     }
@@ -288,7 +289,7 @@ public class Window extends Canvas {
      * @see #setFeature(ch.jeda.ui.Window.Feature, boolean)
      * @since 1
      */
-    public boolean hasFeature(Feature feature) {
+    public boolean hasFeature(final Feature feature) {
         if (feature == null) {
             throw new NullPointerException("feature");
         }
@@ -307,7 +308,7 @@ public class Window extends Canvas {
      * @see #hasFeature(ch.jeda.ui.Window.Feature)
      * @since 1
      */
-    public void setFeature(Feature feature, boolean enabled) {
+    public void setFeature(final Feature feature, final boolean enabled) {
         if (feature == null) {
             throw new NullPointerException("feature");
         }
@@ -348,7 +349,7 @@ public class Window extends Canvas {
      * @see MouseCursor
      * @since 1
      */
-    public void setMouseCursor(MouseCursor mouseCursor) {
+    public void setMouseCursor(final MouseCursor mouseCursor) {
         if (mouseCursor == null) {
             throw new NullPointerException("mouseCursor");
         }
@@ -365,7 +366,7 @@ public class Window extends Canvas {
      * @see #getTitle()
      * @since 1
      */
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         if (title == null) {
             throw new NullPointerException("title");
         }
@@ -388,7 +389,8 @@ public class Window extends Canvas {
         }
     }
 
-    private void resetImp(int width, int height, EnumSet<Feature> features) {
+    private void resetImp(final int width, final int height,
+                          final EnumSet<Feature> features) {
         if (this.imp != null) {
             this.imp.close();
         }
@@ -412,7 +414,7 @@ public class Window extends Canvas {
         return result;
     }
 
-    private static EnumSet<Feature> toSet(Feature... features) {
+    private static EnumSet<Feature> toSet(final Feature... features) {
         final EnumSet<Feature> result = EnumSet.noneOf(Feature.class);
         for (Feature feature : features) {
             result.add(feature);

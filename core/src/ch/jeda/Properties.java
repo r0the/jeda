@@ -78,7 +78,7 @@ public final class Properties {
     }
 
     public Set<String> keys() {
-        final Set<String> result = new TreeSet();
+        final Set<String> result = new TreeSet<String>();
         for (Object key : this.imp.keySet()) {
             result.add(key.toString());
         }
@@ -87,7 +87,7 @@ public final class Properties {
     }
 
     public Set<String> sections() {
-        final Set<String> result = new TreeSet();
+        final Set<String> result = new TreeSet<String>();
         for (String key : this.keys()) {
             final int pos = key.indexOf('.');
             if (pos != -1) {

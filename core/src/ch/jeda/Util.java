@@ -33,7 +33,7 @@ public final class Util {
      * @param args arguments to be inserted in the message template
      * @return resulting message
      */
-    public static String args(String message, Object... args) {
+    public static String args(final String message, final Object... args) {
         if (args == null) {
             return message;
         }
@@ -73,8 +73,8 @@ public final class Util {
      * @param values comma-separated double values
      * @return a list of double values
      */
-    public static List<Double> doubleList(double... values) {
-        ArrayList<Double> result = new ArrayList();
+    public static List<Double> doubleList(final double... values) {
+        ArrayList<Double> result = new ArrayList<Double>();
         for (double value : values) {
             result.add(value);
         }
@@ -88,8 +88,8 @@ public final class Util {
      * @param values comma-separated int values
      * @return a list of int values
      */
-    public static List<Integer> intList(int... values) {
-        ArrayList<Integer> result = new ArrayList();
+    public static List<Integer> intList(final int... values) {
+        ArrayList<Integer> result = new ArrayList<Integer>();
         for (int value : values) {
             result.add(value);
         }
@@ -108,7 +108,7 @@ public final class Util {
      * @param filePath path to the file
      * @return lines of the file as a String list
      */
-    public static List<String> loadTextFile(String filePath) {
+    public static List<String> loadTextFile(final String filePath) {
         return Engine.getContext().loadTextFile(filePath);
     }
 
@@ -118,7 +118,7 @@ public final class Util {
      * @param max upper limit for the random number
      * @return random number
      */
-    public static int randomInt(int max) {
+    public static int randomInt(final int max) {
         return (int) (Math.random() * max);
     }
 
@@ -128,7 +128,7 @@ public final class Util {
      * @param values comma-separated String values
      * @return a list of String values
      */
-    public static List<String> stringList(String... values) {
+    public static List<String> stringList(final String... values) {
         return Arrays.asList(values);
     }
 }
