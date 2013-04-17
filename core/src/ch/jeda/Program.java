@@ -43,6 +43,13 @@ public abstract class Program {
         this.state = ProgramState.Created;
     }
 
+    /**
+     * Returns the current program state.
+     *
+     * @return current program state.
+     *
+     * @since 1
+     */
     public final ProgramState getState() {
         synchronized (this.stateLock) {
             return this.state;
@@ -50,8 +57,7 @@ public abstract class Program {
     }
 
     /**
-     * @deprecated This method should not be called. Return from the
-     * <tt>run()</tt> method to stop a Jeda program.
+     * @deprecated Use {@link #stop()} instead.
      */
     @Deprecated
     public final void requestStop() {
@@ -59,13 +65,24 @@ public abstract class Program {
     }
 
     /**
-     * Executes the program. Override this method to implement the program. If
-     * the program contains a loop, the result of {@link #stopRequested()}
-     * should be used as a breaking condition.
+     * Executes the program. Override this method to implement the program. The
+     * program should react to changes of the program state. It should not
+     * execute program logic while the program state is
+     * {@link ProgramState#Paused}. The program should return from the
+     * <tt>run()</tt> method if the program state is
+     * {@link ProgramState#Stopped}.
      *
      * @since 1
      */
     public abstract void run();
+
+    /**
+     * Requests the program to stop. Sets the program state to
+     * {@link ProgramState#Stopped}.
+     */
+    public final void stop() {
+        this.setState(ProgramState.Stopped);
+    }
 
     /**
      * Returns the Jeda system properties.
