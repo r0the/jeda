@@ -44,9 +44,8 @@ public class MenuState extends WorldState {
         int lineHeight = 0;
         canvas.setFontSize(this.fontSize);
         for (String line : lines) {
-            Size textSize = canvas.textSize(line);
-            width = Math.max(width, textSize.width);
-            lineHeight = Math.max(lineHeight, textSize.height);
+            width = Math.max(width, canvas.textWidth(line));
+            lineHeight = Math.max(lineHeight, canvas.textHeight(line));
         }
 
         int height = lineHeight * lines.length;

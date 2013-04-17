@@ -122,8 +122,10 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
         public DoubleBufferedWindowImp(CanvasWindow canvasWindow) {
             super(canvasWindow);
-            this.backBuffer = GUI.createBufferedImage(canvasWindow.getImageSize());
-            this.frontBuffer = GUI.createBufferedImage(canvasWindow.getImageSize());
+            this.backBuffer = createBufferedImage(canvasWindow.getImageWidth(),
+                                                  canvasWindow.getImageHeight());
+            this.frontBuffer = createBufferedImage(canvasWindow.getImageWidth(),
+                                                   canvasWindow.getImageHeight());
             canvasWindow.setImage(this.frontBuffer);
             this.setBuffer(this.backBuffer);
         }
@@ -145,7 +147,8 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
         public SingleBufferedWindowImp(CanvasWindow canvasWindow) {
             super(canvasWindow);
-            this.buffer = GUI.createBufferedImage(canvasWindow.getImageSize());
+            this.buffer = createBufferedImage(canvasWindow.getImageWidth(),
+                                              canvasWindow.getImageHeight());
             canvasWindow.setImage(this.buffer);
             this.setBuffer(this.buffer);
         }

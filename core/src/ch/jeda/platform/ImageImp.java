@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.Size;
 import ch.jeda.ui.Color;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,7 +31,9 @@ public interface ImageImp {
 
     ImageImp createSubImage(int x, int y, int width, int height);
 
-    Size getSize();
+    int getHeight();
+
+    int getWidth();
 
     ImageImp replacePixels(Color oldColor, Color newColor);
 

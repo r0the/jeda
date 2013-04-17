@@ -24,11 +24,11 @@ import ch.jeda.ui.Events;
 import ch.jeda.ui.Window;
 
 /**
- * This class represents a visual simulation, which is a simulation with a 
+ * This class represents a visual simulation, which is a simulation with a
  * graphical representation. This class extends the {@link ch.jeda.Simulation}
  * class and implements a simulation loop that renders to a
  * {@link ch.jeda.ui.Window}.
- * 
+ *
  * @since 1
  */
 abstract class VisualSimulation extends Simulation {
@@ -42,7 +42,7 @@ abstract class VisualSimulation extends Simulation {
      * @since 1
      */
     protected VisualSimulation() {
-        this(new Size());
+        this(Size.EMPTY);
     }
 
     /**
@@ -52,7 +52,7 @@ abstract class VisualSimulation extends Simulation {
      * @param width the width of the window's drawing area
      * @param height the height of the window's drawing area
      * @throws IllegalArgumentException if width or height are smaller than 1
-     * 
+     *
      * @since 1
      */
     public VisualSimulation(int width, int height) {
@@ -67,18 +67,18 @@ abstract class VisualSimulation extends Simulation {
      *
      * @throws NullPointerException if size is <code>null</code>
      * @throws IllegalArgumentException if size is empty
-     * 
+     *
      * @since 1
      */
     public VisualSimulation(Size size) {
-        this.window = new Window(size, Window.Feature.DoubleBuffered);
+        this.window = new Window(size.width, size.height, Window.Feature.DoubleBuffered);
     }
 
     /**
      * Returns the title of this simulation's window.
      *
      * @return current window title
-     * 
+     *
      * @see #setTitle(java.lang.String)
      * @since 1
      */
@@ -94,7 +94,7 @@ abstract class VisualSimulation extends Simulation {
      * Checks whether this simulation's window is in fullscreen mode.
      *
      * @return <code>true</code> if the window is in fullscreen mode
-     * 
+     *
      * @see #setFullscreen(boolean)
      * @since 1
      */
@@ -106,8 +106,8 @@ abstract class VisualSimulation extends Simulation {
      * Enables/disables the fullscreen mode.
      *
      * @param fullscreen <code>true</code> to enable fullscreen mode,
-     *                   <code>false</code> to disable it
-     * 
+     * <code>false</code> to disable it
+     *
      * @see #isFullscreen()
      * @since 1
      */
@@ -146,36 +146,32 @@ abstract class VisualSimulation extends Simulation {
 
     /**
      * This method is called after the
-     * {@link #drawForeground(ch.jeda.ui.Canvas)} method.
-     * It is intended as a hook for Jeda framework classes and may not be
-     * available to override.
+     * {@link #drawForeground(ch.jeda.ui.Canvas)} method. It is intended as a
+     * hook for Jeda framework classes and may not be available to override.
      */
     protected void afterDraw() {
     }
 
     /**
      * This method is called after the {@link #update(ch.jeda.ui.Events)}
-     * method.
-     * It is intended as a hook for Jeda framework classes and may not be
-     * available to override.
+     * method. It is intended as a hook for Jeda framework classes and may not
+     * be available to override.
      */
     protected void afterUpdate() {
     }
 
     /**
      * This method is called before the
-     * {@link #drawBackground(ch.jeda.ui.Canvas)} method.
-     * It is intended as a hook for Jeda framework classes and may not be
-     * available to override.
+     * {@link #drawBackground(ch.jeda.ui.Canvas)} method. It is intended as a
+     * hook for Jeda framework classes and may not be available to override.
      */
     protected void beforeDraw() {
     }
 
     /**
      * This method is called before the {@link #update(ch.jeda.ui.Events)}
-     * method.
-     * It is intended as a hook for Jeda framework classes and may not be
-     * available to override.
+     * method. It is intended as a hook for Jeda framework classes and may not
+     * be available to override.
      */
     protected void beforeUpdate() {
     }
@@ -184,9 +180,9 @@ abstract class VisualSimulation extends Simulation {
      * This method is called in every simulation step to draw the background of
      * the simulation. The default implementation fills the canvas with the
      * color white.
-     * 
+     *
      * @param canvas the canvas on which the background is drawn
-     * 
+     *
      * @since 1
      */
     protected void drawBackground(Canvas canvas) {
@@ -197,9 +193,9 @@ abstract class VisualSimulation extends Simulation {
     /**
      * This method is called in every simulation step to draw the foreground of
      * the simulation.
-     * 
+     *
      * @param canvas the canvas on which the foreground is drawn
-     * 
+     *
      * @since 1
      */
     protected abstract void drawForeground(Canvas canvas);
@@ -207,10 +203,10 @@ abstract class VisualSimulation extends Simulation {
     /**
      * This method is called once every simulation step to let the simulation
      * update it's state and react to user input events.
-     * 
+     *
      * @param events the user input events that occured since the last call to
-     *               this method
-     * 
+     * this method
+     *
      * @since 1
      */
     protected void update(Events events) {

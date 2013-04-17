@@ -66,7 +66,7 @@ public class JavaGamepad implements InputDeviceImp {
         this.imp = imp;
         this.axisMap = new HashMap();
         this.buttonMap = new HashMap();
-        Profile profile = PROFILE_MAP.get(imp.getName());
+        final Profile profile = PROFILE_MAP.get(imp.getName());
 
         for (Component component : this.imp.getComponents()) {
             if (profile.hasAxis(component.getIdentifier())) {
@@ -109,7 +109,7 @@ public class JavaGamepad implements InputDeviceImp {
     }
 
     private static Map<Component.Identifier, Axis> initDefaultAxisMap() {
-        Map<Component.Identifier, Axis> result = new HashMap();
+        final Map<Component.Identifier, Axis> result = new HashMap();
         result.put(Component.Identifier.Axis.X, Axis.LEFT_X);
         result.put(Component.Identifier.Axis.Y, Axis.LEFT_Y);
         result.put(Component.Identifier.Axis.Z, Axis.LEFT_Z);
@@ -128,7 +128,7 @@ public class JavaGamepad implements InputDeviceImp {
     }
 
     private static Profile createXBoxPadProfile() {
-        Map<Component.Identifier, Button> buttonMap = new HashMap();
+        final Map<Component.Identifier, Button> buttonMap = new HashMap();
         buttonMap.put(Component.Identifier.Button.A, Button.A);
         buttonMap.put(Component.Identifier.Button.B, Button.B);
         buttonMap.put(Component.Identifier.Button.LEFT_THUMB, Button.LEFT_INDEX);
@@ -143,7 +143,7 @@ public class JavaGamepad implements InputDeviceImp {
     }
 
     private static Profile createLogitechF310Profile() {
-        Map<Component.Identifier, Button> buttonMap = new HashMap();
+        final Map<Component.Identifier, Button> buttonMap = new HashMap();
         buttonMap.put(Component.Identifier.Button._0, Button.A);
         buttonMap.put(Component.Identifier.Button._1, Button.B);
         buttonMap.put(Component.Identifier.Button._2, Button.X);

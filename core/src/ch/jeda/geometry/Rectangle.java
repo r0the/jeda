@@ -16,8 +16,6 @@
  */
 package ch.jeda.geometry;
 
-import ch.jeda.Location;
-import ch.jeda.Size;
 import ch.jeda.Vector;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
@@ -25,18 +23,14 @@ import ch.jeda.ui.Color;
 public class Rectangle extends AbstractPolygon {
 
     private final Circle circumscribedCircle;
-    private final float halfWidth;
-    private final float halfHeight;
-    private final Location topLeft;
-    private final Size size;
+    private final int halfWidth;
+    private final int halfHeight;
 
-    public Rectangle(double width, double height) {
-        this.halfWidth = (float) width / 2f;
-        this.halfHeight = (float) height / 2f;
+    public Rectangle(int width, int height) {
+        this.halfWidth = width / 2;
+        this.halfHeight = height / 2;
         final double radius = Math.sqrt(width * width + height * height) / 2.0;
         this.circumscribedCircle = new Circle(radius);
-        this.topLeft = new Location((int) -this.halfWidth, (int) -this.halfHeight);
-        this.size = new Size((int) width, (int) height);
     }
 
     @Override
@@ -56,13 +50,15 @@ public class Rectangle extends AbstractPolygon {
         final Color fillColor = this.getFillColor();
         if (fillColor != null) {
             canvas.setColor(fillColor);
-            canvas.fillRectangle(this.topLeft, this.size);
+            canvas.fillRectangle(-this.halfWidth, -this.halfHeight,
+                                 2 * this.halfWidth, 2 * this.halfHeight);
         }
 
         final Color outlineColor = this.getOutlineColor();
         if (outlineColor != null) {
             canvas.setColor(outlineColor);
-            canvas.drawRectangle(this.topLeft, this.size);
+            canvas.drawRectangle(-this.halfWidth, -this.halfHeight,
+                                 2 * this.halfWidth, 2 * this.halfHeight);
         }
     }
 
@@ -107,7 +103,7 @@ public class Rectangle extends AbstractPolygon {
 
         if (dx * dx + dy * dy <= radius * radius) {
             final Vector p = new Vector(this.halfWidth * Math.signum(center.x),
-                                          this.halfHeight * Math.signum(center.y));
+                                        this.halfHeight * Math.signum(center.y));
             final Vector n = new Vector(center);
             n.subtract(p);
             n.setLength(Math.sqrt(dx * dx + dy * dy) - radius);

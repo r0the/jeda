@@ -16,19 +16,21 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.Size;
 import ch.jeda.ui.Window;
 import java.util.EnumSet;
 
 public final class WindowRequest {
 
-    private final Size size;
     private final EnumSet<Window.Feature> features;
+    private final int height;
     private final Object lock;
+    private final int width;
     private WindowImp result;
 
-    public WindowRequest(Size size, EnumSet<Window.Feature> features) {
-        this.size = size;
+    public WindowRequest(int width, int height,
+                         EnumSet<Window.Feature> features) {
+        this.width = width;
+        this.height = height;
         this.features = features;
         this.lock = new Object();
     }
@@ -41,8 +43,12 @@ public final class WindowRequest {
         return this.features;
     }
 
-    public Size getSize() {
-        return this.size;
+    public int getWidth() {
+        return this.width;
+    }
+
+    public int getHeight() {
+        return this.height;
     }
 
     public void setResult(WindowImp result) {

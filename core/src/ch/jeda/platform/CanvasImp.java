@@ -17,8 +17,6 @@
 package ch.jeda.platform;
 
 import ch.jeda.Transformation;
-import ch.jeda.Location;
-import ch.jeda.Size;
 import ch.jeda.ui.Color;
 
 public interface CanvasImp {
@@ -33,7 +31,7 @@ public interface CanvasImp {
 
     void drawLine(int x1, int y1, int x2, int y2);
 
-    void drawPolygon(Iterable<Location> edges);
+    void drawPolygon(int[] points);
 
     void drawRectangle(int x, int y, int width, int height);
 
@@ -43,15 +41,17 @@ public interface CanvasImp {
 
     void fillCircle(int x, int y, int radius);
 
-    void fillPolygon(Iterable<Location> edges);
+    void fillPolygon(int[] points);
 
     void fillRectangle(int x, int y, int width, int height);
 
-    public double getLineWidth();
+    int getHeight();
+
+    double getLineWidth();
 
     Color getPixelAt(int x, int y);
 
-    Size getSize();
+    int getWidth();
 
     void setAlpha(int alpha);
 
@@ -67,5 +67,7 @@ public interface CanvasImp {
 
     ImageImp takeSnapshot();
 
-    Size textSize(String text);
+    int textHeight(String text);
+
+    int textWidth(String text);
 }

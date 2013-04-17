@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.Size;
 import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ContextImp;
@@ -37,8 +36,8 @@ class JavaContextImp implements ContextImp {
     private final WindowManager windowManager;
 
     @Override
-    public CanvasImp createCanvasImp(Size size) {
-        return new JavaCanvasImp(size);
+    public CanvasImp createCanvasImp(int width, int height) {
+        return new JavaCanvasImp(width, height);
     }
 
     @Override

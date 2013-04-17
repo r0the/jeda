@@ -24,7 +24,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import ch.jeda.Size;
 import ch.jeda.platform.Event;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.Key;
@@ -47,7 +46,6 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     private boolean surfaceAvailable;
     private SurfaceHolder surfaceHolder;
     private SurfaceView surfaceView;
-    private Size surfaceSize;
 
     @Override
     public boolean onKey(final View view, final int keyCode,
@@ -106,9 +104,8 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     @Override
     public void surfaceChanged(final SurfaceHolder holder, final int format,
                                final int width, final int height) {
-        this.surfaceSize = new Size(width, height);
         if (this.request != null) {
-            this.request.setResult(AndroidWindowImp.create(this));
+            this.request.setResult(AndroidWindowImp.create(this, width, height));
             this.request = null;
         }
     }
@@ -157,10 +154,6 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         else {
             return ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
         }
-    }
-
-    Size getSize() {
-        return this.surfaceSize;
     }
 
     void setBitmap(final Bitmap bitmap) {

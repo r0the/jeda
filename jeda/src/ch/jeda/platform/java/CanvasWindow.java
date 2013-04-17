@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.Size;
 import ch.jeda.platform.Event;
 import ch.jeda.ui.Key;
 import ch.jeda.ui.Window;
@@ -49,7 +48,8 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
     private static final Map<Integer, Map<Integer, Key>> KEY_MAP = initKeyMap();
     private final ImageCanvas canvas;
     private final EnumSet<Window.Feature> features;
-    private final Size size;
+    private final int height;
+    private final int width;
     private List<Event> eventsIn;
     private List<Event> eventsOut;
 
@@ -152,12 +152,13 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
 //        this.add(event);
     }
 
-    CanvasWindow(WindowManager manager, Size size,
+    CanvasWindow(WindowManager manager, int width, int height,
                  EnumSet<Window.Feature> features) {
         super(manager);
-        this.canvas = new ImageCanvas(size);
+        this.canvas = new ImageCanvas(width, height);
         this.features = features;
-        this.size = size;
+        this.height = height;
+        this.width = width;
 
         this.eventsIn = new ArrayList();
         this.eventsOut = new ArrayList();
@@ -189,8 +190,12 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
         return this.features;
     }
 
-    Size getImageSize() {
-        return this.size;
+    int getImageHeight() {
+        return this.height;
+    }
+
+    int getImageWidth() {
+        return this.width;
     }
 
     void setFeature(Window.Feature feature, boolean enabled) {
@@ -214,18 +219,18 @@ public class CanvasWindow extends BaseWindow implements FocusListener,
 
         private BufferedImage buffer;
 
-        ImageCanvas(Size size) {
-            final Dimension d = new Dimension(size.width, size.height);
+        ImageCanvas(final int width, final int height) {
+            final Dimension d = new Dimension(width, height);
             this.setPreferredSize(d);
             this.setSize(d);
         }
 
-        void setImage(BufferedImage buffer) {
+        void setImage(final BufferedImage buffer) {
             this.buffer = buffer;
         }
 
         @Override
-        public void paint(Graphics graphics) {
+        public void paint(final Graphics graphics) {
             if (graphics != null) {
                 graphics.drawImage(this.buffer, 0, 0, null);
             }

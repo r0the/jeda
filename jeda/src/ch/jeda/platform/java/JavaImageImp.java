@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.Size;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.ui.Color;
 import java.awt.GraphicsConfiguration;
@@ -35,13 +34,11 @@ import javax.imageio.ImageIO;
 class JavaImageImp implements ImageImp {
 
     final BufferedImage bufferedImage;
-    private final Size size;
 
     JavaImageImp(BufferedImage bufferedImage) {
         assert bufferedImage != null;
 
         this.bufferedImage = bufferedImage;
-        this.size = new Size(bufferedImage.getWidth(), bufferedImage.getHeight());
     }
 
     @Override
@@ -65,8 +62,13 @@ class JavaImageImp implements ImageImp {
     }
 
     @Override
-    public Size getSize() {
-        return this.size;
+    public int getHeight() {
+        return this.bufferedImage.getHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return this.bufferedImage.getWidth();
     }
 
     @Override
@@ -75,7 +77,7 @@ class JavaImageImp implements ImageImp {
         assert newColor != null;
 
         final Image image = ReplaceColorFilter.replaceColor(this.bufferedImage, oldColor, newColor);
-        final BufferedImage result = createImage(this.size.width, this.size.height);
+        final BufferedImage result = createImage(this.getWidth(), this.getHeight());
         result.getGraphics().drawImage(image, 0, 0, null);
         return new JavaImageImp(result);
     }

@@ -17,7 +17,6 @@
 package ch.jeda.platform.android;
 
 import android.graphics.Bitmap;
-import ch.jeda.Size;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.ui.Color;
 import java.io.IOException;
@@ -26,7 +25,6 @@ import java.io.OutputStream;
 class AndroidImageImp implements ImageImp {
 
     final Bitmap bitmap;
-    private final Size size;
 
     @Override
     public ImageImp createScaledImage(final int width, final int height) {
@@ -45,8 +43,13 @@ class AndroidImageImp implements ImageImp {
     }
 
     @Override
-    public Size getSize() {
-        return this.size;
+    public int getHeight() {
+        return this.bitmap.getHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return this.bitmap.getWidth();
     }
 
     @Override
@@ -65,7 +68,6 @@ class AndroidImageImp implements ImageImp {
 
     AndroidImageImp(final Bitmap bitmap) {
         this.bitmap = bitmap;
-        this.size = new Size(this.bitmap.getWidth(), this.bitmap.getHeight());
     }
 
     private static Bitmap.CompressFormat convertEncoding(Encoding encoding) {

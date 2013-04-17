@@ -22,8 +22,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import ch.jeda.Location;
-import ch.jeda.Size;
 import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
@@ -37,7 +35,6 @@ class AndroidCanvasImp implements CanvasImp {
     private final Paint textPaint;
     private Bitmap bitmap;
     private Canvas canvas;
-    private Size size;
 
     @Override
     public void clear() {
@@ -78,10 +75,10 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawPolygon(Iterable<Location> edges) {
-        assert edges != null;
+    public void drawPolygon(final int[] points) {
+        assert points != null;
 
-        this.canvas.drawPath(createPath(edges), this.strokePaint);
+        this.canvas.drawPath(createPath(points), this.strokePaint);
         this.modified();
     }
 
@@ -116,10 +113,10 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillPolygon(Iterable<Location> edges) {
-        assert edges != null;
+    public void fillPolygon(final int[] points) {
+        assert points != null;
 
-        this.canvas.drawPath(createPath(edges), this.fillPaint);
+        this.canvas.drawPath(createPath(points), this.fillPaint);
         this.modified();
     }
 
@@ -131,20 +128,25 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
+    public int getHeight() {
+        return this.bitmap.getHeight();
+    }
+
+    @Override
     public double getLineWidth() {
         return this.strokePaint.getStrokeWidth();
     }
 
     @Override
     public Color getPixelAt(final int x, final int y) {
-        assert this.size.contains(x, y);
+        assert this.contains(x, y);
 
         return new Color(this.bitmap.getPixel(x, y));
     }
 
     @Override
-    public Size getSize() {
-        return this.size;
+    public int getWidth() {
+        return this.bitmap.getWidth();
     }
 
     @Override
@@ -172,7 +174,7 @@ class AndroidCanvasImp implements CanvasImp {
 
     @Override
     public void setPixelAt(final int x, final int y, final Color color) {
-        assert this.size.contains(x, y);
+        assert this.contains(x, y);
         assert color != null;
 
         this.pixelPaint.setColor(color.value);
@@ -190,10 +192,17 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public Size textSize(final String text) {
+    public int textHeight(final String text) {
         Rect bounds = new Rect();
         this.strokePaint.getTextBounds(text, 0, text.length(), bounds);
-        return new Size(bounds.width(), bounds.height());
+        return bounds.height();
+    }
+
+    @Override
+    public int textWidth(final String text) {
+        Rect bounds = new Rect();
+        this.strokePaint.getTextBounds(text, 0, text.length(), bounds);
+        return bounds.width();
     }
 
     AndroidCanvasImp() {
@@ -218,22 +227,25 @@ class AndroidCanvasImp implements CanvasImp {
         return this.bitmap;
     }
 
-    final void setSize(final Size size) {
-        this.size = size;
-        this.bitmap = Bitmap.createBitmap(size.width, size.height, Config.ARGB_8888);
+    final void init(final int width, final int height) {
+        this.bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
         this.canvas = new Canvas(this.bitmap);
     }
 
-    private static Path createPath(Iterable<Location> edges) {
-        Path result = new Path();
+    private boolean contains(final int x, final int y) {
+        return 0 <= x && x < this.getWidth() && 0 <= y && y < this.getHeight();
+    }
+
+    private static Path createPath(final int[] points) {
+        final Path result = new Path();
         boolean first = true;
-        for (Location edge : edges) {
+        for (int i = 0; i < points.length; i = i + 2) {
             if (first) {
-                result.moveTo(edge.x, edge.y);
+                result.moveTo(points[i], points[i + 1]);
                 first = false;
             }
             else {
-                result.lineTo(edge.x, edge.y);
+                result.lineTo(points[i], points[i + 1]);
             }
         }
 

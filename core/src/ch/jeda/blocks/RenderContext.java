@@ -43,8 +43,8 @@ class RenderContext {
 
     RenderContext(Size size) {
         this.blockSet = new BlockSet();
-        this.canvas = new Canvas(size);
-        this.maxY = this.canvas.getSize().height + this.blockSet.brickSizeZ() + this.blockSet.brickSizeY();
+        this.canvas = new Canvas(size.width, size.height);
+        this.maxY = this.canvas.getHeight() + this.blockSet.brickSizeZ() + this.blockSet.brickSizeY();
         this.mapSize = null;
         this.scrollPos = Location.ORIGIN;
     }
@@ -112,7 +112,7 @@ class RenderContext {
         while (i < words.length) {
             lookahead = words[i];
             line = null;
-            while (this.canvas.textSize(lookahead).width < maxWidth && i + 1 < words.length) {
+            while (this.canvas.textWidth(lookahead) < maxWidth && i + 1 < words.length) {
                 line = lookahead;
                 ++i;
                 lookahead = line + " " + words[i];

@@ -17,7 +17,6 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Engine;
-import ch.jeda.Size;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
@@ -107,34 +106,39 @@ public class WindowManager {
         }
     }
 
-    private CanvasWindow createCanvasWindow(WindowRequest viewRequest) {
-        Size size = viewRequest.getSize();
-        if (size.isEmpty()) {
-            size = new Size(800, 600);
+    private CanvasWindow createCanvasWindow(WindowRequest request) {
+        int width = request.getWidth();
+        int height = request.getHeight();
+        if (width < 1 || height < 1) {
+            width = 800;
+            height = 600;
         }
 
-        if (viewRequest.getFeatures().contains(Feature.Fullscreen) && this.fullscreenWindow == null) {
-            DisplayMode displayMode = findDisplayMode(size);
-            size = new Size(displayMode.getWidth(), displayMode.getHeight());
-            this.fullscreenWindow = new CanvasWindow(this, size, viewRequest.getFeatures());
+        if (request.getFeatures().contains(Feature.Fullscreen) && this.fullscreenWindow == null) {
+            DisplayMode displayMode = findDisplayMode(width, height);
+            width = displayMode.getWidth();
+            height = displayMode.getHeight();
+            this.fullscreenWindow = new CanvasWindow(this, width, height,
+                                                     request.getFeatures());
             GRAPHICS_DEVICE.setFullScreenWindow(this.fullscreenWindow);
             GRAPHICS_DEVICE.setDisplayMode(displayMode);
             return this.fullscreenWindow;
         }
         else {
-            return new CanvasWindow(this, size, viewRequest.getFeatures());
+            return new CanvasWindow(this, width, height, request.getFeatures());
         }
     }
 
-    private static DisplayMode findDisplayMode(Size size) {
+    private static DisplayMode findDisplayMode(int width, int height) {
         DisplayMode result = null;
         int fdx = Integer.MAX_VALUE;
         int fdy = Integer.MAX_VALUE;
         int fcolor = Integer.MIN_VALUE;
         for (DisplayMode candidate : GRAPHICS_DEVICE.getDisplayModes()) {
-            int dx = candidate.getWidth() - size.width;
-            int dy = candidate.getHeight() - size.height;
-            if (dx >= 0 && dy >= 0 && (dx < fdx || dy < fdy || candidate.getBitDepth() > fcolor)) {
+            int dx = candidate.getWidth() - width;
+            int dy = candidate.getHeight() - height;
+            if (dx >= 0 && dy >= 0 && (dx < fdx || dy < fdy ||
+                                       candidate.getBitDepth() > fcolor)) {
                 result = candidate;
                 fdx = dx;
                 fdy = dy;

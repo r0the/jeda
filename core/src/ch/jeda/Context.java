@@ -16,15 +16,10 @@
  */
 package ch.jeda;
 
-import static ch.jeda.Log.Level.Debug;
-import static ch.jeda.Log.Level.Error;
-import static ch.jeda.Log.Level.Info;
-import static ch.jeda.Log.Level.Warning;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ContextImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.InputType;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.platform.WindowRequest;
@@ -58,8 +53,8 @@ public final class Context {
     private Properties properties;
     private Log.Level logLevel = Log.Level.Warning;
 
-    public CanvasImp createCanvasImp(Size size) {
-        return this.imp.createCanvasImp(size);
+    public CanvasImp createCanvasImp(int width, int height) {
+        return this.imp.createCanvasImp(width, height);
     }
 
     public Properties getProperties() {
@@ -85,12 +80,13 @@ public final class Context {
         return result;
     }
 
-    public WindowImp showWindow(Size size, EnumSet<Window.Feature> features) {
+    public WindowImp showWindow(int width, int height,
+                                EnumSet<Window.Feature> features) {
         if (features == null) {
             throw new NullPointerException("features");
         }
 
-        final WindowRequest request = new WindowRequest(size, features);
+        final WindowRequest request = new WindowRequest(width, height, features);
         this.imp.showWindow(request);
         request.waitForResult();
         return request.getResult();

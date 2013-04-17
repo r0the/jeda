@@ -148,7 +148,10 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window() {
-        this(Size.EMPTY, NO_FEATURES);
+        this.events = new Events();
+        this.inputDevices = new ArrayList();
+        this.title = Thread.currentThread().getName();
+        this.resetImp(0, 0, NO_FEATURES);
     }
 
     /**
@@ -171,7 +174,10 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window(Feature... features) {
-        this(Size.EMPTY, toSet(features));
+        this.events = new Events();
+        this.inputDevices = new ArrayList();
+        this.title = Thread.currentThread().getName();
+        this.resetImp(0, 0, toSet(features));
     }
 
     /**
@@ -197,31 +203,27 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window(int width, int height, Feature... features) {
-        this(new Size(width, height), toSet(features));
+        if (width < 1) {
+            throw new IllegalArgumentException("width");
+        }
+
+        if (height < 1) {
+            throw new IllegalArgumentException("height");
+        }
+
+        this.events = new Events();
+        this.inputDevices = new ArrayList();
+        this.title = Thread.currentThread().getName();
+        this.resetImp(width, height, toSet(features));
     }
 
     /**
-     * Constructs a window. The window is shown on the screen. All drawing
-     * methods inherited from {@link Canvas} are supported. The specified
-     * features will be enabled for the window.
-     * <p>
-     * The size of the window's drawing area depends on the platform:
-     * <p>
-     * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The
-     * drawing area of the window has the specified <tt>size</tt>.
-     * <p>
-     * <img src="../../../android.png"> The size drawing area depends on the
-     * screen size of the device.
-     *
-     * @param size the size of the drawing area in pixels
-     * @param features the features of the window
-     * @throws IllegalArgumentException if width or height are smaller than 1
-     *
-     * @since 1
+     * @deprecated Use {@link #Window(int, int, ch.jeda.ui.Window.Feature[])}
+     * instead.
      */
+    @Deprecated
     public Window(Size size, Feature... features) {
-        this(size, toSet(features));
+        this(size.width, size.height, features);
     }
 
     /**
@@ -242,8 +244,8 @@ public class Window extends Canvas {
      */
     public List<InputDevice> detectInputDevices() {
         this.inputDevices.clear();
-        for (InputDeviceImp imp : this.imp.detectInputDevices()) {
-            this.inputDevices.add(new InputDevice(imp));
+        for (InputDeviceImp inputDeviceImp : this.imp.detectInputDevices()) {
+            this.inputDevices.add(new InputDevice(inputDeviceImp));
         }
 
         return Collections.unmodifiableList(this.inputDevices);
@@ -311,7 +313,8 @@ public class Window extends Canvas {
         }
 
         if (IMP_CHANGING_FEATURES.contains(feature)) {
-            final EnumSet<Feature> featureSet = EnumSet.copyOf(this.imp.getFeatures());
+            final EnumSet<Feature> featureSet =
+                    EnumSet.copyOf(this.imp.getFeatures());
             if (enabled) {
                 featureSet.add(feature);
             }
@@ -319,7 +322,7 @@ public class Window extends Canvas {
                 featureSet.remove(feature);
             }
 
-            this.resetImp(this.getSize(), featureSet);
+            this.resetImp(this.getWidth(), this.getHeight(), featureSet);
         }
         else {
             this.imp.setFeature(feature, enabled);
@@ -385,23 +388,12 @@ public class Window extends Canvas {
         }
     }
 
-    private Window(Size size, EnumSet<Feature> features) {
-        if (size == null) {
-            throw new NullPointerException("size");
-        }
-
-        this.events = new Events();
-        this.inputDevices = new ArrayList();
-        this.title = Thread.currentThread().getName();
-        this.resetImp(size, features);
-    }
-
-    private void resetImp(Size size, EnumSet<Feature> features) {
+    private void resetImp(int width, int height, EnumSet<Feature> features) {
         if (this.imp != null) {
             this.imp.close();
         }
 
-        this.imp = Engine.getContext().showWindow(size, features);
+        this.imp = Engine.getContext().showWindow(width, height, features);
         this.events.reset();
         this.imp.setTitle(this.title);
         if (!this.hasFeature(Feature.DoubleBuffered)) {

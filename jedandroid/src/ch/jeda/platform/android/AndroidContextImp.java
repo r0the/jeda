@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.graphics.BitmapFactory;
 import android.view.WindowManager;
-import ch.jeda.Size;
 import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ContextImp;
@@ -40,9 +39,9 @@ class AndroidContextImp implements ContextImp {
     private final ViewManager viewManager;
 
     @Override
-    public CanvasImp createCanvasImp(final Size size) {
+    public CanvasImp createCanvasImp(final int width, final int height) {
         final AndroidCanvasImp result = new AndroidCanvasImp();
-        result.setSize(size);
+        result.init(width, height);
         return result;
     }
 

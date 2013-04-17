@@ -18,15 +18,15 @@ package ch.jeda.platform.java;
 
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.CanvasImp;
-import ch.jeda.Location;
-import ch.jeda.Size;
 import ch.jeda.Transformation;
 import ch.jeda.ui.Color;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Composite;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Polygon;
+import java.awt.Transparency;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
@@ -40,21 +40,22 @@ class JavaCanvasImp implements CanvasImp {
     private final Map<FontRenderContext, Map<java.awt.Font, Map<String, TextLayout>>> textLayoutCache;
     private BufferedImage buffer;
     private Graphics2D graphics;
-    private Size size;
+    private int height;
+    private int width;
 
     JavaCanvasImp() {
         this.textLayoutCache = new HashMap();
     }
 
-    JavaCanvasImp(Size size) {
+    JavaCanvasImp(int width, int height) {
         this();
-        this.setBuffer(GUI.createBufferedImage(size));
+        this.setBuffer(createBufferedImage(width, height));
     }
 
     @Override
     public void clear() {
         this.graphics.setBackground(CLEAR_COLOR);
-        this.graphics.clearRect(0, 0, this.size.width, this.size.height);
+        this.graphics.clearRect(0, 0, this.width, this.height);
         this.modified();
     }
 
@@ -92,10 +93,10 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawPolygon(Iterable<Location> edges) {
-        assert edges != null;
+    public void drawPolygon(int[] points) {
+        assert points != null;
 
-        this.graphics.drawPolygon(createPolygon(edges));
+        this.graphics.drawPolygon(createPolygon(points));
         this.modified();
     }
 
@@ -117,7 +118,7 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void fill() {
-        this.graphics.clearRect(0, 0, this.size.width, this.size.height);
+        this.graphics.clearRect(0, 0, this.width, this.height);
         this.modified();
     }
 
@@ -131,10 +132,10 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillPolygon(Iterable<Location> edges) {
-        assert edges != null;
+    public void fillPolygon(int[] points) {
+        assert points != null;
 
-        this.graphics.fillPolygon(createPolygon(edges));
+        this.graphics.fillPolygon(createPolygon(points));
         this.modified();
     }
 
@@ -145,20 +146,25 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
+    public int getHeight() {
+        return this.height;
+    }
+
+    @Override
     public double getLineWidth() {
         return ((BasicStroke) this.graphics.getStroke()).getLineWidth();
     }
 
     @Override
     public Color getPixelAt(int x, int y) {
-        assert this.size.contains(x, y);
+        assert this.contains(x, y);
 
         return new Color(this.buffer.getRGB(x, y));
     }
 
     @Override
-    public Size getSize() {
-        return this.size;
+    public int getWidth() {
+        return this.width;
     }
 
     @Override
@@ -198,7 +204,7 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void setPixelAt(int x, int y, Color color) {
-        assert this.size.contains(x, y);
+        assert this.contains(x, y);
         assert color != null;
 
         this.buffer.setRGB(x, y, color.value);
@@ -214,17 +220,23 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public ImageImp takeSnapshot() {
-        final BufferedImage result = GUI.createBufferedImage(this.size);
-        result.createGraphics().drawImage(this.buffer, 0, 0, this.size.width, this.size.height, null);
+        final BufferedImage result = createBufferedImage(this.width, this.height);
+        result.createGraphics().drawImage(this.buffer, 0, 0, this.width, this.height, null);
         return new JavaImageImp(result);
     }
 
     @Override
-    public Size textSize(String text) {
+    public int textHeight(String text) {
         assert text != null;
 
-        final Rectangle2D bounds = textLayout(text).getBounds();
-        return new Size((int) bounds.getWidth(), (int) bounds.getHeight());
+        return (int) textLayout(text).getBounds().getHeight();
+    }
+
+    @Override
+    public int textWidth(String text) {
+        assert text != null;
+
+        return (int) textLayout(text).getBounds().getWidth();
     }
 
     private TextLayout textLayout(String text) {
@@ -268,13 +280,24 @@ class JavaCanvasImp implements CanvasImp {
             this.graphics.setFont(oldFont);
         }
 
-        this.size = new Size(buffer.getWidth(), buffer.getHeight());
+        this.width = buffer.getWidth();
+        this.height = buffer.getHeight();
     }
 
-    private static Polygon createPolygon(Iterable<Location> edges) {
+    private boolean contains(int x, int y) {
+        return 0 <= x && x < this.width && 0 <= y && y < this.height;
+    }
+
+    static BufferedImage createBufferedImage(int width, int height) {
+        return GraphicsEnvironment.getLocalGraphicsEnvironment().
+                getDefaultScreenDevice().getDefaultConfiguration().
+                createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+    }
+
+    private static Polygon createPolygon(final int[] points) {
         final Polygon result = new Polygon();
-        for (Location edge : edges) {
-            result.addPoint(edge.x, edge.y);
+        for (int i = 0; i < points.length; i = i + 2) {
+            result.addPoint(points[i], points[i + 1]);
         }
 
         return result;

@@ -73,8 +73,6 @@ public final class Image {
      * @return scaled image
      *
      * @see #createScaledImage(int, int)
-     * @see #createScaledImage(Size)
-     *
      * @since 1
      */
     public Image createScaledImage(double factor) {
@@ -92,8 +90,6 @@ public final class Image {
      * smaller than 1
      *
      * @see #createScaledImage(double)
-     * @see #createScaledImage(Size)
-     *
      * @since 1
      */
     public Image createScaledImage(int width, int height) {
@@ -147,17 +143,11 @@ public final class Image {
     }
 
     /**
-     * Returns the size of the image in pixels.
-     *
-     * @return size of image
-     *
-     * @see #getHeight()
-     * @see #getWidth()
-     *
-     * @since 1
+     * @deprecated Use {@link #getWidth()} and {@link #getHeight()} instead.
      */
+    @Deprecated
     public Size getSize() {
-        return this.imp.getSize();
+        return new Size(this.imp.getWidth(), this.imp.getHeight());
     }
 
     /**
@@ -170,7 +160,7 @@ public final class Image {
      * @since 1
      */
     public int getHeight() {
-        return this.imp.getSize().height;
+        return this.imp.getHeight();
     }
 
     /**
@@ -183,7 +173,7 @@ public final class Image {
      * @since 1
      */
     public int getWidth() {
-        return this.imp.getSize().width;
+        return this.imp.getWidth();
     }
 
     /**

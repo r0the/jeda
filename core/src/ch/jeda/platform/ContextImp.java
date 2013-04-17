@@ -16,13 +16,12 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.Size;
 import ch.jeda.Transformation;
 import java.io.InputStream;
 
 public interface ContextImp {
 
-    CanvasImp createCanvasImp(Size size);
+    CanvasImp createCanvasImp(int width, int height);
 
     /**
      * Creates a transformation.

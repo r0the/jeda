@@ -16,95 +16,75 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.Location;
-import ch.jeda.Size;
-
 public class TileSet {
 
+    public final int height;
+    public final int tileHeight;
+    public final int tileWidth;
+    public final int width;
     private final Image image;
-    private final Size size;
-    private final Size tileSize;
     private final Image[] tiles;
 
-    public TileSet(String filePath) {
-        this(filePath, TileSet.parseSize(filePath));
+    public TileSet(String filePath, int tileWidth, int tileHeight) {
+        this(new Image(filePath), tileWidth, tileHeight);
     }
 
-    public TileSet(String filePath, Size tileSize) {
-        this(new Image(filePath), tileSize);
-    }
-
-    public TileSet(Image image, Size tileSize) {
+    public TileSet(Image image, int tileWidth, int tileHeight) {
         if (image == null) {
             throw new NullPointerException("image");
         }
 
-        if (tileSize == null) {
-            throw new NullPointerException("tileSize");
+        if (tileWidth < 1) {
+            throw new IllegalArgumentException("tileWidth");
+        }
+        if (tileHeight < 1) {
+            throw new IllegalArgumentException("tileHeight");
         }
 
+        this.height = image.getWidth() / tileWidth;
+        this.width = image.getHeight() / tileHeight;
         this.image = image;
-        this.tileSize = tileSize;
-        this.size = new Size(this.image.getWidth() / this.tileSize.width,
-                             this.image.getHeight() / this.tileSize.height);
-        this.tiles = new Image[this.size.width * this.size.height];
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+        this.tiles = new Image[this.width * this.height];
     }
 
-    public Size getSize() {
-        return this.size;
+    public int getHeight() {
+        return this.height;
     }
 
     public Image getTileAt(int x, int y) {
-        return this.getTileAt(new Location(x, y));
-    }
-
-    public Image getTileAt(Location location) {
-        if (location == null) {
-            throw new NullPointerException("location");
+        if (!this.contains(x, y)) {
+            throw new IllegalArgumentException("x, y");
         }
 
-        if (!this.size.contains(location)) {
-            throw new IllegalArgumentException("location");
-        }
-
-        int index = location.x + location.y * this.size.width;
+        int index = x + y * this.width;
         if (this.tiles[index] == null) {
-            this.tiles[index] = this.createSubImage(location);
+            this.tiles[index] = this.createSubImage(x, y);
         }
 
         return this.tiles[index];
     }
 
-    public Size getTileSize() {
-        return this.tileSize;
+    public int getTileHeight() {
+        return this.tileHeight;
     }
 
-    private Image createSubImage(Location location) {
-        location = new Location(location.x * this.tileSize.width,
-                                location.y * this.tileSize.height);
-        return this.image.createSubImage(location, this.tileSize);
+    public int getTileWidth() {
+        return this.tileWidth;
     }
 
-    private static boolean isDigit(char ch) {
-        return "0123456789".indexOf(ch) != -1;
+    public int getWidth() {
+        return this.width;
     }
 
-    private static Size parseSize(String filePath) {
-        int endPos = filePath.lastIndexOf('.');;
-        int startPos = endPos;
-        if (startPos == -1) {
-            return Size.EMPTY;
-        }
+    private boolean contains(int x, int y) {
+        return 0 <= x && x < this.width && 0 <= y && y < this.height;
+    }
 
-        while (startPos > 0 && TileSet.isDigit(filePath.charAt(startPos - 1))) {
-            --startPos;
-        }
-
-        --startPos;
-        while (startPos > 0 && TileSet.isDigit(filePath.charAt(startPos - 1))) {
-            --startPos;
-        }
-
-        return Size.parse(filePath.substring(startPos, endPos));
+    private Image createSubImage(int x, int y) {
+        return this.image.createSubImage(x * this.tileWidth,
+                                         y * this.tileWidth,
+                                         this.tileWidth, this.tileHeight);
     }
 }

@@ -99,6 +99,17 @@ public class World extends Simulation {
     }
 
     /**
+     * Returns the height of the drawing area.
+     *
+     * @return height of the drawing area
+     *
+     * @since 1
+     */
+    public final int getCanvasHeight() {
+        return this.window.getHeight();
+    }
+
+    /**
      * Returns the title of this worlds's window.
      *
      * @return current window title
@@ -110,13 +121,14 @@ public class World extends Simulation {
     }
 
     /**
-     * Returns the size of the drawing area of this world's window.
+     * Returns the width of the drawing area.
      *
-     * @return size of the drawing area
+     * @return width of the drawing area
+     *
      * @since 1
      */
-    public final Size getCanvasSize() {
-        return this.window.getSize();
+    public final int getCanvasWidth() {
+        return this.window.getWidth();
     }
 
     /**
@@ -193,7 +205,7 @@ public class World extends Simulation {
      * @since 1
      */
     protected World() {
-        this(Size.EMPTY);
+        this(0, 0);
     }
 
     /**
@@ -206,25 +218,11 @@ public class World extends Simulation {
      * @since 1
      */
     protected World(int width, int height) {
-        this(new Size(width, height));
+        this(width, height, NO_FEATURES);
     }
 
     protected World(int width, int height, Window.Feature... features) {
-        this(new Size(width, height), toSet(features));
-    }
-
-    /**
-     * Creates a new world with a window that has a drawing area of the
-     * specified size.
-     *
-     * @param size the size of the window's drawing area
-     *
-     * @throws NullPointerException if size is <code>null</code>
-     * @throws IllegalArgumentException if size is empty
-     * @since 1
-     */
-    protected World(Size size) {
-        this(size, NO_FEATURES);
+        this(width, height, toSet(features));
     }
 
     protected final void addState(WorldState state) {
@@ -295,11 +293,11 @@ public class World extends Simulation {
     protected void update(Events events) {
     }
 
-    private World(Size size, EnumSet<Window.Feature> features) {
+    private World(int width, int height, EnumSet<Window.Feature> features) {
         features.add(Window.Feature.DoubleBuffered);
         this.debugFeatures = EnumSet.noneOf(DebugFeature.class);
         this.entities = new Entities();
-        this.window = new Window(size, features.toArray(new Window.Feature[0]));
+        this.window = new Window(width, height, features.toArray(new Window.Feature[0]));
         this.nextState = null;
         this.state = WorldState.NULL;
         this.state.notifyEnter(this);
