@@ -16,6 +16,9 @@
  */
 package ch.jeda;
 
+import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.InputType;
+
 /**
  * Base class for all Jeda programs.
  * <p>
@@ -83,51 +86,114 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to input a
-     * <code>double</code> value. The specified
-     * <code>message</code> is displayed to the user. It may be formatted using
-     * simple HTML. Returns
-     * <code>0d</code> if the user cancels the input prompt.
+     * Prompts the user to input a <tt>double</tt> value. The specified message
+     * is displayed to the user. It may be formatted using simple HTML. Returns
+     * <tt>0d</tt> if the user cancels the input prompt.
      *
-     * @param message the message displayed to the user
-     * @return <code>double</code> value entered by the user
+     * @param message the message
+     * @return <tt>double</tt> value entered by the user
      *
-     * @since 1.0
+     * @see #readDouble(java.lang.String, java.lang.Object[])
+     * @since 1
      */
     protected final double readDouble(String message) {
-        return Engine.getContext().readDouble(message);
+        InputRequest<Double> request = new InputRequest(InputType.forDouble(), 0d);
+        request.setMessage(message);
+        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        Engine.getContext().showInputRequest(request);
+        request.waitForResult();
+        return request.getResult();
     }
 
     /**
-     * Prompts the user to input an
-     * <code>int</code> value. The specified
-     * <code>message</code> is displayed to the user. It may be formatted using
-     * simple HTML. Returns
-     * <code>0d</code> if the user cancels the input prompt.
+     * Prompts the user to input a <tt>double</tt> value. The specified message
+     * is displayed to the user. It may be formatted using simple HTML. Returns
+     * <tt>0d</tt> if the user cancels the input prompt.
      *
-     * @param message the message displayed to the user
-     * @return <code>int</code> value entered by the user
+     * @param message the message template
+     * @param args the arguments to be inserted in the message template
+     * @return <tt>double</tt> value entered by the user
      *
-     * @since 1.0
+     * @see #readDouble(java.lang.String)
+     * @see Util#args(java.lang.String, java.lang.Object[])
+     * @since 1
+     */
+    protected final double readDouble(String message, Object... args) {
+        return this.readDouble(Util.args(message, args));
+    }
+
+    /**
+     * Prompts the user to input an <tt>int</tt> value. The specified message is
+     * displayed to the user. It may be formatted using simple HTML. Returns
+     * <tt>0d</tt> if the user cancels the input prompt.
+     *
+     * @param message the message
+     * @return <tt>int</tt> value entered by the user
+     *
+     * @see #readInt(java.lang.String, java.lang.Object[])
+     * @since 1
      */
     protected final int readInt(String message) {
-        return Engine.getContext().readInt(message);
+        InputRequest<Integer> request = new InputRequest(InputType.forInt(), 0);
+        request.setMessage(message);
+        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        Engine.getContext().showInputRequest(request);
+        request.waitForResult();
+        return request.getResult();
     }
 
     /**
-     * Prompts the user to input a
-     * <code>String</code> value. The specified
-     * <code>message</code> is displayed to the user. It may be formatted using
-     * simple HTML. Returns
-     * <code>0d</code> if the user cancels the input prompt.
+     * Prompts the user to input an <tt>int</tt> value. The specified message is
+     * displayed to the user. It may be formatted using simple HTML. Returns
+     * <tt>0d</tt> if the user cancels the input prompt.
      *
-     * @param message the message displayed to the user
-     * @return <code>String</code> value entered by the user
+     * @param message the message template
+     * @param args the arguments to be inserted in the message template
+     * @return <tt>int</tt> value entered by the user
      *
-     * @since 1.0
+     * @see #readInt(java.lang.String)
+     * @see Util#args(java.lang.String, java.lang.Object[])
+     * @since 1
+     */
+    protected final int readInt(String message, Object... args) {
+        return this.readInt(Util.args(message, args));
+    }
+
+    /**
+     * Prompts the user to input a <tt>String</tt> value. The specified message
+     * is displayed to the user. It may be formatted using simple HTML. Returns
+     * <tt>0d</tt> if the user cancels the input prompt.
+     *
+     * @param message the message
+     * @return <tt>String</tt> value entered by the user
+     *
+     * @see #readString(java.lang.String, java.lang.Object[])
+     * @since 1
      */
     protected final String readString(String message) {
-        return Engine.getContext().readString(message);
+        InputRequest<String> request = new InputRequest(InputType.forString(), "");
+        request.setMessage(message);
+        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        Engine.getContext().showInputRequest(request);
+        request.waitForResult();
+        return request.getResult();
+    }
+
+    /**
+     * Prompts the user to input a <tt>String</tt> value. The specified message
+     * is displayed to the user. It may be formatted using simple HTML. Returns
+     * <tt>0d</tt> if the user cancels the input prompt.
+     *
+     * @param message the message template
+     * @param args the arguments to be inserted in the message template
+     * @return <tt>String</tt> value entered by the user
+     *
+     * @see #readString(java.lang.String)
+     * @see Util#args(java.lang.String, java.lang.Object[])
+     * @since 1
+     */
+    protected final String readString(String message, Object... args) {
+        return this.readString(Util.args(message, args));
     }
 
     /**
@@ -148,7 +214,10 @@ public abstract class Program {
     /**
      * Writes a message to the Jeda log window.
      *
-     * @param message the message to write
+     * @param message the message
+     *
+     * @see #write(java.lang.String, java.lang.Object[])
+     * @since 1
      */
     protected final void write(String message) {
         Engine.getContext().write(message);
@@ -157,11 +226,15 @@ public abstract class Program {
     /**
      * Writes a message to the Jeda log window.
      *
-     * @param message the message to write
-     * @param args
+     * @param message the message template
+     * @param args the arguments to be inserted in the message template
+     *
+     * @see Util#args(java.lang.String, java.lang.Object[])
+     * @see #write(java.lang.String)
+     * @since 1
      */
     protected final void write(String message, Object... args) {
-        Engine.getContext().write(message, args);
+        this.write(Util.args(message, args));
     }
 
     final void setState(ProgramState value) {

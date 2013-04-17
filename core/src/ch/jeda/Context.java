@@ -188,31 +188,8 @@ public final class Context {
         }
     }
 
-    double readDouble(String message) {
-        InputRequest<Double> request = new InputRequest(InputType.forDouble(), 0d);
-        request.setMessage(message);
-        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
-        this.imp.showInputRequest(request);
-        request.waitForResult();
-        return request.getResult();
-    }
-
-    int readInt(String message) {
-        InputRequest<Integer> request = new InputRequest(InputType.forInt(), 0);
-        request.setMessage(message);
-        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
-        this.imp.showInputRequest(request);
-        request.waitForResult();
-        return request.getResult();
-    }
-
-    String readString(String message) {
-        InputRequest<String> request = new InputRequest(InputType.forString(), "");
-        request.setMessage(message);
-        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
-        this.imp.showInputRequest(request);
-        request.waitForResult();
-        return request.getResult();
+    void showInputRequest(InputRequest inputRequest) {
+        this.imp.showInputRequest(inputRequest);
     }
 
     void showSelectionRequest(SelectionRequest selectionRequest) {
