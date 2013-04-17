@@ -21,15 +21,6 @@
             </folder>
         </folder>
         <folder name="Jeda">
-            <file name="JedaBlocks.java" url="resources/JedaBlocksClassTemplate_java">
-                <attr name="displayName" bundlevalue="ch.jeda.netbeans.Bundle#Templates/Jeda/JedaBlocks.java"/>
-                <attr name="iconBase" stringvalue="ch/jeda/netbeans/resources/logo-16x16.png"/>
-                <attr name="templateWizardURL" urlvalue="nbresloc:/ch/jeda/netbeans/resources/JedaBlocksClassDescription.html"/>
-                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.form.wizard.TemplateWizardIterator.create"/>
-                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-                <attr name="template" boolvalue="true"/>
-                <attr name="templateCategory" stringvalue="java-classes"/>
-            </file>
             <file name="JedaProgram.java" url="resources/JedaProgramClassTemplate_java">
                 <attr name="displayName" bundlevalue="ch.jeda.netbeans.Bundle#Templates/Jeda/JedaProgram.java"/>
                 <attr name="iconBase" stringvalue="ch/jeda/netbeans/resources/logo-16x16.png"/>
@@ -43,6 +34,15 @@
                 <attr name="displayName" bundlevalue="ch.jeda.netbeans.Bundle#Templates/Jeda/JedaSimulation.java"/>
                 <attr name="iconBase" stringvalue="ch/jeda/netbeans/resources/logo-16x16.png"/>
                 <attr name="templateWizardURL" urlvalue="nbresloc:/ch/jeda/netbeans/resources/JedaSimulationClassDescription.html"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.form.wizard.TemplateWizardIterator.create"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-classes"/>
+            </file>
+            <file name="JedaWorld.java" url="resources/JedaWorldClassTemplate_java">
+                <attr name="displayName" bundlevalue="ch.jeda.netbeans.Bundle#Templates/Jeda/JedaWorld.java"/>
+                <attr name="iconBase" stringvalue="ch/jeda/netbeans/resources/logo-16x16.png"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/ch/jeda/netbeans/resources/JedaWorldClassDescription.html"/>
                 <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.form.wizard.TemplateWizardIterator.create"/>
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="template" boolvalue="true"/>

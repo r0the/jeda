@@ -1,0 +1,24 @@
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import ch.jeda.*;
+import ch.jeda.geometry.*;
+import ch.jeda.ui.*;
+import ch.jeda.world.*;
+
+public class ${name} extends World {
+
+    @Override
+    protected void init() {
+    }
+
+    @Override
+    protected void drawBackground(Canvas canvas) {
+    }
+
+    @Override
+    protected void update(Events events) {
+    }
+
+}
