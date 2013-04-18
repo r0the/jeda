@@ -143,8 +143,15 @@ public final class Pointer {
     }
 
     void setLocation(int x, int y) {
-        this.deltaX = this.deltaX + x - this.x;
-        this.deltaY = this.deltaY + y - this.y;
+        if (this.x == -1) {
+            this.deltaX = 0;
+            this.deltaY = 0;
+        }
+        else {
+            this.deltaX = this.deltaX + x - this.x;
+            this.deltaY = this.deltaY + y - this.y;
+        }
+
         this.x = x;
         this.y = y;
     }
