@@ -197,8 +197,8 @@ public final class Context {
         this.imp.shutdown();
     }
 
-    void write(final String message, Object... args) {
-        this.imp.log(Util.args(message, args));
+    void write(final String message) {
+        this.imp.log(message);
         this.imp.showLog();
     }
 
