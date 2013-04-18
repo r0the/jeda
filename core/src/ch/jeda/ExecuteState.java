@@ -25,6 +25,7 @@ class ExecuteState extends EngineState {
         try {
             this.program.setState(ProgramState.Running);
             this.program.run();
+            this.program.setState(ProgramState.Stopped);
         }
         catch (Exception ex) {
             this.logError(ex, Message.PROGRAM_RUN_ERROR, this.program.getClass());
