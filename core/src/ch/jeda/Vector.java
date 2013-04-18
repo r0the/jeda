@@ -172,6 +172,10 @@ public final class Vector implements Serializable {
         this.y = this.y / length;
     }
 
+    public void rotate(final double angle) {
+        this.setDirection(this.direction() + angle);
+    }
+
     /**
      * Scales the vector. The operations multiplies the length of the vector
      * with <tt>factor</tt>. The direction of the vector remains unchanged.
@@ -330,34 +334,6 @@ public final class Vector implements Serializable {
         result.normalize();
         result.scale(this.dot(result));
         return result;
-    }
-
-    /**
-     * Converts this vector to a location. The locations coordinates correspond
-     * to the vector's rounded coordinates.
-     *
-     * @return location corresponding to this vector
-     *
-     * @since 1
-     */
-    @Deprecated
-    public Location toLocation() {
-        return new Location((int) Math.round(this.x),
-                            (int) Math.round(this.y));
-    }
-
-    /**
-     * Converts this vector to a size. The resulting size's width and height are
-     * the rounded absolute values of this vector's coordinates.
-     *
-     * @return size corresponding to this vector
-     *
-     * @since 1
-     */
-    @Deprecated
-    public Size toSize() {
-        return new Size((int) Math.round(Math.abs(this.x)),
-                        (int) Math.round(Math.abs(this.y)));
     }
 
     @Override

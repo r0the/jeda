@@ -33,6 +33,7 @@ import java.io.Serializable;
  *
  * @since 1
  */
+@Deprecated
 public final class Size implements Serializable {
 
     private static final char SEPARATOR = 'x';
@@ -42,14 +43,10 @@ public final class Size implements Serializable {
     public static final Size EMPTY = new Size();
     /**
      * The width of the size.
-     *
-     * @since 1
      */
     public final int width;
     /**
      * The height of the size.
-     *
-     * @since 1
      */
     public final int height;
 
@@ -59,8 +56,6 @@ public final class Size implements Serializable {
      * if <tt>text</tt> does not represent a valid size.
      *
      * @param text the string to parse
-     *
-     * @since 1
      */
     public static Size parse(String text) {
         if (text == null) {
@@ -103,8 +98,6 @@ public final class Size implements Serializable {
      * @param width the width
      * @param height the height
      * @throws IllegalArgumentException if width or height are smaller than 0
-     *
-     * @since 1
      */
     public Size(int width, int height) {
         if (width < 0) {
@@ -124,8 +117,6 @@ public final class Size implements Serializable {
      * returns the product of <tt>width</tt> and <tt>height</tt>.
      *
      * @return product of <tt>width</tt> and <tt>height</tt>
-     *
-     * @since 1
      */
     public int area() {
         return this.width * this.height;
@@ -138,8 +129,6 @@ public final class Size implements Serializable {
      * @param location the location to check
      * @return <tt>true</tt> if location lies within, otherwise <tt>false</tt>
      * @throws NullPointerException if <tt>location</tt> is <tt>null</tt>
-     *
-     * @since 1
      */
     public boolean contains(Location location) {
         if (location == null) {
@@ -174,8 +163,6 @@ public final class Size implements Serializable {
      * Checks if the size is empty. A size is empty if it's area is zero.
      *
      * @return <tt>true</tt> if size is empty, otherwise <tt>false</tt>
-     *
-     * @since 1
      */
     public boolean isEmpty() {
         return this.width <= 0 || this.height <= 0;
@@ -188,8 +175,6 @@ public final class Size implements Serializable {
      *
      * @param factor the factor by which to scale this size.
      * @return the scaled size or <tt>null</tt>
-     *
-     * @since 1
      */
     public Size scaled(double factor) {
         return new Size((int) Math.round(this.width * factor),
@@ -202,8 +187,6 @@ public final class Size implements Serializable {
      * <tt>H</tt> by the height of this size.
      *
      * @return string representation of this size
-     *
-     * @since 1
      */
     @Override
     public String toString() {

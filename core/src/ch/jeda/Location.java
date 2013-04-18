@@ -19,43 +19,30 @@ package ch.jeda;
 import java.io.Serializable;
 
 /**
- * Represents a pair of two-dimensional, integral coordinates. Location objects
- * can be used to refer to the location of a pixel on a drawing surface or a
- * field on a board game.
- * <p>
- * <tt>Location</tt> objects are immutable. That means that their value cannot
- * be changed.
- *
- * @since 1
+ * @deprecated Don't use this class.
  */
+@Deprecated
 public final class Location implements Serializable {
 
     /**
      * The origin of the coordinate system. Both coordinates of this location
      * are zero.
-     *
-     * @since 1
      */
     public static final Location ORIGIN = new Location();
     /**
      * The x coordinate of the location.
-     *
-     * @since 1
      */
     public final int x;
     /**
      * The y coordinate of the location.
-     *
-     * @since 1
      */
     public final int y;
 
     /**
      * Constructs a location. The location represents the origin. Both
      * coordinates of this location are zero.
-     *
-     * @since 1
      */
+    @Deprecated
     public Location() {
         this.x = 0;
         this.y = 0;
@@ -67,8 +54,6 @@ public final class Location implements Serializable {
      *
      * @param x the x coordinate of the location
      * @param y the y coordinate of the location
-     *
-     * @since 1
      */
     public Location(int x, int y) {
         this.x = x;
@@ -82,8 +67,6 @@ public final class Location implements Serializable {
      * @param other the other location
      * @return Euclidean distance between this and other location
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
-     *
-     * @since 1
      */
     public double distanceTo(Location other) {
         if (other == null) {
@@ -134,8 +117,6 @@ public final class Location implements Serializable {
      * @param other the other location
      * @return Manhattan distance from this to <tt>other</tt> location.
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
-     *
-     * @since 1
      */
     public int manhattanDistanceTo(Location other) {
         if (other == null) {
@@ -160,8 +141,6 @@ public final class Location implements Serializable {
      * @param direction
      * @return neighbor location
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
-     *
-     * @since 1
      */
     public Location neighbor(Direction direction) {
         if (direction == null) {
@@ -184,8 +163,6 @@ public final class Location implements Serializable {
      * coordinates as the location.
      *
      * @return vector representation of the location
-     *
-     * @since 1
      */
     public Vector toVector() {
         return new Vector(this.x, this.y);
