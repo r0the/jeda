@@ -148,10 +148,7 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window() {
-        this.events = new Events();
-        this.inputDevices = new ArrayList<InputDevice>();
-        this.title = Thread.currentThread().getName();
-        this.resetImp(0, 0, NO_FEATURES);
+        this(0, 0);
     }
 
     /**
@@ -204,14 +201,6 @@ public class Window extends Canvas {
      */
     public Window(final int width, final int height,
                   final Feature... features) {
-        if (width < 1) {
-            throw new IllegalArgumentException("width");
-        }
-
-        if (height < 1) {
-            throw new IllegalArgumentException("height");
-        }
-
         this.events = new Events();
         this.inputDevices = new ArrayList<InputDevice>();
         this.title = Thread.currentThread().getName();

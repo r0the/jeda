@@ -109,8 +109,11 @@ public class WindowManager {
     private CanvasWindow createCanvasWindow(WindowRequest request) {
         int width = request.getWidth();
         int height = request.getHeight();
-        if (width < 1 || height < 1) {
+        if (width < 1) {
             width = 800;
+        }
+
+        if (height < 1) {
             height = 600;
         }
 
