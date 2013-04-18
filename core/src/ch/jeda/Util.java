@@ -20,24 +20,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Provides utility functions.
+ */
 public final class Util {
 
     /**
-     * Replaces placeholders in a string with the corresponding arguments. The
-     * message template may contain placeholders having the form <tt>{N}</tt>
-     * where <tt>N</tt> is a number. This method will replace the placeholder
-     * <tt>{0}</tt> with the first argument after <tt>message</tt>, <tt>{1}</tt>
-     * with the second argument and so on.
+     * Replaces placeholders in message template with the corresponding
+     * arguments. The message template may contain placeholders having the form
+     * <tt>{N}</tt> where <tt>N</tt> is a number. This method will replace all
+     * occurrences of the placeholder <tt>{0}</tt> with the first argument after
+     * <tt>message</tt>, occurrences of <tt>{1}</tt> with the second argument
+     * and so on.
      *
-     * @param message message template
-     * @param args arguments to be inserted in the message template
+     * @param messageTemplate the message template
+     * @param args the arguments to be inserted in the message template
      * @return resulting message
      */
-    public static String args(final String message, final Object... args) {
+    public static String args(final String messageTemplate, final Object... args) {
         if (args == null) {
-            return message;
+            return messageTemplate;
         }
-        String result = message;
+        String result = messageTemplate;
         int i = 0;
         for (Object arg : args) {
             String key = "{" + i + "}";
@@ -113,9 +117,9 @@ public final class Util {
     }
 
     /**
-     * Returns a random int number between 0 and (max - 1).
+     * Returns a random int number between <tt>0</tt> and <tt>(max - 1)</tt>.
      *
-     * @param max upper limit for the random number
+     * @param max the upper limit for the random number
      * @return random number
      */
     public static int randomInt(final int max) {

@@ -28,10 +28,6 @@ import java.io.Serializable;
  * [m10 m11 m12]
  * [  0   0   1]</pre>
  * <p>
- * Transformations are immutable objects. That means that they cannot be
- * changed, an object always represents the same transformation. New
- * transformation objects are created by applying a transformation to an
- * existing one, for example by calling {@link #rotatedBy(double)}.
  *
  * @see ch.jeda.ui.Canvas#setTransformation(ch.jeda.Transformation)
  * @see ch.jeda.ui.Canvas#getTransformation()
@@ -44,12 +40,10 @@ public abstract class Transformation implements Serializable {
     }
 
     /**
-     * Combines two transformations. Calculates and returns a transformation
-     * that results from applying the other transformation after this
-     * transformation.
+     * Combines two transformations. Modifies the transformation by adding an
+     * other transformation after the current transformation.
      *
      * @param other the other transformation
-     * @return the combined transformation
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
      *
      * @since 1
@@ -70,29 +64,21 @@ public abstract class Transformation implements Serializable {
     public abstract boolean isIdentity();
 
     /**
-     * Adds a rotation to the transformation. Calculates and returns a new
-     * transformation that results from adding a rotation after this
-     * transformation.
-     * <p>
-     * Same as <tt>combinedWidth(Translation.rotate(angle)</tt>
+     * Adds a rotation to the transformation. Modifies the transformation by
+     * adding a rotation after the transformation.
      *
      * @param angle the rotation angle in radians
-     * @return the combined new transformation
      *
      * @since 1
      */
     public abstract void rotate(double angle);
 
     /**
-     * Adds a scaling to the transformation. Calculates and returns a new
-     * transformation that results from adding a scaling after this
-     * transformation.
-     * <p>
-     * Same as <tt>combinedWidth(Translation.scale(sx, sy)</tt>
+     * Adds a scaling to the transformation. Modifies the transformation by
+     * adding a scaling after the transformation.
      *
      * @param sx the scale factor along x-axis
      * @param sy the scale factor along the y-axis
-     * @return the combined new transformation
      *
      * @since 1
      */
@@ -103,15 +89,11 @@ public abstract class Transformation implements Serializable {
     public abstract void setIdentity();
 
     /**
-     * Adds a translation to the transformation. Calculates and returns a new
-     * transformation that results from adding a translation after this
-     * transformation.
-     * <p>
-     * Same as <tt>combinedWidth(Translation.translate(tx, ty)</tt>
+     * Adds a translation to the transformation. Modifies the transformation by
+     * adding a translation after the transformation.
      *
      * @param tx the translation in direction of the x-axis
      * @param ty the translation in direction of the y-axis
-     * @return the combined new transformation
      *
      * @since 1
      */

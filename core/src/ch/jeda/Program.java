@@ -24,7 +24,6 @@ import ch.jeda.platform.InputType;
  * <p>
  * To write a Jeda program, create a class that inherits from ch.jeda.Program
  * and overwrite the {@link #run()} method.
- * <p>
  *
  * @since 1
  */
@@ -34,13 +33,14 @@ public abstract class Program {
     private ProgramState state;
 
     /**
-     * Constructs a program.
+     * Constructs a program. The created program will have the state
+     * {@link ProgramState#Created}.
      *
      * @since 1
      */
     protected Program() {
         this.stateLock = new Object();
-        this.state = ProgramState.Created;
+        this.state = ProgramState.Creating;
     }
 
     /**
@@ -48,6 +48,7 @@ public abstract class Program {
      *
      * @return current program state.
      *
+     * @see ProgramState
      * @since 1
      */
     public final ProgramState getState() {
@@ -69,7 +70,7 @@ public abstract class Program {
      * program should react to changes of the program state. It should not
      * execute program logic while the program state is
      * {@link ProgramState#Paused}. The program should return from the
-     * <tt>run()</tt> method if the program state is
+     * {@link #run()} method if the program state is
      * {@link ProgramState#Stopped}.
      *
      * @since 1
@@ -103,12 +104,13 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to input a <tt>double</tt> value. The specified message
-     * is displayed to the user. It may be formatted using simple HTML. Returns
-     * <tt>0d</tt> if the user cancels the input prompt.
+     * Prompts the user to enter a <tt>double</tt> value. The specified message
+     * is presented to the user along with a field to enter the <tt>double</tt>
+     * value. The message may be formatted using simple HTML. Returns
+     * <tt>0d</tt> if the user cancels the input.
      *
      * @param message the message
-     * @return <tt>double</tt> value entered by the user
+     * @return <tt>double</tt> value entered by the user or <tt>0.0</tt.
      *
      * @see #readDouble(java.lang.String, java.lang.Object[])
      * @since 1
@@ -123,29 +125,34 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to input a <tt>double</tt> value. The specified message
-     * is displayed to the user. It may be formatted using simple HTML. Returns
-     * <tt>0d</tt> if the user cancels the input prompt.
+     * Prompts the user to enter a <tt>double</tt> value. A message is presented
+     * to the user along with a field to enter the <tt>double</tt> value. The
+     * message to be presented to the user is constructed from the
+     * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
+     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may
+     * be formatted using simple HTML. Returns <tt>0.0</tt> if the user cancels
+     * the input.
      *
-     * @param message the message template
+     * @param messageTemplate the message template
      * @param args the arguments to be inserted in the message template
-     * @return <tt>double</tt> value entered by the user
+     * @return <tt>double</tt> value entered by the user or <tt>0.0</tt>
      *
      * @see #readDouble(java.lang.String)
      * @see Util#args(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final double readDouble(String message, Object... args) {
-        return this.readDouble(Util.args(message, args));
+    protected final double readDouble(String messageTemplate, Object... args) {
+        return this.readDouble(Util.args(messageTemplate, args));
     }
 
     /**
-     * Prompts the user to input an <tt>int</tt> value. The specified message is
-     * displayed to the user. It may be formatted using simple HTML. Returns
-     * <tt>0d</tt> if the user cancels the input prompt.
+     * Prompts the user to enter an <tt>int</tt> value. The specified message is
+     * presented to the user along with a field to enter the <tt>int<//tt>
+     * value. The message may be formatted using simple HTML. Returns <tt>0</tt>
+     * if the user cancels the input.
      *
      * @param message the message
-     * @return <tt>int</tt> value entered by the user
+     * @return <tt>int</tt> value entered by the user or <tt>0</tt>
      *
      * @see #readInt(java.lang.String, java.lang.Object[])
      * @since 1
@@ -160,29 +167,34 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to input an <tt>int</tt> value. The specified message is
-     * displayed to the user. It may be formatted using simple HTML. Returns
-     * <tt>0d</tt> if the user cancels the input prompt.
+     * Prompts the user to enter an <tt>int</tt> value. A message is presented
+     * to the user along with a field to enter the <tt>int</tt> value. The
+     * message to be presented to the user is constructed from the
+     * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
+     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may
+     * be formatted using simple HTML. Returns <tt>0</tt> if the user cancels
+     * the input.
      *
-     * @param message the message template
+     * @param messageTemplate the message template
      * @param args the arguments to be inserted in the message template
-     * @return <tt>int</tt> value entered by the user
+     * @return <tt>int</tt> value entered by the user or <tt>0</tt>
      *
      * @see #readInt(java.lang.String)
      * @see Util#args(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final int readInt(String message, Object... args) {
-        return this.readInt(Util.args(message, args));
+    protected final int readInt(String messageTemplate, Object... args) {
+        return this.readInt(Util.args(messageTemplate, args));
     }
 
     /**
-     * Prompts the user to input a <tt>String</tt> value. The specified message
-     * is displayed to the user. It may be formatted using simple HTML. Returns
-     * <tt>0d</tt> if the user cancels the input prompt.
+     * Prompts the user to enter a <tt>String</tt> value. The specified message
+     * is presented to the user along with a field to enter the <tt>String<//tt>
+     * value. The message may be formatted using simple HTML. Returns
+     * <tt>null</tt> if the user cancels the input.
      *
      * @param message the message
-     * @return <tt>String</tt> value entered by the user
+     * @return <tt>String</tt> value entered by the user or <tt>null</tt>
      *
      * @see #readString(java.lang.String, java.lang.Object[])
      * @since 1
@@ -197,20 +209,24 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to input a <tt>String</tt> value. The specified message
-     * is displayed to the user. It may be formatted using simple HTML. Returns
-     * <tt>0d</tt> if the user cancels the input prompt.
+     * Prompts the user to enter a <tt>String</tt> value. A message is presented
+     * to the user along with a field to enter the <tt>String</tt> value. The
+     * message to be presented to the user is constructed from the
+     * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
+     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may
+     * be formatted using simple HTML. Returns <tt>null</tt> if the user cancels
+     * the input.
      *
-     * @param message the message template
+     * @param messageTemplate the message template
      * @param args the arguments to be inserted in the message template
-     * @return <tt>String</tt> value entered by the user
+     * @return <tt>String</tt> value entered by the user or <tt>null</tt>
      *
      * @see #readString(java.lang.String)
      * @see Util#args(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final String readString(String message, Object... args) {
-        return this.readString(Util.args(message, args));
+    protected final String readString(String messageTemplate, Object... args) {
+        return this.readString(Util.args(messageTemplate, args));
     }
 
     /**
@@ -229,7 +245,8 @@ public abstract class Program {
     }
 
     /**
-     * Writes a message to the Jeda log window.
+     * Writes a message. Writes the specified message to both the standard
+     * output and to the Jeda log window. Shows the Jeda log window.
      *
      * @param message the message
      *
@@ -241,17 +258,21 @@ public abstract class Program {
     }
 
     /**
-     * Writes a message to the Jeda log window.
+     * Writes a message. Writes a message to both the standard output and to the
+     * Jeda log window. Shows the Jeda log window.The message to be written is
+     * constructed from the <tt>messageTemplate</tt> and the
+     * specified<tt>args</tt> by a call to
+     * {@link Util#args(java.lang.String, java.lang.Object[])}
      *
-     * @param message the message template
+     * @param messageTemplate the message template
      * @param args the arguments to be inserted in the message template
      *
-     * @see Util#args(java.lang.String, java.lang.Object[])
      * @see #write(java.lang.String)
+     * @see Util#args(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final void write(String message, Object... args) {
-        this.write(Util.args(message, args));
+    protected final void write(String messageTemplate, Object... args) {
+        this.write(Util.args(messageTemplate, args));
     }
 
     final void setState(ProgramState value) {
