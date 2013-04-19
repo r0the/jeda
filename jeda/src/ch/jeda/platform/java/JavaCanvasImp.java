@@ -29,6 +29,7 @@ import java.awt.Polygon;
 import java.awt.Transparency;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -38,12 +39,16 @@ class JavaCanvasImp implements CanvasImp {
 
     private static final java.awt.Color CLEAR_COLOR = new java.awt.Color(0, 0, 0, 0);
     private final Map<FontRenderContext, Map<java.awt.Font, Map<String, TextLayout>>> textLayoutCache;
+    private final AffineTransform affineTransform;
+    private final float[] matrix;
     private BufferedImage buffer;
     private Graphics2D graphics;
     private int height;
     private int width;
 
     JavaCanvasImp() {
+        this.affineTransform = new AffineTransform();
+        this.matrix = new float[6];
         this.textLayoutCache = new HashMap();
     }
 
@@ -213,9 +218,11 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void setTransformation(Transformation transformation) {
-        assert transformation instanceof JavaTransformation;
-
-        this.graphics.setTransform(((JavaTransformation) transformation).matrix);
+        transformation.copyToArray(this.matrix);
+        this.affineTransform.setTransform(
+                this.matrix[0], this.matrix[3], this.matrix[1],
+                this.matrix[4], this.matrix[2], this.matrix[5]);
+        this.graphics.setTransform(this.affineTransform);
     }
 
     @Override

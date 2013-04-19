@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.graphics.BitmapFactory;
 import android.view.WindowManager;
-import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ContextImp;
 import ch.jeda.platform.ImageImp;
@@ -43,11 +42,6 @@ class AndroidContextImp implements ContextImp {
         final AndroidCanvasImp result = new AndroidCanvasImp();
         result.init(width, height);
         return result;
-    }
-
-    @Override
-    public Transformation createTransformation() {
-        return new AndroidTransformation();
     }
 
     /**

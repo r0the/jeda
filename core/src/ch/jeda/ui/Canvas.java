@@ -90,7 +90,7 @@ public class Canvas {
         this.alpha = 255;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
-        this.transformation = Transformation.createIdentity();
+        this.transformation = new Transformation();
         this.imp = Engine.getContext().createCanvasImp(width, height);
     }
 
@@ -1066,7 +1066,7 @@ public class Canvas {
         this.alpha = 255;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
-        this.transformation = Transformation.createIdentity();
+        this.transformation = new Transformation();
     }
 
     void setImp(final CanvasImp imp) {

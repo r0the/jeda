@@ -205,8 +205,8 @@ public abstract class Figure {
      * Constructs a figure.
      */
     protected Figure() {
-        this.worldTransformation = Transformation.createIdentity();
-        this.inverse = Transformation.createIdentity();
+        this.worldTransformation = new Transformation();
+        this.inverse = new Transformation();
     }
 
     protected abstract Collision doCollideWith(Figure other);

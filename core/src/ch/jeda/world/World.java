@@ -38,10 +38,11 @@ import java.util.Set;
  */
 public class World extends Simulation {
 
-    private static final EnumSet<Window.Feature> NO_FEATURES = EnumSet.noneOf(Window.Feature.class);
     protected static final Color DEBUG_FILL_COLOR = new Color(255, 0, 0, 70);
     protected static final Color DEBUG_OUTLINE_COLOR = Color.RED;
     protected static final Color DEBUG_TEXT_COLOR = Color.BLACK;
+    private static final Transformation IDENTITY = new Transformation();
+    private static final EnumSet<Window.Feature> NO_FEATURES = EnumSet.noneOf(Window.Feature.class);
     private final Set<WorldFeature> features;
     private final WorldState defaultState;
     private final Entities entities;
@@ -284,7 +285,7 @@ public class World extends Simulation {
             paintOrder[i].draw(this.window);
         }
 
-        this.window.setTransformation(Transformation.createIdentity());
+        this.window.setTransformation(IDENTITY);
         // 4.3 Draw debug overlay for entities
         if (this.hasFeature(WorldFeature.DebugCollisionsShapes)) {
             for (int i = 0; i < paintOrder.length; ++i) {

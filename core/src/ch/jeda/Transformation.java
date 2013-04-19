@@ -29,102 +29,173 @@ import java.io.Serializable;
  * [  0   0   1]</pre>
  * <p>
  *
- * @see ch.jeda.ui.Canvas#setTransformation(ch.jeda.Transformation)
- * @see ch.jeda.ui.Canvas#getTransformation()
  * @since 1
  */
-public abstract class Transformation implements Serializable {
+public final class Transformation implements Serializable {
 
-    public static Transformation createIdentity() {
-        return Engine.getContext().createTransformation();
+    private static final float[] IDENTITY = new float[]{1f, 0f, 0f, 0f, 1f, 0f};
+    private static final int M00 = 0;
+    private static final int M01 = 1;
+    private static final int M02 = 2;
+    private static final int M10 = 3;
+    private static final int M11 = 4;
+    private static final int M12 = 5;
+    private final float[] m;
+
+    /**
+     * Constructs a identity transformation.
+     *
+     * @since 1
+     */
+    public Transformation() {
+        this.m = new float[6];
+        this.m[M00] = 1f;
+        this.m[M11] = 1f;
+    }
+
+    public float[] copyToArray(final float[] target) {
+        if (target != null && target.length >= 6) {
+            System.arraycopy(this.m, 0, target, 0, 6);
+            return target;
+        }
+        else {
+            final float[] result = new float[6];
+            System.arraycopy(this.m, 0, result, 0, 6);
+            return result;
+        }
+    }
+
+    public boolean invert(final Transformation inverse) {
+        final float d = this.m[M00] * this.m[M11] - this.m[M01] * this.m[M10];
+
+        if (Math.abs(d) <= Float.MIN_VALUE) {
+            return false;
+        }
+
+        if (inverse != null) {
+            inverse.m[M00] = this.m[M11] / d;
+            inverse.m[M01] = -this.m[M01] / d;
+            inverse.m[M02] = (this.m[M01] * this.m[M12] - this.m[M11] * this.m[M02]) / d;
+            inverse.m[M10] = -this.m[M10] / d;
+            inverse.m[M11] = this.m[M00] / d;
+            inverse.m[M12] = (this.m[M10] * this.m[M02] - this.m[M00] * this.m[M12]) / d;
+        }
+
+        return true;
     }
 
     /**
-     * Combines two transformations. Modifies the transformation by adding an
-     * other transformation after the current transformation.
+     * Adds a rotation to the transformation. Concatenates the transformation
+     * with add a rotation by the specified angle.
+     *
+     * @param angle the rotation angle
+     */
+    public void rotate(final double angle) {
+        final float sin = (float) Math.sin(angle);
+        final float cos = (float) Math.cos(angle);
+        final float m00 = this.m[M00];
+        final float m01 = this.m[M01];
+        final float m10 = this.m[M10];
+        final float m11 = this.m[M11];
+
+        this.m[M00] = cos * m00 + sin * m01;
+        this.m[M01] = -sin * m00 + cos * m01;
+        this.m[M10] = cos * m10 + sin * m11;
+        this.m[M11] = -sin * m10 + cos * m11;
+    }
+
+    /**
+     * Adds a scaling to the transformation. Concatenates the transformation
+     * with add a scaling by the specified factors.
+     *
+     * @param sx the scaling factor along the x-axis
+     * @param sy the scaling factor along the y-axis
+     */
+    public void scale(final float sx, final float sy) {
+        this.m[M00] *= sx;
+        this.m[M11] *= sy;
+    }
+
+    public void set(final Transformation other) {
+        System.arraycopy(other.m, 0, this.m, 0, 6);
+    }
+
+    /**
+     * Sets the transformation to the identity.
+     */
+    public void setIdentity() {
+        System.arraycopy(IDENTITY, 0, this.m, 0, 6);
+    }
+
+    public void transformDelta(final Vector v) {
+        if (v == null) {
+            throw new NullPointerException("v");
+        }
+
+        final float vx = v.x;
+        v.x = this.m[M00] * vx + this.m[M01] * v.y;
+        v.y = this.m[M10] * vx + this.m[M11] * v.y;
+    }
+
+    /**
+     * Applies the transformation to a vector. Calculates and returns the
+     * resulting vector.
+     *
+     * @param v the vector to apply the transformation to
+     * @return the transformed vector
+     * @throws NullPointerException if <tt>v</tt> is <tt>null</tt>
+     *
+     * @since 1
+     */
+    public void transformPoint(final Vector v) {
+        if (v == null) {
+            throw new NullPointerException("v");
+        }
+
+        final float vx = v.x;
+        v.x = this.m[M00] * vx + this.m[M01] * v.y + this.m[M02];
+        v.y = this.m[M10] * vx + this.m[M11] * v.y + this.m[M12];
+    }
+
+    /**
+     * Adds a translation to the transformation.
+     *
+     * @param tx the translation along the x-axis
+     * @param ty the translation along the y-axis
+     */
+    public void translate(final float tx, final float ty) {
+        this.m[M02] += tx;
+        this.m[M12] += ty;
+    }
+    /**
+     * Combines two transformations. Calculates and returns a transformation
+     * that results from applying the other transformation after this
+     * transformation.
      *
      * @param other the other transformation
+     * @return the combined transformation
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
      *
      * @since 1
      */
-    public abstract void concatenate(Transformation other);
-
-    /**
-     * Inverts the transformation. Calculates and returns the inverse
-     * transformation, if such exists.
-     *
-     * @return the inverted transformation
-     * @throws IllegalStateException if transformation is not invertible
-     *
-     * @since 1
-     */
-    public abstract boolean invert(Transformation inverse);
-
-    public abstract boolean isIdentity();
-
-    /**
-     * Adds a rotation to the transformation. Modifies the transformation by
-     * adding a rotation after the transformation.
-     *
-     * @param angle the rotation angle in radians
-     *
-     * @since 1
-     */
-    public abstract void rotate(double angle);
-
-    /**
-     * Adds a scaling to the transformation. Modifies the transformation by
-     * adding a scaling after the transformation.
-     *
-     * @param sx the scale factor along x-axis
-     * @param sy the scale factor along the y-axis
-     *
-     * @since 1
-     */
-    public abstract void scale(double sx, double sy);
-
-    public abstract void set(Transformation other);
-
-    public abstract void setIdentity();
-
-    /**
-     * Adds a translation to the transformation. Modifies the transformation by
-     * adding a translation after the transformation.
-     *
-     * @param tx the translation in direction of the x-axis
-     * @param ty the translation in direction of the y-axis
-     *
-     * @since 1
-     */
-    public abstract void translate(double tx, double ty);
-
-    public final void translate(final Vector t) {
-        this.translate(t.x, t.y);
-    }
-
-    public final void transformPoint(Vector point) {
-        float[] vec = new float[2];
-        vec[0] = point.x;
-        vec[1] = point.y;
-        this.transform(vec);
-        point.x = vec[0];
-        point.y = vec[1];
-    }
-
-    public final void transformDelta(Vector delta) {
-        float[] vec = new float[2];
-        vec[0] = delta.x;
-        vec[1] = delta.y;
-        this.transformDelta(vec);
-        delta.x = vec[0];
-        delta.y = vec[1];
-    }
-
-    protected abstract void transform(float[] points);
-
-    protected abstract void transformDelta(float[] deltas);
-
-    protected Transformation() {
-    }
+//    public Transformation combinedWith(Transformation other) {
+//        if (other == null) {
+//            throw new NullPointerException("other");
+//        }
+//        else if (this == IDENTITY) {
+//            return other;
+//        }
+//        else if (other == IDENTITY) {
+//            return this;
+//        }
+//        else {
+//            return new Transformation(
+//                    this.scaleX * other.scaleX + this.skewX * other.skewY,
+//                    this.scaleX * other.skewX + this.skewX * other.scaleY,
+//                    this.scaleX * other.translateX + this.skewX * other.translateY + this.translateX,
+//                    this.skewY * other.scaleX + this.scaleY * other.skewY,
+//                    this.skewY * other.skewX + this.scaleY * other.scaleX,
+//                    this.skewY * other.translateX + this.scaleY * other.translateY + this.translateY);
+//        }
+//    }
 }

@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ContextImp;
 import ch.jeda.platform.ImageImp;
@@ -38,11 +37,6 @@ class JavaContextImp implements ContextImp {
     @Override
     public CanvasImp createCanvasImp(int width, int height) {
         return new JavaCanvasImp(width, height);
-    }
-
-    @Override
-    public Transformation createTransformation() {
-        return new JavaTransformation();
     }
 
     @Override

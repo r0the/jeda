@@ -16,20 +16,11 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.Transformation;
 import java.io.InputStream;
 
 public interface ContextImp {
 
     CanvasImp createCanvasImp(int width, int height);
-
-    /**
-     * Creates a transformation.
-     *
-     * @return new <tt>Transformation</tt>
-     * @see ch.jeda.Transformation
-     */
-    Transformation createTransformation();
 
     Iterable<String> listClassNames() throws Exception;
 

@@ -115,10 +115,6 @@ public final class Context {
         this.properties.loadFromSystem();
     }
 
-    Transformation createTransformation() {
-        return this.imp.createTransformation();
-    }
-
     Iterable<String> listClassNames() throws Exception {
         return this.imp.listClassNames();
     }
