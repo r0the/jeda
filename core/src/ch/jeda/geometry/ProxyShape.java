@@ -18,15 +18,18 @@ package ch.jeda.geometry;
 
 import ch.jeda.Vector;
 
+/**
+ * Represents a figure that delegates its collision detection to a shape.
+ */
 public abstract class ProxyShape extends Figure {
 
     private Shape collisionShape;
 
-    public Shape getCollisionShape() {
+    public final Shape getCollisionShape() {
         return this.collisionShape;
     }
 
-    public void setCollisionShape(Shape value) {
+    public final void setCollisionShape(final Shape value) {
         if (this.collisionShape != null) {
             this.collisionShape.setParent(null);
         }
@@ -38,25 +41,17 @@ public abstract class ProxyShape extends Figure {
     }
 
     @Override
-    protected void changed() {
-        super.changed();
-        if (this.collisionShape != null) {
-            this.collisionShape.changed();
-        }
-    }
-
-    @Override
-    protected Collision doCollideWith(Figure other) {
+    protected final Collision doCollideWith(final Figure other) {
         return other.doCollideWithShape(this.collisionShape).invert();
     }
 
     @Override
-    protected Collision doCollideWithShape(Shape other) {
+    protected final Collision doCollideWithShape(final Shape other) {
         return this.collisionShape.doCollideWithShape(other);
     }
 
     @Override
-    protected boolean doesContain(Vector point) {
+    protected final boolean doesContain(final Vector point) {
         return this.collisionShape.doesContain(point);
     }
 }

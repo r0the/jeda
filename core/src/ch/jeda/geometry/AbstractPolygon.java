@@ -24,7 +24,7 @@ public abstract class AbstractPolygon extends Shape {
 
     protected abstract Vector[] vertices();
 
-    protected Collision doIntersectWithPolygon(AbstractPolygon other) {
+    protected Collision doIntersectWithPolygon(final AbstractPolygon other) {
         Vector minAxis = new Vector();
         final Vector[] theseVertices = this.vertices();
         final Vector[] otherVertices = other.vertices();
@@ -66,11 +66,11 @@ public abstract class AbstractPolygon extends Shape {
         return this.createCollision(new Vector(), minAxis);
     }
 
-    private static Interval project(Vector axis, Vector[] vertices) {
-        double min = Double.MAX_VALUE;
-        double max = -Double.MAX_VALUE;
+    private static Interval project(final Vector axis, final Vector[] vertices) {
+        float min = Float.MAX_VALUE;
+        float max = -Float.MAX_VALUE;
         for (Vector vertex : vertices) {
-            final double p = axis.dot(vertex);
+            final float p = axis.dot(vertex);
             min = Math.min(min, p);
             max = Math.max(max, p);
         }

@@ -22,18 +22,20 @@ import ch.jeda.ui.Canvas;
 
 /**
  * Represents a two-dimensional figure. A figure can be drawn on a canvas. It
- * maintains information about it's location and rotation.
+ * maintains information about it's position and rotation.
  */
 public abstract class Figure {
 
-    private final Vector location;
+    private static final double TWO_PI = 2.0 * Math.PI;
     private final Transformation worldTransformation;
     private final Transformation inverse;
     private boolean dirty;
     private Figure parent;
     private double rotation;
+    private float x;
+    private float y;
 
-    public final Collision collideWith(Figure other) {
+    public final Collision collideWith(final Figure other) {
         if (other == null || other == this) {
             return Collision.NULL;
         }
@@ -50,7 +52,7 @@ public abstract class Figure {
      * @return <tt>true</tt> if the point is inside the figure, otherwise
      * <tt>false</tt>
      */
-    public final boolean contains(double x, double y) {
+    public final boolean contains(final float x, final float y) {
         return this.doesContain(new Vector(x, y));
     }
 
@@ -60,7 +62,7 @@ public abstract class Figure {
      * @param canvas the canvas to draw on
      * @throws NullPointerException if <tt>canvas</tt> is <tt>null</tt>
      */
-    public final void draw(Canvas canvas) {
+    public final void draw(final Canvas canvas) {
         if (canvas == null) {
             throw new NullPointerException("canvas");
         }
@@ -79,13 +81,14 @@ public abstract class Figure {
     }
 
     /**
-     * Returns the relative location of the figure. The location is relative to
-     * the parent figure.
+     * Returns the relative position of the figure. Creates and returns a new
+     * {@link Vector} representing the current position of this figure relative
+     * to it's parent.
      *
-     * @return relative location of the figure
+     * @return relative position of the figure
      */
-    public final Vector getLocation() {
-        return new Vector(this.location);
+    public final Vector getPosition() {
+        return new Vector(this.x, this.y);
     }
 
     /**
@@ -99,69 +102,71 @@ public abstract class Figure {
     }
 
     /**
-     * Returns the x coordinate of the relative location.
+     * Returns the x coordinate of the relative position of the figure.
      *
-     * @return
+     * @return x coordinate of the relative position
      */
     public final float getX() {
-        return this.location.x;
+        return this.x;
     }
 
     /**
-     * Returns the y coordinate of the relative location.
+     * Returns the y coordinate of the relative position of the figure.
      *
-     * @return
+     * @return y coordinate of the relative position
      */
     public final float getY() {
-        return this.location.y;
+        return this.y;
     }
 
     /**
-     * Sets the relative location of the figure. The location is relative to the
+     * Sets the relative position of the figure. The position is relative to the
      * parent figure.
      *
-     * @param x the x coordinate of the relative location
-     * @param y the y coordinate of the relative location
+     * @param x the x coordinate of the relative position
+     * @param y the y coordinate of the relative position
      */
-    public final void setLocation(double x, double y) {
-        this.location.x = (float) x;
-        this.location.y = (float) y;
-        this.changed();
+    public final void setPosition(final float x, final float y) {
+        this.x = x;
+        this.y = y;
+        this.dirty = true;
     }
 
     /**
-     * Sets the relative location of the figure. The location is relative to the
+     * Sets the relative position of the figure. The position is relative to the
      * parent figure.
      *
-     * @param location the relative location
-     * @throws NullPointerException if <tt>location</tt> is <tt>null</tt>
+     * @param position the relative position
+     * @throws NullPointerException if <tt>position</tt> is <tt>null</tt>
      */
-    public final void setLocation(Vector location) {
-        if (location == null) {
-            throw new NullPointerException("location");
+    public final void setPosition(final Vector position) {
+        if (position == null) {
+            throw new NullPointerException("position");
         }
 
-        this.location.x = location.x;
-        this.location.y = location.y;
-        this.changed();
+        this.x = position.x;
+        this.y = position.y;
+        this.dirty = true;
     }
 
     /**
      * Sets the relative rotation of the figure. The rotation is relative to the
      * parent figure. It is measured in radians.
      *
-     * @param angle the relative rotation
+     * @param angle the relative rotation angle
      */
-    public final void setRotation(double angle) {
-        this.rotation = angle;
-        this.changed();
+    public final void setRotation(final double angle) {
+        this.rotation = normalizeAngle(angle);
+        this.dirty = true;
     }
 
-    public final void translate(double x, double y) {
-        this.setLocation(this.location.x + x, this.location.y + y);
+    public final void translate(final float x, final float y) {
+        this.x += x;
+        this.y += y;
+        this.dirty = true;
     }
 
-    public final void translate(Vector t) {
+    public final void translate(final Vector t) {
         if (t == null) {
             throw new NullPointerException("d");
         }
@@ -169,25 +174,29 @@ public abstract class Figure {
         this.translate(t.x, t.y);
     }
 
-    public final void rotate(double angle) {
-        this.rotation = this.rotation + angle;
-        this.changed();
+    public final void rotate(final double angle) {
+        this.rotation = normalizeAngle(this.rotation + angle);
+        this.dirty = true;
     }
 
     protected void updateTransformation() {
-        if (!this.dirty) {
+        if (!this.isDirty()) {
             return;
         }
 
         if (this.parent != null) {
+            this.parent.updateTransformation();
             this.worldTransformation.set(this.parent.worldTransformation);
         }
         else {
             this.worldTransformation.setIdentity();
         }
 
-        this.worldTransformation.translate(this.location);
-        this.worldTransformation.rotate(this.rotation);
+        this.worldTransformation.translate(this.x, this.y);
+        if (this.rotation != 0.0) {
+            this.worldTransformation.rotate(this.rotation);
+        }
+
         this.worldTransformation.invert(this.inverse);
         this.dirty = false;
     }
@@ -196,7 +205,6 @@ public abstract class Figure {
      * Constructs a figure.
      */
     protected Figure() {
-        this.location = new Vector();
         this.worldTransformation = Transformation.createIdentity();
         this.inverse = Transformation.createIdentity();
     }
@@ -209,32 +217,45 @@ public abstract class Figure {
 
     protected abstract boolean doesContain(Vector point);
 
-    protected void changed() {
-        this.dirty = true;
-    }
-
-    protected void setTransformation(Canvas canvas) {
+    protected final void setTransformation(final Canvas canvas) {
         this.updateTransformation();
         canvas.setTransformation(this.worldTransformation);
     }
 
-    void localToWorld(Vector v) {
+    protected static double normalizeAngle(double angle) {
+        while (angle < 0.0) {
+            angle = angle + TWO_PI;
+        }
+
+        while (angle > TWO_PI) {
+            angle = angle - TWO_PI;
+        }
+
+        return angle;
+
+    }
+
+    final void localToWorld(final Vector v) {
         this.updateTransformation();
         this.worldTransformation.transformPoint(v);
     }
 
-    void localToWorldDirection(Vector v) {
+    final void localToWorldDirection(final Vector v) {
         this.updateTransformation();
         this.worldTransformation.transformDelta(v);
     }
 
-    void worldToLocal(Vector v) {
+    final void worldToLocal(final Vector v) {
         this.updateTransformation();
         this.inverse.transformPoint(v);
     }
 
-    void setParent(Figure value) {
+    final void setParent(final Figure value) {
         this.parent = value;
-        this.changed();
+        this.dirty = true;
+    }
+
+    private boolean isDirty() {
+        return this.dirty || (this.parent != null && this.parent.isDirty());
     }
 }

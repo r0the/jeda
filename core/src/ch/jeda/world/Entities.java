@@ -17,24 +17,31 @@
 package ch.jeda.world;
 
 import ch.jeda.geometry.Shape;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class Entities {
 
+    private static final Entity[] ENTITY_ARRAY = new Entity[0];
+    private static final Comparator<Entity> PAINT_SORT_ORDER = new PaintOrderComparator();
+    private static final Comparator<Entity> UPDATE_SORT_ORDER = new UpdateOrderComparator();
     private final List<Entity> list;
-    private final TypeMap<Entity> typeMap;
-    private final SortedList<Entity> updateOrder;
-    private final SortedList<Entity> paintOrder;
     private final List<Entity> pendingInsertions;
     private final List<Entity> pendingDeletions;
+    private final Map<Class<?>, Object[]> typeMap;
+    private Entity[] updateOrder;
+    private Entity[] paintOrder;
 
     Entities() {
         this.list = new ArrayList<Entity>();
-        this.typeMap = new TypeMap<Entity>(Entity.class);
-        this.paintOrder = new SortedList<Entity>(new PaintOrderComparator());
-        this.updateOrder = new SortedList<Entity>(new UpdateOrderComparator());
+        this.typeMap = new HashMap<Class<?>, Object[]>();
+        this.paintOrder = ENTITY_ARRAY;
+        this.updateOrder = ENTITY_ARRAY;
         this.pendingDeletions = new ArrayList<Entity>();
         this.pendingInsertions = new ArrayList<Entity>();
     }
@@ -45,20 +52,38 @@ class Entities {
     }
 
     void executePendingOperations() {
+        this.checkTypeMap();
+
         if (!this.pendingDeletions.isEmpty()) {
             this.list.removeAll(this.pendingDeletions);
-            this.typeMap.removeAll(this.pendingDeletions);
-            this.updateOrder.removeAll(this.pendingDeletions);
-            this.paintOrder.removeAll(this.pendingDeletions);
             this.pendingDeletions.clear();
+            this.paintOrder = null;
+            this.updateOrder = null;
         }
 
         if (!this.pendingInsertions.isEmpty()) {
             this.list.addAll(this.pendingInsertions);
-            this.typeMap.addAll(this.pendingInsertions);
-            this.updateOrder.addAll(this.pendingInsertions);
-            this.paintOrder.addAll(this.pendingInsertions);
             this.pendingInsertions.clear();
+            this.paintOrder = null;
+            this.updateOrder = null;
+        }
+    }
+
+    private void checkTypeMap() {
+        for (Entity e : this.pendingDeletions) {
+            Class c = e.getClass();
+            while (!c.equals(Entity.class)) {
+                this.typeMap.remove(c);
+                c = c.getSuperclass();
+            }
+        }
+
+        for (Entity e : this.pendingInsertions) {
+            Class c = e.getClass();
+            while (!c.equals(Entity.class)) {
+                this.typeMap.remove(c);
+                c = c.getSuperclass();
+            }
         }
     }
 
@@ -70,46 +95,71 @@ class Entities {
         return this.list.size();
     }
 
-    Iterable<Entity> paintOrderIterator() {
+    Entity[] paintOrder() {
+        if (this.paintOrder == null) {
+            this.paintOrder = this.list.toArray(ENTITY_ARRAY);
+            Arrays.sort(this.paintOrder, 0, this.paintOrder.length, PAINT_SORT_ORDER);
+        }
+
         return this.paintOrder;
     }
 
-    Iterable<Entity> updateOrderIterator() {
+    Entity[] updateOrder() {
+        if (this.updateOrder == null) {
+            this.updateOrder = this.list.toArray(ENTITY_ARRAY);
+            Arrays.sort(this.updateOrder, 0, this.updateOrder.length, UPDATE_SORT_ORDER);
+        }
+
         return this.updateOrder;
     }
 
-    <T extends Entity> List<T> getByLocation(double x, double y, Class<T> type) {
-        final ArrayList<T> result = new ArrayList<T>();
-        for (T entity : this.byType(type)) {
-            if (entity.getCollisionShape().contains(x, y)) {
-                result.add(entity);
+    <T extends Entity> T[] getByLocation(float x, float y, Class<T> type) {
+        final List<T> result = new ArrayList<T>();
+        final T[] entities = this.byType(type);
+        for (int i = 0; i < entities.length; ++i) {
+            if (entities[i].getCollisionShape().contains(x, y)) {
+                result.add(entities[i]);
             }
         }
 
-        return result;
+        return toArray(result, type);
     }
 
-    <T extends Entity> List<T> getIntersectingActors(Shape shape, Class<T> type) {
-        final ArrayList<T> result = new ArrayList<T>();
+    <T extends Entity> T[] getIntersectingEntities(Shape shape, Class<T> type) {
+        final List<T> result = new ArrayList<T>();
         if (shape != null) {
-            for (T entity : this.byType(type)) {
-                if (shape.intersectsWith(entity.getCollisionShape())) {
-                    result.add(entity);
+            final T[] entities = this.byType(type);
+            for (int i = 0; i < entities.length; ++i) {
+                if (shape.intersectsWith(entities[i].getCollisionShape())) {
+                    result.add(entities[i]);
                 }
             }
         }
 
-        return result;
+        return toArray(result, type);
     }
 
-    @SuppressWarnings("unchecked")
-    <T extends Entity> List<T> byType(Class<T> type) {
-        return (List<T>) this.typeMap.get(type);
+    <T extends Entity> T[] byType(Class<T> type) {
+        if (!this.typeMap.containsKey(type)) {
+            final List<Entity> l = new ArrayList<Entity>();
+            for (Entity e : this.list) {
+                if (type.isAssignableFrom(e.getClass())) {
+                    l.add(e);
+                }
+            }
+
+            this.typeMap.put(type, toArray(l, type));
+        }
+        return (T[]) this.typeMap.get(type);
     }
 
     void remove(Entity remove) {
         this.pendingDeletions.add(remove);
         this.pendingInsertions.remove(remove);
+    }
+
+    private static <T> T[] toArray(List<?> list, Class<T> type) {
+        return list.toArray((T[]) Array.newInstance(type, list.size()));
     }
 
     private static class PaintOrderComparator implements Comparator<Entity> {

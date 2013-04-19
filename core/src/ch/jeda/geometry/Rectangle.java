@@ -23,19 +23,23 @@ import ch.jeda.ui.Color;
 public class Rectangle extends AbstractPolygon {
 
     private final Circle circumscribedCircle;
-    private final int halfWidth;
-    private final int halfHeight;
+    private final float halfWidth;
+    private final float halfHeight;
+    private final float height;
+    private final float width;
 
-    public Rectangle(int width, int height) {
+    public Rectangle(final float width, final float height) {
         this.halfWidth = width / 2;
         this.halfHeight = height / 2;
-        final double radius = Math.sqrt(width * width + height * height) / 2.0;
-        this.circumscribedCircle = new Circle(radius);
+        this.height = height;
+        this.width = width;
+        final float diameter = (float) Math.sqrt(width * width + height * height);
+        this.circumscribedCircle = new Circle(diameter / 2f);
     }
 
     @Override
     protected Vector[] axes() {
-        Vector[] result = new Vector[2];
+        final Vector[] result = new Vector[2];
         result[0] = new Vector(1, 0);
         result[1] = new Vector(0, 1);
         for (Vector v : result) {
@@ -46,24 +50,24 @@ public class Rectangle extends AbstractPolygon {
     }
 
     @Override
-    protected void doDraw(Canvas canvas) {
+    protected void doDraw(final Canvas canvas) {
         final Color fillColor = this.getFillColor();
         if (fillColor != null) {
             canvas.setColor(fillColor);
-            canvas.fillRectangle(-this.halfWidth, -this.halfHeight,
-                                 2 * this.halfWidth, 2 * this.halfHeight);
+            canvas.fillRectangle((int) -this.halfWidth, (int) -this.halfHeight,
+                                 (int) this.width, (int) this.height);
         }
 
         final Color outlineColor = this.getOutlineColor();
         if (outlineColor != null) {
             canvas.setColor(outlineColor);
-            canvas.drawRectangle(-this.halfWidth, -this.halfHeight,
-                                 2 * this.halfWidth, 2 * this.halfHeight);
+            canvas.drawRectangle((int) -this.halfWidth, (int) -this.halfHeight,
+                                 (int) this.width, (int) this.height);
         }
     }
 
     @Override
-    protected Collision doCollideWithCircle(Circle other) {
+    protected Collision doCollideWithCircle(final Circle other) {
         final Vector center = new Vector();
         other.localToWorld(center);
         this.worldToLocal(center);
@@ -115,12 +119,12 @@ public class Rectangle extends AbstractPolygon {
     }
 
     @Override
-    protected Collision doCollideWithLineSegment(LineSegment other) {
+    protected Collision doCollideWithLineSegment(final LineSegment other) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected Collision doCollideWithPoint(Point other) {
+    protected Collision doCollideWithPoint(final Point other) {
         final Vector otherLocation = new Vector();
         other.localToWorld(otherLocation);
         this.worldToLocal(otherLocation);
@@ -147,7 +151,7 @@ public class Rectangle extends AbstractPolygon {
     }
 
     @Override
-    protected Collision doCollideWithRectangle(Rectangle other) {
+    protected Collision doCollideWithRectangle(final Rectangle other) {
         // Do a fast first check using rectangles' circumscribed circles.
         if (!this.circumscribedCircle.intersectsWith(other.circumscribedCircle)) {
             return Collision.NULL;
@@ -158,12 +162,12 @@ public class Rectangle extends AbstractPolygon {
     }
 
     @Override
-    protected Collision doCollideWithShape(Shape other) {
+    protected Collision doCollideWithShape(final Shape other) {
         return other.doCollideWithRectangle(this).invert();
     }
 
     @Override
-    protected boolean doesContain(Vector point) {
+    protected boolean doesContain(final Vector point) {
         this.worldToLocal(point);
         return Math.abs(point.x) <= this.halfWidth &&
                Math.abs(point.y) <= this.halfHeight;

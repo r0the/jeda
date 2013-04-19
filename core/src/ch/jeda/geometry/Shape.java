@@ -38,7 +38,7 @@ public abstract class Shape extends Figure {
         return this.outlineColor;
     }
 
-    public final boolean intersectsWith(Shape other) {
+    public final boolean intersectsWith(final Shape other) {
         if (other == null || other == this) {
             return false;
         }
@@ -47,11 +47,11 @@ public abstract class Shape extends Figure {
         }
     }
 
-    public final void setFillColor(Color value) {
+    public final void setFillColor(final Color value) {
         this.fillColor = value;
     }
 
-    public final void setOutlineColor(Color value) {
+    public final void setOutlineColor(final Color value) {
         this.outlineColor = value;
     }
 
@@ -61,7 +61,7 @@ public abstract class Shape extends Figure {
     }
 
     @Override
-    protected final Collision doCollideWith(Figure other) {
+    protected final Collision doCollideWith(final Figure other) {
         return other.doCollideWithShape(this).invert();
     }
 
@@ -73,7 +73,8 @@ public abstract class Shape extends Figure {
 
     protected abstract Collision doCollideWithRectangle(Rectangle other);
 
-    protected final Collision createCollision(Vector point, Vector normal) {
+    protected final Collision createCollision(final Vector point,
+                                              final Vector normal) {
         this.localToWorld(point);
         this.localToWorldDirection(normal);
         return new Collision(point, normal);

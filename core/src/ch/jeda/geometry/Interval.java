@@ -18,28 +18,28 @@ package ch.jeda.geometry;
 
 class Interval {
 
-    public final double min;
-    public final double max;
+    final float min;
+    final float max;
 
-    Interval(double min, double max) {
+    Interval(final float min, final float max) {
         this.min = min;
         this.max = max;
     }
 
-    final boolean contains(Interval other) {
+    final boolean contains(final Interval other) {
         return (this.min <= other.min && other.max <= this.max);
     }
 
-    final boolean overlapsWith(Interval other) {
+    final boolean overlapsWith(final Interval other) {
         return !(other.max < this.min || this.max < other.min);
     }
 
-    final double overlap(Interval other) {
+    final float overlap(final Interval other) {
         if (this.overlapsWith(other)) {
             return Math.min(this.max, other.max) - Math.max(this.min, other.min);
         }
         else {
-            return 0.0;
+            return 0f;
         }
     }
 }

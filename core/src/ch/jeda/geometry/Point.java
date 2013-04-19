@@ -21,7 +21,7 @@ import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 
 /**
- * OK
+ * Represents a point on the two-dimensional plane.
  */
 public class Point extends Shape {
 
@@ -31,12 +31,12 @@ public class Point extends Shape {
     }
 
     @Override
-    protected boolean doesContain(Vector point) {
+    protected boolean doesContain(final Vector point) {
         return false;
     }
 
     @Override
-    protected void doDraw(Canvas canvas) {
+    protected void doDraw(final Canvas canvas) {
         final Color outlineColor = this.getOutlineColor();
         if (outlineColor != null) {
             canvas.setColor(outlineColor);
@@ -46,27 +46,27 @@ public class Point extends Shape {
     }
 
     @Override
-    protected Collision doCollideWithCircle(Circle other) {
+    protected Collision doCollideWithCircle(final Circle other) {
         return other.doCollideWithPoint(this).invert();
     }
 
     @Override
-    protected Collision doCollideWithLineSegment(LineSegment other) {
+    protected Collision doCollideWithLineSegment(final LineSegment other) {
         return Collision.NULL;
     }
 
     @Override
-    protected Collision doCollideWithPoint(Point other) {
+    protected Collision doCollideWithPoint(final Point other) {
         return Collision.NULL;
     }
 
     @Override
-    protected Collision doCollideWithRectangle(Rectangle other) {
+    protected Collision doCollideWithRectangle(final Rectangle other) {
         return other.doCollideWithPoint(this).invert();
     }
 
     @Override
-    protected Collision doCollideWithShape(Shape other) {
+    protected Collision doCollideWithShape(final Shape other) {
         return other.doCollideWithPoint(this).invert();
     }
 }

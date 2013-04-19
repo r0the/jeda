@@ -27,12 +27,12 @@ public class Circle extends Shape {
 
     private final float radius;
 
-    public Circle(double radius) {
-        if (radius <= 0.0) {
+    public Circle(final float radius) {
+        if (radius <= 0f) {
             throw new IllegalArgumentException("radius");
         }
 
-        this.radius = (float) radius;
+        this.radius = radius;
     }
 
     public float getRadius() {
@@ -40,7 +40,7 @@ public class Circle extends Shape {
     }
 
     @Override
-    protected Collision doCollideWithCircle(Circle other) {
+    protected Collision doCollideWithCircle(final Circle other) {
         final Vector otherCenter = new Vector();
         other.localToWorld(otherCenter);
         this.worldToLocal(otherCenter);
@@ -48,12 +48,12 @@ public class Circle extends Shape {
     }
 
     @Override
-    protected Collision doCollideWithLineSegment(LineSegment other) {
+    protected Collision doCollideWithLineSegment(final LineSegment other) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected Collision doCollideWithPoint(Point other) {
+    protected Collision doCollideWithPoint(final Point other) {
         final Vector otherLocation = new Vector();
         other.localToWorld(otherLocation);
         this.worldToLocal(otherLocation);
@@ -61,17 +61,17 @@ public class Circle extends Shape {
     }
 
     @Override
-    protected Collision doCollideWithRectangle(Rectangle other) {
+    protected Collision doCollideWithRectangle(final Rectangle other) {
         return other.doCollideWithCircle(this).invert();
     }
 
     @Override
-    protected Collision doCollideWithShape(Shape other) {
+    protected Collision doCollideWithShape(final Shape other) {
         return other.doCollideWithCircle(this).invert();
     }
 
     @Override
-    protected void doDraw(Canvas canvas) {
+    protected void doDraw(final Canvas canvas) {
         final Color fillColor = this.getFillColor();
         if (fillColor != null) {
             canvas.setColor(fillColor);
@@ -86,7 +86,7 @@ public class Circle extends Shape {
     }
 
     @Override
-    protected boolean doesContain(Vector point) {
+    protected boolean doesContain(final Vector point) {
         this.worldToLocal(point);
         return point.dot(point) < this.radius * this.radius;
     }

@@ -20,11 +20,10 @@ import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Events;
 
 /**
- * EXPERIMENTAL - API MAY CHANGE.
+ * <b>Experimental</b>
  */
 public class WorldState {
 
-    public static final WorldState NULL = new WorldState();
     private World world;
 
     protected WorldState() {
@@ -51,7 +50,7 @@ public class WorldState {
      * @param canvas the canvas on which the background is drawn
      * @since 1
      */
-    protected void drawBackground(Canvas canvas) {
+    protected void drawBackground(final Canvas canvas) {
         this.world.drawBackground(canvas);
     }
 
@@ -62,15 +61,15 @@ public class WorldState {
      * @param canvas the canvas on which the foreground is drawn
      * @since 1
      */
-    protected void drawOverlay(Canvas canvas) {
+    protected void drawOverlay(final Canvas canvas) {
         this.world.drawOverlay(canvas);
     }
 
-    protected void update(Events events) {
+    protected void update(final Events events) {
         this.world.update(events);
     }
 
-    void notifyEnter(World world) {
+    void notifyEnter(final World world) {
         if (this.world == null) {
             this.world = world;
             this.init();

@@ -18,7 +18,6 @@ package ch.jeda.world;
 
 import ch.jeda.Log;
 import ch.jeda.Simulation;
-import ch.jeda.Size;
 import ch.jeda.Transformation;
 import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Canvas;
@@ -27,7 +26,6 @@ import ch.jeda.ui.Events;
 import ch.jeda.ui.Window;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,12 +42,8 @@ public class World extends Simulation {
     protected static final Color DEBUG_FILL_COLOR = new Color(255, 0, 0, 70);
     protected static final Color DEBUG_OUTLINE_COLOR = Color.RED;
     protected static final Color DEBUG_TEXT_COLOR = Color.BLACK;
-
-    public enum DebugFeature {
-
-        FRAMERATE, ENTITY_OVERLAY
-    }
-    private final Set<DebugFeature> debugFeatures;
+    private final Set<WorldFeature> features;
+    private final WorldState defaultState;
     private final Entities entities;
     private final Map<Class<? extends WorldState>, WorldState> states;
     private Class<? extends WorldState> nextState;
@@ -57,7 +51,7 @@ public class World extends Simulation {
     private boolean paused;
     private WorldState state;
 
-    public final void addEntity(Entity entity) {
+    public final void addEntity(final Entity entity) {
         if (entity == null) {
             throw new NullPointerException("entity");
         }
@@ -82,15 +76,17 @@ public class World extends Simulation {
      * @param type base class of all entities to be returned
      * @return list of entities
      */
-    public final <T extends Entity> List<T> collidingEntities(Shape shape, Class<T> type) {
-        return this.entities.getIntersectingActors(shape, type);
+    public final <T extends Entity> T[] collidingEntities(
+            final Shape shape, final Class<T> type) {
+        return this.entities.getIntersectingEntities(shape, type);
     }
 
-    public final <T extends Entity> List<T> collidingEntities(Entity entity, Class<T> type) {
-        return collidingEntities(entity.getCollisionShape(), type);
+    public final <T extends Entity> T[] collidingEntities(
+            final Entity entity, final Class<T> type) {
+        return this.collidingEntities(entity.getCollisionShape(), type);
     }
 
-    public final <T extends Entity> List<T> entities(Class<T> type) {
+    public final <T extends Entity> T[] entities(final Class<T> type) {
         return this.entities.byType(type);
     }
 
@@ -132,49 +128,56 @@ public class World extends Simulation {
     }
 
     /**
-     * Checks whether the specified debug feature is enabled. See
-     * {@link DebugFeature} for more information.
+     * Checks whether the specified world feature is enabled. See
+     * {@link WorldFeature} for more information.
      *
-     * @return <code>true</code> if specified debug feature is enabled
-     * @see #setDebugFeature(ch.jeda.physics.DebugFeature, boolean)
+     * @return <tt>true</tt> if specified world feature is enabled
+     * @see #setFeature(ch.jeda.ui.Window.Feature, boolean)
      */
-    public final boolean hasDebugFeature(DebugFeature feature) {
+    public final boolean hasFeature(final WorldFeature feature) {
         if (feature == null) {
             return false;
         }
 
-        return this.debugFeatures.contains(feature);
+        return this.features.contains(feature);
     }
 
-    public void removeEntity(Entity entity) {
+    public final boolean hasFeature(final Window.Feature feature) {
+        return this.window.hasFeature(feature);
+    }
+
+    public void removeEntity(final Entity entity) {
         this.entities.remove(entity);
     }
 
     /**
-     * Enables or disables the specified debug feature. See {@link DebugFeature}
+     * Enables or disables the specified world feature. See {@link WorldFeature}
      * for more information.
      *
-     * @param enable <code>true</code> to enabled debug feature,
-     * <code>false</code> to disable it
-     * @see #hasDebugFeature(ch.jeda.physics.DebugFeature)
+     * @param enable <tt>true</tt> to enabled debug feature,
+     * <tt>false</tt> to disable it
+     * @see #hasFeature(ch.jeda.world.WorldFeature)
      */
-    public final void setDebugFeature(DebugFeature feature, boolean enable) {
-        if (feature == null) {
-            return;
-        }
-        else if (enable) {
-            this.debugFeatures.add(feature);
+    public final void setFeature(final WorldFeature feature,
+                                 final boolean enable) {
+        if (enable) {
+            this.features.add(feature);
         }
         else {
-            this.debugFeatures.remove(feature);
+            this.features.remove(feature);
         }
     }
 
-    public final void setPaused(boolean paused) {
+    public final void setFeature(final Window.Feature feature,
+                                 final boolean enabled) {
+        this.window.setFeature(feature, enabled);
+    }
+
+    public final void setPaused(final boolean paused) {
         this.paused = paused;
     }
 
-    public final void setState(Class<? extends WorldState> state) {
+    public final void setState(final Class<? extends WorldState> state) {
         if (state == null) {
             throw new NullPointerException("state");
         }
@@ -194,7 +197,7 @@ public class World extends Simulation {
      * @see #getTitle()
      * @since 1
      */
-    public final void setTitle(String title) {
+    public final void setTitle(final String title) {
         this.window.setTitle(title);
     }
 
@@ -217,15 +220,16 @@ public class World extends Simulation {
      * @throws IllegalArgumentException if width or height are smaller than 1
      * @since 1
      */
-    protected World(int width, int height) {
+    protected World(final int width, final int height) {
         this(width, height, NO_FEATURES);
     }
 
-    protected World(int width, int height, Window.Feature... features) {
+    protected World(final int width, final int height,
+                    final Window.Feature... features) {
         this(width, height, toSet(features));
     }
 
-    protected final void addState(WorldState state) {
+    protected final void addState(final WorldState state) {
         if (state == null) {
             throw new NullPointerException("state");
         }
@@ -233,12 +237,12 @@ public class World extends Simulation {
         this.states.put(state.getClass(), state);
     }
 
-    protected void drawBackground(Canvas canvas) {
+    protected void drawBackground(final Canvas canvas) {
         canvas.setColor(Color.WHITE);
         canvas.fill();
     }
 
-    protected void drawOverlay(Canvas canvas) {
+    protected void drawOverlay(final Canvas canvas) {
     }
 
     @Override
@@ -260,8 +264,14 @@ public class World extends Simulation {
         this.state.update(this.window.getEvents());
         // 3.2 Update entities
         if (!this.paused) {
-            for (Entity entity : this.entities.updateOrderIterator()) {
-                entity.update(this);
+            final Entity[] updateOrder = this.entities.updateOrder();
+            final float dt = (float) this.getLastStepDuration();
+            for (int i = 0; i < updateOrder.length; ++i) {
+                updateOrder[i].move(dt);
+            }
+
+            for (int i = 0; i < updateOrder.length; ++i) {
+                updateOrder[i].update(this);
             }
         }
         // --------------------------------------------------------------------
@@ -269,15 +279,22 @@ public class World extends Simulation {
         // 4.1 Draw state background
         this.state.drawBackground(this.window);
         // 4.2 Draw entities
-        for (Entity entity : this.entities.paintOrderIterator()) {
-            entity.draw(this.window);
+        final Entity[] paintOrder = this.entities.paintOrder();
+        for (int i = 0; i < paintOrder.length; ++i) {
+            paintOrder[i].draw(this.window);
         }
 
         this.window.setTransformation(Transformation.createIdentity());
         // 4.3 Draw debug overlay for entities
-        if (this.hasDebugFeature(DebugFeature.ENTITY_OVERLAY)) {
-            for (Entity entity : this.entities.paintOrderIterator()) {
-                entity.drawDebugOverlay(this.window);
+        if (this.hasFeature(WorldFeature.DebugCollisionsShapes)) {
+            for (int i = 0; i < paintOrder.length; ++i) {
+                paintOrder[i].drawCollisionShape(this.window);
+            }
+        }
+
+        if (this.hasFeature(WorldFeature.DebugEntityInfo)) {
+            for (int i = 0; i < paintOrder.length; ++i) {
+                paintOrder[i].drawDebugInfo(this.window);
             }
         }
 
@@ -290,27 +307,29 @@ public class World extends Simulation {
         this.window.update();
     }
 
-    protected void update(Events events) {
+    protected void update(final Events events) {
     }
 
-    private World(int width, int height, EnumSet<Window.Feature> features) {
+    private World(final int width, final int height,
+                  final EnumSet<Window.Feature> features) {
         features.add(Window.Feature.DoubleBuffered);
-        this.debugFeatures = EnumSet.noneOf(DebugFeature.class);
+        this.features = EnumSet.noneOf(WorldFeature.class);
+        this.defaultState = new WorldState();
         this.entities = new Entities();
         this.window = new Window(width, height, features.toArray(new Window.Feature[0]));
         this.nextState = null;
-        this.state = WorldState.NULL;
+        this.state = this.defaultState;
         this.state.notifyEnter(this);
         this.states = new HashMap<Class<? extends WorldState>, WorldState>();
     }
 
     private void drawDebugOverlay() {
-        if (hasDebugFeature(DebugFeature.FRAMERATE)) {
+        if (this.hasFeature(WorldFeature.DebugWorldInfo)) {
             this.window.setColor(new Color(255, 200, 200));
             this.window.fillRectangle(5, 5, this.window.getWidth() - 10, 25);
             this.window.setColor(DEBUG_TEXT_COLOR);
-            this.window.drawText(10, 10, "FPS: " + getCurrentFrequency() +
-                                         ", Last Step Duration: " + (int) (getLastStepDuration() * 1000) +
+            this.window.drawText(10, 10, "FPS: " + this.getCurrentFrequency() +
+                                         ", Last Step Duration: " + (int) (this.getLastStepDuration() * 1000) +
                                          "ms, Entities: " + this.entities.getEntityCount());
         }
     }
@@ -325,14 +344,14 @@ public class World extends Simulation {
             this.state = this.states.get(this.nextState);
         }
         else {
-            this.state = WorldState.NULL;
+            this.state = this.defaultState;
         }
 
         this.nextState = null;
         this.state.notifyEnter(this);
     }
 
-    private static EnumSet<Window.Feature> toSet(Window.Feature... features) {
+    private static EnumSet<Window.Feature> toSet(final Window.Feature... features) {
         final EnumSet<Window.Feature> result = EnumSet.noneOf(Window.Feature.class);
         for (Window.Feature feature : features) {
             result.add(feature);
