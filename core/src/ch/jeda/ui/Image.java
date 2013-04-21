@@ -254,9 +254,9 @@ public final class Image {
 
     private static Map<String, ImageImp.Encoding> initFormatMap() {
         final Map<String, ImageImp.Encoding> result = new HashMap<String, ImageImp.Encoding>();
-        result.put(".jpeg", ImageImp.Encoding.JPEG);
-        result.put(".jpg", ImageImp.Encoding.JPEG);
-        result.put(".png", ImageImp.Encoding.PNG);
+        result.put("jpeg", ImageImp.Encoding.JPEG);
+        result.put("jpg", ImageImp.Encoding.JPEG);
+        result.put("png", ImageImp.Encoding.PNG);
         return result;
     }
 
