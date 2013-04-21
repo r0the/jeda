@@ -66,7 +66,12 @@ class SelectionView extends DialogView {
     }
 
     @Override
-    protected void onButtonClicked(final Button button) {
+    protected void onButtonClicked(Button button) {
+    }
+
+    @Override
+    protected void onCancel() {
+        this.request.cancelRequest();
     }
 
     private static class ListAdapterImp implements ListAdapter {
