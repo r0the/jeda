@@ -16,14 +16,12 @@
  */
 package ch.jeda;
 
-abstract class EngineState implements Runnable {
+abstract class EngineState {
 
     final Context context;
-    final String name;
 
-    EngineState(final Context context, final String name) {
+    EngineState(final Context context) {
         this.context = context;
-        this.name = name;
     }
 
     final void logError(final String messageKey, final Object... args) {
@@ -43,11 +41,5 @@ abstract class EngineState implements Runnable {
 
     abstract void onStop();
 
-    final void setExecuteState(final Program program, final String name) {
-        Engine.setState(new ExecuteState(this.context, name, program));
-    }
-
-    final void setShutdownState() {
-        Engine.setState(new ShutdownState(this.context));
-    }
+    abstract void run();
 }

@@ -17,7 +17,6 @@
 package ch.jeda;
 
 import ch.jeda.platform.SelectionRequest;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +26,25 @@ class SelectProgramState extends EngineState {
     private static final String DEFAULT_PROGRAM_PROPERTY = "jeda.default.program";
     private static final Class<?>[] NO_PARAMS = new Class<?>[0];
 
+    SelectProgramState(final Context context) {
+        super(context);
+    }
+
     @Override
-    public void run() {
+    void onPause() {
+        Engine.enterShutdownState();
+    }
+
+    @Override
+    void onResume() {
+    }
+
+    @Override
+    void onStop() {
+    }
+
+    @Override
+    void run() {
         try {
             // Load all program classes
             final List<ProgramInfo> programInfos = new ArrayList<ProgramInfo>();
@@ -47,14 +63,14 @@ class SelectProgramState extends EngineState {
             }
 
             if (defaultProgram != null) {
-                this.startProgram(defaultProgram);
+                Engine.enterCreateProgramState(defaultProgram);
             }
             else if (programInfos.size() == 1) {
-                this.startProgram(programInfos.get(0));
+                Engine.enterCreateProgramState(programInfos.get(0));
             }
             else if (programInfos.isEmpty()) {
                 this.logError(Message.NO_PROGRAM_ERROR);
-                this.setShutdownState();
+                Engine.enterShutdownState();
             }
             else {
                 final SelectionRequest<ProgramInfo> request = new SelectionRequest<ProgramInfo>();
@@ -67,58 +83,17 @@ class SelectProgramState extends EngineState {
                 this.context.showSelectionRequest(request);
                 request.waitForResult();
                 if (request.isCancelled()) {
-                    this.setShutdownState();
+                    Engine.enterShutdownState();
                 }
                 else {
-                    this.startProgram(request.getResult());
+                    Engine.enterCreateProgramState(request.getResult());
                 }
             }
         }
         catch (final Exception ex) {
             this.logError(ex, Message.CHOOSE_PROGRAM_ERROR);
-            this.setShutdownState();
+            Engine.enterShutdownState();
         }
-    }
-
-    SelectProgramState(final Context context) {
-        super(context, Message.translate(Message.SELECT_PROGRAM_THREAD_NAME));
-    }
-
-    @Override
-    void onPause() {
-        this.setShutdownState();
-    }
-
-    @Override
-    void onResume() {
-    }
-
-    @Override
-    void onStop() {
-    }
-
-    private Program createProgram(final Class<Program> programClass) {
-        try {
-            return programClass.getDeclaredConstructor(new Class[0]).
-                    newInstance(new Object[0]);
-        }
-        catch (final NoSuchMethodException ex) {
-            this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
-        }
-        catch (final IllegalAccessException ex) {
-            this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
-        }
-        catch (final InvocationTargetException ex) {
-            this.logError(ex.getCause(), Message.PROGRAM_CREATE_ERROR, programClass);
-        }
-        catch (final InstantiationException ex) {
-            this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
-        }
-        catch (final NoClassDefFoundError ex) {
-            this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
-        }
-
-        return null;
     }
 
     private ProgramInfo createProgramInfo(final Class<Program> programClass) {
@@ -128,16 +103,6 @@ class SelectProgramState extends EngineState {
         }
 
         return new ProgramInfo(programClass, title);
-    }
-
-    private void startProgram(final ProgramInfo programInfo) {
-        final Program program = createProgram(programInfo.getProgramClass());
-        if (program == null) {
-            this.setShutdownState();
-        }
-        else {
-            this.setExecuteState(program, programInfo.getName());
-        }
     }
 
     private static boolean isProgramClass(final Class<?> cls) {

@@ -203,7 +203,7 @@ public class Window extends Canvas {
                   final Feature... features) {
         this.events = new Events();
         this.inputDevices = new ArrayList<InputDevice>();
-        this.title = Thread.currentThread().getName();
+        this.title = Engine.getProgramName();
         this.resetImp(width, height, toSet(features));
     }
 

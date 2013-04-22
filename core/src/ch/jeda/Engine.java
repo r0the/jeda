@@ -19,70 +19,87 @@ package ch.jeda;
 import ch.jeda.platform.ContextImp;
 
 /**
- * <b>Internal</b>. Do not use this class.
+ * <b>Internal.</b> Do not use this class.
  * <p>
  * Represents the Jeda core. The Jeda engine manages the lifecycle of Jeda
  * programs.
  */
 public final class Engine {
 
+    private static final Object stateLock = new Object();
+    private static Thread engineThread;
+    private static ProgramInfo programInfo;
     private static Context context;
-    private static StateThread stateThread;
+    private static EngineState currentState;
+    private static EngineState nextState;
 
     public static Context getContext() {
         return context;
     }
 
+    public static String getProgramName() {
+        if (programInfo == null) {
+            return null;
+        }
+        else {
+            return programInfo.getName();
+        }
+    }
+
     public static void init(final ContextImp contextImp) {
         context = new Context(contextImp);
         context.init();
-        setState(new SelectProgramState(context));
+        nextState = new SelectProgramState(context);
+        engineThread = new EngineThread();
+        engineThread.setName(Message.translate(Message.ENGINE_THREAD_NAME));
+        engineThread.start();
     }
 
     public static void pause() {
-        stateThread.state.onPause();
+        synchronized (stateLock) {
+            currentState.onPause();
+        }
     }
 
     public static void resume() {
-        stateThread.state.onResume();
+        synchronized (stateLock) {
+            currentState.onResume();
+        }
     }
 
     public static void stop() {
-        stateThread.state.onStop();
+        synchronized (stateLock) {
+            currentState.onStop();
+        }
     }
 
-    static void setState(final EngineState state) {
-        stateThread = new StateThread(stateThread, state);
-        stateThread.start();
+    static void enterCreateProgramState(final ProgramInfo programInfo) {
+        Engine.programInfo = programInfo;
+        nextState = new CreateProgramState(context, programInfo);
+    }
+
+    static void enterExecuteProgramState(final Program program) {
+        nextState = new ExecuteProgramState(context, program);
+    }
+
+    static void enterShutdownState() {
+        nextState = new ShutdownState(context);
     }
 
     private Engine() {
     }
 
-    private static class StateThread extends Thread {
-
-        private final Thread previousStateThread;
-        private final EngineState state;
-
-        public StateThread(final Thread previousStateThread,
-                           final EngineState state) {
-            this.previousStateThread = previousStateThread;
-            this.state = state;
-            this.setName(this.state.name);
-        }
+    private static class EngineThread extends Thread {
 
         @Override
         public void run() {
-            if (this.previousStateThread != null) {
-                try {
-                    this.previousStateThread.join();
+            while (nextState != null) {
+                synchronized (stateLock) {
+                    currentState = nextState;
+                    nextState = null;
                 }
-                catch (InterruptedException ex) {
-                    // ignore
-                }
+                currentState.run();
             }
-
-            this.state.run();
         }
     }
 }

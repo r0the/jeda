@@ -18,13 +18,8 @@ package ch.jeda;
 
 class ShutdownState extends EngineState {
 
-    @Override
-    public void run() {
-        this.context.shutdown();
-    }
-
     ShutdownState(final Context context) {
-        super(context, Message.translate(Message.SHUTDOWN_THREAD_NAME));
+        super(context);
     }
 
     @Override
@@ -37,5 +32,10 @@ class ShutdownState extends EngineState {
 
     @Override
     void onStop() {
+    }
+
+    @Override
+    void run() {
+        this.context.shutdown();
     }
 }

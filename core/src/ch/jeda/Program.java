@@ -259,7 +259,7 @@ public abstract class Program {
 
     /**
      * Writes a message. Writes a message to both the standard output and to the
-     * Jeda log window. Shows the Jeda log window.The message to be written is
+     * Jeda log window. Shows the Jeda log window. The message to be written is
      * constructed from the <tt>messageTemplate</tt> and the
      * specified<tt>args</tt> by a call to
      * {@link Util#args(java.lang.String, java.lang.Object[])}

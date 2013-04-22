@@ -16,28 +16,12 @@
  */
 package ch.jeda;
 
-class ExecuteState extends EngineState {
+class ExecuteProgramState extends EngineState {
 
     private final Program program;
 
-    @Override
-    public void run() {
-        try {
-            this.program.setState(ProgramState.Running);
-            this.program.run();
-            this.program.setState(ProgramState.Stopped);
-        }
-        catch (Exception ex) {
-            this.logError(ex, Message.PROGRAM_RUN_ERROR, this.program.getClass());
-        }
-        finally {
-            this.setShutdownState();
-        }
-    }
-
-    ExecuteState(final Context context, final String name,
-                 final Program program) {
-        super(context, name);
+    ExecuteProgramState(final Context context, final Program program) {
+        super(context);
         this.program = program;
     }
 
@@ -54,5 +38,20 @@ class ExecuteState extends EngineState {
     @Override
     void onStop() {
         this.program.setState(ProgramState.Stopped);
+    }
+
+    @Override
+    void run() {
+        try {
+            this.program.setState(ProgramState.Running);
+            this.program.run();
+            this.program.setState(ProgramState.Stopped);
+        }
+        catch (Exception ex) {
+            this.logError(ex, Message.PROGRAM_RUN_ERROR, this.program.getClass());
+        }
+        finally {
+            Engine.enterShutdownState();
+        }
     }
 }

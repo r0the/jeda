@@ -26,6 +26,7 @@ public class Message {
 
     public static final String CHOOSE_PROGRAM_ERROR = "jeda.error.init.programs";
     public static final String CHOOSE_PROGRAM_TITLE = "jeda.gui.programchooser.title";
+    public static final String ENGINE_THREAD_NAME = "jeda.engine.thread.name";
     public static final String FILE_NOT_FOUND_ERROR = "jeda.file.not.found.error";
     public static final String FILE_READ_ERROR = "jeda.file.read.error";
     public static final String IMAGE_FORMAT_ERROR = "jeda.image.format.error";
@@ -38,8 +39,6 @@ public class Message {
     public static final String NO_PROGRAM_ERROR = "jeda.error.init.noprogram";
     public static final String PROGRAM_CREATE_ERROR = "jeda.programrunner.create.error";
     public static final String PROGRAM_RUN_ERROR = "jeda.program.run.error";
-    public static final String SELECT_PROGRAM_THREAD_NAME = "jeda.select.program.thread.name";
-    public static final String SHUTDOWN_THREAD_NAME = "jeda.shutdown.thread.name";
     // -- TODO --
     public static final String CLASS_NOT_FOUND_ERROR = "jeda.classnotfound.error";
     public static final String GUI_CLOSE_BUTTON = "jeda.gui.close.button";
@@ -54,6 +53,7 @@ public class Message {
     static {
         put(CHOOSE_PROGRAM_ERROR, "Fehler beim Laden der Program-Klassen.");
         put(CHOOSE_PROGRAM_TITLE, "Jeda Programmauswahl");
+        put(ENGINE_THREAD_NAME, "Jeda Engine");
         put(FILE_READ_ERROR, "Fehler beim Lesen der Datei '{0}': {1}");
         put(FILE_NOT_FOUND_ERROR, "Datei {0} nicht gefunden.");
         put(IMAGE_FORMAT_ERROR, "Bilddatei '{0}' kann nicht im unbekannten Bildformat '{1}' gespeichert werden.");
@@ -66,8 +66,6 @@ public class Message {
         put(NO_PROGRAM_ERROR, "Es ist keine Jeda-Programmklasse vorhanden.");
         put(PROGRAM_CREATE_ERROR, "Beim Initalisieren des Programms '{0}' ist ein Fehler aufgetreten.");
         put(PROGRAM_RUN_ERROR, "Fehler beim Ausführen von Programm '{0}'.");
-        put(SELECT_PROGRAM_THREAD_NAME, "Jeda Program Selection");
-        put(SHUTDOWN_THREAD_NAME, "Jeda Shutdown");
         // -- TODO --
         put(NO_TRANSLATION_ERROR, "Es ist keine Übersetzung für '{0}' vorhanden.");
         put(CLASS_NOT_FOUND_ERROR, "Kann Klasse '{0}' nicht finden.");
