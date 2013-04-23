@@ -165,8 +165,8 @@ public class Entity {
     }
 
     /**
-     * If this entity is in a word, the method is called every tick to allow
-     * the entity to update itself.
+     * If this entity is in a word, the method is called every tick to allow the
+     * entity to update itself.
      *
      * Override this method to implement behavior of this entity.
      */

@@ -29,8 +29,8 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
+//import net.java.games.input.Controller;
+//import net.java.games.input.ControllerEnvironment;
 
 abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
@@ -45,12 +45,12 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     @Override
     public Iterable<InputDeviceImp> detectInputDevices() {
         final List<InputDeviceImp> result = new ArrayList();
-        final ControllerEnvironment env = ControllerEnvironment.getDefaultEnvironment();
-        for (Controller controller : env.getControllers()) {
-            if (controller.getType() == Controller.Type.GAMEPAD) {
-                result.add(new JavaGamepad(controller));
-            }
-        }
+//        final ControllerEnvironment env = ControllerEnvironment.getDefaultEnvironment();
+//        for (Controller controller : env.getControllers()) {
+//            if (controller.getType() == Controller.Type.GAMEPAD) {
+//                result.add(new JavaGamepad(controller));
+//            }
+//        }
 
         return result;
     }

@@ -25,9 +25,9 @@ import ch.jeda.ui.Window;
 import java.util.List;
 
 /**
- * This class represents a block world. It extends the {@link ch.jeda.Simulation}
- * class and implements a simulation loop that renders a block world to a
- * {@link ch.jeda.ui.Window}.
+ * This class represents a block world. It extends the
+ * {@link ch.jeda.Simulation} class and implements a simulation loop that
+ * renders a block world to a {@link ch.jeda.ui.Window}.
  */
 public class BlockWorld extends VisualSimulation {
 
