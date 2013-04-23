@@ -157,7 +157,6 @@ public abstract class Entity extends ProxyShape {
     void drawCollisionShape(Canvas canvas) {
         if (this.getCollisionShape() != null) {
             final Transformation oldTransformation = canvas.getTransformation();
-            this.setTransformation(canvas);
             this.getCollisionShape().setFillColor(DEBUG_FILL_COLOR);
             this.getCollisionShape().setOutlineColor(DEBUG_OUTLINE_COLOR);
             this.getCollisionShape().draw(canvas);

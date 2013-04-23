@@ -31,9 +31,9 @@ public class Contact {
     public Contact(Entity entity1, Entity entity2, Collision collision) {
         this.entity1 = entity1;
         this.entity2 = entity2;
-        this.contactNormal = collision.normal;
+        this.contactNormal = collision.normal();
         this.contactNormal.normalize();
-        this.penetration = collision.normal.length();
+        this.penetration = this.contactNormal.length();
     }
 
     public double getPenetration() {

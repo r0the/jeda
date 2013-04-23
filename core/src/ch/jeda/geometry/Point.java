@@ -31,6 +31,17 @@ public class Point extends Shape {
     }
 
     @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("Point(x=");
+        result.append(this.getX());
+        result.append(", y=");
+        result.append(this.getY());
+        result.append(")");
+        return result.toString();
+    }
+
+    @Override
     protected boolean doesContain(final Vector point) {
         return false;
     }
@@ -46,27 +57,22 @@ public class Point extends Shape {
     }
 
     @Override
-    protected Collision doCollideWithCircle(final Circle other) {
-        return other.doCollideWithPoint(this).invert();
+    Collision doCollideWithCircle(final Circle other) {
+        return Collision.invert(other.doCollideWithPoint(this));
     }
 
     @Override
-    protected Collision doCollideWithLineSegment(final LineSegment other) {
-        return Collision.NULL;
+    Collision doCollideWithPoint(final Point other) {
+        return null;
     }
 
     @Override
-    protected Collision doCollideWithPoint(final Point other) {
-        return Collision.NULL;
+    Collision doCollideWithRectangle(final Rectangle other) {
+        return Collision.invert(other.doCollideWithPoint(this));
     }
 
     @Override
-    protected Collision doCollideWithRectangle(final Rectangle other) {
-        return other.doCollideWithPoint(this).invert();
-    }
-
-    @Override
-    protected Collision doCollideWithShape(final Shape other) {
-        return other.doCollideWithPoint(this).invert();
+    Collision doCollideWithShape(final Shape other) {
+        return Collision.invert(other.doCollideWithPoint(this));
     }
 }

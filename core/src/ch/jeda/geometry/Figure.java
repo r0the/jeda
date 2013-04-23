@@ -27,17 +27,27 @@ import ch.jeda.ui.Canvas;
 public abstract class Figure {
 
     private static final double TWO_PI = 2.0 * Math.PI;
-    private final Transformation worldTransformation;
-    private final Transformation inverse;
-    private boolean dirty;
+    private final Transformation localToWorld;
+    private final Transformation worldToLocal;
+    private boolean localToWorldDirty;
+    private boolean worldToLocalDirty;
     private Figure parent;
     private double rotation;
     private float x;
     private float y;
 
+    /**
+     * Collides two figures. Determines if the two figures intersect. Returns
+     * <tt>null</tt> if they don't intersect or if <tt>other</tt> is
+     * <tt>null</tt>. Returns collision information if they do intersect. A
+     * figure never intersects with itself.
+     *
+     * @param other the other figure
+     * @return collision information or <tt>null</tt>
+     */
     public final Collision collideWith(final Figure other) {
         if (other == null || other == this) {
-            return Collision.NULL;
+            return null;
         }
         else {
             return this.doCollideWith(other);
@@ -72,9 +82,10 @@ public abstract class Figure {
     }
 
     /**
-     * Returns the parent of the figure.
+     * Returns the parent of the figure. Returns <tt>null</tt> if the figure has
+     * no parent.
      *
-     * @return parent of the figure
+     * @return parent of the figure or <tt>null</tt>
      */
     public final Figure getParent() {
         return this.parent;
@@ -92,134 +103,119 @@ public abstract class Figure {
     }
 
     /**
-     * Returns the relative rotation of the figure. The rotation is relative to
-     * the parent figure. It is measured in radians.
+     * Returns the rotation of the figure. If the figure has a parent, the
+     * rotation is relative to the parent figure. It is measured in radians.
      *
-     * @return relative rotation of the figure
+     * @return rotation of the figure
      */
     public final double getRotation() {
         return this.rotation;
     }
 
     /**
-     * Returns the x coordinate of the relative position of the figure.
+     * Returns the x coordinate of position of the figure. If the figure has a
+     * parent, the position is relative to the parent figure.
      *
-     * @return x coordinate of the relative position
+     * @return x coordinate of the position
      */
     public final float getX() {
         return this.x;
     }
 
     /**
-     * Returns the y coordinate of the relative position of the figure.
+     * Returns the y coordinate of position of the figure. If the figure has a
+     * parent, the position is relative to the parent figure.
      *
-     * @return y coordinate of the relative position
+     * @return y coordinate of the position
      */
     public final float getY() {
         return this.y;
     }
 
     /**
-     * Sets the relative position of the figure. The position is relative to the
-     * parent figure.
+     * Checks if two figures intersect. Returns <tt>falst</tt> if they don't
+     * intersect or if <tt>other</tt> is <tt>null</tt>. A figure never
+     * intersects with itself.
      *
-     * @param x the x coordinate of the relative position
-     * @param y the y coordinate of the relative position
+     * @param other the other figure
+     * @return <tt>true</tt> if figures intersect, otherwise <tt>false</tt>
+     */
+    public final boolean intersectsWith(final Shape other) {
+        if (other == null || other == this) {
+            return false;
+        }
+        else {
+            return this.doCollideWith(other) != null;
+        }
+    }
+
+    /**
+     * Rotates the figure. Rotates the figure by the specified angle.
+     *
+     * @param angle the rotation angle
+     */
+    public final void rotate(final double angle) {
+        this.rotation = normalizeAngle(this.rotation + angle);
+        this.changed();
+    }
+
+    /**
+     * Sets the position of the figure. If the figure has a parent, the position
+     * is relative to the parent figure.
+     *
+     * @param x the x coordinate of the position
+     * @param y the y coordinate of the position
      */
     public final void setPosition(final float x, final float y) {
         this.x = x;
         this.y = y;
-        this.dirty = true;
+        this.changed();
     }
 
     /**
-     * Sets the relative position of the figure. The position is relative to the
-     * parent figure.
-     *
-     * @param position the relative position
-     * @throws NullPointerException if <tt>position</tt> is <tt>null</tt>
-     */
-    public final void setPosition(final Vector position) {
-        if (position == null) {
-            throw new NullPointerException("position");
-        }
-
-        this.x = position.x;
-        this.y = position.y;
-        this.dirty = true;
-    }
-
-    /**
-     * Sets the relative rotation of the figure. The rotation is relative to the
-     * parent figure. It is measured in radians.
+     * Sets the rotation of the figure. If the figure has a parent, the rotation
+     * is relative to the parent figure. It is measured in radians.
      *
      * @param angle the relative rotation angle
      */
     public final void setRotation(final double angle) {
         this.rotation = normalizeAngle(angle);
-        this.dirty = true;
+        this.changed();
     }
 
-    public final void translate(final float x, final float y) {
-        this.x += x;
-        this.y += y;
-        this.dirty = true;
-    }
-
-    public final void translate(final Vector t) {
-        if (t == null) {
-            throw new NullPointerException("d");
-        }
-
-        this.translate(t.x, t.y);
-    }
-
-    public final void rotate(final double angle) {
-        this.rotation = normalizeAngle(this.rotation + angle);
-        this.dirty = true;
-    }
-
-    protected void updateTransformation() {
-        if (!this.isDirty()) {
-            return;
-        }
-
-        if (this.parent != null) {
-            this.parent.updateTransformation();
-            this.worldTransformation.set(this.parent.worldTransformation);
-        }
-        else {
-            this.worldTransformation.setIdentity();
-        }
-
-        this.worldTransformation.translate(this.x, this.y);
-        if (this.rotation != 0.0) {
-            this.worldTransformation.rotate(this.rotation);
-        }
-
-        this.worldTransformation.invert(this.inverse);
-        this.dirty = false;
+    /**
+     * Translates the figure. If the figure has a parent, the translation is
+     * relative to the parent figure.
+     *
+     * @param dx the translation along the x-axis
+     * @param dy the translation along the x-axis
+     */
+    public final void translate(final float dx, final float dy) {
+        this.x += dx;
+        this.y += dy;
+        this.changed();
     }
 
     /**
      * Constructs a figure.
      */
     protected Figure() {
-        this.worldTransformation = new Transformation();
-        this.inverse = new Transformation();
+        this.localToWorld = new Transformation();
+        this.worldToLocal = new Transformation();
     }
 
-    protected abstract Collision doCollideWith(Figure other);
-
-    protected abstract Collision doCollideWithShape(Shape other);
-
+    /**
+     * Draws the figure. Override this method to draw the figure on the
+     * specified canvas. The drawing operations are interpreted in the local
+     * coordinate system of the figure.
+     *
+     * @param canvas the canvas to draw on
+     */
     protected abstract void doDraw(Canvas canvas);
 
-    protected abstract boolean doesContain(Vector point);
-
     protected final void setTransformation(final Canvas canvas) {
-        this.updateTransformation();
-        canvas.setTransformation(this.worldTransformation);
+        this.checkLocalToWorld();
+        canvas.setTransformation(this.localToWorld);
     }
 
     protected static double normalizeAngle(double angle) {
@@ -235,27 +231,71 @@ public abstract class Figure {
 
     }
 
+    void changed() {
+        this.localToWorldDirty = true;
+        this.worldToLocalDirty = true;
+    }
+
+    abstract Collision doCollideWith(Figure other);
+
+    abstract Collision doCollideWithShape(Shape other);
+
+    abstract boolean doesContain(Vector point);
+
+    final Vector globalPosition() {
+        final Vector result = new Vector();
+        this.localToWorld(result);
+        return result;
+    }
+
     final void localToWorld(final Vector v) {
-        this.updateTransformation();
-        this.worldTransformation.transformPoint(v);
+        this.checkLocalToWorld();
+        this.localToWorld.transformPoint(v);
     }
 
     final void localToWorldDirection(final Vector v) {
-        this.updateTransformation();
-        this.worldTransformation.transformDelta(v);
+        this.checkLocalToWorld();
+        this.localToWorld.transformDelta(v);
     }
 
     final void worldToLocal(final Vector v) {
-        this.updateTransformation();
-        this.inverse.transformPoint(v);
+        this.checkWorldToLocal();
+        this.worldToLocal.transformPoint(v);
     }
 
     final void setParent(final Figure value) {
         this.parent = value;
-        this.dirty = true;
+        this.changed();
     }
 
-    private boolean isDirty() {
-        return this.dirty || (this.parent != null && this.parent.isDirty());
+    private void checkLocalToWorld() {
+        if (!this.localToWorldDirty) {
+            return;
+        }
+
+        if (this.parent != null) {
+            this.parent.checkLocalToWorld();
+            this.localToWorld.set(this.parent.localToWorld);
+        }
+        else {
+            this.localToWorld.setIdentity();
+        }
+
+        this.localToWorld.translate(this.x, this.y);
+        if (this.rotation != 0.0) {
+            this.localToWorld.rotate(this.rotation);
+        }
+
+        this.localToWorldDirty = false;
+    }
+
+    private void checkWorldToLocal() {
+        if (!this.worldToLocalDirty) {
+            return;
+        }
+
+        this.checkLocalToWorld();
+        this.localToWorld.invert(this.worldToLocal);
+        this.worldToLocalDirty = false;
     }
 }

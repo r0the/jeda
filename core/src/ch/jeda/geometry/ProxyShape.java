@@ -25,10 +25,21 @@ public abstract class ProxyShape extends Figure {
 
     private Shape collisionShape;
 
+    /**
+     * Returns the collision shape of the figure.
+     *
+     * @return collision shape of the figure
+     */
     public final Shape getCollisionShape() {
         return this.collisionShape;
     }
 
+    /**
+     * Sets the colision shape of the figure. The collision shape is used to
+     * detect collisions with this figure.
+     *
+     * @param value the collision shape
+     */
     public final void setCollisionShape(final Shape value) {
         if (this.collisionShape != null) {
             this.collisionShape.setParent(null);
@@ -40,18 +51,42 @@ public abstract class ProxyShape extends Figure {
         }
     }
 
-    @Override
-    protected final Collision doCollideWith(final Figure other) {
-        return other.doCollideWithShape(this.collisionShape).invert();
+    /**
+     * Constructs a proxy shape. Initially, no collision shape is set.
+     */
+    protected ProxyShape() {
     }
 
     @Override
-    protected final Collision doCollideWithShape(final Shape other) {
-        return this.collisionShape.doCollideWithShape(other);
+    void changed() {
+        super.changed();
+        if (this.collisionShape != null) {
+            this.collisionShape.changed();
+        }
     }
 
     @Override
-    protected final boolean doesContain(final Vector point) {
+    final Collision doCollideWith(final Figure other) {
+        if (this.collisionShape == null) {
+            return null;
+        }
+        else {
+            return Collision.invert(other.doCollideWithShape(this.collisionShape));
+        }
+    }
+
+    @Override
+    final Collision doCollideWithShape(final Shape other) {
+        if (this.collisionShape == null) {
+            return null;
+        }
+        else {
+            return this.collisionShape.doCollideWithShape(other);
+        }
+    }
+
+    @Override
+    final boolean doesContain(final Vector point) {
         return this.collisionShape.doesContain(point);
     }
 }

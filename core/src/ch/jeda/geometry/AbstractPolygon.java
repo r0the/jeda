@@ -18,46 +18,68 @@ package ch.jeda.geometry;
 
 import ch.jeda.Vector;
 
+/**
+ * <b>Experimental</b>
+ */
 public abstract class AbstractPolygon extends Shape {
 
+    /**
+     * Returns the axes of the polygon. The axes are represented as vectors in
+     * the global coordinate system.
+     *
+     * @return axes of the polygon
+     */
     protected abstract Vector[] axes();
 
+    /**
+     * Returns the vertices of the polygon. The vertices are represented as
+     * vectors in the global coordinate system.
+     *
+     * @return
+     */
     protected abstract Vector[] vertices();
 
+    /**
+     * Intersects two polygons. The polygons are intersected by applying the
+     * Separation of Axes theorem.
+     *
+     * @param other the other polygon
+     * @return collision object representing the intersection
+     */
     protected Collision doIntersectWithPolygon(final AbstractPolygon other) {
         Vector minAxis = new Vector();
+        final Vector[] theseAxes = this.axes();
         final Vector[] theseVertices = this.vertices();
+        final Vector[] otherAxes = other.axes();
         final Vector[] otherVertices = other.vertices();
-        double minOverlap = Double.MAX_VALUE;
+        float minOverlap = Float.MAX_VALUE;
 
-        for (Vector axis : this.axes()) {
-            final Interval p1 = project(axis, theseVertices);
-            final Interval p2 = project(axis, otherVertices);
+        for (int i = 0; i < theseAxes.length; ++i) {
+            final Interval p1 = project(theseAxes[i], theseVertices);
+            final Interval p2 = project(theseAxes[i], otherVertices);
             if (!p1.overlapsWith(p2)) {
-                return Collision.NULL;
+                return null;
             }
             else {
-                final double o = p1.overlap(p2);
+                final float o = p1.overlap(p2);
                 if (o < minOverlap) {
                     minOverlap = o;
-                    minAxis = axis;
+                    minAxis = theseAxes[i];
                 }
             }
         }
 
-        for (Vector axis : other.axes()) {
-            this.worldToLocal(axis);
-            axis.normalize();
-            final Interval p1 = project(axis, theseVertices);
-            final Interval p2 = project(axis, otherVertices);
+        for (int i = 0; i < otherAxes.length; ++i) {
+            final Interval p1 = project(otherAxes[i], theseVertices);
+            final Interval p2 = project(otherAxes[i], otherVertices);
             if (!p1.overlapsWith(p2)) {
-                return Collision.NULL;
+                return null;
             }
             else {
-                final double o = p1.overlap(p2);
+                final float o = p1.overlap(p2);
                 if (o < minOverlap) {
                     minOverlap = o;
-                    minAxis = axis;
+                    minAxis = otherAxes[i];
                 }
             }
         }

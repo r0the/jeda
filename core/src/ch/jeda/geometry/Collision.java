@@ -33,49 +33,34 @@ import java.io.Serializable;
  */
 public final class Collision implements Serializable {
 
-    /**
-     * The non-existing collision. This collision value represents the non-
-     * collision. It's meaning is that the concerned shapes do not collide.
-     */
-    public static final Collision NULL = new Collision();
-    /**
-     * The collision point. This is the point on the border of the second shape
-     * that realises the deepest penetratation of the first shape.
-     */
-    public final Vector point;
-    /**
-     * The collision normal. This is the shortest path from the collision point
-     * to the border of the first shape. This means that the collision can be
-     * resolved by moving the second shape by the collision normal. The length
-     * of the collision normal is the <b>penetration depth</b>.
-     */
-    public final Vector normal;
+    private Vector point1;
+    private Vector point2;
 
-    /**
-     * Checks if this collision is a null collision.
-     *
-     * @return <tt>true</tt> is this collision is a null collision
-     */
-    public boolean isNull() {
-        return this.normal == null;
+    public Vector getPoint1() {
+        return this.point1;
     }
 
-    Collision(Vector point, Vector normal) {
-        this.point = point;
-        this.normal = normal;
+    public Vector getPoint2() {
+        return this.point2;
     }
 
-    Collision invert() {
-        if (!this.isNull()) {
-            this.point.add(this.normal);
-            this.normal.invert();
+    public Vector normal() {
+        return new Vector(this.point2.x - this.point1.x,
+                          this.point2.y - this.point1.y);
+    }
+
+    static Collision invert(final Collision collision) {
+        if (collision != null) {
+            final Vector temp = collision.point1;
+            collision.point1 = collision.point2;
+            collision.point2 = temp;
         }
 
-        return this;
+        return collision;
     }
 
-    private Collision() {
-        this.normal = null;
-        this.point = null;
+    Collision(final Vector point1, final Vector point2) {
+        this.point1 = point1;
+        this.point2 = point2;
     }
 }

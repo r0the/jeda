@@ -21,12 +21,18 @@ import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 
 /**
- * OK
+ * Represents a circle shape.
  */
 public class Circle extends Shape {
 
     private final float radius;
 
+    /**
+     * Constructs a circle shape. The circle shape has the specified radius.
+     * It's center is initially positioned at the origin.
+     *
+     * @param radius the radius of the circle
+     */
     public Circle(final float radius) {
         if (radius <= 0f) {
             throw new IllegalArgumentException("radius");
@@ -35,39 +41,26 @@ public class Circle extends Shape {
         this.radius = radius;
     }
 
+    /**
+     * Returns the radius of the circle.
+     *
+     * @return radius of the circle
+     */
     public float getRadius() {
         return this.radius;
     }
 
     @Override
-    protected Collision doCollideWithCircle(final Circle other) {
-        final Vector otherCenter = new Vector();
-        other.localToWorld(otherCenter);
-        this.worldToLocal(otherCenter);
-        return this.intersectCircle(otherCenter, this.radius + other.radius - otherCenter.length());
-    }
-
-    @Override
-    protected Collision doCollideWithLineSegment(final LineSegment other) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected Collision doCollideWithPoint(final Point other) {
-        final Vector otherLocation = new Vector();
-        other.localToWorld(otherLocation);
-        this.worldToLocal(otherLocation);
-        return this.intersectCircle(otherLocation, this.radius - otherLocation.length());
-    }
-
-    @Override
-    protected Collision doCollideWithRectangle(final Rectangle other) {
-        return other.doCollideWithCircle(this).invert();
-    }
-
-    @Override
-    protected Collision doCollideWithShape(final Shape other) {
-        return other.doCollideWithCircle(this).invert();
+    public String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("Circle(x=");
+        result.append(this.getX());
+        result.append(", y=");
+        result.append(this.getY());
+        result.append(", r=");
+        result.append(this.radius);
+        result.append(")");
+        return result.toString();
     }
 
     @Override
@@ -86,20 +79,73 @@ public class Circle extends Shape {
     }
 
     @Override
-    protected boolean doesContain(final Vector point) {
-        this.worldToLocal(point);
-        return point.dot(point) < this.radius * this.radius;
-    }
-
-    private Collision intersectCircle(Vector normal, double penetrationDepth) {
-        if (penetrationDepth > 0) {
-            final Vector p = new Vector(normal);
-            p.setLength(this.radius);
-            normal.setLength(-penetrationDepth);
-            return this.createCollision(p, normal);
+    Collision doCollideWithCircle(final Circle other) {
+        final Vector p = other.globalPosition();
+        // Determine the vector 'delta' pointing from the first circle's center
+        // to the second circle's center.
+        final Vector delta = new Vector(p);
+        this.worldToLocal(delta);
+        // Determine the penetration depth 'depth', which is the difference of
+        // the sum of both circles' radii and the length of 'delta'.
+        final float depth = this.radius + other.radius - (float) delta.length();
+        // If the penetration depth 'depth' is positive, a collision has 
+        // occurred.
+        if (depth > 0f) {
+            // The second penetration point lies on the second circle in the
+            // opposite direction of 'delta' from the second circle's center.
+            delta.setLength(-other.radius);
+            // Add it to the first circle's center to get the absolute
+            // coordinates of the penetration point.
+            p.add(delta);
+            // The first penetration point lies on the first circle in direction 
+            // of 'delta' from the first circle's center.
+            delta.setLength(-this.radius);
+            this.localToWorld(delta);
+            return new Collision(delta, p);
         }
         else {
-            return Collision.NULL;
+            return null;
         }
+    }
+
+    @Override
+    Collision doCollideWithPoint(final Point other) {
+        final Vector p = other.globalPosition();
+        // Determine the vector 'delta' pointing from the circle's center to the 
+        // point.
+        final Vector delta = new Vector(p);
+        this.worldToLocal(delta);
+        // Determine the penetration depth 'depth', which is the difference of
+        // the circle's radius and the length of 'delta'.
+        final float depth = this.radius - (float) delta.length();
+        // If the penetration depth 'depth' is positive, a collision has 
+        // occurred.
+        if (depth > 0f) {
+            // The first penetration point lies on the circle in direction of 
+            // 'delta' from the circle's center.
+            delta.setLength(this.radius);
+            this.localToWorld(delta);
+            // The second penetration point is the point itself.
+            return new Collision(delta, p);
+        }
+        else {
+            return null;
+        }
+    }
+
+    @Override
+    Collision doCollideWithRectangle(final Rectangle other) {
+        return Collision.invert(other.doCollideWithCircle(this));
+    }
+
+    @Override
+    Collision doCollideWithShape(final Shape other) {
+        return Collision.invert(other.doCollideWithCircle(this));
+    }
+
+    @Override
+    boolean doesContain(final Vector point) {
+        this.worldToLocal(point);
+        return point.dot(point) < this.radius * this.radius;
     }
 }

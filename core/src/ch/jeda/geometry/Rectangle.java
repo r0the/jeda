@@ -37,13 +37,37 @@ public class Rectangle extends AbstractPolygon {
         this.circumscribedCircle = new Circle(diameter / 2f);
     }
 
+    public final float getHeight() {
+        return this.height;
+    }
+
+    public final float getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("Rectangle(x=");
+        result.append(this.getX());
+        result.append(", y=");
+        result.append(this.getY());
+        result.append(", w=");
+        result.append(this.width);
+        result.append(", h=");
+        result.append(this.height);
+        result.append(")");
+        return result.toString();
+    }
+
     @Override
     protected Vector[] axes() {
         final Vector[] result = new Vector[2];
         result[0] = new Vector(1, 0);
         result[1] = new Vector(0, 1);
         for (Vector v : result) {
-            this.localToWorld(v);
+            this.localToWorldDirection(v);
+            v.normalize();
         }
 
         return result;
@@ -67,41 +91,36 @@ public class Rectangle extends AbstractPolygon {
     }
 
     @Override
-    protected Collision doCollideWithCircle(final Circle other) {
-        final Vector center = new Vector();
-        other.localToWorld(center);
-        this.worldToLocal(center);
+    Collision doCollideWithCircle(final Circle other) {
+        final Vector center = other.globalPosition();
+        final Vector delta = new Vector(center);
+        this.worldToLocal(delta);
         final float radius = other.getRadius();
-        final float dx = Math.abs(center.x) - this.halfWidth;
-        final float dy = Math.abs(center.y) - this.halfHeight;
-        if (dx > radius) {
-            return Collision.NULL;
+        final float dx = Math.abs(delta.x) - this.halfWidth;
+        final float dy = Math.abs(delta.y) - this.halfHeight;
+        if (dx > radius || dy > radius) {
+            return null;
         }
-
-        if (dy > radius) {
-            return Collision.NULL;
-        }
-
-        if (dx <= 0 && dy <= 0) {
+        else if (dx <= 0 && dy <= 0) {
             if (Math.abs(dx) < Math.abs(dy)) {
-                final double sig = Math.signum(center.x);
-                return this.createCollision(new Vector(this.halfWidth * sig, center.y),
+                final double sig = Math.signum(delta.x);
+                return this.createCollision(new Vector(this.halfWidth * sig, delta.y),
                                             new Vector(-sig * (radius - dx), 0));
             }
             else {
-                final double sig = Math.signum(center.y);
-                return this.createCollision(new Vector(center.x, this.halfHeight * sig),
+                final double sig = Math.signum(delta.y);
+                return this.createCollision(new Vector(delta.x, this.halfHeight * sig),
                                             new Vector(0, -sig * (radius - dy)));
             }
         }
         else if (dx <= 0) {
-            final double sig = Math.signum(center.y);
-            return this.createCollision(new Vector(center.x, this.halfHeight * sig),
+            final double sig = Math.signum(delta.y);
+            return this.createCollision(new Vector(delta.x, this.halfHeight * sig),
                                         new Vector(0, -sig * (radius - dy)));
         }
         else if (dy <= 0) {
-            final double sig = Math.signum(center.x);
-            return this.createCollision(new Vector(this.halfWidth * sig, center.y),
+            final double sig = Math.signum(delta.x);
+            return this.createCollision(new Vector(this.halfWidth * sig, delta.y),
                                         new Vector(-sig * (radius - dx), 0));
         }
 
@@ -114,47 +133,43 @@ public class Rectangle extends AbstractPolygon {
             return this.createCollision(p, n);
         }
         else {
-            return Collision.NULL;
+            return null;
         }
     }
 
     @Override
-    protected Collision doCollideWithLineSegment(final LineSegment other) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected Collision doCollideWithPoint(final Point other) {
-        final Vector otherLocation = new Vector();
-        other.localToWorld(otherLocation);
-        this.worldToLocal(otherLocation);
-        // Calculate negative penetration depth in both directions
-        final float px = Math.abs(otherLocation.x) - this.halfWidth;
-        final float py = Math.abs(otherLocation.y) - this.halfHeight;
+    Collision doCollideWithPoint(final Point other) {
+        final Vector p = other.globalPosition();
+        // Determine the vector 'delta' pointing from the rectangle's center to
+        // the point.        
+        final Vector delta = new Vector(p);
+        this.worldToLocal(delta);
+        // Project the vector 'delta' on both axes of the rectangle.
+        final float px = Math.abs(delta.x) - this.halfWidth;
+        final float py = Math.abs(delta.y) - this.halfHeight;
         if (px > 0 || py > 0) {
-            // No penetration
-            return Collision.NULL;
+            return null;
         }
-        // Check if horizontal penetration is smaller (px and py are < 0)
-        else if (px > py) {
-            final float sig = Math.signum(otherLocation.x);
-            return this.createCollision(
-                    new Vector(this.halfWidth * sig, otherLocation.y),
-                    new Vector(px * sig, 0));
+
+        final Vector pp;
+        // Both p0 and p1 are negative. p0 > p1 means that the point is nearer
+        // to the axes[0].
+        if (px > py) {
+            pp = new Vector(this.halfWidth * Math.signum(delta.x), delta.y);
         }
         else {
-            final float sig = Math.signum(otherLocation.y);
-            return this.createCollision(
-                    new Vector(otherLocation.x, this.halfHeight * sig),
-                    new Vector(0, py * sig));
+            pp = new Vector(delta.x, Math.signum(delta.y) * this.halfHeight);
         }
+
+        this.localToWorld(pp);
+        return new Collision(p, pp);
     }
 
     @Override
-    protected Collision doCollideWithRectangle(final Rectangle other) {
+    Collision doCollideWithRectangle(final Rectangle other) {
         // Do a fast first check using rectangles' circumscribed circles.
         if (!this.circumscribedCircle.intersectsWith(other.circumscribedCircle)) {
-            return Collision.NULL;
+            return null;
         }
         else {
             return this.doIntersectWithPolygon(other);
@@ -162,12 +177,12 @@ public class Rectangle extends AbstractPolygon {
     }
 
     @Override
-    protected Collision doCollideWithShape(final Shape other) {
-        return other.doCollideWithRectangle(this).invert();
+    Collision doCollideWithShape(final Shape other) {
+        return Collision.invert(other.doCollideWithRectangle(this));
     }
 
     @Override
-    protected boolean doesContain(final Vector point) {
+    boolean doesContain(final Vector point) {
         this.worldToLocal(point);
         return Math.abs(point.x) <= this.halfWidth &&
                Math.abs(point.y) <= this.halfHeight;
@@ -184,6 +199,18 @@ public class Rectangle extends AbstractPolygon {
             this.localToWorld(v);
         }
 
+        return result;
+    }
+
+    Vector heightAxis() {
+        final Vector result = new Vector(this.halfWidth, 0);
+        this.localToWorld(result);
+        return result;
+    }
+
+    Vector widthAxis() {
+        final Vector result = new Vector(this.halfWidth, 0);
+        this.localToWorld(result);
         return result;
     }
 }

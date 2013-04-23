@@ -38,15 +38,6 @@ public abstract class Shape extends Figure {
         return this.outlineColor;
     }
 
-    public final boolean intersectsWith(final Shape other) {
-        if (other == null || other == this) {
-            return false;
-        }
-        else {
-            return !this.doCollideWith(other).isNull();
-        }
-    }
-
     public final void setFillColor(final Color value) {
         this.fillColor = value;
     }
@@ -61,22 +52,22 @@ public abstract class Shape extends Figure {
     }
 
     @Override
-    protected final Collision doCollideWith(final Figure other) {
-        return other.doCollideWithShape(this).invert();
+    final Collision doCollideWith(final Figure other) {
+        return Collision.invert(other.doCollideWithShape(this));
     }
 
-    protected abstract Collision doCollideWithCircle(Circle other);
+    abstract Collision doCollideWithCircle(Circle other);
 
-    protected abstract Collision doCollideWithLineSegment(LineSegment other);
+    abstract Collision doCollideWithPoint(Point other);
 
-    protected abstract Collision doCollideWithPoint(Point other);
+    abstract Collision doCollideWithRectangle(Rectangle other);
 
-    protected abstract Collision doCollideWithRectangle(Rectangle other);
-
-    protected final Collision createCollision(final Vector point,
-                                              final Vector normal) {
+    final Collision createCollision(final Vector point,
+                                    final Vector normal) {
+        Vector p2 = new Vector(point);
+        p2.subtract(normal);
         this.localToWorld(point);
-        this.localToWorldDirection(normal);
-        return new Collision(point, normal);
+        this.localToWorld(p2);
+        return new Collision(point, p2);
     }
 }

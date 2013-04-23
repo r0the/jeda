@@ -46,7 +46,7 @@ public abstract class ContactGenerator {
         }
 
         Collision c = s1.collideWith(s2);
-        if (c.isNull()) {
+        if (c == null) {
             return;
         }
 
