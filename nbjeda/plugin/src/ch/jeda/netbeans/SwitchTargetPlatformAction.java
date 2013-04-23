@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,33 +16,35 @@
  */
 package ch.jeda.netbeans;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import org.netbeans.api.project.Project;
-import org.openide.awt.ActionRegistration;
-import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
+import static ch.jeda.netbeans.ProjectWrapper.Platform.Android;
+import static ch.jeda.netbeans.ProjectWrapper.Platform.Java;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.netbeans.api.project.Project;
 import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(category = "Build",
-          id = "ch.jeda.netbeans.TargetPlatformSwitcher")
+          id = "ch.jeda.netbeans.SwitchTargetPlatformAction")
 @ActionRegistration(iconBase = "ch/jeda/netbeans/resources/logo-16x16.png",
-                    displayName = "#CTL_TargetPlatformSwitcher")
+                    displayName = "#CTL_SwitchTargetPlatformAction")
 @ActionReferences({
     @ActionReference(path = "Menu/BuildProject", position = 97)
 })
-@Messages("CTL_TargetPlatformSwitcher=Switch Target Platform")
-public final class TargetPlatformSwitcher implements ActionListener {
+@Messages("CTL_SwitchTargetPlatformAction=Switch Target Platform")
+public final class SwitchTargetPlatformAction implements ActionListener {
 
     private final ProjectWrapper wrapper;
 
-    public TargetPlatformSwitcher(Project context) {
-        this.wrapper = ProjectWrapper.forProject(context);
+    public SwitchTargetPlatformAction(final Project context) {
+        this.wrapper = ProjectWrapper.forProject((Project) context);
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev) {
+    public void actionPerformed(final ActionEvent event) {
         if (!this.wrapper.isJedaProject()) {
             Util.log("Ignoring platform switch: Not a Jeda project.");
             return;
