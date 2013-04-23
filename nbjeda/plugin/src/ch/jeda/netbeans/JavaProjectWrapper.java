@@ -62,7 +62,7 @@ public class JavaProjectWrapper extends ProjectWrapper {
 
     @Override
     protected void doCleanup() throws Exception {
-        this.deleteFile(NB_PROJECT);
+        this.renameFile(NB_PROJECT, NB_PROJECT_ANDROID);
         this.deleteFile(BUILD_XML);
         this.deleteFile("build");
         this.deleteFile("dist");

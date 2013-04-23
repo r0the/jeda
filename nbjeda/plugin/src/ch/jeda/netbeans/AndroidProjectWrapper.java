@@ -69,6 +69,7 @@ public class AndroidProjectWrapper extends ProjectWrapper {
         this.deleteFile("local.properties");
         this.deleteFile("nbandroid");
         this.deleteFile("project.properties");
+        this.renameFile(NB_PROJECT_ANDROID, NB_PROJECT);
         this.rename(this.getName().replace(ANDROID_SUFFIX, ""));
     }
 

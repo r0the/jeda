@@ -45,6 +45,7 @@ public class ProjectWrapper {
     protected static final String BUILD_XML = "build.xml";
     protected static final String JEDA_PROPERTIES = "jeda.properties";
     protected static final String NB_PROJECT = "nbproject";
+    protected static final String NB_PROJECT_ANDROID = "nbproject_";
     protected static final String RES_ICON_PNG = "ch/jeda/netbeans/resources/logo-16x16.png";
     private static final String DEFAULT_PACKAGE = "src/ch/jeda/project";
     private static final String RES_JEDA_PROPERTIES = "ch/jeda/netbeans/resources/jeda.properties";
@@ -196,6 +197,13 @@ public class ProjectWrapper {
 
     protected final void rename(String newProjectName) throws IOException {
         this.projectRoot.rename(FileLock.NONE, newProjectName, "");
+    }
+
+    protected final void renameFile(String name, String newName) throws IOException {
+        FileObject fo = this.projectRoot.getFileObject(name);
+        if (fo != null) {
+            fo.rename(FileLock.NONE, newName, "");
+        }
     }
 
     protected final void replaceFile(String targetPath, String resourcePath) throws IOException {
