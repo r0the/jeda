@@ -299,13 +299,6 @@ public final class Vector implements Serializable {
         return Math.atan2(this.y, this.x);
     }
 
-    /**
-     * Calculates the normal vector.
-     *
-     * @return the normal vector to this vector
-     *
-     * @since 1
-     */
     @Deprecated
     public void rotate90() {
         final float temp = this.x;

@@ -138,11 +138,9 @@ public final class Transformation implements Serializable {
     }
 
     /**
-     * Applies the transformation to a vector. Calculates and returns the
-     * resulting vector.
+     * Applies the transformation to a vector.
      *
      * @param v the vector to apply the transformation to
-     * @return the transformed vector
      * @throws NullPointerException if <tt>v</tt> is <tt>null</tt>
      *
      * @since 1

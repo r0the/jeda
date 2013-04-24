@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents an axis of an {@link InputDevice}.
+ * <b>Experimental.</b> Represents an axis of an {@link InputDevice}.
  */
 public final class Axis implements Serializable {
 

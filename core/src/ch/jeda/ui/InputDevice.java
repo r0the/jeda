@@ -19,8 +19,8 @@ package ch.jeda.ui;
 import ch.jeda.platform.InputDeviceImp;
 
 /**
- * Represents an input device such as a gamepad or a mouse. An input device has
- * two kinds of sensors: axes and buttons.
+ * <b>Experimental.</b> Represents an input device such as a gamepad or a mouse.
+ * An input device has two kinds of sensors: axes and buttons.
  *
  * Supported devices are:
  * <ul>

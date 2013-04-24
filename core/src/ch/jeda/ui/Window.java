@@ -227,7 +227,8 @@ public class Window extends Canvas {
     }
 
     /**
-     * Detects input devices. Returns a list of all available devices.
+     * <b>Experimental.</b> Detects input devices. Returns a list of all
+     * available devices.
      *
      * @return list of available input devices
      * @see InputDevice

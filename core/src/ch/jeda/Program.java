@@ -34,7 +34,7 @@ public abstract class Program {
 
     /**
      * Constructs a program. The created program will have the state
-     * {@link ProgramState#Created}.
+     * {@link ProgramState#Creating}.
      *
      * @since 1
      */

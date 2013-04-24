@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a button of an {@link InputDevice}.
+ * <b>Experimental.</b> Represents a button of an {@link InputDevice}.
  */
 public final class Button implements Serializable {
 
