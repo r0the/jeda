@@ -24,6 +24,16 @@ import ch.jeda.platform.InputType;
  * <p>
  * To write a Jeda program, create a class that inherits from ch.jeda.Program
  * and overwrite the {@link #run()} method.
+ * <p>
+ * <strong>Example:</strong>
+ * <pre><code> import ch.jeda.*;
+ *
+ * public class HelloWorld extends Program {
+ *
+ * @Override
+ * public void run() {
+ *    write("Hello World");
+ * }</code></pre>
  *
  * @since 1
  */
@@ -115,7 +125,7 @@ public abstract class Program {
      * @see #readDouble(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final double readDouble(String message) {
+    protected final double readDouble(final String message) {
         InputRequest<Double> request = new InputRequest<Double>(InputType.forDouble(), 0d);
         request.setMessage(message);
         request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
@@ -141,7 +151,7 @@ public abstract class Program {
      * @see Util#args(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final double readDouble(String messageTemplate, Object... args) {
+    protected final double readDouble(final String messageTemplate, final Object... args) {
         return this.readDouble(Util.args(messageTemplate, args));
     }
 
@@ -157,7 +167,7 @@ public abstract class Program {
      * @see #readInt(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final int readInt(String message) {
+    protected final int readInt(final String message) {
         InputRequest<Integer> request = new InputRequest<Integer>(InputType.forInt(), 0);
         request.setMessage(message);
         request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
@@ -183,7 +193,7 @@ public abstract class Program {
      * @see Util#args(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final int readInt(String messageTemplate, Object... args) {
+    protected final int readInt(final String messageTemplate, final Object... args) {
         return this.readInt(Util.args(messageTemplate, args));
     }
 
@@ -199,7 +209,7 @@ public abstract class Program {
      * @see #readString(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final String readString(String message) {
+    protected final String readString(final String message) {
         InputRequest<String> request = new InputRequest<String>(InputType.forString(), "");
         request.setMessage(message);
         request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
@@ -225,7 +235,7 @@ public abstract class Program {
      * @see Util#args(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final String readString(String messageTemplate, Object... args) {
+    protected final String readString(final String messageTemplate, final Object... args) {
         return this.readString(Util.args(messageTemplate, args));
     }
 
@@ -253,7 +263,7 @@ public abstract class Program {
      * @see #write(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final void write(String message) {
+    protected final void write(final String message) {
         Engine.getContext().write(message);
     }
 
@@ -271,11 +281,11 @@ public abstract class Program {
      * @see Util#args(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final void write(String messageTemplate, Object... args) {
+    protected final void write(final String messageTemplate, final Object... args) {
         this.write(Util.args(messageTemplate, args));
     }
 
-    final void setState(ProgramState value) {
+    final void setState(final ProgramState value) {
         synchronized (this.stateLock) {
             this.state = value;
         }

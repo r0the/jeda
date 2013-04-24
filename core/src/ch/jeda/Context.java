@@ -51,7 +51,7 @@ public final class Context {
     private final ContextImp imp;
     private ImageImp defaultImage;
     private Properties properties;
-    private Log.Level logLevel = Log.Level.Warning;
+    private LogLevel logLevel = LogLevel.Warning;
 
     public CanvasImp createCanvasImp(final int width, final int height) {
         return this.imp.createCanvasImp(width, height);
@@ -62,22 +62,26 @@ public final class Context {
     }
 
     public ImageImp loadImageImp(final String filePath) {
-        ImageImp result = null;
+        final InputStream in = this.openInputStream(filePath);
+        if (in == null) {
+            return this.defaultImage;
+        }
+
         try {
-            final InputStream in = this.openInputStream(filePath);
-            if (in != null) {
-                result = this.imp.loadImageImp(in);
-            }
+            return this.imp.loadImageImp(in);
         }
         catch (Exception ex) {
-            Log.warning(Message.IMAGE_READ_ERROR, filePath, ex);
+            this.warning(Message.IMAGE_READ_ERROR, filePath, ex);
+            return this.defaultImage;
         }
-
-        if (result == null) {
-            result = this.defaultImage;
+        finally {
+            try {
+                in.close();
+            }
+            catch (IOException ex) {
+                // ignore
+            }
         }
-
-        return result;
     }
 
     public WindowImp showWindow(final int width, final int height,
@@ -92,8 +96,12 @@ public final class Context {
         return request.getResult();
     }
 
-    public void setLogLevel(final Log.Level value) {
+    public void setLogLevel(final LogLevel value) {
         this.logLevel = value;
+    }
+
+    public void warning(final String messageKey, final Object... args) {
+        this.log(LogLevel.Warning, Util.args(Message.translate(messageKey), args), null);
     }
 
     Context(final ContextImp imp) {
@@ -120,14 +128,13 @@ public final class Context {
     }
 
     List<String> loadTextFile(final String filePath) {
-        try {
-            final InputStream in = this.openInputStream(filePath);
-            if (in == null) {
-                Log.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
-                return null;
-            }
+        final InputStream in = this.openInputStream(filePath);
+        if (in == null) {
+            return null;
+        }
 
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        try {
             final List<String> result = new ArrayList<String>();
             while (reader.ready()) {
                 result.add(reader.readLine());
@@ -136,12 +143,20 @@ public final class Context {
             return result;
         }
         catch (IOException ex) {
-            Log.warning(Message.FILE_READ_ERROR, filePath, ex);
+            this.warning(Message.FILE_READ_ERROR, filePath, ex);
             return null;
+        }
+        finally {
+            try {
+                in.close();
+            }
+            catch (IOException ex) {
+                // ignore
+            }
         }
     }
 
-    void log(final Log.Level level, final String message,
+    void log(final LogLevel level, final String message,
              final Throwable exception) {
         if (this.matchesLogLevel(level)) {
             this.imp.log(level.toString() + ": " + message + '\n');
@@ -154,7 +169,7 @@ public final class Context {
         }
     }
 
-    InputStream openInputStream(final String filePath) throws IOException {
+    InputStream openInputStream(final String filePath) {
         if (filePath == null) {
             throw new NullPointerException("filePath");
         }
@@ -163,11 +178,17 @@ public final class Context {
             final URL url = Thread.currentThread().getContextClassLoader().
                     getResource(filePath.substring(RESOURCE_PREFIX.length()));
             if (url == null) {
-                Log.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
+                this.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
                 return null;
             }
             else {
-                return url.openStream();
+                try {
+                    return url.openStream();
+                }
+                catch (IOException ex) {
+                    this.warning(Message.FILE_OPEN_ERROR, filePath, ex);
+                    return null;
+                }
             }
         }
         else {
@@ -175,7 +196,7 @@ public final class Context {
                 return new FileInputStream(filePath);
             }
             catch (FileNotFoundException ex) {
-                Log.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
+                this.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
                 return null;
             }
         }
@@ -198,19 +219,19 @@ public final class Context {
         this.imp.showLog();
     }
 
-    private boolean matchesLogLevel(final Log.Level messageLevel) {
+    private boolean matchesLogLevel(final LogLevel messageLevel) {
         switch (this.logLevel) {
             case Debug:
                 return true;
             case Info:
-                return messageLevel == Log.Level.Info ||
-                       messageLevel == Log.Level.Warning ||
-                       messageLevel == Log.Level.Error;
+                return messageLevel == LogLevel.Info ||
+                       messageLevel == LogLevel.Warning ||
+                       messageLevel == LogLevel.Error;
             case Warning:
-                return messageLevel == Log.Level.Warning ||
-                       messageLevel == Log.Level.Error;
+                return messageLevel == LogLevel.Warning ||
+                       messageLevel == LogLevel.Error;
             case Error:
-                return messageLevel == Log.Level.Error;
+                return messageLevel == LogLevel.Error;
             default:
                 return false;
         }

@@ -21,7 +21,7 @@ class ProgramInfo {
     private final Class<Program> programClass;
     private final String name;
 
-    ProgramInfo(Class<Program> programClass, String name) {
+    ProgramInfo(final Class<Program> programClass, final String name) {
         assert programClass != null;
 
         this.programClass = programClass;

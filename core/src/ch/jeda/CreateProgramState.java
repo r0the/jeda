@@ -16,15 +16,13 @@
  */
 package ch.jeda;
 
-import java.lang.reflect.InvocationTargetException;
-
 class CreateProgramState extends EngineState {
 
-    private final ProgramInfo programInfo;
+    private final Class<Program> programClass;
 
-    CreateProgramState(final Context context, final ProgramInfo programInfo) {
+    CreateProgramState(final Context context, final Class<Program> programClass) {
         super(context);
-        this.programInfo = programInfo;
+        this.programClass = programClass;
     }
 
     @Override
@@ -42,36 +40,14 @@ class CreateProgramState extends EngineState {
 
     @Override
     void run() {
-        final Program program = createProgram(this.programInfo.getProgramClass());
-        if (program == null) {
+        try {
+            Engine.enterExecuteProgramState(this.programClass.
+                    getDeclaredConstructor(new Class[0]).
+                    newInstance(new Object[0]));
+        }
+        catch (final Exception ex) {
+            this.logError(ex, Message.PROGRAM_CREATE_ERROR, this.programClass);
             Engine.enterShutdownState();
         }
-        else {
-            Engine.enterExecuteProgramState(program);
-        }
-    }
-
-    private Program createProgram(final Class<Program> programClass) {
-        try {
-            return programClass.getDeclaredConstructor(new Class[0]).
-                    newInstance(new Object[0]);
-        }
-        catch (final NoSuchMethodException ex) {
-            this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
-        }
-        catch (final IllegalAccessException ex) {
-            this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
-        }
-        catch (final InvocationTargetException ex) {
-            this.logError(ex.getCause(), Message.PROGRAM_CREATE_ERROR, programClass);
-        }
-        catch (final InstantiationException ex) {
-            this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
-        }
-        catch (final NoClassDefFoundError ex) {
-            this.logError(ex, Message.PROGRAM_CREATE_ERROR, programClass);
-        }
-
-        return null;
     }
 }

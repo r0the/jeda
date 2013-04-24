@@ -81,7 +81,7 @@ public final class Engine {
 
     static void enterCreateProgramState(final ProgramInfo programInfo) {
         Engine.programInfo = programInfo;
-        nextState = new CreateProgramState(context, programInfo);
+        nextState = new CreateProgramState(context, programInfo.getProgramClass());
     }
 
     static void enterExecuteProgramState(final Program program) {

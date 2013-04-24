@@ -18,7 +18,6 @@ package ch.jeda.ui;
 
 import ch.jeda.Engine;
 import ch.jeda.Location;
-import ch.jeda.Log;
 import ch.jeda.Message;
 import ch.jeda.Size;
 import ch.jeda.platform.ImageImp;
@@ -214,7 +213,8 @@ public final class Image {
 
         String extension = filePath.substring(pos + 1).toLowerCase();
         if (!FORMAT_MAP.containsKey(extension)) {
-            Log.warning(Message.IMAGE_FORMAT_ERROR, filePath, extension);
+            Engine.getContext().warning(Message.IMAGE_FORMAT_ERROR, filePath,
+                                        extension);
             return false;
         }
 
@@ -229,7 +229,8 @@ public final class Image {
             return this.imp.write(out, FORMAT_MAP.get(extension));
         }
         catch (IOException ex) {
-            Log.warning(Message.IMAGE_WRITE_ERROR, filePath, ex.getMessage());
+            Engine.getContext().warning(Message.IMAGE_WRITE_ERROR, filePath,
+                                        ex.getMessage());
             return false;
         }
         finally {

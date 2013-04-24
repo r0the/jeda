@@ -36,6 +36,7 @@ public final class Util {
      * @param messageTemplate the message template
      * @param args the arguments to be inserted in the message template
      * @return resulting message
+     * @since 1
      */
     public static String args(final String messageTemplate, final Object... args) {
         if (args == null) {

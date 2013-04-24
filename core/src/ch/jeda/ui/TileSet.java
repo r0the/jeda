@@ -64,7 +64,7 @@ public class TileSet {
         int index = x + y * this.width;
         if (this.tiles[index] == null) {
             this.tiles[index] = this.image.createSubImage(
-                    x * this.tileWidth, y * this.tileWidth,
+                    x * this.tileWidth, y * this.tileHeight,
                     this.tileWidth, this.tileHeight);
         }
 

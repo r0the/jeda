@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2011 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -37,7 +37,7 @@ class Timer {
         return this.lastStepDuration / 1000.0;
     }
 
-    void setFrequency(int hertz) {
+    void setFrequency(final int hertz) {
         if (this.frequency != hertz) {
             this.frequency = hertz;
             this.refresh();
@@ -49,8 +49,8 @@ class Timer {
     }
 
     void tick() {
-        long end = System.currentTimeMillis();
-        long sleepTime = this.period - end + this.start - this.adjustment;
+        final long end = System.currentTimeMillis();
+        final long sleepTime = this.period - end + this.start - this.adjustment;
         if (sleepTime > 0) {
             this.sleep(sleepTime);
             this.adjustment = (System.currentTimeMillis() - end) - sleepTime;
@@ -60,7 +60,7 @@ class Timer {
             this.adjustment = 0;
         }
 
-        long now = System.currentTimeMillis();
+        final long now = System.currentTimeMillis();
         this.lastStepDuration = now - this.start;
         this.start = now;
     }
@@ -71,7 +71,7 @@ class Timer {
         this.adjustment = 0;
     }
 
-    private void sleep(long milliseconds) {
+    private void sleep(final long milliseconds) {
         try {
             Thread.sleep(milliseconds);
         }

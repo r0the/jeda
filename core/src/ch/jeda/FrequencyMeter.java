@@ -32,7 +32,7 @@ class FrequencyMeter {
     }
 
     public void count() {
-        long now = System.currentTimeMillis();
+        final long now = System.currentTimeMillis();
         this.durations[this.index] = now - this.startTime;
         this.startTime = now;
         if (this.index < MAX_VALUES - 1) {
@@ -43,8 +43,8 @@ class FrequencyMeter {
         }
 
         this.frequency = 0;
-        for (long time : this.durations) {
-            this.frequency = this.frequency + time;
+        for (int i = 0; i < this.durations.length; ++i) {
+            this.frequency = this.frequency + this.durations[i];
         }
 
         this.frequency = this.frequency / MAX_VALUES;

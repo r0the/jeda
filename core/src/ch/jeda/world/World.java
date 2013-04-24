@@ -16,7 +16,7 @@
  */
 package ch.jeda.world;
 
-import ch.jeda.Log;
+import ch.jeda.Engine;
 import ch.jeda.Simulation;
 import ch.jeda.Transformation;
 import ch.jeda.geometry.Shape;
@@ -184,7 +184,7 @@ public class World extends Simulation {
         }
 
         if (!this.states.containsKey(state)) {
-            Log.error("jeda.game.state.error", state);
+            Engine.getContext().warning("jeda.game.state.error", state);
         }
 
         this.nextState = state;

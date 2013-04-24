@@ -16,6 +16,8 @@
  */
 package ch.jeda;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -32,11 +34,24 @@ public final class Properties {
 
     public Properties(final String filePath) {
         this();
+        final InputStream in = Engine.getContext().openInputStream(filePath);
+        if (in == null) {
+            return;
+        }
+
         try {
-            this.imp.load(Engine.getContext().openInputStream(filePath));
+            this.imp.load(in);
         }
         catch (Exception ex) {
-            Log.warning(Message.FILE_READ_ERROR, filePath, ex.getMessage());
+            Engine.getContext().warning(Message.FILE_READ_ERROR, filePath, ex.getMessage());
+        }
+        finally {
+            try {
+                in.close();
+            }
+            catch (IOException ex) {
+                // ignore
+            }
         }
     }
 

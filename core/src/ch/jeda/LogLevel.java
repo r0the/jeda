@@ -16,30 +16,7 @@
  */
 package ch.jeda;
 
-abstract class EngineState {
+public enum LogLevel {
 
-    final Context context;
-
-    EngineState(final Context context) {
-        this.context = context;
-    }
-
-    final void logError(final String messageKey, final Object... args) {
-        this.context.log(LogLevel.Error,
-                         Util.args(Message.translate(messageKey), args), null);
-    }
-
-    final void logError(final Throwable exception, final String messageKey,
-                        final Object... args) {
-        this.context.log(LogLevel.Error,
-                         Util.args(Message.translate(messageKey), args), exception);
-    }
-
-    abstract void onPause();
-
-    abstract void onResume();
-
-    abstract void onStop();
-
-    abstract void run();
+    Debug, Info, Warning, Error
 }

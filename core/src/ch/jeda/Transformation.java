@@ -43,7 +43,7 @@ public final class Transformation implements Serializable {
     private final float[] m;
 
     /**
-     * Constructs a identity transformation.
+     * Constructs an identity transformation.
      *
      * @since 1
      */
@@ -51,6 +51,35 @@ public final class Transformation implements Serializable {
         this.m = new float[6];
         this.m[M00] = 1f;
         this.m[M11] = 1f;
+    }
+
+    /**
+     * Combines two transformations. Concatenates the transformation with the
+     * specified other transformation.
+     *
+     * @param other the other transformation
+     * @return the combined transformation
+     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
+     *
+     * @since 1
+     */
+    public void concatenate(final Transformation other) {
+        if (other == null) {
+            throw new NullPointerException("other");
+        }
+
+        final float m00 = this.m[M00] * other.m[M00] + this.m[M01] * other.m[M10];
+        final float m01 = this.m[M00] * other.m[M01] + this.m[M01] * other.m[M11];
+        final float m02 = this.m[M00] * other.m[M02] + this.m[M01] * other.m[M12] + this.m[M02];
+        final float m10 = this.m[M10] * other.m[M00] + this.m[M11] * other.m[M10];
+        final float m11 = this.m[M10] * other.m[M01] + this.m[M11] * other.m[M00];
+        final float m12 = this.m[M10] * other.m[M02] + this.m[M11] * other.m[M12] + this.m[M12];
+        this.m[M00] = m00;
+        this.m[M01] = m01;
+        this.m[M02] = m02;
+        this.m[M10] = m10;
+        this.m[M11] = m11;
+        this.m[M12] = m12;
     }
 
     public float[] copyToArray(final float[] target) {
@@ -160,40 +189,11 @@ public final class Transformation implements Serializable {
      *
      * @param tx the translation along the x-axis
      * @param ty the translation along the y-axis
+     *
+     * @since 1
      */
     public void translate(final float tx, final float ty) {
         this.m[M02] += tx;
         this.m[M12] += ty;
     }
-    /**
-     * Combines two transformations. Calculates and returns a transformation
-     * that results from applying the other transformation after this
-     * transformation.
-     *
-     * @param other the other transformation
-     * @return the combined transformation
-     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
-     *
-     * @since 1
-     */
-//    public Transformation combinedWith(Transformation other) {
-//        if (other == null) {
-//            throw new NullPointerException("other");
-//        }
-//        else if (this == IDENTITY) {
-//            return other;
-//        }
-//        else if (other == IDENTITY) {
-//            return this;
-//        }
-//        else {
-//            return new Transformation(
-//                    this.scaleX * other.scaleX + this.skewX * other.skewY,
-//                    this.scaleX * other.skewX + this.skewX * other.scaleY,
-//                    this.scaleX * other.translateX + this.skewX * other.translateY + this.translateX,
-//                    this.skewY * other.scaleX + this.scaleY * other.skewY,
-//                    this.skewY * other.skewX + this.scaleY * other.scaleX,
-//                    this.skewY * other.translateX + this.scaleY * other.translateY + this.translateY);
-//        }
-//    }
 }

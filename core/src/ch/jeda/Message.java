@@ -28,6 +28,7 @@ public class Message {
     public static final String CHOOSE_PROGRAM_TITLE = "jeda.gui.programchooser.title";
     public static final String ENGINE_THREAD_NAME = "jeda.engine.thread.name";
     public static final String FILE_NOT_FOUND_ERROR = "jeda.file.not.found.error";
+    public static final String FILE_OPEN_ERROR = "jeda.file.open.error";
     public static final String FILE_READ_ERROR = "jeda.file.read.error";
     public static final String IMAGE_FORMAT_ERROR = "jeda.image.format.error";
     public static final String IMAGE_READ_ERROR = "jeda.image.read.error";
@@ -54,6 +55,7 @@ public class Message {
         put(CHOOSE_PROGRAM_ERROR, "Fehler beim Laden der Program-Klassen.");
         put(CHOOSE_PROGRAM_TITLE, "Jeda Programmauswahl");
         put(ENGINE_THREAD_NAME, "Jeda Engine");
+        put(FILE_OPEN_ERROR, "Fehler beim Öffnen der Datei '{0}': {1}");
         put(FILE_READ_ERROR, "Fehler beim Lesen der Datei '{0}': {1}");
         put(FILE_NOT_FOUND_ERROR, "Datei {0} nicht gefunden.");
         put(IMAGE_FORMAT_ERROR, "Bilddatei '{0}' kann nicht im unbekannten Bildformat '{1}' gespeichert werden.");
