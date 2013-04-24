@@ -20,6 +20,8 @@ import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -48,15 +50,17 @@ public class ProjectWrapper {
     protected static final String NB_PROJECT_ANDROID = "nbproject_";
     protected static final String RES_ICON_PNG = "ch/jeda/netbeans/resources/logo-16x16.png";
     private static final String DEFAULT_PACKAGE = "src/ch/jeda/project";
+    private static final String LIBS = "libs";
     private static final String RES_JEDA_PROPERTIES = "ch/jeda/netbeans/resources/jeda.properties";
     private final FileObject projectRoot;
     private Project project;
 
-    public static ProjectWrapper forProject(Project project) {
+    public static ProjectWrapper forProject(final Project project) {
         return forProject(project.getProjectDirectory(), project);
     }
 
-    public static ProjectWrapper forProject(FileObject projectRoot, Project project) {
+    public static ProjectWrapper forProject(final FileObject projectRoot,
+                                            final Project project) {
         if (projectRoot.getFileObject(JEDA_PROPERTIES) == null) {
             // Not a Jeda project
             return new ProjectWrapper(projectRoot, project);
@@ -72,12 +76,54 @@ public class ProjectWrapper {
         }
     }
 
-    protected ProjectWrapper(FileObject projectRoot, Project project) {
+    protected ProjectWrapper(final FileObject projectRoot, final Project project) {
         this.projectRoot = projectRoot;
         this.project = project;
     }
 
-    public final void convertTo(Platform platform) {
+    public final void addLibrary(final File libraryPath) {
+        final String fileName = libraryPath.getName();
+        final FileObject libraryDir = this.getLibs();
+        if (libraryDir == null) {
+            return;
+        }
+
+        FileObject target = libraryDir.getFileObject(fileName);
+        if (target != null) {
+            this.showError("Library already exists in project.");
+            return;
+        }
+
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            target = FileUtil.createData(libraryDir, fileName);
+            in = new FileInputStream(libraryPath);
+            out = target.getOutputStream();
+            FileUtil.copy(in, out);
+        }
+        catch (IOException ex) {
+            this.showError("Error while adding library: " + ex.toString());
+        }
+        finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+
+                if (out != null) {
+                    out.close();
+                }
+            }
+            catch (IOException ex) {
+                // ignore
+            }
+        }
+
+        this.librariesChanged();
+    }
+
+    public final void convertTo(final Platform platform) {
         switch (platform) {
             case Android:
                 this.convertTo(new AndroidProjectWrapper(this.projectRoot));
@@ -92,7 +138,7 @@ public class ProjectWrapper {
         return null;
     }
 
-    public final FileObject getJedaPropertiesFiele() {
+    public final FileObject getJedaPropertiesFile() {
         return this.projectRoot.getFileObject(JEDA_PROPERTIES);
     }
 
@@ -116,12 +162,10 @@ public class ProjectWrapper {
         return this.getPlatform() != Platform.Unknown;
     }
 
-    protected final void addDir(String targetPath) throws IOException {
+    protected final void addDir(final String targetPath) throws IOException {
         final String[] dirs = targetPath.split("/");
         FileObject fo = this.projectRoot;
-        int i = 0;
-
-        while (i < dirs.length) {
+        for (int i = 0; i < dirs.length; ++i) {
             final FileObject child = fo.getFileObject(dirs[i]);
             if (child != null) {
                 fo = child;
@@ -129,18 +173,17 @@ public class ProjectWrapper {
             else {
                 fo = fo.createFolder(dirs[i]);
             }
-
-            ++i;
         }
     }
 
-    protected final void addFile(String targetPath, String resourcePath) throws IOException {
+    protected final void addFile(final String targetPath,
+                                 final String resourcePath) throws IOException {
         // Do not overwrite existing files
         if (this.projectRoot.getFileObject(targetPath) != null) {
             return;
         }
 
-        OutputStream out = FileUtil.createData(this.projectRoot, targetPath).getOutputStream();
+        final OutputStream out = FileUtil.createData(this.projectRoot, targetPath).getOutputStream();
         try {
             FileUtil.copy(Util.openResource(resourcePath), out);
         }
@@ -149,17 +192,18 @@ public class ProjectWrapper {
         }
     }
 
-    protected final void addFile(String targetPath, String resourcePath, FileFilter filter) throws Exception {
+    protected final void addFile(final String targetPath, final String resourcePath,
+                                 final FileFilter filter) throws Exception {
         // Do not overwrite existing files
         if (this.projectRoot.getFileObject(targetPath) != null) {
             return;
         }
 
-        OutputStream out = FileUtil.createData(this.projectRoot, targetPath).getOutputStream();
-        InputStream source = Util.openResource(resourcePath);
+        final OutputStream out = FileUtil.createData(this.projectRoot, targetPath).getOutputStream();
+        final InputStream source = Util.openResource(resourcePath);
         filter.setProjectWrapper(this);
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             FileUtil.copy(source, baos);
             filter.execute(new ByteArrayInputStream(baos.toByteArray()), out);
         }
@@ -174,8 +218,8 @@ public class ProjectWrapper {
         return true;
     }
 
-    protected final void deleteFile(String name) throws IOException {
-        FileObject fo = this.projectRoot.getFileObject(name);
+    protected final void deleteFile(final String name) throws IOException {
+        final FileObject fo = this.projectRoot.getFileObject(name);
         if (fo != null) {
             fo.delete();
         }
@@ -191,37 +235,67 @@ public class ProjectWrapper {
         return this.projectRoot.getName();
     }
 
+    public final FileObject getLibs() {
+        final FileObject result = this.projectRoot.getFileObject(LIBS);
+        if (result == null) {
+            try {
+                return this.projectRoot.createFolder(LIBS);
+            }
+            catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+                this.showError("Error while creating library directory: " + ex.toString());
+                return null;
+            }
+        }
+        else {
+            return result;
+        }
+    }
+
     protected final String getRootDir() {
         return this.projectRoot.getPath();
     }
 
-    protected final void rename(String newProjectName) throws IOException {
+    protected final FileObject getSrc() {
+        return this.projectRoot.getFileObject("src");
+    }
+
+    protected final <T> T lookup(Class<T> cl) {
+        return this.project.getLookup().lookup(cl);
+    }
+
+    protected final void rename(final String newProjectName) throws IOException {
         this.projectRoot.rename(FileLock.NONE, newProjectName, "");
     }
 
-    protected final void renameFile(String name, String newName) throws IOException {
-        FileObject fo = this.projectRoot.getFileObject(name);
+    protected final void renameFile(final String name, final String newName)
+            throws IOException {
+        final FileObject fo = this.projectRoot.getFileObject(name);
         if (fo != null) {
             fo.rename(FileLock.NONE, newName, "");
         }
     }
 
-    protected final void replaceFile(String targetPath, String resourcePath) throws IOException {
+    protected final void replaceFile(final String targetPath,
+                                     final String resourcePath) throws IOException {
         this.deleteFile(targetPath);
         this.addFile(targetPath, resourcePath);
     }
 
-    protected final void showError(String message) {
-        NotifyDescriptor nd = new NotifyDescriptor.Message(message,
-                                                           NotifyDescriptor.ERROR_MESSAGE);
+    protected final void showError(final String message) {
+        final NotifyDescriptor nd =
+                new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE);
         DialogDisplayer.getDefault().notify(nd);
+    }
+
+    protected void librariesChanged() {
     }
 
     private void close() {
         OpenProjects.getDefault().close(new Project[]{this.project});
     }
 
-    private void convertTo(ProjectWrapper target) {
+    private void convertTo(final ProjectWrapper target) {
         if (!target.checkConvert()) {
             return;
         }
@@ -248,6 +322,8 @@ public class ProjectWrapper {
         catch (Exception ex) {
             Exceptions.printStackTrace(ex);
             this.showError("Could not open project '" + this.projectRoot.getName() + "'. Please open it manually.");
+
+
         }
     }
 
@@ -255,9 +331,10 @@ public class ProjectWrapper {
 
         private ProjectWrapper projectWrapper;
 
-        protected abstract void execute(InputStream in, OutputStream out) throws Exception;
+        protected abstract void execute(final InputStream in,
+                                        final OutputStream out) throws Exception;
 
-        void setProjectWrapper(ProjectWrapper value) {
+        void setProjectWrapper(final ProjectWrapper value) {
             this.projectWrapper = value;
         }
 
@@ -269,7 +346,8 @@ public class ProjectWrapper {
     public static abstract class TextFileFilter extends FileFilter {
 
         @Override
-        protected final void execute(InputStream is, OutputStream os) throws Exception {
+        protected final void execute(final InputStream is,
+                                     final OutputStream os) throws Exception {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             FileUtil.copy(is, baos);
             final BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(baos.toByteArray())));

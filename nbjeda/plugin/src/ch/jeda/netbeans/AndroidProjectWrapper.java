@@ -37,11 +37,11 @@ public class AndroidProjectWrapper extends ProjectWrapper {
     private static final String RES_PROJECT_PROPERTIES = "ch/jeda/netbeans/resources/android/project.properties";
     private static Image ICON;
 
-    public AndroidProjectWrapper(FileObject projectRoot) {
+    public AndroidProjectWrapper(final FileObject projectRoot) {
         super(projectRoot, null);
     }
 
-    public AndroidProjectWrapper(FileObject projectRoot, Project project) {
+    public AndroidProjectWrapper(final FileObject projectRoot, final Project project) {
         super(projectRoot, project);
     }
 
@@ -75,7 +75,7 @@ public class AndroidProjectWrapper extends ProjectWrapper {
 
     @Override
     protected boolean checkConvert() {
-        File targetDir = new File(new File(this.getRootDir()).getParentFile(), this.getName() + ANDROID_SUFFIX);
+        final File targetDir = new File(new File(this.getRootDir()).getParentFile(), this.getName() + ANDROID_SUFFIX);
         if (targetDir.exists()) {
             this.showError("Cannot convert project, directory '" + targetDir + "' already exists.");
             return false;
@@ -88,6 +88,7 @@ public class AndroidProjectWrapper extends ProjectWrapper {
     protected void doInit() throws Exception {
         this.replaceFile(ANDROID_MANIFEST_XML, RES_ANDROID_MANIFEST_XML);
         this.addFile(BUILD_XML, RES_BUILD_XML, new TextFileFilter() {
+
             @Override
             protected String filterLine(String line) {
                 return line.replace("${ProjectName}", this.getProjectWrapper().getName());
@@ -99,8 +100,8 @@ public class AndroidProjectWrapper extends ProjectWrapper {
 
         this.rename(this.getName() + ANDROID_SUFFIX);
 
-        ProcessBuilder pb = new ProcessBuilder("android", "update", "project", "-p", this.getRootDir());
-        Process p = pb.start();
+        final ProcessBuilder pb = new ProcessBuilder("android", "update", "project", "-p", this.getRootDir());
+        final Process p = pb.start();
         try {
             p.waitFor();
         }

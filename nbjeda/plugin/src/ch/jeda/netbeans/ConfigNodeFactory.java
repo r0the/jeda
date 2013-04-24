@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,12 +24,14 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.FilterNode;
 
-@NodeFactory.Registration(projectType = {"org-netbeans-modules-java-j2seproject",
-                                         "org-netbeans-modules-android-project"})
+@NodeFactory.Registration(projectType = {
+    "org-netbeans-modules-java-j2seproject",
+    "org-netbeans-modules-android-project"
+})
 public class ConfigNodeFactory implements NodeFactory {
 
     @Override
-    public NodeList createNodes(Project project) {
+    public NodeList createNodes(final Project project) {
         ProjectWrapper wrapper = ProjectWrapper.forProject(project);
         if (wrapper.isJedaProject()) {
             try {
@@ -45,8 +47,9 @@ public class ConfigNodeFactory implements NodeFactory {
 
     private static class ConfigNode extends FilterNode {
 
-        public ConfigNode(ProjectWrapper wrapper) throws DataObjectNotFoundException {
-            super(DataObject.find(wrapper.getJedaPropertiesFiele()).getNodeDelegate());
+        public ConfigNode(final ProjectWrapper wrapper)
+                throws DataObjectNotFoundException {
+            super(DataObject.find(wrapper.getJedaPropertiesFile()).getNodeDelegate());
         }
 
         @Override

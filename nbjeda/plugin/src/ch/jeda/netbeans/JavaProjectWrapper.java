@@ -17,10 +17,18 @@
 package ch.jeda.netbeans;
 
 import java.awt.Image;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.xml.XMLUtil;
 import org.w3c.dom.Document;
@@ -95,6 +103,31 @@ public class JavaProjectWrapper extends ProjectWrapper {
                 }
             }
         });
+    }
+
+    @Override
+    protected void librariesChanged() {
+        try {
+            final FileObject[] libs = this.getLibs().getChildren();
+            final List<URI> libUris = new ArrayList<URI>();
+            for (int i = 0; i < libs.length; ++i) {
+                try {
+                    libUris.add(libs[i].getURL().toURI());
+                }
+                catch (URISyntaxException ex) {
+                    // ignore
+                }
+            }
+
+            ProjectClassPathModifier.addRoots(libUris.toArray(new URI[libUris.size()]),
+                                              this.getSrc(), ClassPath.COMPILE);
+        }
+        catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        catch (UnsupportedOperationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
     protected static class ProjectXmlFilter extends FileFilter {
