@@ -39,12 +39,13 @@ public class TileSet {
         if (tileWidth < 1) {
             throw new IllegalArgumentException("tileWidth");
         }
+
         if (tileHeight < 1) {
             throw new IllegalArgumentException("tileHeight");
         }
 
-        this.height = image.getWidth() / tileWidth;
-        this.width = image.getHeight() / tileHeight;
+        this.width = image.getWidth() / tileWidth;
+        this.height = image.getHeight() / tileHeight;
         this.image = image;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
