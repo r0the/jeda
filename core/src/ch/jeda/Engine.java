@@ -57,19 +57,25 @@ public final class Engine {
 
     public static void pause() {
         synchronized (stateLock) {
-            currentState.onPause();
+            if (currentState != null) {
+                currentState.onPause();
+            }
         }
     }
 
     public static void resume() {
         synchronized (stateLock) {
-            currentState.onResume();
+            if (currentState != null) {
+                currentState.onResume();
+            }
         }
     }
 
     public static void stop() {
         synchronized (stateLock) {
-            currentState.onStop();
+            if (currentState != null) {
+                currentState.onStop();
+            }
         }
     }
 
