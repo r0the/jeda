@@ -16,8 +16,6 @@
  */
 package ch.jeda;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -32,7 +30,7 @@ public final class Properties {
         this.imp = new java.util.Properties();
     }
 
-    public Properties(String filePath) {
+    public Properties(final String filePath) {
         this();
         try {
             this.imp.load(Engine.getContext().openInputStream(filePath));
@@ -50,11 +48,7 @@ public final class Properties {
         this.imp.clear();
     }
 
-    public Direction getDirection(String key) {
-        return Direction.parse(this.getString(key));
-    }
-
-    public double getDouble(String key, double defaultValue) {
+    public double getDouble(final String key, final double defaultValue) {
         try {
             return Double.parseDouble(this.getString(key));
         }
@@ -63,7 +57,7 @@ public final class Properties {
         }
     }
 
-    public int getInt(String key, int defaultValue) {
+    public int getInt(final String key, final int defaultValue) {
 
         try {
             return Integer.parseInt(this.getString(key));
@@ -73,7 +67,7 @@ public final class Properties {
         }
     }
 
-    public String getString(String key) {
+    public String getString(final String key) {
         return this.imp.getProperty(key);
     }
 
@@ -98,7 +92,7 @@ public final class Properties {
         return result;
     }
 
-    public Properties section(String prefix) {
+    public Properties section(final String prefix) {
         final int len = prefix.length() + 1;
         final Properties result = new Properties();
         for (String key : this.keys()) {
@@ -108,10 +102,6 @@ public final class Properties {
         }
 
         return result;
-    }
-
-    public void setDirection(String key, Direction value) {
-        this.imp.setProperty(key, value.toString());
     }
 
     void loadFromSystem() {
