@@ -18,11 +18,11 @@ package ch.jeda;
 
 class CreateProgramState extends EngineState {
 
-    private final Class<Program> programClass;
+    private final ProgramWrapper programWrapper;
 
-    CreateProgramState(final Context context, final Class<Program> programClass) {
+    CreateProgramState(final Context context, final ProgramWrapper programWrapper) {
         super(context);
-        this.programClass = programClass;
+        this.programWrapper = programWrapper;
     }
 
     @Override
@@ -41,12 +41,11 @@ class CreateProgramState extends EngineState {
     @Override
     void run() {
         try {
-            Engine.enterExecuteProgramState(this.programClass.
-                    getDeclaredConstructor(new Class[0]).
-                    newInstance(new Object[0]));
+            this.programWrapper.createInstance();
+            Engine.enterExecuteProgramState();
         }
-        catch (final Exception ex) {
-            this.logError(ex, Message.PROGRAM_CREATE_ERROR, this.programClass);
+        catch (final Throwable ex) {
+            this.logError(ex, Message.PROGRAM_CREATE_ERROR, this.programWrapper);
             Engine.enterShutdownState();
         }
     }

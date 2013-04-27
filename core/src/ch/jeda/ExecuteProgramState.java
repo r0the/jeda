@@ -18,37 +18,37 @@ package ch.jeda;
 
 class ExecuteProgramState extends EngineState {
 
-    private final Program program;
+    private final ProgramWrapper programWrapper;
 
-    ExecuteProgramState(final Context context, final Program program) {
+    ExecuteProgramState(final Context context, final ProgramWrapper programWrapper) {
         super(context);
-        this.program = program;
+        this.programWrapper = programWrapper;
     }
 
     @Override
     void onPause() {
-        this.program.setState(ProgramState.Paused);
+        this.programWrapper.setState(ProgramState.Paused);
     }
 
     @Override
     void onResume() {
-        this.program.setState(ProgramState.Running);
+        this.programWrapper.setState(ProgramState.Running);
     }
 
     @Override
     void onStop() {
-        this.program.setState(ProgramState.Stopped);
+        this.programWrapper.setState(ProgramState.Stopped);
     }
 
     @Override
     void run() {
         try {
-            this.program.setState(ProgramState.Running);
-            this.program.run();
-            this.program.setState(ProgramState.Stopped);
+            this.programWrapper.setState(ProgramState.Running);
+            this.programWrapper.run();
+            this.programWrapper.setState(ProgramState.Stopped);
         }
-        catch (Exception ex) {
-            this.logError(ex, Message.PROGRAM_RUN_ERROR, this.program.getClass());
+        catch (Throwable ex) {
+            this.logError(ex, Message.PROGRAM_RUN_ERROR, this.programWrapper.getClass());
         }
         finally {
             Engine.enterShutdownState();

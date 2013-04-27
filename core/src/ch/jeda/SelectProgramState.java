@@ -17,14 +17,12 @@
 package ch.jeda;
 
 import ch.jeda.platform.SelectionRequest;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
 class SelectProgramState extends EngineState {
 
     private static final String DEFAULT_PROGRAM_PROPERTY = "jeda.default.program";
-    private static final Class<?>[] NO_PARAMS = new Class<?>[0];
 
     SelectProgramState(final Context context) {
         super(context);
@@ -47,16 +45,15 @@ class SelectProgramState extends EngineState {
     void run() {
         try {
             // Load all program classes
-            final List<ProgramInfo> programInfos = new ArrayList<ProgramInfo>();
-            ProgramInfo defaultProgram = null;
+            final List<ProgramWrapper> programWrappers = new ArrayList<ProgramWrapper>();
+            ProgramWrapper defaultProgram = null;
             final String defaultProgramName = this.context.getProperties().
                     getString(DEFAULT_PROGRAM_PROPERTY);
             for (String className : this.context.listClassNames()) {
-                Class cls = loadClass(className);
-                if (isProgramClass(cls)) {
-                    ProgramInfo pi = this.createProgramInfo(cls);
-                    programInfos.add(pi);
-                    if (cls.getName().equals(defaultProgramName)) {
+                final ProgramWrapper pi = ProgramWrapper.tryCreate(loadClass(className), this.context);
+                if (pi != null) {
+                    programWrappers.add(pi);
+                    if (pi.getName().equals(defaultProgramName)) {
                         defaultProgram = pi;
                     }
                 }
@@ -65,16 +62,16 @@ class SelectProgramState extends EngineState {
             if (defaultProgram != null) {
                 Engine.enterCreateProgramState(defaultProgram);
             }
-            else if (programInfos.size() == 1) {
-                Engine.enterCreateProgramState(programInfos.get(0));
+            else if (programWrappers.size() == 1) {
+                Engine.enterCreateProgramState(programWrappers.get(0));
             }
-            else if (programInfos.isEmpty()) {
+            else if (programWrappers.isEmpty()) {
                 this.logError(Message.NO_PROGRAM_ERROR);
                 Engine.enterShutdownState();
             }
             else {
-                final SelectionRequest<ProgramInfo> request = new SelectionRequest<ProgramInfo>();
-                for (ProgramInfo programInfo : programInfos) {
+                final SelectionRequest<ProgramWrapper> request = new SelectionRequest<ProgramWrapper>();
+                for (ProgramWrapper programInfo : programWrappers) {
                     request.addItem(programInfo.getName(), programInfo);
                 }
 
@@ -93,33 +90,6 @@ class SelectProgramState extends EngineState {
         catch (final Exception ex) {
             this.logError(ex, Message.CHOOSE_PROGRAM_ERROR);
             Engine.enterShutdownState();
-        }
-    }
-
-    private ProgramInfo createProgramInfo(final Class<Program> programClass) {
-        String title = this.context.getProperties().getString(programClass.getName());
-        if (title == null) {
-            title = programClass.getSimpleName();
-        }
-
-        return new ProgramInfo(programClass, title);
-    }
-
-    private static boolean isProgramClass(final Class<?> cls) {
-        if (!Program.class.isAssignableFrom(cls)) {
-            return false;
-        }
-
-        if (Modifier.isAbstract(cls.getModifiers())) {
-            return false;
-        }
-
-        try {
-            int ctorModifiers = cls.getConstructor(NO_PARAMS).getModifiers();
-            return Modifier.isPublic(ctorModifiers);
-        }
-        catch (final NoSuchMethodException ex) {
-            return false;
         }
     }
 

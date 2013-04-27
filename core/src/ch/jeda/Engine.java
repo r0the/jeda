@@ -28,7 +28,7 @@ public final class Engine {
 
     private static final Object stateLock = new Object();
     private static Thread engineThread;
-    private static ProgramInfo programInfo;
+    private static ProgramWrapper programWrapper;
     private static Context context;
     private static EngineState currentState;
     private static EngineState nextState;
@@ -38,11 +38,11 @@ public final class Engine {
     }
 
     public static String getProgramName() {
-        if (programInfo == null) {
+        if (programWrapper == null) {
             return null;
         }
         else {
-            return programInfo.getName();
+            return programWrapper.getName();
         }
     }
 
@@ -79,13 +79,13 @@ public final class Engine {
         }
     }
 
-    static void enterCreateProgramState(final ProgramInfo programInfo) {
-        Engine.programInfo = programInfo;
-        nextState = new CreateProgramState(context, programInfo.getProgramClass());
+    static void enterCreateProgramState(final ProgramWrapper programWrapper) {
+        Engine.programWrapper = programWrapper;
+        nextState = new CreateProgramState(context, programWrapper);
     }
 
-    static void enterExecuteProgramState(final Program program) {
-        nextState = new ExecuteProgramState(context, program);
+    static void enterExecuteProgramState() {
+        nextState = new ExecuteProgramState(context, programWrapper);
     }
 
     static void enterShutdownState() {

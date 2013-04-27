@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,28 +16,12 @@
  */
 package ch.jeda;
 
-class ProgramInfo {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    private final Class<Program> programClass;
-    private final String name;
-
-    ProgramInfo(final Class<Program> programClass, final String name) {
-        assert programClass != null;
-
-        this.programClass = programClass;
-        this.name = name;
-    }
-
-    String getName() {
-        return this.name;
-    }
-
-    Class<Program> getProgramClass() {
-        return this.programClass;
-    }
-
-    @Override
-    public String toString() {
-        return this.programClass.getName();
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface NoMain {
 }
