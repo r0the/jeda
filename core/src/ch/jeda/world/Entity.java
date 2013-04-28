@@ -17,6 +17,7 @@
 package ch.jeda.world;
 
 import ch.jeda.Transformation;
+import ch.jeda.geometry.Collision;
 import ch.jeda.geometry.ProxyShape;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
@@ -154,6 +155,10 @@ public abstract class Entity extends ProxyShape {
         return 0;
     }
 
+    boolean canMove() {
+        return this.canMove;
+    }
+
     void drawCollisionShape(Canvas canvas) {
         if (this.getCollisionShape() != null) {
             final Transformation oldTransformation = canvas.getTransformation();
@@ -189,6 +194,174 @@ public abstract class Entity extends ProxyShape {
             }
 
             this.translate(this.vx * dt, this.vy * dt);
+        }
+    }
+
+    static class Contact {
+
+        private final Entity entity1;
+        private final Entity entity2;
+        // x component of the contact normal
+        private final float nx;
+        // y component of the contact normal
+        private final float ny;
+        // restitution factor
+        private final float restitution;
+        // length of the contact normal
+        private float penetration;
+        // x component of the shift to be applied to entity1
+        private float s1x;
+        // y component of the shift to be applied to entity1
+        private float s1y;
+        // x component of the shift to be applied to entity2
+        private float s2x;
+        // y component of the shift to be applied to entity2
+        private float s2y;
+
+        Contact(final Entity entity1, final Entity entity2,
+                final Collision collision, final float restitution) {
+            this.entity1 = entity1;
+            this.entity2 = entity2;
+            this.restitution = restitution;
+            final float dx = collision.get2X() - collision.get1X();
+            final float dy = collision.get2Y() - collision.get1Y();
+            this.penetration = (float) Math.sqrt(dx * dx + dy * dy);
+            if (Math.abs(this.penetration) < 5f * Float.MIN_VALUE) {
+                this.nx = 0f;
+                this.ny = 0f;
+            }
+            else {
+                this.nx = dx / this.penetration;
+                this.ny = dy / this.penetration;
+            }
+        }
+
+        /**
+         * Calculates and returns the relative separating speed.
+         *
+         * @return relative separating speed
+         */
+        float separatingSpeed() {
+            final float dvx = this.entity1.vx - this.entity2.vx;
+            final float dvy = this.entity1.vy - this.entity2.vy;
+            return (float) (dvx * this.nx + dvy * this.ny);
+        }
+
+        double getPenetration() {
+            return this.penetration;
+        }
+
+        void resolve(float dt) {
+            this.resolveVelocity(dt);
+            this.resolveInterpenetration();
+        }
+
+        void updatePenetration(final Entity.Contact contact) {
+            if (this.entity1 == contact.entity1) {
+                this.penetration -= contact.s1x * this.nx + contact.s1y * this.ny;
+            }
+            if (this.entity1 == contact.entity2) {
+                this.penetration -= contact.s2x * this.nx + contact.s2y * this.ny;;
+            }
+            if (this.entity2 == contact.entity1) {
+                this.penetration += contact.s1x * this.nx + contact.s1y * this.ny;
+            }
+            if (this.entity2 == contact.entity2) {
+                this.penetration += contact.s2x * this.nx + contact.s2y * this.ny;;
+            }
+        }
+
+        private void resolveVelocity(final float dt) {
+            final float vs = this.separatingSpeed();
+            if (vs > 0) {
+                return;
+            }
+
+            float nvs = -vs * this.restitution;
+            // Calculate the velocity build-up due to acceleration.
+            float ax = 0f;
+            float ay = 0f;
+            if (this.entity1.hasMass && this.entity1.canMove) {
+                ax += this.entity1.fx * this.entity1.inverseMass;
+                ay += this.entity1.fy * this.entity1.inverseMass;
+            }
+
+            if (this.entity2.hasMass && this.entity2.canMove) {
+                ax += this.entity2.fx * this.entity2.inverseMass;
+                ay += this.entity2.fy * this.entity2.inverseMass;
+            }
+
+            final float acv = (ax * this.nx + ay * this.ny) * dt;
+            // There is a closing velocity due to acceleration build-up.
+            // Remove it from the separating velocity.
+            if (acv < 0f) {
+                nvs += acv * this.restitution;
+                if (nvs < 0f) {
+                    nvs = 0f;
+                }
+            }
+
+            // Calculate delta velocity
+            final float dv = nvs - vs;
+            if (!this.entity1.canMove) {
+                // entity1 is immobile
+                this.entity2.vx -= this.nx * dv;
+                this.entity2.vy -= this.ny * dv;
+            }
+            else if (!this.entity2.canMove) {
+                // entity2 is immobile
+                this.entity1.vx += this.nx * dv;
+                this.entity1.vy += this.ny * dv;
+            }
+            else {
+                // calculate total impulse
+                final float inverseMass = this.entity1.inverseMass + this.entity2.inverseMass;
+                final float ix = this.nx * dv / inverseMass;
+                final float iy = this.ny * dv / inverseMass;
+                this.entity1.vx += ix * this.entity1.inverseMass;
+                this.entity1.vy += iy * this.entity1.inverseMass;
+                this.entity2.vx -= ix * this.entity2.inverseMass;
+                this.entity2.vy -= iy * this.entity2.inverseMass;
+            }
+        }
+
+        private void resolveInterpenetration() {
+            if (this.penetration < 0) {
+                return;
+            }
+
+            if (!this.entity1.canMove) {
+                this.s1x = 0f;
+                this.s1y = 0f;
+                this.s2x = -this.nx * this.penetration;
+                this.s2y = -this.ny * this.penetration;
+            }
+            else if (!this.entity2.canMove) {
+                this.s1x = this.nx * this.penetration;
+                this.s1y = this.ny * this.penetration;
+                this.s2x = 0f;
+                this.s2y = 0f;
+            }
+            else {
+                // calculate total shift
+                final float inverseMass = this.entity1.inverseMass + this.entity2.inverseMass;
+                final float sx = this.nx * this.penetration / inverseMass;
+                final float sy = this.ny * this.penetration / inverseMass;
+                this.s1x = sx * this.entity1.inverseMass;
+                this.s1y = sy * this.entity1.inverseMass;
+                this.s2x = -sx * this.entity2.inverseMass;
+                this.s2y = -sy * this.entity2.inverseMass;
+            }
+
+            this.entity1.translate(this.s1x, this.s1y);
+            this.entity2.translate(this.s2x, this.s2y);
+        }
+
+        void check() {
+            Collision c = this.entity1.getCollisionShape().collideWith(this.entity2.getCollisionShape());
+            if (c != null) {
+                System.out.println("Collision not resolved: " + c.penetrationDepth());
+            }
         }
     }
 }

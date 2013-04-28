@@ -101,7 +101,7 @@ public class Circle extends Shape {
             // of 'delta' from the first circle's center.
             delta.setLength(-this.radius);
             this.localToWorld(delta);
-            return new Collision(delta, p);
+            return new Collision(delta.x, delta.y, p.x, p.y);
         }
         else {
             return null;
@@ -126,7 +126,7 @@ public class Circle extends Shape {
             delta.setLength(this.radius);
             this.localToWorld(delta);
             // The second penetration point is the point itself.
-            return new Collision(delta, p);
+            return new Collision(delta.x, delta.y, p.x, p.y);
         }
         else {
             return null;

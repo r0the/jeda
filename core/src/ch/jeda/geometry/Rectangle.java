@@ -105,31 +105,32 @@ public class Rectangle extends AbstractPolygon {
             if (Math.abs(dx) < Math.abs(dy)) {
                 final double sig = Math.signum(delta.x);
                 return this.createCollision(new Vector(this.halfWidth * sig, delta.y),
-                                            new Vector(-sig * (radius - dx), 0));
+                                            new Vector(sig * (radius - dx), 0));
             }
             else {
                 final double sig = Math.signum(delta.y);
                 return this.createCollision(new Vector(delta.x, this.halfHeight * sig),
-                                            new Vector(0, -sig * (radius - dy)));
+                                            new Vector(0, sig * (radius - dy)));
             }
         }
         else if (dx <= 0) {
             final double sig = Math.signum(delta.y);
             return this.createCollision(new Vector(delta.x, this.halfHeight * sig),
-                                        new Vector(0, -sig * (radius - dy)));
+                                        new Vector(0, sig * (radius - dy)));
         }
         else if (dy <= 0) {
             final double sig = Math.signum(delta.x);
             return this.createCollision(new Vector(this.halfWidth * sig, delta.y),
-                                        new Vector(-sig * (radius - dx), 0));
+                                        new Vector(sig * (radius - dx), 0));
         }
 
         if (dx * dx + dy * dy <= radius * radius) {
-            final Vector p = new Vector(this.halfWidth * Math.signum(center.x),
-                                        this.halfHeight * Math.signum(center.y));
-            final Vector n = new Vector(center);
+            final Vector p = new Vector(this.halfWidth * Math.signum(delta.x),
+                                        this.halfHeight * Math.signum(delta.y));
+            final Vector n = new Vector(delta);
             n.subtract(p);
             n.setLength(Math.sqrt(dx * dx + dy * dy) - radius);
+            n.invert();
             return this.createCollision(p, n);
         }
         else {
@@ -162,7 +163,7 @@ public class Rectangle extends AbstractPolygon {
         }
 
         this.localToWorld(pp);
-        return new Collision(p, pp);
+        return new Collision(p.x, p.y, pp.x, pp.y);
     }
 
     @Override

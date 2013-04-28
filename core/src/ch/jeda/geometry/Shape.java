@@ -68,6 +68,6 @@ public abstract class Shape extends Figure {
         p2.subtract(normal);
         this.localToWorld(point);
         this.localToWorld(p2);
-        return new Collision(point, p2);
+        return new Collision(point.x, point.y, p2.x, p2.y);
     }
 }

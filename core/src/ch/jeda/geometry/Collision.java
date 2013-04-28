@@ -16,51 +16,78 @@
  */
 package ch.jeda.geometry;
 
-import ch.jeda.Vector;
 import java.io.Serializable;
 
 /**
- * This class represents a collision between two shapes. It provides the
- * following information about the collision:
- * <ul>
- * <li> The <b>collision point</b> is the point on the border of the second
- * tested shape that realises the deepest penetratation of the first shape.</li>
- * <li> The <b>collision normal</b> is the shortest path from the collision
- * point to the border of the first shape. This means that the collision can be
- * resolved by moving the second shape by the collision normal. The length of
- * the collision normal is the <b>penetration depth</b>.</li>
- * </ul>
+ * This class represents a collision between two shapes.
  */
 public final class Collision implements Serializable {
 
-    private Vector point1;
-    private Vector point2;
+    private float p1x;
+    private float p1y;
+    private float p2x;
+    private float p2y;
 
-    public Vector getPoint1() {
-        return this.point1;
+    /**
+     * The x coordinate of the collision point belonging to the first shape.
+     *
+     * @return x coordinate of the collision point belonging to the first shape
+     */
+    public float get1X() {
+        return this.p1x;
     }
 
-    public Vector getPoint2() {
-        return this.point2;
+    /**
+     * The y coordinate of the collision point belonging to the first shape.
+     *
+     * @return y coordinate of the collision point belonging to the first shape
+     */
+    public float get1Y() {
+        return this.p1y;
     }
 
-    public Vector normal() {
-        return new Vector(this.point2.x - this.point1.x,
-                          this.point2.y - this.point1.y);
+    /**
+     * The x coordinate of the collision point belonging to the second shape.
+     *
+     * @return x coordinate of the collision point belonging to the second shape
+     */
+    public float get2X() {
+        return this.p2x;
+    }
+
+    /**
+     * The y coordinate of the collision point belonging to the second shape.
+     *
+     * @return y coordinate of the collision point belonging to the second shape
+     */
+    public float get2Y() {
+        return this.p2y;
+    }
+
+    public float penetrationDepth() {
+        final float dx = this.p2x - this.p1x;
+        final float dy = this.p2y - this.p1y;
+        return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
     static Collision invert(final Collision collision) {
         if (collision != null) {
-            final Vector temp = collision.point1;
-            collision.point1 = collision.point2;
-            collision.point2 = temp;
+            final float tx = collision.p1x;
+            collision.p1x = collision.p2x;
+            collision.p2x = tx;
+            final float ty = collision.p1y;
+            collision.p1y = collision.p2y;
+            collision.p2y = ty;
         }
 
         return collision;
     }
 
-    Collision(final Vector point1, final Vector point2) {
-        this.point1 = point1;
-        this.point2 = point2;
+    Collision(final float p1x, final float p1y,
+              final float p2x, final float p2y) {
+        this.p1x = p1x;
+        this.p1y = p1y;
+        this.p2x = p2x;
+        this.p2y = p2y;
     }
 }

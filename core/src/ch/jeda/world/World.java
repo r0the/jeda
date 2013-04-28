@@ -40,9 +40,11 @@ public class World extends Simulation {
 
     protected static final Color DEBUG_FILL_COLOR = new Color(255, 0, 0, 70);
     protected static final Color DEBUG_OUTLINE_COLOR = Color.RED;
+    protected static final Color DEBUG_OVERLAY_BG_COLOR = new Color(255, 200, 200);
     protected static final Color DEBUG_TEXT_COLOR = Color.BLACK;
     private static final Transformation IDENTITY = new Transformation();
     private static final EnumSet<Window.Feature> NO_FEATURES = EnumSet.noneOf(Window.Feature.class);
+    private final Contacts contacts;
     private final Set<WorldFeature> features;
     private final WorldState defaultState;
     private final Entities entities;
@@ -51,6 +53,17 @@ public class World extends Simulation {
     private final Window window;
     private boolean paused;
     private WorldState state;
+
+    public final void addAutoCollision(final Class<? extends Entity> type,
+                                       final float restitution) {
+        this.contacts.addDetection(type, restitution);
+    }
+
+    public final void addAutoCollision(final Class<? extends Entity> type1,
+                                       final Class<? extends Entity> type2,
+                                       final float restitution) {
+        this.contacts.addDetection(type1, type2, restitution);
+    }
 
     public final void addEntity(final Entity entity) {
         if (entity == null) {
@@ -255,18 +268,20 @@ public class World extends Simulation {
      */
     @Override
     protected final void step() {
-        // 1. Check if we need to change the state.
+        // --------------------------------------------------------------------
+        // 1. Initialization phase
+        // 1.1 Check if we need to change the state.
         this.checkState();
-        // 2. Update entities (inserts, deletions)
+        // 1.2 Update entities (inserts, deletions)
         this.entities.executePendingOperations();
         // --------------------------------------------------------------------
         // 3. Update phase
+        final float dt = (float) this.getLastStepDuration();
         // 3.1 Update state
         this.state.update(this.window.getEvents());
         // 3.2 Update entities
         if (!this.paused) {
             final Entity[] updateOrder = this.entities.updateOrder();
-            final float dt = (float) this.getLastStepDuration();
             for (int i = 0; i < updateOrder.length; ++i) {
                 updateOrder[i].move(dt);
             }
@@ -275,6 +290,10 @@ public class World extends Simulation {
                 updateOrder[i].update(this);
             }
         }
+
+        this.contacts.detect(this);
+        this.contacts.resolve(dt);
+
         // --------------------------------------------------------------------
         // 4. Draw phase
         // 4.1 Draw state background
@@ -314,6 +333,7 @@ public class World extends Simulation {
     private World(final int width, final int height,
                   final EnumSet<Window.Feature> features) {
         features.add(Window.Feature.DoubleBuffered);
+        this.contacts = new Contacts();
         this.features = EnumSet.noneOf(WorldFeature.class);
         this.defaultState = new WorldState();
         this.entities = new Entities();
@@ -326,7 +346,7 @@ public class World extends Simulation {
 
     private void drawDebugOverlay() {
         if (this.hasFeature(WorldFeature.DebugWorldInfo)) {
-            this.window.setColor(new Color(255, 200, 200));
+            this.window.setColor(DEBUG_OVERLAY_BG_COLOR);
             this.window.fillRectangle(5, 5, this.window.getWidth() - 10, 25);
             this.window.setColor(DEBUG_TEXT_COLOR);
             this.window.drawText(10, 10, "FPS: " + this.getCurrentFrequency() +
