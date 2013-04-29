@@ -949,36 +949,21 @@ public class Canvas {
             throw new NullPointerException("color");
         }
 
-        if (this.getSize().contains(x, y)) {
+        if (this.contains(x, y)) {
             this.imp.setPixelAt(x, y, color);
         }
     }
 
     /**
-     * Sets the color of a pixel. Sets the color of the pixel at the specified
-     * location. Has no effect if the coordinates do not reference a pixel
-     * inside the canvas.
-     *
-     * @param location the location of the pixel
-     * @param color the new color of the pixel
-     * @throws NullPointerException if <tt>location</tt> is <tt>null</tt>
-     * @throws NullPointerException if <tt>color</tt> is <tt>null</tt>
-     *
-     * @see #getPixelAt(ch.jeda.Location)
-     * @since 1
+     * @deprecated Use {@link #setPixelAt(int, int, ch.jeda.ui.Color)} instead.
      */
+    @Deprecated
     public void setPixelAt(Location location, Color color) {
         if (location == null) {
             throw new NullPointerException("location");
         }
 
-        if (color == null) {
-            throw new NullPointerException("color");
-        }
-
-        if (this.getSize().contains(location)) {
-            this.imp.setPixelAt(location.x, location.y, color);
-        }
+        this.setPixelAt(location.x, location.y, color);
     }
 
     /**
