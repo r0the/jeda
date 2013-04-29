@@ -61,13 +61,6 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void clear() {
-        this.graphics.setBackground(CLEAR_COLOR);
-        this.graphics.clearRect(0, 0, this.width, this.height);
-        this.modified();
-    }
-
-    @Override
     public void copyFrom(int x, int y, CanvasImp source) {
         assert source != null;
         assert source instanceof JavaCanvasImp;
@@ -206,7 +199,6 @@ class JavaCanvasImp implements CanvasImp {
     public void setColor(Color color) {
         assert color != null;
 
-        this.graphics.setBackground(new java.awt.Color(color.value, true));
         this.graphics.setColor(new java.awt.Color(color.value, true));
     }
 

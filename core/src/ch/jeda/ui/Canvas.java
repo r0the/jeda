@@ -103,11 +103,11 @@ public class Canvas {
     }
 
     /**
-     * @deprecated
+     * @deprecated Use {@link #fill()} instead.
      */
     @Deprecated
     public void clear() {
-        this.imp.clear();
+        this.fill();
     }
 
     /**

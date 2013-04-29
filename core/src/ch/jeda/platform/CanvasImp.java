@@ -21,8 +21,6 @@ import ch.jeda.ui.Color;
 
 public interface CanvasImp {
 
-    void clear();
-
     void copyFrom(int x, int y, CanvasImp source);
 
     void drawCircle(int x, int y, int radius);

@@ -40,11 +40,6 @@ class AndroidCanvasImp implements CanvasImp {
     private Canvas canvas;
 
     @Override
-    public void clear() {
-        this.canvas.drawColor(0);
-    }
-
-    @Override
     public void copyFrom(final int x, final int y, final CanvasImp source) {
         assert source != null;
         assert source instanceof AndroidCanvasImp;
