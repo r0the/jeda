@@ -44,6 +44,7 @@ import java.util.List;
 public final class Context {
 
     private static final String DEFAULT_IMAGE_PATH = ":ch/jeda/resources/logo-64x64.png";
+    private static final String DEFAULT_PROGRAM_PROPERTY = "jeda.default.program";
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = ":jeda.properties";
     private static final String JEDA_PLATFORM_PROPERTIES_FILE = ":ch/jeda/platform/jeda.properties";
     private static final String JEDA_SYSTEM_PROPERTIES_FILE = ":ch/jeda/jeda.properties";
@@ -107,6 +108,15 @@ public final class Context {
     Context(final ContextImp imp) {
         this.imp = imp;
         this.properties = new Properties();
+    }
+
+    String defaultProgramName() {
+        String result = this.imp.defaultProgramName();
+        if (result == null || result.isEmpty()) {
+            result = this.properties.getString(DEFAULT_PROGRAM_PROPERTY);
+        }
+
+        return result;
     }
 
     void init() {

@@ -22,8 +22,6 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.UIManager;
@@ -31,12 +29,18 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 class JavaContextImp implements ContextImp {
 
+    private final String defaultProgramName;
     private final ResourceFinder resourceFinder;
     private final WindowManager windowManager;
 
     @Override
     public CanvasImp createCanvasImp(int width, int height) {
         return new JavaCanvasImp(width, height);
+    }
+
+    @Override
+    public String defaultProgramName() {
+        return this.defaultProgramName;
     }
 
     @Override
@@ -82,6 +86,13 @@ class JavaContextImp implements ContextImp {
 
     JavaContextImp(String[] args) {
         setLookAndFeel();
+        if (args.length > 0) {
+            this.defaultProgramName = args[0];
+        }
+        else {
+            this.defaultProgramName = null;
+        }
+
         this.resourceFinder = new ResourceFinder();
         this.windowManager = new WindowManager();
     }

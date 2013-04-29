@@ -44,6 +44,11 @@ class AndroidContextImp implements ContextImp {
         return result;
     }
 
+    @Override
+    public String defaultProgramName() {
+        return null;
+    }
+
     /**
      * Iterates through the entries of the application's DEX file to find all
      * classes.

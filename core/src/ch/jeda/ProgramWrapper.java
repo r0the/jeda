@@ -130,7 +130,7 @@ abstract class ProgramWrapper {
 
         @Override
         String getProgramClassName() {
-            return null;
+            return this.constructor.getDeclaringClass().getName();
         }
 
         @Override

@@ -22,8 +22,6 @@ import java.util.List;
 
 class SelectProgramState extends EngineState {
 
-    private static final String DEFAULT_PROGRAM_PROPERTY = "jeda.default.program";
-
     SelectProgramState(final Context context) {
         super(context);
     }
@@ -47,15 +45,14 @@ class SelectProgramState extends EngineState {
             // Load all program classes
             final List<ProgramWrapper> programWrappers = new ArrayList<ProgramWrapper>();
             ProgramWrapper defaultProgram = null;
-            final String defaultProgramName = this.context.getProperties().
-                    getString(DEFAULT_PROGRAM_PROPERTY);
+            final String defaultProgramName = this.context.defaultProgramName();
             final String[] classNames = this.context.listClassNames();
             for (int i = 0; i < classNames.length; ++i) {
                 final ProgramWrapper pi = ProgramWrapper.tryCreate(
                         loadClass(classNames[i]), this.context);
                 if (pi != null) {
                     programWrappers.add(pi);
-                    if (pi.getName().equals(defaultProgramName)) {
+                    if (pi.getProgramClassName().equals(defaultProgramName)) {
                         defaultProgram = pi;
                     }
                 }

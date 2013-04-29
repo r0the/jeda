@@ -22,6 +22,8 @@ public interface ContextImp {
 
     CanvasImp createCanvasImp(int width, int height);
 
+    String defaultProgramName();
+
     String[] listClassNames() throws Exception;
 
     ImageImp loadImageImp(InputStream in) throws Exception;
