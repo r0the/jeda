@@ -40,7 +40,7 @@ class JavaContextImp implements ContextImp {
     }
 
     @Override
-    public Iterable<String> listClassNames() throws Exception {
+    public String[] listClassNames() throws Exception {
         return this.resourceFinder.findClassNames();
     }
 

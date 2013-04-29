@@ -49,7 +49,7 @@ class AndroidContextImp implements ContextImp {
      * classes.
      */
     @Override
-    public Iterable<String> listClassNames() throws Exception {
+    public String[] listClassNames() throws Exception {
         final List<String> result = new ArrayList();
         final Application app = this.activity.getApplication();
         final String apkName = app.getPackageManager().getApplicationInfo(
@@ -63,7 +63,7 @@ class AndroidContextImp implements ContextImp {
             }
         }
 
-        return result;
+        return result.toArray(new String[result.size()]);
     }
 
     @Override

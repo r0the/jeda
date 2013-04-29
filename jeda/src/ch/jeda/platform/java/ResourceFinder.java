@@ -34,9 +34,9 @@ class ResourceFinder {
         this.done = false;
     }
 
-    List<String> findClassNames() throws Exception {
+    String[] findClassNames() throws Exception {
         this.ensureResources();
-        return this.classNames;
+        return this.classNames.toArray(new String[this.classNames.size()]);
     }
 
     private void checkDirectory(File directory, String directoryName) {

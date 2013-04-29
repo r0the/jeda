@@ -22,7 +22,7 @@ public interface ContextImp {
 
     CanvasImp createCanvasImp(int width, int height);
 
-    Iterable<String> listClassNames() throws Exception;
+    String[] listClassNames() throws Exception;
 
     ImageImp loadImageImp(InputStream in) throws Exception;
 

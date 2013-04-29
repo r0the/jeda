@@ -123,7 +123,7 @@ public final class Context {
         this.properties.loadFromSystem();
     }
 
-    Iterable<String> listClassNames() throws Exception {
+    String[] listClassNames() throws Exception {
         return this.imp.listClassNames();
     }
 

@@ -49,8 +49,10 @@ class SelectProgramState extends EngineState {
             ProgramWrapper defaultProgram = null;
             final String defaultProgramName = this.context.getProperties().
                     getString(DEFAULT_PROGRAM_PROPERTY);
-            for (String className : this.context.listClassNames()) {
-                final ProgramWrapper pi = ProgramWrapper.tryCreate(loadClass(className), this.context);
+            final String[] classNames = this.context.listClassNames();
+            for (int i = 0; i < classNames.length; ++i) {
+                final ProgramWrapper pi = ProgramWrapper.tryCreate(
+                        loadClass(classNames[i]), this.context);
                 if (pi != null) {
                     programWrappers.add(pi);
                     if (pi.getName().equals(defaultProgramName)) {
