@@ -38,9 +38,11 @@ import java.util.Map;
 class JavaCanvasImp implements CanvasImp {
 
     private static final java.awt.Color CLEAR_COLOR = new java.awt.Color(0, 0, 0, 0);
-    private final Map<FontRenderContext, Map<java.awt.Font, Map<String, TextLayout>>> textLayoutCache;
+    private static final AffineTransform IDENTITY = new AffineTransform();
     private final AffineTransform affineTransform;
     private final float[] matrix;
+    private final Map<FontRenderContext, Map<java.awt.Font, Map<String, TextLayout>>> textLayoutCache;
+    private int alpha;
     private BufferedImage buffer;
     private Graphics2D graphics;
     private int height;
@@ -50,6 +52,7 @@ class JavaCanvasImp implements CanvasImp {
         this.affineTransform = new AffineTransform();
         this.matrix = new float[6];
         this.textLayoutCache = new HashMap();
+        this.alpha = 255;
     }
 
     JavaCanvasImp(int width, int height) {
@@ -123,7 +126,18 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void fill() {
-        this.graphics.clearRect(0, 0, this.width, this.height);
+        this.graphics.setPaintMode();
+        if (this.graphics.getTransform().isIdentity()) {
+            this.graphics.fillRect(0, 0, this.width, this.height);
+        }
+        else {
+            final AffineTransform oldTransform = this.graphics.getTransform();
+            this.graphics.setTransform(IDENTITY);
+            this.graphics.fillRect(0, 0, this.width, this.height);
+            this.graphics.setTransform(oldTransform);
+        }
+
+        this.setAlpha(this.alpha);
         this.modified();
     }
 
@@ -176,6 +190,7 @@ class JavaCanvasImp implements CanvasImp {
     public void setAlpha(int alpha) {
         assert 0 <= alpha && alpha <= 255;
 
+        this.alpha = alpha;
         if (alpha == 255) {
             this.graphics.setPaintMode();
         }
