@@ -14,22 +14,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.platform;
+package ch.jeda.ui;
 
-import ch.jeda.ui.Axis;
-import ch.jeda.ui.Button;
+/**
+ * The listener interface for receiving key up events. To have an object receive
+ * events of type {@link EventType#KEY_UP}, have the class of the object
+ * implement the interface and register the object with
+ * {@link Window#addEventListener(java.lang.Object)}.
+ *
+ * @since 1
+ */
+public interface KeyUpListener {
 
-public interface InputDeviceImp {
-
-    Iterable<Axis> getAxes();
-
-    double getAxisValue(Axis axis);
-
-    Iterable<Button> getButtons();
-
-    String getName();
-
-    boolean isButtonPressed(Button button);
-
-    void poll();
+    /**
+     * Invoked when a key has been released.
+     *
+     * @param event the event
+     * @since 1
+     */
+    void onKeyUp(KeyEvent event);
 }

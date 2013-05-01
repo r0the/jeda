@@ -16,10 +16,6 @@
  */
 package ch.jeda.ui;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Represents a key that can be typed by the user. Key values are used by the
  * {@link Events} class to represent which keys have been pressed or typed. The
@@ -28,19 +24,16 @@ import java.util.Map;
  *
  * @see Events
  */
-public final class Key implements Serializable {
+public enum Key {
 
-    private static final Map<Integer, String> ID_NAME_MAP = new HashMap<Integer, String>();
-    private static final Map<String, Integer> NAME_ID_MAP = new HashMap<String, Integer>();
-    private static int NEXT_ID = 0;
     /**
      * The "A" key.
      */
-    public static final Key A = register("A");
+    A,
     /**
      * The alt graph key. The text representation of this key is "AltGr".
      */
-    public static final Key ALT_GRAPH = register("AltGr");
+    ALT_GRAPH,
     /**
      * The left alt key. The text representation of this key is "AltLeft".
      * <p>
@@ -49,31 +42,31 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key ALT_LEFT = register("AltLeft");
+    ALT_LEFT,
     /**
      * The left alt key. The text representation of this key is "AltLeft".
      */
-    public static final Key ALT_RIGHT = register("AltRight");
+    ALT_RIGHT,
     /**
      * The apostrophe key. The text representation of this key is "Apostrophe".
      */
-    public static final Key APOSTROPHE = register("Apostrophe");
+    APOSTROPHE,
     /**
      * The "B" key.
      */
-    public static final Key B = register("B");
+    B,
     /**
      * The back key. The text representation of this key is "Back".
      */
-    public static final Key BACK = register("Back");
+    BACK,
     /**
      * The Backspace key. The text representation of this key is "Backspace".
      */
-    public static final Key BACKSPACE = register("Backspace");
+    BACKSPACE,
     /**
      * The "C" key.
      */
-    public static final Key C = register("C");
+    C,
     /**
      * The caps lock key. The text representation of this key is "CapsLock".
      * <p>
@@ -82,7 +75,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key CAPS_LOCK = register("CapsLock");
+    CAPS_LOCK,
     /**
      * The left control key. The text representation of this key is "CtrlLeft".
      * <p>
@@ -91,7 +84,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key CTRL_LEFT = register("CtrlLeft");
+    CTRL_LEFT,
     /**
      * The right control key. The text representation of this key is
      * "CtrlRight".
@@ -101,11 +94,11 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key CTRL_RIGHT = register("CtrlRight");
+    CTRL_RIGHT,
     /**
      * The "D" key.
      */
-    public static final Key D = register("D");
+    D,
     /**
      * The delete key. The text representation of this key is "Delete".
      * <p>
@@ -114,55 +107,55 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key DELETE = register("Delete");
+    DELETE,
     /**
      * The "0" digit key. The text representation of this key is "0".
      */
-    public static final Key DIGIT_0 = register("0");
+    DIGIT_0,
     /**
      * The "1" digit key. The text representation of this key is "1".
      */
-    public static final Key DIGIT_1 = register("1");
+    DIGIT_1,
     /**
      * The "2" digit key. The text representation of this key is "2".
      */
-    public static final Key DIGIT_2 = register("2");
+    DIGIT_2,
     /**
      * The "3" digit key. The text representation of this key is "3".
      */
-    public static final Key DIGIT_3 = register("3");
+    DIGIT_3,
     /**
      * The "4" digit key. The text representation of this key is "4".
      */
-    public static final Key DIGIT_4 = register("4");
+    DIGIT_4,
     /**
      * The "5" digit key. The text representation of this key is "5".
      */
-    public static final Key DIGIT_5 = register("5");
+    DIGIT_5,
     /**
      * The "6" digit key. The text representation of this key is "6".
      */
-    public static final Key DIGIT_6 = register("6");
+    DIGIT_6,
     /**
      * The "7" digit key. The text representation of this key is "7".
      */
-    public static final Key DIGIT_7 = register("7");
+    DIGIT_7,
     /**
      * The "8" digit key. The text representation of this key is "8".
      */
-    public static final Key DIGIT_8 = register("8");
+    DIGIT_8,
     /**
      * The "9" digit key. The text representation of this key is "9".
      */
-    public static final Key DIGIT_9 = register("9");
+    DIGIT_9,
     /**
      * The cursor down key. The text representation of this key is "Down".
      */
-    public static final Key DOWN = register("Down");
+    DOWN,
     /**
      * The "E" key.
      */
-    public static final Key E = register("E");
+    E,
     /**
      * The end key. The text representation of this key is "End".
      * <p>
@@ -171,15 +164,15 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key END = register("End");
+    END,
     /**
      * The enter key. The text representation of this key is "Enter".
      */
-    public static final Key ENTER = register("Enter");
+    ENTER,
     /**
      * The equals key. The text representation of this key is "Equals".
      */
-    public static final Key EQUALS = register("Equals");
+    EQUALS,
     /**
      * The escape key. The text representation of this key is "Esc".
      * <p>
@@ -188,11 +181,11 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key ESCAPE = register("Esc");
+    ESCAPE,
     /**
      * The "F" key.
      */
-    public static final Key F = register("F");
+    F,
     /**
      * The "F1" function key.
      * <p>
@@ -201,7 +194,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F1 = register("F1");
+    F1,
     /**
      * The "F2" function key.
      * <p>
@@ -210,7 +203,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F2 = register("F2");
+    F2,
     /**
      * The "F3" function key.
      * <p>
@@ -219,7 +212,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F3 = register("F3");
+    F3,
     /**
      * The "F4" function key.
      * <p>
@@ -228,7 +221,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F4 = register("F4");
+    F4,
     /**
      * The "F5" function key.
      * <p>
@@ -237,7 +230,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F5 = register("F5");
+    F5,
     /**
      * The "F6" function key.
      * <p>
@@ -246,7 +239,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F6 = register("F6");
+    F6,
     /**
      * The "F7" function key.
      * <p>
@@ -255,7 +248,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F7 = register("F7");
+    F7,
     /**
      * The "F8" function key.
      * <p>
@@ -264,7 +257,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F8 = register("F8");
+    F8,
     /**
      * The "F9" function key.
      * <p>
@@ -273,7 +266,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F9 = register("F9");
+    F9,
     /**
      * The "F10" function key.
      * <p>
@@ -282,7 +275,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F10 = register("F10");
+    F10,
     /**
      * The "F11" function key.
      * <p>
@@ -291,7 +284,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F11 = register("F11");
+    F11,
     /**
      * The "F12" function key.
      * <p>
@@ -300,19 +293,19 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key F12 = register("F12");
+    F12,
     /**
      * The "G" key.
      */
-    public static final Key G = register("G");
+    G,
     /**
      * The "`" key. The text representation of this key is "Grave".
      */
-    public static final Key GRAVE = register("Grave");
+    GRAVE,
     /**
      * The "H" key.
      */
-    public static final Key H = register("H");
+    H,
     /**
      * The home key. The text representation of this key is "Home".
      * <p>
@@ -321,11 +314,11 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key HOME = register("Home");
+    HOME,
     /**
      * The "I" key.
      */
-    public static final Key I = register("I");
+    I,
     /**
      * The insert key. The text representation of this key is "Insert".
      * <p>
@@ -334,27 +327,27 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key INSERT = register("Insert");
+    INSERT,
     /**
      * The "J" key.
      */
-    public static final Key J = register("J");
+    J,
     /**
      * The "K" key.
      */
-    public static final Key K = register("K");
+    K,
     /**
      * The "L" key.
      */
-    public static final Key L = register("L");
+    L,
     /**
      * The cursor left key. The text representation of this key is "Left".
      */
-    public static final Key LEFT = register("Left");
+    LEFT,
     /**
      * The "M" key.
      */
-    public static final Key M = register("M");
+    M,
     /**
      * The menu key. The text representation of this key is "Menu".
      * <p>
@@ -365,31 +358,31 @@ public final class Key implements Serializable {
      * <img src="../../../android.png"> Represents the menu key. This is the
      * hardware key that is used to display a menu.
      */
-    public static final Key MENU = register("Menu");
+    MENU,
     /**
      * The "-" key. The text representation of this key is "Minus".
      */
-    public static final Key MINUS = register("Minus");
+    MINUS,
     /**
      * The middle mouse button.
      */
-    public static final Key MOUSE_MIDDLE = register("MouseMiddle");
+    MOUSE_MIDDLE,
     /**
      * The primary mouse button (usually left).
      */
-    public static final Key MOUSE_PRIMARY = register("MousePrimary");
+    MOUSE_PRIMARY,
     /**
      * The seconary mouse button (usually right).
      */
-    public static final Key MOUSE_SECONDARY = register("MouseSecondary");
+    MOUSE_SECONDARY,
     /**
      * The "N" key.
      */
-    public static final Key N = register("N");
+    N,
     /**
      * The num lock key. The text representation of this key is "NumLock".
      */
-    public static final Key NUM_LOCK = register("NumLock");
+    NUM_LOCK,
     /**
      * The "0" digit key on the numeric keypad. The text representation of this
      * key is "Numpad0".
@@ -399,7 +392,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_0 = register("Numpad0");
+    NUMPAD_0,
     /**
      * The "1" digit key on the numeric keypad. The text representation of this
      * key is "Numpad1".
@@ -409,7 +402,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_1 = register("Numpad1");
+    NUMPAD_1,
     /**
      * The "2" digit key on the numeric keypad. The text representation of this
      * key is "Numpad2".
@@ -419,7 +412,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_2 = register("Numpad2");
+    NUMPAD_2,
     /**
      * The "3" digit key on the numeric keypad. The text representation of this
      * key is "Numpad3".
@@ -429,7 +422,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_3 = register("Numpad3");
+    NUMPAD_3,
     /**
      * The "4" digit key on the numeric keypad. The text representation of this
      * key is "Numpad4".
@@ -439,7 +432,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_4 = register("Numpad4");
+    NUMPAD_4,
     /**
      * The "5" digit key on the numeric keypad. The text representation of this
      * key is "Numpad5".
@@ -449,7 +442,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_5 = register("Numpad5");
+    NUMPAD_5,
     /**
      * The "6" digit key on the numeric keypad. The text representation of this
      * key is "Numpad6".
@@ -459,7 +452,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_6 = register("Numpad6");
+    NUMPAD_6,
     /**
      * The "7" digit key on the numeric keypad. The text representation of this
      * key is "Numpad7".
@@ -469,7 +462,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_7 = register("Numpad7");
+    NUMPAD_7,
     /**
      * The "8" digit key on the numeric keypad. The text representation of this
      * key is "Numpad8".
@@ -479,7 +472,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_8 = register("Numpad8");
+    NUMPAD_8,
     /**
      * The "9" digit key on the numeric keypad. The text representation of this
      * key is "Numpad9".
@@ -489,7 +482,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_9 = register("Numpad9");
+    NUMPAD_9,
     /**
      * The "+" key on the numeric keypard. The text representation of this key
      * is "NumpadAdd".
@@ -499,7 +492,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_ADD = register("NumpadAdd");
+    NUMPAD_ADD,
     /**
      * The "/" key on the numeric keypard. The text representation of this key
      * is "NumpadDivide".
@@ -509,7 +502,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_DIVIDE = register("NumpadDivide");
+    NUMPAD_DIVIDE,
     /**
      * The "." key on the numeric keypard. The text representation of this key
      * is "NumpadDot".
@@ -519,7 +512,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_DOT = register("NumpadDot");
+    NUMPAD_DOT,
     /**
      * The enter key on the numeric keypard. The text representation of this key
      * is "NumpadEnter".
@@ -529,7 +522,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_ENTER = register("NumpadEnter");
+    NUMPAD_ENTER,
     /**
      * The "*" key on the numeric keypard. The text representation of this key
      * is "NumpadMultiply".
@@ -539,7 +532,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_MULTIPLY = register("NumpadMultiply");
+    NUMPAD_MULTIPLY,
     /**
      * The "-" key on the numeric keypard. The text representation of this key
      * is "NumpadSubtract".
@@ -549,15 +542,15 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key NUMPAD_SUBTRACT = register("NumpadSubtract");
+    NUMPAD_SUBTRACT,
     /**
      * The "O" key.
      */
-    public static final Key O = register("O");
+    O,
     /**
      * The "P" key.
      */
-    public static final Key P = register("P");
+    P,
     /**
      * The page down key. The text representation of this key is "PageDown".
      * <p>
@@ -566,7 +559,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key PAGE_DOWN = register("PageDown");
+    PAGE_DOWN,
     /**
      * The page up key. The text representation of this key is "PageUp".
      * <p>
@@ -575,7 +568,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key PAGE_UP = register("PageUp");
+    PAGE_UP,
     /**
      * The pause key. The text representation of this key is "Pause".
      * <p>
@@ -584,7 +577,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key PAUSE = register("Pause");
+    PAUSE,
     /**
      * The print screen key. The text representation of this key is
      * "PrintScreen".
@@ -594,59 +587,60 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
-    public static final Key PRINT_SCREEN = register("PrintScreen");
+    PRINT_SCREEN,
     /**
      * The "Q" key.
      */
-    public static final Key Q = register("Q");
+    Q,
     /**
      * The "R" key.
      */
-    public static final Key R = register("R");
+    R,
     /**
      * The cursor right key. The text representation of this key is "Right".
      */
-    public static final Key RIGHT = register("Right");
+    RIGHT,
     /**
      * The "S" key.
      */
-    public static final Key S = register("S");
+    S,
     /**
      * The scroll lock key. The text representation of this key is "ScrollLock".
      */
-    public static final Key SCROLL_LOCK = register("ScrollLock");
+    SCROLL_LOCK,
     /**
      * The left shift key. The text representation of this key is "ShiftLeft".
      */
-    public static final Key SHIFT_LEFT = register("ShiftLeft");
+    SHIFT_LEFT,
     /**
      * The right shift key. The text representation of this key is "ShiftRight".
      */
-    public static final Key SHIFT_RIGHT = register("ShiftRight");
+    SHIFT_RIGHT,
     /**
      * The space key. The text representation of this key is "Space".
      */
-    public static final Key SPACE = register("Space");
+    SPACE,
     /**
      * The "T" key.
      */
-    public static final Key T = register("T");
+    T,
     /**
      * The tabulator key. The text representation of this key is "Tab".
      */
-    public static final Key TAB = register("Tab");
+    TAB,
     /**
      * The "U" key.
      */
-    public static final Key U = register("U");
+    U,
+    UNDEFINED,
     /**
      * The cursor up key. The text representation of this key is "Up".
      */
-    public static final Key UP = register("Up");
+    UP,
     /**
      * The "V" key.
      */
-    public static final Key V = register("V");
+    V,
     /**
      * The volume down key. The text representation of this key is "VolumeUp".
      * <p>
@@ -655,7 +649,7 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is available.
      */
-    public static final Key VOLUME_DOWN = register("VolumeDown");
+    VOLUME_DOWN,
     /**
      * The volume up key. The text representation of this key is "VolumeUp".
      * <p>
@@ -664,68 +658,21 @@ public final class Key implements Serializable {
      * <p>
      * <img src="../../../android.png"> The key is available.
      */
-    public static final Key VOLUME_UP = register("VolumeUp");
+    VOLUME_UP,
     /**
      * The "W" key.
      */
-    public static final Key W = register("W");
+    W,
     /**
      * The "X" key.
      */
-    public static final Key X = register("X");
+    X,
     /**
      * The "Y" key.
      */
-    public static final Key Y = register("Y");
+    Y,
     /**
      * The "Z" key.
      */
-    public static final Key Z = register("Z");
-    private final int id;
-
-    @Deprecated
-    public Key(String name) {
-        this(NAME_ID_MAP.get(name));
-    }
-
-    @Override
-    public boolean equals(final Object object) {
-        if (object instanceof Key) {
-            return this.id == ((Key) object).id;
-        }
-        else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return 23 * this.id;
-    }
-
-    /**
-     * Returns the text representation of the key. The text representation can
-     * be used to store the key in a file.
-     *
-     * @return text representation of the key
-     */
-    @Override
-    public String toString() {
-        return ID_NAME_MAP.get(this.id);
-    }
-
-    private Key() {
-        this(0);
-    }
-
-    private Key(final int id) {
-        this.id = id;
-    }
-
-    private static Key register(final String name) {
-        final int id = ++NEXT_ID;
-        ID_NAME_MAP.put(id, name);
-        NAME_ID_MAP.put(name, id);
-        return new Key(id);
-    }
+    Z
 }

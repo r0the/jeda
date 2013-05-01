@@ -16,60 +16,21 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.platform.InputDeviceImp;
-
 /**
- * <b>Experimental.</b> Represents an input device such as a gamepad or a mouse.
- * An input device has two kinds of sensors: axes and buttons.
- *
- * Supported devices are:
- * <ul>
- * <li>Xbox or compatible controller (Java platform)</li>
- * </ul>
+ * Represents an input device such as a keyboard, a mouse, a sensor, or a mouse.
  */
 public class InputDevice {
 
-    private final InputDeviceImp imp;
+    private final int id;
+    private final String name;
 
-    /**
-     * Returns all available axes of this input device.
-     *
-     * @return available axes
-     */
-    public Iterable<Axis> getAxes() {
-        return this.imp.getAxes();
-    }
-
-    public double getAxisValue(final Axis axis) {
-        if (axis == null) {
-            throw new NullPointerException("axis");
-        }
-
-        return this.imp.getAxisValue(axis);
-    }
-
-    public Iterable<Button> getButtons() {
-        return this.imp.getButtons();
-    }
-
-    public boolean isButtonPressed(final Button button) {
-        if (button == null) {
-            throw new NullPointerException("button");
-        }
-
-        return this.imp.isButtonPressed(button);
+    public InputDevice(final int id, final String name) {
+        this.id = id;
+        this.name = name;
     }
 
     @Override
     public String toString() {
-        return this.imp.getName();
-    }
-
-    InputDevice(final InputDeviceImp imp) {
-        this.imp = imp;
-    }
-
-    void update() {
-        this.imp.poll();
+        return this.name;
     }
 }

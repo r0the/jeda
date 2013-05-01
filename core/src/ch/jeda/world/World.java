@@ -278,6 +278,7 @@ public class World extends Simulation {
         // 3. Update phase
         final float dt = (float) this.getLastStepDuration();
         // 3.1 Update state
+        this.window.processEvents();
         this.state.update(this.window.getEvents());
         // 3.2 Update entities
         if (!this.paused) {
@@ -342,6 +343,7 @@ public class World extends Simulation {
         this.state = this.defaultState;
         this.state.notifyEnter(this);
         this.states = new HashMap<Class<? extends WorldState>, WorldState>();
+        this.window.addEventListener(this);
     }
 
     private void drawDebugOverlay() {

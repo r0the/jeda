@@ -16,7 +16,6 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.platform.Event;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +40,7 @@ import java.util.Set;
  */
 public final class Events {
 
+    final EventListenerImp listener;
     private final List<Pointer> newPointers;
     private final Map<Integer, Pointer> pointers;
     private final Set<Key> pressedKeys;
@@ -173,6 +173,7 @@ public final class Events {
     }
 
     Events() {
+        this.listener = new EventListenerImp();
         this.newPointers = new ArrayList<Pointer>();
         this.pointers = new HashMap<Integer, Pointer>();
         this.pressedKeys = new HashSet<Key>();
@@ -181,64 +182,13 @@ public final class Events {
         this.typedChars = new StringBuilder();
     }
 
-    void digestEvents(final Iterable<Event> events) {
+    void prepare() {
         this.typedChars = new StringBuilder();
         this.typedKeys.clear();
         this.newPointers.clear();
         Pointer pointer;
         for (Pointer p : this.pointers.values()) {
             p.prepare();
-        }
-
-        for (Event event : events) {
-            switch (event.type) {
-                case KeyPressed:
-                    this.typedKeys.add(event.key);
-                    this.pressedKeys.add(event.key);
-                    break;
-                case KeyReleased:
-                    this.pressedKeys.remove(event.key);
-                    break;
-                case KeyTyped:
-                    this.typedChars.append(event.keyChar);
-                    break;
-                case PointerAvailable:
-                    if (!this.pointers.containsKey(event.pointerId)) {
-                        this.pointers.put(event.pointerId, new Pointer(event.pointerId));
-                    }
-
-                    pointer = this.pointers.get(event.pointerId);
-                    this.newPointers.add(pointer);
-                    pointer.setLocation(event.x, event.y);
-                    if (this.mainPointer == null) {
-                        this.mainPointer = pointer;
-                    }
-
-                    break;
-                case PointerUnavailable:
-                    pointer = this.pointers.get(event.pointerId);
-                    if (pointer != null) {
-                        pointer.setUnavailable();
-                        this.pointers.remove(event.pointerId);
-                    }
-
-                    this.newPointers.remove(pointer);
-                    if (this.mainPointer == pointer) {
-                        this.mainPointer = null;
-                    }
-
-                    break;
-                case PointerMoved:
-                    pointer = this.pointers.get(event.pointerId);
-                    if (pointer != null) {
-                        pointer.setLocation(event.x, event.y);
-                    }
-
-                    break;
-                case WindowFocusLost:
-                    this.pressedKeys.clear();
-                    break;
-            }
         }
     }
 
@@ -248,5 +198,68 @@ public final class Events {
         this.pressedKeys.clear();
         this.pointers.clear();
         this.newPointers.clear();
+    }
+
+    private class EventListenerImp implements KeyListener,
+                                              KeyTypedListener,
+                                              PointerListener,
+                                              WindowFocusLostListener {
+
+        @Override
+        public void onKeyDown(final KeyEvent event) {
+            typedKeys.add(event.getKey());
+            pressedKeys.add(event.getKey());
+        }
+
+        @Override
+        public void onKeyTyped(final KeyEvent event) {
+            typedChars.append(event.getKeyChar());
+        }
+
+        @Override
+        public void onKeyUp(final KeyEvent event) {
+            pressedKeys.remove(event.getKey());
+        }
+
+        @Override
+        public void onPointerDown(final PointerEvent event) {
+            if (!pointers.containsKey(event.getPointerId())) {
+                pointers.put(event.getPointerId(), new Pointer(event.getPointerId()));
+            }
+
+            Pointer pointer = pointers.get(event.getPointerId());
+            newPointers.add(pointer);
+            pointer.setLocation(event.getX(), event.getY());
+            if (mainPointer == null) {
+                mainPointer = pointer;
+            }
+        }
+
+        @Override
+        public void onPointerMoved(final PointerEvent event) {
+            Pointer pointer = pointers.get(event.getPointerId());
+            if (pointer != null) {
+                pointer.setLocation(event.getX(), event.getY());
+            }
+        }
+
+        @Override
+        public void onPointerUp(final PointerEvent event) {
+            Pointer pointer = pointers.get(event.getPointerId());
+            if (pointer != null) {
+                pointer.setUnavailable();
+                pointers.remove(event.getPointerId());
+            }
+
+            newPointers.remove(pointer);
+            if (mainPointer == pointer) {
+                mainPointer = null;
+            }
+        }
+
+        @Override
+        public void onWindowFocusLost() {
+            pressedKeys.clear();
+        }
     }
 }

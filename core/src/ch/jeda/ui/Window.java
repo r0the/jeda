@@ -18,12 +18,8 @@ package ch.jeda.ui;
 
 import ch.jeda.Engine;
 import ch.jeda.Size;
-import ch.jeda.platform.InputDeviceImp;
 import ch.jeda.platform.WindowImp;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  * Represents a drawing window. The window class has the follwoing
@@ -100,11 +96,11 @@ public class Window extends Canvas {
          */
         OrientationPortrait
     }
-    private static final EnumSet<Feature> NO_FEATURES = EnumSet.noneOf(Feature.class);
     private static final EnumSet<Feature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
+    private final EventDispatcher eventDispatcher;
     private final Events events;
-    private final List<InputDevice> inputDevices;
     private WindowImp imp;
+    private boolean processedEvents;
     private String title;
 
     /**
@@ -171,8 +167,9 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window(final Feature... features) {
+        this.eventDispatcher = new EventDispatcher();
         this.events = new Events();
-        this.inputDevices = new ArrayList<InputDevice>();
+        this.eventDispatcher.addListener(this.events.listener);
         this.title = Thread.currentThread().getName();
         this.resetImp(0, 0, toSet(features));
     }
@@ -201,8 +198,9 @@ public class Window extends Canvas {
      */
     public Window(final int width, final int height,
                   final Feature... features) {
+        this.eventDispatcher = new EventDispatcher();
         this.events = new Events();
-        this.inputDevices = new ArrayList<InputDevice>();
+        this.eventDispatcher.addListener(this.events.listener);
         this.title = Engine.getProgramName();
         this.resetImp(width, height, toSet(features));
     }
@@ -217,6 +215,17 @@ public class Window extends Canvas {
     }
 
     /**
+     * Adds an event listener to the window. The specified object will recieve
+     * events for all events listener interfaces it implements.
+     *
+     * @param listener the event listener
+     * @since 1
+     */
+    public void addEventListener(final Object listener) {
+        this.eventDispatcher.addListener(listener);
+    }
+
+    /**
      * Closes the window. The window becomes invalid, all subsequent method
      * calls to the window will cause an error.
      *
@@ -224,22 +233,6 @@ public class Window extends Canvas {
      */
     public void close() {
         this.imp.close();
-    }
-
-    /**
-     * <b>Experimental.</b> Detects input devices. Returns a list of all
-     * available devices.
-     *
-     * @return list of available input devices
-     * @see InputDevice
-     */
-    public List<InputDevice> detectInputDevices() {
-        this.inputDevices.clear();
-        for (InputDeviceImp inputDeviceImp : this.imp.detectInputDevices()) {
-            this.inputDevices.add(new InputDevice(inputDeviceImp));
-        }
-
-        return Collections.unmodifiableList(this.inputDevices);
     }
 
     /**
@@ -285,6 +278,23 @@ public class Window extends Canvas {
         }
 
         return this.imp.getFeatures().contains(feature);
+    }
+
+    public void processEvents() {
+        this.events.prepare();
+        this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
+        this.processedEvents = true;
+    }
+
+    /**
+     * Removes an event listener from the window. The specified object will not
+     * receive events anymore.
+     *
+     * @param listener the event listener
+     * @since 1
+     */
+    public void removeEventListener(final Object listener) {
+        this.eventDispatcher.removeListener(listener);
     }
 
     /**
@@ -373,10 +383,12 @@ public class Window extends Canvas {
      * @since 1
      */
     public void update() {
-        this.events.digestEvents(this.imp.update());
-        for (InputDevice inputDevice : this.inputDevices) {
-            inputDevice.update();
+        if (!this.processedEvents) {
+            this.processEvents();
         }
+
+        this.imp.update();
+        this.processedEvents = false;
     }
 
     private void resetImp(final int width, final int height,

@@ -16,21 +16,16 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.platform.Event;
-import ch.jeda.platform.InputDeviceImp;
 import ch.jeda.platform.WindowImp;
+import ch.jeda.ui.Event;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-//import net.java.games.input.Controller;
-//import net.java.games.input.ControllerEnvironment;
 
 abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
@@ -43,16 +38,8 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     }
 
     @Override
-    public Iterable<InputDeviceImp> detectInputDevices() {
-        final List<InputDeviceImp> result = new ArrayList();
-//        final ControllerEnvironment env = ControllerEnvironment.getDefaultEnvironment();
-//        for (Controller controller : env.getControllers()) {
-//            if (controller.getType() == Controller.Type.GAMEPAD) {
-//                result.add(new JavaGamepad(controller));
-//            }
-//        }
-
-        return result;
+    public Event[] fetchEvents() {
+        return this.canvasWindow.fetchEvents();
     }
 
     @Override
@@ -78,10 +65,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     }
 
     @Override
-    public final Iterable<Event> update() {
-        this.doUpdate();
-        return this.canvasWindow.fetchEvents();
-    }
+    public abstract void update();
 
     static JavaWindowImp create(CanvasWindow viewWindow) {
         if (viewWindow.getFeatures().contains(Window.Feature.DoubleBuffered)) {
@@ -95,8 +79,6 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     JavaWindowImp(CanvasWindow viewWindow) {
         this.canvasWindow = viewWindow;
     }
-
-    abstract void doUpdate();
 
     private static Cursor createInvisibleCursor() {
         final java.awt.Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
@@ -131,7 +113,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         }
 
         @Override
-        void doUpdate() {
+        public void update() {
             final BufferedImage temp = this.frontBuffer;
             this.frontBuffer = this.backBuffer;
             this.backBuffer = temp;
@@ -154,7 +136,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         }
 
         @Override
-        void doUpdate() {
+        public void update() {
             this.canvasWindow.update();
         }
 
