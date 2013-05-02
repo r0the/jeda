@@ -35,7 +35,7 @@ public final class Engine {
     private static Context context;
     private static State currentState;
     private static State nextState;
-    private static JedaPlugin plugins;
+    private static List<PluginWrapper> plugins;
 
     public static Context getContext() {
         return context;
@@ -53,6 +53,8 @@ public final class Engine {
     public static void init(final ContextImp contextImp) {
         context = new Context(contextImp);
         context.init();
+        nextState = new InitEngineState();
+        plugins = new ArrayList<PluginWrapper>();
         nextState = new InitEngineState();
         engineThread = new EngineThread();
         engineThread.setName(Message.translate(Message.ENGINE_THREAD_NAME));
@@ -171,11 +173,25 @@ public final class Engine {
                             defaultProgram = pw;
                         }
                     }
+                    else {
+                        final PluginWrapper plw = PluginWrapper.tryCreate(classes[i]);
+                        if (plw != null) {
+                            plugins.add(plw);
+                        }
+                    }
                 }
-
             }
             catch (Exception ex) {
                 logError(ex, Message.LOAD_CLASSES_ERROR);
+            }
+
+            for (PluginWrapper plugin : plugins) {
+                try {
+                    plugin.initialize();
+                }
+                catch (Throwable ex) {
+                    logError(ex, Message.PLUGIN_INIT_ERROR, plugin);
+                }
             }
 
             // Determine program to execute
@@ -191,6 +207,10 @@ public final class Engine {
             }
             else {
                 enterSelectProgramState(programs);
+
+
+
+
             }
         }
     }

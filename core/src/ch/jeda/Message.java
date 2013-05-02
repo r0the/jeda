@@ -39,6 +39,7 @@ public class Message {
     public static final String LOG_BUTTON = "jeda.gui.log.button";
     public static final String LOG_TITLE = "jeda.gui.log.title";
     public static final String NO_PROGRAM_ERROR = "jeda.error.init.noprogram";
+    public static final String PLUGIN_INIT_ERROR = "jeda.plugin.init.error";
     public static final String PROGRAM_CLASS_LOAD_ERROR = "jeda.program.class.load.error";
     public static final String PROGRAM_CREATE_ERROR = "jeda.program.create.error";
     public static final String PROGRAM_RUN_ERROR = "jeda.program.run.error";
@@ -68,6 +69,7 @@ public class Message {
         put(LOG_BUTTON, "Schliessen");
         put(LOG_TITLE, "Jeda Log");
         put(NO_PROGRAM_ERROR, "Es ist keine Jeda-Programmklasse vorhanden.");
+        put(PLUGIN_INIT_ERROR, "Fehler beim Initialiseren des Plugins {0}.");
         put(PROGRAM_CLASS_LOAD_ERROR, "Kann Klasse {0} nicht laden.");
         put(PROGRAM_CREATE_ERROR, "Beim Initalisieren des Programms '{0}' ist ein Fehler aufgetreten.");
         put(PROGRAM_RUN_ERROR, "Fehler beim Ausführen von Programm '{0}'.");
