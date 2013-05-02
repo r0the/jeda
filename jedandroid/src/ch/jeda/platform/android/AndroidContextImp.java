@@ -54,21 +54,33 @@ class AndroidContextImp implements ContextImp {
      * classes.
      */
     @Override
-    public String[] listClassNames() throws Exception {
-        final List<String> result = new ArrayList();
+    public Class<?>[] loadClasses() throws Exception {
+        final List<Class<?>> result = new ArrayList<Class<?>>();
         final Application app = this.activity.getApplication();
         final String apkName = app.getPackageManager().getApplicationInfo(
                 app.getPackageName(), 0).sourceDir;
         final DexFile dx = new DexFile(apkName);
         final Enumeration<String> e = dx.entries();
         while (e.hasMoreElements()) {
-            String resourceName = e.nextElement();
+            final String resourceName = e.nextElement();
             if (!resourceName.contains("$")) {
-                result.add(resourceName);
+                try {
+                    // Try to load class with system class loader
+                    result.add(ClassLoader.getSystemClassLoader().loadClass(resourceName));
+                }
+                catch (ClassNotFoundException ex) {
+                    try {
+                        // Try to load class with class loader of current context
+                        result.add(Thread.currentThread().getContextClassLoader().loadClass(resourceName));
+                    }
+                    catch (ClassNotFoundException ex2) {
+                        // Ignore
+                    }
+                }
             }
         }
 
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new Class<?>[result.size()]);
     }
 
     @Override

@@ -44,8 +44,8 @@ class JavaContextImp implements ContextImp {
     }
 
     @Override
-    public String[] listClassNames() throws Exception {
-        return this.resourceFinder.findClassNames();
+    public Class<?>[] loadClasses() throws Exception {
+        return this.resourceFinder.loadClasses();
     }
 
     @Override

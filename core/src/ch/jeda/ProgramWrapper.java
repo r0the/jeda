@@ -44,6 +44,18 @@ abstract class ProgramWrapper {
         }
     }
 
+    abstract void createInstance() throws Throwable;
+
+    final String getName() {
+        return this.name;
+    }
+
+    abstract String getProgramClassName();
+
+    abstract void run() throws Throwable;
+
+    abstract void setState(ProgramState state);
+
     private static ProgramWrapper tryCreateAnnotated(final Class<?> candidate, final Context context) {
         try {
             final Constructor<?> constructor = candidate.getDeclaredConstructor();
@@ -91,18 +103,6 @@ abstract class ProgramWrapper {
     ProgramWrapper(final String name) {
         this.name = name;
     }
-
-    abstract void createInstance() throws Throwable;
-
-    final String getName() {
-        return this.name;
-    }
-
-    abstract String getProgramClassName();
-
-    abstract void run() throws Throwable;
-
-    abstract void setState(ProgramState state);
 
     private static final class AnnotatedProgramWrapper extends ProgramWrapper {
 

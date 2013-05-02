@@ -133,8 +133,8 @@ public final class Context {
         this.properties.loadFromSystem();
     }
 
-    String[] listClassNames() throws Exception {
-        return this.imp.listClassNames();
+    Class<?>[] loadClasses() throws Exception {
+        return this.imp.loadClasses();
     }
 
     List<String> loadTextFile(final String filePath) {

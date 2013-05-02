@@ -24,7 +24,7 @@ public interface ContextImp {
 
     String defaultProgramName();
 
-    String[] listClassNames() throws Exception;
+    Class<?>[] loadClasses() throws Exception;
 
     ImageImp loadImageImp(InputStream in) throws Exception;
 

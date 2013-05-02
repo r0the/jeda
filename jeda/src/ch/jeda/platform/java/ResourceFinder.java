@@ -19,33 +19,37 @@ package ch.jeda.platform.java;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 class ResourceFinder {
 
-    private final List<String> classNames;
-    private boolean done;
+    private final Set<Class<?>> classesSet;
+    private Class<?>[] classes;
 
     ResourceFinder() {
-        this.classNames = new ArrayList();
-        this.done = false;
+        this.classesSet = new HashSet<Class<?>>();
     }
 
-    String[] findClassNames() throws Exception {
-        this.ensureResources();
-        return this.classNames.toArray(new String[this.classNames.size()]);
+    Class<?>[] loadClasses() throws Exception {
+        if (this.classes == null) {
+            findResources();
+        }
+
+        return this.classes;
     }
 
-    private void checkDirectory(File directory, String directoryName) {
+    private void checkDirectory(final File directory, final String directoryName) {
         for (File file : directory.listFiles()) {
             this.checkResource(file, directoryName);
         }
     }
 
-    private void checkResource(File file, String directoryName) {
+    private void checkResource(final File file, final String directoryName) {
         if (!file.exists()) {
             return;
         }
@@ -63,40 +67,63 @@ class ResourceFinder {
         }
     }
 
-    private void checkResource(String resourceName) {
+    private void checkResource(final String resourceName) {
+        // Collect only global classes.
+        // Inner classes have a $ in their name.
         if (resourceName.endsWith(".class") && !resourceName.contains("$")) {
+            // Remove ".class" from the name
             String className = resourceName.substring(0, resourceName.length() - 6);
+            // Convert path to packages
             className = className.replace("/", ".");
-            this.classNames.add(className);
-        }
-    }
-
-    private void ensureResources() throws Exception {
-        if (!this.done) {
-            this.findResources();
-            this.done = true;
+            try {
+                // Try to load class with system class loader
+                this.classesSet.add(ClassLoader.getSystemClassLoader().loadClass(className));
+            }
+            catch (ClassNotFoundException ex) {
+                try {
+                    // Try to load class with class loader of current context
+                    this.classesSet.add(Thread.currentThread().getContextClassLoader().loadClass(className));
+                }
+                catch (ClassNotFoundException ex2) {
+                    // Ignore
+                }
+            }
         }
     }
 
     private void findResources() throws Exception {
+        this.findResources(getClass().getProtectionDomain().getCodeSource().getLocation());
         final String[] classPaths = System.getProperty("java.class.path").split(File.pathSeparator);
         for (String classPath : classPaths) {
             this.findResources(classPath);
         }
 
+        this.classes = this.classesSet.toArray(new Class<?>[this.classesSet.size()]);
     }
 
-    private void findResources(String classPath) throws IOException {
+    private void findResources(final String classPath) throws Exception {
         if (classPath.endsWith(".jar")) {
-            this.findJarResources(classPath);
+            try {
+                this.findJarResources(new URL(classPath).openStream());
+            }
+            catch (Exception ex) {
+                // No URL, so probably a file name.
+                this.findJarResources(new FileInputStream(classPath));
+            }
         }
         else {
             this.checkDirectory(new File(classPath), "");
         }
     }
 
-    private void findJarResources(String jarFile) throws IOException {
-        final JarInputStream jarStream = new JarInputStream(new FileInputStream(jarFile));
+    private void findResources(final URL url) throws IOException {
+        if (url.getFile().endsWith(".jar")) {
+            this.findJarResources(url.openStream());
+        }
+    }
+
+    private void findJarResources(final InputStream in) throws IOException {
+        final JarInputStream jarStream = new JarInputStream(in);
         JarEntry element = jarStream.getNextJarEntry();
         while (element != null) {
             this.checkResource(element.getName());

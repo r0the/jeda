@@ -34,14 +34,15 @@ public class Message {
     public static final String IMAGE_READ_ERROR = "jeda.image.read.error";
     public static final String IMAGE_WRITE_ERROR = "jeda.image.write.error";
     public static final String INPUT_REQUEST_TITLE = "jeda.gui.inputrequest.title";
+    public static final String LOAD_CLASSES_ERROR = "jeda.error.init.classes";
     public static final String LOAD_PROPERTIES_ERROR = "jeda.error.init.properties";
     public static final String LOG_BUTTON = "jeda.gui.log.button";
     public static final String LOG_TITLE = "jeda.gui.log.title";
     public static final String NO_PROGRAM_ERROR = "jeda.error.init.noprogram";
-    public static final String PROGRAM_CREATE_ERROR = "jeda.programrunner.create.error";
+    public static final String PROGRAM_CLASS_LOAD_ERROR = "jeda.program.class.load.error";
+    public static final String PROGRAM_CREATE_ERROR = "jeda.program.create.error";
     public static final String PROGRAM_RUN_ERROR = "jeda.program.run.error";
     // -- TODO --
-    public static final String CLASS_NOT_FOUND_ERROR = "jeda.classnotfound.error";
     public static final String GUI_CLOSE_BUTTON = "jeda.gui.close.button";
     public static final String LIST_RESOURCES_ERROR = "jeda.listclasses.error";
     public static final String SUBSYSTEM_CREATE_ERROR = "jeda.subsystem.create.error";
@@ -62,15 +63,16 @@ public class Message {
         put(IMAGE_READ_ERROR, "Fehler beim Lesen der Bilddatei '{0}': {1}");
         put(IMAGE_WRITE_ERROR, "Fehler beim Schreiben der Bilddatei '{0}': {1}");
         put(INPUT_REQUEST_TITLE, "Jeda Eingabe");
+        put(LOAD_CLASSES_ERROR, "Fehler beim Laden der Klassen.");
         put(LOAD_PROPERTIES_ERROR, "Fehler beim Laden der Property-Dateien.");
         put(LOG_BUTTON, "Schliessen");
         put(LOG_TITLE, "Jeda Log");
         put(NO_PROGRAM_ERROR, "Es ist keine Jeda-Programmklasse vorhanden.");
+        put(PROGRAM_CLASS_LOAD_ERROR, "Kann Klasse {0} nicht laden.");
         put(PROGRAM_CREATE_ERROR, "Beim Initalisieren des Programms '{0}' ist ein Fehler aufgetreten.");
         put(PROGRAM_RUN_ERROR, "Fehler beim Ausführen von Programm '{0}'.");
         // -- TODO --
         put(NO_TRANSLATION_ERROR, "Es ist keine Übersetzung für '{0}' vorhanden.");
-        put(CLASS_NOT_FOUND_ERROR, "Kann Klasse '{0}' nicht finden.");
         put(GUI_CLOSE_BUTTON, "Schliessen");
         put(LIST_RESOURCES_ERROR, "Fehler beim Suchen nach Ressourcen.");
         put("jeda.net.connection.init.error", "Fehler beim Erstellen einer Verbindung.");
@@ -87,12 +89,6 @@ public class Message {
         put("jeda.sound.playback.read.error", "Fehler beim Abspielen eines Playbacks.");
         put("jeda.sound.playback.start.error", "Playback kann nicht gestartet werden - keine Linie frei.");
         put("jeda.sound.playback.stop.error", "Fehler beim Stoppen des Playbacks.");
-        put(SUBSYSTEM_CREATE_ERROR, "Fehler beim Erstellen des Subsystems {0}.");
-        put(SUBSYSTEM_INIT_ERROR, "Fehler beim Initialisieren des Subsystems {0}.");
-        put(SUBSYSTEM_THREAD_NAME, "Jeda {0} Shutdown Thread");
-        put(SUBSYSTEM_SHUTDOWN_ERROR, "Fehler beim Beenden des Subsystems {0}.");
-        put("jeda.ui.fullscreen.applet.error", "Der Vollbildmodus ist für Applets nicht verfügbar.");
-        put("jeda.ui.fullscreen.other.error", "Ein anderes Fenster befindet sich schon im Vollbildmodus.");
     }
 
     private static void put(String key, String translation) {
