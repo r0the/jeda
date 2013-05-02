@@ -33,17 +33,17 @@ import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Build",
-          id = "ch.jeda.netbeans.AddLibraryContextAction")
-@ActionRegistration(iconBase = "ch/jeda/netbeans/resources/logo-16x16.png",
-                    displayName = "#CTL_AddLibraryContextAction")
-@ActionReferences({
-    @ActionReference(path = "Projects/org-netbeans-modules-android-project/Actions",
-                     position = 692),
-    @ActionReference(path = "Projects/org-netbeans-modules-java-j2seproject/Actions",
-                     position = 693)
-})
-@Messages("CTL_AddLibraryContextAction=Add JAR Library")
+//@ActionID(category = "Build",
+//          id = "ch.jeda.netbeans.AddLibraryContextAction")
+//@ActionRegistration(iconBase = "ch/jeda/netbeans/resources/logo-16x16.png",
+//                    displayName = "#CTL_AddLibraryContextAction")
+//@ActionReferences({
+//    @ActionReference(path = "Projects/org-netbeans-modules-android-project/Actions",
+//                     position = 692),
+//    @ActionReference(path = "Projects/org-netbeans-modules-java-j2seproject/Actions",
+//                     position = 693)
+//})
+//@Messages("CTL_AddLibraryContextAction=Add JAR Library")
 public class AddLibraryContextAction extends AbstractAction implements ContextAwareAction {
 
     public @Override
