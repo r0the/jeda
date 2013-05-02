@@ -52,7 +52,7 @@ public final class Context {
     private final ContextImp imp;
     private ImageImp defaultImage;
     private Properties properties;
-    private LogLevel logLevel = LogLevel.Warning;
+    private LogLevel logLevel = LogLevel.WARNING;
 
     public CanvasImp createCanvasImp(final int width, final int height) {
         return this.imp.createCanvasImp(width, height);
@@ -102,7 +102,7 @@ public final class Context {
     }
 
     public void warning(final String messageKey, final Object... args) {
-        this.log(LogLevel.Warning, Util.args(Message.translate(messageKey), args), null);
+        this.log(LogLevel.WARNING, Util.args(Message.translate(messageKey), args), null);
     }
 
     Context(final ContextImp imp) {
@@ -231,17 +231,17 @@ public final class Context {
 
     private boolean matchesLogLevel(final LogLevel messageLevel) {
         switch (this.logLevel) {
-            case Debug:
+            case DEBUG:
                 return true;
-            case Info:
-                return messageLevel == LogLevel.Info ||
-                       messageLevel == LogLevel.Warning ||
-                       messageLevel == LogLevel.Error;
-            case Warning:
-                return messageLevel == LogLevel.Warning ||
-                       messageLevel == LogLevel.Error;
-            case Error:
-                return messageLevel == LogLevel.Error;
+            case INFO:
+                return messageLevel == LogLevel.INFO ||
+                       messageLevel == LogLevel.WARNING ||
+                       messageLevel == LogLevel.ERROR;
+            case WARNING:
+                return messageLevel == LogLevel.WARNING ||
+                       messageLevel == LogLevel.ERROR;
+            case ERROR:
+                return messageLevel == LogLevel.ERROR;
             default:
                 return false;
         }

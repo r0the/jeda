@@ -18,5 +18,5 @@ package ch.jeda;
 
 public enum LogLevel {
 
-    Debug, Info, Warning, Error
+    DEBUG, INFO, WARNING, ERROR
 }
