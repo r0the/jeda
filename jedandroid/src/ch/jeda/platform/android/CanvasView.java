@@ -25,8 +25,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.Event;
+import ch.jeda.ui.EventSource;
 import ch.jeda.ui.EventType;
-import ch.jeda.ui.InputDevice;
 import ch.jeda.ui.Key;
 import ch.jeda.ui.KeyEvent;
 import ch.jeda.ui.PointerEvent;
@@ -41,7 +41,8 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
                                              View.OnKeyListener,
                                              View.OnTouchListener {
 
-    private static final Map<Integer, InputDevice> INPUT_DEVICE_MAP = new HashMap<Integer, InputDevice>();
+    private static final Map<Integer, EventSource> INPUT_DEVICE_MAP =
+            new HashMap<Integer, EventSource>();
     private static final Map<Integer, Key> KEY_MAP = initKeyMap();
     private final List<Event> events;
     private final EnumSet<Window.Feature> features;
@@ -73,7 +74,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
 
     @Override
     public boolean onTouch(final View view, final MotionEvent event) {
-        int index = 0;
+        int index;
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
@@ -179,11 +180,11 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         }
     }
 
-    private static InputDevice mapDevice(final android.view.InputEvent event) {
+    private static EventSource mapDevice(final android.view.InputEvent event) {
         final android.view.InputDevice device = event.getDevice();
         final int id = device.getId();
         if (!INPUT_DEVICE_MAP.containsKey(id)) {
-            INPUT_DEVICE_MAP.put(id, new InputDevice(id, device.getName()));
+            INPUT_DEVICE_MAP.put(id, new EventSource(id, device.getName()));
         }
 
         return INPUT_DEVICE_MAP.get(id);

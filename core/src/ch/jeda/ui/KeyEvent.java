@@ -28,19 +28,19 @@ public final class KeyEvent extends Event {
     private final char keyChar;
     private final int repeatCount;
 
-    public KeyEvent(final InputDevice inputDevice, final EventType type,
+    public KeyEvent(final EventSource source, final EventType type,
                     final Key key) {
-        this(inputDevice, type, key, '\0', 0);
+        this(source, type, key, '\0', 0);
     }
 
-    public KeyEvent(final InputDevice inputDevice, final EventType type,
+    public KeyEvent(final EventSource source, final EventType type,
                     final Key key, int repeatCount) {
-        this(inputDevice, type, key, '\0', repeatCount);
+        this(source, type, key, '\0', repeatCount);
     }
 
-    public KeyEvent(final InputDevice inputDevice, final EventType type,
+    public KeyEvent(final EventSource source, final EventType type,
                     final char keyChar) {
-        this(inputDevice, type, Key.UNDEFINED, keyChar, 0);
+        this(source, type, Key.UNDEFINED, keyChar, 0);
     }
 
     /**
@@ -60,9 +60,9 @@ public final class KeyEvent extends Event {
         return this.repeatCount;
     }
 
-    private KeyEvent(final InputDevice inputDevice, final EventType type,
+    private KeyEvent(final EventSource source, final EventType type,
                      final Key key, final char keyChar, int repeatCount) {
-        super(inputDevice, type);
+        super(source, type);
         this.key = key;
         this.keyChar = keyChar;
         this.repeatCount = repeatCount;

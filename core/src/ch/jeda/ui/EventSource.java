@@ -17,14 +17,14 @@
 package ch.jeda.ui;
 
 /**
- * Represents an input device such as a keyboard, a mouse, a sensor, or a mouse.
+ * Represents an event source such as a keyboard, a mouse, a sensor, or a mouse.
  */
-public class InputDevice {
+public class EventSource {
 
     private final int id;
     private final String name;
 
-    public InputDevice(final int id, final String name) {
+    public EventSource(final int id, final String name) {
         this.id = id;
         this.name = name;
     }

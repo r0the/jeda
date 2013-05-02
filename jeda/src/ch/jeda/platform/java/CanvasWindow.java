@@ -17,7 +17,7 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.ui.Event;
-import ch.jeda.ui.InputDevice;
+import ch.jeda.ui.EventSource;
 import ch.jeda.ui.EventType;
 import ch.jeda.ui.Key;
 import ch.jeda.ui.KeyEvent;
@@ -54,10 +54,10 @@ class CanvasWindow extends BaseWindow implements FocusListener,
                                                  MouseMotionListener,
                                                  MouseWheelListener {
 
-    private static final InputDevice KEYBOARD = new InputDevice(0, "Keyboard");
+    private static final EventSource KEYBOARD = new EventSource(0, "Keyboard");
     private static final boolean LINUX = System.getProperty("os.name").endsWith("Linux");
-    private static final InputDevice MOUSE = new InputDevice(1, "Mouse");
-    private static final InputDevice WINDOW = new InputDevice(2, "Window");
+    private static final EventSource MOUSE = new EventSource(1, "Mouse");
+    private static final EventSource WINDOW = new EventSource(2, "Window");
     private static final int POINTER_ID = 0;
     private static final Map<Integer, Key> BUTTON_MAP = initButtonMap();
     private static final Map<Integer, Map<Integer, Key>> KEY_MAP = initKeyMap();

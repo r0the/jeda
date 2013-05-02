@@ -25,39 +25,39 @@ package ch.jeda.ui;
  */
 public class Event {
 
-    private final InputDevice inputDevice;
+    private final EventSource source;
     private final EventType type;
 
     /**
      * Constructs an event.
      *
-     * @param inputDevice the input device that generates the event
+     * @param source the event source that generates the event
      * @param type the type of the event
      * @throws NullPointerException if <tt>type</tt> is <tt>null</tt>
      *
      * @since 1
      */
-    public Event(final InputDevice inputDevice, final EventType type) {
-        if (inputDevice == null) {
+    public Event(final EventSource source, final EventType type) {
+        if (source == null) {
             throw new NullPointerException("inputDevice");
         }
         if (type == null) {
             throw new NullPointerException("type");
         }
 
-        this.inputDevice = inputDevice;
+        this.source = source;
         this.type = type;
     }
 
     /**
-     * Returns the input device that generated the event.
+     * Returns the event source that generated the event.
      *
-     * @return the input device that generated the event
+     * @return the event source that generated the event
      *
      * @since 1
      */
-    public InputDevice getInputDevice() {
-        return this.inputDevice;
+    public EventSource getSource() {
+        return this.source;
     }
 
     /**

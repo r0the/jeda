@@ -16,24 +16,20 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.ui.Event;
-import ch.jeda.ui.InputDevice;
-import ch.jeda.ui.EventType;
-
 public final class PointerEvent extends Event {
 
     private final int pointerId;
     private final int x;
     private final int y;
 
-    public PointerEvent(final InputDevice inputDevice, final EventType type,
+    public PointerEvent(final EventSource source, final EventType type,
                         final int pointerId) {
-        this(inputDevice, type, pointerId, -1, -1);
+        this(source, type, pointerId, -1, -1);
     }
 
-    public PointerEvent(final InputDevice inputDevice, final EventType type,
+    public PointerEvent(final EventSource source, final EventType type,
                         final int pointerId, final int x, final int y) {
-        super(inputDevice, type);
+        super(source, type);
         this.pointerId = pointerId;
         this.x = x;
         this.y = y;
