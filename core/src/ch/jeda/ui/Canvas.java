@@ -17,8 +17,6 @@
 package ch.jeda.ui;
 
 import ch.jeda.Engine;
-import ch.jeda.Location;
-import ch.jeda.Size;
 import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import java.util.Stack;
@@ -56,7 +54,6 @@ public class Canvas {
 
     private static final int DEFAULT_FONT_SIZE = 16;
     private static final Color DEFAULT_FOREGROUND = Color.BLACK;
-    private final Stack<Transformation> transformationStack;
     private int alpha;
     private Color color;
     private int fontSize;
@@ -86,20 +83,11 @@ public class Canvas {
             throw new IllegalArgumentException("height");
         }
 
-        this.transformationStack = new Stack<Transformation>();
         this.alpha = 255;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
         this.transformation = new Transformation();
         this.setImp(Engine.getContext().createCanvasImp(width, height));
-    }
-
-    /**
-     * @deprecated Use {@link #Canvas(int, int)} instead.
-     */
-    @Deprecated
-    public Canvas(Size size) {
-        this(size.width, size.height);
     }
 
     /**
@@ -138,20 +126,6 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use {@link #drawCircle(ch.jeda.Location, int)} instead.
-     */
-    @Deprecated
-    public void drawCircle(Location center, int radius) {
-        if (center == null) {
-            throw new NullPointerException("center");
-        }
-
-        if (radius > 0) {
-            this.imp.drawCircle(center.x, center.y, radius);
-        }
-    }
-
-    /**
      * Draws an image. The image is drawn using the current alpha value. The top
      * left corner of the image is positioned at the specified coordinates. Has
      * no effect if <tt>image</tt> is <tt>null</tt>.
@@ -165,20 +139,6 @@ public class Canvas {
     public void drawImage(final int x, final int y, final Image image) {
         if (image != null) {
             this.imp.drawImage(x, y, image.getImp());
-        }
-    }
-
-    /**
-     * @deprecated Use {@link #drawImage(int, int, ch.jeda.ui.Image)} instead.
-     */
-    @Deprecated
-    public void drawImage(Location topLeft, Image image) {
-        if (topLeft == null) {
-            throw new NullPointerException("topLeft");
-        }
-
-        if (image != null) {
-            this.imp.drawImage(topLeft.x, topLeft.y, image.getImp());
         }
     }
 
@@ -210,28 +170,6 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use
-     * {@link #drawImage(int, int, ch.jeda.ui.Image, ch.jeda.ui.Alignment)}
-     * instead.
-     */
-    @Deprecated
-    public void drawImage(Location anchor, Image image, Alignment alignment) {
-        if (anchor == null) {
-            throw new NullPointerException("anchor");
-        }
-
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (image != null) {
-            this.imp.drawImage(alignment.alignX(anchor.x, image.getWidth()),
-                               alignment.alignY(anchor.y, image.getHeight()),
-                               image.getImp());
-        }
-    }
-
-    /**
      * Draws a straight line. The line is drawn from the coordinates
      * (<tt>x1</tt>, <tt>y1</tt>) to the coordinates (<tt>x2</tt>, <tt>y2</tt>)
      * with the current color, line width, and alpha value.
@@ -246,22 +184,6 @@ public class Canvas {
     public void drawLine(final int x1, final int y1,
                          final int x2, final int y2) {
         this.imp.drawLine(x1, y1, x2, y2);
-    }
-
-    /**
-     * @deprecated Use {@link #drawLine(int, int, int, int)} instead.
-     */
-    @Deprecated
-    public void drawLine(Location from, Location to) {
-        if (from == null) {
-            throw new NullPointerException("from");
-        }
-
-        if (to == null) {
-            throw new NullPointerException("to");
-        }
-
-        this.imp.drawLine(from.x, from.y, to.x, to.y);
     }
 
     /**
@@ -281,24 +203,6 @@ public class Canvas {
                               final int width, final int height) {
         if (width > 0 && height > 0) {
             this.imp.drawRectangle(x, y, width, height);
-        }
-    }
-
-    /**
-     * @deprecated Use {@link #drawRectangle(int, int, int, int)} instead.
-     */
-    @Deprecated
-    public void drawRectangle(Location topLeft, Size size) {
-        if (topLeft == null) {
-            throw new NullPointerException("topLeft");
-        }
-
-        if (size == null) {
-            throw new NullPointerException("size");
-        }
-
-        if (!size.isEmpty()) {
-            this.imp.drawRectangle(topLeft.x, topLeft.y, size.width, size.height);
         }
     }
 
@@ -332,45 +236,11 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use
-     * {@link #drawRectangle(int, int, int, int, ch.jeda.ui.Alignment)} instead.
-     */
-    @Deprecated
-    public void drawRectangle(Location anchor, Size size, Alignment alignment) {
-        if (anchor == null) {
-            throw new NullPointerException("anchor");
-        }
-
-        if (size == null) {
-            throw new NullPointerException("size");
-        }
-
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (!size.isEmpty()) {
-            this.imp.drawRectangle(alignment.alignX(anchor.x, size.width),
-                                   alignment.alignY(anchor.y, size.height),
-                                   size.width, size.height);
-        }
-    }
-
-    /**
      * @deprecated Use {@link #drawText(int, int, java.lang.String)} instead.
      */
     @Deprecated
     public void drawString(int x, int y, String text) {
-        this.drawText(new Location(x, y), text, Alignment.TOP_LEFT);
-    }
-
-    /**
-     * @deprecated Use {@link #drawText(ch.jeda.Location, java.lang.String)}
-     * instead.
-     */
-    @Deprecated
-    public void drawString(Location topLeft, String text) {
-        this.drawText(topLeft, text, Alignment.TOP_LEFT);
+        this.drawText(x, y, text, Alignment.TOP_LEFT);
     }
 
     /**
@@ -380,17 +250,7 @@ public class Canvas {
      */
     @Deprecated
     public final void drawString(int x, int y, String text, Alignment alignment) {
-        this.drawText(new Location(x, y), text, alignment);
-    }
-
-    /**
-     * @deprecated Use
-     * {@link #drawText(ch.jeda.Location, java.lang.String, ch.jeda.ui.Alignment)}
-     * instead.
-     */
-    @Deprecated
-    public void drawString(Location anchor, String text, Alignment alignment) {
-        this.drawText(anchor, text, alignment);
+        this.drawText(x, y, text, alignment);
     }
 
     /**
@@ -408,20 +268,6 @@ public class Canvas {
     public void drawText(final int x, final int y, final String text) {
         if (text != null && !text.isEmpty()) {
             this.imp.drawText(x, y, text);
-        }
-    }
-
-    /**
-     * @deprecated Use {@link #drawText(int, int, java.lang.String)} instead.
-     */
-    @Deprecated
-    public void drawText(Location topLeft, String text) {
-        if (topLeft == null) {
-            throw new NullPointerException("topLeft");
-        }
-
-        if (text != null && !text.isEmpty()) {
-            this.imp.drawText(topLeft.x, topLeft.y, text);
         }
     }
 
@@ -450,29 +296,6 @@ public class Canvas {
             this.imp.drawText(alignment.alignX(x, this.imp.textWidth(text)),
                               alignment.alignY(y, this.imp.textHeight(text)),
                               text);
-        }
-    }
-
-    /**
-     * @deprecated Use
-     * {@link #drawText(int, int, java.lang.String, ch.jeda.ui.Alignment)}
-     * instead.
-     */
-    @Deprecated
-    public void drawText(Location anchor, String text, Alignment alignment) {
-        if (anchor == null) {
-            throw new NullPointerException("anchor");
-        }
-
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (text != null && !text.isEmpty()) {
-            this.imp.drawText(
-                    alignment.alignX(anchor.x, this.imp.textWidth(text)),
-                    alignment.alignY(anchor.y, this.imp.textHeight(text)),
-                    text);
         }
     }
 
@@ -523,20 +346,6 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use {@link #fillCircle(int, int, int)} instead.
-     */
-    @Deprecated
-    public void fillCircle(Location center, int radius) {
-        if (center == null) {
-            throw new NullPointerException("center");
-        }
-
-        if (radius > 0) {
-            this.imp.fillCircle(center.x, center.y, radius);
-        }
-    }
-
-    /**
      * Draws a filled rectangle. The rectangle is filled using the current color
      * and alpha value. The top left corner of the rectangle is positioned at
      * the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
@@ -553,24 +362,6 @@ public class Canvas {
                               final int width, final int height) {
         if (width > 0 && height > 0) {
             this.imp.fillRectangle(x, y, width, height);
-        }
-    }
-
-    /**
-     * @deprecated Use {@link #fillRectangle(int, int, int, int)} instead.
-     */
-    @Deprecated
-    public void fillRectangle(Location topLeft, Size size) {
-        if (topLeft == null) {
-            throw new NullPointerException("topLeft");
-        }
-
-        if (size == null) {
-            throw new NullPointerException("size");
-        }
-
-        if (!size.isEmpty()) {
-            this.imp.fillRectangle(topLeft.x, topLeft.y, size.width, size.height);
         }
     }
 
@@ -601,31 +392,6 @@ public class Canvas {
             this.imp.fillRectangle(alignment.alignX(x, width),
                                    alignment.alignY(y, height),
                                    width, height);
-        }
-    }
-
-    /**
-     * @deprecated Use
-     * {@link #fillRectangle(int, int, int, int, ch.jeda.ui.Alignment)} instead.
-     */
-    @Deprecated
-    public void fillRectangle(Location anchor, Size size, Alignment alignment) {
-        if (anchor == null) {
-            throw new NullPointerException("anchor");
-        }
-
-        if (size == null) {
-            throw new NullPointerException("size");
-        }
-
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (!size.isEmpty()) {
-            this.imp.fillRectangle(alignment.alignX(anchor.x, size.width),
-                                   alignment.alignY(anchor.y, size.height),
-                                   size.width, size.height);
         }
     }
 
@@ -763,40 +529,11 @@ public class Canvas {
     }
 
     /**
-     * Returns the color of a pixel. Returns the color of the pixel at the
-     * specified location. Returns {@link ch.jeda.ui.Color#NONE} if the
-     * coordinates do not reference a pixel inside the canvas.
-     *
-     * @param location the location of the pixel
-     * @return the color of the pixel at the specified location
-     * @throws NullPointerException if <tt>location</tt> is <tt>null</tt>
-     *
-     * @see #setPixelAt(ch.jeda.Location, ch.jeda.ui.Color)
-     * @since 1
-     */
-    public Color getPixelAt(Location location) {
-        if (location == null) {
-            throw new NullPointerException("location");
-        }
-
-        return this.getPixelAt(location.x, location.y);
-    }
-
-    /**
-     * @deprecated Use {@link #getWidth()} and {@link #getHeight()} instead.
-     */
-    @Deprecated
-    public Size getSize() {
-        return new Size(this.imp.getWidth(), this.imp.getHeight());
-    }
-
-    /**
      * Returns the current transformation for the canvas.
      *
      * @return the current transformation
      *
-     * @see #popTransformation()
-     * @see #pushTransformation(ch.jeda.Transformation)
+     * @see #setTransformation(ch.jeda.Transformation)
      * @since 1
      */
     public Transformation getTransformation() {
@@ -813,35 +550,6 @@ public class Canvas {
      */
     public int getWidth() {
         return this.imp.getWidth();
-    }
-
-    /**
-     * @deprecated Use {@link #getTransformation()} to retrieve and store the
-     * current transformation.
-     */
-    @Deprecated
-    public void popTransformation() {
-        if (this.transformationStack.isEmpty()) {
-            throw new IllegalStateException("Empty transformation stack.");
-        }
-
-        this.transformation = this.transformationStack.pop();
-        this.imp.setTransformation(this.transformation);
-    }
-
-    /**
-     * @deprecated Use {@link #setTransformation(ch.jeda.Transformation)}
-     * instead.
-     */
-    @Deprecated
-    public void pushTransformation(Transformation transformation) {
-        if (transformation == null) {
-            throw new NullPointerException("transformation");
-        }
-
-        this.transformationStack.push(this.transformation);
-        this.transformation = transformation;
-        this.imp.setTransformation(this.transformation);
     }
 
     /**
@@ -955,18 +663,6 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use {@link #setPixelAt(int, int, ch.jeda.ui.Color)} instead.
-     */
-    @Deprecated
-    public void setPixelAt(Location location, Color color) {
-        if (location == null) {
-            throw new NullPointerException("location");
-        }
-
-        this.setPixelAt(location.x, location.y, color);
-    }
-
-    /**
      * Sets the affine transformation. The transformation set by this method is
      * applied to all subsequent drawing operations.
      *
@@ -1015,21 +711,6 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use {@link #textWidth(java.lang.String)} and
-     * {@link #textHeight(java.lang.String)} instead.
-     */
-    @Deprecated
-    public Size textSize(String text) {
-        if (text == null || text.isEmpty()) {
-            return Size.EMPTY;
-        }
-        else {
-            return new Size(this.imp.textWidth(text),
-                            this.imp.textHeight(text));
-        }
-    }
-
-    /**
      * Returns the width of a text in pixels. Returns the width in pixels of the
      * specified text given the current font size. Returns zero if <tt>text</tt>
      * is <tt>null</tt> or empty.
@@ -1047,7 +728,6 @@ public class Canvas {
     }
 
     Canvas() {
-        this.transformationStack = new Stack<Transformation>();
         this.alpha = 255;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;

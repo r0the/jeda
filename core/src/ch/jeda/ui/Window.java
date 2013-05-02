@@ -17,7 +17,6 @@
 package ch.jeda.ui;
 
 import ch.jeda.Engine;
-import ch.jeda.Size;
 import ch.jeda.platform.WindowImp;
 import java.util.EnumSet;
 
@@ -203,15 +202,6 @@ public class Window extends Canvas {
         this.eventDispatcher.addListener(this.events.listener);
         this.title = Engine.getProgramName();
         this.resetImp(width, height, toSet(features));
-    }
-
-    /**
-     * @deprecated Use {@link #Window(int, int, ch.jeda.ui.Window.Feature[])}
-     * instead.
-     */
-    @Deprecated
-    public Window(Size size, Feature... features) {
-        this(size.width, size.height, features);
     }
 
     /**
