@@ -37,12 +37,10 @@ import java.util.Map;
 
 class JavaCanvasImp implements CanvasImp {
 
-    private static final java.awt.Color CLEAR_COLOR = new java.awt.Color(0, 0, 0, 0);
     private static final AffineTransform IDENTITY = new AffineTransform();
     private final AffineTransform affineTransform;
     private final float[] matrix;
     private final Map<FontRenderContext, Map<java.awt.Font, Map<String, TextLayout>>> textLayoutCache;
-    private int alpha;
     private BufferedImage buffer;
     private Graphics2D graphics;
     private int height;
@@ -52,7 +50,6 @@ class JavaCanvasImp implements CanvasImp {
         this.affineTransform = new AffineTransform();
         this.matrix = new float[6];
         this.textLayoutCache = new HashMap();
-        this.alpha = 255;
     }
 
     JavaCanvasImp(int width, int height) {
@@ -78,12 +75,20 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawImage(int x, int y, ImageImp image) {
+    public void drawImage(int x, int y, ImageImp image, int alpha) {
         assert image != null;
         assert image instanceof JavaImageImp;
+        assert 0 < alpha && alpha <= 255;
 
-        final BufferedImage awtImage = ((JavaImageImp) image).bufferedImage;
-        this.graphics.drawImage(awtImage, x, y, null);
+        if (alpha != 255) {
+            this.graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha / 255f));
+        }
+
+        this.graphics.drawImage(((JavaImageImp) image).bufferedImage, x, y, null);
+        if (alpha != 255) {
+            this.graphics.setPaintMode();
+        }
+
         this.modified();
     }
 
@@ -96,6 +101,8 @@ class JavaCanvasImp implements CanvasImp {
     @Override
     public void drawPolygon(int[] points) {
         assert points != null;
+        assert points.length >= 6;
+        assert points.length % 2 == 0;
 
         this.graphics.drawPolygon(createPolygon(points));
         this.modified();
@@ -119,7 +126,6 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void fill() {
-        this.graphics.setPaintMode();
         if (this.graphics.getTransform().isIdentity()) {
             this.graphics.fillRect(0, 0, this.width, this.height);
         }
@@ -130,7 +136,6 @@ class JavaCanvasImp implements CanvasImp {
             this.graphics.setTransform(oldTransform);
         }
 
-        this.setAlpha(this.alpha);
         this.modified();
     }
 
@@ -146,6 +151,8 @@ class JavaCanvasImp implements CanvasImp {
     @Override
     public void fillPolygon(int[] points) {
         assert points != null;
+        assert points.length >= 6;
+        assert points.length % 2 == 0;
 
         this.graphics.fillPolygon(createPolygon(points));
         this.modified();
@@ -163,7 +170,7 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public double getLineWidth() {
+    public float getLineWidth() {
         return ((BasicStroke) this.graphics.getStroke()).getLineWidth();
     }
 
@@ -177,22 +184,6 @@ class JavaCanvasImp implements CanvasImp {
     @Override
     public int getWidth() {
         return this.width;
-    }
-
-    @Override
-    public void setAlpha(int alpha) {
-        assert 0 <= alpha && alpha <= 255;
-
-        this.alpha = alpha;
-        if (alpha == 255) {
-            this.graphics.setPaintMode();
-        }
-        else if (alpha == 0) {
-            this.graphics.setComposite(AlphaComposite.Dst);
-        }
-        else {
-            this.graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha / 255f));
-        }
     }
 
     @Override
@@ -210,8 +201,10 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setLineWidth(double width) {
-        this.graphics.setStroke(new BasicStroke((float) width));
+    public void setLineWidth(float lineWidth) {
+        assert lineWidth >= 0f;
+
+        this.graphics.setStroke(new BasicStroke(lineWidth));
     }
 
     @Override
@@ -225,6 +218,8 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void setTransformation(Transformation transformation) {
+        assert transformation != null;
+
         transformation.copyToArray(this.matrix);
         this.affineTransform.setTransform(
                 this.matrix[0], this.matrix[3], this.matrix[1],

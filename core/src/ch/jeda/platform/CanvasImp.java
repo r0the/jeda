@@ -25,7 +25,7 @@ public interface CanvasImp {
 
     void drawCircle(int x, int y, int radius);
 
-    void drawImage(int x, int y, ImageImp image);
+    void drawImage(int x, int y, ImageImp image, int alpha);
 
     void drawLine(int x1, int y1, int x2, int y2);
 
@@ -45,19 +45,17 @@ public interface CanvasImp {
 
     int getHeight();
 
-    double getLineWidth();
+    float getLineWidth();
 
     Color getPixelAt(int x, int y);
 
     int getWidth();
 
-    void setAlpha(int alpha);
-
     void setColor(Color color);
 
-    void setFontSize(int size);
+    void setFontSize(int fontSize);
 
-    void setLineWidth(double width);
+    void setLineWidth(float lineWidth);
 
     void setPixelAt(int x, int y, Color color);
 

@@ -31,6 +31,7 @@ import ch.jeda.ui.Color;
 class AndroidCanvasImp implements CanvasImp {
 
     private final Paint fillPaint;
+    private final Paint imagePaint;
     private final Matrix matrix;
     private final float[] matrixArray;
     private final Paint pixelPaint;
@@ -57,12 +58,15 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawImage(final int x, final int y, final ImageImp image) {
+    public void drawImage(final int x, final int y, final ImageImp image,
+                          final int alpha) {
         assert image != null;
         assert image instanceof AndroidImageImp;
+        assert 0 < alpha && alpha <= 255;
 
+        this.imagePaint.setAlpha(alpha);
         this.canvas.drawBitmap(((AndroidImageImp) image).bitmap, x, y,
-                               this.fillPaint);
+                               this.imagePaint);
         this.modified();
     }
 
@@ -75,6 +79,8 @@ class AndroidCanvasImp implements CanvasImp {
     @Override
     public void drawPolygon(final int[] points) {
         assert points != null;
+        assert points.length >= 6;
+        assert points.length % 2 == 0;
 
         this.canvas.drawPath(createPath(points), this.strokePaint);
         this.modified();
@@ -113,6 +119,8 @@ class AndroidCanvasImp implements CanvasImp {
     @Override
     public void fillPolygon(final int[] points) {
         assert points != null;
+        assert points.length >= 6;
+        assert points.length % 2 == 0;
 
         this.canvas.drawPath(createPath(points), this.fillPaint);
         this.modified();
@@ -131,7 +139,7 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public double getLineWidth() {
+    public float getLineWidth() {
         return this.strokePaint.getStrokeWidth();
     }
 
@@ -147,27 +155,24 @@ class AndroidCanvasImp implements CanvasImp {
         return this.bitmap.getWidth();
     }
 
-    @Override
-    public void setAlpha(final int alpha) {
-        assert 0 <= alpha && alpha <= 255;
-
-        this.fillPaint.setAlpha(alpha);
-    }
-
     public void setColor(final Color color) {
+        assert color != null;
+
         this.fillPaint.setColor(color.value);
         this.strokePaint.setColor(color.value);
         this.textPaint.setColor(color.value);
     }
 
     @Override
-    public void setFontSize(final int size) {
-        this.strokePaint.setTextSize(size);
+    public void setFontSize(final int fontSize) {
+        this.strokePaint.setTextSize(fontSize);
     }
 
     @Override
-    public void setLineWidth(final double width) {
-        this.strokePaint.setStrokeWidth((float) width);
+    public void setLineWidth(final float lineWidth) {
+        assert lineWidth >= 0f;
+
+        this.strokePaint.setStrokeWidth(lineWidth);
     }
 
     @Override
@@ -181,6 +186,8 @@ class AndroidCanvasImp implements CanvasImp {
 
     @Override
     public void setTransformation(final Transformation transformation) {
+        assert transformation != null;
+
         this.matrixArray[Matrix.MPERSP_0] = 0;
         this.matrixArray[Matrix.MPERSP_1] = 0;
         this.matrixArray[Matrix.MPERSP_2] = 1;
@@ -196,15 +203,19 @@ class AndroidCanvasImp implements CanvasImp {
 
     @Override
     public int textHeight(final String text) {
+        assert text != null;
+
         Rect bounds = new Rect();
-        this.strokePaint.getTextBounds(text, 0, text.length(), bounds);
+        this.textPaint.getTextBounds(text, 0, text.length(), bounds);
         return bounds.height();
     }
 
     @Override
     public int textWidth(final String text) {
+        assert text != null;
+
         Rect bounds = new Rect();
-        this.strokePaint.getTextBounds(text, 0, text.length(), bounds);
+        this.textPaint.getTextBounds(text, 0, text.length(), bounds);
         return bounds.width();
     }
 
@@ -212,6 +223,7 @@ class AndroidCanvasImp implements CanvasImp {
         this.fillPaint = new Paint();
         this.fillPaint.setStyle(Paint.Style.FILL);
         this.fillPaint.setAntiAlias(true);
+        this.imagePaint = new Paint();
         this.matrix = new Matrix();
         this.matrixArray = new float[9];
         this.pixelPaint = new Paint();

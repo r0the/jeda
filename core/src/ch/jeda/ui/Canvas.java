@@ -36,9 +36,6 @@ import java.util.Stack;
  * <li> <b>font size</b>: the size of the font used to render text. Initially,
  * the font size is 16. The font size can be changed with
  * {@link #setFontSize(int)}.
- * <li> <b>alpha</b>: The opaqueness of drawing operations. Initially, the alpha
- * value is set to 255 (fully opaque). The value can be changed with
- * {@link #setAlpha(int)}.
  * <lI> <b>transformation</b>: The canvas has an affine transformation that is
  * applied to all drawing operations. The default transformation is the
  * identity.
@@ -54,11 +51,10 @@ public class Canvas {
 
     private static final int DEFAULT_FONT_SIZE = 16;
     private static final Color DEFAULT_FOREGROUND = Color.BLACK;
-    private int alpha;
     private Color color;
     private int fontSize;
     private CanvasImp imp;
-    private double lineWidth;
+    private float lineWidth;
     private Transformation transformation;
 
     /**
@@ -83,7 +79,6 @@ public class Canvas {
             throw new IllegalArgumentException("height");
         }
 
-        this.alpha = 255;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
         this.transformation = new Transformation();
@@ -111,7 +106,8 @@ public class Canvas {
 
     /**
      * Draws a circle. The circle is drawn using the current color, line width,
-     * and alpha value. Has no effect if the specified radius is not positive.
+     * and transformation. Has no effect if the specified radius is not
+     * positive.
      *
      * @param x the x coordinate of the circle's centre
      * @param y the y coordinate of the circle's centre
@@ -126,9 +122,9 @@ public class Canvas {
     }
 
     /**
-     * Draws an image. The image is drawn using the current alpha value. The top
-     * left corner of the image is positioned at the specified coordinates. Has
-     * no effect if <tt>image</tt> is <tt>null</tt>.
+     * Draws an image. The image is drawn using the current transformation. The
+     * top left corner of the image is positioned at the specified coordinates.
+     * Has no effect if <tt>image</tt> is <tt>null</tt>.
      *
      * @param x the x coordinate of the image's top left corner
      * @param y the y coordinate of the image's top left corner
@@ -138,12 +134,38 @@ public class Canvas {
      */
     public void drawImage(final int x, final int y, final Image image) {
         if (image != null) {
-            this.imp.drawImage(x, y, image.getImp());
+            this.imp.drawImage(x, y, image.getImp(), 255);
         }
     }
 
     /**
-     * Draws an image. The image is drawn using the current alpha value. The
+     * Draws an image. The image is drawn using the current transformation. The
+     * top left corner of the image is positioned at the specified coordinates.
+     * The image is drawn with a translucency effect specified by the alpha
+     * value. Specify an alpha value of 255 for a completely opaque image, and
+     * alpha value of 0 for a completely transparent image. Has no effect if
+     * <tt>image</tt> is <tt>null</tt>.
+     *
+     * @param x the x coordinate of the image's top left corner
+     * @param y the y coordinate of the image's top left corner
+     * @param image the image to draw
+     * @param alpha the alpha value
+     *
+     * @since 1
+     */
+    public void drawImage(final int x, final int y, final Image image,
+                          final int alpha) {
+        if (alpha < 0 || 255 < alpha) {
+            throw new IllegalArgumentException("alpha");
+        }
+
+        if (image != null && alpha > 0) {
+            this.imp.drawImage(x, y, image.getImp(), alpha);
+        }
+    }
+
+    /**
+     * Draws an image. The image is drawn using the current transformation. The
      * image is aligned relative to the specified coordinates (<tt>x</tt>,
      * <tt>y</tt>). Has no effect if <tt>image</tt> is <tt>null</tt>.
      *
@@ -165,14 +187,49 @@ public class Canvas {
         if (image != null) {
             this.imp.drawImage(alignment.alignX(x, image.getWidth()),
                                alignment.alignY(y, image.getHeight()),
-                               image.getImp());
+                               image.getImp(), 255);
+        }
+    }
+
+    /**
+     * Draws an image. The image is drawn using the current transformation. The
+     * image is aligned relative to the specified coordinates (<tt>x</tt>,
+     * <tt>y</tt>). The image is drawn with a translucency effect specified by
+     * the alpha value. Specify an alpha value of 255 for a completely opaque
+     * image, and alpha value of 0 for a completely transparent image. Has no
+     * effect if <tt>image</tt> is <tt>null</tt>.
+     *
+     * @param x the x coordinate of the alignment point
+     * @param y the y coordinate of the alignment point
+     * @param image the image to draw
+     * @param alpha the alpha value
+     * @param alignment specifies how to align the image relative to
+     * (<tt>x</tt>, <tt>y</tt>)
+     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     *
+     * @since 1
+     */
+    public void drawImage(final int x, final int y, final Image image,
+                          final int alpha, final Alignment alignment) {
+        if (alignment == null) {
+            throw new NullPointerException("alignment");
+        }
+
+        if (alpha < 0 || 255 < alpha) {
+            throw new IllegalArgumentException("alpha");
+        }
+
+        if (image != null && alpha > 0) {
+            this.imp.drawImage(alignment.alignX(x, image.getWidth()),
+                               alignment.alignY(y, image.getHeight()),
+                               image.getImp(), alpha);
         }
     }
 
     /**
      * Draws a straight line. The line is drawn from the coordinates
      * (<tt>x1</tt>, <tt>y1</tt>) to the coordinates (<tt>x2</tt>, <tt>y2</tt>)
-     * with the current color, line width, and alpha value.
+     * with the current color, line width, and transformation.
      *
      * @param x1 the x coordinate of the line's start point
      * @param y1 the y coordinate of the lines' start point
@@ -188,8 +245,8 @@ public class Canvas {
 
     /**
      * Draws a rectangle. The rectangle is drawn using the current color, line
-     * width and alpha value. The top left corner of the rectangle is positioned
-     * at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
+     * width, and transformation. The top left corner of the rectangle is
+     * positioned at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
      * <tt>width</tt> or <tt>height</tt> are not positive.
      *
      * @param x the x coordinate of the rectangle's top left corner
@@ -208,9 +265,9 @@ public class Canvas {
 
     /**
      * Draws a rectangle. The rectangle is drawn using the current color, line
-     * width and alpha value. The rectangle is aligned relative to the specified
-     * coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>width</tt> or
-     * <tt>height</tt> are not positive.
+     * width, and transformation. The rectangle is aligned relative to the
+     * specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
+     * <tt>width</tt> or <tt>height</tt> are not positive.
      *
      * @param x the x coordinate of the alignment point
      * @param y the y coordinate of the alignment point
@@ -254,8 +311,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a text. The text is drawn using the current color, alpha value and
-     * font size. The top left corner of the text is positioned at the
+     * Draws a text. The text is drawn using the current color, transformation,
+     * and font size. The top left corner of the text is positioned at the
      * coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>text</tt>
      * is <tt>null</tt> or empty.
      *
@@ -272,10 +329,10 @@ public class Canvas {
     }
 
     /**
-     * Draws a text. The text is drawn using the current color, alpha value and
-     * font size. The text is aligned relative to the specified coordinates
-     * (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>text</tt>
-     * is <tt>null</tt> or empty.
+     * Draws a text. The text is drawn using the current color, transformation,
+     * and font size. The text is aligned relative to the specified coordinates
+     * (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>text</tt> is <tt>null</tt>
+     * or empty.
      *
      * @param x the x coordinate of the alignment point
      * @param y the y coordinate of the alignment point
@@ -303,7 +360,7 @@ public class Canvas {
      * Draws a triangle. The triangle is specified by the three corners
      * (<tt>x1</tt>, <tt>y1</tt>), (<tt>x2</tt>, <tt>y2</tt>), and (<tt>x3</tt>,
      * <tt>y3</tt>). The triangle is drawn using the current color, line width,
-     * and alpha value.
+     * and transformation.
      *
      * @param x1 x coordinate of the first corner
      * @param y1 y coordinate of the first corner
@@ -320,8 +377,7 @@ public class Canvas {
     }
 
     /**
-     * Fills the entire canvas. The canvas is filled using the current color and
-     * alpha value.
+     * Fills the entire canvas. The canvas is filled using the current color.
      *
      * @since 1
      */
@@ -330,8 +386,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled a circle. The circle is filled using the current color and
-     * alpha value. Has no effect if the specified radius is not positive.
+     * Draws a filled a circle. The circle is drawn using the current color and
+     * transformation. Has no effect if the specified radius is not positive.
      *
      * @param x the x coordinate of the circle's centre
      * @param y the y coordinate of the circle's centre
@@ -346,8 +402,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled rectangle. The rectangle is filled using the current color
-     * and alpha value. The top left corner of the rectangle is positioned at
+     * Draws a filled rectangle. The rectangle is drawn using the current color
+     * and transformation. The top left corner of the rectangle is positioned at
      * the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
      * <tt>width</tt> or <tt>height</tt> are not positive.
      *
@@ -366,8 +422,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled rectangle. The rectangle is filled using the current color
-     * and alpha value. The rectangle is aligned relative to the specified
+     * Draws a filled rectangle. The rectangle is drawn using the current color
+     * and transformation. The rectangle is aligned relative to the specified
      * coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
      * <tt>width</tt> or
      * <tt>height</tt> are not positive.
@@ -398,8 +454,8 @@ public class Canvas {
     /**
      * Draws a filled triangle. The triangle is specified by the three corners
      * (<tt>x1</tt>, <tt>y1</tt>), (<tt>x2</tt>, <tt>y2</tt>), and (<tt>x3</tt>,
-     * <tt>y3</tt>). The triangle is filled using the current color and alpha
-     * value.
+     * <tt>y3</tt>). The triangle is drawn using the current color and
+     * transformation.
      *
      * @param x1 x coordinate of the first corner
      * @param y1 y coordinate of the first corner
@@ -450,15 +506,11 @@ public class Canvas {
     }
 
     /**
-     * Returns the current alpha value.
-     *
-     * @return current alpha value
-     *
-     * @see #setAlpha(int)
-     * @since 1
+     * @deprecated Canvas doesn't support a global alpha value anymore.
      */
+    @Deprecated
     public int getAlpha() {
-        return this.alpha;
+        return 255;
     }
 
     /**
@@ -502,7 +554,7 @@ public class Canvas {
      *
      * @return current line width
      */
-    public double getLineWidth() {
+    public float getLineWidth() {
         return this.imp.getLineWidth();
     }
 
@@ -553,28 +605,14 @@ public class Canvas {
     }
 
     /**
-     * Sets the alpha value. The alpha value describes the opaqueness (the
-     * opposite of transparency) of drawing operations. The value set by this
-     * method is applied to all subsequent <tt>draw...</tt> and <tt>fill...</tt>
-     * operations. The alpha value must be in the range from 0 (fully
-     * transparent) to 255 (fully opaque).
-     *
-     * @param alpha the new alpha value
-     * @throws IllegalArgumentException if alpha value is outside the valid
-     * range
-     *
-     * @see #getAlpha()
-     * @since 1
+     * @deprecated Cavnas doesn't support a global alpha value anymore. Use
+     * {@link #setColor(ch.jeda.ui.Color)} with a transparent color to draw with
+     * translucency. Use{@link #drawImage(int, int, ch.jeda.ui.Image, int)} or
+     * {@link #drawImage(int, int, ch.jeda.ui.Image, int, ch.jeda.ui.Alignment)}
+     * to draw an image with translucency.
      */
+    @Deprecated
     public void setAlpha(final int alpha) {
-        if (alpha < 0 || 255 < alpha) {
-            throw new IllegalArgumentException("alpha");
-        }
-
-        if (this.alpha != alpha) {
-            this.alpha = alpha;
-            this.imp.setAlpha(this.alpha);
-        }
     }
 
     /**
@@ -622,16 +660,17 @@ public class Canvas {
 
     /**
      * Sets the line width. The line width set by this method is applied to all
-     * subsequent <tt>draw...</tt> operations.
+     * subsequent <tt>draw...</tt> operations. Set 0 for drawing hairlines
+     * independent of the transformation.
      *
      * @param lineWidth the new line width
      *
-     * @throws IllegalArgumentException if <tt>lineWidth</tt> is not positive
+     * @throws IllegalArgumentException if <tt>lineWidth</tt> is negative
      *
      * @since 1
      */
-    public void setLineWidth(final double lineWidth) {
-        if (lineWidth <= 0.0) {
+    public void setLineWidth(final float lineWidth) {
+        if (lineWidth < 0f) {
             throw new IllegalArgumentException("lineWidth");
         }
 
@@ -700,6 +739,8 @@ public class Canvas {
      *
      * @param text
      * @return height of text in pixels
+     *
+     * @since 1
      */
     public int textHeight(final String text) {
         if (text == null || text.isEmpty()) {
@@ -717,6 +758,8 @@ public class Canvas {
      *
      * @param text
      * @return width of text in pixels
+     *
+     * @since 1
      */
     public int textWidth(final String text) {
         if (text == null || text.isEmpty()) {
@@ -728,7 +771,6 @@ public class Canvas {
     }
 
     Canvas() {
-        this.alpha = 255;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
         this.transformation = new Transformation();
@@ -736,7 +778,6 @@ public class Canvas {
 
     final void setImp(final CanvasImp imp) {
         this.imp = imp;
-        this.imp.setAlpha(this.alpha);
         this.imp.setColor(this.color);
         this.imp.setFontSize(this.fontSize);
         this.imp.setLineWidth(this.lineWidth);
