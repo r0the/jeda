@@ -16,7 +16,6 @@
  */
 package ch.jeda.world;
 
-import ch.jeda.Size;
 import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;

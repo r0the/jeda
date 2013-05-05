@@ -26,12 +26,11 @@ import java.util.List;
 public final class Util {
 
     /**
-     * Replaces placeholders in message template with the corresponding
-     * arguments. The message template may contain placeholders having the form
-     * <tt>{N}</tt> where <tt>N</tt> is a number. This method will replace all
-     * occurrences of the placeholder <tt>{0}</tt> with the first argument after
-     * <tt>message</tt>, occurrences of <tt>{1}</tt> with the second argument
-     * and so on.
+     * Replaces placeholders in message template with the corresponding arguments. The message template may contain
+     * placeholders having the form
+     * <tt>{N}</tt> where <tt>N</tt> is a number. This method will replace all occurrences of the placeholder
+     * <tt>{0}</tt> with the first argument after
+     * <tt>message</tt>, occurrences of <tt>{1}</tt> with the second argument and so on.
      *
      * @param messageTemplate the message template
      * @param args the arguments to be inserted in the message template
@@ -54,6 +53,17 @@ public final class Util {
             i = i + 1;
         }
         return result;
+    }
+
+    /**
+     * Returns the euclidean distance between the origin and the point <tt>(x, y)</tt>.
+     *
+     * @param x the x coordinate of the point
+     * @param y the y coordinate of the point
+     * @return the euclidean distance between the origin and the point
+     */
+    public static float distance(final float x, final float y) {
+        return (float) Math.sqrt(x * x + y * y);
     }
 
 //    public static String concat(Iterable<String> elements, String separator) {
@@ -103,9 +113,19 @@ public final class Util {
     }
 
     /**
-     * Loads a text file and returns the content as a list of Strings. Each line
-     * of the text file will be represented by a String in the returned list.
-     * Returns
+     * Checks if a <tt>float</tt> number is almost zero. Return <tt>true</tt> if the value of <tt>f</tt> is closer to
+     * zero than a fifth of the smallest representable <tt>float</tt> value.
+     *
+     * @param f the <tt>float</tt> value
+     * @return <tt>true</tt> if <tt>f</tt> is almost zero, <tt>false</tt> otherwise.
+     */
+    public static boolean isZero(final float f) {
+        return Math.abs(f) < 5f * Float.MIN_VALUE;
+    }
+
+    /**
+     * Loads a text file and returns the content as a list of Strings. Each line of the text file will be represented by
+     * a String in the returned list. Returns
      * <code>null</code> if the file is not present or cannot be read.
      *
      * To read a resource file, put ':' in front of the file path.

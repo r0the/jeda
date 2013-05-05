@@ -23,11 +23,11 @@ import java.util.List;
 
 class Contacts {
 
-    private final List<Entity.Contact> contacts;
+    private final List<MovingEntity.Contact> contacts;
     private final List<Detector> detectors;
 
     public Contacts() {
-        this.contacts = new ArrayList<Entity.Contact>();
+        this.contacts = new ArrayList<MovingEntity.Contact>();
         this.detectors = new ArrayList<Detector>();
     }
 
@@ -49,12 +49,6 @@ class Contacts {
         }
     }
 
-    void check() {
-        for (int i = 0; i < this.contacts.size(); ++i) {
-            this.contacts.get(i).check();
-        }
-    }
-
     void resolve(final float dt) {
         int iterations = 0;
         float max;
@@ -62,7 +56,7 @@ class Contacts {
         while (iterations < this.contacts.size() * 2) {
             max = -Float.MAX_VALUE;
             for (int i = 0; i < this.contacts.size(); ++i) {
-                final Entity.Contact c = this.contacts.get(i);
+                final MovingEntity.Contact c = this.contacts.get(i);
                 if (c.getPenetration() >= 0f) {
                     final float v = c.separatingSpeed();
                     if (v > max) {
@@ -76,12 +70,9 @@ class Contacts {
                 return;
             }
 
-            final Entity.Contact c = this.contacts.get(maxIndex);
-            c.resolve(dt);
-
-            for (int i = 0; i < this.contacts.size(); ++i) {
-                this.contacts.get(i).updatePenetration(c);
-            }
+            final MovingEntity.Contact contact = this.contacts.get(maxIndex);
+            contact.resolve(dt);
+            contact.updatePenetration(this.contacts);
 
             ++iterations;
         }
@@ -89,8 +80,9 @@ class Contacts {
 
     private void checkCollision(final Entity e1, final Entity e2,
                                 final float restitution) {
-        // Cannot collide two immobile entities.
-        if (!e1.canMove() && !e2.canMove()) {
+        final boolean e1canMove = e1 instanceof MovingEntity;
+        final boolean e2canMove = e2 instanceof MovingEntity;
+        if (!(e1canMove || e2canMove)) {
             return;
         }
 
@@ -100,12 +92,30 @@ class Contacts {
             return;
         }
 
-        final Collision c = s1.collideWith(s2);
-        if (c == null) {
+        final Collision collision = s1.collideWith(s2);
+        if (collision == null) {
             return;
         }
 
-        this.contacts.add(new Entity.Contact(e1, e2, c, restitution));
+        if (e1canMove && e2canMove) {
+            final float dx = collision.get2X() - collision.get1X();
+            final float dy = collision.get2Y() - collision.get1Y();
+            this.contacts.add(new MovingEntity.ContactMM(
+                    (MovingEntity) e1, (MovingEntity) e2, dx, dy, restitution));
+        }
+        else if (e1canMove) {
+            final float dx = collision.get2X() - collision.get1X();
+            final float dy = collision.get2Y() - collision.get1Y();
+            this.contacts.add(new MovingEntity.ContactMI(
+                    (MovingEntity) e1, e2, dx, dy, restitution));
+        }
+        else {
+            // Swap entities so that moving entity is first
+            final float dx = collision.get1X() - collision.get2X();
+            final float dy = collision.get1Y() - collision.get2Y();
+            this.contacts.add(new MovingEntity.ContactMI(
+                    (MovingEntity) e2, e1, dx, dy, restitution));
+        }
     }
 
     private abstract static class Detector {

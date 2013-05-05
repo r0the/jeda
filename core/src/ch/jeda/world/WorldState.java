@@ -17,7 +17,6 @@
 package ch.jeda.world;
 
 import ch.jeda.ui.Canvas;
-import ch.jeda.ui.Events;
 
 /**
  * <b>Experimental</b>
@@ -43,9 +42,8 @@ public class WorldState {
     }
 
     /**
-     * This method is called in every simulation step to draw the background of
-     * this state. The default implementation fills the canvas with the color
-     * white.
+     * This method is called in every simulation step to draw the background of this state. The default implementation
+     * fills the canvas with the color white.
      *
      * @param canvas the canvas on which the background is drawn
      * @since 1
@@ -55,8 +53,7 @@ public class WorldState {
     }
 
     /**
-     * This method is called in every simulation step to draw the foreground of
-     * this state.
+     * This method is called in every simulation step to draw the foreground of this state.
      *
      * @param canvas the canvas on which the foreground is drawn
      * @since 1
@@ -65,8 +62,8 @@ public class WorldState {
         this.world.drawOverlay(canvas);
     }
 
-    protected void update(final Events events) {
-        this.world.update(events);
+    protected void update() {
+        this.world.update();
     }
 
     void notifyEnter(final World world) {

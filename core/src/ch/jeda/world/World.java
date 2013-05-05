@@ -22,7 +22,6 @@ import ch.jeda.Transformation;
 import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
-import ch.jeda.ui.Events;
 import ch.jeda.ui.Window;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -30,9 +29,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class represents a virtual world, which is a simulation with a graphical
- * representation. This class extends the {@link ch.jeda.Simulation} class and
- * implements a simulation loop that renders to a {@link ch.jeda.ui.Window}.
+ * This class represents a virtual world, which is a simulation with a graphical representation. This class extends the
+ * {@link ch.jeda.Simulation} class and implements a simulation loop that renders to a {@link ch.jeda.ui.Window}.
  *
  * @since 1
  */
@@ -70,15 +68,30 @@ public class World extends Simulation {
             throw new NullPointerException("entity");
         }
 
+        this.window.addEventListener(entity);
         this.entities.add(entity);
     }
 
     /**
-     * Returns a list of entities that intersect with the specified shape. Only
-     * entities that are instances of the class specified in
+     * Adds an event listener to the world. The specified object will recieve events for all events listener interfaces
+     * it implements.
+     *
+     * @param listener the event listener
+     * @since 1
+     */
+    public final void addEventListener(final Object listener) {
+        this.window.addEventListener(listener);
+    }
+
+    public final void clearEntities() {
+        this.entities.clear();
+    }
+
+    /**
+     * Returns a list of entities that intersect with the specified shape. Only entities that are instances of the class
+     * specified in
      * <code>type</code> or a subclass thereof are returned. Pass
-     * <code>Entity.class</code> to return all actors intersecting with the
-     * shape.
+     * <code>Entity.class</code> to return all actors intersecting with the shape.
      *
      * If
      * <code>null</code> is passed as shape, an empty list will be returned.
@@ -101,11 +114,7 @@ public class World extends Simulation {
     }
 
     public final <T extends Entity> T[] entities(final Class<T> type) {
-        return this.entities.byType(type);
-    }
-
-    public final Events getEvents() {
-        return this.window.getEvents();
+        return this.entities.getByType(type);
     }
 
     /**
@@ -142,8 +151,7 @@ public class World extends Simulation {
     }
 
     /**
-     * Checks whether the specified world feature is enabled. See
-     * {@link WorldFeature} for more information.
+     * Checks whether the specified world feature is enabled. See {@link WorldFeature} for more information.
      *
      * @return <tt>true</tt> if specified world feature is enabled
      * @see #setFeature(ch.jeda.ui.Window.Feature, boolean)
@@ -161,12 +169,12 @@ public class World extends Simulation {
     }
 
     public void removeEntity(final Entity entity) {
+        this.window.removeEventListener(entity);
         this.entities.remove(entity);
     }
 
     /**
-     * Enables or disables the specified world feature. See {@link WorldFeature}
-     * for more information.
+     * Enables or disables the specified world feature. See {@link WorldFeature} for more information.
      *
      * @param enable <tt>true</tt> to enabled debug feature,
      * <tt>false</tt> to disable it
@@ -226,8 +234,7 @@ public class World extends Simulation {
     }
 
     /**
-     * Creates a new world with a window that has a drawing area of the
-     * specified size.
+     * Creates a new world with a window that has a drawing area of the specified size.
      *
      * @param width the width of the window's drawing area
      * @param height the height of the window's drawing area
@@ -267,7 +274,7 @@ public class World extends Simulation {
      * This method is overridden to implement the simulation step for a world.
      */
     @Override
-    protected final void step() {
+    public final void step() {
         // --------------------------------------------------------------------
         // 1. Initialization phase
         // 1.1 Check if we need to change the state.
@@ -279,7 +286,7 @@ public class World extends Simulation {
         final float dt = (float) this.getLastStepDuration();
         // 3.1 Update state
         this.window.processEvents();
-        this.state.update(this.window.getEvents());
+        this.state.update();
         // 3.2 Update entities
         if (!this.paused) {
             final Entity[] updateOrder = this.entities.updateOrder();
@@ -307,13 +314,13 @@ public class World extends Simulation {
 
         this.window.setTransformation(IDENTITY);
         // 4.3 Draw debug overlay for entities
-        if (this.hasFeature(WorldFeature.DebugCollisionsShapes)) {
+        if (this.hasFeature(WorldFeature.SHOW_COLLISION_SHAPES)) {
             for (int i = 0; i < paintOrder.length; ++i) {
                 paintOrder[i].drawCollisionShape(this.window);
             }
         }
 
-        if (this.hasFeature(WorldFeature.DebugEntityInfo)) {
+        if (this.hasFeature(WorldFeature.SHOW_ENTITY_INFO)) {
             for (int i = 0; i < paintOrder.length; ++i) {
                 paintOrder[i].drawDebugInfo(this.window);
             }
@@ -328,7 +335,7 @@ public class World extends Simulation {
         this.window.update();
     }
 
-    protected void update(final Events events) {
+    protected void update() {
     }
 
     private World(final int width, final int height,
@@ -347,7 +354,7 @@ public class World extends Simulation {
     }
 
     private void drawDebugOverlay() {
-        if (this.hasFeature(WorldFeature.DebugWorldInfo)) {
+        if (this.hasFeature(WorldFeature.SHOW_WORLD_INFO)) {
             this.window.setColor(DEBUG_OVERLAY_BG_COLOR);
             this.window.fillRectangle(5, 5, this.window.getWidth() - 10, 25);
             this.window.setColor(DEBUG_TEXT_COLOR);
@@ -376,8 +383,8 @@ public class World extends Simulation {
 
     private static EnumSet<Window.Feature> toSet(final Window.Feature... features) {
         final EnumSet<Window.Feature> result = EnumSet.noneOf(Window.Feature.class);
-        for (Window.Feature feature : features) {
-            result.add(feature);
+        for (int i = 0; i < features.length; ++i) {
+            result.add(features[i]);
         }
 
         return result;

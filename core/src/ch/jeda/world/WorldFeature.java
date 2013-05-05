@@ -18,5 +18,5 @@ package ch.jeda.world;
 
 public enum WorldFeature {
 
-    DebugCollisionsShapes, DebugEntityInfo, DebugWorldInfo,
+    SHOW_COLLISION_SHAPES, SHOW_ENTITY_INFO, SHOW_WORLD_INFO,
 }

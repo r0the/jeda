@@ -87,8 +87,52 @@ class Entities {
         }
     }
 
+    void clear() {
+        this.pendingDeletions.addAll(this.list);
+    }
+
     Entity get(int index) {
         return this.list.get(index);
+    }
+
+    <T extends Entity> T[] getByLocation(float x, float y, Class<T> type) {
+        final List<T> result = new ArrayList<T>();
+        final T[] entities = this.getByType(type);
+        for (int i = 0; i < entities.length; ++i) {
+            if (entities[i].getCollisionShape().contains(x, y)) {
+                result.add(entities[i]);
+            }
+        }
+
+        return toArray(result, type);
+    }
+
+    <T extends Entity> T[] getByType(Class<T> type) {
+        if (!this.typeMap.containsKey(type)) {
+            final List<Entity> l = new ArrayList<Entity>();
+            for (Entity e : this.list) {
+                if (type.isAssignableFrom(e.getClass())) {
+                    l.add(e);
+                }
+            }
+
+            this.typeMap.put(type, toArray(l, type));
+        }
+        return (T[]) this.typeMap.get(type);
+    }
+
+    <T extends Entity> T[] getIntersectingEntities(Shape shape, Class<T> type) {
+        final List<T> result = new ArrayList<T>();
+        if (shape != null) {
+            final T[] entities = this.getByType(type);
+            for (int i = 0; i < entities.length; ++i) {
+                if (shape.intersectsWith(entities[i].getCollisionShape())) {
+                    result.add(entities[i]);
+                }
+            }
+        }
+
+        return toArray(result, type);
     }
 
     int getEntityCount() {
@@ -104,6 +148,11 @@ class Entities {
         return this.paintOrder;
     }
 
+    void remove(Entity remove) {
+        this.pendingDeletions.add(remove);
+        this.pendingInsertions.remove(remove);
+    }
+
     Entity[] updateOrder() {
         if (this.updateOrder == null) {
             this.updateOrder = this.list.toArray(ENTITY_ARRAY);
@@ -111,51 +160,6 @@ class Entities {
         }
 
         return this.updateOrder;
-    }
-
-    <T extends Entity> T[] getByLocation(float x, float y, Class<T> type) {
-        final List<T> result = new ArrayList<T>();
-        final T[] entities = this.byType(type);
-        for (int i = 0; i < entities.length; ++i) {
-            if (entities[i].getCollisionShape().contains(x, y)) {
-                result.add(entities[i]);
-            }
-        }
-
-        return toArray(result, type);
-    }
-
-    <T extends Entity> T[] getIntersectingEntities(Shape shape, Class<T> type) {
-        final List<T> result = new ArrayList<T>();
-        if (shape != null) {
-            final T[] entities = this.byType(type);
-            for (int i = 0; i < entities.length; ++i) {
-                if (shape.intersectsWith(entities[i].getCollisionShape())) {
-                    result.add(entities[i]);
-                }
-            }
-        }
-
-        return toArray(result, type);
-    }
-
-    <T extends Entity> T[] byType(Class<T> type) {
-        if (!this.typeMap.containsKey(type)) {
-            final List<Entity> l = new ArrayList<Entity>();
-            for (Entity e : this.list) {
-                if (type.isAssignableFrom(e.getClass())) {
-                    l.add(e);
-                }
-            }
-
-            this.typeMap.put(type, toArray(l, type));
-        }
-        return (T[]) this.typeMap.get(type);
-    }
-
-    void remove(Entity remove) {
-        this.pendingDeletions.add(remove);
-        this.pendingInsertions.remove(remove);
     }
 
     private static <T> T[] toArray(List<?> list, Class<T> type) {
