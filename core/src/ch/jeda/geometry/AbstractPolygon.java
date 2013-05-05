@@ -24,24 +24,21 @@ import ch.jeda.Vector;
 public abstract class AbstractPolygon extends Shape {
 
     /**
-     * Returns the axes of the polygon. The axes are represented as vectors in
-     * the global coordinate system.
+     * Returns the axes of the polygon. The axes are represented as vectors in the global coordinate system.
      *
      * @return axes of the polygon
      */
     protected abstract Vector[] axes();
 
     /**
-     * Returns the vertices of the polygon. The vertices are represented as
-     * vectors in the global coordinate system.
+     * Returns the vertices of the polygon. The vertices are represented as vectors in the global coordinate system.
      *
-     * @return
+     * @return vertices of the polygon
      */
     protected abstract Vector[] vertices();
 
     /**
-     * Intersects two polygons. The polygons are intersected by applying the
-     * Separation of Axes theorem.
+     * Intersects two polygons. The polygons are intersected by applying the Separation of Axes theorem.
      *
      * @param other the other polygon
      * @return collision object representing the intersection

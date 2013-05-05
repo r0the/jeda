@@ -58,7 +58,6 @@ public final class Transformation implements Serializable {
      * specified other transformation.
      *
      * @param other the other transformation
-     * @return the combined transformation
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
      *
      * @since 1
