@@ -27,21 +27,25 @@ abstract class ProgramWrapper {
     private final String name;
 
     static ProgramWrapper tryCreate(final Class<?> candidate, final Context context) {
+        // An abstract class cannot be a valid Jeda program.
         if (Modifier.isAbstract(candidate.getModifiers())) {
             return null;
-        }
-        else if (Program.class.isAssignableFrom(candidate)) {
-            return tryCreateInherited((Class<Program>) candidate, context);
-        }
-        else if (candidate.isAnnotationPresent(JedaProgram.class)) {
-            return tryCreateAnnotated(candidate, context);
         }
         else if (candidate.isAnnotationPresent(NoMain.class)) {
             return tryCreateAnnotated(candidate, context);
         }
-        else {
-            return null;
+        else if (Program.class.isAssignableFrom(candidate)) {
+            return tryCreateInherited((Class<Program>) candidate, context);
         }
+
+        final Class[] interfaces = candidate.getInterfaces();
+        for (int i = 0; i < interfaces.length; ++i) {
+            if (interfaces[i].equals(JedaProgram.class)) {
+                return tryCreateJedaProgram(candidate, context);
+            }
+        }
+
+        return null;
     }
 
     abstract void createInstance() throws Throwable;
@@ -72,6 +76,21 @@ abstract class ProgramWrapper {
 
         }
         catch (NoSuchMethodException ex) {
+            return null;
+        }
+    }
+
+    static ProgramWrapper tryCreateJedaProgram(final Class<?> candidate, final Context context) {
+        try {
+            final Constructor<JedaProgram> constructor =
+                    ((Class<JedaProgram>) candidate).getDeclaredConstructor();
+            constructor.setAccessible(true);
+            return new JedaProgramWrapper(programName(candidate, context), constructor);
+        }
+        catch (NoSuchMethodException ex) {
+            return null;
+        }
+        catch (SecurityException ex) {
             return null;
         }
     }
@@ -141,6 +160,43 @@ abstract class ProgramWrapper {
             catch (InvocationTargetException ex) {
                 throw ex.getCause();
             }
+        }
+
+        @Override
+        void setState(final ProgramState state) {
+            // ignore
+        }
+    }
+
+    private static final class JedaProgramWrapper extends ProgramWrapper {
+
+        private final Constructor<JedaProgram> constructor;
+        private JedaProgram program;
+
+        JedaProgramWrapper(final String name,
+                           final Constructor<JedaProgram> constructor) {
+            super(name);
+            this.constructor = constructor;
+        }
+
+        @Override
+        void createInstance() throws Throwable {
+            try {
+                this.program = this.constructor.newInstance();
+            }
+            catch (InvocationTargetException ex) {
+                throw (Exception) ex.getCause();
+            }
+        }
+
+        @Override
+        String getProgramClassName() {
+            return this.constructor.getDeclaringClass().getName();
+        }
+
+        @Override
+        void run() throws Throwable {
+            this.program.run();
         }
 
         @Override
