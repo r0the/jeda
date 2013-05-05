@@ -50,7 +50,7 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawCircle(final int x, final int y, final int radius) {
+    public void drawCircle(final float x, final float y, final float radius) {
         assert radius > 0;
 
         this.canvas.drawCircle(x, y, radius, this.strokePaint);
@@ -58,7 +58,7 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawImage(final int x, final int y, final ImageImp image,
+    public void drawImage(final float x, final float y, final ImageImp image,
                           final int alpha) {
         assert image != null;
         assert image instanceof AndroidImageImp;
@@ -71,13 +71,14 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawLine(final int x1, final int y1, final int x2, final int y2) {
+    public void drawLine(final float x1, final float y1,
+                         final float x2, final float y2) {
         this.canvas.drawLine(x1, y1, x2, y2, this.strokePaint);
         this.modified();
     }
 
     @Override
-    public void drawPolygon(final int[] points) {
+    public void drawPolygon(final float[] points) {
         assert points != null;
         assert points.length >= 6;
         assert points.length % 2 == 0;
@@ -87,14 +88,14 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawRectangle(final int x, final int y,
-                              final int width, final int height) {
+    public void drawRectangle(final float x, final float y,
+                              final float width, final float height) {
         this.canvas.drawRect(x, y, x + width, y + height, this.strokePaint);
         this.modified();
     }
 
     @Override
-    public void drawText(final int x, final int y, final String text) {
+    public void drawText(final float x, final float y, final String text) {
         assert text != null;
 
         this.canvas.drawText(text, x, y - (int) this.textPaint.ascent(),
@@ -109,7 +110,7 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillCircle(final int x, final int y, final int radius) {
+    public void fillCircle(final float x, final float y, final float radius) {
         assert radius > 0;
 
         this.canvas.drawCircle(x, y, radius, this.fillPaint);
@@ -117,7 +118,7 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillPolygon(final int[] points) {
+    public void fillPolygon(final float[] points) {
         assert points != null;
         assert points.length >= 6;
         assert points.length % 2 == 0;
@@ -127,8 +128,8 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillRectangle(final int x, final int y,
-                              final int width, final int height) {
+    public void fillRectangle(final float x, final float y,
+                              final float width, final float height) {
         this.canvas.drawRect(x, y, x + width, y + height, this.fillPaint);
         this.modified();
     }
@@ -158,9 +159,9 @@ class AndroidCanvasImp implements CanvasImp {
     public void setColor(final Color color) {
         assert color != null;
 
-        this.fillPaint.setColor(color.value);
-        this.strokePaint.setColor(color.value);
-        this.textPaint.setColor(color.value);
+        this.fillPaint.setColor(color.getValue());
+        this.strokePaint.setColor(color.getValue());
+        this.textPaint.setColor(color.getValue());
     }
 
     @Override
@@ -180,8 +181,8 @@ class AndroidCanvasImp implements CanvasImp {
         assert this.contains(x, y);
         assert color != null;
 
-        this.pixelPaint.setColor(color.value);
-        this.canvas.drawPoint(x, y, this.pixelPaint);
+        this.pixelPaint.setColor(color.getValue());
+        this.bitmap.setPixel(x, y, color.getValue());
     }
 
     @Override
@@ -253,7 +254,7 @@ class AndroidCanvasImp implements CanvasImp {
         return 0 <= x && x < this.getWidth() && 0 <= y && y < this.getHeight();
     }
 
-    private static Path createPath(final int[] points) {
+    private static Path createPath(final float[] points) {
         final Path result = new Path();
         boolean first = true;
         for (int i = 0; i < points.length; i = i + 2) {

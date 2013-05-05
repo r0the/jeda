@@ -23,25 +23,25 @@ public interface CanvasImp {
 
     void copyFrom(int x, int y, CanvasImp source);
 
-    void drawCircle(int x, int y, int radius);
+    void drawCircle(float x, float y, float radius);
 
-    void drawImage(int x, int y, ImageImp image, int alpha);
+    void drawImage(float x, float y, ImageImp image, int alpha);
 
-    void drawLine(int x1, int y1, int x2, int y2);
+    void drawLine(float x1, float y1, float x2, float y2);
 
-    void drawPolygon(int[] points);
+    void drawPolygon(float[] points);
 
-    void drawRectangle(int x, int y, int width, int height);
+    void drawRectangle(float x, float y, float width, float height);
 
-    void drawText(int x, int y, String text);
+    void drawText(float x, float y, String text);
 
     void fill();
 
-    void fillCircle(int x, int y, int radius);
+    void fillCircle(float x, float y, float radius);
 
-    void fillPolygon(int[] points);
+    void fillPolygon(float[] points);
 
-    void fillRectangle(int x, int y, int width, int height);
+    void fillRectangle(float x, float y, float width, float height);
 
     int getHeight();
 

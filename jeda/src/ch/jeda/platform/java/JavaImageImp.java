@@ -116,8 +116,8 @@ class JavaImageImp implements ImageImp {
         }
 
         ReplaceColorFilter(Color oldColor, Color newColor) {
-            this.oldColor = oldColor.value;
-            this.newColor = oldColor.value;
+            this.oldColor = oldColor.getValue();
+            this.newColor = oldColor.getValue();
         }
 
         @Override

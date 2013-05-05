@@ -19,9 +19,8 @@ package ch.jeda.ui;
 import java.io.Serializable;
 
 /**
- * This class provides constants to specify alignment when drawing on a
- * {@link Canvas}. The alignment specifies how the element to be drawn is
- * positioned relative to the given coordinates (the alignment point).
+ * This class provides constants to specify alignment when drawing on a {@link Canvas}. The alignment specifies how the
+ * element to be drawn is positioned relative to the given coordinates (the alignment point).
  * <p>
  * <strong>Example:</strong>
  * <pre><code> Window window = new Window(200, 200);
@@ -94,11 +93,11 @@ public final class Alignment implements Serializable {
     private final Align horizontal;
     private final Align vertical;
 
-    int alignX(final int x, final int width) {
+    float alignX(final float x, final float width) {
         return this.horizontal.align(x, width);
     }
 
-    int alignY(final int y, final int height) {
+    float alignY(final float y, final float height) {
         return this.vertical.align(y, height);
     }
 
@@ -109,13 +108,13 @@ public final class Alignment implements Serializable {
 
     private static abstract class Align implements Serializable {
 
-        public abstract int align(int pos, int size);
+        public abstract float align(float pos, float size);
     }
 
     private static class AlignLeftTop extends Align {
 
         @Override
-        public int align(final int pos, final int size) {
+        public float align(final float pos, final float size) {
             return pos;
         }
     }
@@ -123,7 +122,7 @@ public final class Alignment implements Serializable {
     private static class AlignCenter extends Align {
 
         @Override
-        public int align(final int pos, final int size) {
+        public float align(final float pos, final float size) {
             return pos - size / 2;
         }
     }
@@ -131,7 +130,7 @@ public final class Alignment implements Serializable {
     private static class AlignRightBottom extends Align {
 
         @Override
-        public int align(final int pos, final int size) {
+        public float align(final float pos, final float size) {
             return pos - size;
         }
     }

@@ -127,12 +127,7 @@ public final class Color implements Serializable {
      * @since 1
      */
     public static final Color YELLOW = new Color(255, 255, 0);
-    /**
-     * The internal value of the color.
-     *
-     * @since 1
-     */
-    public final int value;
+    private final int value;
 
     /**
      * Constructs a color from a specified value.
@@ -248,6 +243,15 @@ public final class Color implements Serializable {
      */
     public int getRed() {
         return 255 & (this.value >> 16);
+    }
+
+    /**
+     * The internal value of the color.
+     *
+     * @since 1
+     */
+    public int getValue() {
+        return this.value;
     }
 
     @Override

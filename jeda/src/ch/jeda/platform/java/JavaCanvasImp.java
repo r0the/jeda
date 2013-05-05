@@ -52,13 +52,13 @@ class JavaCanvasImp implements CanvasImp {
         this.textLayoutCache = new HashMap();
     }
 
-    JavaCanvasImp(int width, int height) {
+    JavaCanvasImp(final int width, final int height) {
         this();
         this.setBuffer(createBufferedImage(width, height));
     }
 
     @Override
-    public void copyFrom(int x, int y, CanvasImp source) {
+    public void copyFrom(final int x, final int y, final CanvasImp source) {
         assert source != null;
         assert source instanceof JavaCanvasImp;
 
@@ -66,16 +66,16 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawCircle(int x, int y, int radius) {
+    public void drawCircle(final float x, final float y, final float radius) {
         assert radius > 0;
 
-        final int diameter = 2 * radius;
-        this.graphics.drawOval(x - radius, y - radius, diameter, diameter);
+        final int diameter = (int) (2 * radius);
+        this.graphics.drawOval((int) (x - radius), (int) (y - radius), diameter, diameter);
         this.modified();
     }
 
     @Override
-    public void drawImage(int x, int y, ImageImp image, int alpha) {
+    public void drawImage(final float x, final float y, final ImageImp image, final int alpha) {
         assert image != null;
         assert image instanceof JavaImageImp;
         assert 0 < alpha && alpha <= 255;
@@ -84,7 +84,7 @@ class JavaCanvasImp implements CanvasImp {
             this.graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha / 255f));
         }
 
-        this.graphics.drawImage(((JavaImageImp) image).bufferedImage, x, y, null);
+        this.graphics.drawImage(((JavaImageImp) image).bufferedImage, (int) x, (int) y, null);
         if (alpha != 255) {
             this.graphics.setPaintMode();
         }
@@ -93,13 +93,13 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawLine(int x1, int y1, int x2, int y2) {
-        this.graphics.drawLine(x1, y1, x2, y2);
+    public void drawLine(final float x1, final float y1, final float x2, final float y2) {
+        this.graphics.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
         this.modified();
     }
 
     @Override
-    public void drawPolygon(int[] points) {
+    public void drawPolygon(final float[] points) {
         assert points != null;
         assert points.length >= 6;
         assert points.length % 2 == 0;
@@ -109,13 +109,13 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawRectangle(int x, int y, int width, int height) {
-        this.graphics.drawRect(x, y, width, height);
+    public void drawRectangle(final float x, final float y, final float width, final float height) {
+        this.graphics.drawRect((int) x, (int) y, (int) width, (int) height);
         this.modified();
     }
 
     @Override
-    public void drawText(int x, int y, String text) {
+    public void drawText(final float x, final float y, String text) {
         assert text != null;
 
         final TextLayout textLayout = this.textLayout(text);
@@ -140,16 +140,16 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillCircle(int x, int y, int radius) {
+    public void fillCircle(final float x, final float y, final float radius) {
         assert radius > 0;
 
-        final int diameter = 2 * radius;
-        this.graphics.fillOval(x - radius, y - radius, diameter, diameter);
+        final int diameter = (int) (2 * radius);
+        this.graphics.fillOval((int) (x - radius), (int) (y - radius), diameter, diameter);
         this.modified();
     }
 
     @Override
-    public void fillPolygon(int[] points) {
+    public void fillPolygon(final float[] points) {
         assert points != null;
         assert points.length >= 6;
         assert points.length % 2 == 0;
@@ -159,8 +159,8 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillRectangle(int x, int y, int width, int height) {
-        this.graphics.fillRect(x, y, width, height);
+    public void fillRectangle(final float x, final float y, final float width, final float height) {
+        this.graphics.fillRect((int) x, (int) y, (int) width, (int) height);
         this.modified();
     }
 
@@ -175,7 +175,7 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public Color getPixelAt(int x, int y) {
+    public Color getPixelAt(final int x, final int y) {
         assert this.contains(x, y);
 
         return new Color(this.buffer.getRGB(x, y));
@@ -187,37 +187,37 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setColor(Color color) {
+    public void setColor(final Color color) {
         assert color != null;
 
-        this.graphics.setColor(new java.awt.Color(color.value, true));
+        this.graphics.setColor(new java.awt.Color(color.getValue(), true));
     }
 
     @Override
-    public void setFontSize(int fontSize) {
+    public void setFontSize(final int fontSize) {
         assert fontSize > 0;
 
         this.graphics.setFont(this.graphics.getFont().deriveFont((float) fontSize));
     }
 
     @Override
-    public void setLineWidth(float lineWidth) {
+    public void setLineWidth(final float lineWidth) {
         assert lineWidth >= 0f;
 
         this.graphics.setStroke(new BasicStroke(lineWidth));
     }
 
     @Override
-    public void setPixelAt(int x, int y, Color color) {
+    public void setPixelAt(final int x, final int y, final Color color) {
         assert this.contains(x, y);
         assert color != null;
 
-        this.buffer.setRGB(x, y, color.value);
+        this.buffer.setRGB(x, y, color.getValue());
         this.modified();
     }
 
     @Override
-    public void setTransformation(Transformation transformation) {
+    public void setTransformation(final Transformation transformation) {
         assert transformation != null;
 
         transformation.copyToArray(this.matrix);
@@ -235,20 +235,20 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public int textHeight(String text) {
+    public int textHeight(final String text) {
         assert text != null;
 
         return (int) textLayout(text).getBounds().getHeight();
     }
 
     @Override
-    public int textWidth(String text) {
+    public int textWidth(final String text) {
         assert text != null;
 
         return (int) textLayout(text).getBounds().getWidth();
     }
 
-    private TextLayout textLayout(String text) {
+    private TextLayout textLayout(final String text) {
         final FontRenderContext frc = this.graphics.getFontRenderContext();
         final java.awt.Font font = this.graphics.getFont();
         if (!this.textLayoutCache.containsKey(frc)) {
@@ -271,7 +271,7 @@ class JavaCanvasImp implements CanvasImp {
     void modified() {
     }
 
-    final void setBuffer(BufferedImage buffer) {
+    final void setBuffer(final BufferedImage buffer) {
         java.awt.Color oldColor = null;
         java.awt.Font oldFont = null;
         Composite oldComposite = null;
@@ -293,20 +293,20 @@ class JavaCanvasImp implements CanvasImp {
         this.height = buffer.getHeight();
     }
 
-    private boolean contains(int x, int y) {
+    private boolean contains(final int x, final int y) {
         return 0 <= x && x < this.width && 0 <= y && y < this.height;
     }
 
-    static BufferedImage createBufferedImage(int width, int height) {
+    static BufferedImage createBufferedImage(final int width, final int height) {
         return GraphicsEnvironment.getLocalGraphicsEnvironment().
                 getDefaultScreenDevice().getDefaultConfiguration().
                 createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
-    private static Polygon createPolygon(final int[] points) {
+    private static Polygon createPolygon(final float[] points) {
         final Polygon result = new Polygon();
         for (int i = 0; i < points.length; i = i + 2) {
-            result.addPoint(points[i], points[i + 1]);
+            result.addPoint((int) points[i], (int) points[i + 1]);
         }
 
         return result;
