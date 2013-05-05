@@ -22,8 +22,7 @@ import ch.jeda.platform.InputType;
 /**
  * Base class for all Jeda programs.
  * <p>
- * To write a Jeda program, create a class that inherits from ch.jeda.Program
- * and overwrite the {@link #run()} method.
+ * To write a Jeda program, create a class that inherits from ch.jeda.Program and overwrite the {@link #run()} method.
  * <p>
  * <strong>Example:</strong>
  * <pre><code> import ch.jeda.*;
@@ -43,14 +42,13 @@ public abstract class Program {
     private ProgramState state;
 
     /**
-     * Constructs a program. The created program will have the state
-     * {@link ProgramState#Creating}.
+     * Constructs a program. The created program will have the state {@link ProgramState#CREATING}.
      *
      * @since 1
      */
     protected Program() {
         this.stateLock = new Object();
-        this.state = ProgramState.Creating;
+        this.state = ProgramState.CREATING;
     }
 
     /**
@@ -72,27 +70,23 @@ public abstract class Program {
      */
     @Deprecated
     public final void requestStop() {
-        this.setState(ProgramState.Stopped);
+        this.setState(ProgramState.STOPPED);
     }
 
     /**
-     * Executes the program. Override this method to implement the program. The
-     * program should react to changes of the program state. It should not
-     * execute program logic while the program state is
-     * {@link ProgramState#Paused}. The program should return from the
-     * {@link #run()} method if the program state is
-     * {@link ProgramState#Stopped}.
+     * Executes the program. Override this method to implement the program. The program should react to changes of the
+     * program state. It should not execute program logic while the program state is {@link ProgramState#PAUSED}. The
+     * program should return from the {@link #run()} method if the program state is {@link ProgramState#STOPPED}.
      *
      * @since 1
      */
     public abstract void run();
 
     /**
-     * Requests the program to stop. Sets the program state to
-     * {@link ProgramState#Stopped}.
+     * Requests the program to stop. Sets the program state to {@link ProgramState#STOPPED}.
      */
     public final void stop() {
-        this.setState(ProgramState.Stopped);
+        this.setState(ProgramState.STOPPED);
     }
 
     /**
@@ -110,12 +104,12 @@ public abstract class Program {
      */
     @Deprecated
     protected final boolean stopRequested() {
-        return this.getState() == ProgramState.Stopped;
+        return this.getState() == ProgramState.STOPPED;
     }
 
     /**
-     * Prompts the user to enter a <tt>double</tt> value. The specified message
-     * is presented to the user along with a field to enter the <tt>double</tt>
+     * Prompts the user to enter a <tt>double</tt> value. The specified message is presented to the user along with a
+     * field to enter the <tt>double</tt>
      * value. The message may be formatted using simple HTML. Returns
      * <tt>0d</tt> if the user cancels the input.
      *
@@ -135,13 +129,11 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to enter a <tt>double</tt> value. A message is presented
-     * to the user along with a field to enter the <tt>double</tt> value. The
-     * message to be presented to the user is constructed from the
+     * Prompts the user to enter a <tt>double</tt> value. A message is presented to the user along with a field to enter
+     * the <tt>double</tt> value. The message to be presented to the user is constructed from the
      * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
-     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may
-     * be formatted using simple HTML. Returns <tt>0.0</tt> if the user cancels
-     * the input.
+     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may be formatted using simple HTML. Returns
+     * <tt>0.0</tt> if the user cancels the input.
      *
      * @param messageTemplate the message template
      * @param args the arguments to be inserted in the message template
@@ -156,8 +148,8 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to enter an <tt>int</tt> value. The specified message is
-     * presented to the user along with a field to enter the <tt>int<//tt>
+     * Prompts the user to enter an <tt>int</tt> value. The specified message is presented to the user along with a
+     * field to enter the <tt>int<//tt>
      * value. The message may be formatted using simple HTML. Returns <tt>0</tt>
      * if the user cancels the input.
      *
@@ -177,13 +169,11 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to enter an <tt>int</tt> value. A message is presented
-     * to the user along with a field to enter the <tt>int</tt> value. The
-     * message to be presented to the user is constructed from the
+     * Prompts the user to enter an <tt>int</tt> value. A message is presented to the user along with a field to enter
+     * the <tt>int</tt> value. The message to be presented to the user is constructed from the
      * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
-     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may
-     * be formatted using simple HTML. Returns <tt>0</tt> if the user cancels
-     * the input.
+     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may be formatted using simple HTML. Returns
+     * <tt>0</tt> if the user cancels the input.
      *
      * @param messageTemplate the message template
      * @param args the arguments to be inserted in the message template
@@ -198,8 +188,8 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to enter a <tt>String</tt> value. The specified message
-     * is presented to the user along with a field to enter the <tt>String<//tt>
+     * Prompts the user to enter a <tt>String</tt> value. The specified message is presented to the user along with a
+     * field to enter the <tt>String<//tt>
      * value. The message may be formatted using simple HTML. Returns
      * <tt>null</tt> if the user cancels the input.
      *
@@ -219,13 +209,11 @@ public abstract class Program {
     }
 
     /**
-     * Prompts the user to enter a <tt>String</tt> value. A message is presented
-     * to the user along with a field to enter the <tt>String</tt> value. The
-     * message to be presented to the user is constructed from the
+     * Prompts the user to enter a <tt>String</tt> value. A message is presented to the user along with a field to enter
+     * the <tt>String</tt> value. The message to be presented to the user is constructed from the
      * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
-     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may
-     * be formatted using simple HTML. Returns <tt>null</tt> if the user cancels
-     * the input.
+     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may be formatted using simple HTML. Returns
+     * <tt>null</tt> if the user cancels the input.
      *
      * @param messageTemplate the message template
      * @param args the arguments to be inserted in the message template
@@ -255,8 +243,8 @@ public abstract class Program {
     }
 
     /**
-     * Writes a message. Writes the specified message to both the standard
-     * output and to the Jeda log window. Shows the Jeda log window.
+     * Writes a message. Writes the specified message to both the standard output and to the Jeda log window. Shows the
+     * Jeda log window.
      *
      * @param message the message
      *
@@ -268,11 +256,9 @@ public abstract class Program {
     }
 
     /**
-     * Writes a message. Writes a message to both the standard output and to the
-     * Jeda log window. Shows the Jeda log window. The message to be written is
-     * constructed from the <tt>messageTemplate</tt> and the
-     * specified<tt>args</tt> by a call to
-     * {@link Util#args(java.lang.String, java.lang.Object[])}
+     * Writes a message. Writes a message to both the standard output and to the Jeda log window. Shows the Jeda log
+     * window. The message to be written is constructed from the <tt>messageTemplate</tt> and the specified<tt>args</tt>
+     * by a call to {@link Util#args(java.lang.String, java.lang.Object[])}
      *
      * @param messageTemplate the message template
      * @param args the arguments to be inserted in the message template

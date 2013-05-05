@@ -260,25 +260,25 @@ public final class Engine {
 
         @Override
         void onPause() {
-            this.programWrapper.setState(ProgramState.Paused);
+            this.programWrapper.setState(ProgramState.PAUSED);
         }
 
         @Override
         void onResume() {
-            this.programWrapper.setState(ProgramState.Running);
+            this.programWrapper.setState(ProgramState.RUNNING);
         }
 
         @Override
         void onStop() {
-            this.programWrapper.setState(ProgramState.Stopped);
+            this.programWrapper.setState(ProgramState.STOPPED);
         }
 
         @Override
         void run() {
             try {
-                this.programWrapper.setState(ProgramState.Running);
+                this.programWrapper.setState(ProgramState.RUNNING);
                 this.programWrapper.run();
-                this.programWrapper.setState(ProgramState.Stopped);
+                this.programWrapper.setState(ProgramState.STOPPED);
             }
             catch (Throwable ex) {
                 logError(ex, Message.PROGRAM_RUN_ERROR, this.programWrapper.getClass());

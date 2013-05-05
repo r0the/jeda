@@ -90,8 +90,8 @@ public abstract class Simulation extends Program {
     public final void run() {
         this.init();
         this.timer.start();
-        while (this.getState() != ProgramState.Stopped) {
-            if (this.getState() == ProgramState.Paused) {
+        while (this.getState() != ProgramState.STOPPED) {
+            if (this.getState() == ProgramState.PAUSED) {
                 this.sleep(PAUSE_SLEEP_MILLIS);
                 this.timer.start();
             }
