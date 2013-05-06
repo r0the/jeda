@@ -136,74 +136,62 @@ class EventDispatcher {
 
     private void doAddListener(final Object listener) {
         this.listeners.add(listener);
-        final Class[] interfaces = listener.getClass().getInterfaces();
-        for (int i = 0; i < interfaces.length; ++i) {
-            this.doAddInterface(listener, interfaces[i]);
-        }
-    }
-
-    private void doAddInterface(final Object listener, final Class ifc) {
-        final Class[] parents = ifc.getInterfaces();
-        for (int i = 0; i < parents.length; ++i) {
-            this.doAddInterface(listener, parents[i]);
-        }
-
-        if (ifc.equals(KeyDownListener.class)) {
+        if (listener instanceof KeyDownListener) {
             this.keyDownListeners.add((KeyDownListener) listener);
         }
-        else if (ifc.equals(KeyTypedListener.class)) {
+
+        if (listener instanceof KeyTypedListener) {
             this.keyTypedListeners.add((KeyTypedListener) listener);
         }
-        else if (ifc.equals(KeyUpListener.class)) {
+
+        if (listener instanceof KeyUpListener) {
             this.keyUpListeners.add((KeyUpListener) listener);
         }
-        else if (ifc.equals(PointerDownListener.class)) {
+
+        if (listener instanceof PointerDownListener) {
             this.pointerDownListeners.add((PointerDownListener) listener);
         }
-        else if (ifc.equals(PointerMovedListener.class)) {
+
+        if (listener instanceof PointerMovedListener) {
             this.pointerMovedListeners.add((PointerMovedListener) listener);
         }
-        else if (ifc.equals(PointerUpListener.class)) {
+
+        if (listener instanceof PointerUpListener) {
             this.pointerUpListeners.add((PointerUpListener) listener);
         }
-        else if (ifc.equals(WindowFocusLostListener.class)) {
+
+        if (listener instanceof WindowFocusLostListener) {
             this.windowFocusLostListeners.add((WindowFocusLostListener) listener);
         }
     }
 
     private void doRemoveListener(final Object listener) {
         this.listeners.remove(listener);
-        final Class[] interfaces = listener.getClass().getInterfaces();
-        for (int i = 0; i < interfaces.length; ++i) {
-            this.doRemoveInterface(listener, interfaces[i]);
-        }
-    }
-
-    private void doRemoveInterface(final Object listener, final Class ifc) {
-        final Class[] parents = ifc.getInterfaces();
-        for (int i = 0; i < parents.length; ++i) {
-            this.doRemoveInterface(listener, parents[i]);
-        }
-
-        if (ifc.equals(KeyDownListener.class)) {
+        if (listener instanceof KeyDownListener) {
             this.keyDownListeners.remove((KeyDownListener) listener);
         }
-        else if (ifc.equals(KeyTypedListener.class)) {
+
+        if (listener instanceof KeyTypedListener) {
             this.keyTypedListeners.remove((KeyTypedListener) listener);
         }
-        else if (ifc.equals(KeyUpListener.class)) {
+
+        if (listener instanceof KeyUpListener) {
             this.keyUpListeners.remove((KeyUpListener) listener);
         }
-        else if (ifc.equals(PointerDownListener.class)) {
+
+        if (listener instanceof PointerDownListener) {
             this.pointerDownListeners.remove((PointerDownListener) listener);
         }
-        else if (ifc.equals(PointerMovedListener.class)) {
+
+        if (listener instanceof PointerMovedListener) {
             this.pointerMovedListeners.remove((PointerMovedListener) listener);
         }
-        else if (ifc.equals(PointerUpListener.class)) {
+
+        if (listener instanceof PointerUpListener) {
             this.pointerUpListeners.remove((PointerUpListener) listener);
         }
-        else if (ifc.equals(WindowFocusLostListener.class)) {
+
+        if (listener instanceof WindowFocusLostListener) {
             this.windowFocusLostListeners.remove((WindowFocusLostListener) listener);
         }
     }
