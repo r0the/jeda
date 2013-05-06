@@ -35,14 +35,14 @@ class JavaImageImp implements ImageImp {
 
     final BufferedImage bufferedImage;
 
-    JavaImageImp(BufferedImage bufferedImage) {
+    JavaImageImp(final BufferedImage bufferedImage) {
         assert bufferedImage != null;
 
         this.bufferedImage = bufferedImage;
     }
 
     @Override
-    public JavaImageImp createScaledImage(int width, int height) {
+    public JavaImageImp createScaledImage(final int width, final int height) {
         assert width > 0;
         assert height > 0;
 
@@ -53,7 +53,7 @@ class JavaImageImp implements ImageImp {
     }
 
     @Override
-    public ImageImp createSubImage(int x, int y, int width, int height) {
+    public ImageImp createSubImage(final int x, final int y, final int width, final int height) {
         assert width > 0;
         assert height > 0;
 
@@ -72,7 +72,7 @@ class JavaImageImp implements ImageImp {
     }
 
     @Override
-    public JavaImageImp replacePixels(Color oldColor, Color newColor) {
+    public JavaImageImp replacePixels(final Color oldColor, final Color newColor) {
         assert oldColor != null;
         assert newColor != null;
 
@@ -83,11 +83,11 @@ class JavaImageImp implements ImageImp {
     }
 
     @Override
-    public boolean write(OutputStream out, Encoding encoding) throws IOException {
+    public boolean write(final OutputStream out, final Encoding encoding) throws IOException {
         return ImageIO.write(this.bufferedImage, convertEncoding(encoding), out);
     }
 
-    private static String convertEncoding(Encoding encoding) {
+    private static String convertEncoding(final Encoding encoding) {
         switch (encoding) {
             case JPEG:
                 return "jpg";
@@ -98,7 +98,7 @@ class JavaImageImp implements ImageImp {
         }
     }
 
-    private static BufferedImage createImage(int width, int height) {
+    private static BufferedImage createImage(final int width, final int height) {
         final GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().
                 getDefaultScreenDevice().getDefaultConfiguration();
         return gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
@@ -109,19 +109,19 @@ class JavaImageImp implements ImageImp {
         private final int oldColor;
         private final int newColor;
 
-        public static java.awt.Image replaceColor(BufferedImage image, Color oldColor, Color newColor) {
+        public static java.awt.Image replaceColor(final BufferedImage image, final Color oldColor, final Color newColor) {
             final ImageFilter filter = new ReplaceColorFilter(oldColor, newColor);
             final FilteredImageSource filteredSrc = new FilteredImageSource(image.getSource(), filter);
             return Toolkit.getDefaultToolkit().createImage(filteredSrc);
         }
 
-        ReplaceColorFilter(Color oldColor, Color newColor) {
+        ReplaceColorFilter(final Color oldColor, final Color newColor) {
             this.oldColor = oldColor.getValue();
             this.newColor = oldColor.getValue();
         }
 
         @Override
-        public int filterRGB(int x, int y, int rgb) {
+        public int filterRGB(final int x, final int y, final int rgb) {
             if (rgb == this.oldColor) {
                 return this.newColor;
             }

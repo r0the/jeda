@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,7 +24,7 @@ class SelectionWindow extends BaseWindow {
 
     private SelectionRequest listInfo;
 
-    SelectionWindow(WindowManager manager) {
+    SelectionWindow(final WindowManager manager) {
         super(manager);
         this.initComponents();
         this.list.addMouseListener(new MouseListenerImp(this));
@@ -32,7 +32,7 @@ class SelectionWindow extends BaseWindow {
         this.init();
     }
 
-    void setListInfo(SelectionRequest listInfo) {
+    void setListInfo(final SelectionRequest listInfo) {
         this.listInfo = listInfo;
         this.setTitle(listInfo.getTitle());
         this.list.setListData(listInfo.getDisplayItems().toArray());
@@ -53,14 +53,14 @@ class SelectionWindow extends BaseWindow {
 
     private static class MouseListenerImp extends MouseAdapter {
 
-        protected SelectionWindow window;
+        private final SelectionWindow window;
 
-        public MouseListenerImp(SelectionWindow dialog) {
+        public MouseListenerImp(final SelectionWindow dialog) {
             this.window = dialog;
         }
 
         @Override
-        public void mouseClicked(MouseEvent event) {
+        public void mouseClicked(final MouseEvent event) {
             if (event.getClickCount() == 2) {
                 this.window.accept();
             }

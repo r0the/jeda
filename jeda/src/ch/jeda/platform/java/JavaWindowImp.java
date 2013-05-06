@@ -48,26 +48,26 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     }
 
     @Override
-    public void setFeature(Window.Feature feature, boolean enabled) {
+    public void setFeature(final Window.Feature feature, final boolean enabled) {
         this.canvasWindow.setFeature(feature, enabled);
     }
 
     @Override
-    public void setMouseCursor(MouseCursor mouseCursor) {
+    public void setMouseCursor(final MouseCursor mouseCursor) {
         assert mouseCursor != null;
 
         this.canvasWindow.setCursor(MOUSE_CURSOR_MAP.get(mouseCursor));
     }
 
     @Override
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.canvasWindow.setTitle(title);
     }
 
     @Override
     public abstract void update();
 
-    static JavaWindowImp create(CanvasWindow viewWindow) {
+    static JavaWindowImp create(final CanvasWindow viewWindow) {
         if (viewWindow.getFeatures().contains(Window.Feature.DoubleBuffered)) {
             return new DoubleBufferedWindowImp(viewWindow);
         }
@@ -76,7 +76,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         }
     }
 
-    JavaWindowImp(CanvasWindow viewWindow) {
+    JavaWindowImp(final CanvasWindow viewWindow) {
         this.canvasWindow = viewWindow;
     }
 
@@ -102,7 +102,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         private BufferedImage backBuffer;
         private BufferedImage frontBuffer;
 
-        public DoubleBufferedWindowImp(CanvasWindow canvasWindow) {
+        public DoubleBufferedWindowImp(final CanvasWindow canvasWindow) {
             super(canvasWindow);
             this.backBuffer = createBufferedImage(canvasWindow.getImageWidth(),
                                                   canvasWindow.getImageHeight());
@@ -127,7 +127,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
         private final BufferedImage buffer;
 
-        public SingleBufferedWindowImp(CanvasWindow canvasWindow) {
+        public SingleBufferedWindowImp(final CanvasWindow canvasWindow) {
             super(canvasWindow);
             this.buffer = createBufferedImage(canvasWindow.getImageWidth(),
                                               canvasWindow.getImageHeight());

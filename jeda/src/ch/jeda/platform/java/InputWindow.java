@@ -24,7 +24,7 @@ class InputWindow extends BaseWindow {
 
     private InputRequest inputRequest;
 
-    InputWindow(WindowManager manager) {
+    InputWindow(final WindowManager manager) {
         super(manager);
         this.initComponents();
         this.setDefaultButton(this.acceptButton);
@@ -33,7 +33,7 @@ class InputWindow extends BaseWindow {
         this.init();
     }
 
-    void setRequest(InputRequest inputRequest) {
+    void setRequest(final InputRequest inputRequest) {
         this.inputRequest = inputRequest;
         this.setTitle(inputRequest.getTitle());
         this.messageLabel.setText(inputRequest.getMessage());
@@ -59,24 +59,24 @@ class InputWindow extends BaseWindow {
 
     private static final class DocumentListenerImp implements DocumentListener {
 
-        private InputWindow window;
+        private final InputWindow window;
 
-        DocumentListenerImp(InputWindow window) {
+        DocumentListenerImp(final InputWindow window) {
             this.window = window;
         }
 
         @Override
-        public void changedUpdate(DocumentEvent event) {
+        public void changedUpdate(final DocumentEvent event) {
             this.window.validateInput();
         }
 
         @Override
-        public void insertUpdate(DocumentEvent event) {
+        public void insertUpdate(final DocumentEvent event) {
             this.window.validateInput();
         }
 
         @Override
-        public void removeUpdate(DocumentEvent event) {
+        public void removeUpdate(final DocumentEvent event) {
             this.window.validateInput();
         }
     }

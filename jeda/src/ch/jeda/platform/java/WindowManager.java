@@ -49,11 +49,11 @@ public class WindowManager {
         this.windows.add(this.selectionWindow);
     }
 
-    void log(String text) {
+    void log(final String text) {
         this.logWindow.log(text);
     }
 
-    void showInputRequest(InputRequest inputRequest) {
+    void showInputRequest(final InputRequest inputRequest) {
         this.inputWindow.setRequest(inputRequest);
         this.inputWindow.setVisible(true);
     }
@@ -62,12 +62,12 @@ public class WindowManager {
         this.logWindow.setVisible(true);
     }
 
-    void showSelectionRequest(SelectionRequest selectionRequest) {
+    void showSelectionRequest(final SelectionRequest selectionRequest) {
         this.selectionWindow.setListInfo(selectionRequest);
         this.selectionWindow.setVisible(true);
     }
 
-    void showWindow(WindowRequest viewRequest) {
+    void showWindow(final WindowRequest viewRequest) {
         final CanvasWindow window = this.createCanvasWindow(viewRequest);
         this.windows.add(window);
         window.setVisible(true);
@@ -79,7 +79,7 @@ public class WindowManager {
         this.checkWindowsClosed();
     }
 
-    void windowClosed(BaseWindow window) {
+    void windowClosed(final BaseWindow window) {
         if (window.equals(this.fullscreenWindow)) {
             this.fullscreenWindow = null;
             GRAPHICS_DEVICE.setFullScreenWindow(window);
@@ -106,7 +106,7 @@ public class WindowManager {
         }
     }
 
-    private CanvasWindow createCanvasWindow(WindowRequest request) {
+    private CanvasWindow createCanvasWindow(final WindowRequest request) {
         int width = request.getWidth();
         int height = request.getHeight();
         if (width < 1) {
@@ -132,16 +132,15 @@ public class WindowManager {
         }
     }
 
-    private static DisplayMode findDisplayMode(int width, int height) {
+    private static DisplayMode findDisplayMode(final int width, final int height) {
         DisplayMode result = null;
         int fdx = Integer.MAX_VALUE;
         int fdy = Integer.MAX_VALUE;
         int fcolor = Integer.MIN_VALUE;
         for (DisplayMode candidate : GRAPHICS_DEVICE.getDisplayModes()) {
-            int dx = candidate.getWidth() - width;
-            int dy = candidate.getHeight() - height;
-            if (dx >= 0 && dy >= 0 && (dx < fdx || dy < fdy ||
-                                       candidate.getBitDepth() > fcolor)) {
+            final int dx = candidate.getWidth() - width;
+            final int dy = candidate.getHeight() - height;
+            if (dx >= 0 && dy >= 0 && (dx < fdx || dy < fdy || candidate.getBitDepth() > fcolor)) {
                 result = candidate;
                 fdx = dx;
                 fdy = dy;

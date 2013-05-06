@@ -29,7 +29,7 @@ class BaseWindow extends JFrame {
 
     private final WindowManager manager;
 
-    public BaseWindow(WindowManager manager) {
+    public BaseWindow(final WindowManager manager) {
         super(graphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration());
         this.manager = manager;
         this.addWindowListener(new WindowListener(this));
@@ -59,7 +59,7 @@ class BaseWindow extends JFrame {
         this.setIconImage(loadImage("ch/jeda/resources/logo-16x16.png"));
     }
 
-    protected final void setDefaultButton(JButton button) {
+    protected final void setDefaultButton(final JButton button) {
         this.getRootPane().setDefaultButton(button);
     }
 
@@ -67,20 +67,20 @@ class BaseWindow extends JFrame {
         return GraphicsEnvironment.getLocalGraphicsEnvironment();
     }
 
-    private static Image loadImage(String path) {
+    private static Image loadImage(final String path) {
         return new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(path)).getImage();
     }
 
     private static class WindowListener extends WindowAdapter {
 
-        protected BaseWindow window;
+        protected final BaseWindow window;
 
-        public WindowListener(BaseWindow window) {
+        public WindowListener(final BaseWindow window) {
             this.window = window;
         }
 
         @Override
-        public void windowClosing(WindowEvent event) {
+        public void windowClosing(final WindowEvent event) {
             this.window.cancel();
         }
     }

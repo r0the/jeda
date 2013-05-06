@@ -20,7 +20,7 @@ import ch.jeda.Message;
 
 class LogWindow extends BaseWindow {
 
-    LogWindow(WindowManager manager) {
+    LogWindow(final WindowManager manager) {
         super(manager);
         this.initComponents();
         this.setTitle(Message.translate(Message.LOG_TITLE));
@@ -29,7 +29,7 @@ class LogWindow extends BaseWindow {
         this.init();
     }
 
-    void log(String text) {
+    void log(final String text) {
         this.logTextArea.append(text);
         this.logTextArea.setCaretPosition(this.logTextArea.getText().length() - 1);
     }

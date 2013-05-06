@@ -34,7 +34,7 @@ class JavaContextImp implements ContextImp {
     private final WindowManager windowManager;
 
     @Override
-    public CanvasImp createCanvasImp(int width, int height) {
+    public CanvasImp createCanvasImp(final int width, final int height) {
         return new JavaCanvasImp(width, height);
     }
 
@@ -49,18 +49,18 @@ class JavaContextImp implements ContextImp {
     }
 
     @Override
-    public ImageImp loadImageImp(InputStream in) throws Exception {
+    public ImageImp loadImageImp(final InputStream in) throws Exception {
         return new JavaImageImp(ImageIO.read(in));
     }
 
     @Override
-    public void log(String text) {
+    public void log(final String text) {
         this.windowManager.log(text);
         System.out.print(text);
     }
 
     @Override
-    public void showInputRequest(InputRequest inputRequest) {
+    public void showInputRequest(final InputRequest inputRequest) {
         this.windowManager.showInputRequest(inputRequest);
     }
 
@@ -70,12 +70,12 @@ class JavaContextImp implements ContextImp {
     }
 
     @Override
-    public void showSelectionRequest(SelectionRequest selectionRequest) {
+    public void showSelectionRequest(final SelectionRequest selectionRequest) {
         this.windowManager.showSelectionRequest(selectionRequest);
     }
 
     @Override
-    public void showWindow(WindowRequest windowRequest) {
+    public void showWindow(final WindowRequest windowRequest) {
         this.windowManager.showWindow(windowRequest);
     }
 
@@ -84,7 +84,7 @@ class JavaContextImp implements ContextImp {
         this.windowManager.shutdown();
     }
 
-    JavaContextImp(String[] args) {
+    JavaContextImp(final String[] args) {
         setLookAndFeel();
         if (args.length > 0) {
             this.defaultProgramName = args[0];
