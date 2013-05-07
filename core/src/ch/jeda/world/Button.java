@@ -16,7 +16,9 @@
  */
 package ch.jeda.world;
 
+import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
+import ch.jeda.ui.Color;
 import ch.jeda.ui.Key;
 import ch.jeda.ui.KeyEvent;
 import ch.jeda.ui.KeyListener;
@@ -25,20 +27,31 @@ import ch.jeda.ui.PointerListener;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class Button extends Entity implements KeyListener,
-                                              PointerListener {
+public class Button extends WorldObject implements KeyListener, PointerListener {
 
     private final Set<Key> keys;
+    private final float x;
+    private final float y;
+    private final float width;
+    private final float height;
+    private boolean clicked;
+    private Color backgroundColor;
     private Key pressedKey;
     private Integer pressedPointer;
-    private boolean clicked;
+    private String text;
 
-    public Button() {
+    public Button(final float x, final float y, final float width, final float height) {
+        super();
         this.keys = EnumSet.noneOf(Key.class);
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.backgroundColor = new Color(150, 150, 150, 150);
     }
 
-    public Button(final Key... keys) {
-        this.keys = EnumSet.noneOf(Key.class);
+    public Button(final float x, final float y, final float width, final float height, final Key... keys) {
+        this(x, y, width, height);
         for (int i = 0; i < keys.length; ++i) {
             this.keys.add(keys[i]);
         }
@@ -46,6 +59,25 @@ public class Button extends Entity implements KeyListener,
 
     public final void addKey(final Key key) {
         this.keys.add(key);
+    }
+
+    @Override
+    public boolean contains(final float x, final float y) {
+        return this.x <= x && x <= this.x + this.width && this.y <= y && y <= this.y + this.height;
+    }
+
+    @Override
+    public void draw(final Canvas canvas) {
+        this.clicked = false;
+        canvas.setColor(this.backgroundColor);
+        canvas.fillRectangle(this.x, this.y, this.width, this.height);
+        canvas.setColor(Color.WHITE);
+        canvas.drawRectangle(this.x, this.y, this.width, this.height);
+        canvas.drawText(this.x + this.width / 2f, this.y + this.height / 2f, this.text, Alignment.CENTER);
+    }
+
+    public final String getText() {
+        return this.text;
     }
 
     public final boolean isClicked() {
@@ -80,22 +112,23 @@ public class Button extends Entity implements KeyListener,
     }
 
     @Override
-    public final void onPointerMoved(PointerEvent event) {
-        if (this.pressedPointer == event.getPointerId() &&
+    public final void onPointerMoved(final PointerEvent event) {
+        if (this.pressedPointer != null &&
+            this.pressedPointer == event.getPointerId() &&
             !this.contains(event.getX(), event.getY())) {
             this.pressedPointer = null;
         }
     }
 
     @Override
-    public final void onPointerUp(PointerEvent event) {
-        if (this.pressedPointer == event.getPointerId()) {
+    public final void onPointerUp(final PointerEvent event) {
+        if (this.pressedPointer != null && this.pressedPointer == event.getPointerId()) {
             this.clicked = true;
             this.pressedPointer = null;
         }
     }
 
-    @Override
-    protected void doDraw(final Canvas canvas) {
+    public final void setText(final String text) {
+        this.text = text;
     }
 }

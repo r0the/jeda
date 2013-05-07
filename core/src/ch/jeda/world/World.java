@@ -19,7 +19,6 @@ package ch.jeda.world;
 import ch.jeda.Engine;
 import ch.jeda.Simulation;
 import ch.jeda.Transformation;
-import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 import ch.jeda.ui.Window;
@@ -27,94 +26,55 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.jbox2d.callbacks.DebugDraw;
+import org.jbox2d.common.Color3f;
+import org.jbox2d.common.IViewportTransform;
+import org.jbox2d.common.OBBViewportTransform;
+import org.jbox2d.common.Transform;
+import org.jbox2d.common.Vec2;
 
 /**
  * This class represents a virtual world, which is a simulation with a graphical representation. This class extends the
- * {@link ch.jeda.Simulation} class and implements a simulation loop that renders to a {@link ch.jeda.ui.Window}.
+ * {@link ch.jeda.Simulation} class and implements a simulation loop that renders to a {@link ch.jeda.ui.Window}. A jeda
+ * world can contain the follwing kinds of objects:
+ * <ul>
+ * <li>A <b>body</b> is subject to the laws of physics and is controlled by a physics engine. Bodies can obly be used
+ * when an appropriate plugin is used.
+ * <li>A <b>particle</b> is subject to the laws of physics and is controlled by a physics engine. Particles can obly be
+ * used when an appropriate plugin is used.
+ * <li>A <b>figure</b> is a graphic
+ * </ul>
  *
  * @since 1
  */
 public class World extends Simulation {
-
-    protected static final Color DEBUG_FILL_COLOR = new Color(255, 0, 0, 70);
-    protected static final Color DEBUG_OUTLINE_COLOR = Color.RED;
+    
+    private final int velocityIterations;
+    private final int positionIterations;
     protected static final Color DEBUG_OVERLAY_BG_COLOR = new Color(255, 200, 200);
     protected static final Color DEBUG_TEXT_COLOR = Color.BLACK;
     private static final Transformation IDENTITY = new Transformation();
     private static final EnumSet<Window.Feature> NO_FEATURES = EnumSet.noneOf(Window.Feature.class);
-    private final Contacts contacts;
     private final Set<WorldFeature> features;
     private final WorldState defaultState;
-    private final Entities entities;
+    private final org.jbox2d.dynamics.World physics;
     private final Map<Class<? extends WorldState>, WorldState> states;
     private Class<? extends WorldState> nextState;
     private final Window window;
+    private Objects objects;
     private boolean paused;
     private WorldState state;
-
-    public final void addAutoCollision(final Class<? extends Entity> type,
-                                       final float restitution) {
-        this.contacts.addDetection(type, restitution);
-    }
-
-    public final void addAutoCollision(final Class<? extends Entity> type1,
-                                       final Class<? extends Entity> type2,
-                                       final float restitution) {
-        this.contacts.addDetection(type1, type2, restitution);
-    }
-
-    public final void addEntity(final Entity entity) {
-        if (entity == null) {
-            throw new NullPointerException("entity");
+    
+    public final void addObject(final WorldObject object) {
+        if (object == null) {
+            throw new NullPointerException("object");
         }
-
-        this.window.addEventListener(entity);
-        this.entities.add(entity);
-    }
-
-    /**
-     * Adds an event listener to the world. The specified object will recieve events for all events listener interfaces
-     * it implements.
-     *
-     * @param listener the event listener
-     * @since 1
-     */
-    public final void addEventListener(final Object listener) {
-        this.window.addEventListener(listener);
-    }
-
-    public final void clearEntities() {
-        this.entities.clear();
-    }
-
-    /**
-     * Returns a list of entities that intersect with the specified shape. Only entities that are instances of the class
-     * specified in
-     * <code>type</code> or a subclass thereof are returned. Pass
-     * <code>Entity.class</code> to return all actors intersecting with the shape.
-     *
-     * If
-     * <code>null</code> is passed as shape, an empty list will be returned.
-     *
-     * The returned list is a newly created copy, it may be modified.
-     *
-     * @param <T> base class of all entities to be returned
-     * @param shape shape to intersect with the entities
-     * @param type base class of all entities to be returned
-     * @return list of entities
-     */
-    public final <T extends Entity> T[] collidingEntities(
-            final Shape shape, final Class<T> type) {
-        return this.entities.getIntersectingEntities(shape, type);
-    }
-
-    public final <T extends Entity> T[] collidingEntities(
-            final Entity entity, final Class<T> type) {
-        return this.collidingEntities(entity.getCollisionShape(), type);
-    }
-
-    public final <T extends Entity> T[] entities(final Class<T> type) {
-        return this.entities.getByType(type);
+        
+        this.objects.add(object);
+        this.window.addEventListener(object);
+        if (object instanceof PhysicsObject) {
+            ((PhysicsObject) object).addToWorld(this.physics);
+        }
     }
 
     /**
@@ -149,6 +109,10 @@ public class World extends Simulation {
     public final int getCanvasWidth() {
         return this.window.getWidth();
     }
+    
+    public final WorldObject[] getObjects() {
+        return this.objects.getAll();
+    }
 
     /**
      * Checks whether the specified world feature is enabled. See {@link WorldFeature} for more information.
@@ -160,17 +124,24 @@ public class World extends Simulation {
         if (feature == null) {
             return false;
         }
-
+        
         return this.features.contains(feature);
     }
-
+    
     public final boolean hasFeature(final Window.Feature feature) {
         return this.window.hasFeature(feature);
     }
-
-    public void removeEntity(final Entity entity) {
-        this.window.removeEventListener(entity);
-        this.entities.remove(entity);
+    
+    public void removeObject(final WorldObject object) {
+        if (object == null) {
+            throw new NullPointerException("object");
+        }
+        
+        this.objects.remove(object);
+        this.window.removeEventListener(object);
+        if (object instanceof PhysicsObject) {
+            ((PhysicsObject) object).removeFromWorld(this.physics);
+        }
     }
 
     /**
@@ -180,8 +151,7 @@ public class World extends Simulation {
      * <tt>false</tt> to disable it
      * @see #hasFeature(ch.jeda.world.WorldFeature)
      */
-    public final void setFeature(final WorldFeature feature,
-                                 final boolean enable) {
+    public final void setFeature(final WorldFeature feature, final boolean enable) {
         if (enable) {
             this.features.add(feature);
         }
@@ -189,25 +159,28 @@ public class World extends Simulation {
             this.features.remove(feature);
         }
     }
-
-    public final void setFeature(final Window.Feature feature,
-                                 final boolean enabled) {
+    
+    public final void setFeature(final Window.Feature feature, final boolean enabled) {
         this.window.setFeature(feature, enabled);
+    }
+    
+    public final void setGravity(float gx, float gy) {
+        this.physics.setGravity(new Vec2(gx, gy));
     }
 
     public final void setPaused(final boolean paused) {
         this.paused = paused;
     }
-
+    
     public final void setState(final Class<? extends WorldState> state) {
         if (state == null) {
             throw new NullPointerException("state");
         }
-
+        
         if (!this.states.containsKey(state)) {
             Engine.getContext().warning("jeda.game.state.error", state);
         }
-
+        
         this.nextState = state;
     }
 
@@ -244,28 +217,28 @@ public class World extends Simulation {
     protected World(final int width, final int height) {
         this(width, height, NO_FEATURES);
     }
-
+    
     protected World(final int width, final int height,
                     final Window.Feature... features) {
         this(width, height, toSet(features));
     }
-
+    
     protected final void addState(final WorldState state) {
         if (state == null) {
             throw new NullPointerException("state");
         }
-
+        
         this.states.put(state.getClass(), state);
     }
-
+    
     protected void drawBackground(final Canvas canvas) {
         canvas.setColor(Color.WHITE);
         canvas.fill();
     }
-
+    
     protected void drawOverlay(final Canvas canvas) {
     }
-
+    
     @Override
     protected void init() {
     }
@@ -279,51 +252,31 @@ public class World extends Simulation {
         // 1. Initialization phase
         // 1.1 Check if we need to change the state.
         this.checkState();
-        // 1.2 Update entities (inserts, deletions)
-        this.entities.executePendingOperations();
+        // 1.2 Process pending insertions and deletions
+        this.objects.processPending();
         // --------------------------------------------------------------------
         // 3. Update phase
         final float dt = (float) this.getLastStepDuration();
-        // 3.1 Update state
+        // 3.1 Process events
         this.window.processEvents();
+        // 3.2 Update state
         this.state.update();
-        // 3.2 Update entities
+        this.physics.step(dt, this.velocityIterations, this.positionIterations);
         if (!this.paused) {
-            final Entity[] updateOrder = this.entities.updateOrder();
-            for (int i = 0; i < updateOrder.length; ++i) {
-                updateOrder[i].move(dt);
-            }
-
-            for (int i = 0; i < updateOrder.length; ++i) {
-                updateOrder[i].update(this);
-            }
+            // 3.3 Update objects
         }
-
-        this.contacts.detect(this);
-        this.contacts.resolve(dt);
 
         // --------------------------------------------------------------------
         // 4. Draw phase
         // 4.1 Draw state background
         this.state.drawBackground(this.window);
         // 4.2 Draw entities
-        final Entity[] paintOrder = this.entities.paintOrder();
-        for (int i = 0; i < paintOrder.length; ++i) {
-            paintOrder[i].draw(this.window);
-        }
-
+        this.objects.draw(this.window);
+        
         this.window.setTransformation(IDENTITY);
         // 4.3 Draw debug overlay for entities
         if (this.hasFeature(WorldFeature.SHOW_COLLISION_SHAPES)) {
-            for (int i = 0; i < paintOrder.length; ++i) {
-                paintOrder[i].drawCollisionShape(this.window);
-            }
-        }
-
-        if (this.hasFeature(WorldFeature.SHOW_ENTITY_INFO)) {
-            for (int i = 0; i < paintOrder.length; ++i) {
-                paintOrder[i].drawDebugInfo(this.window);
-            }
+            this.physics.drawDebugData();
         }
 
         // 4.4 Draw state overlay
@@ -334,25 +287,34 @@ public class World extends Simulation {
         // 5. Update window
         this.window.update();
     }
-
+    
     protected void update() {
     }
-
-    private World(final int width, final int height,
-                  final EnumSet<Window.Feature> features) {
+    
+    private World(final int width, final int height, final EnumSet<Window.Feature> features) {
         features.add(Window.Feature.DoubleBuffered);
-        this.contacts = new Contacts();
         this.features = EnumSet.noneOf(WorldFeature.class);
         this.defaultState = new WorldState();
-        this.entities = new Entities();
         this.window = new Window(width, height, features.toArray(new Window.Feature[0]));
         this.nextState = null;
+        this.objects = new Objects();
         this.state = this.defaultState;
         this.state.notifyEnter(this);
         this.states = new HashMap<Class<? extends WorldState>, WorldState>();
         this.window.addEventListener(this);
+        this.velocityIterations = 8;
+        this.positionIterations = 3;
+        // Init physics
+        this.physics = new org.jbox2d.dynamics.World(new Vec2());
+        final OBBViewportTransform viewport = new OBBViewportTransform();
+        final float halfWidth = this.window.getWidth() / 2f;
+        final float halfHeight = this.window.getHeight() / 2f;
+        viewport.setExtents(halfWidth, halfHeight);
+        viewport.setCenter(halfWidth, halfHeight);
+        viewport.setYFlip(true);
+        this.physics.setDebugDraw(new DebugDrawAdapter(this.window, viewport));
     }
-
+    
     private void drawDebugOverlay() {
         if (this.hasFeature(WorldFeature.SHOW_WORLD_INFO)) {
             this.window.setColor(DEBUG_OVERLAY_BG_COLOR);
@@ -360,15 +322,15 @@ public class World extends Simulation {
             this.window.setColor(DEBUG_TEXT_COLOR);
             this.window.drawText(10, 10, "FPS: " + this.getCurrentFrequency() +
                                          ", Last Step Duration: " + (int) (this.getLastStepDuration() * 1000) +
-                                         "ms, Entities: " + this.entities.getEntityCount());
+                                         "ms, Objects: " + this.objects.count());
         }
     }
-
+    
     private void checkState() {
         if (this.nextState == null) {
             return;
         }
-
+        
         this.state.notifyExit();
         if (this.states.containsKey(this.nextState)) {
             this.state = this.states.get(this.nextState);
@@ -376,17 +338,78 @@ public class World extends Simulation {
         else {
             this.state = this.defaultState;
         }
-
+        
         this.nextState = null;
         this.state.notifyEnter(this);
     }
-
+    
     private static EnumSet<Window.Feature> toSet(final Window.Feature... features) {
         final EnumSet<Window.Feature> result = EnumSet.noneOf(Window.Feature.class);
         for (int i = 0; i < features.length; ++i) {
             result.add(features[i]);
         }
-
+        
         return result;
+    }
+    
+    private static final class DebugDrawAdapter extends DebugDraw {
+        
+        private final Canvas canvas;
+        
+        public DebugDrawAdapter(final Canvas canvas, final IViewportTransform viewport) {
+            super(viewport);
+            this.canvas = canvas;
+            this.setFlags(e_shapeBit | e_centerOfMassBit);
+        }
+        
+        @Override
+        public void drawCircle(Vec2 center, float radius, Color3f color) {
+            this.canvas.setColor(convertColor(color));
+            this.canvas.drawCircle(center.x, center.y, radius);
+        }
+        
+        @Override
+        public void drawPoint(final Vec2 point, final float radius, final Color3f color) {
+            this.canvas.setColor(convertColor(color));
+            this.canvas.fillCircle(point.x, point.y, radius);
+        }
+        
+        @Override
+        public void drawSegment(Vec2 p1, Vec2 p2, Color3f color) {
+            this.canvas.setColor(convertColor(color));
+            this.canvas.drawLine(p1.x, p1.y, p2.x, p2.y);
+        }
+        
+        @Override
+        public void drawSolidCircle(final Vec2 center, final float radius, final Vec2 axis, final Color3f color) {
+            this.canvas.setColor(convertColor(color));
+            this.canvas.fillCircle(center.x, center.y, radius);
+        }
+        
+        @Override
+        public void drawSolidPolygon(final Vec2[] vertices, int vertexCount, final Color3f color) {
+            final float[] points = new float[2 * vertexCount];
+            for (int i = 0; i < vertexCount; ++i) {
+                points[2 * i] = vertices[i].x;
+                points[2 * i + 1] = vertices[i].y;
+            }
+            
+            this.canvas.setColor(convertColor(color));
+            this.canvas.drawPolygon(points);
+        }
+        
+        @Override
+        public void drawString(final float x, final float y, final String s, final Color3f color) {
+            this.canvas.setColor(convertColor(color));
+            this.canvas.drawText(x, y, s);
+        }
+        
+        @Override
+        public void drawTransform(final Transform t) {
+        }
+        
+        private static Color convertColor(final Color3f color) {
+            return new Color((int) (255f * color.x), (int) (255f * color.y), (int) (255f * color.z));
+        }
     }
 }

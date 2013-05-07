@@ -14,32 +14,27 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.geometry;
+package ch.jeda.world;
 
-class Interval {
+import ch.jeda.ui.Canvas;
 
-    final float min;
-    final float max;
+public abstract class WorldObject {
 
-    Interval(final float min, final float max) {
-        this.min = min;
-        this.max = max;
+    Objects owner;
+    private float z;
+
+    public abstract boolean contains(float x, float y);
+
+    public abstract void draw(Canvas canvas);
+
+    public final float getZ() {
+        return this.z;
     }
 
-    final boolean contains(final Interval other) {
-        return (this.min <= other.min && other.max <= this.max);
-    }
-
-    final boolean overlapsWith(final Interval other) {
-        return !(other.max < this.min || this.max < other.min);
-    }
-
-    final float overlap(final Interval other) {
-        if (this.overlapsWith(other)) {
-            return Math.min(this.max, other.max) - Math.max(this.min, other.min);
-        }
-        else {
-            return 0f;
+    public final void setZ(final float z) {
+        this.z = z;
+        if (this.owner != null) {
+            this.owner.setDirty();
         }
     }
 }
