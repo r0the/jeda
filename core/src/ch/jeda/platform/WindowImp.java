@@ -21,6 +21,9 @@ import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
 import java.util.EnumSet;
 
+/**
+ * <b>Internal</b>. Do not use this interface.
+ */
 public interface WindowImp extends CanvasImp {
 
     void close();

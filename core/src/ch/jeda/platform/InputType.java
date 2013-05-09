@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,9 @@
  */
 package ch.jeda.platform;
 
+/**
+ * <b>Internal</b>. Do not use this class.
+ */
 public abstract class InputType<T> {
 
     public static InputType<Double> forDouble() {
@@ -40,7 +43,7 @@ public abstract class InputType<T> {
     private static class DoubleInputType extends InputType<Double> {
 
         @Override
-        public Double parse(String text) {
+        public Double parse(final String text) {
             try {
                 return Double.parseDouble(text);
             }
@@ -50,7 +53,7 @@ public abstract class InputType<T> {
         }
 
         @Override
-        public boolean validate(String text) {
+        public boolean validate(final String text) {
             return this.parse(text) != null;
         }
     }
@@ -58,7 +61,7 @@ public abstract class InputType<T> {
     private static class IntInputType extends InputType<Integer> {
 
         @Override
-        public Integer parse(String text) {
+        public Integer parse(final String text) {
             try {
                 return Integer.parseInt(text);
             }
@@ -68,7 +71,7 @@ public abstract class InputType<T> {
         }
 
         @Override
-        public boolean validate(String text) {
+        public boolean validate(final String text) {
             return this.parse(text) != null;
         }
     }
@@ -76,12 +79,12 @@ public abstract class InputType<T> {
     private static class StringInputType extends InputType<String> {
 
         @Override
-        public String parse(String text) {
+        public String parse(final String text) {
             return text;
         }
 
         @Override
-        public boolean validate(String text) {
+        public boolean validate(final String text) {
             return true;
         }
     }

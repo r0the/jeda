@@ -18,6 +18,9 @@ package ch.jeda.platform;
 
 import java.io.InputStream;
 
+/**
+ * <b>Internal</b>. Do not use this interface.
+ */
 public interface ContextImp {
 
     CanvasImp createCanvasImp(int width, int height);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,9 @@ package ch.jeda.platform;
 import ch.jeda.ui.Window;
 import java.util.EnumSet;
 
+/**
+ * <b>Internal</b>. Do not use this class.
+ */
 public final class WindowRequest {
 
     private final EnumSet<Window.Feature> features;
@@ -27,8 +30,8 @@ public final class WindowRequest {
     private final int width;
     private WindowImp result;
 
-    public WindowRequest(int width, int height,
-                         EnumSet<Window.Feature> features) {
+    public WindowRequest(final int width, final int height,
+                         final EnumSet<Window.Feature> features) {
         this.width = width;
         this.height = height;
         this.features = features;
@@ -51,7 +54,7 @@ public final class WindowRequest {
         return this.height;
     }
 
-    public void setResult(WindowImp result) {
+    public void setResult(final WindowImp result) {
         synchronized (this.lock) {
             this.result = result;
             this.lock.notify();

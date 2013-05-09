@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,9 @@
  */
 package ch.jeda.platform;
 
+/**
+ * <b>Internal</b>. Do not use this class.
+ */
 public class InputRequest<T> extends Request {
 
     private final InputType<T> inputType;
@@ -24,7 +27,7 @@ public class InputRequest<T> extends Request {
     private boolean done;
     private T result;
 
-    public InputRequest(InputType<T> inputType, T defaultValue) {
+    public InputRequest(final InputType<T> inputType, final T defaultValue) {
         assert inputType != null;
 
         this.inputType = inputType;
@@ -52,7 +55,7 @@ public class InputRequest<T> extends Request {
         return this.cancelled;
     }
 
-    public void setResult(T result) {
+    public void setResult(final T result) {
         synchronized (this.lock) {
             this.done = true;
             this.result = result;

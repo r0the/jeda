@@ -19,6 +19,9 @@ package ch.jeda.platform;
 import ch.jeda.Transformation;
 import ch.jeda.ui.Color;
 
+/**
+ * <b>Internal</b>. Do not use this interface.
+ */
 public interface CanvasImp {
 
     void copyFrom(int x, int y, CanvasImp source);

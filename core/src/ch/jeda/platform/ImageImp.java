@@ -20,6 +20,9 @@ import ch.jeda.ui.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * <b>Internal</b>. Do not use this interface.
+ */
 public interface ImageImp {
 
     enum Encoding {

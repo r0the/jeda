@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,7 +21,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class SelectionRequest<T> extends Request {
+/**
+ * <b>Internal</b>. Do not use this class.
+ */
+public final class SelectionRequest<T> extends Request {
 
     private static final Comparator<ListItem> LIST_ITEM_BY_NAME = new ListItemByName();
     private final List<ListItem<T>> items;

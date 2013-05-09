@@ -16,6 +16,9 @@
  */
 package ch.jeda.platform;
 
+/**
+ * <b>Internal</b>. Do not use this class.
+ */
 public class Request {
 
     private String message;
@@ -24,7 +27,7 @@ public class Request {
     protected Request() {
     }
 
-    public String getMessage() {
+    public final String getMessage() {
         return message;
     }
 
@@ -32,11 +35,11 @@ public class Request {
         return this.title;
     }
 
-    public final void setTitle(String value) {
-        this.title = value;
+    public final void setMessage(final String message) {
+        this.message = message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public final void setTitle(final String value) {
+        this.title = value;
     }
 }
