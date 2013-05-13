@@ -29,7 +29,6 @@ import ch.jeda.platform.InputType;
  *
  * public class HelloWorld extends Program {
  *
- * @Override
  * public void run() {
  *    write("Hello World");
  * }</code></pre>
