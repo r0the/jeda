@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -36,10 +36,8 @@ abstract class DialogView extends BaseView {
         this.buttonPanel.setId(1);
         this.buttonPanel.setOrientation(LinearLayout.HORIZONTAL);
         this.buttonPanel.setGravity(Gravity.CENTER);
-        final RelativeLayout.LayoutParams buttonPanelParams =
-                new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.FILL_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        final RelativeLayout.LayoutParams buttonPanelParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         buttonPanelParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         this.buttonPanel.setLayoutParams(buttonPanelParams);
         this.addView(this.buttonPanel);
@@ -50,8 +48,7 @@ abstract class DialogView extends BaseView {
         final Button result = new Button(this.buttonPanel.getContext());
         result.setText(text);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.weight = 1f;
         result.setLayoutParams(layoutParams);
         this.buttonPanel.addView(result);
@@ -60,10 +57,8 @@ abstract class DialogView extends BaseView {
     }
 
     protected void addContent(final View content) {
-        final RelativeLayout.LayoutParams contentParams =
-                new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.FILL_PARENT,
-                RelativeLayout.LayoutParams.FILL_PARENT);
+        final RelativeLayout.LayoutParams contentParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
         contentParams.addRule(RelativeLayout.ABOVE, this.buttonPanel.getId());
         content.setLayoutParams(contentParams);
         this.addView(content);

@@ -21,8 +21,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 /**
- * Base class of all views used in the jeda activity. Base views are managed by
- * the view manager.
+ * Base class of all views used in the jeda activity. Base views are managed by the view manager.
  */
 class BaseView extends RelativeLayout {
 
@@ -32,9 +31,7 @@ class BaseView extends RelativeLayout {
     BaseView(final ViewManager manager) {
         super(manager.getContext());
         this.manager = manager;
-        this.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.FILL_PARENT,
-                ViewGroup.LayoutParams.FILL_PARENT));
+        this.setLayoutParams(createFillLayout());
     }
 
     int getOrientation() {
@@ -71,8 +68,6 @@ class BaseView extends RelativeLayout {
     }
 
     protected static ViewGroup.LayoutParams createFillLayout() {
-        return new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.FILL_PARENT,
-                ViewGroup.LayoutParams.FILL_PARENT);
+        return new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
     }
 }

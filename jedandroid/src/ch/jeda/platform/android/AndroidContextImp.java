@@ -50,15 +50,13 @@ class AndroidContextImp implements ContextImp {
     }
 
     /**
-     * Iterates through the entries of the application's DEX file to find all
-     * classes.
+     * Iterates through the entries of the application's DEX file to find all classes.
      */
     @Override
     public Class<?>[] loadClasses() throws Exception {
         final List<Class<?>> result = new ArrayList<Class<?>>();
         final Application app = this.activity.getApplication();
-        final String apkName = app.getPackageManager().getApplicationInfo(
-                app.getPackageName(), 0).sourceDir;
+        final String apkName = app.getPackageManager().getApplicationInfo(app.getPackageName(), 0).sourceDir;
         final DexFile dx = new DexFile(apkName);
         final Enumeration<String> e = dx.entries();
         while (e.hasMoreElements()) {
@@ -96,8 +94,7 @@ class AndroidContextImp implements ContextImp {
 
     @Override
     public void showInputRequest(final InputRequest inputRequest) {
-        this.activity.runOnUiThread(new ShowInputRequestTask(
-                this.viewManager, inputRequest));
+        this.activity.runOnUiThread(new ShowInputRequestTask(this.viewManager, inputRequest));
     }
 
     @Override
@@ -107,14 +104,12 @@ class AndroidContextImp implements ContextImp {
 
     @Override
     public void showSelectionRequest(final SelectionRequest selectionRequest) {
-        this.activity.runOnUiThread(new ShowSelectionRequestTask(
-                this.viewManager, selectionRequest));
+        this.activity.runOnUiThread(new ShowSelectionRequestTask(this.viewManager, selectionRequest));
     }
 
     @Override
     public void showWindow(final WindowRequest windowRequest) {
-        this.activity.runOnUiThread(new ShowWindowTask(
-                this.viewManager, windowRequest));
+        this.activity.runOnUiThread(new ShowWindowTask(this.viewManager, windowRequest));
     }
 
     @Override
@@ -125,8 +120,7 @@ class AndroidContextImp implements ContextImp {
     AndroidContextImp(Activity activity) {
         this.activity = activity;
         // Adjust window when soft keyboard is shown.
-        this.activity.getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        this.activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         this.viewManager = new ViewManager(activity);
     }
 
@@ -160,8 +154,7 @@ class AndroidContextImp implements ContextImp {
             this.viewManager.showInputRequest(this.inputRequest);
         }
 
-        ShowInputRequestTask(final ViewManager viewManager,
-                             final InputRequest inputRequest) {
+        ShowInputRequestTask(final ViewManager viewManager, final InputRequest inputRequest) {
             this.viewManager = viewManager;
             this.inputRequest = inputRequest;
         }
@@ -191,8 +184,7 @@ class AndroidContextImp implements ContextImp {
             this.viewManager.showSelectionRequest(this.selectionRequest);
         }
 
-        ShowSelectionRequestTask(final ViewManager viewManager,
-                                 final SelectionRequest selectionRequest) {
+        ShowSelectionRequestTask(final ViewManager viewManager, final SelectionRequest selectionRequest) {
             this.viewManager = viewManager;
             this.selectionRequest = selectionRequest;
         }
@@ -208,8 +200,7 @@ class AndroidContextImp implements ContextImp {
             this.viewManager.showWindow(this.windowRequest);
         }
 
-        ShowWindowTask(final ViewManager viewManager,
-                       final WindowRequest windowRequest) {
+        ShowWindowTask(final ViewManager viewManager, final WindowRequest windowRequest) {
             this.viewManager = viewManager;
             this.windowRequest = windowRequest;
         }

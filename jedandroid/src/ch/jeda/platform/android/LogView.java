@@ -30,14 +30,11 @@ class LogView extends DialogView {
     LogView(final ViewManager manager) {
         super(manager);
         this.setTitle(Message.translate(Message.LOG_TITLE));
-
         this.textView = new TextView(this.getContext());
         this.textView.setLayoutParams(createFillLayout());
-
         this.scrollView = new ScrollView(this.getContext());
         this.scrollView.addView(this.textView);
         this.addContent(this.scrollView);
-
         this.addButton(Message.translate(Message.LOG_BUTTON));
     }
 

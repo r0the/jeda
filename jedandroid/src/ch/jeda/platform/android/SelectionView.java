@@ -122,8 +122,7 @@ class SelectionView extends DialogView {
         }
 
         @Override
-        public View getView(final int position, final View convertView,
-                            final ViewGroup parent) {
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
             View result = convertView;
             if (result == null) {
                 result = this.createRowView();
@@ -169,8 +168,7 @@ class SelectionView extends DialogView {
             final TextView textView = new TextView(this.context);
             textView.setId(TEXT_VIEW_ID);
             textView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             textView.setGravity(Gravity.CENTER_VERTICAL);
             textView.setHeight(50);
             textView.setTextSize(20);
@@ -188,9 +186,7 @@ class SelectionView extends DialogView {
         }
 
         @Override
-        public void onItemClick(final AdapterView<?> adapterView,
-                                final View view, final int position,
-                                final long id) {
+        public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
             this.selectionView.selectedItemPosition = position;
             this.selectionView.accept();
         }

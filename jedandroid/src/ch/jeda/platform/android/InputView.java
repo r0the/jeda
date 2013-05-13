@@ -35,12 +35,10 @@ class InputView extends DialogView implements TextWatcher {
     private final TextView label;
     private InputRequest request;
 
-    public void beforeTextChanged(final CharSequence cs, final int start,
-                                  final int count, final int after) {
+    public void beforeTextChanged(final CharSequence cs, final int start, final int count, final int after) {
     }
 
-    public void onTextChanged(final CharSequence cs, final int start,
-                              final int count, final int after) {
+    public void onTextChanged(final CharSequence cs, final int start, final int count, final int after) {
     }
 
     public void afterTextChanged(final Editable editable) {
@@ -59,12 +57,10 @@ class InputView extends DialogView implements TextWatcher {
 
         this.input = new EditText(this.getContext());
         this.input.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.FILL_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
+                LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         this.label = new TextView(this.getContext());
         this.label.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.FILL_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
+                LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         main.addView(this.label);
         main.addView(this.input);
 
@@ -72,8 +68,7 @@ class InputView extends DialogView implements TextWatcher {
         this.input.setInputType(EditorInfo.TYPE_CLASS_TEXT);
         this.input.addTextChangedListener(this);
 
-        final InputMethodManager imm = (InputMethodManager) getContext().
-                getSystemService(Context.INPUT_METHOD_SERVICE);
+        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(this.input, InputMethodManager.SHOW_IMPLICIT);
     }
 
@@ -88,8 +83,7 @@ class InputView extends DialogView implements TextWatcher {
 
     @Override
     protected void onAccept() {
-        this.request.setResult(this.request.getInputType().parse(
-                this.input.getText().toString()));
+        this.request.setResult(this.request.getInputType().parse(this.input.getText().toString()));
     }
 
     @Override
@@ -108,7 +102,6 @@ class InputView extends DialogView implements TextWatcher {
     }
 
     private void validateInput() {
-        this.acceptButton.setEnabled(this.request.getInputType().validate(
-                this.input.getText().toString()));
+        this.acceptButton.setEnabled(this.request.getInputType().validate(this.input.getText().toString()));
     }
 }

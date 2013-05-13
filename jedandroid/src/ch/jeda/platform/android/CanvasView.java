@@ -41,8 +41,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
                                              View.OnKeyListener,
                                              View.OnTouchListener {
 
-    private static final Map<Integer, EventSource> INPUT_DEVICE_MAP =
-            new HashMap<Integer, EventSource>();
+    private static final Map<Integer, EventSource> INPUT_DEVICE_MAP = new HashMap<Integer, EventSource>();
     private static final Map<Integer, Key> KEY_MAP = initKeyMap();
     private final List<Event> events;
     private final EnumSet<Window.Feature> features;
@@ -52,8 +51,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     private SurfaceView surfaceView;
 
     @Override
-    public boolean onKey(final View view, final int keyCode,
-                         final android.view.KeyEvent event) {
+    public boolean onKey(final View view, final int keyCode, final android.view.KeyEvent event) {
         final Key key = KEY_MAP.get(keyCode);
         if (key == null) {
             return false;
@@ -61,8 +59,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
 
         switch (event.getAction()) {
             case android.view.KeyEvent.ACTION_DOWN:
-                this.events.add(new KeyEvent(mapDevice(event), EventType.KEY_DOWN,
-                                             key, event.getRepeatCount()));
+                this.events.add(new KeyEvent(mapDevice(event), EventType.KEY_DOWN, key, event.getRepeatCount()));
                 break;
             case android.view.KeyEvent.ACTION_UP:
                 this.events.add(new KeyEvent(mapDevice(event), EventType.KEY_UP, key));
@@ -79,26 +76,18 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
                 index = event.getActionIndex();
-                this.events.add(new PointerEvent(mapDevice(event),
-                                                 EventType.POINTER_DOWN,
-                                                 event.getPointerId(index),
-                                                 (int) event.getX(index),
-                                                 (int) event.getY(index)));
+                this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_DOWN, event.getPointerId(index),
+                                                 (int) event.getX(index), (int) event.getY(index)));
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 index = event.getActionIndex();
-                this.events.add(new PointerEvent(mapDevice(event),
-                                                 EventType.POINTER_UP,
-                                                 event.getPointerId(index)));
+                this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_UP, event.getPointerId(index)));
                 break;
             case MotionEvent.ACTION_MOVE:
                 for (index = 0; index < event.getPointerCount(); ++index) {
-                    this.events.add(new PointerEvent(mapDevice(event),
-                                                     EventType.POINTER_MOVED,
-                                                     event.getPointerId(index),
-                                                     (int) event.getX(index),
-                                                     (int) event.getY(index)));
+                    this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_MOVED, event.getPointerId(index),
+                                                     (int) event.getX(index), (int) event.getY(index)));
                 }
 
                 break;
@@ -112,8 +101,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     }
 
     @Override
-    public void surfaceChanged(final SurfaceHolder holder, final int format,
-                               final int width, final int height) {
+    public void surfaceChanged(final SurfaceHolder holder, final int format, final int width, final int height) {
         if (this.request != null) {
             this.request.setResult(AndroidWindowImp.create(this, width, height));
             this.request = null;

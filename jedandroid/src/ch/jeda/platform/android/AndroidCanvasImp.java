@@ -45,8 +45,7 @@ class AndroidCanvasImp implements CanvasImp {
         assert source != null;
         assert source instanceof AndroidCanvasImp;
 
-        this.canvas.drawBitmap(((AndroidCanvasImp) source).bitmap,
-                               x, y, this.fillPaint);
+        this.canvas.drawBitmap(((AndroidCanvasImp) source).bitmap, x, y, this.fillPaint);
     }
 
     @Override
@@ -58,21 +57,18 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawImage(final float x, final float y, final ImageImp image,
-                          final int alpha) {
+    public void drawImage(final float x, final float y, final ImageImp image, final int alpha) {
         assert image != null;
         assert image instanceof AndroidImageImp;
         assert 0 < alpha && alpha <= 255;
 
         this.imagePaint.setAlpha(alpha);
-        this.canvas.drawBitmap(((AndroidImageImp) image).bitmap, x, y,
-                               this.imagePaint);
+        this.canvas.drawBitmap(((AndroidImageImp) image).bitmap, x, y, this.imagePaint);
         this.modified();
     }
 
     @Override
-    public void drawLine(final float x1, final float y1,
-                         final float x2, final float y2) {
+    public void drawLine(final float x1, final float y1, final float x2, final float y2) {
         this.canvas.drawLine(x1, y1, x2, y2, this.strokePaint);
         this.modified();
     }
@@ -88,8 +84,7 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawRectangle(final float x, final float y,
-                              final float width, final float height) {
+    public void drawRectangle(final float x, final float y, final float width, final float height) {
         this.canvas.drawRect(x, y, x + width, y + height, this.strokePaint);
         this.modified();
     }
@@ -98,8 +93,7 @@ class AndroidCanvasImp implements CanvasImp {
     public void drawText(final float x, final float y, final String text) {
         assert text != null;
 
-        this.canvas.drawText(text, x, y - (int) this.textPaint.ascent(),
-                             this.textPaint);
+        this.canvas.drawText(text, x, y - (int) this.textPaint.ascent(), this.textPaint);
         this.modified();
     }
 
@@ -128,8 +122,7 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillRectangle(final float x, final float y,
-                              final float width, final float height) {
+    public void fillRectangle(final float x, final float y, final float width, final float height) {
         this.canvas.drawRect(x, y, x + width, y + height, this.fillPaint);
         this.modified();
     }

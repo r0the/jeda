@@ -37,15 +37,13 @@ class ViewManager {
         this.activity = activity;
         // Stack must be instantiated before any views
         this.visibleViews = new Stack();
-
         this.inputView = new InputView(this);
         this.logView = new LogView(this);
         this.selectionView = new SelectionView(this);
     }
 
     /**
-     * Closes a view. If it is the last closed view, signal the Jeda engine to
-     * stop.
+     * Closes a view. If it is the last closed view, signal the Jeda engine to stop.
      */
     void closeView() {
         if (!this.visibleViews.isEmpty()) {
