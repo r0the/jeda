@@ -19,16 +19,15 @@ package ch.jeda.ui;
 public final class PointerEvent extends Event {
 
     private final int pointerId;
-    private final int x;
-    private final int y;
+    private final float x;
+    private final float y;
 
-    public PointerEvent(final EventSource source, final EventType type,
-                        final int pointerId) {
+    public PointerEvent(final EventSource source, final EventType type, final int pointerId) {
         this(source, type, pointerId, -1, -1);
     }
 
-    public PointerEvent(final EventSource source, final EventType type,
-                        final int pointerId, final int x, final int y) {
+    public PointerEvent(final EventSource source, final EventType type, final int pointerId,
+                        final float x, final float y) {
         super(source, type);
         this.pointerId = pointerId;
         this.x = x;
@@ -39,11 +38,11 @@ public final class PointerEvent extends Event {
         return this.pointerId;
     }
 
-    public int getX() {
+    public float getX() {
         return this.x;
     }
 
-    public int getY() {
+    public float getY() {
         return this.y;
     }
 }

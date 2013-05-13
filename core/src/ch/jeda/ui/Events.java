@@ -25,9 +25,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents events that are taking place on this window. These are typically
- * keys pressed or typed by the user or motion events such as moving or clicking
- * with a mouse, trackball, pen or finger.
+ * Represents events that are taking place on this window. These are typically keys pressed or typed by the user or
+ * motion events such as moving or clicking with a mouse, trackball, pen or finger.
  *
  * <p>
  * <strong>Example:</strong>
@@ -49,15 +48,13 @@ public final class Events {
     private StringBuilder typedChars;
 
     /**
-     * Returns the main pointer. The behaviour of this method depends on the
-     * platform:
+     * Returns the main pointer. The behaviour of this method depends on the platform:
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> Returns
-     * the pointer representing the mouse. Returns <tt>null</tt> if the mouse
-     * pointer is outside the window.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> Returns the pointer representing the mouse.
+     * Returns <tt>null</tt> if the mouse pointer is outside the window.
      * <p>
-     * <img src="../../../android.png"> Returns the pointer that first touched
-     * the surface. Returns <tt>null</tt> if no pointer touches the surface.
+     * <img src="../../../android.png"> Returns the pointer that first touched the surface. Returns <tt>null</tt> if no
+     * pointer touches the surface.
      *
      * @return main pointer
      *
@@ -68,16 +65,13 @@ public final class Events {
     }
 
     /**
-     * Returns a list of all pointers. The behaviour of this method depends on
-     * the platform:
+     * Returns a list of all pointers. The behaviour of this method depends on the platform:
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> Returns a
-     * list containing the pointer representing the mouse. Returns an empty list
-     * if the mouse pointer is outside the window.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> Returns a list containing the pointer
+     * representing the mouse. Returns an empty list if the mouse pointer is outside the window.
      * <p>
-     * <img src="../../../android.png"> Returns a list of all pointers that are
-     * touching the surface. Returns an empty list if no pointer touches the
-     * surface.
+     * <img src="../../../android.png"> Returns a list of all pointers that are touching the surface. Returns an empty
+     * list if no pointer touches the surface.
      *
      * @return list of all pointers
      *
@@ -88,8 +82,7 @@ public final class Events {
     }
 
     /**
-     * Returns all pointers that have become available in the window since the
-     * last call to {@link Window#update()}.
+     * Returns all pointers that have become available in the window since the last call to {@link Window#update()}.
      *
      * @return all new pointers
      *
@@ -111,11 +104,9 @@ public final class Events {
     }
 
     /**
-     * Returns a String representing the recently typed characters. When a
-     * character is typed, it is appended to the String. The string is cleared
-     * when {@link Window#update()} is called. Returns an empty String ("") when
-     * no characters have been typed since the last call to
-     * {@link Window#update()}.
+     * Returns a String representing the recently typed characters. When a character is typed, it is appended to the
+     * String. The string is cleared when {@link Window#update()} is called. Returns an empty String ("") when no
+     * characters have been typed since the last call to {@link Window#update()}.
      *
      * @return recently typed characters or ""
      *
@@ -137,8 +128,7 @@ public final class Events {
     }
 
     /**
-     * Checks if a key is pressed. Returns <tt>true</tt> if the specified key is
-     * pressed.
+     * Checks if a key is pressed. Returns <tt>true</tt> if the specified key is pressed.
      *
      * @param key the key to check for
      * @return <tt>true</tt> if specified key is currently pressed
@@ -155,8 +145,7 @@ public final class Events {
     }
 
     /**
-     * Checks if a key was typed. Returns <tt>true</tt> if the specified key has
-     * been typed.
+     * Checks if a key was typed. Returns <tt>true</tt> if the specified key has been typed.
      *
      * @param key the key to check
      * @return <tt>true</tt> if specified key ha been typed
@@ -229,7 +218,7 @@ public final class Events {
 
             Pointer pointer = pointers.get(event.getPointerId());
             newPointers.add(pointer);
-            pointer.setLocation(event.getX(), event.getY());
+            pointer.setLocation((int) event.getX(), (int) event.getY());
             if (mainPointer == null) {
                 mainPointer = pointer;
             }
@@ -239,7 +228,7 @@ public final class Events {
         public void onPointerMoved(final PointerEvent event) {
             Pointer pointer = pointers.get(event.getPointerId());
             if (pointer != null) {
-                pointer.setLocation(event.getX(), event.getY());
+                pointer.setLocation((int) event.getX(), (int) event.getY());
             }
         }
 
