@@ -253,7 +253,7 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawRectangle(final int x, final int y, final int width, final int height) {
+    public void drawRectangle(final float x, final float y, final float width, final float height) {
         if (width > 0 && height > 0) {
             this.imp.drawRectangle(x, y, width, height);
         }
