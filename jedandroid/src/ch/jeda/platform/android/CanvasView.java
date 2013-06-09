@@ -82,7 +82,8 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 index = event.getActionIndex();
-                this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_UP, event.getPointerId(index)));
+                this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_UP, event.getPointerId(index),
+                                                 event.getX(index), event.getY(index)));
                 break;
             case MotionEvent.ACTION_MOVE:
                 for (index = 0; index < event.getPointerCount(); ++index) {
