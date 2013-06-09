@@ -17,9 +17,8 @@
 package ch.jeda.ui;
 
 /**
- * Represents a key that can be typed by the user. Key values are used by the
- * {@link Events} class to represent which keys have been pressed or typed. The
- * key value representing a specific keyboard key depends on the
+ * Represents a key that can be typed by the user. Key values are used by the {@link Events} class to represent which
+ * keys have been pressed or typed. The key value representing a specific keyboard key depends on the
  * <a href="http://en.wikipedia.org/wiki/Keyboard_layout">keyboard layout</a>.
  *
  * @see Events
@@ -31,24 +30,23 @@ public enum Key {
      */
     A,
     /**
-     * The alt graph key. The text representation of this key is "AltGr".
+     * The alt graph key.
      */
     ALT_GRAPH,
     /**
-     * The left alt key. The text representation of this key is "AltLeft".
+     * The left alt key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     ALT_LEFT,
     /**
-     * The left alt key. The text representation of this key is "AltLeft".
+     * The left alt key.
      */
     ALT_RIGHT,
     /**
-     * The apostrophe key. The text representation of this key is "Apostrophe".
+     * The apostrophe key.
      */
     APOSTROPHE,
     /**
@@ -56,11 +54,11 @@ public enum Key {
      */
     B,
     /**
-     * The back key. The text representation of this key is "Back".
+     * The back key.
      */
     BACK,
     /**
-     * The Backspace key. The text representation of this key is "Backspace".
+     * The Backspace key.
      */
     BACKSPACE,
     /**
@@ -68,29 +66,29 @@ public enum Key {
      */
     C,
     /**
-     * The caps lock key. The text representation of this key is "CapsLock".
+     * The caps lock key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     CAPS_LOCK,
     /**
-     * The left control key. The text representation of this key is "CtrlLeft".
+     * The comma (",") key.
+     */
+    COMMA,
+    /**
+     * The left control key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     CTRL_LEFT,
     /**
-     * The right control key. The text representation of this key is
-     * "CtrlRight".
+     * The right control key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -100,56 +98,71 @@ public enum Key {
      */
     D,
     /**
-     * The delete key. The text representation of this key is "Delete".
+     * The dead diaeresis key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
+     * <p>
+     * <img src="../../../android.png"> The key is <b>not</b> available.
+     */
+    DEAD_DIAERESIS,
+    /**
+     * The delete key.
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     DELETE,
     /**
-     * The "0" digit key. The text representation of this key is "0".
+     * The "0" digit key.
      */
     DIGIT_0,
     /**
-     * The "1" digit key. The text representation of this key is "1".
+     * The "1" digit key.
      */
     DIGIT_1,
     /**
-     * The "2" digit key. The text representation of this key is "2".
+     * The "2" digit key.
      */
     DIGIT_2,
     /**
-     * The "3" digit key. The text representation of this key is "3".
+     * The "3" digit key.
      */
     DIGIT_3,
     /**
-     * The "4" digit key. The text representation of this key is "4".
+     * The "4" digit key.
      */
     DIGIT_4,
     /**
-     * The "5" digit key. The text representation of this key is "5".
+     * The "5" digit key.
      */
     DIGIT_5,
     /**
-     * The "6" digit key. The text representation of this key is "6".
+     * The "6" digit key.
      */
     DIGIT_6,
     /**
-     * The "7" digit key. The text representation of this key is "7".
+     * The "7" digit key.
      */
     DIGIT_7,
     /**
-     * The "8" digit key. The text representation of this key is "8".
+     * The "8" digit key.
      */
     DIGIT_8,
     /**
-     * The "9" digit key. The text representation of this key is "9".
+     * The "9" digit key.
      */
     DIGIT_9,
     /**
-     * The cursor down key. The text representation of this key is "Down".
+     * The dollar ("$") key.
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
+     * <p>
+     * <img src="../../../android.png"> The key is <b>not</b> available.
+     */
+    DOLLAR,
+    /**
+     * The cursor down key.
      */
     DOWN,
     /**
@@ -157,27 +170,25 @@ public enum Key {
      */
     E,
     /**
-     * The end key. The text representation of this key is "End".
+     * The end key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     END,
     /**
-     * The enter key. The text representation of this key is "Enter".
+     * The enter key.
      */
     ENTER,
     /**
-     * The equals key. The text representation of this key is "Equals".
+     * The equals key.
      */
     EQUALS,
     /**
-     * The escape key. The text representation of this key is "Esc".
+     * The escape key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -189,8 +200,7 @@ public enum Key {
     /**
      * The "F1" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -198,8 +208,7 @@ public enum Key {
     /**
      * The "F2" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -207,8 +216,7 @@ public enum Key {
     /**
      * The "F3" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -216,8 +224,7 @@ public enum Key {
     /**
      * The "F4" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -225,8 +232,7 @@ public enum Key {
     /**
      * The "F5" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -234,8 +240,7 @@ public enum Key {
     /**
      * The "F6" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -243,8 +248,7 @@ public enum Key {
     /**
      * The "F7" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -252,8 +256,7 @@ public enum Key {
     /**
      * The "F8" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -261,8 +264,7 @@ public enum Key {
     /**
      * The "F9" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -270,8 +272,7 @@ public enum Key {
     /**
      * The "F10" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -279,8 +280,7 @@ public enum Key {
     /**
      * The "F11" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -288,8 +288,7 @@ public enum Key {
     /**
      * The "F12" function key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -299,7 +298,7 @@ public enum Key {
      */
     G,
     /**
-     * The "`" key. The text representation of this key is "Grave".
+     * The "`" key.
      */
     GRAVE,
     /**
@@ -307,10 +306,9 @@ public enum Key {
      */
     H,
     /**
-     * The home key. The text representation of this key is "Home".
+     * The home key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -320,10 +318,9 @@ public enum Key {
      */
     I,
     /**
-     * The insert key. The text representation of this key is "Insert".
+     * The insert key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -341,7 +338,7 @@ public enum Key {
      */
     L,
     /**
-     * The cursor left key. The text representation of this key is "Left".
+     * The cursor left key.
      */
     LEFT,
     /**
@@ -349,18 +346,17 @@ public enum Key {
      */
     M,
     /**
-     * The menu key. The text representation of this key is "Menu".
+     * The menu key.
      * <p>
      * <img src="../../../windows.png"> <img src="../../../linux.png">
-     * Represents the context menu key on the keyboard (usually located left of
-     * the right control key.
+     * Represents the context menu key on the keyboard (usually located left of the right control key.
      * <p>
-     * <img src="../../../android.png"> Represents the menu key. This is the
-     * hardware key that is used to display a menu.
+     * <img src="../../../android.png"> Represents the menu key. This is the hardware key that is used to display a
+     * menu.
      */
     MENU,
     /**
-     * The "-" key. The text representation of this key is "Minus".
+     * The minus ("-") key.
      */
     MINUS,
     /**
@@ -380,165 +376,133 @@ public enum Key {
      */
     N,
     /**
-     * The num lock key. The text representation of this key is "NumLock".
+     * The num lock key.
      */
     NUM_LOCK,
     /**
-     * The "0" digit key on the numeric keypad. The text representation of this
-     * key is "Numpad0".
+     * The "0" digit key on the numeric keypad.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_0,
     /**
-     * The "1" digit key on the numeric keypad. The text representation of this
-     * key is "Numpad1".
+     * The "1" digit key on the numeric keypad.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_1,
     /**
-     * The "2" digit key on the numeric keypad. The text representation of this
-     * key is "Numpad2".
+     * The "2" digit key on the numeric keypad.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_2,
     /**
-     * The "3" digit key on the numeric keypad. The text representation of this
-     * key is "Numpad3".
+     * The "3" digit key on the numeric keypad.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_3,
     /**
-     * The "4" digit key on the numeric keypad. The text representation of this
-     * key is "Numpad4".
+     * The "4" digit key on the numeric keypad.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_4,
     /**
-     * The "5" digit key on the numeric keypad. The text representation of this
-     * key is "Numpad5".
+     * The "5" digit key on the numeric keypad.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_5,
     /**
-     * The "6" digit key on the numeric keypad. The text representation of this
-     * key is "Numpad6".
+     * The "6" digit key on the numeric keypad.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_6,
     /**
-     * The "7" digit key on the numeric keypad. The text representation of this
-     * key is "Numpad7".
+     * The "7" digit key on the numeric keypad.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_7,
     /**
-     * The "8" digit key on the numeric keypad. The text representation of this
-     * key is "Numpad8".
+     * The "8" digit key on the numeric keypad.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_8,
     /**
-     * The "9" digit key on the numeric keypad. The text representation of this
-     * key is "Numpad9".
+     * The "9" digit key on the numeric keypad.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_9,
     /**
-     * The "+" key on the numeric keypard. The text representation of this key
-     * is "NumpadAdd".
+     * The "+" key on the numeric keypard.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_ADD,
     /**
-     * The "/" key on the numeric keypard. The text representation of this key
-     * is "NumpadDivide".
+     * The "/" key on the numeric keypard.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_DIVIDE,
     /**
-     * The "." key on the numeric keypard. The text representation of this key
-     * is "NumpadDot".
+     * The "." key on the numeric keypard.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_DOT,
     /**
-     * The enter key on the numeric keypard. The text representation of this key
-     * is "NumpadEnter".
+     * The enter key on the numeric keypard.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_ENTER,
     /**
-     * The "*" key on the numeric keypard. The text representation of this key
-     * is "NumpadMultiply".
+     * The "*" key on the numeric keypard.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     NUMPAD_MULTIPLY,
     /**
-     * The "-" key on the numeric keypard. The text representation of this key
-     * is "NumpadSubtract".
+     * The "-" key on the numeric keypard.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -552,38 +516,37 @@ public enum Key {
      */
     P,
     /**
-     * The page down key. The text representation of this key is "PageDown".
+     * The page down key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     PAGE_DOWN,
     /**
-     * The page up key. The text representation of this key is "PageUp".
+     * The page up key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     PAGE_UP,
     /**
-     * The pause key. The text representation of this key is "Pause".
+     * The pause key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
     PAUSE,
     /**
-     * The print screen key. The text representation of this key is
-     * "PrintScreen".
+     * The period (".") key.
+     */
+    PERIOD,
+    /**
+     * The print screen key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is available.
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      */
@@ -597,7 +560,7 @@ public enum Key {
      */
     R,
     /**
-     * The cursor right key. The text representation of this key is "Right".
+     * The cursor right key.
      */
     RIGHT,
     /**
@@ -605,19 +568,23 @@ public enum Key {
      */
     S,
     /**
-     * The scroll lock key. The text representation of this key is "ScrollLock".
+     * The scroll lock key.
      */
     SCROLL_LOCK,
     /**
-     * The left shift key. The text representation of this key is "ShiftLeft".
+     * The left shift key.
      */
     SHIFT_LEFT,
     /**
-     * The right shift key. The text representation of this key is "ShiftRight".
+     * The right shift key.
      */
     SHIFT_RIGHT,
     /**
-     * The space key. The text representation of this key is "Space".
+     * The forward slash ("/") key.
+     */
+    SLASH,
+    /**
+     * The space key.
      */
     SPACE,
     /**
@@ -625,7 +592,7 @@ public enum Key {
      */
     T,
     /**
-     * The tabulator key. The text representation of this key is "Tab".
+     * The tabulator key.
      */
     TAB,
     /**
@@ -634,7 +601,7 @@ public enum Key {
     U,
     UNDEFINED,
     /**
-     * The cursor up key. The text representation of this key is "Up".
+     * The cursor up key.
      */
     UP,
     /**
@@ -642,19 +609,17 @@ public enum Key {
      */
     V,
     /**
-     * The volume down key. The text representation of this key is "VolumeUp".
+     * The volume down key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is <b>not</b> available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is <b>not</b> available.
      * <p>
      * <img src="../../../android.png"> The key is available.
      */
     VOLUME_DOWN,
     /**
-     * The volume up key. The text representation of this key is "VolumeUp".
+     * The volume up key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key
-     * is <b>not</b> available.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The key is <b>not</b> available.
      * <p>
      * <img src="../../../android.png"> The key is available.
      */

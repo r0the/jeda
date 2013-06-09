@@ -185,6 +185,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         result.put(android.view.KeyEvent.KEYCODE_ALT_RIGHT, Key.ALT_RIGHT);
         result.put(android.view.KeyEvent.KEYCODE_APOSTROPHE, Key.APOSTROPHE);
         result.put(android.view.KeyEvent.KEYCODE_B, Key.B);
+        result.put(android.view.KeyEvent.KEYCODE_COMMA, Key.COMMA);
         result.put(android.view.KeyEvent.KEYCODE_DEL, Key.BACKSPACE);
         result.put(android.view.KeyEvent.KEYCODE_C, Key.C);
         result.put(android.view.KeyEvent.KEYCODE_D, Key.D);
@@ -219,12 +220,14 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         result.put(android.view.KeyEvent.KEYCODE_P, Key.P);
         result.put(android.view.KeyEvent.KEYCODE_PAGE_DOWN, Key.PAGE_DOWN);
         result.put(android.view.KeyEvent.KEYCODE_PAGE_UP, Key.PAGE_UP);
+        result.put(android.view.KeyEvent.KEYCODE_PERIOD, Key.PERIOD);
         result.put(android.view.KeyEvent.KEYCODE_Q, Key.Q);
         result.put(android.view.KeyEvent.KEYCODE_R, Key.R);
         result.put(android.view.KeyEvent.KEYCODE_DPAD_RIGHT, Key.RIGHT);
         result.put(android.view.KeyEvent.KEYCODE_S, Key.S);
         result.put(android.view.KeyEvent.KEYCODE_SHIFT_LEFT, Key.SHIFT_LEFT);
         result.put(android.view.KeyEvent.KEYCODE_SHIFT_RIGHT, Key.SHIFT_RIGHT);
+        result.put(android.view.KeyEvent.KEYCODE_SLASH, Key.SLASH);
         result.put(android.view.KeyEvent.KEYCODE_SPACE, Key.SPACE);
         result.put(android.view.KeyEvent.KEYCODE_T, Key.T);
         result.put(android.view.KeyEvent.KEYCODE_TAB, Key.TAB);

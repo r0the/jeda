@@ -293,19 +293,6 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         final Map<Integer, Key> right = new HashMap();
         final Map<Integer, Key> unknown = new HashMap();
 
-        standard.put(java.awt.event.KeyEvent.VK_A, Key.A);
-        left.put(java.awt.event.KeyEvent.VK_ALT, Key.ALT_LEFT);
-        right.put(java.awt.event.KeyEvent.VK_ALT, Key.ALT_RIGHT);
-        standard.put(java.awt.event.KeyEvent.VK_QUOTE, Key.APOSTROPHE);
-        standard.put(java.awt.event.KeyEvent.VK_B, Key.B);
-        standard.put(java.awt.event.KeyEvent.VK_BACK_QUOTE, Key.GRAVE);
-        standard.put(java.awt.event.KeyEvent.VK_BACK_SPACE, Key.BACKSPACE);
-        standard.put(java.awt.event.KeyEvent.VK_C, Key.C);
-        standard.put(java.awt.event.KeyEvent.VK_CAPS_LOCK, Key.CAPS_LOCK);
-        left.put(java.awt.event.KeyEvent.VK_CONTROL, Key.CTRL_LEFT);
-        right.put(java.awt.event.KeyEvent.VK_CONTROL, Key.CTRL_RIGHT);
-        standard.put(java.awt.event.KeyEvent.VK_D, Key.D);
-        standard.put(java.awt.event.KeyEvent.VK_DELETE, Key.DELETE);
         standard.put(java.awt.event.KeyEvent.VK_0, Key.DIGIT_0);
         standard.put(java.awt.event.KeyEvent.VK_1, Key.DIGIT_1);
         standard.put(java.awt.event.KeyEvent.VK_2, Key.DIGIT_2);
@@ -316,6 +303,22 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         standard.put(java.awt.event.KeyEvent.VK_7, Key.DIGIT_7);
         standard.put(java.awt.event.KeyEvent.VK_8, Key.DIGIT_8);
         standard.put(java.awt.event.KeyEvent.VK_9, Key.DIGIT_9);
+        standard.put(java.awt.event.KeyEvent.VK_A, Key.A);
+        left.put(java.awt.event.KeyEvent.VK_ALT, Key.ALT_LEFT);
+        right.put(java.awt.event.KeyEvent.VK_ALT, Key.ALT_RIGHT);
+        standard.put(java.awt.event.KeyEvent.VK_QUOTE, Key.APOSTROPHE);
+        standard.put(java.awt.event.KeyEvent.VK_B, Key.B);
+        standard.put(java.awt.event.KeyEvent.VK_BACK_QUOTE, Key.GRAVE);
+        standard.put(java.awt.event.KeyEvent.VK_BACK_SPACE, Key.BACKSPACE);
+        standard.put(java.awt.event.KeyEvent.VK_C, Key.C);
+        standard.put(java.awt.event.KeyEvent.VK_CAPS_LOCK, Key.CAPS_LOCK);
+        standard.put(java.awt.event.KeyEvent.VK_COMMA, Key.COMMA);
+        left.put(java.awt.event.KeyEvent.VK_CONTROL, Key.CTRL_LEFT);
+        right.put(java.awt.event.KeyEvent.VK_CONTROL, Key.CTRL_RIGHT);
+        standard.put(java.awt.event.KeyEvent.VK_D, Key.D);
+        standard.put(java.awt.event.KeyEvent.VK_DEAD_DIAERESIS, Key.DEAD_DIAERESIS);
+        standard.put(java.awt.event.KeyEvent.VK_DELETE, Key.DELETE);
+        standard.put(java.awt.event.KeyEvent.VK_DOLLAR, Key.DOLLAR);
         standard.put(java.awt.event.KeyEvent.VK_DOWN, Key.DOWN);
         standard.put(java.awt.event.KeyEvent.VK_E, Key.E);
         standard.put(java.awt.event.KeyEvent.VK_END, Key.END);
@@ -370,6 +373,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         standard.put(java.awt.event.KeyEvent.VK_PAGE_DOWN, Key.PAGE_DOWN);
         standard.put(java.awt.event.KeyEvent.VK_PAGE_UP, Key.PAGE_UP);
         standard.put(java.awt.event.KeyEvent.VK_PAUSE, Key.PAUSE);
+        standard.put(java.awt.event.KeyEvent.VK_PERIOD, Key.PERIOD);
         standard.put(java.awt.event.KeyEvent.VK_PRINTSCREEN, Key.PRINT_SCREEN);
         standard.put(java.awt.event.KeyEvent.VK_Q, Key.Q);
         standard.put(java.awt.event.KeyEvent.VK_R, Key.R);
@@ -378,6 +382,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         standard.put(java.awt.event.KeyEvent.VK_SCROLL_LOCK, Key.SCROLL_LOCK);
         left.put(java.awt.event.KeyEvent.VK_SHIFT, Key.SHIFT_LEFT);
         right.put(java.awt.event.KeyEvent.VK_SHIFT, Key.SHIFT_RIGHT);
+        standard.put(java.awt.event.KeyEvent.VK_SLASH, Key.SLASH);
         standard.put(java.awt.event.KeyEvent.VK_SPACE, Key.SPACE);
         standard.put(java.awt.event.KeyEvent.VK_T, Key.T);
         standard.put(java.awt.event.KeyEvent.VK_TAB, Key.TAB);
