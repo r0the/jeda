@@ -159,7 +159,7 @@ class AndroidCanvasImp implements CanvasImp {
 
     @Override
     public void setFontSize(final int fontSize) {
-        this.strokePaint.setTextSize(fontSize);
+        this.textPaint.setTextSize(fontSize);
     }
 
     @Override
