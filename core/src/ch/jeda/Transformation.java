@@ -19,11 +19,10 @@ package ch.jeda;
 import java.io.Serializable;
 
 /**
- * Represents a two-dimensional affine transformation. Transformations can be
- * applied either to {@link Vector} objects or a {@link ch.jeda.ui.Canvas}.
+ * Represents a two-dimensional affine transformation. Transformations can be applied either to {@link Vector} objects
+ * or a {@link ch.jeda.ui.Canvas}.
  * <p>
- * A transformation is represented as an 3x3 affine transformation matrix. It
- * has the form
+ * A transformation is represented as an 3x3 affine transformation matrix. It has the form
  * <pre>[m00 m01 m02]
  * [m10 m11 m12]
  * [  0   0   1]</pre>
@@ -54,8 +53,7 @@ public final class Transformation implements Serializable {
     }
 
     /**
-     * Combines two transformations. Concatenates the transformation with the
-     * specified other transformation.
+     * Combines two transformations. Concatenates the transformation with the specified other transformation.
      *
      * @param other the other transformation
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
@@ -113,8 +111,8 @@ public final class Transformation implements Serializable {
     }
 
     /**
-     * Adds a rotation to the transformation. Concatenates the transformation
-     * with add a rotation by the specified angle.
+     * Adds a rotation to the transformation. Concatenates the transformation with add a rotation by the specified
+     * angle.
      *
      * @param angle the rotation angle
      */
@@ -133,8 +131,8 @@ public final class Transformation implements Serializable {
     }
 
     /**
-     * Adds a scaling to the transformation. Concatenates the transformation
-     * with add a scaling by the specified factors.
+     * Adds a scaling to the transformation. Concatenates the transformation with add a scaling by the specified
+     * factors.
      *
      * @param sx the scaling factor along the x-axis
      * @param sy the scaling factor along the y-axis

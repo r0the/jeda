@@ -24,8 +24,7 @@ import java.util.List;
 /**
  * <b>Internal.</b> Do not use this class.
  * <p>
- * Represents the Jeda core. The Jeda engine manages the lifecycle of Jeda
- * programs.
+ * Represents the Jeda core. The Jeda engine manages the lifecycle of Jeda programs.
  */
 public final class Engine {
 

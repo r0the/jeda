@@ -87,8 +87,7 @@ public final class Direction implements Serializable {
      */
     public static final Direction WEST = new Direction(-1, 0, "West", 4);
     /**
-     * A list of all eight directions. The list is ordered counterclickwise and
-     * starts with the direction {@link #EAST}.
+     * A list of all eight directions. The list is ordered counterclickwise and starts with the direction {@link #EAST}.
      *
      * @since 1
      */
@@ -105,8 +104,7 @@ public final class Direction implements Serializable {
     private final String name;
 
     /**
-     * Returns the direction for the specified name. Returns <tt>null</tt> if
-     * the specified name is not valid.
+     * Returns the direction for the specified name. Returns <tt>null</tt> if the specified name is not valid.
      *
      * @param name the name of a direction
      * @return direction for the specified number or <tt>null</tt>
@@ -123,8 +121,8 @@ public final class Direction implements Serializable {
     }
 
     /**
-     * Returns a direction clockwise of the direction. Returns the direction
-     * that lies <tt>amount</tt> steps clockwise of this direction.
+     * Returns a direction clockwise of the direction. Returns the direction that lies <tt>amount</tt> steps clockwise
+     * of this direction.
      * <p>
      * For example, <tt>Direction.NORTH.clockwise(2)</tt> will return
      * <tt>Direction.EAST</tt>.
@@ -144,9 +142,8 @@ public final class Direction implements Serializable {
     }
 
     /**
-     * Returns a direction counterclockwise of this direction. Returns the
-     * direction that lies <tt>amount</tt> steps counterclockwise of this
-     * direction.
+     * Returns a direction counterclockwise of this direction. Returns the direction that lies <tt>amount</tt> steps
+     * counterclockwise of this direction.
      * <p>
      * For example, <tt>Direction.NORTH.counterclockwise(2)</tt> will return
      * <tt>Direction.WEST</tt>.
@@ -182,8 +179,7 @@ public final class Direction implements Serializable {
     }
 
     /**
-     * Returns the opposite direction. Returns the direction that points
-     * opposite to the direction.
+     * Returns the opposite direction. Returns the direction that points opposite to the direction.
      * <p>
      * For example, <tt>Direction.NORTH.opposite()</tt> will return
      * <tt>Direction.SOUTH</tt>.

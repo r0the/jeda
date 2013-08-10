@@ -35,8 +35,7 @@ public final class Vector implements Serializable {
     public float y;
 
     /**
-     * Constructs a vector. The constructed vector is the null vector (both
-     * coordinates are zero).
+     * Constructs a vector. The constructed vector is the null vector (both coordinates are zero).
      */
     public Vector() {
         this.x = 0f;
@@ -44,8 +43,7 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Constructs a vector. The constructed vector has the specified x and y
-     * coordinates.
+     * Constructs a vector. The constructed vector has the specified x and y coordinates.
      *
      * @param x the x coordinate of the vector
      * @param y the y coordinate of the vector
@@ -58,8 +56,7 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Constructs a vector. The constructed vector has the specified x and y
-     * coordinates.
+     * Constructs a vector. The constructed vector has the specified x and y coordinates.
      *
      * @param x the x coordinate of the vector
      * @param y the y coordinate of the vector
@@ -72,8 +69,7 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Constructs a vector. The constructed vector is a copy of the specified
-     * vector <tt>v</tt>.
+     * Constructs a vector. The constructed vector is a copy of the specified vector <tt>v</tt>.
      *
      * @param orig the original vector
      * @throws NullPointerException if <tt>orig</tt> is <tt>null</tt>
@@ -141,8 +137,8 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Inverts the vector. The operation inverts the direction of the vector.
-     * The length of the vector remains unchanged.
+     * Inverts the vector. The operation inverts the direction of the vector. The length of the vector remains
+     * unchanged.
      */
     public void invert() {
         this.x = -this.x;
@@ -161,8 +157,8 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Normalizes the vector. The operation sets the length of the vector to 1.
-     * The direction of the vector remains unchanged.
+     * Normalizes the vector. The operation sets the length of the vector to 1. The direction of the vector remains
+     * unchanged.
      *
      * @since 1
      */
@@ -177,8 +173,8 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Scales the vector. The operations multiplies the length of the vector
-     * with <tt>factor</tt>. The direction of the vector remains unchanged.
+     * Scales the vector. The operations multiplies the length of the vector with <tt>factor</tt>. The direction of the
+     * vector remains unchanged.
      *
      * @param factor the scaling factor
      */
@@ -188,8 +184,8 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Scales the vector. The operations multiplies the length of the vector
-     * with <tt>factor</tt>. The direction of the vector remains unchanged.
+     * Scales the vector. The operations multiplies the length of the vector with <tt>factor</tt>. The direction of the
+     * vector remains unchanged.
      *
      * @param factor the scaling factor
      */
@@ -200,8 +196,7 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Sets the coordinates. Sets the coordinates of the vector to the specified
-     * values.
+     * Sets the coordinates. Sets the coordinates of the vector to the specified values.
      *
      * @param x the new x coordinate
      * @param y the new y coordinate
@@ -212,8 +207,7 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Sets the vector. Sets the coordinates of the vector to the coordinates of
-     * the specified vector.
+     * Sets the vector. Sets the coordinates of the vector to the coordinates of the specified vector.
      *
      * @param other the vector
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt.
@@ -228,10 +222,9 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Sets the direction. Sets the direction of the vector as specified. The
-     * direction is measured mathematically. That means it is measured in
-     * radians, the x-axis has the direction 0 and the y-axis has the direction
-     * of π/2. The length of the vector remains unchanged.
+     * Sets the direction. Sets the direction of the vector as specified. The direction is measured mathematically. That
+     * means it is measured in radians, the x-axis has the direction 0 and the y-axis has the direction of π/2. The
+     * length of the vector remains unchanged.
      * <p>
      * Has no effect on the null vector.
      *
@@ -244,8 +237,8 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Sets the length. The operations sets the length of the vector to the
-     * specified <tt>length</tt>. The direction of the vector remains unchanged.
+     * Sets the length. The operations sets the length of the vector to the specified <tt>length</tt>. The direction of
+     * the vector remains unchanged.
      *
      * @param length the new length
      */
@@ -256,8 +249,8 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Sets the length. The operations sets the length of the vector to the
-     * specified <tt>length</tt>. The direction of the vector remains unchanged.
+     * Sets the length. The operations sets the length of the vector to the specified <tt>length</tt>. The direction of
+     * the vector remains unchanged.
      *
      * @param length the new length
      */
@@ -268,8 +261,7 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Subtracts a vector. The vector <tt>other</tt> is subtracted from the
-     * vector.
+     * Subtracts a vector. The vector <tt>other</tt> is subtracted from the vector.
      *
      * @param other the vector to be subtracted
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
@@ -286,10 +278,9 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Returns the direction. Calculates and returns the direction of the
-     * vector. The direction is measured mathematically. That means it is
-     * measured in radians, the x-axis has the direction 0 and the y-axis has
-     * the direction of π/2.
+     * Returns the direction. Calculates and returns the direction of the vector. The direction is measured
+     * mathematically. That means it is measured in radians, the x-axis has the direction 0 and the y-axis has the
+     * direction of π/2.
      *
      * @return current direction
      *
@@ -307,9 +298,8 @@ public final class Vector implements Serializable {
     }
 
     /**
-     * Projects this vector on the other vector. The resulting vector points in
-     * the same direction as other. The length of the resulting vector is equal
-     * to the dot product of this and other.
+     * Projects this vector on the other vector. The resulting vector points in the same direction as other. The length
+     * of the resulting vector is equal to the dot product of this and other.
      *
      * @param other vector to be projected on
      * @return projection of this on other

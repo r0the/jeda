@@ -25,8 +25,7 @@ import java.io.Serializable;
 public final class Location implements Serializable {
 
     /**
-     * The origin of the coordinate system. Both coordinates of this location
-     * are zero.
+     * The origin of the coordinate system. Both coordinates of this location are zero.
      */
     public static final Location ORIGIN = new Location();
     /**
@@ -39,8 +38,7 @@ public final class Location implements Serializable {
     public final int y;
 
     /**
-     * Constructs a location. The location represents the origin. Both
-     * coordinates of this location are zero.
+     * Constructs a location. The location represents the origin. Both coordinates of this location are zero.
      */
     @Deprecated
     public Location() {
@@ -61,8 +59,8 @@ public final class Location implements Serializable {
     }
 
     /**
-     * Calculates the Euclidean distance. Calculates and returns the Euclidean
-     * distance from the location to the specified other location.
+     * Calculates the Euclidean distance. Calculates and returns the Euclidean distance from the location to the
+     * specified other location.
      *
      * @param other the other location
      * @return Euclidean distance between this and other location
@@ -111,8 +109,8 @@ public final class Location implements Serializable {
     }
 
     /**
-     * Calculates the Manhattan distance. Calculates and returns the Manhattan
-     * distance from the location to the specified other location.
+     * Calculates the Manhattan distance. Calculates and returns the Manhattan distance from the location to the
+     * specified other location.
      *
      * @param other the other location
      * @return Manhattan distance from this to <tt>other</tt> location.
@@ -135,8 +133,7 @@ public final class Location implements Serializable {
     }
 
     /**
-     * Returns a neighbour of this location. Returns the neighbour location of
-     * the location in the specified direction.
+     * Returns a neighbour of this location. Returns the neighbour location of the location in the specified direction.
      *
      * @param direction
      * @return neighbor location
@@ -159,8 +156,7 @@ public final class Location implements Serializable {
     }
 
     /**
-     * Converts the location to a vector. Returns a vector with the same
-     * coordinates as the location.
+     * Converts the location to a vector. Returns a vector with the same coordinates as the location.
      *
      * @return vector representation of the location
      */

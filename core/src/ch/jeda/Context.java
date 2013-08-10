@@ -38,8 +38,8 @@ import java.util.List;
 /**
  * <b>Internal</b>. Do not use this class.
  * <p>
- * Represents the application context of the Jeda engine. The context provides
- * low-level access to platform and system resources.
+ * Represents the application context of the Jeda engine. The context provides low-level access to platform and system
+ * resources.
  */
 public final class Context {
 

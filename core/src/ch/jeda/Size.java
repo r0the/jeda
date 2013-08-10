@@ -19,17 +19,14 @@ package ch.jeda;
 import java.io.Serializable;
 
 /**
- * Represents a two-dimensional size. <tt>Size</tt> objects can for example be
- * used to specify the size of a rectangle to be drawn on a
- * {@link ch.jeda.ui.Canvas}. <tt>Size</tt> objects are returned by some methods
- * to inform about the size of an object (for example
- * {@link ch.jeda.ui.Image#getSize()}.
+ * Represents a two-dimensional size. <tt>Size</tt> objects can for example be used to specify the size of a rectangle
+ * to be drawn on a {@link ch.jeda.ui.Canvas}. <tt>Size</tt> objects are returned by some methods to inform about the
+ * size of an object (for example {@link ch.jeda.ui.Image#getSize()}.
  * <p>
- * A size has a width and a height which cannot be negative. A size with both a
- * width and a height of zero is called empty.
+ * A size has a width and a height which cannot be negative. A size with both a width and a height of zero is called
+ * empty.
  * <p>
- * <tt>Size</tt> objects are immutable. That means that their value cannot be
- * changed.
+ * <tt>Size</tt> objects are immutable. That means that their value cannot be changed.
  *
  * @since 1
  */
@@ -51,8 +48,8 @@ public final class Size implements Serializable {
     public final int height;
 
     /**
-     * Parses a size from a string. The string must consist of two positivie
-     * integers separated by an 'x', e.g. "800x600". Returns <tt>Size.EMPTY</tt>
+     * Parses a size from a string. The string must consist of two positivie integers separated by an 'x', e.g.
+     * "800x600". Returns <tt>Size.EMPTY</tt>
      * if <tt>text</tt> does not represent a valid size.
      *
      * @param text the string to parse
@@ -92,8 +89,8 @@ public final class Size implements Serializable {
     }
 
     /**
-     * Constructs a size. The size has the specified width and height. The
-     * values of <tt>width</tt> and <tt>height</tt> may not be negative.
+     * Constructs a size. The size has the specified width and height. The values of <tt>width</tt> and <tt>height</tt>
+     * may not be negative.
      *
      * @param width the width
      * @param height the height
@@ -113,8 +110,8 @@ public final class Size implements Serializable {
     }
 
     /**
-     * Returns the area of a rectangle described by the size. More specific,
-     * returns the product of <tt>width</tt> and <tt>height</tt>.
+     * Returns the area of a rectangle described by the size. More specific, returns the product of <tt>width</tt> and
+     * <tt>height</tt>.
      *
      * @return product of <tt>width</tt> and <tt>height</tt>
      */
@@ -123,8 +120,7 @@ public final class Size implements Serializable {
     }
 
     /**
-     * Checks whether the specified location lies within a rectangle described
-     * by this size.
+     * Checks whether the specified location lies within a rectangle described by this size.
      *
      * @param location the location to check
      * @return <tt>true</tt> if location lies within, otherwise <tt>false</tt>
@@ -169,9 +165,8 @@ public final class Size implements Serializable {
     }
 
     /**
-     * Returns a scaled variant of this size. Both width and height of this size
-     * are scaled and rounded. If both width and height are positive, a
-     * resulting size is returned. Otherwise, <tt>null</tt> is returned.
+     * Returns a scaled variant of this size. Both width and height of this size are scaled and rounded. If both width
+     * and height are positive, a resulting size is returned. Otherwise, <tt>null</tt> is returned.
      *
      * @param factor the factor by which to scale this size.
      * @return the scaled size or <tt>null</tt>
@@ -182,8 +177,8 @@ public final class Size implements Serializable {
     }
 
     /**
-     * Returns a string representation of this size. The string representation
-     * has the form <tt>"WxH"</tt> where <tt>W</tt> is replaced by the width and
+     * Returns a string representation of this size. The string representation has the form <tt>"WxH"</tt> where
+     * <tt>W</tt> is replaced by the width and
      * <tt>H</tt> by the height of this size.
      *
      * @return string representation of this size
