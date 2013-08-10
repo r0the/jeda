@@ -137,7 +137,7 @@ public final class Context {
         return this.imp.loadClasses();
     }
 
-    List<String> loadTextFile(final String filePath) {
+    String[] loadTextFile(final String filePath) {
         final InputStream in = this.openInputStream(filePath);
         if (in == null) {
             return null;
@@ -150,7 +150,7 @@ public final class Context {
                 result.add(reader.readLine());
             }
 
-            return result;
+            return result.toArray(new String[result.size()]);
         }
         catch (IOException ex) {
             this.warning(Message.FILE_READ_ERROR, filePath, ex);

@@ -125,15 +125,14 @@ public final class Util {
 
     /**
      * Loads a text file and returns the content as a list of Strings. Each line of the text file will be represented by
-     * a String in the returned list. Returns
-     * <code>null</code> if the file is not present or cannot be read.
+     * a <tt>String</tt> in the returned array. Returns <tt>null</tt> if the file is not present or cannot be read.
      *
      * To read a resource file, put ':' in front of the file path.
      *
      * @param filePath path to the file
-     * @return lines of the file as a String list
+     * @return lines of the file as an array of <tt>String</tt>
      */
-    public static List<String> loadTextFile(final String filePath) {
+    public static String[] loadTextFile(final String filePath) {
         return Engine.getContext().loadTextFile(filePath);
     }
 
