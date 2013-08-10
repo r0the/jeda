@@ -17,6 +17,7 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Message;
+import java.awt.Font;
 
 class LogWindow extends BaseWindow {
 
@@ -34,6 +35,11 @@ class LogWindow extends BaseWindow {
         this.logTextArea.setCaretPosition(this.logTextArea.getText().length() - 1);
     }
 
+    private void changeFontSize(float delta) {
+        final Font font = this.logTextArea.getFont();
+        this.logTextArea.setFont(font.deriveFont(font.getSize() + delta));
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -41,11 +47,14 @@ class LogWindow extends BaseWindow {
         jScrollPane1 = new javax.swing.JScrollPane();
         logTextArea = new javax.swing.JTextArea();
         closeButton = new javax.swing.JButton();
+        increaseSizeButton = new javax.swing.JButton();
+        decreaseSizeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        logTextArea.setColumns(20);
         logTextArea.setEditable(false);
+        logTextArea.setColumns(20);
+        logTextArea.setFont(new java.awt.Font("Sans Serif", 0, 16)); // NOI18N
         logTextArea.setRows(5);
         jScrollPane1.setViewportView(logTextArea);
 
@@ -56,22 +65,46 @@ class LogWindow extends BaseWindow {
             }
         });
 
+        increaseSizeButton.setText("+");
+        increaseSizeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                increaseSizeButtonActionPerformed(evt);
+            }
+        });
+
+        decreaseSizeButton.setText("-");
+        decreaseSizeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                decreaseSizeButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(491, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(increaseSizeButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(decreaseSizeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(closeButton)
                 .addContainerGap())
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {decreaseSizeButton, increaseSizeButton});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(closeButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(closeButton)
+                    .addComponent(increaseSizeButton)
+                    .addComponent(decreaseSizeButton))
                 .addContainerGap())
         );
 
@@ -81,8 +114,19 @@ class LogWindow extends BaseWindow {
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         this.cancel();
     }//GEN-LAST:event_closeButtonActionPerformed
+
+    private void increaseSizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_increaseSizeButtonActionPerformed
+        this.changeFontSize(+3);
+    }//GEN-LAST:event_increaseSizeButtonActionPerformed
+
+    private void decreaseSizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decreaseSizeButtonActionPerformed
+        this.changeFontSize(-3);
+    }//GEN-LAST:event_decreaseSizeButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
+    private javax.swing.JButton decreaseSizeButton;
+    private javax.swing.JButton increaseSizeButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea logTextArea;
     // End of variables declaration//GEN-END:variables
