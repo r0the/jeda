@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,92 +16,10 @@
  */
 package ch.jeda;
 
-/**
- * Base class for all Jeda programs.
- * <p>
- * To write a Jeda program, create a class that inherits from ch.jeda.Program and overwrite the {@link #run()} method.
- * <p>
- * <strong>Example:</strong>
- * <pre><code> import ch.jeda.*;
- *
- * public class HelloWorld extends Program {
- *
- * public void run() {
- *    write("Hello World");
- * }</code></pre>
- *
- * @since 1
- */
-public abstract class Program {
+import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.InputType;
 
-    private final Object stateLock;
-    private ProgramState state;
-
-    /**
-     * Constructs a program. The created program will have the state {@link ProgramState#CREATING}.
-     *
-     * @since 1
-     */
-    protected Program() {
-        this.stateLock = new Object();
-        this.state = ProgramState.CREATING;
-    }
-
-    /**
-     * Returns the current program state.
-     *
-     * @return current program state.
-     *
-     * @see ProgramState
-     * @since 1
-     */
-    public final ProgramState getState() {
-        synchronized (this.stateLock) {
-            return this.state;
-        }
-    }
-
-    /**
-     * @deprecated Use {@link #stop()} instead.
-     */
-    @Deprecated
-    public final void requestStop() {
-        this.setState(ProgramState.STOPPED);
-    }
-
-    /**
-     * Executes the program. Override this method to implement the program. The program should react to changes of the
-     * program state. It should not execute program logic while the program state is {@link ProgramState#PAUSED}. The
-     * program should return from the {@link #run()} method if the program state is {@link ProgramState#STOPPED}.
-     *
-     * @since 1
-     */
-    public abstract void run();
-
-    /**
-     * Requests the program to stop. Sets the program state to {@link ProgramState#STOPPED}.
-     */
-    public final void stop() {
-        this.setState(ProgramState.STOPPED);
-    }
-
-    /**
-     * Returns the Jeda system properties.
-     *
-     * @return Jeda system properties.
-     * @see Properties
-     */
-    protected final Properties getProperties() {
-        return Engine.getContext().getProperties();
-    }
-
-    /**
-     * @deprecated Use <tt>this.getState() == ProgramState.Stopped</tt> instead.
-     */
-    @Deprecated
-    protected final boolean stopRequested() {
-        return this.getState() == ProgramState.STOPPED;
-    }
+public class Dialog {
 
     /**
      * Prompts the user to enter a <tt>double</tt> value. The specified message is presented to the user along with a
@@ -115,8 +33,13 @@ public abstract class Program {
      * @see #readDouble(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final double readDouble(final String message) {
-        return Dialog.readDouble(message);
+    public static double readDouble(final String message) {
+        InputRequest<Double> request = new InputRequest<Double>(InputType.forDouble(), 0d);
+        request.setMessage(message);
+        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        Engine.getContext().showInputRequest(request);
+        request.waitForResult();
+        return request.getResult();
     }
 
     /**
@@ -134,9 +57,16 @@ public abstract class Program {
      * @see Util#args(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final double readDouble(final String messageTemplate, final Object... args) {
-        return Dialog.readDouble(messageTemplate, args);
+    public static double readDouble(final String messageTemplate, final Object... args) {
+        return readDouble(Util.args(messageTemplate, args));
     }
+
+//    public static String selectFileName() {
+//        InputRequest<String> request = new InputRequest<String>((InputType.forFile(), null);
+//        Engine.getContext().showInputRequest(request);
+//        request.waitForResult();
+//        return request.getResult();
+//    }
 
     /**
      * Prompts the user to enter an <tt>int</tt> value. The specified message is presented to the user along with a
@@ -150,8 +80,13 @@ public abstract class Program {
      * @see #readInt(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final int readInt(final String message) {
-        return Dialog.readInt(message);
+    public static int readInt(final String message) {
+        InputRequest<Integer> request = new InputRequest<Integer>(InputType.forInt(), 0);
+        request.setMessage(message);
+        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        Engine.getContext().showInputRequest(request);
+        request.waitForResult();
+        return request.getResult();
     }
 
     /**
@@ -169,8 +104,8 @@ public abstract class Program {
      * @see Util#args(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final int readInt(final String messageTemplate, final Object... args) {
-        return Dialog.readInt(messageTemplate, args);
+    public static int readInt(final String messageTemplate, final Object... args) {
+        return readInt(Util.args(messageTemplate, args));
     }
 
     /**
@@ -185,8 +120,13 @@ public abstract class Program {
      * @see #readString(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final String readString(final String message) {
-        return Dialog.readString(message);
+    public static String readString(final String message) {
+        InputRequest<String> request = new InputRequest<String>(InputType.forString(), "");
+        request.setMessage(message);
+        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        Engine.getContext().showInputRequest(request);
+        request.waitForResult();
+        return request.getResult();
     }
 
     /**
@@ -204,57 +144,7 @@ public abstract class Program {
      * @see Util#args(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final String readString(final String messageTemplate, final Object... args) {
-        return Dialog.readString(messageTemplate, args);
-    }
-
-    /**
-     * Waits for the specified amount of time.
-     *
-     * @param milliseconds the amount of milliseconds to wait
-     *
-     * @since 1
-     */
-    protected final void sleep(final int milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        }
-        catch (InterruptedException ex) {
-        }
-    }
-
-    /**
-     * Writes a message. Writes the specified message to both the standard output and to the Jeda log window. Shows the
-     * Jeda log window.
-     *
-     * @param message the message
-     *
-     * @see #write(java.lang.String, java.lang.Object[])
-     * @since 1
-     */
-    protected final void write(final String message) {
-        Engine.getContext().write(message);
-    }
-
-    /**
-     * Writes a message. Writes a message to both the standard output and to the Jeda log window. Shows the Jeda log
-     * window. The message to be written is constructed from the <tt>messageTemplate</tt> and the specified<tt>args</tt>
-     * by a call to {@link Util#args(java.lang.String, java.lang.Object[])}
-     *
-     * @param messageTemplate the message template
-     * @param args the arguments to be inserted in the message template
-     *
-     * @see #write(java.lang.String)
-     * @see Util#args(java.lang.String, java.lang.Object[])
-     * @since 1
-     */
-    protected final void write(final String messageTemplate, final Object... args) {
-        this.write(Util.args(messageTemplate, args));
-    }
-
-    final void setState(final ProgramState value) {
-        synchronized (this.stateLock) {
-            this.state = value;
-        }
+    public static String readString(final String messageTemplate, final Object... args) {
+        return readString(Util.args(messageTemplate, args));
     }
 }
