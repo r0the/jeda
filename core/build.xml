@@ -4,11 +4,6 @@
     <import file="nbproject/build-impl.xml"/>
 
     <target name="-post-jar" depends="javadoc">
-        <!-- Add jbox2d library to jar -->
-        <jar update="true" jarfile="${dist.jar}">
-            <zipfileset src="lib/jbox2d-library-2.2.1.1.jar"/>
-        </jar>
-
         <copy file="${dist.jar}" todir="../jedandroid/libs/"/>
         <copy todir="dist/javadoc">
             <fileset dir="../artwork/javadoc-icons"/>

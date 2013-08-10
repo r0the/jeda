@@ -16,7 +16,6 @@
  */
 package ch.jeda.world;
 
-import ch.jeda.ui.Canvas;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 

@@ -36,7 +36,7 @@ import org.jbox2d.common.Vec2;
 /**
  * This class represents a virtual world, which is a simulation with a graphical representation. This class extends the
  * {@link ch.jeda.Simulation} class and implements a simulation loop that renders to a {@link ch.jeda.ui.Window}. A jeda
- * world can contain the follwing kinds of objects:
+ * world can contain the following kinds of objects:
  * <ul>
  * <li>A <b>body</b> is subject to the laws of physics and is controlled by a physics engine. Bodies can obly be used
  * when an appropriate plugin is used.
@@ -48,7 +48,8 @@ import org.jbox2d.common.Vec2;
  * @since 1
  */
 public class World extends Simulation {
-    
+
+    static final float FACTOR = 2f;
     private final int velocityIterations;
     private final int positionIterations;
     protected static final Color DEBUG_OVERLAY_BG_COLOR = new Color(255, 200, 200);
@@ -64,12 +65,12 @@ public class World extends Simulation {
     private Objects objects;
     private boolean paused;
     private WorldState state;
-    
+
     public final void addObject(final WorldObject object) {
         if (object == null) {
             throw new NullPointerException("object");
         }
-        
+
         this.objects.add(object);
         this.window.addEventListener(object);
         if (object instanceof PhysicsObject) {
@@ -109,7 +110,7 @@ public class World extends Simulation {
     public final int getCanvasWidth() {
         return this.window.getWidth();
     }
-    
+
     public final WorldObject[] getObjects() {
         return this.objects.getAll();
     }
@@ -124,19 +125,19 @@ public class World extends Simulation {
         if (feature == null) {
             return false;
         }
-        
+
         return this.features.contains(feature);
     }
-    
+
     public final boolean hasFeature(final Window.Feature feature) {
         return this.window.hasFeature(feature);
     }
-    
+
     public void removeObject(final WorldObject object) {
         if (object == null) {
             throw new NullPointerException("object");
         }
-        
+
         this.objects.remove(object);
         this.window.removeEventListener(object);
         if (object instanceof PhysicsObject) {
@@ -159,11 +160,11 @@ public class World extends Simulation {
             this.features.remove(feature);
         }
     }
-    
+
     public final void setFeature(final Window.Feature feature, final boolean enabled) {
         this.window.setFeature(feature, enabled);
     }
-    
+
     public final void setGravity(float gx, float gy) {
         this.physics.setGravity(new Vec2(gx, gy));
     }
@@ -171,16 +172,16 @@ public class World extends Simulation {
     public final void setPaused(final boolean paused) {
         this.paused = paused;
     }
-    
+
     public final void setState(final Class<? extends WorldState> state) {
         if (state == null) {
             throw new NullPointerException("state");
         }
-        
+
         if (!this.states.containsKey(state)) {
             Engine.getContext().warning("jeda.game.state.error", state);
         }
-        
+
         this.nextState = state;
     }
 
@@ -217,28 +218,28 @@ public class World extends Simulation {
     protected World(final int width, final int height) {
         this(width, height, NO_FEATURES);
     }
-    
+
     protected World(final int width, final int height,
                     final Window.Feature... features) {
         this(width, height, toSet(features));
     }
-    
+
     protected final void addState(final WorldState state) {
         if (state == null) {
             throw new NullPointerException("state");
         }
-        
+
         this.states.put(state.getClass(), state);
     }
-    
+
     protected void drawBackground(final Canvas canvas) {
         canvas.setColor(Color.WHITE);
         canvas.fill();
     }
-    
+
     protected void drawOverlay(final Canvas canvas) {
     }
-    
+
     @Override
     protected void init() {
     }
@@ -272,7 +273,7 @@ public class World extends Simulation {
         this.state.drawBackground(this.window);
         // 4.2 Draw entities
         this.objects.draw(this.window);
-        
+
         this.window.setTransformation(IDENTITY);
         // 4.3 Draw debug overlay for entities
         if (this.hasFeature(WorldFeature.SHOW_COLLISION_SHAPES)) {
@@ -287,10 +288,10 @@ public class World extends Simulation {
         // 5. Update window
         this.window.update();
     }
-    
+
     protected void update() {
     }
-    
+
     private World(final int width, final int height, final EnumSet<Window.Feature> features) {
         features.add(Window.Feature.DoubleBuffered);
         this.features = EnumSet.noneOf(WorldFeature.class);
@@ -314,7 +315,7 @@ public class World extends Simulation {
         viewport.setYFlip(true);
         this.physics.setDebugDraw(new DebugDrawAdapter(this.window, viewport));
     }
-    
+
     private void drawDebugOverlay() {
         if (this.hasFeature(WorldFeature.SHOW_WORLD_INFO)) {
             this.window.setColor(DEBUG_OVERLAY_BG_COLOR);
@@ -325,12 +326,12 @@ public class World extends Simulation {
                                          "ms, Objects: " + this.objects.count());
         }
     }
-    
+
     private void checkState() {
         if (this.nextState == null) {
             return;
         }
-        
+
         this.state.notifyExit();
         if (this.states.containsKey(this.nextState)) {
             this.state = this.states.get(this.nextState);
@@ -338,76 +339,76 @@ public class World extends Simulation {
         else {
             this.state = this.defaultState;
         }
-        
+
         this.nextState = null;
         this.state.notifyEnter(this);
     }
-    
+
     private static EnumSet<Window.Feature> toSet(final Window.Feature... features) {
         final EnumSet<Window.Feature> result = EnumSet.noneOf(Window.Feature.class);
         for (int i = 0; i < features.length; ++i) {
             result.add(features[i]);
         }
-        
+
         return result;
     }
-    
+
     private static final class DebugDrawAdapter extends DebugDraw {
-        
+
         private final Canvas canvas;
-        
+
         public DebugDrawAdapter(final Canvas canvas, final IViewportTransform viewport) {
             super(viewport);
             this.canvas = canvas;
             this.setFlags(e_shapeBit | e_centerOfMassBit);
         }
-        
+
         @Override
         public void drawCircle(Vec2 center, float radius, Color3f color) {
             this.canvas.setColor(convertColor(color));
-            this.canvas.drawCircle(center.x, center.y, radius);
+            this.canvas.drawCircle(center.x * FACTOR, center.y * FACTOR, radius);
         }
-        
+
         @Override
         public void drawPoint(final Vec2 point, final float radius, final Color3f color) {
             this.canvas.setColor(convertColor(color));
-            this.canvas.fillCircle(point.x, point.y, radius);
+            this.canvas.fillCircle(point.x * FACTOR, point.y * FACTOR, radius);
         }
-        
+
         @Override
         public void drawSegment(Vec2 p1, Vec2 p2, Color3f color) {
             this.canvas.setColor(convertColor(color));
-            this.canvas.drawLine(p1.x, p1.y, p2.x, p2.y);
+            this.canvas.drawLine(p1.x * FACTOR, p1.y * FACTOR, p2.x * FACTOR, p2.y * FACTOR);
         }
-        
+
         @Override
         public void drawSolidCircle(final Vec2 center, final float radius, final Vec2 axis, final Color3f color) {
             this.canvas.setColor(convertColor(color));
             this.canvas.fillCircle(center.x, center.y, radius);
         }
-        
+
         @Override
         public void drawSolidPolygon(final Vec2[] vertices, int vertexCount, final Color3f color) {
             final float[] points = new float[2 * vertexCount];
             for (int i = 0; i < vertexCount; ++i) {
-                points[2 * i] = vertices[i].x;
-                points[2 * i + 1] = vertices[i].y;
+                points[2 * i] = vertices[i].x * FACTOR;
+                points[2 * i + 1] = vertices[i].y * FACTOR;
             }
-            
+
             this.canvas.setColor(convertColor(color));
             this.canvas.drawPolygon(points);
         }
-        
+
         @Override
         public void drawString(final float x, final float y, final String s, final Color3f color) {
             this.canvas.setColor(convertColor(color));
-            this.canvas.drawText(x, y, s);
+            this.canvas.drawText(x * FACTOR, y * FACTOR, s);
         }
-        
+
         @Override
         public void drawTransform(final Transform t) {
         }
-        
+
         private static Color convertColor(final Color3f color) {
             return new Color((int) (255f * color.x), (int) (255f * color.y), (int) (255f * color.z));
         }

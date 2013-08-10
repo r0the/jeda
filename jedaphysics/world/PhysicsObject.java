@@ -25,31 +25,36 @@ public abstract class PhysicsObject extends WorldObject {
     final BodyDef bodyDef;
     Body body;
 
+    /**
+     * Returns the object's x coordinate in the world coordinate system.
+     *
+     * @return
+     */
     public final float getX() {
         if (this.body == null) {
-            return this.bodyDef.position.x;
+            return this.bodyDef.position.x * World.FACTOR;
         }
         else {
-            return this.body.getPosition().x;
+            return this.body.getPosition().x * World.FACTOR;
         }
     }
 
     public final float getY() {
         if (this.body == null) {
-            return this.bodyDef.position.y;
+            return this.bodyDef.position.y * World.FACTOR;
         }
         else {
-            return this.body.getPosition().y;
+            return this.body.getPosition().y * World.FACTOR;
         }
     }
 
     public final void setPosition(final float x, final float y) {
         if (this.body == null) {
-            this.bodyDef.position.x = x;
-            this.bodyDef.position.y = y;
+            this.bodyDef.position.x = x / World.FACTOR;
+            this.bodyDef.position.y = y / World.FACTOR;
         }
         else {
-            this.body.setTransform(new Vec2(x, y), this.body.getAngle());
+            this.body.setTransform(new Vec2(x * 100f, y * 100f), this.body.getAngle());
         }
     }
 
