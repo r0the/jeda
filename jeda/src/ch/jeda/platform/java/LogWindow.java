@@ -31,8 +31,10 @@ class LogWindow extends BaseWindow {
     }
 
     void log(final String text) {
-        this.logTextArea.append(text);
-        this.logTextArea.setCaretPosition(this.logTextArea.getText().length() - 1);
+        if (text != null && !text.isEmpty()) {
+            this.logTextArea.append(text);
+            this.logTextArea.setCaretPosition(this.logTextArea.getText().length() - 1);
+        }
     }
 
     private void changeFontSize(float delta) {
@@ -122,7 +124,6 @@ class LogWindow extends BaseWindow {
     private void decreaseSizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decreaseSizeButtonActionPerformed
         this.changeFontSize(-3);
     }//GEN-LAST:event_decreaseSizeButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
     private javax.swing.JButton decreaseSizeButton;
