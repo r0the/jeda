@@ -30,7 +30,7 @@ import ch.jeda.ui.EventType;
 import ch.jeda.ui.Key;
 import ch.jeda.ui.KeyEvent;
 import ch.jeda.ui.PointerEvent;
-import ch.jeda.ui.Window;
+import ch.jeda.ui.WindowFeature;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     private static final Map<Integer, EventSource> INPUT_DEVICE_MAP = new HashMap<Integer, EventSource>();
     private static final Map<Integer, Key> KEY_MAP = initKeyMap();
     private final List<Event> events;
-    private final EnumSet<Window.Feature> features;
+    private final EnumSet<WindowFeature> features;
     private WindowRequest request;
     private boolean surfaceAvailable;
     private SurfaceHolder surfaceHolder;
@@ -135,16 +135,16 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         return result;
     }
 
-    EnumSet<Window.Feature> getFeatures() {
+    EnumSet<WindowFeature> getFeatures() {
         return this.features;
     }
 
     @Override
     int getOrientation() {
-        if (this.features.contains(Window.Feature.OrientationLandscape)) {
+        if (this.features.contains(WindowFeature.OrientationLandscape)) {
             return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         }
-        else if (this.features.contains(Window.Feature.OrientationPortrait)) {
+        else if (this.features.contains(WindowFeature.OrientationPortrait)) {
             return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         }
         else {
@@ -160,7 +160,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         }
     }
 
-    void setFeature(final Window.Feature feature, final boolean enabled) {
+    void setFeature(final WindowFeature feature, final boolean enabled) {
         if (enabled) {
             this.features.add(feature);
         }

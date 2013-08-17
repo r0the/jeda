@@ -20,7 +20,7 @@ import ch.jeda.Engine;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
-import ch.jeda.ui.Window.Feature;
+import ch.jeda.ui.WindowFeature;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -117,7 +117,7 @@ public class WindowManager {
             height = 600;
         }
 
-        if (request.getFeatures().contains(Feature.Fullscreen) && this.fullscreenWindow == null) {
+        if (request.getFeatures().contains(WindowFeature.Fullscreen) && this.fullscreenWindow == null) {
             DisplayMode displayMode = findDisplayMode(width, height);
             width = displayMode.getWidth();
             height = displayMode.getHeight();

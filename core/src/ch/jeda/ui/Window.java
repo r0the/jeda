@@ -21,12 +21,10 @@ import ch.jeda.platform.WindowImp;
 import java.util.EnumSet;
 
 /**
- * Represents a drawing window. The window class has the follwoing
- * functionality:
+ * Represents a drawing window. The window class has the following functionality:
  * <ul>
  * <li> fullscreen: the window can be displayed in framed or fullscreen mode.
- * <li> double buffering: the window supports a double buffering mode for
- * animations.
+ * <li> double buffering: the window supports a double buffering mode for animations.
  * <li> user input: the window provides means to query keyboard and mouse input.
  * </ul>
  *
@@ -34,68 +32,7 @@ import java.util.EnumSet;
  */
 public class Window extends Canvas {
 
-    public enum Feature {
-
-        /**
-         * Enables double buffering in a window. A double-buffered window
-         * performs drawing operations in an off-screen buffer. The
-         * {@link Window#update()} method must be called to display the contents
-         * of this buffer. This prevents flickering in animations.
-         *
-         * @see Window#update()
-         * @since 1
-         */
-        DoubleBuffered,
-        /**
-         * Sets fullscreen mode for a window. The behaviour of this feature
-         * depends on the platform:
-         * <p>
-         * <img src="../../../windows.png"> <img src="../../../linux.png">
-         * Displays the window in fullscreen mode. The screen resolution is
-         * automatically selected to fit the window size as closely as possible.
-         * <p>
-         * <img src="../../../android.png"> Fullscreen mode is not yet supported
-         * on Android devices.
-         *
-         * @since 1
-         */
-        Fullscreen,
-        /**
-         *
-         * @see Window#update()
-         * @since 1
-         */
-        HoveringPointer,
-        /**
-         * Set landscape orientation for a window. The behaviour of this feature
-         * depends on the platform:
-         * <p>
-         * <img src="../../../windows.png"> <img src="../../../linux.png"> Has
-         * no effect.
-         * <p>
-         * <img src="../../../android.png"> The screen orientation of the device
-         * is set to landscape. Thus, the width of the window's drawing area is
-         * larger than it's height.
-         *
-         * @since 1
-         */
-        OrientationLandscape,
-        /**
-         * Set portrait orientation for a window. The behaviour of this feature
-         * depends on the platform:
-         * <p>
-         * <img src="../../../windows.png"> <img src="../../../linux.png"> Has
-         * no effect.
-         * <p>
-         * <img src="../../../android.png"> The screen orientation of the device
-         * is set to portrait. Thus, the width of the window's drawing area is
-         * smaller than it's height.
-         *
-         * @since 1
-         */
-        OrientationPortrait
-    }
-    private static final EnumSet<Feature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
+    private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
     private final EventDispatcher eventDispatcher;
     private final Events events;
     private WindowImp imp;
@@ -103,42 +40,16 @@ public class Window extends Canvas {
     private String title;
 
     /**
-     * @deprecated Use {@link #Window()} instead.
-     */
-    @Deprecated
-    public static Window create() {
-        return new Window();
-    }
-
-    /**
-     * @deprecated Use {@link #Window(Feature... )} instead.
-     */
-    @Deprecated
-    public static Window create(Feature... features) {
-        return new Window(features);
-    }
-
-    /**
-     * @deprecated Use {@link #Window(int, int, Feature... )} instead.
-     */
-    @Deprecated
-    public static Window create(int width, int height, Feature... features) {
-        return new Window(width, height, features);
-    }
-
-    /**
-     * Constructs a window. The window is shown on the screen. All drawing
-     * methods inherited from {@link Canvas} are supported.
+     * Constructs a window. The window is shown on the screen. All drawing methods inherited from {@link Canvas} are
+     * supported.
      * <p>
      * The size of the window's drawing area depends on the platform:
      * <p>
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The
-     * drawing area of the window has a width of 800 pixels and a height of 600
-     * pixels.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The drawing area of the window has a width of 800
+     * pixels and a height of 600 pixels.
      * <p>
-     * <img src="../../../android.png"> The size drawing area depends on the
-     * screen size of the device.
+     * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.
      *
      * @since 1
      */
@@ -147,25 +58,22 @@ public class Window extends Canvas {
     }
 
     /**
-     * Constructs a window. The window is shown on the screen. All drawing
-     * methods inherited from {@link Canvas} are supported. The specified
-     * features will be enabled for the window.
+     * Constructs a window. The window is shown on the screen. All drawing methods inherited from {@link Canvas} are
+     * supported. The specified features will be enabled for the window.
      * <p>
      * The size of the window's drawing area depends on the platform:
      * <p>
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The
-     * drawing area of the window has a width of 800 pixels and a height of 600
-     * pixels.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The drawing area of the window has a width of 800
+     * pixels and a height of 600 pixels.
      * <p>
-     * <img src="../../../android.png"> The size drawing area depends on the
-     * screen size of the device.
+     * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.
      *
      * @param features the features of the window
      *
      * @since 1
      */
-    public Window(final Feature... features) {
+    public Window(final WindowFeature... features) {
         this.eventDispatcher = new EventDispatcher();
         this.events = new Events();
         this.eventDispatcher.addListener(this.events.listener);
@@ -174,19 +82,17 @@ public class Window extends Canvas {
     }
 
     /**
-     * Constructs a window. The window is shown on the screen. All drawing
-     * methods inherited from {@link Canvas} are supported. The specified
-     * features will be enabled for the window.
+     * Constructs a window. The window is shown on the screen. All drawing methods inherited from {@link Canvas} are
+     * supported. The specified features will be enabled for the window.
      * <p>
      * The size of the window's drawing area depends on the platform:
      * <p>
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> The
-     * drawing area of the window has the specified <tt>width</tt> and
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The drawing area of the window has the specified
+     * <tt>width</tt> and
      * <tt>height</tt>.
      * <p>
-     * <img src="../../../android.png"> The size drawing area depends on the
-     * screen size of the device.
+     * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.
      *
      * @param width the width of the drawing area in pixels
      * @param height the height of the drawing area in pixels
@@ -196,7 +102,7 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window(final int width, final int height,
-                  final Feature... features) {
+                  final WindowFeature... features) {
         this.eventDispatcher = new EventDispatcher();
         this.events = new Events();
         this.eventDispatcher.addListener(this.events.listener);
@@ -205,8 +111,8 @@ public class Window extends Canvas {
     }
 
     /**
-     * Adds an event listener to the window. The specified object will recieve
-     * events for all events listener interfaces it implements.
+     * Adds an event listener to the window. The specified object will recieve events for all events listener interfaces
+     * it implements.
      *
      * @param listener the event listener
      * @since 1
@@ -216,8 +122,7 @@ public class Window extends Canvas {
     }
 
     /**
-     * Closes the window. The window becomes invalid, all subsequent method
-     * calls to the window will cause an error.
+     * Closes the window. The window becomes invalid, all subsequent method calls to the window will cause an error.
      *
      * @since 1
      */
@@ -226,10 +131,9 @@ public class Window extends Canvas {
     }
 
     /**
-     * Returns an object holding the events that are taking place on the window.
-     * The {@link Events} object returned by this method stays valid as long as
-     * the window is open. The {@link Events} object is updated only by a call
-     * to the {@link #update()} method.
+     * Returns an object holding the events that are taking place on the window. The {@link Events} object returned by
+     * this method stays valid as long as the window is open. The {@link Events} object is updated only by a call to the
+     * {@link #update()} method.
      *
      * @return {@link Events} object representing the events on the window
      *
@@ -252,17 +156,16 @@ public class Window extends Canvas {
     }
 
     /**
-     * Checks for a window feature. Returns <tt>true</tt> if the specified
-     * feature is currently enabled for the window.
+     * Checks for a window feature. Returns <tt>true</tt> if the specified feature is currently enabled for the window.
      *
      * @return <tt>true</tt> if the feature is enabled, otherwise returns
      * <tt>false</tt>
      * @throws NullPointerException if <tt>feature</tt> is <tt>null</tt>
      *
-     * @see #setFeature(ch.jeda.ui.Window.Feature, boolean)
+     * @see #setFeature(WindowFeature, boolean)
      * @since 1
      */
-    public boolean hasFeature(final Feature feature) {
+    public boolean hasFeature(final WindowFeature feature) {
         if (feature == null) {
             throw new NullPointerException("feature");
         }
@@ -277,8 +180,7 @@ public class Window extends Canvas {
     }
 
     /**
-     * Removes an event listener from the window. The specified object will not
-     * receive events anymore.
+     * Removes an event listener from the window. The specified object will not receive events anymore.
      *
      * @param listener the event listener
      * @since 1
@@ -295,16 +197,16 @@ public class Window extends Canvas {
      * <tt>false</tt> to disable it
      * @throws NullPointerException if <tt>feature</tt> is <tt>null</tt>
      *
-     * @see #hasFeature(ch.jeda.ui.Window.Feature)
+     * @see #hasFeature(WindowFeature)
      * @since 1
      */
-    public void setFeature(final Feature feature, final boolean enabled) {
+    public void setFeature(final WindowFeature feature, final boolean enabled) {
         if (feature == null) {
             throw new NullPointerException("feature");
         }
 
         if (IMP_CHANGING_FEATURES.contains(feature)) {
-            final EnumSet<Feature> featureSet =
+            final EnumSet<WindowFeature> featureSet =
                     EnumSet.copyOf(this.imp.getFeatures());
             if (enabled) {
                 featureSet.add(feature);
@@ -318,15 +220,6 @@ public class Window extends Canvas {
         else {
             this.imp.setFeature(feature, enabled);
         }
-    }
-
-    /**
-     * @deprecated use #setFeature(Window.Feature.Fullscreen, fullscreen)
-     * instead
-     */
-    @Deprecated
-    public void setFullscreen(boolean fullscreen) {
-        this.setFeature(Feature.Fullscreen, fullscreen);
     }
 
     /**
@@ -366,9 +259,8 @@ public class Window extends Canvas {
     }
 
     /**
-     * Updates the window. Updates the {@link Events} of the window. If the
-     * window has the feature {@link Feature#DoubleBuffered} activiated, also
-     * flips foreground and background buffer.
+     * Updates the window. Updates the {@link Events} of the window. If the window has the feature
+     * {@link Feature#DoubleBuffered} activiated, also flips foreground and background buffer.
      *
      * @since 1
      */
@@ -382,7 +274,7 @@ public class Window extends Canvas {
     }
 
     private void resetImp(final int width, final int height,
-                          final EnumSet<Feature> features) {
+                          final EnumSet<WindowFeature> features) {
         if (this.imp != null) {
             this.imp.close();
         }
@@ -390,7 +282,7 @@ public class Window extends Canvas {
         this.imp = Engine.getContext().showWindow(width, height, features);
         this.events.reset();
         this.imp.setTitle(this.title);
-        if (!this.hasFeature(Feature.DoubleBuffered)) {
+        if (!this.hasFeature(WindowFeature.DoubleBuffered)) {
             this.imp.setColor(Color.WHITE);
             this.imp.fill();
         }
@@ -399,16 +291,16 @@ public class Window extends Canvas {
         this.update();
     }
 
-    private static EnumSet<Feature> initImpChangingFeatures() {
-        final EnumSet<Feature> result = EnumSet.noneOf(Feature.class);
-        result.add(Feature.DoubleBuffered);
-        result.add(Feature.Fullscreen);
+    private static EnumSet<WindowFeature> initImpChangingFeatures() {
+        final EnumSet<WindowFeature> result = EnumSet.noneOf(WindowFeature.class);
+        result.add(WindowFeature.DoubleBuffered);
+        result.add(WindowFeature.Fullscreen);
         return result;
     }
 
-    private static EnumSet<Feature> toSet(final Feature... features) {
-        final EnumSet<Feature> result = EnumSet.noneOf(Feature.class);
-        for (Feature feature : features) {
+    private static EnumSet<WindowFeature> toSet(final WindowFeature... features) {
+        final EnumSet<WindowFeature> result = EnumSet.noneOf(WindowFeature.class);
+        for (WindowFeature feature : features) {
             result.add(feature);
         }
 

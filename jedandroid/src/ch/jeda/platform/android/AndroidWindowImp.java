@@ -19,8 +19,7 @@ package ch.jeda.platform.android;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.Event;
 import ch.jeda.ui.MouseCursor;
-import ch.jeda.ui.Window;
-import ch.jeda.ui.Window.Feature;
+import ch.jeda.ui.WindowFeature;
 import java.util.EnumSet;
 
 class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
@@ -37,12 +36,12 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     }
 
     @Override
-    public EnumSet<Window.Feature> getFeatures() {
+    public EnumSet<WindowFeature> getFeatures() {
         return this.canvasView.getFeatures();
     }
 
     @Override
-    public void setFeature(final Feature feature, final boolean enabled) {
+    public void setFeature(final WindowFeature feature, final boolean enabled) {
         this.canvasView.setFeature(feature, enabled);
     }
 
@@ -62,7 +61,7 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     }
 
     static AndroidWindowImp create(final CanvasView canvasView, final int width, final int height) {
-        if (canvasView.getFeatures().contains(Window.Feature.DoubleBuffered)) {
+        if (canvasView.getFeatures().contains(WindowFeature.DoubleBuffered)) {
             return new AndroidWindowImp(canvasView, width, height);
         }
         else {

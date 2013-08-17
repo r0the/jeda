@@ -20,6 +20,7 @@ import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.Event;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.Window;
+import ch.jeda.ui.WindowFeature;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
@@ -43,12 +44,12 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     }
 
     @Override
-    public EnumSet<Window.Feature> getFeatures() {
+    public EnumSet<WindowFeature> getFeatures() {
         return this.canvasWindow.getFeatures();
     }
 
     @Override
-    public void setFeature(final Window.Feature feature, final boolean enabled) {
+    public void setFeature(final WindowFeature feature, final boolean enabled) {
         this.canvasWindow.setFeature(feature, enabled);
     }
 
@@ -68,7 +69,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     public abstract void update();
 
     static JavaWindowImp create(final CanvasWindow viewWindow) {
-        if (viewWindow.getFeatures().contains(Window.Feature.DoubleBuffered)) {
+        if (viewWindow.getFeatures().contains(WindowFeature.DoubleBuffered)) {
             return new DoubleBufferedWindowImp(viewWindow);
         }
         else {

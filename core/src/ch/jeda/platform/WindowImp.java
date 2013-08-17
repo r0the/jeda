@@ -18,7 +18,7 @@ package ch.jeda.platform;
 
 import ch.jeda.ui.Event;
 import ch.jeda.ui.MouseCursor;
-import ch.jeda.ui.Window;
+import ch.jeda.ui.WindowFeature;
 import java.util.EnumSet;
 
 /**
@@ -30,9 +30,9 @@ public interface WindowImp extends CanvasImp {
 
     Event[] fetchEvents();
 
-    EnumSet<Window.Feature> getFeatures();
+    EnumSet<WindowFeature> getFeatures();
 
-    void setFeature(Window.Feature feature, boolean enabled);
+    void setFeature(WindowFeature feature, boolean enabled);
 
     void setMouseCursor(MouseCursor mouseCursor);
 

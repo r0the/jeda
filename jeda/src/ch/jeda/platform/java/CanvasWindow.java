@@ -22,7 +22,7 @@ import ch.jeda.ui.EventType;
 import ch.jeda.ui.Key;
 import ch.jeda.ui.KeyEvent;
 import ch.jeda.ui.PointerEvent;
-import ch.jeda.ui.Window;
+import ch.jeda.ui.WindowFeature;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
@@ -64,7 +64,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
     private final ImageCanvas canvas;
     private final List<Event> events;
     private final Object eventsLock;
-    private final EnumSet<Window.Feature> features;
+    private final EnumSet<WindowFeature> features;
     private final int height;
     // BEGIN workaround to Java bug on Linux platform
     private final Map<Key, KeyReleaseTimer> keyReleaseTimer;
@@ -141,7 +141,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void mouseEntered(final MouseEvent event) {
-        if (this.features.contains(Window.Feature.HoveringPointer)) {
+        if (this.features.contains(WindowFeature.HoveringPointer)) {
             this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN,
                                            POINTER_ID, event.getX(), event.getY()));
         }
@@ -149,7 +149,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void mouseExited(final MouseEvent event) {
-        if (this.features.contains(Window.Feature.HoveringPointer)) {
+        if (this.features.contains(WindowFeature.HoveringPointer)) {
             this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID,
                                            event.getX(), event.getY()));
         }
@@ -157,7 +157,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void mouseMoved(final MouseEvent event) {
-        if (this.features.contains(Window.Feature.HoveringPointer)) {
+        if (this.features.contains(WindowFeature.HoveringPointer)) {
             this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_MOVED, POINTER_ID,
                                            event.getX(), event.getY()));
         }
@@ -170,7 +170,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
             this.addEvent(new KeyEvent(MOUSE, EventType.KEY_DOWN, key));
         }
 
-        if (!this.features.contains(Window.Feature.HoveringPointer)) {
+        if (!this.features.contains(WindowFeature.HoveringPointer)) {
             this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN, POINTER_ID,
                                            event.getX(), event.getY()));
         }
@@ -183,7 +183,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
             this.addEvent(new KeyEvent(MOUSE, EventType.KEY_UP, key));
         }
 
-        if (!this.features.contains(Window.Feature.HoveringPointer)) {
+        if (!this.features.contains(WindowFeature.HoveringPointer)) {
             this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID,
                                            event.getX(), event.getY()));
         }
@@ -194,7 +194,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
     }
 
     CanvasWindow(final WindowManager manager, final int width, final int height,
-                 final EnumSet<Window.Feature> features) {
+                 final EnumSet<WindowFeature> features) {
         super(manager);
         this.canvas = new ImageCanvas(width, height);
         this.events = new ArrayList<Event>();
@@ -207,7 +207,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         this.setResizable(false);
         this.setIgnoreRepaint(true);
         this.getContentPane().add(this.canvas);
-        this.setUndecorated(features.contains(Window.Feature.Fullscreen));
+        this.setUndecorated(features.contains(WindowFeature.Fullscreen));
         this.pack();
         this.init();
         this.canvas.requestFocus();
@@ -227,7 +227,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         }
     }
 
-    EnumSet<Window.Feature> getFeatures() {
+    EnumSet<WindowFeature> getFeatures() {
         return this.features;
     }
 
@@ -239,7 +239,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         return this.width;
     }
 
-    void setFeature(final Window.Feature feature, final boolean enabled) {
+    void setFeature(final WindowFeature feature, final boolean enabled) {
         if (enabled) {
             this.features.add(feature);
         }

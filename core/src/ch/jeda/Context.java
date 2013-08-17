@@ -23,7 +23,7 @@ import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.platform.WindowRequest;
-import ch.jeda.ui.Window;
+import ch.jeda.ui.WindowFeature;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -86,7 +86,7 @@ public final class Context {
     }
 
     public WindowImp showWindow(final int width, final int height,
-                                final EnumSet<Window.Feature> features) {
+                                final EnumSet<WindowFeature> features) {
         if (features == null) {
             throw new NullPointerException("features");
         }
