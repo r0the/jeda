@@ -43,6 +43,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 // On Linux, Java generates repeating keyReleased. This is a known bug, see
@@ -54,6 +55,8 @@ class CanvasWindow extends BaseWindow implements FocusListener,
                                                  MouseMotionListener,
                                                  MouseWheelListener {
 
+    private static final int KEY_RELEASE_TIMEOUT = 2;
+    private static final int UPDATE_TIMEOUT = 100;
     private static final EventSource KEYBOARD = new EventSource(0, "Keyboard");
     private static final boolean LINUX = System.getProperty("os.name").endsWith("Linux");
     private static final EventSource MOUSE = new EventSource(1, "Mouse");
@@ -253,7 +256,12 @@ class CanvasWindow extends BaseWindow implements FocusListener,
     }
 
     void update() {
-        this.canvas.repaint();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                canvas.repaint();
+            }
+        });
     }
 
     private void addEvent(final Event event) {
@@ -470,7 +478,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
 
         public KeyReleaseTimer(final Key key, final CanvasWindow window) {
             this.key = key;
-            this.timer = new Timer(2, this);
+            this.timer = new Timer(KEY_RELEASE_TIMEOUT, this);
             this.window = window;
             this.ok = true;
         }

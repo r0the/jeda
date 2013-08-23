@@ -97,6 +97,7 @@ public class Canvas {
         }
 
         this.imp.copyFrom(0, 0, canvas.imp);
+        this.modified();
     }
 
     /**
@@ -112,6 +113,7 @@ public class Canvas {
     public void drawCircle(final float x, final float y, final float radius) {
         if (radius > 0) {
             this.imp.drawCircle(x, y, radius);
+            this.modified();
         }
     }
 
@@ -128,6 +130,7 @@ public class Canvas {
     public void drawImage(final float x, final float y, final Image image) {
         if (image != null) {
             this.imp.drawImage(x, y, image.getImp(), 255);
+            this.modified();
         }
     }
 
@@ -152,6 +155,7 @@ public class Canvas {
 
         if (image != null && alpha > 0) {
             this.imp.drawImage(x, y, image.getImp(), alpha);
+            this.modified();
         }
     }
 
@@ -175,6 +179,7 @@ public class Canvas {
 
         if (image != null) {
             this.imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()), image.getImp(), 255);
+            this.modified();
         }
     }
 
@@ -205,6 +210,7 @@ public class Canvas {
 
         if (image != null && alpha > 0) {
             this.imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()), image.getImp(), alpha);
+            this.modified();
         }
     }
 
@@ -221,6 +227,7 @@ public class Canvas {
      */
     public void drawLine(final float x1, final float y1, final float x2, final float y2) {
         this.imp.drawLine(x1, y1, x2, y2);
+        this.modified();
     }
 
     /**
@@ -239,6 +246,7 @@ public class Canvas {
         }
 
         this.imp.drawPolygon(points);
+        this.modified();
     }
 
     /**
@@ -256,6 +264,7 @@ public class Canvas {
     public void drawRectangle(final float x, final float y, final float width, final float height) {
         if (width > 0 && height > 0) {
             this.imp.drawRectangle(x, y, width, height);
+            this.modified();
         }
     }
 
@@ -280,6 +289,7 @@ public class Canvas {
 
         if (width > 0 && height > 0) {
             this.imp.drawRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
+            this.modified();
         }
     }
 
@@ -313,6 +323,7 @@ public class Canvas {
     public void drawText(final float x, final float y, final String text) {
         if (text != null && !text.isEmpty()) {
             this.imp.drawText(x, y, text);
+            this.modified();
         }
     }
 
@@ -337,6 +348,7 @@ public class Canvas {
 
         if (text != null && !text.isEmpty()) {
             this.imp.drawText(alignment.alignX(x, this.imp.textWidth(text)), alignment.alignY(y, this.imp.textHeight(text)), text);
+            this.modified();
         }
     }
 
@@ -356,6 +368,7 @@ public class Canvas {
      */
     public void drawTriangle(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
         this.imp.drawPolygon(new float[]{x1, y1, x2, y2, x3, y3});
+        this.modified();
     }
 
     /**
@@ -365,6 +378,7 @@ public class Canvas {
      */
     public void fill() {
         this.imp.fill();
+        this.modified();
     }
 
     /**
@@ -380,6 +394,7 @@ public class Canvas {
     public void fillCircle(final float x, final float y, final float radius) {
         if (radius > 0) {
             this.imp.fillCircle(x, y, radius);
+            this.modified();
         }
     }
 
@@ -399,6 +414,7 @@ public class Canvas {
         }
 
         this.imp.fillPolygon(points);
+        this.modified();
     }
 
     /**
@@ -416,6 +432,7 @@ public class Canvas {
     public void fillRectangle(final float x, final float y, final float width, final float height) {
         if (width > 0 && height > 0) {
             this.imp.fillRectangle(x, y, width, height);
+            this.modified();
         }
     }
 
@@ -441,6 +458,7 @@ public class Canvas {
 
         if (width > 0 && height > 0) {
             this.imp.fillRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
+            this.modified();
         }
     }
 
@@ -460,6 +478,7 @@ public class Canvas {
      */
     public void fillTriangle(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
         this.imp.fillPolygon(new float[]{x1, y1, x2, y2, x3, y3});
+        this.modified();
     }
 
     /**
@@ -757,6 +776,9 @@ public class Canvas {
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
         this.transformation = new Transformation();
+    }
+
+    void modified() {
     }
 
     final void setImp(final CanvasImp imp) {

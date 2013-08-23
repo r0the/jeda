@@ -19,7 +19,6 @@ package ch.jeda.platform.java;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.Event;
 import ch.jeda.ui.MouseCursor;
-import ch.jeda.ui.Window;
 import ch.jeda.ui.WindowFeature;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
@@ -138,11 +137,6 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
         @Override
         public void update() {
-            this.canvasWindow.update();
-        }
-
-        @Override
-        void modified() {
             this.canvasWindow.update();
         }
     }

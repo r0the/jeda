@@ -53,7 +53,6 @@ class AndroidCanvasImp implements CanvasImp {
         assert radius > 0;
 
         this.canvas.drawCircle(x, y, radius, this.strokePaint);
-        this.modified();
     }
 
     @Override
@@ -64,13 +63,11 @@ class AndroidCanvasImp implements CanvasImp {
 
         this.imagePaint.setAlpha(alpha);
         this.canvas.drawBitmap(((AndroidImageImp) image).bitmap, x, y, this.imagePaint);
-        this.modified();
     }
 
     @Override
     public void drawLine(final float x1, final float y1, final float x2, final float y2) {
         this.canvas.drawLine(x1, y1, x2, y2, this.strokePaint);
-        this.modified();
     }
 
     @Override
@@ -80,13 +77,11 @@ class AndroidCanvasImp implements CanvasImp {
         assert points.length % 2 == 0;
 
         this.canvas.drawPath(createPath(points), this.strokePaint);
-        this.modified();
     }
 
     @Override
     public void drawRectangle(final float x, final float y, final float width, final float height) {
         this.canvas.drawRect(x, y, x + width, y + height, this.strokePaint);
-        this.modified();
     }
 
     @Override
@@ -94,13 +89,11 @@ class AndroidCanvasImp implements CanvasImp {
         assert text != null;
 
         this.canvas.drawText(text, x, y - (int) this.textPaint.ascent(), this.textPaint);
-        this.modified();
     }
 
     @Override
     public void fill() {
         this.canvas.drawColor(this.fillPaint.getColor());
-        this.modified();
     }
 
     @Override
@@ -108,7 +101,6 @@ class AndroidCanvasImp implements CanvasImp {
         assert radius > 0;
 
         this.canvas.drawCircle(x, y, radius, this.fillPaint);
-        this.modified();
     }
 
     @Override
@@ -118,13 +110,11 @@ class AndroidCanvasImp implements CanvasImp {
         assert points.length % 2 == 0;
 
         this.canvas.drawPath(createPath(points), this.fillPaint);
-        this.modified();
     }
 
     @Override
     public void fillRectangle(final float x, final float y, final float width, final float height) {
         this.canvas.drawRect(x, y, x + width, y + height, this.fillPaint);
-        this.modified();
     }
 
     @Override
@@ -229,9 +219,6 @@ class AndroidCanvasImp implements CanvasImp {
 
     Canvas getCanvas() {
         return this.canvas;
-    }
-
-    void modified() {
     }
 
     Bitmap getBitmap() {

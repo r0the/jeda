@@ -19,6 +19,8 @@ package ch.jeda.ui;
 import ch.jeda.Engine;
 import ch.jeda.platform.WindowImp;
 import java.util.EnumSet;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Represents a drawing window. The window class has the following functionality:
@@ -32,12 +34,14 @@ import java.util.EnumSet;
  */
 public class Window extends Canvas {
 
+    private static final int UPDATE_DELAY = 100;
     private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
     private final EventDispatcher eventDispatcher;
     private final Events events;
+    private final Timer updateTimer;
     private WindowImp imp;
-    private boolean processedEvents;
     private String title;
+    private UpdateTask updateTask;
 
     /**
      * Constructs a window. The window is shown on the screen. All drawing methods inherited from {@link Canvas} are
@@ -76,6 +80,7 @@ public class Window extends Canvas {
     public Window(final WindowFeature... features) {
         this.eventDispatcher = new EventDispatcher();
         this.events = new Events();
+        this.updateTimer = new Timer(true);
         this.eventDispatcher.addListener(this.events.listener);
         this.title = Thread.currentThread().getName();
         this.resetImp(0, 0, toSet(features));
@@ -101,17 +106,17 @@ public class Window extends Canvas {
      *
      * @since 1
      */
-    public Window(final int width, final int height,
-                  final WindowFeature... features) {
+    public Window(final int width, final int height, final WindowFeature... features) {
         this.eventDispatcher = new EventDispatcher();
         this.events = new Events();
+        this.updateTimer = new Timer(true);
         this.eventDispatcher.addListener(this.events.listener);
         this.title = Engine.getProgramName();
         this.resetImp(width, height, toSet(features));
     }
 
     /**
-     * Adds an event listener to the window. The specified object will recieve events for all events listener interfaces
+     * Adds an event listener to the window. The specified object will receive events for all events listener interfaces
      * it implements.
      *
      * @param listener the event listener
@@ -131,13 +136,7 @@ public class Window extends Canvas {
     }
 
     /**
-     * Returns an object holding the events that are taking place on the window. The {@link Events} object returned by
-     * this method stays valid as long as the window is open. The {@link Events} object is updated only by a call to the
-     * {@link #update()} method.
-     *
-     * @return {@link Events} object representing the events on the window
-     *
-     * @since 1
+     * @deprecated Use {@link Window#addEventListener(java.lang.Object)} instead.
      */
     public Events getEvents() {
         return this.events;
@@ -171,12 +170,6 @@ public class Window extends Canvas {
         }
 
         return this.imp.getFeatures().contains(feature);
-    }
-
-    public void processEvents() {
-        this.events.prepare();
-        this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
-        this.processedEvents = true;
     }
 
     /**
@@ -260,21 +253,35 @@ public class Window extends Canvas {
 
     /**
      * Updates the window. Updates the {@link Events} of the window. If the window has the feature
-     * {@link Feature#DoubleBuffered} activiated, also flips foreground and background buffer.
+     * {@link WindowFeature#DoubleBuffered} activated, also flips foreground and background buffer.
      *
      * @since 1
      */
     public void update() {
-        if (!this.processedEvents) {
-            this.processEvents();
-        }
-
+        this.cancelUpdateTask();
+        this.events.prepare();
+        this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
         this.imp.update();
-        this.processedEvents = false;
     }
 
-    private void resetImp(final int width, final int height,
-                          final EnumSet<WindowFeature> features) {
+    void cancelUpdateTask() {
+        if (this.updateTask != null) {
+            this.updateTask.cancel();
+            this.updateTask = null;
+        }
+    }
+
+    @Override
+    void modified() {
+        if (this.updateTask == null && !this.hasFeature(WindowFeature.DoubleBuffered)) {
+            this.updateTask = new UpdateTask(this);
+            this.updateTimer.schedule(this.updateTask, UPDATE_DELAY);
+        }
+    }
+
+    private void resetImp(final int width, final int height, final EnumSet<WindowFeature> features) {
+        this.cancelUpdateTask();
+
         if (this.imp != null) {
             this.imp.close();
         }
@@ -305,5 +312,19 @@ public class Window extends Canvas {
         }
 
         return result;
+    }
+
+    private static class UpdateTask extends TimerTask {
+
+        private final Window window;
+
+        UpdateTask(final Window window) {
+            this.window = window;
+        }
+
+        @Override
+        public void run() {
+            this.window.update();
+        }
     }
 }

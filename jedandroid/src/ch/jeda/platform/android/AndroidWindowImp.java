@@ -61,28 +61,11 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     }
 
     static AndroidWindowImp create(final CanvasView canvasView, final int width, final int height) {
-        if (canvasView.getFeatures().contains(WindowFeature.DoubleBuffered)) {
-            return new AndroidWindowImp(canvasView, width, height);
-        }
-        else {
-            return new SingleBufferedAndroidViewImp(canvasView, width, height);
-        }
+        return new AndroidWindowImp(canvasView, width, height);
     }
 
     private AndroidWindowImp(final CanvasView canvasView, final int width, final int height) {
         this.canvasView = canvasView;
         this.init(width, height);
-    }
-
-    private static class SingleBufferedAndroidViewImp extends AndroidWindowImp {
-
-        SingleBufferedAndroidViewImp(final CanvasView displayView, final int width, final int height) {
-            super(displayView, width, height);
-        }
-
-        @Override
-        void modified() {
-            this.update();
-        }
     }
 }

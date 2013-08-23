@@ -71,7 +71,6 @@ class JavaCanvasImp implements CanvasImp {
 
         final int diameter = (int) (2 * radius);
         this.graphics.drawOval((int) (x - radius), (int) (y - radius), diameter, diameter);
-        this.modified();
     }
 
     @Override
@@ -88,14 +87,11 @@ class JavaCanvasImp implements CanvasImp {
         if (alpha != 255) {
             this.graphics.setPaintMode();
         }
-
-        this.modified();
     }
 
     @Override
     public void drawLine(final float x1, final float y1, final float x2, final float y2) {
         this.graphics.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-        this.modified();
     }
 
     @Override
@@ -105,13 +101,11 @@ class JavaCanvasImp implements CanvasImp {
         assert points.length % 2 == 0;
 
         this.graphics.drawPolygon(createPolygon(points));
-        this.modified();
     }
 
     @Override
     public void drawRectangle(final float x, final float y, final float width, final float height) {
         this.graphics.drawRect((int) x, (int) y, (int) width, (int) height);
-        this.modified();
     }
 
     @Override
@@ -121,7 +115,6 @@ class JavaCanvasImp implements CanvasImp {
         final TextLayout textLayout = this.textLayout(text);
         final Rectangle2D bounds = textLayout.getBounds();
         textLayout.draw(this.graphics, x, y - (int) bounds.getMinY());
-        this.modified();
     }
 
     @Override
@@ -135,8 +128,6 @@ class JavaCanvasImp implements CanvasImp {
             this.graphics.fillRect(0, 0, this.width, this.height);
             this.graphics.setTransform(oldTransform);
         }
-
-        this.modified();
     }
 
     @Override
@@ -145,7 +136,6 @@ class JavaCanvasImp implements CanvasImp {
 
         final int diameter = (int) (2 * radius);
         this.graphics.fillOval((int) (x - radius), (int) (y - radius), diameter, diameter);
-        this.modified();
     }
 
     @Override
@@ -155,13 +145,11 @@ class JavaCanvasImp implements CanvasImp {
         assert points.length % 2 == 0;
 
         this.graphics.fillPolygon(createPolygon(points));
-        this.modified();
     }
 
     @Override
     public void fillRectangle(final float x, final float y, final float width, final float height) {
         this.graphics.fillRect((int) x, (int) y, (int) width, (int) height);
-        this.modified();
     }
 
     @Override
@@ -213,7 +201,6 @@ class JavaCanvasImp implements CanvasImp {
         assert color != null;
 
         this.buffer.setRGB(x, y, color.getValue());
-        this.modified();
     }
 
     @Override
@@ -266,9 +253,6 @@ class JavaCanvasImp implements CanvasImp {
         }
 
         return byText.get(text);
-    }
-
-    void modified() {
     }
 
     final void setBuffer(final BufferedImage buffer) {
