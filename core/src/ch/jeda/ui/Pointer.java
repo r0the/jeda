@@ -113,9 +113,9 @@ public final class Pointer {
     /**
      * Checks if the pointer is currently available. On a device with touch
      * screen, a pointer becomes available if the screen is touched. The pointer
-     * remains available while the screen is beeing touched. On a device with
+     * remains available while the screen is being touched. On a device with
      * mouse cursor, the behavior depends on the {@link Window} feature
-     * {@link Window.Feature#HoveringPointer}. If the feature is set, the
+     * {@link WindowFeature#HoveringPointer}. If the feature is set, the
      * pointer representing the mouse cursor becomes available if the cursor
      * enters the window and remains available while the mouse cursor is inside
      * the window. If the feature is not set, the pointer becomes available if a

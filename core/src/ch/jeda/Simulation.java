@@ -78,7 +78,7 @@ public abstract class Simulation extends Program {
 
     /**
      * Calls {@link #init()} and then starts the simulation. Calls {@link #step()} repeatedly until the simulation has
-     * been stopped by calling {@link #requestStop()}.
+     * been stopped by calling {@link #stop()}.
      *
      * @since 1
      */
