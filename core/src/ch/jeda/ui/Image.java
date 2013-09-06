@@ -17,9 +17,7 @@
 package ch.jeda.ui;
 
 import ch.jeda.Engine;
-import ch.jeda.Location;
 import ch.jeda.Message;
-import ch.jeda.Size;
 import ch.jeda.platform.ImageImp;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,9 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a bitmap image. A bitmap image can be loaded from an image file or
- * be obtained by making a snapshot of a {@link Canvas}. Simple image
- * transformations are also supported.
+ * Represents a bitmap image. A bitmap image can be loaded from an image file or be obtained by making a snapshot of a
+ * {@link Canvas}. Simple image transformations are also supported.
  *
  * @since 1
  */
@@ -45,13 +42,11 @@ public final class Image {
     private final ImageImp imp;
 
     /**
-     * Constructs an image from a file. Loads the contents of the specified
-     * image file. Currently, the image file formats JPEG, and PNG are
-     * supported.
+     * Constructs an image from a file. Loads the contents of the specified image file. Currently, the image file
+     * formats JPEG, and PNG are supported.
      * <p>
-     * The file can either be located on the local computer, or in the project.
-     * To read a file located in the project, put ':' in front of the file path.
-     * For example, use the following code to load an image located in the
+     * The file can either be located on the local computer, or in the project. To read a file located in the project,
+     * put ':' in front of the file path. For example, use the following code to load an image located in the
      * <tt>ch.jeda.samples</tt> package of the project:
      *
      * <pre><code>Image sample = new Image("src/ch/jeda/samples/sample.png");</code></pre>
@@ -65,8 +60,7 @@ public final class Image {
     }
 
     /**
-     * Creates a scaled copy of the image. Width and height are both scaled
-     * proportionally.
+     * Creates a scaled copy of the image. Width and height are both scaled proportionally.
      *
      * @param factor the scaling factor
      * @return scaled image
@@ -74,37 +68,26 @@ public final class Image {
      * @see #createScaledImage(int, int)
      * @since 1
      */
-    public Image createScaledImage(double factor) {
-        return this.createScaledImage(this.getSize().scaled(factor));
+    public Image createScaledImage(float factor) {
+        final int width = (int) (this.getWidth() * factor);
+        final int height = (int) (this.getHeight() * factor);
+        return this.createScaledImage(width, height);
     }
 
     /**
-     * Creates a scaled copy of the image. Both width and height of the new
-     * image can be specified. The aspect ratio may not be preserved.
+     * Creates a scaled copy of the image. Both width and height of the new image can be specified. The aspect ratio may
+     * not be preserved.
      *
      * @param width the width of the new image
      * @param height the height of the new image
      * @return scaled image
-     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are
-     * smaller than 1
+     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are smaller than 1
      *
-     * @see #createScaledImage(double)
+     * @see #createScaledImage(float)
      * @since 1
      */
     public Image createScaledImage(final int width, final int height) {
         return new Image(this.imp.createScaledImage(width, height));
-    }
-
-    /**
-     * @deprecated Use {@link #createScaledImage(int, int)} instead.
-     */
-    @Deprecated
-    public Image createScaledImage(Size size) {
-        if (size == null) {
-            throw new NullPointerException("size");
-        }
-
-        return new Image(this.imp.createScaledImage(size.width, size.height));
     }
 
     /**
@@ -115,8 +98,7 @@ public final class Image {
      * @param width the width of the part
      * @param height the height of the part
      * @return specified part of image
-     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are
-     * smaller than 1
+     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are smaller than 1
      *
      * @since 1
      */
@@ -126,36 +108,10 @@ public final class Image {
     }
 
     /**
-     * @deprecated Use {@link #createSubImage(int, int, int, int)} instead.
-     */
-    @Deprecated
-    public Image createSubImage(Location location, Size size) {
-        if (location == null) {
-            throw new NullPointerException("location");
-        }
-
-        if (size == null) {
-            throw new NullPointerException("size");
-        }
-
-        return new Image(this.imp.createSubImage(location.x, location.y,
-                                                 size.width, size.height));
-    }
-
-    /**
-     * @deprecated Use {@link #getWidth()} and {@link #getHeight()} instead.
-     */
-    @Deprecated
-    public Size getSize() {
-        return new Size(this.imp.getWidth(), this.imp.getHeight());
-    }
-
-    /**
      * Returns the height of the image in pixels.
      *
      * @return height of image
      *
-     * @see #getSize()
      * @see #getWidth()
      * @since 1
      */
@@ -169,7 +125,6 @@ public final class Image {
      * @return width of image
      *
      * @see #getHeight()
-     * @see #getSize()
      * @since 1
      */
     public int getWidth() {
@@ -177,8 +132,7 @@ public final class Image {
     }
 
     /**
-     * Replaces all pixels of one specific color with another color. This can be
-     * useful for creating transparent images.
+     * Replaces all pixels of one specific color with another color. This can be useful for creating transparent images.
      *
      * @param oldColor color to be replaced
      * @param newColor color to replace oldColor
@@ -190,10 +144,9 @@ public final class Image {
     }
 
     /**
-     * Saves the contents of the image to a file. Saving to a resource file
-     * (i.e. a file path starting with ':') is not allowed. The file path must
-     * end with a valid image file extension. Currently, the extension ".jpeg",
-     * ".jpg", and ".png" are supported.
+     * Saves the contents of the image to a file. Saving to a resource file (i.e. a file path starting with ':') is not
+     * allowed. The file path must end with a valid image file extension. Currently, the extension ".jpeg", ".jpg", and
+     * ".png" are supported.
      *
      * @param filePath file to save to
      * @return <tt>true</tt> if file has been saved sucessfully
@@ -214,7 +167,7 @@ public final class Image {
         String extension = filePath.substring(pos + 1).toLowerCase();
         if (!FORMAT_MAP.containsKey(extension)) {
             Engine.getContext().warning(Message.IMAGE_FORMAT_ERROR, filePath,
-                                        extension);
+                extension);
             return false;
         }
 
@@ -230,7 +183,7 @@ public final class Image {
         }
         catch (IOException ex) {
             Engine.getContext().warning(Message.IMAGE_WRITE_ERROR, filePath,
-                                        ex.getMessage());
+                ex.getMessage());
             return false;
         }
         finally {

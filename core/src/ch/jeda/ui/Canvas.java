@@ -56,7 +56,7 @@ public class Canvas {
     /**
      * Constructs a drawing surface. The drawing surface has the specified width and height. A drawing surface
      * constructed in this way is <b>invisible</b>
-     * and can be used to draw images for later use. Use {@link Window#Window(int, int, ch.jeda.ui.Window.Feature[])} to
+     * and can be used to draw images for later use. Use {@link Window#Window(int, int, ch.jeda.ui.WindowFeature[])} to
      * create a visible drawing surface.
      *
      * @param width the width of the canvas in pixels
@@ -78,14 +78,6 @@ public class Canvas {
         this.fontSize = DEFAULT_FONT_SIZE;
         this.transformation = new Transformation();
         this.setImp(Engine.getContext().createCanvasImp(width, height));
-    }
-
-    /**
-     * @deprecated Use {@link #fill()} instead.
-     */
-    @Deprecated
-    public void clear() {
-        this.fill();
     }
 
     /**
@@ -294,22 +286,6 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use {@link #drawText(float, float, java.lang.String)} instead.
-     */
-    @Deprecated
-    public void drawString(int x, int y, String text) {
-        this.drawText(x, y, text, Alignment.TOP_LEFT);
-    }
-
-    /**
-     * @deprecated Use {@link #drawText(float, float, java.lang.String, ch.jeda.ui.Alignment)} instead.
-     */
-    @Deprecated
-    public final void drawString(int x, int y, String text, Alignment alignment) {
-        this.drawText(x, y, text, alignment);
-    }
-
-    /**
      * Draws a text. The text is drawn using the current color, transformation, and font size. The top left corner of
      * the text is positioned at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>text</tt>
      * is <tt>null</tt> or empty.
@@ -515,14 +491,6 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Canvas doesn't support a global alpha value anymore.
-     */
-    @Deprecated
-    public int getAlpha() {
-        return 255;
-    }
-
-    /**
      * Returns the current color.
      *
      * @return current drawing color
@@ -609,15 +577,6 @@ public class Canvas {
      */
     public int getWidth() {
         return this.imp.getWidth();
-    }
-
-    /**
-     * @deprecated Cavnas doesn't support a global alpha value anymore. Use {@link #setColor(ch.jeda.ui.Color)} with a
-     * transparent color to draw with translucency. Use{@link #drawImage(float, float, ch.jeda.ui.Image, int)} or
-     * {@link #drawImage(float, float, ch.jeda.ui.Image, int, ch.jeda.ui.Alignment)} to draw an image with translucency.
-     */
-    @Deprecated
-    public void setAlpha(final int alpha) {
     }
 
     /**
