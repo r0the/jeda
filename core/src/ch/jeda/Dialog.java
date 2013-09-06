@@ -30,35 +30,15 @@ public class Dialog {
      * @param message the message
      * @return <tt>double</tt> value entered by the user or <tt>0.0</tt.
      *
-     * @see #readDouble(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    public static double readDouble(final String message) {
-        InputRequest<Double> request = new InputRequest<Double>(InputType.forDouble(), 0d);
-        request.setMessage(message);
+    public static double readDouble(final Object... message) {
+        final InputRequest<Double> request = new InputRequest<Double>(InputType.forDouble(), 0d);
+        request.setMessage(Util.toString(message));
         request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
         Engine.getContext().showInputRequest(request);
         request.waitForResult();
         return request.getResult();
-    }
-
-    /**
-     * Prompts the user to enter a <tt>double</tt> value. A message is presented to the user along with a field to enter
-     * the <tt>double</tt> value. The message to be presented to the user is constructed from the
-     * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
-     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may be formatted using simple HTML. Returns
-     * <tt>0.0</tt> if the user cancels the input.
-     *
-     * @param messageTemplate the message template
-     * @param args the arguments to be inserted in the message template
-     * @return <tt>double</tt> value entered by the user or <tt>0.0</tt>
-     *
-     * @see #readDouble(java.lang.String)
-     * @see Util#args(java.lang.String, java.lang.Object[])
-     * @since 1
-     */
-    public static double readDouble(final String messageTemplate, final Object... args) {
-        return readDouble(Util.args(messageTemplate, args));
     }
 
 //    public static String selectFileName() {
@@ -67,7 +47,6 @@ public class Dialog {
 //        request.waitForResult();
 //        return request.getResult();
 //    }
-
     /**
      * Prompts the user to enter an <tt>int</tt> value. The specified message is presented to the user along with a
      * field to enter the <tt>int<//tt>
@@ -77,35 +56,15 @@ public class Dialog {
      * @param message the message
      * @return <tt>int</tt> value entered by the user or <tt>0</tt>
      *
-     * @see #readInt(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    public static int readInt(final String message) {
-        InputRequest<Integer> request = new InputRequest<Integer>(InputType.forInt(), 0);
-        request.setMessage(message);
+    public static int readInt(final Object... message) {
+        final InputRequest<Integer> request = new InputRequest<Integer>(InputType.forInt(), 0);
+        request.setMessage(Util.toString(message));
         request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
         Engine.getContext().showInputRequest(request);
         request.waitForResult();
         return request.getResult();
-    }
-
-    /**
-     * Prompts the user to enter an <tt>int</tt> value. A message is presented to the user along with a field to enter
-     * the <tt>int</tt> value. The message to be presented to the user is constructed from the
-     * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
-     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may be formatted using simple HTML. Returns
-     * <tt>0</tt> if the user cancels the input.
-     *
-     * @param messageTemplate the message template
-     * @param args the arguments to be inserted in the message template
-     * @return <tt>int</tt> value entered by the user or <tt>0</tt>
-     *
-     * @see #readInt(java.lang.String)
-     * @see Util#args(java.lang.String, java.lang.Object[])
-     * @since 1
-     */
-    public static int readInt(final String messageTemplate, final Object... args) {
-        return readInt(Util.args(messageTemplate, args));
     }
 
     /**
@@ -117,34 +76,14 @@ public class Dialog {
      * @param message the message
      * @return <tt>String</tt> value entered by the user or <tt>null</tt>
      *
-     * @see #readString(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    public static String readString(final String message) {
-        InputRequest<String> request = new InputRequest<String>(InputType.forString(), "");
-        request.setMessage(message);
+    public static String readString(final Object... message) {
+        final InputRequest<String> request = new InputRequest<String>(InputType.forString(), "");
+        request.setMessage(Util.toString(message));
         request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
         Engine.getContext().showInputRequest(request);
         request.waitForResult();
         return request.getResult();
-    }
-
-    /**
-     * Prompts the user to enter a <tt>String</tt> value. A message is presented to the user along with a field to enter
-     * the <tt>String</tt> value. The message to be presented to the user is constructed from the
-     * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
-     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may be formatted using simple HTML. Returns
-     * <tt>null</tt> if the user cancels the input.
-     *
-     * @param messageTemplate the message template
-     * @param args the arguments to be inserted in the message template
-     * @return <tt>String</tt> value entered by the user or <tt>null</tt>
-     *
-     * @see #readString(java.lang.String)
-     * @see Util#args(java.lang.String, java.lang.Object[])
-     * @since 1
-     */
-    public static String readString(final String messageTemplate, final Object... args) {
-        return readString(Util.args(messageTemplate, args));
     }
 }

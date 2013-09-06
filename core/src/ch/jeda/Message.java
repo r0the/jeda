@@ -105,6 +105,36 @@ public class Message {
         return doTranslate(key, null);
     }
 
+    /**
+     * Replaces place-holders in message template with the corresponding arguments. The message template may contain
+     * place-holders having the form
+     * <tt>{N}</tt> where <tt>N</tt> is a number. This method will replace all occurrences of the placeholder
+     * <tt>{0}</tt> with the first argument after
+     * <tt>message</tt>, occurrences of <tt>{1}</tt> with the second argument and so on.
+     *
+     * @param messageTemplate the message template
+     * @param args the arguments to be inserted in the message template
+     * @return resulting message
+     * @since 1
+     */
+    static String args(final String messageTemplate, final Object... args) {
+        if (args == null) {
+            return messageTemplate;
+        }
+        String result = messageTemplate;
+        int i = 0;
+        for (Object arg : args) {
+            String key = "{" + i + "}";
+            String val = "null";
+            if (arg != null) {
+                val = arg.toString();
+            }
+            result = result.replace(key, val);
+            i = i + 1;
+        }
+        return result;
+    }
+
     private static String doTranslate(String key, Object[] args) {
         if (key == null) {
             return "<null>";
@@ -117,6 +147,6 @@ public class Message {
         else {
             result = messageMap.get(key);
         }
-        return Util.args(result, args);
+        return args(result, args);
     }
 }

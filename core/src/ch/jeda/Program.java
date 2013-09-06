@@ -62,14 +62,6 @@ public abstract class Program {
     }
 
     /**
-     * @deprecated Use {@link #stop()} instead.
-     */
-    @Deprecated
-    public final void requestStop() {
-        this.setState(ProgramState.STOPPED);
-    }
-
-    /**
      * Executes the program. Override this method to implement the program. The program should react to changes of the
      * program state. It should not execute program logic while the program state is {@link ProgramState#PAUSED}. The
      * program should return from the {@link #run()} method if the program state is {@link ProgramState#STOPPED}.
@@ -96,14 +88,6 @@ public abstract class Program {
     }
 
     /**
-     * @deprecated Use <tt>this.getState() == ProgramState.Stopped</tt> instead.
-     */
-    @Deprecated
-    protected final boolean stopRequested() {
-        return this.getState() == ProgramState.STOPPED;
-    }
-
-    /**
      * Prompts the user to enter a <tt>double</tt> value. The specified message is presented to the user along with a
      * field to enter the <tt>double</tt>
      * value. The message may be formatted using simple HTML. Returns
@@ -112,30 +96,10 @@ public abstract class Program {
      * @param message the message
      * @return <tt>double</tt> value entered by the user or <tt>0.0</tt.
      *
-     * @see #readDouble(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final double readDouble(final String message) {
+    protected final double readDouble(final Object... message) {
         return Dialog.readDouble(message);
-    }
-
-    /**
-     * Prompts the user to enter a <tt>double</tt> value. A message is presented to the user along with a field to enter
-     * the <tt>double</tt> value. The message to be presented to the user is constructed from the
-     * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
-     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may be formatted using simple HTML. Returns
-     * <tt>0.0</tt> if the user cancels the input.
-     *
-     * @param messageTemplate the message template
-     * @param args the arguments to be inserted in the message template
-     * @return <tt>double</tt> value entered by the user or <tt>0.0</tt>
-     *
-     * @see #readDouble(java.lang.String)
-     * @see Util#args(java.lang.String, java.lang.Object[])
-     * @since 1
-     */
-    protected final double readDouble(final String messageTemplate, final Object... args) {
-        return Dialog.readDouble(messageTemplate, args);
     }
 
     /**
@@ -147,30 +111,10 @@ public abstract class Program {
      * @param message the message
      * @return <tt>int</tt> value entered by the user or <tt>0</tt>
      *
-     * @see #readInt(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final int readInt(final String message) {
+    protected final int readInt(final Object... message) {
         return Dialog.readInt(message);
-    }
-
-    /**
-     * Prompts the user to enter an <tt>int</tt> value. A message is presented to the user along with a field to enter
-     * the <tt>int</tt> value. The message to be presented to the user is constructed from the
-     * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
-     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may be formatted using simple HTML. Returns
-     * <tt>0</tt> if the user cancels the input.
-     *
-     * @param messageTemplate the message template
-     * @param args the arguments to be inserted in the message template
-     * @return <tt>int</tt> value entered by the user or <tt>0</tt>
-     *
-     * @see #readInt(java.lang.String)
-     * @see Util#args(java.lang.String, java.lang.Object[])
-     * @since 1
-     */
-    protected final int readInt(final String messageTemplate, final Object... args) {
-        return Dialog.readInt(messageTemplate, args);
     }
 
     /**
@@ -182,30 +126,10 @@ public abstract class Program {
      * @param message the message
      * @return <tt>String</tt> value entered by the user or <tt>null</tt>
      *
-     * @see #readString(java.lang.String, java.lang.Object[])
      * @since 1
      */
-    protected final String readString(final String message) {
+    protected final String readString(final Object... message) {
         return Dialog.readString(message);
-    }
-
-    /**
-     * Prompts the user to enter a <tt>String</tt> value. A message is presented to the user along with a field to enter
-     * the <tt>String</tt> value. The message to be presented to the user is constructed from the
-     * <tt>messageTemplate</tt> and the specified <tt>args</tt> by a call to
-     * {@link Util#args(java.lang.String, java.lang.Object[])}. The message may be formatted using simple HTML. Returns
-     * <tt>null</tt> if the user cancels the input.
-     *
-     * @param messageTemplate the message template
-     * @param args the arguments to be inserted in the message template
-     * @return <tt>String</tt> value entered by the user or <tt>null</tt>
-     *
-     * @see #readString(java.lang.String)
-     * @see Util#args(java.lang.String, java.lang.Object[])
-     * @since 1
-     */
-    protected final String readString(final String messageTemplate, final Object... args) {
-        return Dialog.readString(messageTemplate, args);
     }
 
     /**
@@ -223,33 +147,8 @@ public abstract class Program {
         }
     }
 
-    /**
-     * Writes a message. Writes the specified message to both the standard output and to the Jeda log window. Shows the
-     * Jeda log window.
-     *
-     * @param message the message
-     *
-     * @see #write(java.lang.String, java.lang.Object[])
-     * @since 1
-     */
-    protected final void write(final String message) {
-        Engine.getContext().write(message);
-    }
-
-    /**
-     * Writes a message. Writes a message to both the standard output and to the Jeda log window. Shows the Jeda log
-     * window. The message to be written is constructed from the <tt>messageTemplate</tt> and the specified<tt>args</tt>
-     * by a call to {@link Util#args(java.lang.String, java.lang.Object[])}
-     *
-     * @param messageTemplate the message template
-     * @param args the arguments to be inserted in the message template
-     *
-     * @see #write(java.lang.String)
-     * @see Util#args(java.lang.String, java.lang.Object[])
-     * @since 1
-     */
-    protected final void write(final String messageTemplate, final Object... args) {
-        this.write(Util.args(messageTemplate, args));
+    protected final void write(final Object... args) {
+        Engine.getContext().write(Util.toString(args));
     }
 
     final void setState(final ProgramState value) {

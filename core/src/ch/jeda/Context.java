@@ -103,7 +103,7 @@ public final class Context {
     }
 
     public void warning(final String messageKey, final Object... args) {
-        this.log(LogLevel.WARNING, Util.args(Message.translate(messageKey), args), null);
+        this.log(LogLevel.WARNING, Message.args(Message.translate(messageKey), args), null);
     }
 
     Context(final ContextImp imp) {

@@ -106,13 +106,13 @@ public final class Engine {
 
     private static void logError(final String messageKey, final Object... args) {
         context.log(LogLevel.ERROR,
-                    Util.args(Message.translate(messageKey), args), null);
+            Message.args(Message.translate(messageKey), args), null);
     }
 
     private static void logError(final Throwable exception, final String messageKey,
                                  final Object... args) {
         context.log(LogLevel.ERROR,
-                    Util.args(Message.translate(messageKey), args), exception);
+            Message.args(Message.translate(messageKey), args), exception);
     }
 
     private static class EngineThread extends Thread {
@@ -206,10 +206,6 @@ public final class Engine {
             }
             else {
                 enterSelectProgramState(programs);
-
-
-
-
             }
         }
     }

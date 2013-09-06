@@ -19,41 +19,12 @@ package ch.jeda;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides utility functions.
  */
 public final class Util {
-
-    /**
-     * Replaces place-holders in message template with the corresponding arguments. The message template may contain
-     * place-holders having the form
-     * <tt>{N}</tt> where <tt>N</tt> is a number. This method will replace all occurrences of the placeholder
-     * <tt>{0}</tt> with the first argument after
-     * <tt>message</tt>, occurrences of <tt>{1}</tt> with the second argument and so on.
-     *
-     * @param messageTemplate the message template
-     * @param args the arguments to be inserted in the message template
-     * @return resulting message
-     * @since 1
-     */
-    public static String args(final String messageTemplate, final Object... args) {
-        if (args == null) {
-            return messageTemplate;
-        }
-        String result = messageTemplate;
-        int i = 0;
-        for (Object arg : args) {
-            String key = "{" + i + "}";
-            String val = "null";
-            if (arg != null) {
-                val = arg.toString();
-            }
-            result = result.replace(key, val);
-            i = i + 1;
-        }
-        return result;
-    }
 
     /**
      * Returns the Euclidean distance between the origin and the point <tt>(x, y)</tt>.
@@ -66,22 +37,6 @@ public final class Util {
         return (float) Math.sqrt(x * x + y * y);
     }
 
-//    public static String concat(Iterable<String> elements, String separator) {
-//        StringBuilder result = new StringBuilder();
-//        boolean first = true;
-//        for (String element : elements) {
-//            if (first) {
-//                first = false;
-//            }
-//            else {
-//                result.append(separator);
-//            }
-//
-//            result.append(element);
-//        }
-//
-//        return result.toString();
-//    }
     /**
      * Creates and returns a list of double values.
      *
@@ -89,8 +44,23 @@ public final class Util {
      * @return a list of double values
      */
     public static List<Double> doubleList(final double... values) {
-        ArrayList<Double> result = new ArrayList<Double>();
-        for (double value : values) {
+        final ArrayList<Double> result = new ArrayList<Double>();
+        for (final double value : values) {
+            result.add(value);
+        }
+
+        return result;
+    }
+
+    /**
+     * Creates and returns a list of float values.
+     *
+     * @param values comma-separated float values
+     * @return a list of float values
+     */
+    public static List<Float> floatList(final float... values) {
+        final ArrayList<Float> result = new ArrayList<Float>();
+        for (final float value : values) {
             result.add(value);
         }
 
@@ -104,8 +74,8 @@ public final class Util {
      * @return a list of int values
      */
     public static List<Integer> intList(final int... values) {
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        for (int value : values) {
+        final ArrayList<Integer> result = new ArrayList<Integer>();
+        for (final int value : values) {
             result.add(value);
         }
 
@@ -154,5 +124,116 @@ public final class Util {
      */
     public static List<String> stringList(final String... values) {
         return Arrays.asList(values);
+    }
+
+    public static String toString(final Object... objects) {
+        final StringBuilder result = new StringBuilder();
+        for (final Object object : objects) {
+            result.append(objectToString(object));
+        }
+
+        return result.toString();
+    }
+
+    private static String iterableToString(final Iterable iterable) {
+        final StringBuilder result = new StringBuilder();
+        result.append('[');
+        for (final Object element : iterable) {
+            if (result.length() > 1) {
+                result.append(", ");
+            }
+
+            result.append(toString(element));
+        }
+
+        result.append(']');
+        return result.toString();
+    }
+
+    private static String mapToString(final Map map) {
+        final StringBuilder result = new StringBuilder();
+        result.append('{');
+        for (final Object key : map.keySet()) {
+            if (result.length() > 1) {
+                result.append(", ");
+            }
+
+            result.append(toString(key));
+            result.append(": ");
+            result.append(toString(map.get(key)));
+        }
+
+        result.append('}');
+        return result.toString();
+    }
+
+    private static String objectToString(final Object object) {
+        if (object == null) {
+            return "null";
+        }
+        else if (object.getClass().isArray()) {
+            return iterableToString(arrayToList(object));
+        }
+        else if (object instanceof Iterable) {
+            return iterableToString((Iterable) object);
+        }
+        else if (object instanceof Map) {
+            return mapToString((Map) object);
+        }
+        else {
+            return object.toString();
+        }
+    }
+
+    private static List<Object> arrayToList(final Object array) {
+        final List<Object> result = new ArrayList<Object>();
+        final Class componentType = array.getClass().getComponentType();
+        if (Boolean.TYPE.equals(componentType)) {
+            for (boolean element : (boolean[]) array) {
+                result.add(element);
+            }
+        }
+        else if (Character.TYPE.equals(componentType)) {
+            for (char element : (char[]) array) {
+                result.add(element);
+            }
+        }
+        else if (Byte.TYPE.equals(componentType)) {
+            for (byte element : (byte[]) array) {
+                result.add(element);
+            }
+        }
+        else if (Short.TYPE.equals(componentType)) {
+            for (short element : (short[]) array) {
+                result.add(element);
+            }
+        }
+        else if (Integer.TYPE.equals(componentType)) {
+            for (int element : (int[]) array) {
+                result.add(element);
+            }
+        }
+        else if (Long.TYPE.equals(componentType)) {
+            for (long element : (long[]) array) {
+                result.add(element);
+            }
+        }
+        else if (Float.TYPE.equals(componentType)) {
+            for (float element : (float[]) array) {
+                result.add(element);
+            }
+        }
+        else if (Double.TYPE.equals(componentType)) {
+            for (double element : (double[]) array) {
+                result.add(element);
+            }
+        }
+        else {
+            for (Object element : (Object[]) array) {
+                result.add(element);
+            }
+        }
+
+        return result;
     }
 }
