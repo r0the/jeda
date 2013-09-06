@@ -48,7 +48,8 @@ public final class Context {
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = ":jeda.properties";
     private static final String JEDA_PLATFORM_PROPERTIES_FILE = ":ch/jeda/platform/jeda.properties";
     private static final String JEDA_SYSTEM_PROPERTIES_FILE = ":ch/jeda/jeda.properties";
-    private static final String RESOURCE_PREFIX = ":";
+    private static final String NEW_RESOURCE_PREFIX = "res:";
+    private static final String OLD_RESOURCE_PREFIX = ":";
     private final ContextImp imp;
     private ImageImp defaultImage;
     private Properties properties;
@@ -184,22 +185,11 @@ public final class Context {
             throw new NullPointerException("filePath");
         }
 
-        if (filePath.startsWith(RESOURCE_PREFIX)) {
-            final URL url = Thread.currentThread().getContextClassLoader().
-                    getResource(filePath.substring(RESOURCE_PREFIX.length()));
-            if (url == null) {
-                this.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
-                return null;
-            }
-            else {
-                try {
-                    return url.openStream();
-                }
-                catch (IOException ex) {
-                    this.warning(Message.FILE_OPEN_ERROR, filePath, ex);
-                    return null;
-                }
-            }
+        if (filePath.startsWith(NEW_RESOURCE_PREFIX)) {
+            return this.openResourceInputStream(filePath, NEW_RESOURCE_PREFIX.length());
+        }
+        else if (filePath.startsWith(OLD_RESOURCE_PREFIX)) {
+            return this.openResourceInputStream(filePath, OLD_RESOURCE_PREFIX.length());
         }
         else {
             try {
@@ -244,6 +234,23 @@ public final class Context {
                 return messageLevel == LogLevel.ERROR;
             default:
                 return false;
+        }
+    }
+
+    private InputStream openResourceInputStream(final String filePath, final int prefixLength) {
+        final URL url = Thread.currentThread().getContextClassLoader().getResource(filePath.substring(prefixLength));
+        if (url == null) {
+            this.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
+            return null;
+        }
+        else {
+            try {
+                return url.openStream();
+            }
+            catch (IOException ex) {
+                this.warning(Message.FILE_OPEN_ERROR, filePath, ex);
+                return null;
+            }
         }
     }
 }
