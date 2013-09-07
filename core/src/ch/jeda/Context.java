@@ -72,7 +72,7 @@ public final class Context {
         try {
             return this.imp.loadImageImp(in);
         }
-        catch (Exception ex) {
+        catch (final Exception ex) {
             this.warning(Message.IMAGE_READ_ERROR, filePath, ex);
             return this.defaultImage;
         }
@@ -80,14 +80,13 @@ public final class Context {
             try {
                 in.close();
             }
-            catch (IOException ex) {
+            catch (final IOException ex) {
                 // ignore
             }
         }
     }
 
-    public WindowImp showWindow(final int width, final int height,
-                                final EnumSet<WindowFeature> features) {
+    public WindowImp showWindow(final int width, final int height, final EnumSet<WindowFeature> features) {
         if (features == null) {
             throw new NullPointerException("features");
         }
@@ -153,7 +152,7 @@ public final class Context {
 
             return result.toArray(new String[result.size()]);
         }
-        catch (IOException ex) {
+        catch (final IOException ex) {
             this.warning(Message.FILE_READ_ERROR, filePath, ex);
             return null;
         }
@@ -167,8 +166,7 @@ public final class Context {
         }
     }
 
-    void log(final LogLevel level, final String message,
-             final Throwable exception) {
+    void log(final LogLevel level, final String message, final Throwable exception) {
         if (this.matchesLogLevel(level)) {
             this.imp.log(level.toString() + ": " + message + '\n');
             if (exception != null) {
@@ -195,7 +193,7 @@ public final class Context {
             try {
                 return new FileInputStream(filePath);
             }
-            catch (FileNotFoundException ex) {
+            catch (final FileNotFoundException ex) {
                 this.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
                 return null;
             }
@@ -247,7 +245,7 @@ public final class Context {
             try {
                 return url.openStream();
             }
-            catch (IOException ex) {
+            catch (final IOException ex) {
                 this.warning(Message.FILE_OPEN_ERROR, filePath, ex);
                 return null;
             }

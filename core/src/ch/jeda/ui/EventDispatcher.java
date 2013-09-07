@@ -58,17 +58,6 @@ class EventDispatcher {
         }
     }
 
-    final void removeListener(final Object listener) {
-        if (listener != null) {
-            if (!this.listeners.contains(listener)) {
-                this.pendingInsertions.remove(listener);
-            }
-            else if (!this.pendingDeletions.contains(listener)) {
-                this.pendingDeletions.add(listener);
-            }
-        }
-    }
-
     final void dispatchEvents(final Event[] events) {
         for (int i = 0; i < this.pendingDeletions.size(); ++i) {
             this.doRemoveListener(this.pendingDeletions.get(i));
@@ -91,8 +80,7 @@ class EventDispatcher {
                     break;
                 case KEY_TYPED:
                     for (int j = 0; j < this.keyTypedListeners.size(); ++j) {
-                        this.keyTypedListeners.get(j).
-                                onKeyTyped((KeyEvent) event);
+                        this.keyTypedListeners.get(j).onKeyTyped((KeyEvent) event);
                     }
 
                     break;
@@ -104,32 +92,39 @@ class EventDispatcher {
                     break;
                 case POINTER_DOWN:
                     for (int j = 0; j < this.pointerDownListeners.size(); ++j) {
-                        this.pointerDownListeners.get(j).
-                                onPointerDown((PointerEvent) event);
+                        this.pointerDownListeners.get(j).onPointerDown((PointerEvent) event);
                     }
 
                     break;
                 case POINTER_MOVED:
                     for (int j = 0; j < this.pointerMovedListeners.size(); ++j) {
-                        this.pointerMovedListeners.get(j).
-                                onPointerMoved((PointerEvent) event);
+                        this.pointerMovedListeners.get(j).onPointerMoved((PointerEvent) event);
                     }
 
                     break;
                 case POINTER_UP:
                     for (int j = 0; j < this.pointerUpListeners.size(); ++j) {
-                        this.pointerUpListeners.get(j).
-                                onPointerUp((PointerEvent) event);
+                        this.pointerUpListeners.get(j).onPointerUp((PointerEvent) event);
                     }
 
                     break;
                 case WINDOW_FOCUS_LOST:
                     for (int j = 0; j < this.windowFocusLostListeners.size(); ++j) {
-                        this.windowFocusLostListeners.get(j).
-                                onWindowFocusLost();
+                        this.windowFocusLostListeners.get(j).onWindowFocusLost();
                     }
 
                     break;
+            }
+        }
+    }
+
+    final void removeListener(final Object listener) {
+        if (listener != null) {
+            if (!this.listeners.contains(listener)) {
+                this.pendingInsertions.remove(listener);
+            }
+            else if (!this.pendingDeletions.contains(listener)) {
+                this.pendingDeletions.add(listener);
             }
         }
     }
