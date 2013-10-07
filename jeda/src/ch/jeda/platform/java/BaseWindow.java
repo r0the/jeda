@@ -68,7 +68,7 @@ class BaseWindow extends JFrame {
     }
 
     private static Image loadImage(final String path) {
-        return new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(path)).getImage();
+        return new ImageIcon(BaseWindow.class.getClassLoader().getResource(path)).getImage();
     }
 
     private static class WindowListener extends WindowAdapter {
