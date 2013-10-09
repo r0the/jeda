@@ -24,16 +24,9 @@ import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.WindowFeature;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  * <b>Internal</b>. Do not use this class.
@@ -51,7 +44,6 @@ public final class Context {
     private final ContextImp imp;
     private ImageImp defaultImage;
     private Properties properties;
-    private LogLevel logLevel = LogLevel.WARNING;
 
     public CanvasImp createCanvasImp(final int width, final int height) {
         return this.imp.createCanvasImp(width, height);
@@ -95,10 +87,6 @@ public final class Context {
         return request.getResult();
     }
 
-    public void setLogLevel(final LogLevel value) {
-        this.logLevel = value;
-    }
-
     Context(final ContextImp imp) {
         this.imp = imp;
         this.properties = new Properties();
@@ -131,18 +119,6 @@ public final class Context {
         return this.imp.loadClasses();
     }
 
-    void log(final LogLevel level, final String message, final Throwable exception) {
-        if (this.matchesLogLevel(level)) {
-            this.imp.log(level.toString() + ": " + message + '\n');
-            if (exception != null) {
-                this.imp.log(exception.toString() + '\n');
-                for (StackTraceElement el : exception.getStackTrace()) {
-                    this.imp.log("   " + el.toString() + '\n');
-                }
-            }
-        }
-    }
-
     void showInputRequest(final InputRequest inputRequest) {
         this.imp.showInputRequest(inputRequest);
     }
@@ -153,28 +129,5 @@ public final class Context {
 
     void shutdown() {
         this.imp.shutdown();
-    }
-
-    void write(final String message) {
-        this.imp.log(message);
-        this.imp.showLog();
-    }
-
-    private boolean matchesLogLevel(final LogLevel messageLevel) {
-        switch (this.logLevel) {
-            case DEBUG:
-                return true;
-            case INFO:
-                return messageLevel == LogLevel.INFO ||
-                       messageLevel == LogLevel.WARNING ||
-                       messageLevel == LogLevel.ERROR;
-            case WARNING:
-                return messageLevel == LogLevel.WARNING ||
-                       messageLevel == LogLevel.ERROR;
-            case ERROR:
-                return messageLevel == LogLevel.ERROR;
-            default:
-                return false;
-        }
     }
 }

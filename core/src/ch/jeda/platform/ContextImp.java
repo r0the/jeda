@@ -31,8 +31,6 @@ public interface ContextImp {
 
     ImageImp loadImageImp(InputStream in) throws Exception;
 
-    void log(String text);
-
     void showInputRequest(InputRequest inputRequest);
 
     void showLog();

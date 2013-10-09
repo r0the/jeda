@@ -16,24 +16,40 @@
  */
 package ch.jeda.platform.java;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 
-class LogWindow extends BaseWindow {
+class LogWindow extends AutoCloseWindow {
 
     LogWindow(final WindowManager manager) {
         super(manager);
         this.initComponents();
-        this.setTitle("Jeda Log");
+        this.setTitle("Jeda Console");
         this.closeButton.setText("Schliessen");
         this.setDefaultButton(this.closeButton);
         this.init();
+        System.setErr(new PrintStream(new ConsoleOutputStream(this, Color.RED, System.err)));
+        System.setOut(new PrintStream(new ConsoleOutputStream(this, Color.BLACK, System.out)));
     }
 
-    void log(final String text) {
-        if (text != null && !text.isEmpty()) {
-            this.logTextArea.append(text);
-            this.logTextArea.setCaretPosition(this.logTextArea.getText().length() - 1);
+    private void append(final String content, final AttributeSet textAttributes) {
+        try {
+            final Document document = this.logTextArea.getDocument();
+            document.insertString(document.getLength(), content, textAttributes);
         }
+        catch (final BadLocationException ex) {
+            // ignore
+        }
+
+        this.logTextArea.setCaretPosition(this.logTextArea.getDocument().getLength());
+        this.setVisible(true);
     }
 
     private void changeFontSize(float delta) {
@@ -130,4 +146,31 @@ class LogWindow extends BaseWindow {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea logTextArea;
     // End of variables declaration//GEN-END:variables
+
+    private static class ConsoleOutputStream extends ByteArrayOutputStream {
+
+        private final LogWindow logWindow;
+        private final PrintStream printStream;
+        private final SimpleAttributeSet textAttributes;
+
+        ConsoleOutputStream(final LogWindow logWindow, final Color textColor, final PrintStream printStream) {
+            this.logWindow = logWindow;
+            this.printStream = printStream;
+            this.textAttributes = new SimpleAttributeSet();
+            StyleConstants.setForeground(this.textAttributes, textColor);
+        }
+
+        @Override
+        public void flush() {
+            final String content = this.toString();
+            if (content.isEmpty()) {
+                return;
+            }
+
+            this.logWindow.append(content, this.textAttributes);
+            this.printStream.print(content);
+            this.printStream.flush();
+            this.reset();
+        }
+    }
 }

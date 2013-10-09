@@ -54,12 +54,6 @@ class JavaContextImp implements ContextImp {
     }
 
     @Override
-    public void log(final String text) {
-        this.windowManager.log(text);
-        System.out.print(text);
-    }
-
-    @Override
     public void showInputRequest(final InputRequest inputRequest) {
         this.windowManager.showInputRequest(inputRequest);
     }

@@ -87,12 +87,6 @@ class AndroidContextImp implements ContextImp {
     }
 
     @Override
-    public void log(final String text) {
-        this.activity.runOnUiThread(new LogTask(this.viewManager, text));
-        System.out.println(text);
-    }
-
-    @Override
     public void showInputRequest(final InputRequest inputRequest) {
         this.activity.runOnUiThread(new ShowInputRequestTask(this.viewManager, inputRequest));
     }
@@ -126,22 +120,6 @@ class AndroidContextImp implements ContextImp {
 
     void closeView() {
         this.viewManager.closeView();
-    }
-
-    private static class LogTask implements Runnable {
-
-        private final ViewManager viewManager;
-        private final String text;
-
-        @Override
-        public void run() {
-            this.viewManager.log(this.text);
-        }
-
-        LogTask(final ViewManager viewManager, final String text) {
-            this.viewManager = viewManager;
-            this.text = text;
-        }
     }
 
     private static class ShowInputRequestTask implements Runnable {

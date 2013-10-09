@@ -148,7 +148,8 @@ public abstract class Program {
     }
 
     protected final void write(final Object... args) {
-        Engine.getContext().write(Util.toString(args));
+        System.out.print(Util.toString(args));
+        System.out.flush();
     }
 
     final void setState(final ProgramState value) {

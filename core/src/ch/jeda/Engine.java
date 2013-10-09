@@ -255,7 +255,7 @@ public final class Engine {
                 this.programWrapper.setState(ProgramState.STOPPED);
             }
             catch (Throwable ex) {
-                IO.err(ex, "jeda.program.error.run");
+                IO.err(ex, "jeda.program.error.run", programWrapper.getProgramClassName());
             }
             finally {
                 enterShutdownState();

@@ -30,7 +30,7 @@ import java.util.Set;
 public class WindowManager {
 
     private static final GraphicsDevice GRAPHICS_DEVICE =
-            GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private final InputWindow inputWindow;
     private final LogWindow logWindow;
     private final SelectionWindow selectionWindow;
@@ -47,10 +47,6 @@ public class WindowManager {
         this.windows.add(this.inputWindow);
         this.windows.add(this.logWindow);
         this.windows.add(this.selectionWindow);
-    }
-
-    void log(final String text) {
-        this.logWindow.log(text);
     }
 
     void showInputRequest(final InputRequest inputRequest) {
@@ -122,7 +118,7 @@ public class WindowManager {
             width = displayMode.getWidth();
             height = displayMode.getHeight();
             this.fullscreenWindow = new CanvasWindow(this, width, height,
-                                                     request.getFeatures());
+                request.getFeatures());
             GRAPHICS_DEVICE.setFullScreenWindow(this.fullscreenWindow);
             GRAPHICS_DEVICE.setDisplayMode(displayMode);
             return this.fullscreenWindow;

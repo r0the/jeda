@@ -47,13 +47,17 @@ class BaseView extends RelativeLayout {
         this.manager.titleChanged(this);
     }
 
+    protected final void show() {
+        this.manager.show(this);
+    }
+
     protected final void accept() {
-        this.close();
+        this.manager.closing(this);
         this.onAccept();
     }
 
     protected final void cancel() {
-        this.close();
+        this.manager.closing(this);
         this.onCancel();
     }
 
@@ -61,10 +65,6 @@ class BaseView extends RelativeLayout {
     }
 
     protected void onCancel() {
-    }
-
-    private void close() {
-        this.manager.closing(this);
     }
 
     protected static ViewGroup.LayoutParams createFillLayout() {

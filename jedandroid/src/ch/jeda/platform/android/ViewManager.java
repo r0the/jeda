@@ -69,27 +69,31 @@ class ViewManager {
         }
     }
 
-    void log(final String text) {
-        this.logView.log(text);
+    void show(final BaseView view) {
+        this.activity.runOnUiThread(new Runnable() {
+            public void run() {
+                doShow(view);
+            }
+        });
     }
 
     void showInputRequest(final InputRequest inputRequest) {
         this.inputView.setInputRequest(inputRequest);
-        this.show(this.inputView);
+        this.doShow(this.inputView);
     }
 
     void showLog() {
-        this.show(this.logView);
+        this.doShow(this.logView);
     }
 
     void showSelectionRequest(final SelectionRequest selectionRequest) {
         this.selectionView.setSelectionRequest(selectionRequest);
-        this.show(this.selectionView);
+        this.doShow(this.selectionView);
     }
 
     void showWindow(final WindowRequest request) {
         CanvasView displayView = new CanvasView(this, request);
-        this.show(displayView);
+        this.doShow(displayView);
     }
 
     void shutdown() {
@@ -121,14 +125,14 @@ class ViewManager {
         }
     }
 
-    private void show(final BaseView view) {
+    private boolean isTopView(final BaseView view) {
+        return !this.visibleViews.isEmpty() && view == this.visibleViews.peek();
+    }
+
+    private void doShow(final BaseView view) {
         if (!this.isTopView(view)) {
             this.visibleViews.push(view);
             this.activateView(view);
         }
-    }
-
-    private boolean isTopView(final BaseView view) {
-        return !this.visibleViews.isEmpty() && view == this.visibleViews.peek();
     }
 }
