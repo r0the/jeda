@@ -151,4 +151,7 @@ public class IO {
             }
         }
     }
+
+    private IO() {
+    }
 }

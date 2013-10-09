@@ -84,9 +84,6 @@ public final class Engine {
         }
     }
 
-    private Engine() {
-    }
-
     private static void enterCreateProgramState(final ProgramWrapper programWrapper) {
         Engine.program = programWrapper;
         nextState = new CreateProgramState(programWrapper);
@@ -116,6 +113,9 @@ public final class Engine {
                 currentState.run();
             }
         }
+    }
+
+    private Engine() {
     }
 
     static abstract class State {

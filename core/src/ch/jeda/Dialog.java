@@ -21,6 +21,9 @@ import ch.jeda.platform.InputType;
 
 public class Dialog {
 
+    private Dialog() {
+    }
+
     /**
      * Prompts the user to enter a <tt>double</tt> value. The specified message is presented to the user along with a
      * field to enter the <tt>double</tt>

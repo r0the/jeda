@@ -53,4 +53,7 @@ class Helper {
         catch (InterruptedException ex) {
         }
     }
+
+    private Helper() {
+    }
 }
