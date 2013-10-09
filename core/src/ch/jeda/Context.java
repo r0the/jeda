@@ -36,14 +36,19 @@ import java.util.EnumSet;
  */
 public final class Context {
 
-    private static final String DEFAULT_IMAGE_PATH = ":ch/jeda/resources/logo-64x64.png";
+    private static final String DEFAULT_IMAGE_PATH = "res:ch/jeda/resources/logo-64x64.png";
     private static final String DEFAULT_PROGRAM_PROPERTY = "jeda.default.program";
-    private static final String JEDA_APPLICATION_PROPERTIES_FILE = ":jeda.properties";
-    private static final String JEDA_PLATFORM_PROPERTIES_FILE = ":ch/jeda/platform/jeda.properties";
-    private static final String JEDA_SYSTEM_PROPERTIES_FILE = ":ch/jeda/jeda.properties";
+    private static final String JEDA_APPLICATION_PROPERTIES_FILE = "res:jeda.properties";
+    private static final String JEDA_PLATFORM_PROPERTIES_FILE = "res:ch/jeda/platform/jeda.properties";
+    private static final String JEDA_SYSTEM_PROPERTIES_FILE = "res:ch/jeda/jeda.properties";
     private final ContextImp imp;
     private ImageImp defaultImage;
     private Properties properties;
+
+    Context(final ContextImp imp) {
+        this.imp = imp;
+        this.properties = new Properties();
+    }
 
     public CanvasImp createCanvasImp(final int width, final int height) {
         return this.imp.createCanvasImp(width, height);
@@ -85,11 +90,6 @@ public final class Context {
         this.imp.showWindow(request);
         request.waitForResult();
         return request.getResult();
-    }
-
-    Context(final ContextImp imp) {
-        this.imp = imp;
-        this.properties = new Properties();
     }
 
     String defaultProgramName() {
