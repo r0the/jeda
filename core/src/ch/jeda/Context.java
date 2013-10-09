@@ -48,8 +48,6 @@ public final class Context {
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = ":jeda.properties";
     private static final String JEDA_PLATFORM_PROPERTIES_FILE = ":ch/jeda/platform/jeda.properties";
     private static final String JEDA_SYSTEM_PROPERTIES_FILE = ":ch/jeda/jeda.properties";
-    private static final String NEW_RESOURCE_PREFIX = "res:";
-    private static final String OLD_RESOURCE_PREFIX = ":";
     private final ContextImp imp;
     private ImageImp defaultImage;
     private Properties properties;
@@ -64,7 +62,7 @@ public final class Context {
     }
 
     public ImageImp loadImageImp(final String filePath) {
-        final InputStream in = this.openInputStream(filePath);
+        final InputStream in = IO.openInputStream(filePath);
         if (in == null) {
             return this.defaultImage;
         }
@@ -137,35 +135,6 @@ public final class Context {
         return this.imp.loadClasses();
     }
 
-    String[] loadTextFile(final String filePath) {
-        final InputStream in = this.openInputStream(filePath);
-        if (in == null) {
-            return null;
-        }
-
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        try {
-            final List<String> result = new ArrayList<String>();
-            while (reader.ready()) {
-                result.add(reader.readLine());
-            }
-
-            return result.toArray(new String[result.size()]);
-        }
-        catch (final IOException ex) {
-            this.warning(Message.FILE_READ_ERROR, filePath, ex);
-            return null;
-        }
-        finally {
-            try {
-                in.close();
-            }
-            catch (IOException ex) {
-                // ignore
-            }
-        }
-    }
-
     void log(final LogLevel level, final String message, final Throwable exception) {
         if (this.matchesLogLevel(level)) {
             this.imp.log(level.toString() + ": " + message + '\n');
@@ -174,28 +143,6 @@ public final class Context {
                 for (StackTraceElement el : exception.getStackTrace()) {
                     this.imp.log("   " + el.toString() + '\n');
                 }
-            }
-        }
-    }
-
-    InputStream openInputStream(final String filePath) {
-        if (filePath == null) {
-            throw new NullPointerException("filePath");
-        }
-
-        if (filePath.startsWith(NEW_RESOURCE_PREFIX)) {
-            return this.openResourceInputStream(filePath, NEW_RESOURCE_PREFIX.length());
-        }
-        else if (filePath.startsWith(OLD_RESOURCE_PREFIX)) {
-            return this.openResourceInputStream(filePath, OLD_RESOURCE_PREFIX.length());
-        }
-        else {
-            try {
-                return new FileInputStream(filePath);
-            }
-            catch (final FileNotFoundException ex) {
-                this.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
-                return null;
             }
         }
     }
@@ -232,23 +179,6 @@ public final class Context {
                 return messageLevel == LogLevel.ERROR;
             default:
                 return false;
-        }
-    }
-
-    private InputStream openResourceInputStream(final String filePath, final int prefixLength) {
-        final URL url = Thread.currentThread().getContextClassLoader().getResource(filePath.substring(prefixLength));
-        if (url == null) {
-            this.warning(Message.FILE_NOT_FOUND_ERROR, filePath);
-            return null;
-        }
-        else {
-            try {
-                return url.openStream();
-            }
-            catch (final IOException ex) {
-                this.warning(Message.FILE_OPEN_ERROR, filePath, ex);
-                return null;
-            }
         }
     }
 }

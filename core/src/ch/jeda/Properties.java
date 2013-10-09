@@ -34,7 +34,7 @@ public final class Properties {
 
     public Properties(final String filePath) {
         this();
-        final InputStream in = Engine.getContext().openInputStream(filePath);
+        final InputStream in = IO.openInputStream(filePath);
         if (in == null) {
             return;
         }

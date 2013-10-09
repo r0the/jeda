@@ -103,7 +103,7 @@ public final class Util {
      * @return lines of the file as an array of <tt>String</tt>
      */
     public static String[] loadTextFile(final String filePath) {
-        return Engine.getContext().loadTextFile(filePath);
+        return IO.loadTextFile(filePath);
     }
 
     /**
