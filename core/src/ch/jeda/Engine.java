@@ -56,7 +56,7 @@ public final class Engine {
         plugins = new Plugins();
         nextState = new InitEngineState();
         engineThread = new EngineThread();
-        engineThread.setName(Message.translate(Message.ENGINE_THREAD_NAME));
+        engineThread.setName(Helper.getMessage("jeda.engine.thread-name"));
         engineThread.start();
     }
 
@@ -102,17 +102,6 @@ public final class Engine {
 
     private static void enterShutdownState() {
         nextState = new ShutdownState();
-    }
-
-    private static void logError(final String messageKey, final Object... args) {
-        context.log(LogLevel.ERROR,
-            Message.args(Message.translate(messageKey), args), null);
-    }
-
-    private static void logError(final Throwable exception, final String messageKey,
-                                 final Object... args) {
-        context.log(LogLevel.ERROR,
-            Message.args(Message.translate(messageKey), args), exception);
     }
 
     private static class EngineThread extends Thread {
@@ -178,7 +167,7 @@ public final class Engine {
                 }
             }
             catch (Exception ex) {
-                logError(ex, Message.LOAD_CLASSES_ERROR);
+                IO.err(ex, "jeda.engine.error.init-classes");
             }
 
             plugins.initialize();
@@ -191,7 +180,7 @@ public final class Engine {
                 enterCreateProgramState(programs.get(0));
             }
             else if (programs.isEmpty()) {
-                logError(Message.NO_PROGRAM_ERROR);
+                IO.err("jeda.program.error.no-class-found");
                 enterShutdownState();
             }
             else {
@@ -229,7 +218,7 @@ public final class Engine {
                 enterExecuteProgramState();
             }
             catch (final Throwable ex) {
-                logError(ex, Message.PROGRAM_CREATE_ERROR, this.programWrapper);
+                IO.err(ex, "jeda.program.error.create");
                 enterShutdownState();
             }
         }
@@ -266,7 +255,7 @@ public final class Engine {
                 this.programWrapper.setState(ProgramState.STOPPED);
             }
             catch (Throwable ex) {
-                logError(ex, Message.PROGRAM_RUN_ERROR, this.programWrapper.getClass());
+                IO.err(ex, "jeda.program.error.run");
             }
             finally {
                 enterShutdownState();
@@ -305,7 +294,7 @@ public final class Engine {
                 }
 
                 request.sortItemsByName();
-                request.setTitle(Message.translate(Message.CHOOSE_PROGRAM_TITLE));
+                request.setTitle(Helper.getMessage("jeda.gui.select-program.title"));
                 context.showSelectionRequest(request);
                 request.waitForResult();
                 if (request.isCancelled()) {
@@ -316,7 +305,7 @@ public final class Engine {
                 }
             }
             catch (final Exception ex) {
-                logError(ex, Message.CHOOSE_PROGRAM_ERROR);
+                IO.err(ex, "jeda.program.error.select");
                 enterShutdownState();
             }
         }

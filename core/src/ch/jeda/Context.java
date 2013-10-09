@@ -71,7 +71,7 @@ public final class Context {
             return this.imp.loadImageImp(in);
         }
         catch (final Exception ex) {
-            this.warning(Message.IMAGE_READ_ERROR, filePath, ex);
+            IO.err(ex, "jeda.image.error.read", filePath);
             return this.defaultImage;
         }
         finally {
@@ -97,10 +97,6 @@ public final class Context {
 
     public void setLogLevel(final LogLevel value) {
         this.logLevel = value;
-    }
-
-    public void warning(final String messageKey, final Object... args) {
-        this.log(LogLevel.WARNING, Message.args(Message.translate(messageKey), args), null);
     }
 
     Context(final ContextImp imp) {

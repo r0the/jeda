@@ -43,7 +43,7 @@ public final class Properties {
             this.imp.load(in);
         }
         catch (Exception ex) {
-            Engine.getContext().warning(Message.FILE_READ_ERROR, filePath, ex.getMessage());
+            IO.err("jeda.file.error.read", filePath);
         }
         finally {
             try {

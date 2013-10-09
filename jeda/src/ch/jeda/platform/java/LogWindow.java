@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.Message;
 import java.awt.Font;
 
 class LogWindow extends BaseWindow {
@@ -24,8 +23,8 @@ class LogWindow extends BaseWindow {
     LogWindow(final WindowManager manager) {
         super(manager);
         this.initComponents();
-        this.setTitle(Message.translate(Message.LOG_TITLE));
-        this.closeButton.setText(Message.translate(Message.LOG_BUTTON));
+        this.setTitle("Jeda Log");
+        this.closeButton.setText("Schliessen");
         this.setDefaultButton(this.closeButton);
         this.init();
     }

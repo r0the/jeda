@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import ch.jeda.Message;
 
 class LogView extends DialogView {
 
@@ -29,13 +28,13 @@ class LogView extends DialogView {
 
     LogView(final ViewManager manager) {
         super(manager);
-        this.setTitle(Message.translate(Message.LOG_TITLE));
+        this.setTitle("Jeda Log");
         this.textView = new TextView(this.getContext());
         this.textView.setLayoutParams(createFillLayout());
         this.scrollView = new ScrollView(this.getContext());
         this.scrollView.addView(this.textView);
         this.addContent(this.scrollView);
-        this.addButton(Message.translate(Message.LOG_BUTTON));
+        this.addButton("Schliessen");
     }
 
     void log(final String text) {

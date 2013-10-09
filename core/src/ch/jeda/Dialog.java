@@ -35,7 +35,7 @@ public class Dialog {
     public static double readDouble(final Object... message) {
         final InputRequest<Double> request = new InputRequest<Double>(InputType.forDouble(), 0d);
         request.setMessage(Util.toString(message));
-        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        request.setTitle(Helper.getMessage("jeda.gui.input-title"));
         Engine.getContext().showInputRequest(request);
         request.waitForResult();
         return request.getResult();
@@ -61,7 +61,7 @@ public class Dialog {
     public static int readInt(final Object... message) {
         final InputRequest<Integer> request = new InputRequest<Integer>(InputType.forInt(), 0);
         request.setMessage(Util.toString(message));
-        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        request.setTitle(Helper.getMessage("jeda.gui.input-title"));
         Engine.getContext().showInputRequest(request);
         request.waitForResult();
         return request.getResult();
@@ -81,7 +81,7 @@ public class Dialog {
     public static String readString(final Object... message) {
         final InputRequest<String> request = new InputRequest<String>(InputType.forString(), "");
         request.setMessage(Util.toString(message));
-        request.setTitle(Message.translate(Message.INPUT_REQUEST_TITLE));
+        request.setTitle(Helper.getMessage("jeda.gui.input-title"));
         Engine.getContext().showInputRequest(request);
         request.waitForResult();
         return request.getResult();

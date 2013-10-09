@@ -17,7 +17,7 @@
 package ch.jeda.ui;
 
 import ch.jeda.Engine;
-import ch.jeda.Message;
+import ch.jeda.IO;
 import ch.jeda.platform.ImageImp;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -159,19 +159,18 @@ public final class Image {
             throw new NullPointerException("filePath");
         }
 
-        int pos = filePath.indexOf('.');
+        final int pos = filePath.indexOf('.');
         if (pos == -1) {
             return false;
         }
 
-        String extension = filePath.substring(pos + 1).toLowerCase();
+        final String extension = filePath.substring(pos + 1).toLowerCase();
         if (!FORMAT_MAP.containsKey(extension)) {
-            Engine.getContext().warning(Message.IMAGE_FORMAT_ERROR, filePath,
-                extension);
+            IO.err("jeda.image.error.format", filePath, extension);
             return false;
         }
 
-        java.io.File dir = new File(filePath).getParentFile();
+        final java.io.File dir = new File(filePath).getParentFile();
         if (dir != null) {
             dir.mkdirs();
         }
@@ -181,9 +180,8 @@ public final class Image {
             out = new FileOutputStream(filePath);
             return this.imp.write(out, FORMAT_MAP.get(extension));
         }
-        catch (IOException ex) {
-            Engine.getContext().warning(Message.IMAGE_WRITE_ERROR, filePath,
-                ex.getMessage());
+        catch (final IOException ex) {
+            IO.err("jeda.image.error.write", filePath);
             return false;
         }
         finally {
@@ -191,7 +189,7 @@ public final class Image {
                 try {
                     out.close();
                 }
-                catch (IOException ex) {
+                catch (final IOException ex) {
                     // ignore
                 }
             }
