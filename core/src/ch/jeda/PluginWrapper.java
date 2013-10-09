@@ -16,52 +16,26 @@
  */
 package ch.jeda;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 class PluginWrapper {
 
-    private final Constructor<Plugin> constructor;
-    private Plugin instance;
+    private final Plugin delegate;
 
     @Override
     public String toString() {
-        return this.constructor.getDeclaringClass().getName();
+        return this.delegate.getClass().getName();
     }
 
-    static PluginWrapper tryCreate(final Class<?> candidate) {
-        final Class[] interfaces = candidate.getInterfaces();
-        for (int i = 0; i < interfaces.length; ++i) {
-            if (interfaces[i].equals(Plugin.class)) {
-                try {
-                    final Constructor<Plugin> constructor =
-                            ((Class<Plugin>) candidate).getDeclaredConstructor();
-                    constructor.setAccessible(true);
-                    return new PluginWrapper(constructor);
-                }
-                catch (NoSuchMethodException ex) {
-                    return null;
-                }
-                catch (SecurityException ex) {
-                    return null;
-                }
-            }
-        }
-
-        return null;
+    PluginWrapper(final Plugin delegate) {
+        this.delegate = delegate;
     }
 
     void initialize() throws Throwable {
         try {
-            this.instance = this.constructor.newInstance();
-            this.instance.initialize();
+            this.delegate.initialize();
         }
         catch (InvocationTargetException ex) {
-            throw (Exception) ex.getCause();
         }
-    }
-
-    private PluginWrapper(final Constructor<Plugin> constructor) {
-        this.constructor = constructor;
     }
 }

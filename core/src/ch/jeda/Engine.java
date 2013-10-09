@@ -34,7 +34,7 @@ public final class Engine {
     private static Context context;
     private static State currentState;
     private static State nextState;
-    private static List<PluginWrapper> plugins;
+    private static Plugins plugins;
 
     public static Context getContext() {
         return context;
@@ -53,7 +53,7 @@ public final class Engine {
         context = new Context(contextImp);
         context.init();
         nextState = new InitEngineState();
-        plugins = new ArrayList<PluginWrapper>();
+        plugins = new Plugins();
         nextState = new InitEngineState();
         engineThread = new EngineThread();
         engineThread.setName(Message.translate(Message.ENGINE_THREAD_NAME));
@@ -173,10 +173,7 @@ public final class Engine {
                         }
                     }
                     else {
-                        final PluginWrapper plw = PluginWrapper.tryCreate(classes[i]);
-                        if (plw != null) {
-                            plugins.add(plw);
-                        }
+                        plugins.tryAddPlugin(classes[i]);
                     }
                 }
             }
@@ -184,14 +181,7 @@ public final class Engine {
                 logError(ex, Message.LOAD_CLASSES_ERROR);
             }
 
-            for (PluginWrapper plugin : plugins) {
-                try {
-                    plugin.initialize();
-                }
-                catch (Throwable ex) {
-                    logError(ex, Message.PLUGIN_INIT_ERROR, plugin);
-                }
-            }
+            plugins.initialize();
 
             // Determine program to execute
             if (defaultProgram != null) {
