@@ -37,15 +37,12 @@ abstract class ProgramWrapper {
         else if (Program.class.isAssignableFrom(candidate)) {
             return tryCreateInherited((Class<Program>) candidate, context);
         }
-
-        final Class[] interfaces = candidate.getInterfaces();
-        for (int i = 0; i < interfaces.length; ++i) {
-            if (interfaces[i].equals(JedaProgram.class)) {
-                return tryCreateJedaProgram(candidate, context);
-            }
+        else if (Helper.hasInterface(candidate, JedaProgram.class)) {
+            return tryCreateJedaProgram(candidate, context);
         }
-
-        return null;
+        else {
+            return null;
+        }
     }
 
     abstract void createInstance() throws Throwable;
@@ -83,7 +80,7 @@ abstract class ProgramWrapper {
     static ProgramWrapper tryCreateJedaProgram(final Class<?> candidate, final Context context) {
         try {
             final Constructor<JedaProgram> constructor =
-                    ((Class<JedaProgram>) candidate).getDeclaredConstructor();
+                ((Class<JedaProgram>) candidate).getDeclaredConstructor();
             constructor.setAccessible(true);
             return new JedaProgramWrapper(programName(candidate, context), constructor);
         }

@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <b>Internal</b>. Do not use this class.
+ * <p>
  * Provides a low-level input/output interface for Jeda.
  */
 public class IO {
