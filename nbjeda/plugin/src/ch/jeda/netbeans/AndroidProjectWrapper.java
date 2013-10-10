@@ -18,8 +18,10 @@ package ch.jeda.netbeans;
 
 import java.awt.Image;
 import java.io.File;
+import java.io.IOException;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 
 public class AndroidProjectWrapper extends ProjectWrapper {
@@ -76,7 +78,7 @@ public class AndroidProjectWrapper extends ProjectWrapper {
     protected boolean checkConvert() {
         final File targetDir = new File(new File(this.getRootDir()).getParentFile(), this.getName() + ANDROID_SUFFIX);
         if (targetDir.exists()) {
-            this.showError("Cannot convert project, directory '" + targetDir + "' already exists.");
+            Util.showError("Cannot convert project, directory '" + targetDir + "' already exists.");
             return false;
         }
 

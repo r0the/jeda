@@ -23,6 +23,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
 
 public class Util {
@@ -39,5 +41,10 @@ public class Util {
         final ClassLoader cl = Lookup.getDefault().lookup(ClassLoader.class);
         final URL url = cl.getResource(resourcePath);
         return url.openStream();
+    }
+
+    public static void showError(final String message) {
+        final NotifyDescriptor nd = new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE);
+        DialogDisplayer.getDefault().notify(nd);
     }
 }

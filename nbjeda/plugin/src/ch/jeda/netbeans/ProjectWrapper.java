@@ -30,8 +30,6 @@ import java.io.PrintWriter;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -89,7 +87,7 @@ public class ProjectWrapper {
 
         FileObject target = libraryDir.getFileObject(fileName);
         if (target != null) {
-            this.showError("Library already exists in project.");
+            Util.showError("Library already exists in project.");
             return;
         }
 
@@ -102,7 +100,7 @@ public class ProjectWrapper {
             FileUtil.copy(in, out);
         }
         catch (IOException ex) {
-            this.showError("Error while adding library: " + ex.toString());
+            Util.showError("Error while adding library: " + ex.toString());
         }
         finally {
             try {
@@ -153,7 +151,7 @@ public class ProjectWrapper {
         }
         catch (Exception ex) {
             Exceptions.printStackTrace(ex);
-            this.showError("Error while initializing project: " + ex.toString());
+            Util.showError("Error while initializing project: " + ex.toString());
         }
     }
 
@@ -241,7 +239,7 @@ public class ProjectWrapper {
             }
             catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
-                this.showError("Error while creating library directory: " + ex.toString());
+                Util.showError("Error while creating library directory: " + ex.toString());
                 return null;
             }
         }
@@ -280,12 +278,6 @@ public class ProjectWrapper {
         this.addFile(targetPath, resourcePath);
     }
 
-    protected final void showError(final String message) {
-        final NotifyDescriptor nd =
-            new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE);
-        DialogDisplayer.getDefault().notify(nd);
-    }
-
     protected void librariesChanged() {
     }
 
@@ -306,7 +298,7 @@ public class ProjectWrapper {
         }
         catch (Exception ex) {
             Exceptions.printStackTrace(ex);
-            this.showError("Cannot switch target platform: " + ex.getMessage());
+            Util.showError("Cannot switch target platform: " + ex.getMessage());
         }
     }
 
@@ -319,9 +311,7 @@ public class ProjectWrapper {
         }
         catch (Exception ex) {
             Exceptions.printStackTrace(ex);
-            this.showError("Could not open project '" + this.projectRoot.getName() + "'. Please open it manually.");
-
-
+            Util.showError("Could not open project '" + this.projectRoot.getName() + "'. Please open it manually.");
         }
     }
 
