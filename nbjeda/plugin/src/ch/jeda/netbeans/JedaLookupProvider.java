@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,8 +24,8 @@ import org.openide.util.lookup.Lookups;
 public class JedaLookupProvider implements LookupProvider {
 
     @Override
-    public Lookup createAdditionalLookup(Lookup lookup) {
-        ProjectWrapper wrapper = ProjectWrapper.forProject(lookup.lookup(Project.class));
+    public Lookup createAdditionalLookup(final Lookup lookup) {
+        final ProjectWrapper wrapper = ProjectWrapper.forProject(lookup.lookup(Project.class));
         if (wrapper.isJedaProject()) {
             return Lookups.fixed(new JedaProjectIconAnnotator());
         }

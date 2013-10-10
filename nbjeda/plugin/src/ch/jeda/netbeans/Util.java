@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,17 +27,17 @@ import org.openide.util.Lookup;
 
 public class Util {
 
-    public static void closeProject(Project project) {
+    public static void closeProject(final Project project) {
         OpenProjects.getDefault().close(new Project[]{project});
     }
 
-    public static void log(String message) {
+    public static void log(final String message) {
         Logger.getLogger("NbJeda").log(Level.INFO, message);
     }
 
-    public static InputStream openResource(String resourcePath) throws IOException {
-        ClassLoader cl = Lookup.getDefault().lookup(ClassLoader.class);
-        URL url = cl.getResource(resourcePath);
+    public static InputStream openResource(final String resourcePath) throws IOException {
+        final ClassLoader cl = Lookup.getDefault().lookup(ClassLoader.class);
+        final URL url = cl.getResource(resourcePath);
         return url.openStream();
     }
 }

@@ -37,7 +37,7 @@ public class ConfigNodeFactory implements NodeFactory {
             try {
                 return NodeFactorySupport.fixedNodeList(new ConfigNode(wrapper));
             }
-            catch (DataObjectNotFoundException ex) {
+            catch (final DataObjectNotFoundException ex) {
                 // ignore
             }
         }
@@ -47,8 +47,7 @@ public class ConfigNodeFactory implements NodeFactory {
 
     private static class ConfigNode extends FilterNode {
 
-        public ConfigNode(final ProjectWrapper wrapper)
-                throws DataObjectNotFoundException {
+        public ConfigNode(final ProjectWrapper wrapper) throws DataObjectNotFoundException {
             super(DataObject.find(wrapper.getJedaPropertiesFile()).getNodeDelegate());
         }
 

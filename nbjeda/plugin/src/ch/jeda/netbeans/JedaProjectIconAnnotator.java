@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,23 +26,24 @@ import org.openide.util.lookup.ServiceProvider;
 public class JedaProjectIconAnnotator implements ProjectIconAnnotator {
 
     public @Override
-    Image annotateIcon(Project project, Image orig, boolean openedNode) {
-        ProjectWrapper wrapper = ProjectWrapper.forProject(project);
-        Image result = wrapper.getIcon();
+    Image annotateIcon(final Project project, final Image orig, final boolean openedNode) {
+        final ProjectWrapper wrapper = ProjectWrapper.forProject(project);
+        final Image result = wrapper.getIcon();
         if (result == null) {
-            result = orig;
+            return orig;
         }
-
-        return result;
+        else {
+            return result;
+        }
     }
 
     public @Override
-    void addChangeListener(ChangeListener listener) {
+    void addChangeListener(final ChangeListener listener) {
         // ignored
     }
 
     public @Override
-    void removeChangeListener(ChangeListener listener) {
+    void removeChangeListener(final ChangeListener listener) {
         // ignored
     }
 }

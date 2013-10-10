@@ -59,8 +59,7 @@ public class ProjectWrapper {
         return forProject(project.getProjectDirectory(), project);
     }
 
-    public static ProjectWrapper forProject(final FileObject projectRoot,
-                                            final Project project) {
+    public static ProjectWrapper forProject(final FileObject projectRoot, final Project project) {
         if (projectRoot.getFileObject(JEDA_PROPERTIES) == null) {
             // Not a Jeda project
             return new ProjectWrapper(projectRoot, project);
@@ -176,8 +175,7 @@ public class ProjectWrapper {
         }
     }
 
-    protected final void addFile(final String targetPath,
-                                 final String resourcePath) throws IOException {
+    protected final void addFile(final String targetPath, final String resourcePath) throws IOException {
         // Do not overwrite existing files
         if (this.projectRoot.getFileObject(targetPath) != null) {
             return;
@@ -192,8 +190,8 @@ public class ProjectWrapper {
         }
     }
 
-    protected final void addFile(final String targetPath, final String resourcePath,
-                                 final FileFilter filter) throws Exception {
+    protected final void addFile(final String targetPath, final String resourcePath, final FileFilter filter)
+        throws Exception {
         // Do not overwrite existing files
         if (this.projectRoot.getFileObject(targetPath) != null) {
             return;
@@ -269,7 +267,7 @@ public class ProjectWrapper {
     }
 
     protected final void renameFile(final String name, final String newName)
-            throws IOException {
+        throws IOException {
         final FileObject fo = this.projectRoot.getFileObject(name);
         if (fo != null) {
             fo.rename(FileLock.NONE, newName, "");
@@ -284,7 +282,7 @@ public class ProjectWrapper {
 
     protected final void showError(final String message) {
         final NotifyDescriptor nd =
-                new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE);
+            new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE);
         DialogDisplayer.getDefault().notify(nd);
     }
 
@@ -331,8 +329,7 @@ public class ProjectWrapper {
 
         private ProjectWrapper projectWrapper;
 
-        protected abstract void execute(final InputStream in,
-                                        final OutputStream out) throws Exception;
+        protected abstract void execute(final InputStream in, final OutputStream out) throws Exception;
 
         void setProjectWrapper(final ProjectWrapper value) {
             this.projectWrapper = value;
@@ -346,11 +343,11 @@ public class ProjectWrapper {
     public static abstract class TextFileFilter extends FileFilter {
 
         @Override
-        protected final void execute(final InputStream is,
-                                     final OutputStream os) throws Exception {
+        protected final void execute(final InputStream is, final OutputStream os) throws Exception {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             FileUtil.copy(is, baos);
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(baos.toByteArray())));
+            final BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new ByteArrayInputStream(baos.toByteArray())));
             final PrintWriter writer = new PrintWriter(os);
             try {
                 while (reader.ready()) {

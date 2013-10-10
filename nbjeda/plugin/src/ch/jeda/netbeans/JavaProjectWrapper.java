@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -46,11 +45,11 @@ public class JavaProjectWrapper extends ProjectWrapper {
     private static final String RES_PROJECT_XML = "ch/jeda/netbeans/resources/java/project.xml";
     private static Image ICON;
 
-    public JavaProjectWrapper(FileObject projectRoot) {
+    public JavaProjectWrapper(final FileObject projectRoot) {
         super(projectRoot, null);
     }
 
-    public JavaProjectWrapper(FileObject projectRoot, Project project) {
+    public JavaProjectWrapper(final FileObject projectRoot, final Project project) {
         super(projectRoot, project);
     }
 
@@ -79,9 +78,8 @@ public class JavaProjectWrapper extends ProjectWrapper {
     @Override
     protected void doInit() throws Exception {
         this.addFile(BUILD_XML, RES_BUILD_XML, new TextFileFilter() {
-
             @Override
-            protected String filterLine(String line) {
+            protected String filterLine(final String line) {
                 return line.replace("${ProjectName}", this.getProjectWrapper().getName());
             }
         });
@@ -89,9 +87,8 @@ public class JavaProjectWrapper extends ProjectWrapper {
         this.addFile(PROJECT_XML, RES_PROJECT_XML, new ProjectXmlFilter());
 
         this.addFile(PROJECT_PROPERTIES, RES_PROJECT_PROPERTIES, new TextFileFilter() {
-
             @Override
-            protected String filterLine(String line) {
+            protected String filterLine(final String line) {
                 if (line.startsWith("application.title=")) {
                     return "application.title=" + this.getProjectWrapper().getName();
                 }
@@ -111,21 +108,16 @@ public class JavaProjectWrapper extends ProjectWrapper {
             final FileObject[] libs = this.getLibs().getChildren();
             final List<URI> libUris = new ArrayList<URI>();
             for (int i = 0; i < libs.length; ++i) {
-                try {
-                    libUris.add(libs[i].getURL().toURI());
-                }
-                catch (URISyntaxException ex) {
-                    // ignore
-                }
+                libUris.add(libs[i].toURI());
             }
 
             ProjectClassPathModifier.addRoots(libUris.toArray(new URI[libUris.size()]),
-                                              this.getSrc(), ClassPath.COMPILE);
+                this.getSrc(), ClassPath.COMPILE);
         }
-        catch (IOException ex) {
+        catch (final IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-        catch (UnsupportedOperationException ex) {
+        catch (final UnsupportedOperationException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
@@ -133,14 +125,14 @@ public class JavaProjectWrapper extends ProjectWrapper {
     protected static class ProjectXmlFilter extends FileFilter {
 
         @Override
-        protected void execute(InputStream is, OutputStream os) throws Exception {
-            Document doc = XMLUtil.parse(new InputSource(is), false, false, null, null);
-            NodeList nl = doc.getDocumentElement().getElementsByTagName("name");
+        protected void execute(final InputStream is, final OutputStream os) throws Exception {
+            final Document doc = XMLUtil.parse(new InputSource(is), false, false, null, null);
+            final NodeList nl = doc.getDocumentElement().getElementsByTagName("name");
             if (nl != null) {
                 for (int i = 0; i < nl.getLength(); i++) {
-                    Element el = (Element) nl.item(i);
+                    final Element el = (Element) nl.item(i);
                     if (el.getParentNode() != null && "data".equals(el.getParentNode().getNodeName())) {
-                        NodeList nl2 = el.getChildNodes();
+                        final NodeList nl2 = el.getChildNodes();
                         if (nl2.getLength() > 0) {
                             nl2.item(0).setNodeValue(this.getProjectWrapper().getName());
                         }

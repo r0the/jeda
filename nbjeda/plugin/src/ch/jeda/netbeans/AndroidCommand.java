@@ -31,7 +31,7 @@ public class AndroidCommand {
         try {
             p.waitFor();
         }
-        catch (InterruptedException ex) {
+        catch (final InterruptedException ex) {
             // ignore
         }
     }
