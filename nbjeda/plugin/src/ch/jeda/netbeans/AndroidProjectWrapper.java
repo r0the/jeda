@@ -20,7 +20,6 @@ import java.awt.Image;
 import java.io.File;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 
 public class AndroidProjectWrapper extends ProjectWrapper {
@@ -88,7 +87,6 @@ public class AndroidProjectWrapper extends ProjectWrapper {
     protected void doInit() throws Exception {
         this.replaceFile(ANDROID_MANIFEST_XML, RES_ANDROID_MANIFEST_XML);
         this.addFile(BUILD_XML, RES_BUILD_XML, new TextFileFilter() {
-
             @Override
             protected String filterLine(String line) {
                 return line.replace("${ProjectName}", this.getProjectWrapper().getName());
@@ -99,14 +97,6 @@ public class AndroidProjectWrapper extends ProjectWrapper {
         this.addFile(PROJECT_PROPERTIES, RES_PROJECT_PROPERTIES);
 
         this.rename(this.getName() + ANDROID_SUFFIX);
-
-        final ProcessBuilder pb = new ProcessBuilder("android", "update", "project", "-p", this.getRootDir());
-        final Process p = pb.start();
-        try {
-            p.waitFor();
-        }
-        catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        AndroidCommand.updateProject(this.getRootDir());
     }
 }
