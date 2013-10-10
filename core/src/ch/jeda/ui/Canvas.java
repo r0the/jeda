@@ -317,19 +317,9 @@ public class Canvas {
     }
 
     /**
-     * Draws a triangle. The triangle is specified by the three corners (<tt>x1</tt>, <tt>y1</tt>), (<tt>x2</tt>,
-     * <tt>y2</tt>), and (<tt>x3</tt>,
-     * <tt>y3</tt>). The triangle is drawn using the current color, line width, and transformation.
-     *
-     * @param x1 x coordinate of the first corner
-     * @param y1 y coordinate of the first corner
-     * @param x2 x coordinate of the second corner
-     * @param y2 y coordinate of the second corner
-     * @param x3 x coordinate of the third corner
-     * @param y3 y coordinate of the third corner
-     *
-     * @since 1
+     * @deprecated Use {@link #drawPolygon(float[])} instead
      */
+    @Deprecated
     public void drawTriangle(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
         this.imp.drawPolygon(new float[]{x1, y1, x2, y2, x3, y3});
     }
@@ -421,18 +411,7 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled triangle. The triangle is specified by the three corners (<tt>x1</tt>, <tt>y1</tt>), (<tt>x2</tt>,
-     * <tt>y2</tt>), and (<tt>x3</tt>,
-     * <tt>y3</tt>). The triangle is drawn using the current color and transformation.
-     *
-     * @param x1 x coordinate of the first corner
-     * @param y1 y coordinate of the first corner
-     * @param x2 x coordinate of the second corner
-     * @param y2 y coordinate of the second corner
-     * @param x3 x coordinate of the third corner
-     * @param y3 y coordinate of the third corner
-     *
-     * @since 1
+     * @deprecated Use {@link #fillPolygon(float[])} instead
      */
     public void fillTriangle(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
         this.imp.fillPolygon(new float[]{x1, y1, x2, y2, x3, y3});

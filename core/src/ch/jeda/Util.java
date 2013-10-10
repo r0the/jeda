@@ -32,6 +32,8 @@ public final class Util {
      * @param x the x coordinate of the point
      * @param y the y coordinate of the point
      * @return the Euclidean distance between the origin and the point
+     *
+     * @since 1
      */
     public static float distance(final float x, final float y) {
         return (float) Math.sqrt(x * x + y * y);

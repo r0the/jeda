@@ -23,79 +23,55 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Represents the eight compass directions.
- *
- * @since 1
- */
+@Deprecated
 public final class Direction implements Serializable {
 
-    /**
-     * The direction east. The text representation of this direction is
-     * <tt>"East"</tt>. Its number is <tt>0</tt>.
-     *
-     * @since 1
-     */
     public static final Direction EAST = new Direction(1, 0, "East", 0);
-    /**
-     * The direction north. The text representation of this direction is
-     * <tt>"North"</tt>. Its number is <tt>2</tt>.
-     *
-     * @since 1
-     */
     public static final Direction NORTH = new Direction(0, -1, "North", 2);
     /**
      * The direction north east. The text representation of this direction is
      * <tt>"NorthEast"</tt>. Its number is <tt>1</tt>.
      *
-     * @since 1
      */
     public static final Direction NORTH_EAST = new Direction(1, -1, "NorthEast", 1);
     /**
      * The direction north west. The text representation of this direction is
      * <tt>"NorthWest"</tt>. Its number is <tt>3</tt>.
      *
-     * @since 1
      */
     public static final Direction NORTH_WEST = new Direction(-1, -1, "NorthWest", 3);
     /**
      * The direction south. The text representation of this direction is
      * <tt>"South"</tt>. Its number is <tt>6</tt>.
      *
-     * @since 1
      */
     public static final Direction SOUTH = new Direction(0, 1, "South", 6);
     /**
      * The direction south east. The text representation of this direction is
      * <tt>"SouthEast"</tt>. Its number is <tt>7</tt>.
      *
-     * @since 1
      */
     public static final Direction SOUTH_EAST = new Direction(1, 1, "SouthEast", 7);
     /**
      * The direction south west. The text representation of this direction is
      * <tt>"SouthWest"</tt>. Its number is <tt>5</tt>.
      *
-     * @since 1
      */
     public static final Direction SOUTH_WEST = new Direction(-1, 1, "SouthWest", 5);
     /**
      * The direction west. The text representation of this direction is
      * <tt>"West"</tt>. Its number is <tt>4</tt>.
      *
-     * @since 1
      */
     public static final Direction WEST = new Direction(-1, 0, "West", 4);
     /**
      * A list of all eight directions. The list is ordered counterclickwise and starts with the direction {@link #EAST}.
      *
-     * @since 1
      */
     public static final List<Direction> ALL = initAllDirections();
     /**
      * The number of the direction.
      *
-     * @since 1
      */
     public final int number;
     public final int dx;
@@ -109,7 +85,6 @@ public final class Direction implements Serializable {
      * @param name the name of a direction
      * @return direction for the specified number or <tt>null</tt>
      *
-     * @since 1
      */
     public static Direction parse(final String name) {
         if (NAME_MAP.containsKey(name)) {
@@ -130,7 +105,6 @@ public final class Direction implements Serializable {
      * @param amount the number of steps to turn
      * @return the new direction
      *
-     * @since 1
      */
     public Direction clockwise(final int amount) {
         if (amount < 0) {
@@ -151,7 +125,6 @@ public final class Direction implements Serializable {
      * @param amount the number of steps to turn
      * @return the new direction
      *
-     * @since 1
      */
     public Direction counterclockwise(final int amount) {
         if (amount < 0) {
@@ -186,7 +159,6 @@ public final class Direction implements Serializable {
      *
      * @return the opposite direction
      *
-     * @since 1
      */
     public Direction opposite() {
         return this.clockwise(4);
@@ -197,7 +169,6 @@ public final class Direction implements Serializable {
      *
      * @return the name of this direction
      *
-     * @since 1
      */
     @Override
     public String toString() {
