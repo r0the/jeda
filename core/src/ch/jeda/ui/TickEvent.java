@@ -16,6 +16,11 @@
  */
 package ch.jeda.ui;
 
+/**
+ * Represents an event of the type {@link EventType#TICK}.
+ *
+ * @since 1
+ */
 public class TickEvent extends Event {
 
     private final float duration;
@@ -31,11 +36,18 @@ public class TickEvent extends Event {
      * Returns the duration of the last frame in seconds. This value can be used to calculate smooth movements.
      *
      * @return duration of last frame in seconds
+     * @since 1
      */
     public float getDuration() {
         return this.duration;
     }
 
+    /**
+     * Returns the current frame rate.
+     *
+     * @return the current frame rate
+     * @since 1
+     */
     public float getFrameRate() {
         return this.frameRate;
     }

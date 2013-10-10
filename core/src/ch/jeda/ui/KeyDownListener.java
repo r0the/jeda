@@ -17,9 +17,8 @@
 package ch.jeda.ui;
 
 /**
- * The listener interface for receiving key down events. To have an object
- * receive events of type {@link EventType#KEY_DOWN}, have the class of the
- * object implement the interface and register the object with
+ * The listener interface for receiving key down events. To have an object receive events of type
+ * {@link EventType#KEY_DOWN}, have the class of the object implement the interface and register the object with
  * {@link Window#addEventListener(java.lang.Object)}.
  *
  * @since 1
@@ -30,6 +29,7 @@ public interface KeyDownListener {
      * Invoked when a key has been pressed.
      *
      * @param event the event
+     * 
      * @since 1
      */
     void onKeyDown(KeyEvent event);

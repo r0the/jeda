@@ -17,8 +17,7 @@
 package ch.jeda.ui;
 
 /**
- * Represents an event of types {@link EventType#KEY_DOWN},
- * {@link EventType#KEY_TYPED}, or {@link EventType#KEY_UP}.
+ * Represents an event of the type {@link EventType#KEY_DOWN}, {@link EventType#KEY_TYPED}, or {@link EventType#KEY_UP}.
  *
  * @since 1
  */
@@ -47,6 +46,8 @@ public final class KeyEvent extends Event {
      * Returns the key.
      *
      * @return the key
+     *
+     * @since 1
      */
     public Key getKey() {
         return this.key;

@@ -16,7 +16,20 @@
  */
 package ch.jeda.ui;
 
+/**
+ * The listener interface for receiving tick events. To have an object receive events of type {@link EventType#TICK},
+ * have the class of the object implement the interface and register the object with
+ * {@link Window#addEventListener(java.lang.Object)}.
+ *
+ * @since 1
+ */
 public interface TickListener {
 
+    /**
+     * Invoked every time before the {@link Window} updates its contents.
+     *
+     * @param event the event
+     * @since 1
+     */
     void onTick(TickEvent event);
 }

@@ -16,7 +16,21 @@
  */
 package ch.jeda.ui;
 
+/**
+ * The listener interface for receiving pointer down events. To have an object receive events of type
+ * {@link EventType#POINTER_DOWN}, have the class of the object implement the interface and register the object with
+ * {@link Window#addEventListener(java.lang.Object)}.
+ *
+ * @since 1
+ */
 public interface PointerDownListener {
 
+    /**
+     * Invoked when a new pointer has been detected.
+     *
+     * @param event the event
+     *
+     * @since 1
+     */
     void onPointerDown(PointerEvent event);
 }

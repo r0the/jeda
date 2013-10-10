@@ -16,6 +16,12 @@
  */
 package ch.jeda.ui;
 
+/**
+ * Represents an event of the type {@link EventType#POINTER_DOWN}, {@link EventType#POINTER_MOVED}, or
+ * {@link EventType#POINTER_UP}.
+ *
+ * @since 1
+ */
 public final class PointerEvent extends Event {
 
     private final int pointerId;
@@ -34,14 +40,31 @@ public final class PointerEvent extends Event {
         this.y = y;
     }
 
+    /**
+     * Returns the id of the pointer.
+     *
+     * @return id of the pointer
+     * @since 1
+     */
     public int getPointerId() {
         return this.pointerId;
     }
 
+    /**
+     * Returns the x coordinate of the pointer.
+     *
+     * @return x coordinate of the pointer
+     */
     public float getX() {
         return this.x;
     }
 
+    /**
+     * Returns the y coordinate of the pointer.
+     *
+     * @return y coordinate of the pointer
+     * @since 1
+     */
     public float getY() {
         return this.y;
     }

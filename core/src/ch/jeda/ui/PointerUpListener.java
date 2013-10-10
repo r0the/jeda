@@ -16,7 +16,21 @@
  */
 package ch.jeda.ui;
 
+/**
+ * The listener interface for receiving pointer up events. To have an object receive events of type
+ * {@link EventType#POINTER_UP}, have the class of the object implement the interface and register the object with
+ * {@link Window#addEventListener(java.lang.Object)}.
+ *
+ * @since 1
+ */
 public interface PointerUpListener {
 
+    /**
+     * Invoked when a pointer has left the screen/window.
+     *
+     * @param event the event
+     *
+     * @since 1
+     */
     void onPointerUp(PointerEvent event);
 }

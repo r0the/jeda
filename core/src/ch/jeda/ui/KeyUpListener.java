@@ -17,9 +17,8 @@
 package ch.jeda.ui;
 
 /**
- * The listener interface for receiving key up events. To have an object receive
- * events of type {@link EventType#KEY_UP}, have the class of the object
- * implement the interface and register the object with
+ * The listener interface for receiving key up events. To have an object receive events of type
+ * {@link EventType#KEY_UP}, have the class of the object implement the interface and register the object with
  * {@link Window#addEventListener(java.lang.Object)}.
  *
  * @since 1
@@ -30,6 +29,7 @@ public interface KeyUpListener {
      * Invoked when a key has been released.
      *
      * @param event the event
+     *
      * @since 1
      */
     void onKeyUp(KeyEvent event);
