@@ -111,7 +111,7 @@ public class IO {
             return new FileInputStream(filePath);
         }
         catch (final FileNotFoundException ex) {
-            err("jeda.file.error.not-found", filePath);
+            err(ex, "jeda.file.error.not-found", filePath);
             return null;
         }
     }
@@ -121,11 +121,11 @@ public class IO {
             return new URL(filePath).openStream();
         }
         catch (final MalformedURLException ex) {
-            err("jeda.file.error.open", filePath);
+            err(ex, "jeda.file.error.open", filePath);
             return null;
         }
         catch (final IOException ex) {
-            err("jeda.file.error.open", filePath);
+            err(ex, "jeda.file.error.open", filePath);
             return null;
         }
 
@@ -146,7 +146,7 @@ public class IO {
                 return url.openStream();
             }
             catch (final IOException ex) {
-                err("jeda.file.error.open", filePath);
+                err(ex, "jeda.file.error.open", filePath);
                 return null;
             }
         }
