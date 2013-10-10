@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda;
+package ch.jeda.ui;
 
 class FrequencyMeter {
 
     private static final int MAX_VALUES = 60;
     private final long[] durations;
-    private long frequency;
+    private float frequency;
     private int index;
     private long startTime;
 
@@ -42,7 +42,7 @@ class FrequencyMeter {
             this.index = 0;
         }
 
-        this.frequency = 0;
+        this.frequency = 0f;
         for (int i = 0; i < this.durations.length; ++i) {
             this.frequency = this.frequency + this.durations[i];
         }
@@ -50,12 +50,7 @@ class FrequencyMeter {
         this.frequency = this.frequency / MAX_VALUES;
     }
 
-    int getFrequency() {
-        if (this.frequency == 0) {
-            return 0;
-        }
-        else {
-            return 1000 / (int) this.frequency;
-        }
+    float getFrequency() {
+        return 1000f / this.frequency;
     }
 }

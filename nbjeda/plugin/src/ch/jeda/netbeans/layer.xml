@@ -30,19 +30,10 @@
                 <attr name="template" boolvalue="true"/>
                 <attr name="templateCategory" stringvalue="java-classes"/>
             </file>
-            <file name="JedaSimulation.java" url="resources/JedaSimulationClassTemplate_java">
-                <attr name="displayName" bundlevalue="ch.jeda.netbeans.Bundle#Templates/Jeda/JedaSimulation.java"/>
+            <file name="JedaAnimation.java" url="resources/JedaAnimationClassTemplate_java">
+                <attr name="displayName" bundlevalue="ch.jeda.netbeans.Bundle#Templates/Jeda/JedaAnimation.java"/>
                 <attr name="iconBase" stringvalue="ch/jeda/netbeans/resources/logo-16x16.png"/>
-                <attr name="templateWizardURL" urlvalue="nbresloc:/ch/jeda/netbeans/resources/JedaSimulationClassDescription.html"/>
-                <attr name="instantiatingIterator" methodvalue="org.netbeans.spi.java.project.support.ui.templates.JavaTemplates.createJavaTemplateIterator"/>
-                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-                <attr name="template" boolvalue="true"/>
-                <attr name="templateCategory" stringvalue="java-classes"/>
-            </file>
-            <file name="JedaWorld.java" url="resources/JedaWorldClassTemplate_java">
-                <attr name="displayName" bundlevalue="ch.jeda.netbeans.Bundle#Templates/Jeda/JedaWorld.java"/>
-                <attr name="iconBase" stringvalue="ch/jeda/netbeans/resources/logo-16x16.png"/>
-                <attr name="templateWizardURL" urlvalue="nbresloc:/ch/jeda/netbeans/resources/JedaWorldClassDescription.html"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/ch/jeda/netbeans/resources/JedaAnimationClassDescription.html"/>
                 <attr name="instantiatingIterator" methodvalue="org.netbeans.spi.java.project.support.ui.templates.JavaTemplates.createJavaTemplateIterator"/>
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="template" boolvalue="true"/>

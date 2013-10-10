@@ -32,6 +32,7 @@ class EventDispatcher {
     private final List<PointerDownListener> pointerDownListeners;
     private final List<PointerMovedListener> pointerMovedListeners;
     private final List<PointerUpListener> pointerUpListeners;
+    private final List<TickListener> tickListener;
     private final List<WindowFocusLostListener> windowFocusLostListeners;
 
     EventDispatcher() {
@@ -44,6 +45,7 @@ class EventDispatcher {
         this.pointerDownListeners = new ArrayList<PointerDownListener>();
         this.pointerMovedListeners = new ArrayList<PointerMovedListener>();
         this.pointerUpListeners = new ArrayList<PointerUpListener>();
+        this.tickListener = new ArrayList<TickListener>();
         this.windowFocusLostListeners = new ArrayList<WindowFocusLostListener>();
     }
 
@@ -129,6 +131,12 @@ class EventDispatcher {
         }
     }
 
+    void dispatchTick(final TickEvent event) {
+        for (int j = 0; j < this.tickListener.size(); ++j) {
+            this.tickListener.get(j).onTick((TickEvent) event);
+        }
+    }
+
     private void doAddListener(final Object listener) {
         this.listeners.add(listener);
         if (listener instanceof KeyDownListener) {
@@ -153,6 +161,10 @@ class EventDispatcher {
 
         if (listener instanceof PointerUpListener) {
             this.pointerUpListeners.add((PointerUpListener) listener);
+        }
+
+        if (listener instanceof TickListener) {
+            this.tickListener.add((TickListener) listener);
         }
 
         if (listener instanceof WindowFocusLostListener) {
@@ -184,6 +196,10 @@ class EventDispatcher {
 
         if (listener instanceof PointerUpListener) {
             this.pointerUpListeners.remove((PointerUpListener) listener);
+        }
+
+        if (listener instanceof TickListener) {
+            this.tickListener.remove((TickListener) listener);
         }
 
         if (listener instanceof WindowFocusLostListener) {

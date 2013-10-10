@@ -14,32 +14,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda;
+package ch.jeda.ui;
 
 class Timer {
 
-    private static final int DEFAULT_FREQUENCY = 60;
+    private static final int DEFAULT_FRAME_RATE = 60;
     private long adjustment;
-    private int frequency;
+    private float frameRate;
     private long lastStepDuration;
     private long start;
     private long period;
 
     Timer() {
-        this.frequency = DEFAULT_FREQUENCY;
+        this.frameRate = DEFAULT_FRAME_RATE;
     }
 
-    int getFrequency() {
-        return this.frequency;
+    float getFrameRate() {
+        return this.frameRate;
     }
 
-    double getLastStepDuration() {
-        return this.lastStepDuration / 1000.0;
+    float getLastStepDuration() {
+        return this.lastStepDuration / 1000f;
     }
 
-    void setFrequency(final int hertz) {
-        if (this.frequency != hertz) {
-            this.frequency = hertz;
+    void setFrameRate(final float hertz) {
+        if (this.frameRate != hertz) {
+            this.frameRate = hertz;
             this.refresh();
         }
     }
@@ -67,7 +67,7 @@ class Timer {
 
     void refresh() {
         this.start = System.currentTimeMillis();
-        this.period = 1000 / this.frequency;
+        this.period = (long) (1000f / this.frameRate);
         this.adjustment = 0;
     }
 

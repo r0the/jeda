@@ -16,114 +16,49 @@
  */
 package ch.jeda;
 
+import ch.jeda.ui.TickEvent;
+import ch.jeda.ui.TickListener;
+
 /**
- * Represents a simulation. When run, the simulation initializes itself by calling the {@link #init()} method. Then, the
- * simulation calls the {@link #step()} method repeatedly to perform a simulation step. The target frequency with which
- * the {@link #step()} method is called can be adjusted.
- *
- * @since 1
+ * @deprecated Use {@link Program} with an {@link TickListener} instead.
  */
-public abstract class Simulation extends Program {
+@Deprecated
+public abstract class Simulation extends Program implements TickListener {
 
-    private final int PAUSE_SLEEP_MILLIS = 200;
-    private final FrequencyMeter frequencyMeter;
-    private final Timer timer;
+    private int currentFrequency;
+    private double lastStepDuration;
 
-    /**
-     * Creates a new simulation . The target simulation frequency is set to 60 Hertz.
-     *
-     * @since 1
-     */
     protected Simulation() {
-        this.frequencyMeter = new FrequencyMeter();
-        this.timer = new Timer();
     }
 
-    /**
-     * Returns the measured simulation frequency in Hertz. This is the frequency in which the method {@link #step()} has
-     * beend called during the last second.
-     *
-     * @return measured simulation frequency
-     *
-     * @see #getFrequency()
-     * @see #setFrequency(int)
-     * @since 1
-     */
     public final int getCurrentFrequency() {
-        return this.frequencyMeter.getFrequency();
+        return this.currentFrequency;
     }
 
-    /**
-     * Returns the duration of the last simulation step in seconds. This value can be used to calculate smooth
-     * movements.
-     *
-     * @return duration of last simulation step in seconds
-     */
     public final double getLastStepDuration() {
-        return this.timer.getLastStepDuration();
+        return this.lastStepDuration;
     }
 
-    /**
-     * Returns the target simulation frequency in Hertz.
-     *
-     * @return the desired frequency
-     *
-     * @see #getCurrentFrequency()
-     * @see #setFrequency(int)
-     * @since 1
-     */
     public final int getFrequency() {
-        return this.timer.getFrequency();
+        return 0;
     }
 
-    /**
-     * Calls {@link #init()} and then starts the simulation. Calls {@link #step()} repeatedly until the simulation has
-     * been stopped by calling {@link #stop()}.
-     *
-     * @since 1
-     */
+    @Override
+    public void onTick(final TickEvent event) {
+        this.lastStepDuration = event.getDuration();
+        this.currentFrequency = (int) event.getFrameRate();
+        this.step();
+    }
+
     @Override
     public final void run() {
         this.init();
-        this.timer.start();
-        while (this.getState() != ProgramState.STOPPED) {
-            if (this.getState() == ProgramState.PAUSED) {
-                this.sleep(PAUSE_SLEEP_MILLIS);
-                this.timer.start();
-            }
-            else {
-                this.frequencyMeter.count();
-                this.step();
-                this.timer.tick();
-            }
-        }
     }
 
-    /**
-     * Sets the target simulation frequency in Hertz. This is the frequency in which the method {@link #step()} will be
-     * called.
-     *
-     * @param hertz new frequency in hertz
-     *
-     * @see #getCurrentFrequency()
-     * @see #getFrequency()
-     * @since 1
-     */
     public final void setFrequency(final int hertz) {
-        this.timer.setFrequency(hertz);
     }
 
-    /**
-     * Initializes the simulation. Override this method to initialize the simulation.
-     *
-     * @since 1
-     */
     protected abstract void init();
 
-    /**
-     * Performs a simulation step. Override this method to perform a simulation step.
-     *
-     * @since 1
-     */
     protected abstract void step();
 }

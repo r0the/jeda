@@ -48,6 +48,16 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     }
 
     @Override
+    public boolean isActive() {
+        return this.canvasWindow.isActive();
+    }
+
+    @Override
+    public boolean isValid() {
+        return this.canvasWindow.isVisible();
+    }
+
+    @Override
     public void setFeature(final WindowFeature feature, final boolean enabled) {
         this.canvasWindow.setFeature(feature, enabled);
     }
@@ -105,9 +115,9 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         public DoubleBufferedWindowImp(final CanvasWindow canvasWindow) {
             super(canvasWindow);
             this.backBuffer = createBufferedImage(canvasWindow.getImageWidth(),
-                                                  canvasWindow.getImageHeight());
+                canvasWindow.getImageHeight());
             this.frontBuffer = createBufferedImage(canvasWindow.getImageWidth(),
-                                                   canvasWindow.getImageHeight());
+                canvasWindow.getImageHeight());
             canvasWindow.setImage(this.frontBuffer);
             this.setBuffer(this.backBuffer);
         }
@@ -130,7 +140,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         public SingleBufferedWindowImp(final CanvasWindow canvasWindow) {
             super(canvasWindow);
             this.buffer = createBufferedImage(canvasWindow.getImageWidth(),
-                                              canvasWindow.getImageHeight());
+                canvasWindow.getImageHeight());
             canvasWindow.setImage(this.buffer);
             this.setBuffer(this.buffer);
         }

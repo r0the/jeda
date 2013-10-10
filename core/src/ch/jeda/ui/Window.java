@@ -19,8 +19,6 @@ package ch.jeda.ui;
 import ch.jeda.Engine;
 import ch.jeda.platform.WindowImp;
 import java.util.EnumSet;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Represents a drawing window. The window class has the following functionality:
@@ -34,14 +32,15 @@ import java.util.TimerTask;
  */
 public class Window extends Canvas {
 
-    private static final int UPDATE_DELAY = 100;
     private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
+    private static final int PAUSE_SLEEP_MILLIS = 200;
+    private static final EventSource WINDOW = new EventSource(2, "Window");
     private final EventDispatcher eventDispatcher;
     private final Events events;
-    private final Timer updateTimer;
+    private final FrequencyMeter frequencyMeter;
+    private final Timer timer;
     private WindowImp imp;
     private String title;
-    private UpdateTask updateTask;
 
     /**
      * Constructs a window. The window is shown on the screen. All drawing methods inherited from {@link Canvas} are
@@ -78,12 +77,7 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window(final WindowFeature... features) {
-        this.eventDispatcher = new EventDispatcher();
-        this.events = new Events();
-        this.updateTimer = new Timer(true);
-        this.eventDispatcher.addListener(this.events.listener);
-        this.title = Thread.currentThread().getName();
-        this.resetImp(0, 0, toSet(features));
+        this(0, 0, features);
     }
 
     /**
@@ -109,10 +103,12 @@ public class Window extends Canvas {
     public Window(final int width, final int height, final WindowFeature... features) {
         this.eventDispatcher = new EventDispatcher();
         this.events = new Events();
-        this.updateTimer = new Timer(true);
         this.eventDispatcher.addListener(this.events.listener);
+        this.frequencyMeter = new FrequencyMeter();
+        this.timer = new Timer();
         this.title = Engine.getProgramName();
         this.resetImp(width, height, toSet(features));
+        new EventLoop(this).start();
     }
 
     /**
@@ -133,6 +129,18 @@ public class Window extends Canvas {
      */
     public void close() {
         this.imp.close();
+    }
+
+    /**
+     * Returns the target frame rate in Hertz.
+     *
+     * @return the target frame rate
+     *
+     * @see #setFrameRate(float)
+     * @since 1
+     */
+    public final float getFrameRate() {
+        return this.timer.getFrameRate();
     }
 
     /**
@@ -200,7 +208,7 @@ public class Window extends Canvas {
 
         if (IMP_CHANGING_FEATURES.contains(feature)) {
             final EnumSet<WindowFeature> featureSet =
-                    EnumSet.copyOf(this.imp.getFeatures());
+                EnumSet.copyOf(this.imp.getFeatures());
             if (enabled) {
                 featureSet.add(feature);
             }
@@ -213,6 +221,19 @@ public class Window extends Canvas {
         else {
             this.imp.setFeature(feature, enabled);
         }
+    }
+
+    /**
+     * Sets the target frame rate in Hertz. This is the frequency in which the window will be refreshed and
+     * {@link TickEvent} events will be emitted.
+     *
+     * @param hertz new frame rate in hertz
+     *
+     * @see #getFrameRate()
+     * @since 1
+     */
+    public final void setFrameRate(final float hertz) {
+        this.timer.setFrameRate(hertz);
     }
 
     /**
@@ -257,31 +278,36 @@ public class Window extends Canvas {
      *
      * @since 1
      */
+    @Deprecated
     public void update() {
-        this.cancelUpdateTask();
-        this.events.prepare();
-        this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
-        this.imp.update();
     }
 
-    void cancelUpdateTask() {
-        if (this.updateTask != null) {
-            this.updateTask.cancel();
-            this.updateTask = null;
-        }
-    }
-
-    @Override
-    void modified() {
-        if (this.updateTask == null && !this.hasFeature(WindowFeature.DoubleBuffered)) {
-            this.updateTask = new UpdateTask(this);
-            this.updateTimer.schedule(this.updateTask, UPDATE_DELAY);
+    private void eventLoop() {
+        this.timer.start();
+        while (this.imp.isValid()) {
+            if (this.imp.isActive()) {
+                this.frequencyMeter.count();
+                this.events.prepare();
+                this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
+                final TickEvent event = new TickEvent(
+                    WINDOW, EventType.TICK, this.timer.getLastStepDuration(), this.frequencyMeter.getFrequency());
+                this.eventDispatcher.dispatchTick(event);
+                this.imp.update();
+                this.timer.tick();
+            }
+            else {
+                try {
+                    Thread.sleep(PAUSE_SLEEP_MILLIS);
+                }
+                catch (InterruptedException ex) {
+                    // ignore
+                }
+                this.timer.start();
+            }
         }
     }
 
     private void resetImp(final int width, final int height, final EnumSet<WindowFeature> features) {
-        this.cancelUpdateTask();
-
         if (this.imp != null) {
             this.imp.close();
         }
@@ -295,7 +321,6 @@ public class Window extends Canvas {
         }
 
         super.setImp(this.imp);
-        this.update();
     }
 
     private static EnumSet<WindowFeature> initImpChangingFeatures() {
@@ -314,17 +339,17 @@ public class Window extends Canvas {
         return result;
     }
 
-    private static class UpdateTask extends TimerTask {
+    private static class EventLoop extends Thread {
 
         private final Window window;
 
-        UpdateTask(final Window window) {
+        public EventLoop(Window window) {
             this.window = window;
         }
 
         @Override
         public void run() {
-            this.window.update();
+            this.window.eventLoop();
         }
     }
 }

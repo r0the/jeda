@@ -41,6 +41,16 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     }
 
     @Override
+    public boolean isActive() {
+        return this.canvasView.isShown();
+    }
+
+    @Override
+    public boolean isValid() {
+        return this.canvasView.isShown();
+    }
+
+    @Override
     public void setFeature(final WindowFeature feature, final boolean enabled) {
         this.canvasView.setFeature(feature, enabled);
     }

@@ -16,14 +16,27 @@
  */
 package ch.jeda.ui;
 
-public enum EventType {
+public class TickEvent extends Event {
 
-    KEY_DOWN,
-    KEY_TYPED,
-    KEY_UP,
-    POINTER_DOWN,
-    POINTER_MOVED,
-    POINTER_UP,
-    TICK,
-    WINDOW_FOCUS_LOST
+    private final float duration;
+    private final float frameRate;
+
+    public TickEvent(final EventSource source, final EventType type, final float duration, final float frameRate) {
+        super(source, type);
+        this.duration = duration;
+        this.frameRate = frameRate;
+    }
+
+    /**
+     * Returns the duration of the last frame in seconds. This value can be used to calculate smooth movements.
+     *
+     * @return duration of last frame in seconds
+     */
+    public float getDuration() {
+        return this.duration;
+    }
+
+    public float getFrameRate() {
+        return this.frameRate;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,33 +14,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.platform;
+package ch.jeda.ui;
 
-import ch.jeda.ui.Event;
-import ch.jeda.ui.MouseCursor;
-import ch.jeda.ui.WindowFeature;
-import java.util.EnumSet;
+public interface TickListener {
 
-/**
- * <b>Internal</b>. Do not use this interface.
- */
-public interface WindowImp extends CanvasImp {
-
-    void close();
-
-    Event[] fetchEvents();
-
-    EnumSet<WindowFeature> getFeatures();
-
-    boolean isActive();
-
-    boolean isValid();
-
-    void setFeature(WindowFeature feature, boolean enabled);
-
-    void setMouseCursor(MouseCursor mouseCursor);
-
-    void setTitle(String title);
-
-    void update();
+    void onTick(TickEvent event);
 }
