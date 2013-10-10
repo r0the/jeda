@@ -61,6 +61,17 @@ public class AndroidProjectWrapper extends ProjectWrapper {
     }
 
     @Override
+    public void onOpen() {
+        try {
+            this.replaceFile(JEDANDROID_JAR, RES_JEDANDROID_JAR);
+        }
+        catch (final IOException ex) {
+            Exceptions.printStackTrace(ex);
+            Util.showError("Could not replace jedandroid.jar");
+        }
+    }
+
+    @Override
     protected void doCleanup() throws Exception {
         this.deleteFile(ANDROID_MANIFEST_XML);
         this.deleteFile(BUILD_XML);

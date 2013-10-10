@@ -17,17 +17,26 @@
 package ch.jeda.netbeans;
 
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.project.LookupProvider;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
+@LookupProvider.Registration(projectTypes = {
+    @LookupProvider.Registration.ProjectType(id = "org-netbeans-modules-android-project"),
+    @LookupProvider.Registration.ProjectType(id = "org-netbeans-modules-java-j2seproject")
+})
 public class JedaLookupProvider implements LookupProvider {
+
+    static {
+        OpenProjects.getDefault().addPropertyChangeListener(null);
+    }
 
     @Override
     public Lookup createAdditionalLookup(final Lookup lookup) {
         final ProjectWrapper wrapper = ProjectWrapper.forProject(lookup.lookup(Project.class));
         if (wrapper.isJedaProject()) {
-            return Lookups.fixed(new JedaProjectIconAnnotator());
+            return Lookups.fixed(new JedaProjectIconAnnotator(), new JedaProjectOpenedHook(wrapper));
         }
         else {
             return Lookups.fixed();

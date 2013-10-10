@@ -159,6 +159,9 @@ public class ProjectWrapper {
         return this.getPlatform() != Platform.Unknown;
     }
 
+    public void onOpen() {
+    }
+
     protected final void addDir(final String targetPath) throws IOException {
         final String[] dirs = targetPath.split("/");
         FileObject fo = this.projectRoot;
