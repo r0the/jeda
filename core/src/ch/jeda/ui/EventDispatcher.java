@@ -23,6 +23,9 @@ import java.util.Set;
 
 class EventDispatcher {
 
+    private static final EventSource WINDOW = new EventSource(2, "Window");
+    private final List<ActionEvent> actionEvents;
+    private final List<ActionListener> actionListeners;
     private final List<KeyDownListener> keyDownListeners;
     private final List<KeyTypedListener> keyTypedListeners;
     private final List<KeyUpListener> keyUpListeners;
@@ -36,6 +39,8 @@ class EventDispatcher {
     private final List<WindowFocusLostListener> windowFocusLostListeners;
 
     EventDispatcher() {
+        this.actionEvents = new ArrayList<ActionEvent>();
+        this.actionListeners = new ArrayList<ActionListener>();
         this.keyDownListeners = new ArrayList<KeyDownListener>();
         this.keyTypedListeners = new ArrayList<KeyTypedListener>();
         this.keyUpListeners = new ArrayList<KeyUpListener>();
@@ -49,6 +54,10 @@ class EventDispatcher {
         this.windowFocusLostListeners = new ArrayList<WindowFocusLostListener>();
     }
 
+    void addAction(final String action) {
+        this.actionEvents.add(new ActionEvent(WINDOW, action));
+    }
+
     final void addListener(final Object listener) {
         if (listener != null) {
             if (this.listeners.contains(listener)) {
@@ -57,6 +66,13 @@ class EventDispatcher {
             else if (!this.pendingInsertions.contains(listener)) {
                 this.pendingInsertions.add(listener);
             }
+        }
+    }
+
+    void dispatchTick(final float duration, final float frameRate) {
+        final TickEvent event = new TickEvent(WINDOW, EventType.TICK, duration, frameRate);
+        for (int j = 0; j < this.tickListener.size(); ++j) {
+            this.tickListener.get(j).onTick(event);
         }
     }
 
@@ -118,6 +134,14 @@ class EventDispatcher {
                     break;
             }
         }
+
+        for (int i = 0; i < this.actionEvents.size(); ++i) {
+            for (int j = 0; j < this.actionListeners.size(); ++j) {
+                this.actionListeners.get(j).onAction(this.actionEvents.get(i));
+            }
+        }
+
+        this.actionEvents.clear();
     }
 
     final void removeListener(final Object listener) {
@@ -131,14 +155,12 @@ class EventDispatcher {
         }
     }
 
-    void dispatchTick(final TickEvent event) {
-        for (int j = 0; j < this.tickListener.size(); ++j) {
-            this.tickListener.get(j).onTick((TickEvent) event);
-        }
-    }
-
     private void doAddListener(final Object listener) {
         this.listeners.add(listener);
+        if (listener instanceof ActionListener) {
+            this.actionListeners.add((ActionListener) listener);
+        }
+
         if (listener instanceof KeyDownListener) {
             this.keyDownListeners.add((KeyDownListener) listener);
         }
@@ -174,6 +196,10 @@ class EventDispatcher {
 
     private void doRemoveListener(final Object listener) {
         this.listeners.remove(listener);
+        if (listener instanceof ActionListener) {
+            this.actionListeners.remove((ActionListener) listener);
+        }
+
         if (listener instanceof KeyDownListener) {
             this.keyDownListeners.remove((KeyDownListener) listener);
         }

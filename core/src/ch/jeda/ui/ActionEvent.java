@@ -16,15 +16,16 @@
  */
 package ch.jeda.ui;
 
-public enum EventType {
+public class ActionEvent extends Event {
 
-    ACTION,
-    KEY_DOWN,
-    KEY_TYPED,
-    KEY_UP,
-    POINTER_DOWN,
-    POINTER_MOVED,
-    POINTER_UP,
-    TICK,
-    WINDOW_FOCUS_LOST
+    private final String name;
+
+    public ActionEvent(final EventSource source, final String name) {
+        super(source, EventType.ACTION);
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
 }

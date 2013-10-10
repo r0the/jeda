@@ -16,7 +16,7 @@
  */
 package ch.jeda.ui;
 
-public class Button extends AbstractButton {
+public class Button extends AbstractButton implements Drawable {
 
     private static Color BG_NORMAL_COLOR = new Color(230, 230, 230);
     private static Color BG_PRESSED_COLOR = new Color(130, 130, 130);
@@ -28,22 +28,20 @@ public class Button extends AbstractButton {
     private float x;
     private float y;
 
-    public Button() {
-        this.width = 200;
-        this.height = 150;
+    public Button(final Window window, final String action) {
+        super(window, action);
+        window.addDrawable(this);
+        this.width = 100;
+        this.height = 50;
     }
 
-    public Button(final Key key) {
-        this();
-        this.addKey(key);
+    public Button(final Window window, final float x, final float y, final String text) {
+        this(window, x, y, text, Alignment.TOP_LEFT);
     }
 
-    public Button(final float x, final float y, final String text) {
-        this(x, y, text, Alignment.TOP_LEFT);
-    }
-
-    public Button(final float x, final float y, final String text, final Alignment alignment) {
-        this();
+    public Button(final Window window, final float x, final float y, final String text, final Alignment alignment) {
+        this(window, text);
+        window.addDrawable(this);
         this.x = alignment.alignX(x, this.width);
         this.y = alignment.alignY(y, this.height);
         this.text = text;
@@ -53,6 +51,7 @@ public class Button extends AbstractButton {
         return this.text;
     }
 
+    @Override
     public void draw(final Canvas canvas) {
         if (this.text == null || this.text.isEmpty()) {
             return;
@@ -70,6 +69,11 @@ public class Button extends AbstractButton {
         canvas.drawRectangle(this.x, this.y, this.width, this.height);
         canvas.setColor(TEXT_COLOR);
         canvas.drawText(this.x + this.width / 2f, this.y + this.height / 2f, text, Alignment.CENTER);
+    }
+
+    @Override
+    public int drawOrder() {
+        return Integer.MAX_VALUE;
     }
 
     public void setPosition(final float x, final float y) {

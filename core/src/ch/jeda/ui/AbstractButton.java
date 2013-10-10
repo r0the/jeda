@@ -22,66 +22,74 @@ public abstract class AbstractButton implements KeyDownListener, KeyUpListener, 
 
     private final EnumSet<Key> keys;
     private final EnumSet<Key> pressedKeys;
-    private boolean activated;
+    private String action;
     private Integer pointerId;
+    private final Window window;
 
-    protected AbstractButton() {
+    protected AbstractButton(final Window window, final String action) {
+        this.action = action;
         this.keys = EnumSet.noneOf(Key.class);
         this.pressedKeys = EnumSet.noneOf(Key.class);
+        this.window = window;
+        this.window.addEventListener(this);
     }
 
-    public void addKey(final Key key) {
+    public final void addKey(final Key key) {
         this.keys.add(key);
     }
 
-    public boolean isActivated() {
-        return this.activated;
+    public final String getAction() {
+        return this.action;
     }
 
-    public boolean isPressed() {
+    public final boolean isPressed() {
         return !this.pressedKeys.isEmpty() || pointerId != null;
     }
 
     @Override
-    public void onKeyDown(KeyEvent event) {
+    public final void onKeyDown(KeyEvent event) {
         if (this.keys.contains(event.getKey())) {
             this.pressedKeys.add(event.getKey());
-            this.activated = false;
         }
     }
 
     @Override
-    public void onKeyUp(KeyEvent event) {
+    public final void onKeyUp(KeyEvent event) {
         if (this.pressedKeys.remove(event.getKey())) {
-            this.activated = true;
+            this.window.sendAction(this.action);
         }
     }
 
-    public void removeKey(final Key key) {
+    public final void removeKey(final Key key) {
         this.keys.remove(key);
     }
 
     @Override
-    public void onPointerDown(PointerEvent event) {
+    public final void onPointerDown(PointerEvent event) {
         if (this.pointerId == null && contains(event.getX(), event.getY())) {
             this.pointerId = event.getPointerId();
-            this.activated = false;
         }
     }
 
     @Override
-    public void onPointerMoved(PointerEvent event) {
+    public final void onPointerMoved(PointerEvent event) {
         if (this.pointerId != null && event.getPointerId() == this.pointerId && !contains(event.getX(), event.getY())) {
             this.pointerId = null;
         }
     }
 
     @Override
-    public void onPointerUp(PointerEvent event) {
-        if (this.pointerId != null && event.getPointerId() == this.pointerId && contains(event.getX(), event.getY())) {
+    public final void onPointerUp(PointerEvent event) {
+        if (this.pointerId != null && event.getPointerId() == this.pointerId) {
             this.pointerId = null;
-            this.activated = true;
+            if (this.contains(event.getX(), event.getY())) {
+                this.window.sendAction(this.action);
+            }
         }
+    }
+
+    public final void setAction(final String action) {
+        this.action = action;
     }
 
     protected abstract boolean contains(float x, float y);

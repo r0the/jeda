@@ -34,7 +34,7 @@ public class Window extends Canvas {
 
     private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
     private static final int PAUSE_SLEEP_MILLIS = 200;
-    private static final EventSource WINDOW = new EventSource(2, "Window");
+    private final Drawables drawables;
     private final EventDispatcher eventDispatcher;
     private final Events events;
     private final FrequencyMeter frequencyMeter;
@@ -101,6 +101,7 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window(final int width, final int height, final WindowFeature... features) {
+        this.drawables = new Drawables();
         this.eventDispatcher = new EventDispatcher();
         this.events = new Events();
         this.eventDispatcher.addListener(this.events.listener);
@@ -109,6 +110,11 @@ public class Window extends Canvas {
         this.title = Engine.getProgramName();
         this.resetImp(width, height, toSet(features));
         new EventLoop(this).start();
+    }
+
+    public void addDrawable(final Drawable drawable) {
+        this.drawables.addDrawable(drawable);
+        this.eventDispatcher.addListener(drawable);
     }
 
     /**
@@ -180,6 +186,11 @@ public class Window extends Canvas {
         return this.imp.getFeatures().contains(feature);
     }
 
+    public void removeDrawable(final Drawable drawable) {
+        this.drawables.removeDrawable(drawable);
+        this.eventDispatcher.removeListener(drawable);
+    }
+
     /**
      * Removes an event listener from the window. The specified object will not receive events anymore.
      *
@@ -188,6 +199,10 @@ public class Window extends Canvas {
      */
     public void removeEventListener(final Object listener) {
         this.eventDispatcher.removeListener(listener);
+    }
+
+    public void sendAction(final String name) {
+        this.eventDispatcher.addAction(name);
     }
 
     /**
@@ -289,9 +304,8 @@ public class Window extends Canvas {
                 this.frequencyMeter.count();
                 this.events.prepare();
                 this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
-                final TickEvent event = new TickEvent(
-                    WINDOW, EventType.TICK, this.timer.getLastStepDuration(), this.frequencyMeter.getFrequency());
-                this.eventDispatcher.dispatchTick(event);
+                this.eventDispatcher.dispatchTick(this.timer.getLastStepDuration(), this.frequencyMeter.getFrequency());
+                this.drawables.draw(this);
                 this.imp.update();
                 this.timer.tick();
             }
