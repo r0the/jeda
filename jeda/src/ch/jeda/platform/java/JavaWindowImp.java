@@ -17,7 +17,7 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.platform.WindowImp;
-import ch.jeda.ui.Event;
+import ch.jeda.event.Event;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.WindowFeature;
 import java.awt.Cursor;

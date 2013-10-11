@@ -16,6 +16,11 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.event.ActionEvent;
+import ch.jeda.event.ActionListener;
+import ch.jeda.event.Event;
+import ch.jeda.event.EventSource;
+import ch.jeda.event.EventType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

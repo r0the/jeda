@@ -14,23 +14,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.event;
 
-/**
- * Represents an event source such as a keyboard, a mouse, a sensor, or a mouse.
- */
-public class EventSource {
+import ch.jeda.event.Event;
+import ch.jeda.event.EventSource;
+import ch.jeda.event.EventType;
 
-    private final int id;
+public class ActionEvent extends Event {
+
     private final String name;
 
-    public EventSource(final int id, final String name) {
-        this.id = id;
+    public ActionEvent(final EventSource source, final String name) {
+        super(source, EventType.ACTION);
         this.name = name;
     }
 
-    @Override
-    public String toString() {
+    public String getName() {
         return this.name;
     }
 }

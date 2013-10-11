@@ -14,17 +14,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.event;
 
-public enum EventType {
+public interface ActionListener {
 
-    ACTION,
-    KEY_DOWN,
-    KEY_TYPED,
-    KEY_UP,
-    POINTER_DOWN,
-    POINTER_MOVED,
-    POINTER_UP,
-    TICK,
-    WINDOW_FOCUS_LOST
+    void onAction(ActionEvent event);
 }

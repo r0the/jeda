@@ -16,9 +16,9 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.ui.Event;
-import ch.jeda.ui.EventSource;
-import ch.jeda.ui.EventType;
+import ch.jeda.event.Event;
+import ch.jeda.event.EventSource;
+import ch.jeda.event.EventType;
 import ch.jeda.ui.Key;
 import ch.jeda.ui.KeyEvent;
 import ch.jeda.ui.PointerEvent;

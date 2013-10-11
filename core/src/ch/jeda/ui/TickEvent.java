@@ -16,6 +16,10 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.event.Event;
+import ch.jeda.event.EventSource;
+import ch.jeda.event.EventType;
+
 /**
  * Represents an event of the type {@link EventType#TICK}.
  *

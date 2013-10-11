@@ -14,18 +14,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.event;
 
-public class ActionEvent extends Event {
+public enum EventType {
 
-    private final String name;
-
-    public ActionEvent(final EventSource source, final String name) {
-        super(source, EventType.ACTION);
-        this.name = name;
-    }
-
-    public String getName() {
-        return this.name;
-    }
+    ACTION,
+    KEY_DOWN,
+    KEY_TYPED,
+    KEY_UP,
+    POINTER_DOWN,
+    POINTER_MOVED,
+    POINTER_UP,
+    TICK,
+    WINDOW_FOCUS_LOST
 }

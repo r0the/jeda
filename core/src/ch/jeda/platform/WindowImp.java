@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.ui.Event;
+import ch.jeda.event.Event;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.WindowFeature;
 import java.util.EnumSet;

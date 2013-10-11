@@ -14,9 +14,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.event;
 
-public interface ActionListener {
+/**
+ * Represents an event source such as a keyboard, a mouse, a sensor, or a mouse.
+ */
+public class EventSource {
 
-    void onAction(ActionEvent event);
+    private final int id;
+    private final String name;
+
+    public EventSource(final int id, final String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }
