@@ -34,7 +34,7 @@ public final class Properties {
 
     public Properties(final String filePath) {
         this();
-        final InputStream in = IO.openInputStream(filePath);
+        final InputStream in = Engine.getContext().openResource(filePath);
         if (in == null) {
             return;
         }
@@ -42,14 +42,14 @@ public final class Properties {
         try {
             this.imp.load(in);
         }
-        catch (Exception ex) {
+        catch (final Exception ex) {
             IO.err("jeda.file.error.read", filePath);
         }
         finally {
             try {
                 in.close();
             }
-            catch (IOException ex) {
+            catch (final IOException ex) {
                 // ignore
             }
         }

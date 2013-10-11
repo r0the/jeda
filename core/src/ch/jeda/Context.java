@@ -21,10 +21,10 @@ import ch.jeda.platform.ContextImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
+import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.WindowFeature;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.EnumSet;
 
@@ -58,27 +58,18 @@ public final class Context {
         return this.properties;
     }
 
-    public ImageImp loadImageImp(final String filePath) {
-        final InputStream in = IO.openInputStream(filePath);
-        if (in == null) {
+    public ImageImp loadImageImp(final String path) {
+        final ImageImp result = this.imp.loadImageImp(path);
+        if (result == null) {
             return this.defaultImage;
         }
+        else {
+            return result;
+        }
+    }
 
-        try {
-            return this.imp.loadImageImp(in);
-        }
-        catch (final Exception ex) {
-            IO.err(ex, "jeda.image.error.read", filePath);
-            return this.defaultImage;
-        }
-        finally {
-            try {
-                in.close();
-            }
-            catch (final IOException ex) {
-                // ignore
-            }
-        }
+    public InputStream openResource(final String path) {
+        return this.imp.openResource(path);
     }
 
     public WindowImp showWindow(final int width, final int height, final EnumSet<WindowFeature> features) {
@@ -92,6 +83,28 @@ public final class Context {
         return request.getResult();
     }
 
+//    SoundImp createSoundImp(final String filePath) {
+//        final InputStream in = IO.openInputStream(filePath);
+//        if (in == null) {
+//            return null;
+//        }
+//
+//        try {
+//            return this.imp.createSoundImp(in);
+//        }
+//        catch (final Exception ex) {
+//            IO.err(ex, "jeda.sound.error.read", filePath);
+//            return null;
+//        }
+//        finally {
+//            try {
+//                in.close();
+//            }
+//            catch (final IOException ex) {
+//                // ignore
+//            }
+//        }
+//    }
     String defaultProgramName() {
         String result = this.imp.defaultProgramName();
         if (result == null || result.isEmpty()) {

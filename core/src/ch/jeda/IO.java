@@ -17,13 +17,9 @@
 package ch.jeda;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +29,6 @@ import java.util.List;
  * Provides a low-level input/output interface for Jeda.
  */
 public class IO {
-
-    private static final String HTTP_PREFIX = "http://";
-    private static final String NEW_RESOURCE_PREFIX = "res:";
-    private static final String OLD_RESOURCE_PREFIX = ":";
 
     public static void err(final String messageKey, Object... args) {
         System.err.format(Helper.getMessage(messageKey), args);
@@ -59,7 +51,7 @@ public class IO {
     }
 
     static String[] loadTextFile(final String filePath) {
-        final InputStream in = openInputStream(filePath);
+        final InputStream in = Engine.getContext().openResource(filePath);
         if (in == null) {
             return null;
         }
@@ -83,71 +75,6 @@ public class IO {
             }
             catch (IOException ex) {
                 // ignore
-            }
-        }
-    }
-
-    static InputStream openInputStream(final String filePath) {
-        if (filePath == null) {
-            throw new NullPointerException("filePath");
-        }
-
-        if (filePath.startsWith(NEW_RESOURCE_PREFIX)) {
-            return openResourceInputStream(filePath, NEW_RESOURCE_PREFIX.length());
-        }
-        else if (filePath.startsWith(OLD_RESOURCE_PREFIX)) {
-            return openResourceInputStream(filePath, OLD_RESOURCE_PREFIX.length());
-        }
-        else if (filePath.startsWith(HTTP_PREFIX)) {
-            return openRemoteInputStream(filePath);
-        }
-        else {
-            return openFileInputStream(filePath);
-        }
-    }
-
-    private static InputStream openFileInputStream(final String filePath) {
-        try {
-            return new FileInputStream(filePath);
-        }
-        catch (final FileNotFoundException ex) {
-            err(ex, "jeda.file.error.not-found", filePath);
-            return null;
-        }
-    }
-
-    private static InputStream openRemoteInputStream(final String filePath) {
-        try {
-            return new URL(filePath).openStream();
-        }
-        catch (final MalformedURLException ex) {
-            err(ex, "jeda.file.error.open", filePath);
-            return null;
-        }
-        catch (final IOException ex) {
-            err(ex, "jeda.file.error.open", filePath);
-            return null;
-        }
-
-    }
-
-    private static InputStream openResourceInputStream(final String filePath, final int prefixLength) {
-        URL url = Thread.currentThread().getContextClassLoader().getResource(filePath.substring(prefixLength));
-        if (url == null) {
-            url = IO.class.getClassLoader().getResource(filePath.substring(prefixLength));
-        }
-
-        if (url == null) {
-            err("jeda.file.error.not-found", filePath);
-            return null;
-        }
-        else {
-            try {
-                return url.openStream();
-            }
-            catch (final IOException ex) {
-                err(ex, "jeda.file.error.open", filePath);
-                return null;
             }
         }
     }

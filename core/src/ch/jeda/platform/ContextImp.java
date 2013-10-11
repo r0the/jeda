@@ -29,7 +29,9 @@ public interface ContextImp {
 
     Class<?>[] loadClasses() throws Exception;
 
-    ImageImp loadImageImp(InputStream in) throws Exception;
+    ImageImp loadImageImp(String path);
+
+    InputStream openResource(String path);
 
     void showInputRequest(InputRequest inputRequest);
 

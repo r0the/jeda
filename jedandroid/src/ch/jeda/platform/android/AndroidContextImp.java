@@ -17,8 +17,6 @@
 package ch.jeda.platform.android;
 
 import android.app.Activity;
-import android.app.Application;
-import android.graphics.BitmapFactory;
 import android.view.WindowManager;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ContextImp;
@@ -26,11 +24,7 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
-import dalvik.system.DexFile;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
 class AndroidContextImp implements ContextImp {
 
@@ -54,36 +48,15 @@ class AndroidContextImp implements ContextImp {
      */
     @Override
     public Class<?>[] loadClasses() throws Exception {
-        final List<Class<?>> result = new ArrayList<Class<?>>();
-        final Application app = this.activity.getApplication();
-        final String apkName = app.getPackageManager().getApplicationInfo(app.getPackageName(), 0).sourceDir;
-        final DexFile dx = new DexFile(apkName);
-        final Enumeration<String> e = dx.entries();
-        while (e.hasMoreElements()) {
-            final String resourceName = e.nextElement();
-            if (!resourceName.contains("$")) {
-                try {
-                    // Try to load class with system class loader
-                    result.add(ClassLoader.getSystemClassLoader().loadClass(resourceName));
-                }
-                catch (ClassNotFoundException ex) {
-                    try {
-                        // Try to load class with class loader of current context
-                        result.add(Thread.currentThread().getContextClassLoader().loadClass(resourceName));
-                    }
-                    catch (ClassNotFoundException ex2) {
-                        // Ignore
-                    }
-                }
-            }
-        }
-
-        return result.toArray(new Class<?>[result.size()]);
+        return Resources.loadClasses(this.activity.getApplication());
     }
 
-    @Override
-    public ImageImp loadImageImp(final InputStream in) throws Exception {
-        return new AndroidImageImp(BitmapFactory.decodeStream(in));
+    public ImageImp loadImageImp(final String path) {
+        return Resources.openImage(path);
+    }
+
+    public InputStream openResource(final String path) {
+        return Resources.openInputStream(path);
     }
 
     @Override

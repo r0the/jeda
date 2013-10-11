@@ -23,14 +23,12 @@ import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
 import java.io.InputStream;
-import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 class JavaContextImp implements ContextImp {
 
     private final String defaultProgramName;
-    private final ResourceFinder resourceFinder;
     private final WindowManager windowManager;
 
     @Override
@@ -45,12 +43,17 @@ class JavaContextImp implements ContextImp {
 
     @Override
     public Class<?>[] loadClasses() throws Exception {
-        return this.resourceFinder.loadClasses();
+        return Resources.loadClasses();
     }
 
     @Override
-    public ImageImp loadImageImp(final InputStream in) throws Exception {
-        return new JavaImageImp(ImageIO.read(in));
+    public ImageImp loadImageImp(final String path) {
+        return Resources.openImage(path);
+    }
+
+    @Override
+    public InputStream openResource(final String path) {
+        return Resources.openInputStream(path);
     }
 
     @Override
@@ -87,7 +90,6 @@ class JavaContextImp implements ContextImp {
             this.defaultProgramName = null;
         }
 
-        this.resourceFinder = new ResourceFinder();
         this.windowManager = new WindowManager();
     }
 
