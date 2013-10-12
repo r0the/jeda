@@ -143,7 +143,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     }
 
     @Override
-    int getOrientation() {
+    int getOrientation(final int currentOrientation) {
         if (this.features.contains(WindowFeature.OrientationLandscape)) {
             return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         }
@@ -151,7 +151,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
             return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         }
         else {
-            return ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
+            return currentOrientation;
         }
     }
 

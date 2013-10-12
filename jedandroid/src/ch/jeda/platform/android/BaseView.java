@@ -34,8 +34,8 @@ class BaseView extends RelativeLayout {
         this.setLayoutParams(createFillLayout());
     }
 
-    int getOrientation() {
-        return ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+    int getOrientation(final int currentOrientation) {
+        return ActivityInfo.SCREEN_ORIENTATION_USER;
     }
 
     final String getTitle() {
