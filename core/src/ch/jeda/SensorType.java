@@ -14,18 +14,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.event;
+package ch.jeda;
 
-public enum EventType {
+public enum SensorType {
 
-    ACTION,
-    KEY_DOWN,
-    KEY_TYPED,
-    KEY_UP,
-    POINTER_DOWN,
-    POINTER_MOVED,
-    POINTER_UP,
-    SENSOR,
-    TICK,
-    WINDOW_FOCUS_LOST
+    Acceleration, Gravity, LinearAcceleration, MagneticField
 }

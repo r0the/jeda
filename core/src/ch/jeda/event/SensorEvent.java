@@ -16,16 +16,36 @@
  */
 package ch.jeda.event;
 
-public enum EventType {
+import ch.jeda.SensorType;
 
-    ACTION,
-    KEY_DOWN,
-    KEY_TYPED,
-    KEY_UP,
-    POINTER_DOWN,
-    POINTER_MOVED,
-    POINTER_UP,
-    SENSOR,
-    TICK,
-    WINDOW_FOCUS_LOST
+public class SensorEvent extends Event {
+
+    private SensorType sensorType;
+    private float x;
+    private float y;
+    private float z;
+
+    public SensorEvent(final Object source, final SensorType sensorType, float x, final float y, final float z) {
+        super(source, EventType.SENSOR);
+        this.sensorType = sensorType;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public SensorType getSensorType() {
+        return this.sensorType;
+    }
+
+    public float getX() {
+        return this.x;
+    }
+
+    public float getY() {
+        return this.y;
+    }
+
+    public float getZ() {
+        return this.z;
+    }
 }

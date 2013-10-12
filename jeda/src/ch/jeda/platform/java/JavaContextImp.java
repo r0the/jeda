@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.SensorType;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ContextImp;
 import ch.jeda.platform.ImageImp;
@@ -42,6 +43,16 @@ class JavaContextImp implements ContextImp {
     }
 
     @Override
+    public boolean isSensorAvailable(final SensorType sensorType) {
+        return false;
+    }
+
+    @Override
+    public boolean isSensorEnabled(final SensorType sensorType) {
+        return false;
+    }
+
+    @Override
     public Class<?>[] loadClasses() throws Exception {
         return Resources.loadClasses();
     }
@@ -54,6 +65,11 @@ class JavaContextImp implements ContextImp {
     @Override
     public InputStream openResource(final String path) {
         return Resources.openInputStream(path);
+    }
+
+    @Override
+    public void setSensorEnabled(final SensorType sensorType, final boolean enabled) {
+        // ignore
     }
 
     @Override

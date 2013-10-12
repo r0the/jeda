@@ -19,6 +19,7 @@ package ch.jeda.platform.android;
 import android.app.Activity;
 import android.content.Context;
 import ch.jeda.Engine;
+import ch.jeda.event.Event;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
@@ -40,6 +41,22 @@ class ViewManager {
         this.inputView = new InputView(this);
         this.logView = new LogView(this);
         this.selectionView = new SelectionView(this);
+    }
+
+    /**
+     * Adds an event to be dispatched by the top view, if available.
+     *
+     * @param event
+     */
+    void addEvent(final Event event) {
+        if (this.visibleViews.isEmpty()) {
+            return;
+        }
+
+        final BaseView topView = this.visibleViews.peek();
+        if (topView instanceof CanvasView) {
+            ((CanvasView) topView).addEvent(event);
+        }
     }
 
     /**

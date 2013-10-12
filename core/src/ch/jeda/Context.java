@@ -128,8 +128,20 @@ public final class Context {
         this.properties.loadFromSystem();
     }
 
+    boolean isSensorAvailable(final SensorType sensorType) {
+        return this.imp.isSensorAvailable(sensorType);
+    }
+
+    boolean isSensorEnabled(final SensorType sensorType) {
+        return this.imp.isSensorEnabled(sensorType);
+    }
+
     Class<?>[] loadClasses() throws Exception {
         return this.imp.loadClasses();
+    }
+
+    void setSensorEnabled(final SensorType sensorType, final boolean enabled) {
+        this.imp.setSensorEnabled(sensorType, enabled);
     }
 
     void showInputRequest(final InputRequest inputRequest) {

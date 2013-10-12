@@ -129,6 +129,10 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         this.addView(this.surfaceView);
     }
 
+    void addEvent(final Event event) {
+        this.events.add(event);
+    }
+
     Event[] fetchEvents() {
         final Event[] result = this.events.toArray(new Event[this.events.size()]);
         this.events.clear();

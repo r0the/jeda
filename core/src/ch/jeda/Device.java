@@ -14,18 +14,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.event;
+package ch.jeda;
 
-public enum EventType {
+public class Device {
 
-    ACTION,
-    KEY_DOWN,
-    KEY_TYPED,
-    KEY_UP,
-    POINTER_DOWN,
-    POINTER_MOVED,
-    POINTER_UP,
-    SENSOR,
-    TICK,
-    WINDOW_FOCUS_LOST
+    public static void disableSensor(final SensorType sensorType) {
+        Engine.getContext().setSensorEnabled(sensorType, false);
+    }
+
+    public static void enableSensor(final SensorType sensorType) {
+        Engine.getContext().setSensorEnabled(sensorType, true);
+    }
+
+    public static boolean isSensorAvailable(final SensorType sensorType) {
+        return Engine.getContext().isSensorAvailable(sensorType);
+    }
+
+    public static boolean isSensorEnabled(final SensorType sensorType) {
+        return Engine.getContext().isSensorEnabled(sensorType);
+    }
 }

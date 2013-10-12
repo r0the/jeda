@@ -21,6 +21,8 @@ import ch.jeda.event.ActionListener;
 import ch.jeda.event.Event;
 import ch.jeda.event.EventSource;
 import ch.jeda.event.EventType;
+import ch.jeda.event.SensorEvent;
+import ch.jeda.event.SensorListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +42,8 @@ class EventDispatcher {
     private final List<PointerDownListener> pointerDownListeners;
     private final List<PointerMovedListener> pointerMovedListeners;
     private final List<PointerUpListener> pointerUpListeners;
-    private final List<TickListener> tickListener;
+    private final List<SensorListener> sensorListeners;
+    private final List<TickListener> tickListeners;
     private final List<WindowFocusLostListener> windowFocusLostListeners;
 
     EventDispatcher() {
@@ -55,7 +58,8 @@ class EventDispatcher {
         this.pointerDownListeners = new ArrayList<PointerDownListener>();
         this.pointerMovedListeners = new ArrayList<PointerMovedListener>();
         this.pointerUpListeners = new ArrayList<PointerUpListener>();
-        this.tickListener = new ArrayList<TickListener>();
+        this.sensorListeners = new ArrayList<SensorListener>();
+        this.tickListeners = new ArrayList<TickListener>();
         this.windowFocusLostListeners = new ArrayList<WindowFocusLostListener>();
     }
 
@@ -76,8 +80,8 @@ class EventDispatcher {
 
     void dispatchTick(final float duration, final float frameRate) {
         final TickEvent event = new TickEvent(WINDOW, EventType.TICK, duration, frameRate);
-        for (int j = 0; j < this.tickListener.size(); ++j) {
-            this.tickListener.get(j).onTick(event);
+        for (int j = 0; j < this.tickListeners.size(); ++j) {
+            this.tickListeners.get(j).onTick(event);
         }
     }
 
@@ -128,6 +132,12 @@ class EventDispatcher {
                 case POINTER_UP:
                     for (int j = 0; j < this.pointerUpListeners.size(); ++j) {
                         this.pointerUpListeners.get(j).onPointerUp((PointerEvent) event);
+                    }
+
+                    break;
+                case SENSOR:
+                    for (int j = 0; j < this.sensorListeners.size(); ++j) {
+                        this.sensorListeners.get(j).onSensorChanged((SensorEvent) event);
                     }
 
                     break;
@@ -190,8 +200,12 @@ class EventDispatcher {
             this.pointerUpListeners.add((PointerUpListener) listener);
         }
 
+        if (listener instanceof SensorListener) {
+            this.sensorListeners.add((SensorListener) listener);
+        }
+
         if (listener instanceof TickListener) {
-            this.tickListener.add((TickListener) listener);
+            this.tickListeners.add((TickListener) listener);
         }
 
         if (listener instanceof WindowFocusLostListener) {
@@ -229,8 +243,12 @@ class EventDispatcher {
             this.pointerUpListeners.remove((PointerUpListener) listener);
         }
 
+        if (listener instanceof SensorListener) {
+            this.sensorListeners.remove((SensorListener) listener);
+        }
+
         if (listener instanceof TickListener) {
-            this.tickListener.remove((TickListener) listener);
+            this.tickListeners.remove((TickListener) listener);
         }
 
         if (listener instanceof WindowFocusLostListener) {

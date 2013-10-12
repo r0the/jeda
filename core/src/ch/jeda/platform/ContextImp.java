@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform;
 
+import ch.jeda.SensorType;
 import java.io.InputStream;
 
 /**
@@ -27,11 +28,17 @@ public interface ContextImp {
 
     String defaultProgramName();
 
+    boolean isSensorAvailable(SensorType sensorType);
+
+    boolean isSensorEnabled(SensorType sensorType);
+
     Class<?>[] loadClasses() throws Exception;
 
     ImageImp loadImageImp(String path);
 
     InputStream openResource(String path);
+
+    void setSensorEnabled(SensorType sensorType, boolean enabled);
 
     void showInputRequest(InputRequest inputRequest);
 

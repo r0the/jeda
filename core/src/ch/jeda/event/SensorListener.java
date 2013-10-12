@@ -16,16 +16,7 @@
  */
 package ch.jeda.event;
 
-public enum EventType {
+public interface SensorListener {
 
-    ACTION,
-    KEY_DOWN,
-    KEY_TYPED,
-    KEY_UP,
-    POINTER_DOWN,
-    POINTER_MOVED,
-    POINTER_UP,
-    SENSOR,
-    TICK,
-    WINDOW_FOCUS_LOST
+    void onSensorChanged(SensorEvent event);
 }

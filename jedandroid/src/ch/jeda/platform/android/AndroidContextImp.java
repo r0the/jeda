@@ -18,6 +18,7 @@ package ch.jeda.platform.android;
 
 import android.app.Activity;
 import android.view.WindowManager;
+import ch.jeda.SensorType;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ContextImp;
 import ch.jeda.platform.ImageImp;
@@ -29,6 +30,7 @@ import java.io.InputStream;
 class AndroidContextImp implements ContextImp {
 
     private final Activity activity;
+    private final SensorManager sensorManager;
     private final ViewManager viewManager;
 
     @Override
@@ -43,9 +45,14 @@ class AndroidContextImp implements ContextImp {
         return null;
     }
 
-    /**
-     * Iterates through the entries of the application's DEX file to find all classes.
-     */
+    public boolean isSensorAvailable(final SensorType sensorType) {
+        return this.sensorManager.isAvailable(sensorType);
+    }
+
+    public boolean isSensorEnabled(final SensorType sensorType) {
+        return this.sensorManager.isEnabled(sensorType);
+    }
+
     @Override
     public Class<?>[] loadClasses() throws Exception {
         return Resources.loadClasses(this.activity.getApplication());
@@ -57,6 +64,10 @@ class AndroidContextImp implements ContextImp {
 
     public InputStream openResource(final String path) {
         return Resources.openInputStream(path);
+    }
+
+    public void setSensorEnabled(final SensorType sensorType, boolean enabled) {
+        this.sensorManager.setEnabled(sensorType, enabled);
     }
 
     @Override
@@ -86,9 +97,10 @@ class AndroidContextImp implements ContextImp {
 
     AndroidContextImp(Activity activity) {
         this.activity = activity;
+        this.viewManager = new ViewManager(activity);
+        this.sensorManager = new SensorManager(activity, this.viewManager);
         // Adjust window when soft keyboard is shown.
         this.activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        this.viewManager = new ViewManager(activity);
     }
 
     void closeView() {
