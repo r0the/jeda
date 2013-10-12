@@ -19,9 +19,8 @@ package ch.jeda.ui;
 import java.io.Serializable;
 
 /**
- * Represents a color in the RGBA color model. A color is defined by three
- * values for the red, green, and blue part, and an alpha value defining the
- * color's opacity. Each value can be a number between 0 and 255.
+ * Represents a color in the RGBA color model. A color is defined by three values for the red, green, and blue part, and
+ * an alpha value defining the color's opacity. Each value can be a number between 0 and 255.
  *
  * @since 1
  */
@@ -127,6 +126,12 @@ public final class Color implements Serializable {
      * @since 1
      */
     public static final Color YELLOW = new Color(255, 255, 0);
+    /**
+     * The Jeda color. Same as <tt>new Color(112, 208, 80)</tt>.
+     *
+     * @since 1
+     */
+    public static final Color JEDA = new Color(112, 208, 80);
     private final int value;
 
     /**
@@ -139,16 +144,14 @@ public final class Color implements Serializable {
     }
 
     /**
-     * Constructs an RGB color. The values for the red, green, and blue
-     * components of the color can be specified. All values must be in the range
-     * from 0 to 255.
+     * Constructs an RGB color. The values for the red, green, and blue components of the color can be specified. All
+     * values must be in the range from 0 to 255.
      *
      * @param red color's red component
      * @param green color's green component
      * @param blue color's blue component
      *
-     * @throws IllegalArgumentException if not all component values are valid
-     * (in the range from 0 to 255).
+     * @throws IllegalArgumentException if not all component values are valid (in the range from 0 to 255).
      * @since 1
      */
     public Color(final int red, final int green, final int blue) {
@@ -156,17 +159,15 @@ public final class Color implements Serializable {
     }
 
     /**
-     * Constructs an RGBA color. The values for the red, green, blue, and alpha
-     * components of the color can be specified. All values must be in the range
-     * from 0 to 255.
+     * Constructs an RGBA color. The values for the red, green, blue, and alpha components of the color can be
+     * specified. All values must be in the range from 0 to 255.
      *
      * @param red color's red component
      * @param green color's green component
      * @param blue color's blue component
      * @param alpha color's alpha component (opacity)
      *
-     * @throws IllegalArgumentException if not all component values are valid
-     * (in the range of 0 to 255).
+     * @throws IllegalArgumentException if not all component values are valid (in the range of 0 to 255).
      * @since 1
      */
     public Color(final int red, final int green, final int blue,
@@ -260,11 +261,10 @@ public final class Color implements Serializable {
     }
 
     /**
-     * Returns a text representation of the color. The returned text is a CSS 3
-     * color specification of the color. It has the form <tt>"rgb(R, G, B)"</tt>
-     * or <tt>"rgba(R, G, B, A)"</tt> where R, G, and B are the red, green, and
-     * blue components ranging from 0 to 255 and A ist the alpha component
-     * ranging from 0 to 1.
+     * Returns a text representation of the color. The returned text is a CSS 3 color specification of the color. It has
+     * the form <tt>"rgb(R, G, B)"</tt>
+     * or <tt>"rgba(R, G, B, A)"</tt> where R, G, and B are the red, green, and blue components ranging from 0 to 255
+     * and A ist the alpha component ranging from 0 to 1.
      *
      * @return CSS 3 color specification of the color
      */
