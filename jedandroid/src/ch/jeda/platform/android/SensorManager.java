@@ -19,6 +19,7 @@ package ch.jeda.platform.android;
 import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
+import android.view.Surface;
 import ch.jeda.SensorType;
 import ch.jeda.event.SensorEvent;
 import java.util.EnumMap;
@@ -105,8 +106,29 @@ class SensorManager {
 
         public void onSensorChanged(final android.hardware.SensorEvent event) {
             final SensorInfo sensorInfo = this.sensorReserveMap.get(event.sensor);
-            this.viewManager.addEvent(new SensorEvent(sensorInfo, sensorInfo.getSensorType(),
-                                                      -event.values[0], event.values[1], event.values[2]));
+            float x = 0f;
+            float y = 0f;
+            final float z = event.values[2];
+            switch (this.viewManager.getRotation()) {
+                case Surface.ROTATION_0:
+                    x = -event.values[0];
+                    y = event.values[1];
+                    break;
+                case Surface.ROTATION_90:
+                    x = event.values[1];
+                    y = event.values[0];
+                    break;
+                case Surface.ROTATION_180:
+                    x = event.values[0];
+                    y = -event.values[1];
+                    break;
+                case Surface.ROTATION_270:
+                    x = -event.values[1];
+                    y = -event.values[0];
+                    break;
+            }
+
+            this.viewManager.addEvent(new SensorEvent(sensorInfo, sensorInfo.getSensorType(), x, y, z));
         }
 
         public void onAccuracyChanged(final Sensor sensor, final int accuracy) {

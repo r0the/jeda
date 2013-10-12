@@ -72,10 +72,6 @@ class ViewManager {
         }
     }
 
-    Context getContext() {
-        return this.activity;
-    }
-
     void closing(final BaseView view) {
         this.visibleViews.remove(view);
         if (this.visibleViews.empty()) {
@@ -84,6 +80,14 @@ class ViewManager {
         else {
             this.activateView(this.visibleViews.peek());
         }
+    }
+
+    Context getContext() {
+        return this.activity;
+    }
+
+    int getRotation() {
+        return this.activity.getWindowManager().getDefaultDisplay().getRotation();
     }
 
     void show(final BaseView view) {
