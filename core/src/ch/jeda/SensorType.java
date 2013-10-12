@@ -16,7 +16,32 @@
  */
 package ch.jeda;
 
+/**
+ * Defines available sensor types.
+ *
+ * @since 1
+ */
 public enum SensorType {
 
-    Acceleration, Gravity, LinearAcceleration, MagneticField
+    /**
+     * Acceleration sensor. An acceleration sensor measures the acceleration applied to the device, including the force
+     * of gravity.
+     *
+     * @since 1
+     */
+    Acceleration,
+    /**
+     * Gravity sensor. The gravity sensor provides a three dimensional vector indicating the direction and magnitude of
+     * gravity.
+     */
+    Gravity,
+    /**
+     * Linear acceleration sensor. The linear acceleration sensor provides you with a three-dimensional vector
+     * representing acceleration along each device axis, excluding gravity.
+     */
+    LinearAcceleration,
+    /**
+     * Magnetic field sensor. The magnetic field sensor measures the magnetic field.
+     */
+    MagneticField
 }

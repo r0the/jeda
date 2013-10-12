@@ -16,6 +16,10 @@
  */
 package ch.jeda.event;
 
+/**
+ *
+ * @author stefan
+ */
 public enum EventType {
 
     ACTION,
