@@ -17,15 +17,14 @@
 package ch.jeda.event;
 
 /**
- * Represents an external input for the application. An event results from an
- * external action such as the user pressing a key or moving the mouse, or a
- * sensor registering a change.
+ * Represents an external input for the application. An event results from an external action such as the user pressing
+ * a key or moving the mouse, or a sensor registering a change.
  *
  * @since 1
  */
 public class Event {
 
-    private final EventSource source;
+    private final Object source;
     private final EventType type;
 
     /**
@@ -33,11 +32,11 @@ public class Event {
      *
      * @param source the event source that generates the event
      * @param type the type of the event
-     * @throws NullPointerException if <tt>type</tt> is <tt>null</tt>
+     * @throws NullPointerException if <tt>type</tt> or <tt>source</tt> is <tt>null</tt>
      *
      * @since 1
      */
-    public Event(final EventSource source, final EventType type) {
+    public Event(final Object source, final EventType type) {
         if (source == null) {
             throw new NullPointerException("inputDevice");
         }
@@ -56,7 +55,7 @@ public class Event {
      *
      * @since 1
      */
-    public EventSource getSource() {
+    public Object getSource() {
         return this.source;
     }
 

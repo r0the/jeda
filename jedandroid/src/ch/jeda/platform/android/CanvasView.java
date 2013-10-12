@@ -24,7 +24,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import ch.jeda.event.Event;
-import ch.jeda.event.EventSource;
 import ch.jeda.event.EventType;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.Key;
@@ -77,18 +76,18 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
             case MotionEvent.ACTION_POINTER_DOWN:
                 index = event.getActionIndex();
                 this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_DOWN, event.getPointerId(index),
-                    event.getX(index), event.getY(index)));
+                                                 event.getX(index), event.getY(index)));
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 index = event.getActionIndex();
                 this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_UP, event.getPointerId(index),
-                    event.getX(index), event.getY(index)));
+                                                 event.getX(index), event.getY(index)));
                 break;
             case MotionEvent.ACTION_MOVE:
                 for (index = 0; index < event.getPointerCount(); ++index) {
                     this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_MOVED, event.getPointerId(index),
-                        event.getX(index), event.getY(index)));
+                                                     event.getX(index), event.getY(index)));
                 }
 
                 break;
@@ -179,7 +178,7 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         final android.view.InputDevice device = event.getDevice();
         final int id = device.getId();
         if (!INPUT_DEVICE_MAP.containsKey(id)) {
-            INPUT_DEVICE_MAP.put(id, new EventSource(id, device.getName()));
+            INPUT_DEVICE_MAP.put(id, new EventSource(device.getName()));
         }
 
         return INPUT_DEVICE_MAP.get(id);
@@ -294,5 +293,19 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
 //        result.put(android.view.KeyEvent.KEYCODE_NUMPAD_SUBTRACT, Key.NUMPAD_SUBTRACT);
 //        result.put(android.view.KeyEvent.KEYCODE_SCROLL_LOCK, Key.SCROLL_LOCK);
         return result;
+    }
+
+    private static class EventSource {
+
+        private final String name;
+
+        public EventSource(final String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return this.name;
+        }
     }
 }

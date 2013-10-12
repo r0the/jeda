@@ -56,7 +56,7 @@ public abstract class AbstractButton implements KeyDownListener, KeyUpListener, 
     @Override
     public final void onKeyUp(KeyEvent event) {
         if (this.pressedKeys.remove(event.getKey())) {
-            this.window.sendAction(this.action);
+            this.window.sendAction(this, this.action);
         }
     }
 
@@ -83,7 +83,7 @@ public abstract class AbstractButton implements KeyDownListener, KeyUpListener, 
         if (this.pointerId != null && event.getPointerId() == this.pointerId) {
             this.pointerId = null;
             if (this.contains(event.getX(), event.getY())) {
-                this.window.sendAction(this.action);
+                this.window.sendAction(this, this.action);
             }
         }
     }

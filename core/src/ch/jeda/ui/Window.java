@@ -201,8 +201,8 @@ public class Window extends Canvas {
         this.eventDispatcher.removeListener(listener);
     }
 
-    public void sendAction(final String name) {
-        this.eventDispatcher.addAction(name);
+    public void sendAction(final Object source, final String name) {
+        this.eventDispatcher.addAction(source, name);
     }
 
     /**
@@ -304,7 +304,9 @@ public class Window extends Canvas {
                 this.frequencyMeter.count();
                 this.events.prepare();
                 this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
-                this.eventDispatcher.dispatchTick(this.timer.getLastStepDuration(), this.frequencyMeter.getFrequency());
+                final TickEvent event = new TickEvent(this, this.timer.getLastStepDuration(),
+                                                      this.frequencyMeter.getFrequency());
+                this.eventDispatcher.dispatchTick(event);
                 this.drawables.draw(this);
                 this.imp.update();
                 this.timer.tick();

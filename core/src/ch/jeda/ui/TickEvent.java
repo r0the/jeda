@@ -17,7 +17,6 @@
 package ch.jeda.ui;
 
 import ch.jeda.event.Event;
-import ch.jeda.event.EventSource;
 import ch.jeda.event.EventType;
 
 /**
@@ -30,8 +29,8 @@ public class TickEvent extends Event {
     private final float duration;
     private final float frameRate;
 
-    public TickEvent(final EventSource source, final EventType type, final float duration, final float frameRate) {
-        super(source, type);
+    public TickEvent(final Object source, final float duration, final float frameRate) {
+        super(source, EventType.TICK);
         this.duration = duration;
         this.frameRate = frameRate;
     }

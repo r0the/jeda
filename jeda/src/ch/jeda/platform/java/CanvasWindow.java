@@ -17,7 +17,6 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.event.Event;
-import ch.jeda.event.EventSource;
 import ch.jeda.event.EventType;
 import ch.jeda.ui.Key;
 import ch.jeda.ui.KeyEvent;
@@ -56,11 +55,10 @@ class CanvasWindow extends BaseWindow implements FocusListener,
                                                  MouseWheelListener {
 
     private static final int KEY_RELEASE_TIMEOUT = 2;
-    private static final int UPDATE_TIMEOUT = 100;
-    private static final EventSource KEYBOARD = new EventSource(0, "Keyboard");
+    private static final EventSource KEYBOARD = new EventSource("Keyboard");
     private static final boolean LINUX = System.getProperty("os.name").endsWith("Linux");
-    private static final EventSource MOUSE = new EventSource(1, "Mouse");
-    private static final EventSource WINDOW = new EventSource(2, "Window");
+    private static final EventSource MOUSE = new EventSource("Mouse");
+    private static final EventSource WINDOW = new EventSource("Window");
     private static final int POINTER_ID = 0;
     private static final Map<Integer, Key> BUTTON_MAP = initButtonMap();
     private static final Map<Integer, Map<Integer, Key>> KEY_MAP = initKeyMap();
@@ -500,6 +498,20 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         void cancel() {
             this.ok = false;
             this.timer.stop();
+        }
+    }
+
+    private static class EventSource {
+
+        private final String name;
+
+        public EventSource(final String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return this.name;
         }
     }
 }

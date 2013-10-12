@@ -19,7 +19,6 @@ package ch.jeda.ui;
 import ch.jeda.event.ActionEvent;
 import ch.jeda.event.ActionListener;
 import ch.jeda.event.Event;
-import ch.jeda.event.EventSource;
 import ch.jeda.event.EventType;
 import ch.jeda.event.SensorEvent;
 import ch.jeda.event.SensorListener;
@@ -30,7 +29,6 @@ import java.util.Set;
 
 class EventDispatcher {
 
-    private static final EventSource WINDOW = new EventSource(2, "Window");
     private final List<ActionEvent> actionEvents;
     private final List<ActionListener> actionListeners;
     private final List<KeyDownListener> keyDownListeners;
@@ -63,8 +61,8 @@ class EventDispatcher {
         this.windowFocusLostListeners = new ArrayList<WindowFocusLostListener>();
     }
 
-    void addAction(final String action) {
-        this.actionEvents.add(new ActionEvent(WINDOW, action));
+    void addAction(final Object source, final String action) {
+        this.actionEvents.add(new ActionEvent(source, action));
     }
 
     final void addListener(final Object listener) {
@@ -78,8 +76,7 @@ class EventDispatcher {
         }
     }
 
-    void dispatchTick(final float duration, final float frameRate) {
-        final TickEvent event = new TickEvent(WINDOW, EventType.TICK, duration, frameRate);
+    void dispatchTick(final TickEvent event) {
         for (int j = 0; j < this.tickListeners.size(); ++j) {
             this.tickListeners.get(j).onTick(event);
         }

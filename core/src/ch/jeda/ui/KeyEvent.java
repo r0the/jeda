@@ -17,7 +17,6 @@
 package ch.jeda.ui;
 
 import ch.jeda.event.Event;
-import ch.jeda.event.EventSource;
 import ch.jeda.event.EventType;
 
 /**
@@ -31,18 +30,15 @@ public final class KeyEvent extends Event {
     private final char keyChar;
     private final int repeatCount;
 
-    public KeyEvent(final EventSource source, final EventType type,
-                    final Key key) {
+    public KeyEvent(final Object source, final EventType type, final Key key) {
         this(source, type, key, '\0', 0);
     }
 
-    public KeyEvent(final EventSource source, final EventType type,
-                    final Key key, int repeatCount) {
+    public KeyEvent(final Object source, final EventType type, final Key key, int repeatCount) {
         this(source, type, key, '\0', repeatCount);
     }
 
-    public KeyEvent(final EventSource source, final EventType type,
-                    final char keyChar) {
+    public KeyEvent(final Object source, final EventType type, final char keyChar) {
         this(source, type, Key.UNDEFINED, keyChar, 0);
     }
 
@@ -65,8 +61,7 @@ public final class KeyEvent extends Event {
         return this.repeatCount;
     }
 
-    private KeyEvent(final EventSource source, final EventType type,
-                     final Key key, final char keyChar, int repeatCount) {
+    private KeyEvent(final Object source, final EventType type, final Key key, final char keyChar, int repeatCount) {
         super(source, type);
         this.key = key;
         this.keyChar = keyChar;

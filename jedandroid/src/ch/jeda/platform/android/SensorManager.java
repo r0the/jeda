@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import ch.jeda.SensorType;
-import ch.jeda.event.EventSource;
 import ch.jeda.event.SensorEvent;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -28,7 +27,6 @@ import java.util.Map;
 
 class SensorManager {
 
-    private static final EventSource SENSOR = new EventSource(10, "Sensor");
     private final android.hardware.SensorManager imp;
     private final EnumMap<SensorType, Sensor> sensorMap;
     private final EnumMap<SensorType, SensorEventListener> sensorListenerMap;
@@ -108,7 +106,7 @@ class SensorManager {
         public void onSensorChanged(final android.hardware.SensorEvent event) {
             final SensorInfo sensorInfo = this.sensorReserveMap.get(event.sensor);
             this.viewManager.addEvent(new SensorEvent(sensorInfo, sensorInfo.getSensorType(),
-                -event.values[0], event.values[1], event.values[2]));
+                                                      -event.values[0], event.values[1], event.values[2]));
         }
 
         public void onAccuracyChanged(final Sensor sensor, final int accuracy) {

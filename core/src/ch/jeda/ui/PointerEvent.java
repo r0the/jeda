@@ -17,7 +17,6 @@
 package ch.jeda.ui;
 
 import ch.jeda.event.Event;
-import ch.jeda.event.EventSource;
 import ch.jeda.event.EventType;
 
 /**
@@ -32,11 +31,11 @@ public final class PointerEvent extends Event {
     private final float x;
     private final float y;
 
-    public PointerEvent(final EventSource source, final EventType type, final int pointerId) {
+    public PointerEvent(final Object source, final EventType type, final int pointerId) {
         this(source, type, pointerId, -1, -1);
     }
 
-    public PointerEvent(final EventSource source, final EventType type, final int pointerId,
+    public PointerEvent(final Object source, final EventType type, final int pointerId,
                         final float x, final float y) {
         super(source, type);
         this.pointerId = pointerId;

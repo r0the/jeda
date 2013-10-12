@@ -16,15 +16,11 @@
  */
 package ch.jeda.event;
 
-import ch.jeda.event.Event;
-import ch.jeda.event.EventSource;
-import ch.jeda.event.EventType;
-
 public class ActionEvent extends Event {
 
     private final String name;
 
-    public ActionEvent(final EventSource source, final String name) {
+    public ActionEvent(final Object source, final String name) {
         super(source, EventType.ACTION);
         this.name = name;
     }
