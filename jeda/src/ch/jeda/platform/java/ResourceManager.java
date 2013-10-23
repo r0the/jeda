@@ -31,36 +31,35 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import javax.imageio.ImageIO;
 
-class Resources {
+class ResourceManager {
 
     private static final String HTTP_PREFIX = "http://";
     private static final String NEW_RESOURCE_PREFIX = "res:";
     private static final String OLD_RESOURCE_PREFIX = ":";
     private static final ResourceFinder RESOURCE_FINDER = new ResourceFinder();
 
-    static Class<?>[] loadClasses() throws Exception {
+    static Class<?>[] loadClasses()
+        throws Exception {
         return RESOURCE_FINDER.loadClasses();
     }
 
     static ImageImp openImage(final String filePath) {
-        final InputStream in = openInputStream(filePath);
+        InputStream in = openInputStream(filePath);
         if (in == null) {
             return null;
         }
-
         try {
             return new JavaImageImp(ImageIO.read(in));
         }
-        catch (final Exception ex) {
-            IO.err(ex, "jeda.image.error.read", filePath);
+        catch (Exception ex) {
+            IO.err(ex, "jeda.image.error.read", new Object[]{filePath});
             return null;
         }
         finally {
             try {
                 in.close();
             }
-            catch (final IOException ex) {
-                // ignore
+            catch (IOException ex) {
             }
         }
     }
@@ -73,60 +72,72 @@ class Resources {
         if (filePath.startsWith(NEW_RESOURCE_PREFIX)) {
             return openResourceInputStream(filePath, NEW_RESOURCE_PREFIX.length());
         }
-        else if (filePath.startsWith(OLD_RESOURCE_PREFIX)) {
+
+        if (filePath.startsWith(OLD_RESOURCE_PREFIX)) {
             return openResourceInputStream(filePath, OLD_RESOURCE_PREFIX.length());
         }
-        else if (filePath.startsWith(HTTP_PREFIX)) {
+
+        if (filePath.startsWith(HTTP_PREFIX)) {
             return openRemoteInputStream(filePath);
         }
-        else {
-            return openFileInputStream(filePath);
-        }
+
+        return openFileInputStream(filePath);
     }
 
     private static InputStream openFileInputStream(final String filePath) {
         try {
             return new FileInputStream(filePath);
         }
-        catch (final FileNotFoundException ex) {
-            IO.err(ex, "jeda.file.error.not-found", filePath);
-            return null;
+        catch (FileNotFoundException ex) {
+            IO.err(ex, "jeda.file.error.not-found", new Object[]{filePath});
         }
+
+        return null;
     }
 
     private static InputStream openRemoteInputStream(final String filePath) {
         try {
             return new URL(filePath).openStream();
         }
-        catch (final MalformedURLException ex) {
-            IO.err(ex, "jeda.file.error.open", filePath);
+        catch (MalformedURLException ex) {
+            IO.err(ex, "jeda.file.error.open", new Object[]{filePath});
             return null;
         }
-        catch (final IOException ex) {
-            IO.err(ex, "jeda.file.error.open", filePath);
-            return null;
+        catch (IOException ex) {
+            IO.err(ex, "jeda.file.error.open", new Object[]{filePath});
         }
-
+        return null;
     }
 
     private static InputStream openResourceInputStream(final String filePath, final int prefixLength) {
-        URL url = Thread.currentThread().getContextClassLoader().getResource(filePath.substring(prefixLength));
+        String resourcePath = filePath.substring(prefixLength);
+        URL url = findResource("res/" + resourcePath);
         if (url == null) {
-            url = IO.class.getClassLoader().getResource(filePath.substring(prefixLength));
+            url = findResource(resourcePath);
         }
 
         if (url == null) {
-            IO.err("jeda.file.error.not-found", filePath);
+            IO.err("jeda.file.error.not-found", new Object[]{filePath});
             return null;
         }
+
+        try {
+            return url.openStream();
+        }
+        catch (IOException ex) {
+            IO.err(ex, "jeda.file.error.open", new Object[]{filePath});
+        }
+
+        return null;
+    }
+
+    private static URL findResource(final String resourcePath) {
+        URL result = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
+        if (result == null) {
+            return IO.class.getClassLoader().getResource(resourcePath);
+        }
         else {
-            try {
-                return url.openStream();
-            }
-            catch (final IOException ex) {
-                IO.err(ex, "jeda.file.error.open", filePath);
-                return null;
-            }
+            return result;
         }
     }
 
@@ -148,7 +159,7 @@ class Resources {
         }
 
         private void checkDirectory(final File directory, final String directoryName) {
-            for (File file : directory.listFiles()) {
+            for (final File file : directory.listFiles()) {
                 this.checkResource(file, directoryName);
             }
         }

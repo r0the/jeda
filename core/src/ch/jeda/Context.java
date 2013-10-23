@@ -21,7 +21,6 @@ import ch.jeda.platform.ContextImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
-import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.WindowFeature;
@@ -36,11 +35,11 @@ import java.util.EnumSet;
  */
 public final class Context {
 
-    private static final String DEFAULT_IMAGE_PATH = "res:ch/jeda/resources/logo-64x64.png";
+    private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
     private static final String DEFAULT_PROGRAM_PROPERTY = "jeda.default.program";
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = "res:jeda.properties";
-    private static final String JEDA_PLATFORM_PROPERTIES_FILE = "res:ch/jeda/platform/jeda.properties";
-    private static final String JEDA_SYSTEM_PROPERTIES_FILE = "res:ch/jeda/jeda.properties";
+    private static final String JEDA_PLATFORM_PROPERTIES_FILE = "res:jeda/platform.properties";
+    private static final String JEDA_SYSTEM_PROPERTIES_FILE = "res:jeda/system.properties";
     private final ContextImp imp;
     private ImageImp defaultImage;
     private Properties properties;

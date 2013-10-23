@@ -54,17 +54,17 @@ class JavaContextImp implements ContextImp {
 
     @Override
     public Class<?>[] loadClasses() throws Exception {
-        return Resources.loadClasses();
+        return ResourceManager.loadClasses();
     }
 
     @Override
     public ImageImp loadImageImp(final String path) {
-        return Resources.openImage(path);
+        return ResourceManager.openImage(path);
     }
 
     @Override
     public InputStream openResource(final String path) {
-        return Resources.openInputStream(path);
+        return ResourceManager.openInputStream(path);
     }
 
     @Override
