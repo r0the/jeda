@@ -6,14 +6,11 @@
     <!-- Properties -->
 
     <property name="jeda.core.dir" value="../core"/>
-    <property name="jeda.nbjeda.dir" value="../nbjeda/plugin"/>
-    <property name="jeda.library.release.dir" value="${jeda.nbjeda.dir}/release"/>
-    <property name="jeda.source.jar" value="${jeda.library.release.dir}/sources/jeda-src.jar"/>
-    <property name="jeda.javadoc.zip" value="${jeda.library.release.dir}/docs/jeda-api.zip"/>
+    <property name="jeda.nbjeda.dir" value="../nbjeda7.3/jeda"/>
 
     <target name="-post-jar">
         <!-- Load jeda version -->
-        <property file="${jeda.core.dir}/src/ch/jeda/jeda.properties"/>
+        <property file="${jeda.core.dir}/src/res/jeda/system.properties"/>
 
         <!-- Add core library to jar -->
         <jar update="true" jarfile="${dist.jar}">
@@ -30,11 +27,7 @@
         </jar>
 
         <!-- BEGIN Update Jeda Library in NBJeda -->
-        <copy file="${dist.jar}" tofile="${jeda.library.release.dir}/lib/jeda.jar"/>
-        <zip basedir="${jeda.core.dir}/dist/javadoc" destfile="${jeda.javadoc.zip}"/>
-
-        <zip basedir="${jeda.core.dir}/src" destfile="${jeda.source.jar}"/>
-        <zip basedir="${src.dir}" update="true" destfile="${jeda.source.jar}"/>
+        <copy file="${dist.jar}" tofile="${jeda.nbjeda.dir}/src/ch/jeda/netbeans/java/res/jeda.jar"/>
         <!-- END Update Jeda Library in NBJeda -->
 
         <!-- BEGIN Update Jeda version in nbjeda -->
@@ -42,10 +35,5 @@
             <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
         </manifest>
         <!-- END Update Jeda version in nbjeda -->
-
-        <!-- Directly update installed library files -->
-        <copy file="${dist.jar}" tofile="${user.home}/.netbeans/7.3.1/lib/jeda.jar"/>
-        <copy file="${jeda.library.release.dir}/docs/jeda-api.zip" tofile="${user.home}/.netbeans/7.3.1/docs/jeda-api.zip/"/>
-        <copy file="${jeda.source.jar}" tofile="${user.home}/.netbeans/7.3.1/sources/jeda-src.jar/"/>
     </target>
 </project>
