@@ -41,10 +41,10 @@ class SensorManager {
         this.sensorReserveMap = new HashMap<Sensor, SensorInfo>();
         this.viewManager = viewManager;
 
-        this.checkAdd(SensorType.Acceleration, this.imp.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
-        this.checkAdd(SensorType.Gravity, this.imp.getDefaultSensor(Sensor.TYPE_GRAVITY));
-        this.checkAdd(SensorType.LinearAcceleration, this.imp.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
-        this.checkAdd(SensorType.MagneticField, this.imp.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD));
+        this.checkAdd(SensorType.ACCELERATION, this.imp.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+        this.checkAdd(SensorType.GRAVITY, this.imp.getDefaultSensor(Sensor.TYPE_GRAVITY));
+        this.checkAdd(SensorType.LINEAR_ACCELERATION, this.imp.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
+        this.checkAdd(SensorType.MAGNETIC_FIELD, this.imp.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD));
     }
 
     boolean isAvailable(final SensorType sensorType) {
@@ -84,10 +84,10 @@ class SensorManager {
 
     private SensorEventListener createEventListener(final SensorType sensorType) {
         switch (sensorType) {
-            case Acceleration:
-            case Gravity:
-            case LinearAcceleration:
-            case MagneticField:
+            case ACCELERATION:
+            case GRAVITY:
+            case LINEAR_ACCELERATION:
+            case MAGNETIC_FIELD:
                 return new ThreeDeeSensorHandler(this.viewManager, this.sensorReserveMap);
             default:
                 return null;
