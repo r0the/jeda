@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="jedandroid" default="help">
-    <property file="local.properties" />
-    <property file="ant.properties" />
-    <property environment="env" />
+    <property file="local.properties"/>
+    <property file="ant.properties"/>
+    <property environment="env"/>
 
-    <property name="jeda.nbjeda.dir" value="../nbjeda/plugin" />
+    <!-- Set properties -->
+    <property name="jeda.nbjeda.dir" value="../nbjeda7.3"/>
+    <property name="jeda.nbjeda.jedandroid.jar" value="${jeda.nbjeda.dir}/jedandroid/src/ch/jeda/netbeans/android/res/jedandroid.jar"/>
 
     <condition property="sdk.dir" value="${env.ANDROID_HOME}">
-        <isset property="env.ANDROID_HOME" />
+        <isset property="env.ANDROID_HOME"/>
     </condition>
 
-    <loadproperties srcFile="project.properties" />
+    <loadproperties srcFile="project.properties"/>
 
     <fail
-            message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
-            unless="sdk.dir"
+        message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
+        unless="sdk.dir"
     />
 
-    <import file="custom_rules.xml" optional="true" />
-    <import file="${sdk.dir}/tools/ant/build.xml" />
-    
-    
+    <import file="custom_rules.xml" optional="true"/>
+    <import file="${sdk.dir}/tools/ant/build.xml"/>
+
     <target name="-post-package">
-        <property name="jeda.jedandroid.jar" value="${jeda.nbjeda.dir}/src/ch/jeda/netbeans/resources/android/jedandroid.jar" />
-        <!-- Update Jedandroid Library in NBJeda -->
-        <copy file="bin/classes.jar" tofile="${jeda.jedandroid.jar}" />
-        <!-- Add core library to jar -->
-        <jar update="true" jarfile="${jeda.jedandroid.jar}">
-            <zipfileset src="libs/core.jar" />
+        <!-- Update Jedandroid library in nbjeda -->
+        <copy file="bin/classes.jar" tofile="${jeda.nbjeda.jedandroid.jar}"/>
+        <!-- Add core library to Jedandroid library in nbjeda -->
+        <jar update="true" jarfile="${jeda.nbjeda.jedandroid.jar}">
+            <zipfileset src="libs/core.jar"/>
         </jar>
     </target>
-
 </project>
