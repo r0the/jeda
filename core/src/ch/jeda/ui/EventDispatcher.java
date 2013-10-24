@@ -16,10 +16,10 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.IO;
 import ch.jeda.event.ActionEvent;
 import ch.jeda.event.ActionListener;
 import ch.jeda.event.Event;
-import ch.jeda.event.EventType;
 import ch.jeda.event.SensorEvent;
 import ch.jeda.event.SensorListener;
 import java.util.ArrayList;
@@ -78,7 +78,12 @@ class EventDispatcher {
 
     void dispatchTick(final TickEvent event) {
         for (int j = 0; j < this.tickListeners.size(); ++j) {
-            this.tickListeners.get(j).onTick(event);
+            try {
+                this.tickListeners.get(j).onTick(event);
+            }
+            catch (final Throwable ex) {
+                IO.err(ex, "java.event.error");
+            }
         }
     }
 
@@ -98,49 +103,89 @@ class EventDispatcher {
             switch (event.getType()) {
                 case KEY_DOWN:
                     for (int j = 0; j < this.keyDownListeners.size(); ++j) {
-                        this.keyDownListeners.get(j).onKeyDown((KeyEvent) event);
+                        try {
+                            this.keyDownListeners.get(j).onKeyDown((KeyEvent) event);
+                        }
+                        catch (final Throwable ex) {
+                            IO.err(ex, "java.event.error");
+                        }
                     }
 
                     break;
                 case KEY_TYPED:
                     for (int j = 0; j < this.keyTypedListeners.size(); ++j) {
-                        this.keyTypedListeners.get(j).onKeyTyped((KeyEvent) event);
+                        try {
+                            this.keyTypedListeners.get(j).onKeyTyped((KeyEvent) event);
+                        }
+                        catch (final Throwable ex) {
+                            IO.err(ex, "java.event.error");
+                        }
                     }
 
                     break;
                 case KEY_UP:
                     for (int j = 0; j < this.keyUpListeners.size(); ++j) {
-                        this.keyUpListeners.get(j).onKeyUp((KeyEvent) event);
+                        try {
+                            this.keyUpListeners.get(j).onKeyUp((KeyEvent) event);
+                        }
+                        catch (final Throwable ex) {
+                            IO.err(ex, "java.event.error");
+                        }
                     }
 
                     break;
                 case POINTER_DOWN:
                     for (int j = 0; j < this.pointerDownListeners.size(); ++j) {
-                        this.pointerDownListeners.get(j).onPointerDown((PointerEvent) event);
+                        try {
+                            this.pointerDownListeners.get(j).onPointerDown((PointerEvent) event);
+                        }
+                        catch (final Throwable ex) {
+                            IO.err(ex, "java.event.error");
+                        }
                     }
 
                     break;
                 case POINTER_MOVED:
                     for (int j = 0; j < this.pointerMovedListeners.size(); ++j) {
-                        this.pointerMovedListeners.get(j).onPointerMoved((PointerEvent) event);
+                        try {
+                            this.pointerMovedListeners.get(j).onPointerMoved((PointerEvent) event);
+                        }
+                        catch (final Throwable ex) {
+                            IO.err(ex, "java.event.error");
+                        }
                     }
 
                     break;
                 case POINTER_UP:
                     for (int j = 0; j < this.pointerUpListeners.size(); ++j) {
-                        this.pointerUpListeners.get(j).onPointerUp((PointerEvent) event);
+                        try {
+                            this.pointerUpListeners.get(j).onPointerUp((PointerEvent) event);
+                        }
+                        catch (final Throwable ex) {
+                            IO.err(ex, "java.event.error");
+                        }
                     }
 
                     break;
                 case SENSOR:
                     for (int j = 0; j < this.sensorListeners.size(); ++j) {
-                        this.sensorListeners.get(j).onSensorChanged((SensorEvent) event);
+                        try {
+                            this.sensorListeners.get(j).onSensorChanged((SensorEvent) event);
+                        }
+                        catch (final Throwable ex) {
+                            IO.err(ex, "java.event.error");
+                        }
                     }
 
                     break;
                 case WINDOW_FOCUS_LOST:
                     for (int j = 0; j < this.windowFocusLostListeners.size(); ++j) {
-                        this.windowFocusLostListeners.get(j).onWindowFocusLost();
+                        try {
+                            this.windowFocusLostListeners.get(j).onWindowFocusLost();
+                        }
+                        catch (final Throwable ex) {
+                            IO.err(ex, "java.event.error");
+                        }
                     }
 
                     break;
@@ -149,7 +194,12 @@ class EventDispatcher {
 
         for (int i = 0; i < this.actionEvents.size(); ++i) {
             for (int j = 0; j < this.actionListeners.size(); ++j) {
-                this.actionListeners.get(j).onAction(this.actionEvents.get(i));
+                try {
+                    this.actionListeners.get(j).onAction(this.actionEvents.get(i));
+                }
+                catch (final Throwable ex) {
+                    IO.err(ex, "java.event.error");
+                }
             }
         }
 
