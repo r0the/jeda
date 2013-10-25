@@ -18,15 +18,14 @@ package ch.jeda.ui;
 
 class Timer {
 
-    private static final int DEFAULT_FRAME_RATE = 60;
     private long adjustment;
     private float frameRate;
     private long lastStepDuration;
     private long start;
     private long period;
 
-    Timer() {
-        this.frameRate = DEFAULT_FRAME_RATE;
+    Timer(final float frameRate) {
+        this.frameRate = frameRate;
     }
 
     float getFrameRate() {

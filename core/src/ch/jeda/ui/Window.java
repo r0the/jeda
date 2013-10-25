@@ -32,6 +32,7 @@ import java.util.EnumSet;
  */
 public class Window extends Canvas {
 
+    private static final float DEFAULT_FRAME_RATE = 30f;
     private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
     private static final int PAUSE_SLEEP_MILLIS = 200;
     private final Drawables drawables;
@@ -106,7 +107,7 @@ public class Window extends Canvas {
         this.events = new Events();
         this.eventDispatcher.addListener(this.events.listener);
         this.frequencyMeter = new FrequencyMeter();
-        this.timer = new Timer();
+        this.timer = new Timer(DEFAULT_FRAME_RATE);
         this.title = Engine.getProgramName();
         this.resetImp(width, height, toSet(features));
         new EventLoop(this).start();
