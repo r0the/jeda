@@ -115,6 +115,12 @@ public final class Color implements Serializable {
      */
     public static final Color TEAL = new Color(0, 128, 128);
     /**
+     * The fully transparent color. Same as <tt>new Color(0, 0, 0, 255)</tt>.
+     *
+     * @since 1
+     */
+    public static final Color TRANSPARENT = new Color(0, 0, 0, 255);
+    /**
      * The VGA color <i>white</i>. Same as <tt>new Color(255, 255, 255)</tt>.
      *
      * @since 1
@@ -127,11 +133,11 @@ public final class Color implements Serializable {
      */
     public static final Color YELLOW = new Color(255, 255, 0);
     /**
-     * The Jeda color. Same as <tt>new Color(112, 208, 80)</tt>.
+     * The Jeda color. Same as <tt>new Color(126, 218, 66)</tt>.
      *
      * @since 1
      */
-    public static final Color JEDA = new Color(112, 208, 80);
+    public static final Color JEDA = new Color(126, 218, 66);
     private final int value;
 
     /**
