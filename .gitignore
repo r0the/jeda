@@ -14,7 +14,7 @@ dist/
 
 # Jeda generated files
 
-nbjeda7.3/jeda/src/ch/jeda/netbeans/android/res/jedandroid.jar
+nbjeda7.3/jedandroid/src/ch/jeda/netbeans/android/res/jedandroid.jar
 nbjeda7.3/jeda/src/ch/jeda/netbeans/java/res/jeda.jar
 
 # Jedandroid generated files
