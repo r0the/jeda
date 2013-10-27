@@ -34,11 +34,11 @@ import java.util.Map;
  */
 public final class Image {
 
-    public static final String JEDA_LOGO_16x16 = ":ch/jeda/resources/logo-16x16.png";
-    public static final String JEDA_LOGO_48x48 = ":ch/jeda/resources/logo-48x48.png";
-    public static final String JEDA_LOGO_64x64 = ":ch/jeda/resources/logo-64x64.png";
     private static final Map<String, ImageImp> CACHE = new HashMap<String, ImageImp>();
     private static final Map<String, ImageImp.Encoding> FORMAT_MAP = initFormatMap();
+    public static final Image JEDA_LOGO_16x16 = new Image("res:jeda/logo-16x16.png");
+    public static final Image JEDA_LOGO_48x48 = new Image("res:jeda/logo-48x48.png");
+    public static final Image JEDA_LOGO_64x64 = new Image("res:jeda/logo-64x64.png");
     private final ImageImp imp;
 
     /**
