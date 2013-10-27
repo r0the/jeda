@@ -1,0 +1,24 @@
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import ch.jeda.*;
+import ch.jeda.event.*;
+import ch.jeda.ui.*;
+
+public class ${name} extends Program implements TickListener {
+
+    Window window;
+
+    @Override
+    public void run() {
+        window = new Window();
+        // Write initialization code here.
+        window.addEventListener(this);
+    }
+
+    @Override
+    public void onTick(TickEvent event) {
+        // Write animation code here.
+    }
+}
