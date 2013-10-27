@@ -36,7 +36,7 @@ class JedandroidProject {
     public static final String PROJECT_TYPE = "org-netbeans-modules-android-project";
     private static final Image ICON = ImageUtilities.loadImage("ch/jeda/netbeans/android/res/icon.png");
     private static final String ANDROID_MANIFEST_XML = "AndroidManifest.xml";
-    private static final String ANDROID_MANIFEST_XML_RES = "ch/jeda/netbeans/android/res/AndroidManifest.xml";
+    private static final String ANDROID_MANIFEST_XML_RES = "ch/jeda/netbeans/android/res/android_manifest.xml";
     private static final String APP_ICON = "res/drawable/icon.png";
     private static final String APP_ICON_RES = "ch/jeda/netbeans/android/res/app_icon.png";
     private static final String BUILD_XML = "build.xml";
