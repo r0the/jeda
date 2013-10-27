@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform.android;
 
-import android.app.Application;
+import android.app.Activity;
 import android.graphics.BitmapFactory;
 import ch.jeda.IO;
 import ch.jeda.platform.ImageImp;
@@ -31,69 +31,68 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-class Resources {
+class ResourceManager {
 
     private static final String HTTP_PREFIX = "http://";
     private static final String NEW_RESOURCE_PREFIX = "res:";
     private static final String OLD_RESOURCE_PREFIX = ":";
+    private final Activity activity;
 
-    static Class<?>[] loadClasses(final Application application) throws Exception {
-        final List<Class<?>> result = new ArrayList<Class<?>>();
-        final String apkName = application.getPackageManager().
-            getApplicationInfo(application.getPackageName(), 0).sourceDir;
+    ResourceManager(final Activity activity) {
+        this.activity = activity;
+    }
+
+    Class<?>[] loadClasses() throws Exception {
+        final List<Class<?>> result = new ArrayList();
+        String apkName = this.activity.getApplication().getPackageManager().
+            getApplicationInfo(this.activity.getApplication().getPackageName(), 0).sourceDir;
+
         final DexFile dx = new DexFile(apkName);
         final Enumeration<String> e = dx.entries();
         while (e.hasMoreElements()) {
-            final String resourceName = e.nextElement();
+            final String resourceName = (String) e.nextElement();
             if (!resourceName.contains("$")) {
                 try {
-                    // Try to load class with system class loader
                     result.add(ClassLoader.getSystemClassLoader().loadClass(resourceName));
                 }
-                catch (ClassNotFoundException ex) {
+                catch (final ClassNotFoundException ex) {
                     try {
-                        // Try to load class with class loader of current context
                         result.add(Thread.currentThread().getContextClassLoader().loadClass(resourceName));
                     }
-                    catch (ClassNotFoundException ex2) {
-                        // Ignore
+                    catch (final ClassNotFoundException ex2) {
                     }
                 }
             }
         }
-
-        return result.toArray(new Class<?>[result.size()]);
+        return (Class[]) result.toArray(new Class[result.size()]);
     }
 
-    static ImageImp openImage(final String filePath) {
+    ImageImp openImage(final String filePath) {
         final InputStream in = openInputStream(filePath);
         if (in == null) {
             return null;
         }
-
         try {
             return new AndroidImageImp(BitmapFactory.decodeStream(in));
         }
         catch (final Exception ex) {
-            IO.err(ex, "jeda.image.error.read", filePath);
+            IO.err(ex, "jeda.image.error.read", new Object[]{filePath});
             return null;
         }
         finally {
             try {
                 in.close();
             }
-            catch (final IOException ex) {
-                // ignore
+            catch (IOException ex) {
             }
         }
     }
 
-    static InputStream openInputStream(final String filePath) {
+    InputStream openInputStream(final String filePath) {
         if (filePath == null) {
             throw new NullPointerException("filePath");
         }
-
-        if (filePath.startsWith(NEW_RESOURCE_PREFIX)) {
+        else if (filePath.startsWith(NEW_RESOURCE_PREFIX)) {
             return openResourceInputStream(filePath, NEW_RESOURCE_PREFIX.length());
         }
         else if (filePath.startsWith(OLD_RESOURCE_PREFIX)) {
@@ -107,49 +106,50 @@ class Resources {
         }
     }
 
-    private static InputStream openFileInputStream(final String filePath) {
+    private InputStream openFileInputStream(final String filePath) {
         try {
             return new FileInputStream(filePath);
         }
         catch (final FileNotFoundException ex) {
-            IO.err(ex, "jeda.file.error.not-found", filePath);
-            return null;
+            IO.err(ex, "jeda.file.error.not-found", new Object[]{filePath});
         }
+
+        return null;
     }
 
-    private static InputStream openRemoteInputStream(final String filePath) {
+    private InputStream openRemoteInputStream(final String filePath) {
         try {
             return new URL(filePath).openStream();
         }
         catch (final MalformedURLException ex) {
-            IO.err(ex, "jeda.file.error.open", filePath);
+            IO.err(ex, "jeda.file.error.open", new Object[]{filePath});
             return null;
         }
         catch (final IOException ex) {
-            IO.err(ex, "jeda.file.error.open", filePath);
-            return null;
+            IO.err(ex, "jeda.file.error.open", new Object[]{filePath});
         }
 
+        return null;
     }
 
-    private static InputStream openResourceInputStream(final String filePath, final int prefixLength) {
-        URL url = Thread.currentThread().getContextClassLoader().getResource(filePath.substring(prefixLength));
+    private InputStream openResourceInputStream(final String filePath, final int prefixLength) {
+        final String resourcePath = "res/" + filePath.substring(prefixLength);
+        URL url = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
         if (url == null) {
-            url = IO.class.getClassLoader().getResource(filePath.substring(prefixLength));
+            url = IO.class.getClassLoader().getResource(resourcePath);
         }
 
         if (url == null) {
-            IO.err("jeda.file.error.not-found", filePath);
+            IO.err("jeda.file.error.not-found", new Object[]{filePath});
             return null;
         }
-        else {
-            try {
-                return url.openStream();
-            }
-            catch (final IOException ex) {
-                IO.err(ex, "jeda.file.error.open", filePath);
-                return null;
-            }
+        try {
+            return url.openStream();
         }
+        catch (final IOException ex) {
+            IO.err(ex, "jeda.file.error.open", new Object[]{filePath});
+        }
+
+        return null;
     }
 }

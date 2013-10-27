@@ -30,6 +30,7 @@ import java.io.InputStream;
 class AndroidContextImp implements ContextImp {
 
     private final Activity activity;
+    private final ResourceManager resourceManager;
     private final SensorManager sensorManager;
     private final ViewManager viewManager;
 
@@ -55,15 +56,15 @@ class AndroidContextImp implements ContextImp {
 
     @Override
     public Class<?>[] loadClasses() throws Exception {
-        return Resources.loadClasses(this.activity.getApplication());
+        return this.resourceManager.loadClasses();
     }
 
     public ImageImp loadImageImp(final String path) {
-        return Resources.openImage(path);
+        return this.resourceManager.openImage(path);
     }
 
     public InputStream openResource(final String path) {
-        return Resources.openInputStream(path);
+        return this.resourceManager.openInputStream(path);
     }
 
     public void setSensorEnabled(final SensorType sensorType, boolean enabled) {
@@ -97,6 +98,7 @@ class AndroidContextImp implements ContextImp {
 
     AndroidContextImp(Activity activity) {
         this.activity = activity;
+        this.resourceManager = new ResourceManager(activity);
         this.viewManager = new ViewManager(activity);
         this.sensorManager = new SensorManager(activity, this.viewManager);
         // Adjust window when soft keyboard is shown.
