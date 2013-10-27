@@ -63,14 +63,14 @@ public class SensorEvent extends Event {
     /**
      * Returns the x-axis component of the currently sensed value. Depending on the sensor type, these are:
      * <ul>
-     * <li>For {@link SensorType#Acceleration}: The acceleration in meter per square second in direction of the positive
+     * <li>For {@link SensorType#ACCELERATION}: The acceleration in meter per square second in direction of the positive
      * x-axis of the {@link ch.jeda.Window}, i.e. to the right.
-     * <li>For {@link SensorType#Gravity}: The gravity component in meter per square second in direction of the positive
+     * <li>For {@link SensorType#GRAVITY}: The gravity component in meter per square second in direction of the positive
      * x-axis of the {@link ch.jeda.Window}, i.e. to the right.
-     * <li>For {@link SensorType#LinearAcceleration}: The acceleration in meter per square second in direction of the
+     * <li>For {@link SensorType#LINEAR_ACCELERATION}: The acceleration in meter per square second in direction of the
      * positive x-axis of the {@link ch.jeda.Window}, i.e. to the right.
-     * <li>For {@link SensorType#MagneticField}: The magnetic field component in Microtesla in direction of the positive
-     * x-axis of the {@link ch.jeda.Window}, i.e. to the right.
+     * <li>For {@link SensorType#MAGNETIC_FIELD}: The magnetic field component in Microtesla in direction of the
+     * positive x-axis of the {@link ch.jeda.Window}, i.e. to the right.
      * </ul>
      *
      * @return the x-axis component of the currently sensed value
@@ -84,14 +84,14 @@ public class SensorEvent extends Event {
     /**
      * Returns the y-axis component of the currently sensed value. Depending on the sensor type, these are:
      * <ul>
-     * <li>For {@link SensorType#Acceleration}: The acceleration in meter per square second in direction of the positive
+     * <li>For {@link SensorType#ACCELERATION}: The acceleration in meter per square second in direction of the positive
      * y-axis of the {@link ch.jeda.Window}, i.e. downwards on the screen.
-     * <li>For {@link SensorType#Gravity}: The gravity component in meter per square second in direction of the positive
+     * <li>For {@link SensorType#GRAVITY}: The gravity component in meter per square second in direction of the positive
      * y-axis of the {@link ch.jeda.Window}, i.e. downwards on the screen.
-     * <li>For {@link SensorType#LinearAcceleration}: The acceleration in meter per square second in direction of the
+     * <li>For {@link SensorType#LINEAR_ACCELERATION}: The acceleration in meter per square second in direction of the
      * positive y-axis of the {@link ch.jeda.Window}, i.e. downwards on the screen.
-     * <li>For {@link SensorType#MagneticField}: The magnetic field component in Microtesla in direction of the positive
-     * y-axis of the {@link ch.jeda.Window}, i.e. downwards on the screen.
+     * <li>For {@link SensorType#MAGNETIC_FIELD}: The magnetic field component in Microtesla in direction of the
+     * positive y-axis of the {@link ch.jeda.Window}, i.e. downwards on the screen.
      * </ul>
      *
      * @return the y-axis component of the currently sensed value
@@ -105,11 +105,11 @@ public class SensorEvent extends Event {
     /**
      * Returns the z-axis component of the currently sensed value. Depending on the sensor type, these are:
      * <ul>
-     * <li>For {@link SensorType#Acceleration}: The acceleration in meter per square second upwards from the screen.
-     * <li>For {@link SensorType#Gravity}: The gravity component in meter per square second upwards from the screen.
-     * <li>For {@link SensorType#LinearAcceleration}: The acceleration in meter per square second upwards from the
+     * <li>For {@link SensorType#ACCELERATION}: The acceleration in meter per square second upwards from the screen.
+     * <li>For {@link SensorType#GRAVITY}: The gravity component in meter per square second upwards from the screen.
+     * <li>For {@link SensorType#LINEAR_ACCELERATION}: The acceleration in meter per square second upwards from the
      * screen.
-     * <li>For {@link SensorType#MagneticField}: The magnetic field component in Microtesla upwards from the screen.
+     * <li>For {@link SensorType#MAGNETIC_FIELD}: The magnetic field component in Microtesla upwards from the screen.
      * </ul>
      *
      * @return the z-axis component of the currently sensed value
