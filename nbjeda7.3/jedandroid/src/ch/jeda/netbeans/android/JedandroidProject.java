@@ -51,37 +51,41 @@ class JedandroidProject {
     private static final String RES = "res";
     private static final String SRC_CH_JEDA_PROJECT = "src/ch/jeda/project";
 
-    static Image annotateIcon(Project project, Image orig, boolean openedNode) {
+    static Image annotateIcon(final Project project, final Image orig, final boolean openedNode) {
         if (isJedaProject(project)) {
             return ICON;
         }
         return orig;
     }
 
-    static NodeList createConfigNode(Project project) {
+    static NodeList createConfigNode(final Project project) {
         if (isJedaProject(project)) {
             try {
                 return NodeFactorySupport.fixedNodeList(new Node[]{new JedandroidProject.Node(getJedaPropertiesFile(project), "Jeda Configuration")});
             }
-            catch (DataObjectNotFoundException ex) {
+            catch (final DataObjectNotFoundException ex) {
+                // ignore
             }
         }
+
         return NodeFactorySupport.fixedNodeList(new Node[0]);
     }
 
-    static Lookup fixLookup(Lookup lookup) {
-        Project project = (Project) lookup.lookup(Project.class);
+    static Lookup fixLookup(final Lookup lookup) {
+        final Project project = (Project) lookup.lookup(Project.class);
         if (isJedaProject(project)) {
             return Lookups.fixed(new Object[]{new JedandroidProjectIconAnnotator(), new JedandroidProjectOpenedHook(project)});
         }
-        return Lookups.fixed(new Object[0]);
+        else {
+            return Lookups.fixed(new Object[0]);
+        }
     }
 
-    private static FileObject getJedaPropertiesFile(Project project) {
+    private static FileObject getJedaPropertiesFile(final Project project) {
         return project.getProjectDirectory().getFileObject(JEDA_PROPERTIES);
     }
 
-    static void init(FileObject projectDir) {
+    static void init(final FileObject projectDir) {
         FileHelper.addDir(projectDir, LIBS);
         FileHelper.addDir(projectDir, RES);
         FileHelper.addFile(projectDir, ANDROID_MANIFEST_XML, ANDROID_MANIFEST_XML_RES);
@@ -100,7 +104,7 @@ class JedandroidProject {
         }
     }
 
-    private static boolean isJedaProject(Project project) {
+    private static boolean isJedaProject(final Project project) {
         return getJedaPropertiesFile(project) != null &&
                project.getProjectDirectory().getFileObject(ANDROID_MANIFEST_XML) != null;
     }

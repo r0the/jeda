@@ -99,9 +99,7 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages>
-                <package>ch.jeda.netbeans.template</package>
-            </public-packages>
+            <public-packages/>
         </data>
     </configuration>
 </project>
