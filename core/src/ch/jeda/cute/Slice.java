@@ -21,7 +21,7 @@ import java.util.List;
 
 class Slice {
 
-    private static final List<CuteObject> NO_OBJECTS = new ArrayList();
+    private static final List<CuteObject> NO_OBJECTS = new ArrayList<CuteObject>();
     private final Box[] boxes;
     private final int sizeX;
     private final int sizeY;

@@ -50,7 +50,7 @@ public class SpeechBubble {
 
     private static List<String> lineBreak(final Canvas canvas, final String message, final int maxWidth) {
         final String[] words = message.split(" ");
-        final List<String> result = new ArrayList();
+        final List<String> result = new ArrayList<String>();
 
         int i = 0;
         while (i < words.length) {

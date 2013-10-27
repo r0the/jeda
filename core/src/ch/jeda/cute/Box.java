@@ -27,7 +27,7 @@ class Box {
 
     Box() {
         this.block = Block.EMPTY;
-        this.objects = new ArrayList();
+        this.objects = new ArrayList<CuteObject>();
     }
 
     void addObject(final CuteObject object) {

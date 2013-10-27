@@ -35,8 +35,8 @@ public final class CuteWorld {
     private float scrollY;
 
     public CuteWorld(final int sizeX, final int sizeY, final int sizeZ) {
-        this.changes = new ArrayList();
-        this.objects = new ArrayList();
+        this.changes = new ArrayList<Change>();
+        this.objects = new ArrayList<CuteObject>();
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.sizeZ = sizeZ;

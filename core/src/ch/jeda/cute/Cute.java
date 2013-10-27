@@ -32,7 +32,7 @@ class Cute {
     }
 
     private static EnumMap<Direction, Image> initShadows() {
-        EnumMap<Direction, Image> result = new EnumMap(Direction.class);
+        EnumMap<Direction, Image> result = new EnumMap<Direction, Image>(Direction.class);
         result.put(Direction.EAST, loadImage("ShadowEast"));
         result.put(Direction.NORTH, loadImage("ShadowNorth"));
         result.put(Direction.NORTH_EAST, loadImage("ShadowNorthEast"));
