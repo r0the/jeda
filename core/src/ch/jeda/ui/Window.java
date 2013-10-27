@@ -329,10 +329,12 @@ public class Window extends Canvas {
             this.imp.close();
         }
 
+        fixWindowFeatures(features);
+
         this.imp = Engine.getContext().showWindow(width, height, features);
         this.events.reset();
         this.imp.setTitle(this.title);
-        if (!this.hasFeature(WindowFeature.DoubleBuffered)) {
+        if (!this.hasFeature(WindowFeature.DOUBLE_BUFFERED)) {
             this.imp.setColor(Color.WHITE);
             this.imp.fill();
         }
@@ -340,10 +342,52 @@ public class Window extends Canvas {
         super.setImp(this.imp);
     }
 
+    private static void fixWindowFeatures(final EnumSet<WindowFeature> features) {
+        if (features.contains(WindowFeature.DoubleBuffered)) {
+            features.add(WindowFeature.DOUBLE_BUFFERED);
+        }
+
+        if (features.contains(WindowFeature.Fullscreen)) {
+            features.add(WindowFeature.FULLSCREEN);
+        }
+
+        if (features.contains(WindowFeature.HoveringPointer)) {
+            features.add(WindowFeature.HOVERING_POINTER);
+        }
+
+        if (features.contains(WindowFeature.OrientationLandscape)) {
+            features.add(WindowFeature.ORIENTATION_LANDSCAPE);
+        }
+
+        if (features.contains(WindowFeature.OrientationPortrait)) {
+            features.add(WindowFeature.ORIENTATION_PORTRAIT);
+        }
+
+        if (features.contains(WindowFeature.DOUBLE_BUFFERED)) {
+            features.add(WindowFeature.DoubleBuffered);
+        }
+
+        if (features.contains(WindowFeature.FULLSCREEN)) {
+            features.add(WindowFeature.Fullscreen);
+        }
+
+        if (features.contains(WindowFeature.HOVERING_POINTER)) {
+            features.add(WindowFeature.HoveringPointer);
+        }
+
+        if (features.contains(WindowFeature.ORIENTATION_LANDSCAPE)) {
+            features.add(WindowFeature.OrientationLandscape);
+        }
+
+        if (features.contains(WindowFeature.ORIENTATION_PORTRAIT)) {
+            features.add(WindowFeature.OrientationPortrait);
+        }
+    }
+
     private static EnumSet<WindowFeature> initImpChangingFeatures() {
         final EnumSet<WindowFeature> result = EnumSet.noneOf(WindowFeature.class);
-        result.add(WindowFeature.DoubleBuffered);
-        result.add(WindowFeature.Fullscreen);
+        result.add(WindowFeature.DOUBLE_BUFFERED);
+        result.add(WindowFeature.FULLSCREEN);
         return result;
     }
 

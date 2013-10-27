@@ -113,12 +113,11 @@ public class WindowManager {
             height = 600;
         }
 
-        if (request.getFeatures().contains(WindowFeature.Fullscreen) && this.fullscreenWindow == null) {
+        if (request.getFeatures().contains(WindowFeature.FULLSCREEN) && this.fullscreenWindow == null) {
             DisplayMode displayMode = findDisplayMode(width, height);
             width = displayMode.getWidth();
             height = displayMode.getHeight();
-            this.fullscreenWindow = new CanvasWindow(this, width, height,
-                request.getFeatures());
+            this.fullscreenWindow = new CanvasWindow(this, width, height, request.getFeatures());
             GRAPHICS_DEVICE.setFullScreenWindow(this.fullscreenWindow);
             GRAPHICS_DEVICE.setDisplayMode(displayMode);
             return this.fullscreenWindow;

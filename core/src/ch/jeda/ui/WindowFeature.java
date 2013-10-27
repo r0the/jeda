@@ -26,7 +26,7 @@ public enum WindowFeature {
      * @see Window#update()
      * @since 1
      */
-    DoubleBuffered,
+    DOUBLE_BUFFERED,
     /**
      * Sets fullscreen mode for a window. The behaviour of this feature depends on the platform:
      * <p>
@@ -38,13 +38,11 @@ public enum WindowFeature {
      *
      * @since 1
      */
-    Fullscreen,
+    FULLSCREEN,
     /**
      *
-     * @see Window#update()
-     * @since 1
      */
-    HoveringPointer,
+    HOVERING_POINTER,
     /**
      * Set landscape orientation for a window. The behaviour of this feature depends on the platform:
      * <p>
@@ -55,7 +53,7 @@ public enum WindowFeature {
      *
      * @since 1
      */
-    OrientationLandscape,
+    ORIENTATION_LANDSCAPE,
     /**
      * Set portrait orientation for a window. The behaviour of this feature depends on the platform:
      * <p>
@@ -65,6 +63,26 @@ public enum WindowFeature {
      * window's drawing area is smaller than it's height.
      *
      * @since 1
+     */
+    ORIENTATION_PORTRAIT,
+    /**
+     * @deprecated Use {@link #DOUBLE_BUFFERED} instead.
+     */
+    DoubleBuffered,
+    /**
+     * @deprecated Use {@link #FULLSCREEN} instead.
+     */
+    Fullscreen,
+    /**
+     * @deprecated Use {@link #HOVERING_POINTER} instead.
+     */
+    HoveringPointer,
+    /**
+     * @deprecated Use {@link #ORIENTATION_LANDSCAPE} instead.
+     */
+    OrientationLandscape,
+    /**
+     * @deprecated Use {@link #ORIENTATION_PORTRAIT} instead.
      */
     OrientationPortrait
 }

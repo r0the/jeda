@@ -142,7 +142,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void mouseEntered(final MouseEvent event) {
-        if (this.features.contains(WindowFeature.HoveringPointer)) {
+        if (this.features.contains(WindowFeature.HOVERING_POINTER)) {
             this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN,
                                            POINTER_ID, event.getX(), event.getY()));
         }
@@ -150,7 +150,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void mouseExited(final MouseEvent event) {
-        if (this.features.contains(WindowFeature.HoveringPointer)) {
+        if (this.features.contains(WindowFeature.HOVERING_POINTER)) {
             this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID,
                                            event.getX(), event.getY()));
         }
@@ -158,7 +158,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void mouseMoved(final MouseEvent event) {
-        if (this.features.contains(WindowFeature.HoveringPointer)) {
+        if (this.features.contains(WindowFeature.HOVERING_POINTER)) {
             this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_MOVED, POINTER_ID,
                                            event.getX(), event.getY()));
         }
@@ -171,7 +171,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
             this.addEvent(new KeyEvent(MOUSE, EventType.KEY_DOWN, key));
         }
 
-        if (!this.features.contains(WindowFeature.HoveringPointer)) {
+        if (!this.features.contains(WindowFeature.HOVERING_POINTER)) {
             this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN, POINTER_ID,
                                            event.getX(), event.getY()));
         }
@@ -184,7 +184,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
             this.addEvent(new KeyEvent(MOUSE, EventType.KEY_UP, key));
         }
 
-        if (!this.features.contains(WindowFeature.HoveringPointer)) {
+        if (!this.features.contains(WindowFeature.HOVERING_POINTER)) {
             this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID,
                                            event.getX(), event.getY()));
         }
@@ -208,7 +208,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         this.setResizable(false);
         this.setIgnoreRepaint(true);
         this.getContentPane().add(this.canvas);
-        this.setUndecorated(features.contains(WindowFeature.Fullscreen));
+        this.setUndecorated(features.contains(WindowFeature.FULLSCREEN));
         this.pack();
         this.init();
         this.canvas.requestFocus();
