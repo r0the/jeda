@@ -3,10 +3,9 @@
     <description>Builds, tests, and runs the project jeda.</description>
     <import file="nbproject/build-impl.xml"/>
 
-    <!-- Properties -->
-
+    <!-- Set properties -->
     <property name="jeda.core.dir" value="../core"/>
-    <property name="jeda.nbjeda.dir" value="../nbjeda7.3/jeda"/>
+    <property name="jeda.nbjeda.dir" value="../nbjeda7.3"/>
 
     <target name="-post-jar">
         <!-- Load jeda version -->
@@ -26,14 +25,18 @@
             </manifest>
         </jar>
 
-        <!-- BEGIN Update Jeda Library in NBJeda -->
-        <copy file="${dist.jar}" tofile="${jeda.nbjeda.dir}/src/ch/jeda/netbeans/java/res/jeda.jar"/>
-        <!-- END Update Jeda Library in NBJeda -->
+        <!-- Update Jeda library in nbjeda -->
+        <copy file="${dist.jar}" tofile="${jeda.nbjeda.dir}/jeda/src/ch/jeda/netbeans/java/res/jeda.jar"/>
 
-        <!-- BEGIN Update Jeda version in nbjeda -->
-        <manifest file="${jeda.nbjeda.dir}/manifest.mf" mode="update">
+        <!-- Update Jeda version in nbjeda -->
+        <manifest file="${jeda.nbjeda.dir}/jeda/manifest.mf" mode="update">
             <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
         </manifest>
-        <!-- END Update Jeda version in nbjeda -->
+        <manifest file="${jeda.nbjeda.dir}/jedandroid/manifest.mf" mode="update">
+            <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
+        </manifest>
+        <manifest file="${jeda.nbjeda.dir}/templates/manifest.mf" mode="update">
+            <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
+        </manifest>
     </target>
 </project>
