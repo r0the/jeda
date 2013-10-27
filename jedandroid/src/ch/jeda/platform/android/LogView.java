@@ -70,11 +70,14 @@ class LogView extends DialogView {
                 return;
             }
 
-            this.logView.append(content);
+            this.reset();
             this.printStream.print(content);
             this.printStream.flush();
-            this.reset();
-
+            this.logView.runOnUiThread(new Runnable() {
+                public void run() {
+                    logView.append(content);
+                }
+            });
         }
     }
 }

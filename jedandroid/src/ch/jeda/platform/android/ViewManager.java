@@ -90,6 +90,10 @@ class ViewManager {
         return this.activity.getWindowManager().getDefaultDisplay().getRotation();
     }
 
+    void runOnUiThread(final Runnable action) {
+        this.activity.runOnUiThread(action);
+    }
+
     void show(final BaseView view) {
         this.activity.runOnUiThread(new Runnable() {
             public void run() {
