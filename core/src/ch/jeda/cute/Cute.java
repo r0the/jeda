@@ -28,19 +28,15 @@ class Cute {
     }
 
     static Image getShadow(final Direction direction) {
-        return (Image) SHADOWS.get(direction);
+        return SHADOWS.get(direction);
     }
 
     private static EnumMap<Direction, Image> initShadows() {
-        EnumMap<Direction, Image> result = new EnumMap<Direction, Image>(Direction.class);
-        result.put(Direction.EAST, loadImage("ShadowEast"));
-        result.put(Direction.NORTH, loadImage("ShadowNorth"));
-        result.put(Direction.NORTH_EAST, loadImage("ShadowNorthEast"));
-        result.put(Direction.NORTH_WEST, loadImage("ShadowNorthWest"));
-        result.put(Direction.SOUTH, loadImage("ShadowSouth"));
-        result.put(Direction.SOUTH_EAST, loadImage("ShadowSouthEast"));
-        result.put(Direction.SOUTH_WEST, loadImage("ShadowSouthWest"));
-        result.put(Direction.WEST, loadImage("ShadowWest"));
+        final EnumMap<Direction, Image> result = new EnumMap<Direction, Image>(Direction.class);
+        for (final Direction direction : Direction.values()) {
+            result.put(direction, loadImage("shadow_" + direction.toString().toLowerCase()));
+        }
+
         return result;
     }
 }

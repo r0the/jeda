@@ -26,8 +26,8 @@ import java.util.List;
 public class SpeechBubble {
 
     private static final String SPEECH_PREFIX = "says:";
-    private static final Image INFO_BUBBLE = Cute.loadImage("InfoBubble");
-    private static final Image SPEECH_BUBBLE = Cute.loadImage("SpeechBubble");
+    private static final Image INFO_BUBBLE = Cute.loadImage("info_bubble");
+    private static final Image SPEECH_BUBBLE = Cute.loadImage("speech_bubble");
 
     static void draw(final Canvas canvas, float x, float y, String message) {
         if (message.startsWith(SPEECH_PREFIX)) {

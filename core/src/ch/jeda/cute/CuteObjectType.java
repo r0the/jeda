@@ -21,38 +21,46 @@ import ch.jeda.ui.Image;
 public class CuteObjectType {
 
     public static final CuteObjectType EMPTY = new CuteObjectType();
-    public static final CuteObjectType BOY = new CuteObjectType("Boy");
-    public static final CuteObjectType CAT_GIRL = new CuteObjectType("CatGirl");
-    public static final CuteObjectType DEMON_GIRL = new CuteObjectType("DemonGirl");
-    public static final CuteObjectType PINK_GIRL = new CuteObjectType("PinkGirl");
-    public static final CuteObjectType PRINCESS_GIRL = new CuteObjectType("PrincessGirl");
-    public static final CuteObjectType BLUE_GEM = new CuteObjectType("BlueGem");
-    public static final CuteObjectType GREEN_GEM = new CuteObjectType("GreenGem");
-    public static final CuteObjectType ORANGE_GEM = new CuteObjectType("OrangeGem");
-    public static final CuteObjectType HEART = new CuteObjectType("Heart");
-    public static final CuteObjectType STAR = new CuteObjectType("Star");
-    public static final CuteObjectType BUG = new CuteObjectType("Bug");
-    public static final CuteObjectType SHORT_TREE = new CuteObjectType("ShortTree");
-    public static final CuteObjectType TALL_TREE = new CuteObjectType("TallTree");
-    public static final CuteObjectType UGLY_TREE = new CuteObjectType("UglyTree");
-    public static final CuteObjectType ROCK = new CuteObjectType("Rock");
-    public static final CuteObjectType KEY = new CuteObjectType("Key");
-    public static final CuteObjectType CLOSED_CHEST = new CuteObjectType("ClosedChest");
-    public static final CuteObjectType OPEN_CHEST = new CuteObjectType("OpenChest");
-    public static final CuteObjectType CLOSED_DOOR = new CuteObjectType("ClosedDoor");
-    public static final CuteObjectType OPEN_DOOR = new CuteObjectType("OpenDoor");
-    public static final CuteObjectType SELECTOR = new CuteObjectType("Selector");
+    public static final CuteObjectType BOY = new CuteObjectType("BOY");
+    public static final CuteObjectType CAT_GIRL = new CuteObjectType("CAT_GIRL");
+    public static final CuteObjectType DEMON_GIRL = new CuteObjectType("DEMON_GIRL");
+    public static final CuteObjectType PINK_GIRL = new CuteObjectType("PINK_GIRL");
+    public static final CuteObjectType PRINCESS_GIRL = new CuteObjectType("PRINCESS_GIRL");
+    public static final CuteObjectType BLUE_GEM = new CuteObjectType("BLUE_GEM");
+    public static final CuteObjectType GREEN_GEM = new CuteObjectType("GREEN_GEM");
+    public static final CuteObjectType ORANGE_GEM = new CuteObjectType("ORANGE_GEM");
+    public static final CuteObjectType HEART = new CuteObjectType("HEART");
+    public static final CuteObjectType STAR = new CuteObjectType("STAR");
+    public static final CuteObjectType BIG_BUG = new CuteObjectType("BIG_BUG");
+    public static final CuteObjectType SHORT_TREE = new CuteObjectType("SHORT_TREE");
+    public static final CuteObjectType TALL_TREE = new CuteObjectType("TALL_TREE");
+    public static final CuteObjectType UGLY_TREE = new CuteObjectType("UGLY_TREE");
+    public static final CuteObjectType ROCK = new CuteObjectType("ROCK");
+    public static final CuteObjectType KEY = new CuteObjectType("KEY");
+    public static final CuteObjectType CLOSED_CHEST = new CuteObjectType("CLOSED_CHEST");
+    public static final CuteObjectType OPEN_CHEST = new CuteObjectType("OPEN_CHEST");
+    public static final CuteObjectType CLOSED_DOOR = new CuteObjectType("CLOSED_DOOR");
+    public static final CuteObjectType OPEN_DOOR = new CuteObjectType("OPEN_DOOR");
+    public static final CuteObjectType SELECTOR = new CuteObjectType("SELECTOR");
     private final Image image;
+    private final String name;
 
-    public CuteObjectType(final String imagePath) {
-        this.image = Cute.loadImage(imagePath);
+    public CuteObjectType(final String name) {
+        this.image = Cute.loadImage(name.toLowerCase());
+        this.name = name;
     }
 
     private CuteObjectType() {
         this.image = null;
+        this.name = "EMPTY";
     }
 
     public final Image getImage() {
         return this.image;
+    }
+
+    @Override
+    public final String toString() {
+        return this.name;
     }
 }

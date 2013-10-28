@@ -22,17 +22,17 @@ import ch.jeda.ui.Image;
 
 public abstract class Block {
 
-    public static final Block BROWN = new Block.DefaultBlock("BrownBlock");
-    public static final Block DIRT = new Block.DefaultBlock("DirtBlock");
+    public static final Block BROWN = new Block.DefaultBlock("BROWN");
+    public static final Block DIRT = new Block.DefaultBlock("DIRT");
     public static final Block EMPTY = new Block.EmptyBlock();
-    public static final Block GRASS = new Block.DefaultBlock("GrassBlock");
-    public static final Block ICE = new Block.DefaultBlock("IceBlock");
-    public static final Block PLAIN = new Block.DefaultBlock("PlainBlock");
-    public static final Block STONE = new Block.DefaultBlock("StoneBlock");
-    public static final Block WALL = new Block.DefaultBlock("WallBlock");
-    public static final Block WATER = new Block.DefaultBlock("WaterBlock");
-    public static final Block WINDOW = new Block.DefaultBlock("WindowBlock");
-    public static final Block WOOD = new Block.DefaultBlock("WoodBlock");
+    public static final Block GRASS = new Block.DefaultBlock("GRASS");
+    public static final Block ICE = new Block.DefaultBlock("ICE");
+    public static final Block PLAIN = new Block.DefaultBlock("PLAIN");
+    public static final Block STONE = new Block.DefaultBlock("STONE");
+    public static final Block WALL = new Block.DefaultBlock("WALL");
+    public static final Block WATER = new Block.DefaultBlock("WATER");
+    public static final Block WINDOW = new Block.DefaultBlock("WINDOW");
+    public static final Block WOOD = new Block.DefaultBlock("WOOD");
     public static final float SIZE_X = 100f;
     public static final float SIZE_Y = 40f;
     public static final float SIZE_Z = 82f;
@@ -45,9 +45,11 @@ public abstract class Block {
     private static class DefaultBlock extends Block {
 
         private final Image image;
+        private final String name;
 
         public DefaultBlock(final String name) {
-            this.image = Cute.loadImage(name);
+            this.image = Cute.loadImage(name.toLowerCase() + "_block");
+            this.name = name;
         }
 
         @Override
@@ -58,6 +60,11 @@ public abstract class Block {
         @Override
         public boolean isEmpty() {
             return false;
+        }
+
+        @Override
+        public String toString() {
+            return this.name;
         }
     }
 
