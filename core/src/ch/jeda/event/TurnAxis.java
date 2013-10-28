@@ -16,17 +16,6 @@
  */
 package ch.jeda.event;
 
-public enum EventType {
-
-    ACTION,
-    KEY_DOWN,
-    KEY_TYPED,
-    KEY_UP,
-    POINTER_DOWN,
-    POINTER_MOVED,
-    POINTER_UP,
-    SENSOR,
-    TICK,
-    TURN,
-    WINDOW_FOCUS_LOST
+public enum TurnAxis {
+    MOUSE_WHEEL,
 }

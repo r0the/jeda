@@ -16,17 +16,22 @@
  */
 package ch.jeda.event;
 
-public enum EventType {
+public class TurnEvent extends Event {
 
-    ACTION,
-    KEY_DOWN,
-    KEY_TYPED,
-    KEY_UP,
-    POINTER_DOWN,
-    POINTER_MOVED,
-    POINTER_UP,
-    SENSOR,
-    TICK,
-    TURN,
-    WINDOW_FOCUS_LOST
+    private final float amount;
+    private final TurnAxis axis;
+
+    public TurnEvent(final Object source, final float amount, final TurnAxis axis) {
+        super(source, EventType.TURN);
+        this.amount = amount;
+        this.axis = axis;
+    }
+
+    public float getAmount() {
+        return this.amount;
+    }
+
+    public TurnAxis getAxis() {
+        return this.axis;
+    }
 }

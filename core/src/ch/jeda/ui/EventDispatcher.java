@@ -22,6 +22,8 @@ import ch.jeda.event.ActionListener;
 import ch.jeda.event.Event;
 import ch.jeda.event.SensorEvent;
 import ch.jeda.event.SensorListener;
+import ch.jeda.event.TurnEvent;
+import ch.jeda.event.TurnListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +44,7 @@ class EventDispatcher {
     private final List<PointerUpListener> pointerUpListeners;
     private final List<SensorListener> sensorListeners;
     private final List<TickListener> tickListeners;
+    private final List<TurnListener> turnListeners;
     private final List<WindowFocusLostListener> windowFocusLostListeners;
 
     EventDispatcher() {
@@ -58,6 +61,7 @@ class EventDispatcher {
         this.pointerUpListeners = new ArrayList<PointerUpListener>();
         this.sensorListeners = new ArrayList<SensorListener>();
         this.tickListeners = new ArrayList<TickListener>();
+        this.turnListeners = new ArrayList<TurnListener>();
         this.windowFocusLostListeners = new ArrayList<WindowFocusLostListener>();
     }
 
@@ -178,6 +182,17 @@ class EventDispatcher {
                     }
 
                     break;
+                case TURN:
+                    for (int j = 0; j < this.turnListeners.size(); ++j) {
+                        try {
+                            this.turnListeners.get(j).onTurn((TurnEvent) event);
+                        }
+                        catch (final Throwable ex) {
+                            IO.err(ex, "java.event.error");
+                        }
+                    }
+
+                    break;
                 case WINDOW_FOCUS_LOST:
                     for (int j = 0; j < this.windowFocusLostListeners.size(); ++j) {
                         try {
@@ -255,6 +270,10 @@ class EventDispatcher {
             this.tickListeners.add((TickListener) listener);
         }
 
+        if (listener instanceof TurnListener) {
+            this.turnListeners.add((TurnListener) listener);
+        }
+
         if (listener instanceof WindowFocusLostListener) {
             this.windowFocusLostListeners.add((WindowFocusLostListener) listener);
         }
@@ -296,6 +315,10 @@ class EventDispatcher {
 
         if (listener instanceof TickListener) {
             this.tickListeners.remove((TickListener) listener);
+        }
+
+        if (listener instanceof TurnListener) {
+            this.turnListeners.remove((TurnListener) listener);
         }
 
         if (listener instanceof WindowFocusLostListener) {

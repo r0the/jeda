@@ -1,11 +1,14 @@
 package ch.jeda.test;
 
 import ch.jeda.*;
+import ch.jeda.event.TurnEvent;
+import ch.jeda.event.TurnListener;
 import ch.jeda.ui.*;
 
 public class InputTest extends Program implements KeyListener,
                                                   KeyTypedListener,
-                                                  PointerListener {
+                                                  PointerListener,
+                                                  TurnListener {
 
     Window window;
     int y;
@@ -60,9 +63,19 @@ public class InputTest extends Program implements KeyListener,
         drawMessage(toMessage(event));
     }
 
+    @Override
+    public void onTurn(TurnEvent event) {
+        drawMessage(toMessage(event));
+    }
+
     private String toMessage(PointerEvent event) {
         return Util.toString("type=", event.getType(), ", id=", event.getPointerId(), ", x=",
                              event.getX(), ", y=", event.getY(), ", device=", event.getSource());
+    }
+
+    private String toMessage(TurnEvent event) {
+        return Util.toString("type=", event.getType(), ", amount=", event.getAmount(), ", axis=",
+                             event.getAxis(), ", device=", event.getSource());
     }
 
     private String toMessage(KeyEvent event) {
