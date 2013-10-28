@@ -78,6 +78,18 @@ public class CuteObject {
         return this.objectType;
     }
 
+    public final float getVx() {
+        return this.vx;
+    }
+
+    public final float getVy() {
+        return this.vy;
+    }
+
+    public final float getVz() {
+        return this.vz;
+    }
+
     public final float getX() {
         return this.x;
     }
@@ -90,11 +102,11 @@ public class CuteObject {
         return this.z;
     }
 
-    public void setMessage(final String message) {
+    public final void setMessage(final String message) {
         this.setMessage(message, -1f);
     }
 
-    public void setMessage(final String message, final float seconds) {
+    public final void setMessage(final String message, final float seconds) {
         this.message = message;
         this.messageTimeout = seconds;
     }
@@ -121,6 +133,10 @@ public class CuteObject {
     public void update(final float dt) {
     }
 
+    protected void moveTo(final float newX, final float newY, final float newZ) {
+        this.setPosition(newX, newY, newZ);
+    }
+
     void internalUpdate(final float dt) {
         if (this.messageTimeout > 0f) {
             this.messageTimeout -= dt;
@@ -133,7 +149,7 @@ public class CuteObject {
         float newX = getX() + this.vx * dt;
         float newY = getY() + this.vy * dt;
         float newZ = getZ() + this.vz * dt;
-        this.setPosition(newX, newY, newZ);
+        this.moveTo(newX, newY, newZ);
     }
 
     void setRenderer(final CuteWorld renderer) {

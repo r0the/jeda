@@ -38,7 +38,9 @@ public abstract class Block {
     public static final float SIZE_Z = 82f;
     public static final float TOP_OFFSET = 120f;
 
-    public abstract void draw(Canvas paramCanvas, float paramFloat1, float paramFloat2);
+    public abstract void draw(Canvas canvas, float x, float y);
+
+    public abstract void draw(Canvas canvas, float x, float y, int alpha);
 
     public abstract boolean isEmpty();
 
@@ -58,6 +60,11 @@ public abstract class Block {
         }
 
         @Override
+        public void draw(Canvas canvas, float x, float y, final int alpha) {
+            canvas.drawImage(x, y, this.image, alpha, Alignment.BOTTOM_CENTER);
+        }
+
+        @Override
         public boolean isEmpty() {
             return false;
         }
@@ -72,6 +79,10 @@ public abstract class Block {
 
         @Override
         public void draw(final Canvas canvas, final float x, final float y) {
+        }
+
+        @Override
+        public void draw(final Canvas canvas, final float x, final float y, final int alpha) {
         }
 
         @Override

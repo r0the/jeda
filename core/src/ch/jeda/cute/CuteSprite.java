@@ -18,10 +18,9 @@ package ch.jeda.cute;
 
 import ch.jeda.ui.Canvas;
 
-public class CuteSprite
-    extends CuteObject {
+public class CuteSprite extends CuteObject {
 
-    private CuteSprite.ControlState state;
+    private ControlState state;
 
     public CuteSprite(final CuteObjectType objectType) {
         this(objectType, 0f, 0f, 0f);
