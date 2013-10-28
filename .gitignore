@@ -1,4 +1,4 @@
-# NetBeans generated files
+# NetBeans generated project files
 
 build/
 dist/
@@ -17,12 +17,10 @@ dist/
 nbjeda7.3/jedandroid/src/ch/jeda/netbeans/android/res/jedandroid.jar
 nbjeda7.3/jeda/src/ch/jeda/netbeans/java/res/jeda.jar
 
-# Jedandroid generated files
+# Android generated files
 
-jedandroid/bin/
-jedandroid/gen/
-jedandroid/libs/
-jedandroid/gen/
-jedandroid/nbandroid/
-
-jedandroid/local.properties
+*/bin/
+*/gen/
+*/libs/
+*/gen/
+*/local.properties
