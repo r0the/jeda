@@ -49,7 +49,9 @@ class LogWindow extends AutoCloseWindow {
         }
 
         this.logTextArea.setCaretPosition(this.logTextArea.getDocument().getLength());
-        this.setVisible(true);
+        if (!this.isVisible()) {
+            this.setVisible(true);
+        }
     }
 
     private void changeFontSize(float delta) {
