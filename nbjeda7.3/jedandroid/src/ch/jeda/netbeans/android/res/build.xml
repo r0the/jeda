@@ -7,10 +7,12 @@
         <isset property="env.ANDROID_HOME"/>
     </condition>
     <property file="project.properties"/>
-    <property file="jeda.properties"/>
     <fail message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable." unless="sdk.dir"/>
 
-    <property name="jeda.manifest.10"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+    <!-- Load Jeda project configuration -->
+    <property file="jeda.properties"/>
+    <!-- Predefined AndroidManifest building blocks -->
+    <property name="jeda.android-manifest.start"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="]]>${jeda.application.package}<![CDATA["
       android:versionCode="]]>${jeda.application.version.code}<![CDATA["
@@ -19,66 +21,62 @@
                       android:xlargeScreens="true"/>
     <uses-sdk android:minSdkVersion="10"
               android:targetSdkVersion="15"/>
-    <application android:label="@string/app_name"
+]]></property>
+    <property name="jeda.android-manifest.permission.internet.true"><![CDATA[    <uses-permission android:name="android.permission.INTERNET"/>
+]]></property>
+    <property name="jeda.android-manifest.application.10"><![CDATA[    <application android:label="@string/app_name"
                  android:icon="@drawable/icon">
         <activity android:name="ch.jeda.platform.android.Main"
                   android:icon="@drawable/icon"
                   android:label="@string/app_name"
                   android:configChanges="orientation|screenLayout">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-    </application>
-</manifest>
-]]>
-    </property>
-
-    <property name="jeda.manifest.15"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="]]>${jeda.application.package}<![CDATA["
-      android:versionCode="]]>${jeda.application.version.code}<![CDATA["
-      android:versionName="]]>${jeda.application.version.name}<![CDATA[">
-    <supports-screens android:largeScreens="true"
-                      android:xlargeScreens="true"/>
-    <uses-sdk android:minSdkVersion="10"
-              android:targetSdkVersion="15"/>
-    <application android:label="@string/app_name"
+]]></property>
+    <property name="jeda.android-manifest.application.15"><![CDATA[    <application android:label="@string/app_name"
                  android:icon="@drawable/icon">
         <activity android:name="ch.jeda.platform.android.Main"
                   android:icon="@drawable/icon"
                   android:label="@string/app_name"
                   android:configChanges="orientation|screenLayout|screenSize">
-            <intent-filter>
+]]></property>
+    <property name="jeda.android-manifest.end"><![CDATA[            <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>
 </manifest>
-]]>
-    </property>
+]]></property>
 
-    <condition property="jeda.android-manifest-xml-content" value="${jeda.manifest.15}">
+    <!-- Choose AndroidManifest blocks according to Jeda project configuration. -->
+    <condition property="jeda.android-manifest.application" value="${jeda.android-manifest.application.15}">
         <equals arg1="${jeda.android.platform}" arg2="15" casesensitive="false"/>
     </condition>
-    <condition property="jeda.project-properties-content" value="target=android-15">
-        <equals arg1="${jeda.android.platform}" arg2="15" casesensitive="false"/>
+    <condition property="jeda.android-manifest.application" value="${jeda.android-manifest.application.10}">
+        <equals arg1="${jeda.android.platform}" arg2="10" casesensitive="false"/>
     </condition>
 
-    <condition property="jeda.android-manifest-xml-content" value="${jeda.manifest.10}">
-        <equals arg1="${jeda.android.platform}" arg2="10" casesensitive="false"/>
-    </condition>
-    <condition property="jeda.project-properties-content" value="target=android-10">
-        <equals arg1="${jeda.android.platform}" arg2="10" casesensitive="false"/>
+    <property name="jeda.android-manifest.permission.internet" value=""/>
+    <condition property="jeda.android-manifest.permission.internet" value="${jeda.android-manifest.permission.internet.true}">
+        <equals arg1="${jeda.android.networking}" arg2="true" casesensitive="false"/>
     </condition>
 
     <!-- Write AndroidManifest.xml. -->
     <!-- This cannot be done with the echoxml task because of namespace problems. -->
-    <echo output="AndroidManifest.xml" append="false" message="${jeda.android-manifest-xml-content}"/>
+    <echo output="AndroidManifest.xml" append="false" message="${jeda.android-manifest.start}"/>
+    <echo output="AndroidManifest.xml" append="true" message="${jeda.android-manifest.permission.internet}"/>
+    <echo output="AndroidManifest.xml" append="true" message="${jeda.android-manifest.application}"/>
+    <echo output="AndroidManifest.xml" append="true" message="${jeda.android-manifest.end}"/>
+
+    <!-- Choose project.properties content according to Jeda project configuration. -->
+    <condition property="jeda.project-properties.content" value="target=android-15">
+        <equals arg1="${jeda.android.platform}" arg2="15" casesensitive="false"/>
+    </condition>
+    <condition property="jeda.project-properties.content" value="target=android-10">
+        <equals arg1="${jeda.android.platform}" arg2="10" casesensitive="false"/>
+    </condition>
+
     <!-- Write project.properties -->
-    <echo output="project.properties" append="false" message="${jeda.project-properties-content}"/>
+    <echo output="project.properties" append="false" message="${jeda.project-properties.content}"/>
 
     <import file="custom_rules.xml" optional="true"/>
     <import file="${sdk.dir}/tools/ant/build.xml"/>
