@@ -4,5 +4,5 @@ Created-By: 1.7.0_25-b30 (Oracle Corporation)
 OpenIDE-Module: ch.jeda.netbeans.java
 OpenIDE-Module-Localizing-Bundle: ch/jeda/netbeans/java/Bundle.propert
  ies
-OpenIDE-Module-Specification-Version: 0.9.14.14
+OpenIDE-Module-Specification-Version: 0.9.15
 
