@@ -16,97 +16,44 @@
  */
 package ch.jeda.input;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * <b>Experimental.</b> Represents a button of an {@link InputDevice}.
  */
-public final class Button implements Serializable {
+public enum Button {
 
-    private static final Map<Integer, String> ID_NAME_MAP = new HashMap<Integer, String>();
-    private static final Map<String, Integer> NAME_ID_MAP = new HashMap<String, Integer>();
-    private static int NEXT_ID = 0;
     /**
      * The gamepad "A" button.
      */
-    public static final Button A = register("A");
+    A,
     /**
      * The gamepad "B" button.
      */
-    public static final Button B = register("B");
+    B,
     /**
-     * The gamepad left index finger button (top left shoulder button on Xbox
-     * compatible controller).
+     * The gamepad left index finger button (top left shoulder button on Xbox compatible controller).
      */
-    public static final Button LEFT_INDEX = register("LeftIndex");
-    public static final Button LEFT_THUMB = register("LeftThumb");
-    public static final Button MODE = register("Mode");
+    LEFT_INDEX,
+    LEFT_THUMB,
+    MODE,
     /**
-     * The gamepad right index finger button (top right shoulder button on Xbox
-     * compatible controller).
+     * The gamepad right index finger button (top right shoulder button on Xbox compatible controller).
      */
-    public static final Button RIGHT_INDEX = register("RightIndex");
-    public static final Button RIGHT_THUMB = register("RightThumb");
+    RIGHT_INDEX,
+    RIGHT_THUMB,
     /**
      * The gamepad "select" button.
      */
-    public static final Button SELECT = register("Select");
+    SELECT,
     /**
      * The gamepad "start" button.
      */
-    public static final Button START = register("Start");
+    START,
     /**
      * The gamepad "X" button.
      */
-    public static final Button X = register("X");
+    X,
     /**
      * The gamepad "Y" button.
      */
-    public static final Button Y = register("Y");
-    /**
-     * @since 1
-     */
-    public final int id;
-
-    @Deprecated
-    public Button(String name) {
-        this(NAME_ID_MAP.get(name));
-    }
-
-    @Override
-    public boolean equals(final Object object) {
-        if (object instanceof Button) {
-            return this.id == ((Button) object).id;
-        }
-        else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return 23 * this.id;
-    }
-
-    @Override
-    public String toString() {
-        return ID_NAME_MAP.get(this.id);
-    }
-
-    private Button() {
-        this(0);
-    }
-
-    private Button(final int id) {
-        this.id = id;
-    }
-
-    private static Button register(final String name) {
-        final int id = ++NEXT_ID;
-        ID_NAME_MAP.put(id, name);
-        NAME_ID_MAP.put(name, id);
-        return new Button(id);
-    }
+    Y
 }

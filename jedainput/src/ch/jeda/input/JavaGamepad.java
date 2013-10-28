@@ -14,57 +14,50 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package ch.jeda.input;
 
-import ch.jeda.platform.InputDeviceImp;
-import ch.jeda.ui.Axis;
-import ch.jeda.ui.Button;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import net.java.games.input.Component;
 import net.java.games.input.Component.Identifier;
 
-public class JavaGamepad implements InputDeviceImp {
+public class JavaGamepad {
 
     private static final Map<Component.Identifier, Axis> DEFAULT_AXIS_MAP = initDefaultAxisMap();
     private static final Map<String, Profile> PROFILE_MAP = initProfileMap();
-    private final Map<Axis, Component> axisMap;
-    private final Map<Button, Component> buttonMap;
+    private final EnumMap<Axis, Component> axisMap;
+    private final EnumMap<Button, Component> buttonMap;
     private final net.java.games.input.Controller imp;
 
-    @Override
     public Iterable<Axis> getAxes() {
         return this.axisMap.keySet();
     }
 
-    @Override
-    public double getAxisValue(Axis axis) {
+    public float getAxisValue(Axis axis) {
         return this.axisMap.get(axis).getPollData();
     }
 
-    @Override
     public Iterable<Button> getButtons() {
         return this.buttonMap.keySet();
     }
 
-    @Override
     public String getName() {
         return this.imp.getName();
     }
 
-    @Override
     public boolean isButtonPressed(Button button) {
         return this.buttonMap.get(button).getPollData() == 1f;
     }
 
-    @Override
     public void poll() {
         this.imp.poll();
     }
 
     JavaGamepad(net.java.games.input.Controller imp) {
         this.imp = imp;
-        this.axisMap = new HashMap();
-        this.buttonMap = new HashMap();
+        this.axisMap = new EnumMap<Axis, Component>(Axis.class);
+        this.buttonMap = new EnumMap<Button, Component>(Button.class);
         final Profile profile = PROFILE_MAP.get(imp.getName());
 
         for (Component component : this.imp.getComponents()) {

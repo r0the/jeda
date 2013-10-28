@@ -16,62 +16,10 @@
  */
 package ch.jeda.input;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * <b>Experimental.</b> Represents an axis of an {@link InputDevice}.
  */
-public final class Axis implements Serializable {
+public enum Axis {
 
-    private static final Map<Integer, String> ID_NAME_MAP = new HashMap<Integer, String>();
-    private static final Map<String, Integer> NAME_ID_MAP = new HashMap<String, Integer>();
-    private static int NEXT_ID = 0;
-    public static final Axis LEFT_X = register("LeftX");
-    public static final Axis LEFT_Y = register("LeftY");
-    public static final Axis LEFT_Z = register("LeftZ");
-    public static final Axis RIGHT_X = register("RightX");
-    public static final Axis RIGHT_Y = register("RightY");
-    public static final Axis RIGHT_Z = register("RightZ");
-    public static final Axis POV = register("POV");
-    /**
-     * @since 1
-     */
-    public final int id;
-
-    @Override
-    public boolean equals(final Object object) {
-        if (object instanceof Axis) {
-            return this.id == ((Axis) object).id;
-        }
-        else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return 23 * this.id;
-    }
-
-    @Override
-    public String toString() {
-        return ID_NAME_MAP.get(this.id);
-    }
-
-    private Axis() {
-        this(0);
-    }
-
-    private Axis(final int id) {
-        this.id = id;
-    }
-
-    private static Axis register(final String name) {
-        final int id = ++NEXT_ID;
-        ID_NAME_MAP.put(id, name);
-        NAME_ID_MAP.put(name, id);
-        return new Axis(id);
-    }
+    LEFT_X, LEFT_Y, LEFT_Z, RIGHT_X, RIGHT_Y, RIGHT_Z, POV
 }
