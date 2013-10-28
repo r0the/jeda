@@ -17,9 +17,9 @@
 package ch.jeda.event;
 
 /**
- * The listener interface for receiving sensor events. To have an object receive events of type {@link EventType#TYPE},
- * have the class of the object implement the interface and register the object with
- * {@link Window#addEventListener(java.lang.Object)}.
+ * The listener interface for receiving sensor events. To have an object receive events of type
+ * {@link ch.jeda.event.EventType#SENSOR}, have the class of the object implement the interface and register the object
+ * with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
  *
  * To reveice sensor events, the corresponding sensor must be enabled by calling
  * {@link ch.jeda.Device#enableSensor(ch.jeda.SensorType)}.
