@@ -30,7 +30,7 @@ public final class Engine {
 
     private static final Object stateLock = new Object();
     private static Thread engineThread;
-    private static ProgramWrapper program;
+    private static ProgramClassWrapper program;
     private static Context context;
     private static State currentState;
     private static State nextState;
@@ -84,7 +84,7 @@ public final class Engine {
         }
     }
 
-    private static void enterCreateProgramState(final ProgramWrapper programWrapper) {
+    private static void enterCreateProgramState(final ProgramClassWrapper programWrapper) {
         Engine.program = programWrapper;
         nextState = new CreateProgramState(programWrapper);
     }
@@ -93,7 +93,7 @@ public final class Engine {
         nextState = new ExecuteProgramState(program);
     }
 
-    private static void enterSelectProgramState(final List<ProgramWrapper> candidates) {
+    private static void enterSelectProgramState(final List<ProgramClassWrapper> candidates) {
         nextState = new SelectProgramState(candidates);
     }
 
@@ -147,14 +147,14 @@ public final class Engine {
 
         @Override
         void run() {
-            final List<ProgramWrapper> programs = new ArrayList<ProgramWrapper>();
-            ProgramWrapper defaultProgram = null;
+            final List<ProgramClassWrapper> programs = new ArrayList<ProgramClassWrapper>();
+            ProgramClassWrapper defaultProgram = null;
             try {
                 final String defaultProgramName = context.defaultProgramName();
                 final Class[] classes = context.loadClasses();
                 // Load jeda plugins and jeda programs
                 for (int i = 0; i < classes.length; ++i) {
-                    final ProgramWrapper pw = ProgramWrapper.tryCreate(classes[i], context);
+                    final ProgramClassWrapper pw = ProgramClassWrapper.tryCreate(classes[i], context);
                     if (pw != null) {
                         programs.add(pw);
                         if (pw.getProgramClassName().equals(defaultProgramName)) {
@@ -191,9 +191,9 @@ public final class Engine {
 
     static class CreateProgramState extends State {
 
-        private final ProgramWrapper programWrapper;
+        private final ProgramClassWrapper programWrapper;
 
-        CreateProgramState(final ProgramWrapper programWrapper) {
+        CreateProgramState(final ProgramClassWrapper programWrapper) {
             this.programWrapper = programWrapper;
         }
 
@@ -226,9 +226,9 @@ public final class Engine {
 
     static class ExecuteProgramState extends State {
 
-        private final ProgramWrapper programWrapper;
+        private final ProgramClassWrapper programWrapper;
 
-        ExecuteProgramState(final ProgramWrapper programWrapper) {
+        ExecuteProgramState(final ProgramClassWrapper programWrapper) {
             this.programWrapper = programWrapper;
         }
 
@@ -265,9 +265,9 @@ public final class Engine {
 
     static class SelectProgramState extends State {
 
-        private final List<ProgramWrapper> candidates;
+        private final List<ProgramClassWrapper> candidates;
 
-        SelectProgramState(final List<ProgramWrapper> candidates) {
+        SelectProgramState(final List<ProgramClassWrapper> candidates) {
             this.candidates = candidates;
         }
 
@@ -288,8 +288,8 @@ public final class Engine {
         @Override
         void run() {
             try {
-                final SelectionRequest<ProgramWrapper> request = new SelectionRequest<ProgramWrapper>();
-                for (ProgramWrapper candidate : this.candidates) {
+                final SelectionRequest<ProgramClassWrapper> request = new SelectionRequest<ProgramClassWrapper>();
+                for (ProgramClassWrapper candidate : this.candidates) {
                     request.addItem(candidate.getName(), candidate);
                 }
 

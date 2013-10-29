@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2013 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,12 +21,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-abstract class ProgramWrapper {
+abstract class ProgramClassWrapper {
 
     private static final String RUN_METHOD = "run";
     private final String name;
 
-    static ProgramWrapper tryCreate(final Class<?> candidate, final Context context) {
+    static ProgramClassWrapper tryCreate(final Class<?> candidate, final Context context) {
         // An abstract class cannot be a valid Jeda program.
         if (Modifier.isAbstract(candidate.getModifiers())) {
             return null;
@@ -57,7 +57,7 @@ abstract class ProgramWrapper {
 
     abstract void setState(ProgramState state);
 
-    private static ProgramWrapper tryCreateAnnotated(final Class<?> candidate, final Context context) {
+    private static ProgramClassWrapper tryCreateAnnotated(final Class<?> candidate, final Context context) {
         try {
             final Constructor<?> constructor = candidate.getDeclaredConstructor();
             if (!Modifier.isPublic(constructor.getModifiers())) {
@@ -69,39 +69,39 @@ abstract class ProgramWrapper {
                 return null;
             }
 
-            return new AnnotatedProgramWrapper(programName(candidate, context), constructor, runMethod);
+            return new AnnotatedProgramClassWrapper(programName(candidate, context), constructor, runMethod);
 
         }
-        catch (NoSuchMethodException ex) {
+        catch (final NoSuchMethodException ex) {
             return null;
         }
     }
 
-    static ProgramWrapper tryCreateJedaProgram(final Class<?> candidate, final Context context) {
+    static ProgramClassWrapper tryCreateJedaProgram(final Class<?> candidate, final Context context) {
         try {
             final Constructor<JedaProgram> constructor =
                 ((Class<JedaProgram>) candidate).getDeclaredConstructor();
             constructor.setAccessible(true);
-            return new JedaProgramWrapper(programName(candidate, context), constructor);
+            return new JedaProgramClassWrapper(programName(candidate, context), constructor);
         }
-        catch (NoSuchMethodException ex) {
+        catch (final NoSuchMethodException ex) {
             return null;
         }
-        catch (SecurityException ex) {
+        catch (final SecurityException ex) {
             return null;
         }
     }
 
-    private static ProgramWrapper tryCreateInherited(final Class<Program> candidate, final Context context) {
+    private static ProgramClassWrapper tryCreateInherited(final Class<Program> candidate, final Context context) {
         try {
             final Constructor<Program> constructor = candidate.getDeclaredConstructor();
             if (!Modifier.isPublic(constructor.getModifiers())) {
                 return null;
             }
 
-            return new InheritedProgramWrapper(programName(candidate, context), constructor);
+            return new InheritedProgramClassWrapper(programName(candidate, context), constructor);
         }
-        catch (NoSuchMethodException ex) {
+        catch (final NoSuchMethodException ex) {
             return null;
         }
     }
@@ -116,19 +116,18 @@ abstract class ProgramWrapper {
         }
     }
 
-    ProgramWrapper(final String name) {
+    ProgramClassWrapper(final String name) {
         this.name = name;
     }
 
-    private static final class AnnotatedProgramWrapper extends ProgramWrapper {
+    private static final class AnnotatedProgramClassWrapper extends ProgramClassWrapper {
 
         private final Constructor<?> constructor;
         private final Method runMethod;
         private Object program;
 
-        public AnnotatedProgramWrapper(final String name,
-                                       final Constructor<?> constructor,
-                                       final Method runMethod) {
+        public AnnotatedProgramClassWrapper(final String name, final Constructor<?> constructor,
+                                            final Method runMethod) {
             super(name);
             this.constructor = constructor;
             this.runMethod = runMethod;
@@ -139,7 +138,7 @@ abstract class ProgramWrapper {
             try {
                 this.program = this.constructor.newInstance();
             }
-            catch (InvocationTargetException ex) {
+            catch (final InvocationTargetException ex) {
                 throw ex.getCause();
             }
         }
@@ -154,7 +153,7 @@ abstract class ProgramWrapper {
             try {
                 this.runMethod.invoke(this.program);
             }
-            catch (InvocationTargetException ex) {
+            catch (final InvocationTargetException ex) {
                 throw ex.getCause();
             }
         }
@@ -165,13 +164,12 @@ abstract class ProgramWrapper {
         }
     }
 
-    private static final class JedaProgramWrapper extends ProgramWrapper {
+    private static final class JedaProgramClassWrapper extends ProgramClassWrapper {
 
         private final Constructor<JedaProgram> constructor;
         private JedaProgram program;
 
-        JedaProgramWrapper(final String name,
-                           final Constructor<JedaProgram> constructor) {
+        JedaProgramClassWrapper(final String name, final Constructor<JedaProgram> constructor) {
             super(name);
             this.constructor = constructor;
         }
@@ -181,8 +179,8 @@ abstract class ProgramWrapper {
             try {
                 this.program = this.constructor.newInstance();
             }
-            catch (InvocationTargetException ex) {
-                throw (Exception) ex.getCause();
+            catch (final InvocationTargetException ex) {
+                throw ex.getCause();
             }
         }
 
@@ -202,13 +200,12 @@ abstract class ProgramWrapper {
         }
     }
 
-    private static final class InheritedProgramWrapper extends ProgramWrapper {
+    private static final class InheritedProgramClassWrapper extends ProgramClassWrapper {
 
         private final Constructor<Program> constructor;
         private Program program;
 
-        InheritedProgramWrapper(final String name,
-                                final Constructor<Program> constructor) {
+        InheritedProgramClassWrapper(final String name, final Constructor<Program> constructor) {
             super(name);
             this.constructor = constructor;
         }
@@ -218,8 +215,8 @@ abstract class ProgramWrapper {
             try {
                 this.program = this.constructor.newInstance();
             }
-            catch (InvocationTargetException ex) {
-                throw (Exception) ex.getCause();
+            catch (final InvocationTargetException ex) {
+                throw ex.getCause();
             }
         }
 
