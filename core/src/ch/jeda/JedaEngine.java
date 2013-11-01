@@ -34,7 +34,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 class JedaEngine implements PlatformCallback, Runnable {
-    
+
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
     private static final float DEFAULT_TICK_FREQUENCY = 60f;
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = "res/jeda.properties";
@@ -51,16 +51,15 @@ class JedaEngine implements PlatformCallback, Runnable {
     private final List<TickListener> tickListeners;
     private final Timer timer;
     private JedaProgramExecutor currentProgram;
-    
+
     static JedaEngine create() {
         final JedaEngine result = new JedaEngine();
         final Thread eventThread = new Thread(result);
         eventThread.setName(Helper.getMessage("jeda.engine.event-thread-name"));
-        eventThread.setDaemon(true);
         eventThread.start();
         return result;
     }
-    
+
     JedaEngine() {
         this.currentProgramLock = new Object();
         this.frequencyMeter = new FrequencyMeter();
@@ -92,11 +91,11 @@ class JedaEngine implements PlatformCallback, Runnable {
         catch (final Exception ex) {
             IO.err(ex, "jeda.engine.error.init-classes");
         }
-        
+
         this.programClasses = programClassList.toArray(new ProgramClassWrapper[programClassList.size()]);
         this.plugins.initialize();
     }
-    
+
     @Override
     public void run() {
         this.timer.start();
@@ -111,11 +110,11 @@ class JedaEngine implements PlatformCallback, Runnable {
                     IO.err(ex, "java.event.error");
                 }
             }
-            
+
             this.timer.tick();
         }
     }
-    
+
     @Override
     public void stop() {
         synchronized (this.currentProgramLock) {
@@ -128,17 +127,17 @@ class JedaEngine implements PlatformCallback, Runnable {
             }
         }
     }
-    
+
     void addTickListener(final TickListener listener) {
         if (listener != null && !this.tickListeners.contains(listener)) {
             this.tickListeners.add(listener);
         }
     }
-    
+
     public CanvasImp createCanvasImp(final int width, final int height) {
         return this.platform.createCanvasImp(width, height);
     }
-    
+
     public ImageImp createImageImp(final String path) {
         final ImageImp result = this.platform.loadImageImp(path);
         if (result == null) {
@@ -148,44 +147,44 @@ class JedaEngine implements PlatformCallback, Runnable {
             return result;
         }
     }
-    
+
     float getTickFrequency() {
         return this.timer.getTargetFrequency();
     }
-    
+
     @Deprecated
     Platform getPlatform() {
         return this.platform;
     }
-    
+
     ProgramClassWrapper[] getProgramClasses() {
         return this.programClasses;
     }
-    
+
     Properties getProperties() {
         return this.properties;
     }
-    
+
     void programTerminated() {
         synchronized (this.currentProgramLock) {
             this.currentProgram = null;
         }
     }
-    
+
     void removeTickListener(final TickListener listener) {
         if (listener != null) {
             this.tickListeners.remove(listener);
         }
     }
-    
+
     void showSelectionRequest(final SelectionRequest request) {
         this.platform.showSelectionRequest(request);
     }
-    
+
     void setTickFrequency(final float hertz) {
         this.timer.setTargetFrequency(hertz);
     }
-    
+
     void startProgram(final String programClassName) {
         synchronized (this.currentProgramLock) {
             if (this.currentProgram != null) {
@@ -199,13 +198,13 @@ class JedaEngine implements PlatformCallback, Runnable {
             }
         }
     }
-    
+
     private static Platform initPlatform(final String platformClassName, final PlatformCallback callback) {
         if (platformClassName == null || platformClassName.isEmpty()) {
             IO.err("jeda.engine.error.platform-missing-class-name");
             return null;
         }
-        
+
         try {
             final Class<?> clazz = JedaEngine.class.getClassLoader().loadClass(platformClassName);
             final Constructor<?> ctor = clazz.getConstructor(PlatformCallback.class);
@@ -240,7 +239,7 @@ class JedaEngine implements PlatformCallback, Runnable {
             return null;
         }
     }
-    
+
     private static Properties initProperties() {
         java.util.Properties result = new java.util.Properties();
         loadProperties(result, JEDA_SYSTEM_PROPERTIES_FILE);
@@ -249,14 +248,14 @@ class JedaEngine implements PlatformCallback, Runnable {
         result.putAll(System.getProperties());
         return new Properties(result);
     }
-    
+
     private static void loadProperties(final java.util.Properties properties, final String path) {
         final URL url = JedaEngine.class.getClassLoader().getResource(path);
         if (url == null) {
             IO.err("jeda.engine.error.properties-not-found", path);
             return;
         }
-        
+
         InputStream in = null;
         try {
             in = url.openStream();
