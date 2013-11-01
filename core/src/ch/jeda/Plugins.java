@@ -25,11 +25,11 @@ class Plugins {
 
     private final List<PluginWrapper> list;
 
-    public Plugins() {
+    Plugins() {
         this.list = new ArrayList<PluginWrapper>();
     }
 
-    public void tryAddPlugin(final Class<?> candidate) {
+    void tryAddPlugin(final Class<?> candidate) {
         if (!Helper.hasInterface(candidate, Plugin.class)) {
             return;
         }
@@ -49,7 +49,7 @@ class Plugins {
         }
     }
 
-    public void initialize() {
+    void initialize() {
         for (int i = 0; i < this.list.size(); ++i) {
             try {
                 this.list.get(i).initialize();

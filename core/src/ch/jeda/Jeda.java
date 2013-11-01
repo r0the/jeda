@@ -42,6 +42,9 @@ public class Jeda {
 
     private static final JedaEngine ENGINE = JedaEngine.create();
 
+    private Jeda() {
+    }
+
     /**
      * Adds a tick listener to the Jeda engine. The listener will receive {@link ch.jeda.event.EventType#TICK} events in
      * approximately the frequency set with {@link ch.jeda.Jeda#setFrameRate(float)}. Has no effect if <tt>listener</tt>
