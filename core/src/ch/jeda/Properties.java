@@ -34,7 +34,7 @@ public final class Properties {
 
     public Properties(final String filePath) {
         this();
-        final InputStream in = Engine.getContext().openResource(filePath);
+        final InputStream in = Jeda.openResource(filePath);
         if (in == null) {
             return;
         }
@@ -53,6 +53,10 @@ public final class Properties {
                 // ignore
             }
         }
+    }
+
+    public Properties(final java.util.Properties imp) {
+        this.imp = imp;
     }
 
     public void addAll(final Properties properties) {

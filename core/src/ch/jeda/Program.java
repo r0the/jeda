@@ -32,10 +32,7 @@ package ch.jeda;
  *
  * @since 1
  */
-public abstract class Program {
-
-    private final Object stateLock;
-    private ProgramState state;
+public abstract class Program implements Runnable {
 
     /**
      * Constructs a program. The created program will have the state {@link ProgramState#CREATING}.
@@ -43,22 +40,6 @@ public abstract class Program {
      * @since 1
      */
     protected Program() {
-        this.stateLock = new Object();
-        this.state = ProgramState.CREATING;
-    }
-
-    /**
-     * Returns the current program state.
-     *
-     * @return current program state.
-     *
-     * @see ProgramState
-     * @since 1
-     */
-    public final ProgramState getState() {
-        synchronized (this.stateLock) {
-            return this.state;
-        }
     }
 
     /**
@@ -68,14 +49,8 @@ public abstract class Program {
      *
      * @since 1
      */
+    @Override
     public abstract void run();
-
-    /**
-     * Requests the program to stop. Sets the program state to {@link ProgramState#STOPPED}.
-     */
-    public final void stop() {
-        this.setState(ProgramState.STOPPED);
-    }
 
     /**
      * Returns the Jeda system properties.
@@ -84,7 +59,7 @@ public abstract class Program {
      * @see Properties
      */
     protected final Properties getProperties() {
-        return Engine.getContext().getProperties();
+        return Jeda.getProperties();
     }
 
     /**
@@ -150,11 +125,5 @@ public abstract class Program {
     protected final void write(final Object... args) {
         System.out.print(Util.toString(args));
         System.out.flush();
-    }
-
-    final void setState(final ProgramState value) {
-        synchronized (this.stateLock) {
-            this.state = value;
-        }
     }
 }

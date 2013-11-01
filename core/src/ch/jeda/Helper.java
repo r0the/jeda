@@ -46,14 +46,6 @@ class Helper {
         return false;
     }
 
-    static void sleep(final int milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        }
-        catch (InterruptedException ex) {
-        }
-    }
-
     private Helper() {
     }
 }

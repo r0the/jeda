@@ -20,14 +20,14 @@ import android.app.Activity;
 import android.view.WindowManager;
 import ch.jeda.SensorType;
 import ch.jeda.platform.CanvasImp;
-import ch.jeda.platform.ContextImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
 import java.io.InputStream;
 
-class AndroidContextImp implements ContextImp {
+class AndroidPlatform implements Platform {
 
     private final Activity activity;
     private final ResourceManager resourceManager;
@@ -39,11 +39,6 @@ class AndroidContextImp implements ContextImp {
         final AndroidCanvasImp result = new AndroidCanvasImp();
         result.init(width, height);
         return result;
-    }
-
-    @Override
-    public String defaultProgramName() {
-        return null;
     }
 
     public boolean isSensorAvailable(final SensorType sensorType) {
@@ -96,7 +91,7 @@ class AndroidContextImp implements ContextImp {
         this.activity.runOnUiThread(new ShutdownTask(this.viewManager));
     }
 
-    AndroidContextImp(Activity activity) {
+    AndroidPlatform(Activity activity) {
         this.activity = activity;
         this.resourceManager = new ResourceManager(activity);
         this.viewManager = new ViewManager(activity);

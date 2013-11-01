@@ -18,28 +18,28 @@ package ch.jeda.platform.java;
 
 import ch.jeda.SensorType;
 import ch.jeda.platform.CanvasImp;
-import ch.jeda.platform.ContextImp;
+import ch.jeda.platform.Platform;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
 import java.io.InputStream;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-class JavaContextImp implements ContextImp {
+class JavaPlatform implements Platform {
 
-    private final String defaultProgramName;
     private final WindowManager windowManager;
+
+    public JavaPlatform(final PlatformCallback callback) {
+        setLookAndFeel();
+        this.windowManager = new WindowManager(callback);
+    }
 
     @Override
     public CanvasImp createCanvasImp(final int width, final int height) {
         return new JavaCanvasImp(width, height);
-    }
-
-    @Override
-    public String defaultProgramName() {
-        return this.defaultProgramName;
     }
 
     @Override
@@ -97,18 +97,6 @@ class JavaContextImp implements ContextImp {
         this.windowManager.shutdown();
     }
 
-    JavaContextImp(final String[] args) {
-        setLookAndFeel();
-        if (args.length > 0) {
-            this.defaultProgramName = args[0];
-        }
-        else {
-            this.defaultProgramName = null;
-        }
-
-        this.windowManager = new WindowManager();
-    }
-
     private static void setLookAndFeel() {
         try {
             final String defaultLaf = System.getProperty("swing.defaultlaf");
@@ -119,16 +107,16 @@ class JavaContextImp implements ContextImp {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
         }
-        catch (UnsupportedLookAndFeelException ex) {
+        catch (final UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }
-        catch (ClassNotFoundException ex) {
+        catch (final ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        catch (InstantiationException ex) {
+        catch (final InstantiationException ex) {
             ex.printStackTrace();
         }
-        catch (IllegalAccessException ex) {
+        catch (final IllegalAccessException ex) {
             ex.printStackTrace();
         }
     }

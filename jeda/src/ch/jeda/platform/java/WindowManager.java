@@ -16,8 +16,8 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.Engine;
 import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.WindowFeature;
@@ -27,10 +27,11 @@ import java.awt.GraphicsEnvironment;
 import java.util.HashSet;
 import java.util.Set;
 
-public class WindowManager {
+class WindowManager {
 
     private static final GraphicsDevice GRAPHICS_DEVICE =
         GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    private final PlatformCallback callback;
     private final InputWindow inputWindow;
     private final LogWindow logWindow;
     private final SelectionWindow selectionWindow;
@@ -38,7 +39,8 @@ public class WindowManager {
     private CanvasWindow fullscreenWindow;
     private boolean shutdown;
 
-    public WindowManager() {
+    WindowManager(final PlatformCallback callback) {
+        this.callback = callback;
         this.inputWindow = new InputWindow(this);
         this.logWindow = new LogWindow(this);
         this.selectionWindow = new SelectionWindow(this);
@@ -98,7 +100,7 @@ public class WindowManager {
             }
         }
         else {
-            Engine.stop();
+            this.callback.stop();
         }
     }
 

@@ -16,7 +16,8 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.Engine;
+import ch.jeda.Jeda;
+import ch.jeda.JedaInternal;
 import ch.jeda.platform.WindowImp;
 import java.util.EnumSet;
 
@@ -32,14 +33,11 @@ import java.util.EnumSet;
  */
 public class Window extends Canvas {
 
-    private static final float DEFAULT_FRAME_RATE = 30f;
     private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
     private static final int PAUSE_SLEEP_MILLIS = 200;
     private final Drawables drawables;
     private final EventDispatcher eventDispatcher;
     private final Events events;
-    private final FrequencyMeter frequencyMeter;
-    private final Timer timer;
     private WindowImp imp;
     private String title;
 
@@ -106,11 +104,9 @@ public class Window extends Canvas {
         this.eventDispatcher = new EventDispatcher();
         this.events = new Events();
         this.eventDispatcher.addListener(this.events.listener);
-        this.frequencyMeter = new FrequencyMeter();
-        this.timer = new Timer(DEFAULT_FRAME_RATE);
-        this.title = Engine.getProgramName();
+        this.title = Jeda.getProperties().getString("jeda.program.name");
         this.resetImp(width, height, toSet(features));
-        new EventLoop(this).start();
+        Jeda.addTickListener(new EventLoop(this));
     }
 
     public void addDrawable(final Drawable drawable) {
@@ -136,18 +132,6 @@ public class Window extends Canvas {
      */
     public void close() {
         this.imp.close();
-    }
-
-    /**
-     * Returns the target frame rate in Hertz.
-     *
-     * @return the target frame rate
-     *
-     * @see #setFrameRate(float)
-     * @since 1
-     */
-    public final float getFrameRate() {
-        return this.timer.getFrameRate();
     }
 
     /**
@@ -240,19 +224,6 @@ public class Window extends Canvas {
     }
 
     /**
-     * Sets the target frame rate in Hertz. This is the frequency in which the window will be refreshed and
-     * {@link TickEvent} events will be emitted.
-     *
-     * @param hertz new frame rate in hertz
-     *
-     * @see #getFrameRate()
-     * @since 1
-     */
-    public final void setFrameRate(final float hertz) {
-        this.timer.setFrameRate(hertz);
-    }
-
-    /**
      * Sets the shape of the mouse cursor.
      *
      * @param mouseCursor new shape of mouse cursor
@@ -289,38 +260,18 @@ public class Window extends Canvas {
     }
 
     /**
-     * Updates the window. Updates the {@link Events} of the window. If the window has the feature
-     * {@link WindowFeature#DoubleBuffered} activated, also flips foreground and background buffer.
-     *
-     * @since 1
+     * @deprecated This call is not needed anymore.
      */
-    @Deprecated
     public void update() {
     }
 
-    private void eventLoop() {
-        this.timer.start();
-        while (this.imp.isValid()) {
-            if (this.imp.isActive()) {
-                this.frequencyMeter.count();
-                this.events.prepare();
-                this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
-                final TickEvent event = new TickEvent(this, this.timer.getLastStepDuration(),
-                                                      this.frequencyMeter.getFrequency());
-                this.eventDispatcher.dispatchTick(event);
-                this.drawables.draw(this);
-                this.imp.update();
-                this.timer.tick();
-            }
-            else {
-                try {
-                    Thread.sleep(PAUSE_SLEEP_MILLIS);
-                }
-                catch (InterruptedException ex) {
-                    // ignore
-                }
-                this.timer.start();
-            }
+    private void tick(final TickEvent event) {
+        if (this.imp.isValid() && this.imp.isActive()) {
+            this.events.prepare();
+            this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
+            this.eventDispatcher.dispatchTick(event);
+            this.drawables.draw(this);
+            this.imp.update();
         }
     }
 
@@ -331,7 +282,7 @@ public class Window extends Canvas {
 
         fixWindowFeatures(features);
 
-        this.imp = Engine.getContext().showWindow(width, height, features);
+        this.imp = JedaInternal.createWindowImp(width, height, features);
         this.events.reset();
         this.imp.setTitle(this.title);
         if (!this.hasFeature(WindowFeature.DOUBLE_BUFFERED)) {
@@ -400,17 +351,17 @@ public class Window extends Canvas {
         return result;
     }
 
-    private static class EventLoop extends Thread {
+    private static class EventLoop implements TickListener {
 
         private final Window window;
 
-        public EventLoop(Window window) {
+        public EventLoop(final Window window) {
             this.window = window;
         }
 
         @Override
-        public void run() {
-            this.window.eventLoop();
+        public void onTick(final TickEvent event) {
+            this.window.tick(event);
         }
     }
 }

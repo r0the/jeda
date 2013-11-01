@@ -16,19 +16,17 @@
  */
 package ch.jeda;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * <b>Internal</b>. Do not use this class.
  * <p>
  * Provides a low-level input/output interface for Jeda.
  */
 public class IO {
+
+    public static void dbg(final String message) {
+        System.out.println(message);
+        System.out.flush();
+    }
 
     public static void err(final String messageKey, Object... args) {
         System.err.format(Helper.getMessage(messageKey), args);
@@ -48,35 +46,6 @@ public class IO {
         }
 
         System.err.flush();
-    }
-
-    static String[] loadTextFile(final String filePath) {
-        final InputStream in = Engine.getContext().openResource(filePath);
-        if (in == null) {
-            return null;
-        }
-
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        try {
-            final List<String> result = new ArrayList<String>();
-            while (reader.ready()) {
-                result.add(reader.readLine());
-            }
-
-            return result.toArray(new String[result.size()]);
-        }
-        catch (final IOException ex) {
-            err("jeda.file.error.read", filePath, ex);
-            return null;
-        }
-        finally {
-            try {
-                in.close();
-            }
-            catch (IOException ex) {
-                // ignore
-            }
-        }
     }
 
     private IO() {

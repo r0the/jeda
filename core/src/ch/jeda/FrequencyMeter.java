@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda;
 
 class FrequencyMeter {
 
@@ -26,7 +26,7 @@ class FrequencyMeter {
 
     FrequencyMeter() {
         this.durations = new long[MAX_VALUES];
-        this.frequency = 0;
+        this.frequency = 0f;
         this.index = 0;
         this.startTime = System.currentTimeMillis();
     }

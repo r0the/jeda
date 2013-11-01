@@ -18,11 +18,8 @@ package ch.jeda.platform.android;
 
 import android.app.Activity;
 import android.os.Bundle;
-import ch.jeda.Engine;
 
 public final class Main extends Activity {
-
-    private AndroidContextImp contextImp;
 
     public Main() {
     }
@@ -35,7 +32,7 @@ public final class Main extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.contextImp = new AndroidContextImp(this);
+        this.contextImp = new AndroidPlatform(this);
         Engine.init(this.contextImp);
     }
 

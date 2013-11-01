@@ -22,11 +22,9 @@ import java.io.InputStream;
 /**
  * <b>Internal</b>. Do not use this interface.
  */
-public interface ContextImp {
+public interface Platform {
 
     CanvasImp createCanvasImp(int width, int height);
-
-    String defaultProgramName();
 
     boolean isSensorAvailable(SensorType sensorType);
 

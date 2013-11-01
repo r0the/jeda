@@ -16,7 +16,7 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.Engine;
+import ch.jeda.JedaInternal;
 import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import java.util.Stack;
@@ -77,7 +77,7 @@ public class Canvas {
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
         this.transformation = new Transformation();
-        this.setImp(Engine.getContext().createCanvasImp(width, height));
+        this.setImp(JedaInternal.createCanvasImp(width, height));
     }
 
     /**

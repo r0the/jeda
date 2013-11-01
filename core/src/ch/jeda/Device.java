@@ -16,21 +16,36 @@
  */
 package ch.jeda;
 
+/**
+ * @deprecated Use {@link Jeda} instead.
+ */
 public class Device {
 
+    /**
+     * @deprecated Use {@link Jeda#disableSensor(ch.jeda.SensorType)} instead.
+     */
     public static void disableSensor(final SensorType sensorType) {
-        Engine.getContext().setSensorEnabled(sensorType, false);
+        Jeda.disableSensor(sensorType);
     }
 
+    /**
+     * @deprecated Use {@link Jeda#enableSensor(ch.jeda.SensorType)} instead.
+     */
     public static void enableSensor(final SensorType sensorType) {
-        Engine.getContext().setSensorEnabled(sensorType, true);
+        Jeda.enableSensor(sensorType);
     }
 
+    /**
+     * @deprecated Use {@link Jeda#isSensorAvailable(ch.jeda.SensorType)} instead.
+     */
     public static boolean isSensorAvailable(final SensorType sensorType) {
-        return Engine.getContext().isSensorAvailable(sensorType);
+        return Jeda.isSensorAvailable(sensorType);
     }
 
+    /**
+     * @deprecated Use {@link Jeda#isSensorEnabled(ch.jeda.SensorType)} instead.
+     */
     public static boolean isSensorEnabled(final SensorType sensorType) {
-        return Engine.getContext().isSensorEnabled(sensorType);
+        return Jeda.isSensorEnabled(sensorType);
     }
 }

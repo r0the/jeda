@@ -16,8 +16,8 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.Engine;
 import ch.jeda.IO;
+import ch.jeda.JedaInternal;
 import ch.jeda.platform.ImageImp;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -214,7 +214,7 @@ public final class Image {
 
     private static ImageImp loadImp(final String filePath) {
         if (!CACHE.containsKey(filePath)) {
-            CACHE.put(filePath, Engine.getContext().loadImageImp(filePath));
+            CACHE.put(filePath, JedaInternal.createImageImp(filePath));
         }
 
         return CACHE.get(filePath);

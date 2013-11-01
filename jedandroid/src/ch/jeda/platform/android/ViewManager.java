@@ -18,7 +18,6 @@ package ch.jeda.platform.android;
 
 import android.app.Activity;
 import android.content.Context;
-import ch.jeda.Engine;
 import ch.jeda.event.Event;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;

@@ -39,7 +39,7 @@ public class Dialog {
         final InputRequest<Double> request = new InputRequest<Double>(InputType.forDouble(), 0d);
         request.setMessage(Util.toString(message));
         request.setTitle(Helper.getMessage("jeda.gui.input-title"));
-        Engine.getContext().showInputRequest(request);
+        Jeda.showInputRequest(request);
         request.waitForResult();
         return request.getResult();
     }
@@ -65,7 +65,7 @@ public class Dialog {
         final InputRequest<Integer> request = new InputRequest<Integer>(InputType.forInt(), 0);
         request.setMessage(Util.toString(message));
         request.setTitle(Helper.getMessage("jeda.gui.input-title"));
-        Engine.getContext().showInputRequest(request);
+        Jeda.showInputRequest(request);
         request.waitForResult();
         return request.getResult();
     }
@@ -85,7 +85,7 @@ public class Dialog {
         final InputRequest<String> request = new InputRequest<String>(InputType.forString(), "");
         request.setMessage(Util.toString(message));
         request.setTitle(Helper.getMessage("jeda.gui.input-title"));
-        Engine.getContext().showInputRequest(request);
+        Jeda.showInputRequest(request);
         request.waitForResult();
         return request.getResult();
     }
