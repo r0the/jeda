@@ -36,13 +36,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 class JedaEngine implements PlatformCallback, Runnable {
 
+    private static final SoundImp EMPTY_SOUND_IMP = new EmptySoundImp();
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
     private static final float DEFAULT_TICK_FREQUENCY = 60f;
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = "res/jeda.properties";
     private static final String JEDA_PLATFORM_PROPERTIES_FILE = "res/jeda/platform.properties";
     private static final String JEDA_SYSTEM_PROPERTIES_FILE = "res/jeda/system.properties";
     private final Object currentProgramLock;
-    private final ImageImp defaultImage;
+    private final ImageImp defaultImageImp;
     private final FrequencyMeter frequencyMeter;
     private final Platform platform;
     private final Plugins plugins;
@@ -73,7 +74,7 @@ class JedaEngine implements PlatformCallback, Runnable {
         // Init platform
         this.platform = initPlatform(this.properties.getString("jeda.platform.class"), this);
         // Load default image
-        this.defaultImage = this.platform.createImageImp(DEFAULT_IMAGE_PATH);
+        this.defaultImageImp = this.platform.createImageImp(DEFAULT_IMAGE_PATH);
         // Find Jeda programs and plugins
         final List<ProgramClassWrapper> programClassList = new ArrayList<ProgramClassWrapper>();
         try {
@@ -143,7 +144,7 @@ class JedaEngine implements PlatformCallback, Runnable {
     public ImageImp createImageImp(final String path) {
         final ImageImp result = this.platform.createImageImp(path);
         if (result == null) {
-            return this.defaultImage;
+            return this.defaultImageImp;
         }
         else {
             return result;
@@ -151,7 +152,13 @@ class JedaEngine implements PlatformCallback, Runnable {
     }
 
     public SoundImp createSoundImp(final String path) {
-        return this.platform.createSoundImp(path);
+        final SoundImp result = this.platform.createSoundImp(path);
+        if (result == null) {
+            return EMPTY_SOUND_IMP;
+        }
+        else {
+            return result;
+        }
     }
 
     float getTickFrequency() {
@@ -279,6 +286,21 @@ class JedaEngine implements PlatformCallback, Runnable {
                     // ignore
                 }
             }
+        }
+    }
+
+    private static class EmptySoundImp implements SoundImp {
+
+        @Override
+        public void load() {
+        }
+
+        @Override
+        public void play() {
+        }
+
+        @Override
+        public void unload() {
         }
     }
 }
