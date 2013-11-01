@@ -24,12 +24,12 @@ class Slice {
     private static final List<CuteObject> NO_OBJECTS = new ArrayList<CuteObject>();
     private final Box[] boxes;
     private final int sizeX;
-    private final int sizeY;
+    private final int sizeZ;
 
-    Slice(final int sizeX, final int sizeY) {
+    Slice(final int sizeX, final int sizeZ) {
         this.sizeX = sizeX;
-        this.sizeY = sizeY;
-        int size = sizeX * sizeY;
+        this.sizeZ = sizeZ;
+        int size = sizeX * sizeZ;
         this.boxes = new Box[size];
         for (int i = 0; i < size; i++) {
             this.boxes[i] = new Box();
@@ -38,13 +38,13 @@ class Slice {
 
     void addObject(final int x, final int z, final CuteObject object) {
         if (0 <= x && x < this.sizeX &&
-            0 <= z && z < this.sizeY) {
+            0 <= z && z < this.sizeZ) {
             this.boxes[(x + z * this.sizeX)].addObject(object);
         }
     }
 
-    Block getBlockAt(final int x, final int y) {
-        final Box box = getBoxAt(x, y);
+    Block getBlockAt(final int x, final int z) {
+        final Box box = getBoxAt(x, z);
         if (box != null) {
             return box.getBlock();
         }
@@ -53,18 +53,18 @@ class Slice {
         }
     }
 
-    Box getBoxAt(int x, int y) {
+    Box getBoxAt(int x, int z) {
         if (0 <= x && x < this.sizeX &&
-            0 <= y && y < this.sizeY) {
-            return this.boxes[(x + y * this.sizeX)];
+            0 <= z && z < this.sizeZ) {
+            return this.boxes[(x + z * this.sizeX)];
         }
         else {
             return null;
         }
     }
 
-    List<CuteObject> getObjectsAt(int x, int y) {
-        final Box box = getBoxAt(x, y);
+    List<CuteObject> getObjectsAt(int x, int z) {
+        final Box box = getBoxAt(x, z);
         if (box != null) {
             return box.getObjects();
         }

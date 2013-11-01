@@ -40,9 +40,9 @@ public final class CuteWorld {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.sizeZ = sizeZ;
-        this.slices = new Slice[sizeZ];
-        for (int z = 0; z < sizeZ; z++) {
-            this.slices[z] = new Slice(sizeX, sizeY);
+        this.slices = new Slice[sizeY];
+        for (int y = 0; y < sizeY; y++) {
+            this.slices[y] = new Slice(sizeX, sizeZ);
         }
     }
 
@@ -50,10 +50,10 @@ public final class CuteWorld {
         this.changes.add(Change.createAddObjectChange(object));
     }
 
-    public void fill(final int y, final Block block) {
-        if (0 <= y && y < this.sizeY) {
+    public void fill(final int z, final Block block) {
+        if (0 <= z && z < this.sizeZ) {
             for (int x = 0; x < this.sizeX; x++) {
-                for (int z = 0; z < this.sizeZ; z++) {
+                for (int y = 0; y < this.sizeY; y++) {
                     setBlockAt(x, y, z, block);
                 }
             }
@@ -61,7 +61,7 @@ public final class CuteWorld {
     }
 
     public Block getBlockAt(final int x, final int y, final int z) {
-        final Box box = getBox(x, y, z);
+        final Box box = this.getBox(x, y, z);
         if (box != null) {
             return box.getBlock();
         }
@@ -71,7 +71,7 @@ public final class CuteWorld {
     }
 
     public CuteObject[] getObjectsAt(final int x, final int y, final int z) {
-        final Box box = getBox(x, y, z);
+        final Box box = this.getBox(x, y, z);
         if (box != null) {
             return box.getObjectsArray();
         }
@@ -117,27 +117,27 @@ public final class CuteWorld {
     public void draw(final Canvas canvas) {
         checkScrollPos(canvas);
 
-        float top = Block.SIZE_Z + this.sizeY * Block.SIZE_Y;
+        float top = Block.SIZE_Y + this.sizeZ * Block.SIZE_Z;
         float screenStartY = top - this.scrollY;
         int startX = (int) Math.max(0f, this.scrollX / Block.SIZE_X);
         int endX = (int) Math.min(this.sizeX, startX + canvas.getWidth() / Block.SIZE_X + 1f);
-        int startZ = 0;
-        int endZ = this.sizeZ - 1;
+        int startY = 0;
+        int endY = this.sizeY - 1;
         float screenStartX = Block.SIZE_X / 2f - this.scrollX % Block.SIZE_X;
-        for (int z = startZ; z <= endZ; z++) {
-            final Slice slice = this.slices[z];
+        for (int y = startY; y <= endY; y++) {
+            final Slice slice = this.slices[y];
             float screenY = screenStartY;
-            for (int y = 0; y <= this.sizeY; y++) {
+            for (int z = 0; z <= this.sizeZ; z++) {
                 float screenX = screenStartX;
                 for (int x = startX; x <= endX; x++) {
-                    final Block block = slice.getBlockAt(x, y);
+                    final Block block = slice.getBlockAt(x, z);
                     if (!block.isEmpty()) {
                         block.draw(canvas, screenX, screenY);
-                        if (getBlockAt(x, y + 1, z).isEmpty()) {
-                            boolean east = !getBlockAt(x + 1, y + 1, z).isEmpty();
-                            boolean north = !getBlockAt(x, y + 1, z - 1).isEmpty();
-                            boolean south = !getBlockAt(x, y + 1, z + 1).isEmpty();
-                            boolean west = !getBlockAt(x - 1, y + 1, z).isEmpty();
+                        if (this.getBlockAt(x, y + 1, z).isEmpty()) {
+                            boolean east = !this.getBlockAt(x + 1, y + 1, z).isEmpty();
+                            boolean north = !this.getBlockAt(x, y + 1, z - 1).isEmpty();
+                            boolean south = !this.getBlockAt(x, y + 1, z + 1).isEmpty();
+                            boolean west = !this.getBlockAt(x - 1, y + 1, z).isEmpty();
                             if (east) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.WEST), Alignment.BOTTOM_CENTER);
                             }
@@ -154,15 +154,15 @@ public final class CuteWorld {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.EAST), Alignment.BOTTOM_CENTER);
                             }
 
-                            if (!north && !east && !getBlockAt(x + 1, y + 1, z - 1).isEmpty()) {
+                            if (!north && !east && !this.getBlockAt(x + 1, y + 1, z - 1).isEmpty()) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH_WEST), Alignment.BOTTOM_CENTER);
                             }
 
-                            if (!north && !west && !getBlockAt(x - 1, y + 1, z - 1).isEmpty()) {
+                            if (!north && !west && !this.getBlockAt(x - 1, y + 1, z - 1).isEmpty()) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH_EAST), Alignment.BOTTOM_CENTER);
                             }
 
-                            if (!south && !east && !getBlockAt(x + 1, y + 1, z + 1).isEmpty()) {
+                            if (!south && !east && !this.getBlockAt(x + 1, y + 1, z + 1).isEmpty()) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.NORTH_WEST), Alignment.BOTTOM_CENTER);
                             }
 
@@ -172,7 +172,7 @@ public final class CuteWorld {
                         }
                     }
 
-                    for (CuteObject object : slice.getObjectsAt(x, y)) {
+                    for (final CuteObject object : slice.getObjectsAt(x, z)) {
                         object.draw(canvas,
                                     screenX + (object.getX() - object.getIntX()) * Block.SIZE_X,
                                     screenY + (object.getY() - object.getIntY()) * Block.SIZE_Y +
@@ -182,10 +182,10 @@ public final class CuteWorld {
                     screenX += Block.SIZE_X;
                 }
 
-                screenY -= Block.SIZE_Y;
+                screenY -= Block.SIZE_Z;
             }
 
-            screenStartY += Block.SIZE_Z;
+            screenStartY += Block.SIZE_Y;
         }
     }
 
@@ -215,10 +215,12 @@ public final class CuteWorld {
     }
 
     Box getBox(final int x, final int y, final int z) {
-        if ((0 <= z) && (z < this.sizeZ)) {
-            return this.slices[z].getBoxAt(x, y);
+        if ((0 <= y) && (y < this.sizeY)) {
+            return this.slices[y].getBoxAt(x, z);
         }
-        return null;
+        else {
+            return null;
+        }
     }
 
     void doAddObject(final CuteObject object) {
@@ -232,7 +234,7 @@ public final class CuteWorld {
     }
 
     void doSetBlock(final int x, final int y, final int z, final Block block) {
-        Box box = getBox(x, y, z);
+        Box box = this.getBox(x, y, z);
         if (box != null) {
             box.setBlock(block);
         }
@@ -243,7 +245,8 @@ public final class CuteWorld {
         float maxScrollY = this.sizeY * Block.SIZE_Y + this.sizeZ * Block.SIZE_Z - canvas.getHeight();
         if (this.scrollLock != null) {
             this.scrollX = (this.scrollLock.getX() * Block.SIZE_X + Block.SIZE_X / 2 - canvas.getWidth() / 2f);
-            this.scrollY = (this.scrollLock.getY() * Block.SIZE_Y + this.scrollLock.getZ() * Block.SIZE_Z - canvas.getHeight() / 2f);
+            this.scrollY = (this.scrollLock.getY() * Block.SIZE_Y + this.scrollLock.getZ() * Block.SIZE_Z -
+                            canvas.getHeight() / 2f);
         }
 
         this.scrollX = Math.max(0f, Math.min(maxScrollX, this.scrollX));
