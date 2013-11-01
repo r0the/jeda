@@ -47,6 +47,11 @@ class JavaPlatform implements Platform {
     }
 
     @Override
+    public ImageImp createImageImp(final String path) {
+        return ResourceManager.loadImage(path);
+    }
+
+    @Override
     public SoundImp createSoundImp(String path) {
         return this.audioSystem.createSoundImp(path);
     }
@@ -64,11 +69,6 @@ class JavaPlatform implements Platform {
     @Override
     public Class<?>[] loadClasses() throws Exception {
         return ResourceManager.loadClasses();
-    }
-
-    @Override
-    public ImageImp loadImageImp(final String path) {
-        return ResourceManager.loadImage(path);
     }
 
     @Override

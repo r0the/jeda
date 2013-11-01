@@ -26,6 +26,8 @@ public interface Platform {
 
     CanvasImp createCanvasImp(int width, int height);
 
+    ImageImp createImageImp(String path);
+
     SoundImp createSoundImp(String path);
 
     boolean isSensorAvailable(SensorType sensorType);
@@ -33,8 +35,6 @@ public interface Platform {
     boolean isSensorEnabled(SensorType sensorType);
 
     Class<?>[] loadClasses() throws Exception;
-
-    ImageImp loadImageImp(String path);
 
     InputStream openResource(String path);
 

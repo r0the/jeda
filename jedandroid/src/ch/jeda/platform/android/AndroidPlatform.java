@@ -41,6 +41,10 @@ class AndroidPlatform implements Platform {
         return result;
     }
 
+    public ImageImp createImageImp(final String path) {
+        return this.resourceManager.openImage(path);
+    }
+
     public boolean isSensorAvailable(final SensorType sensorType) {
         return this.sensorManager.isAvailable(sensorType);
     }
@@ -52,10 +56,6 @@ class AndroidPlatform implements Platform {
     @Override
     public Class<?>[] loadClasses() throws Exception {
         return this.resourceManager.loadClasses();
-    }
-
-    public ImageImp loadImageImp(final String path) {
-        return this.resourceManager.openImage(path);
     }
 
     public InputStream openResource(final String path) {

@@ -73,7 +73,7 @@ class JedaEngine implements PlatformCallback, Runnable {
         // Init platform
         this.platform = initPlatform(this.properties.getString("jeda.platform.class"), this);
         // Load default image
-        this.defaultImage = this.platform.loadImageImp(DEFAULT_IMAGE_PATH);
+        this.defaultImage = this.platform.createImageImp(DEFAULT_IMAGE_PATH);
         // Find Jeda programs and plugins
         final List<ProgramClassWrapper> programClassList = new ArrayList<ProgramClassWrapper>();
         try {
@@ -141,7 +141,7 @@ class JedaEngine implements PlatformCallback, Runnable {
     }
 
     public ImageImp createImageImp(final String path) {
-        final ImageImp result = this.platform.loadImageImp(path);
+        final ImageImp result = this.platform.createImageImp(path);
         if (result == null) {
             return this.defaultImage;
         }
