@@ -26,6 +26,8 @@ public interface Platform {
 
     CanvasImp createCanvasImp(int width, int height);
 
+    SoundImp createSoundImp(String path);
+
     boolean isSensorAvailable(SensorType sensorType);
 
     boolean isSensorEnabled(SensorType sensorType);

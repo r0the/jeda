@@ -16,11 +16,11 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.ui.TickListener;
+public interface SoundImp {
 
-public interface PlatformCallback {
+    void load();
 
-    void addTickListener(TickListener listener);
+    void play();
 
-    void stop();
+    void unload();
 }

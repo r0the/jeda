@@ -18,6 +18,8 @@ package ch.jeda.platform.java;
 
 import ch.jeda.IO;
 import ch.jeda.platform.ImageImp;
+import ch.jeda.platform.SoundImp;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,6 +32,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFileFormat.Type;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 class ResourceManager {
 
@@ -43,16 +48,17 @@ class ResourceManager {
         return RESOURCE_FINDER.loadClasses();
     }
 
-    static ImageImp openImage(final String filePath) {
-        InputStream in = openInputStream(filePath);
+    static ImageImp loadImage(final String path) {
+        final InputStream in = openInputStream(path);
         if (in == null) {
             return null;
         }
+
         try {
             return new JavaImageImp(ImageIO.read(in));
         }
         catch (Exception ex) {
-            IO.err(ex, "jeda.image.error.read", new Object[]{filePath});
+            IO.err(ex, "jeda.image.error.read", path);
             return null;
         }
         finally {
@@ -64,60 +70,58 @@ class ResourceManager {
         }
     }
 
-    static InputStream openInputStream(final String filePath) {
-        if (filePath == null) {
-            throw new NullPointerException("filePath");
+    static InputStream openInputStream(final String path) {
+        if (path == null) {
+            throw new NullPointerException("path");
         }
-
-        if (filePath.startsWith(NEW_RESOURCE_PREFIX)) {
-            return openResourceInputStream(filePath, NEW_RESOURCE_PREFIX.length());
+        else if (path.startsWith(NEW_RESOURCE_PREFIX)) {
+            return openResourceInputStream(path, NEW_RESOURCE_PREFIX.length());
         }
-
-        if (filePath.startsWith(OLD_RESOURCE_PREFIX)) {
-            return openResourceInputStream(filePath, OLD_RESOURCE_PREFIX.length());
+        else if (path.startsWith(OLD_RESOURCE_PREFIX)) {
+            return openResourceInputStream(path, OLD_RESOURCE_PREFIX.length());
         }
-
-        if (filePath.startsWith(HTTP_PREFIX)) {
-            return openRemoteInputStream(filePath);
+        else if (path.startsWith(HTTP_PREFIX)) {
+            return openRemoteInputStream(path);
         }
-
-        return openFileInputStream(filePath);
+        else {
+            return openFileInputStream(path);
+        }
     }
 
-    private static InputStream openFileInputStream(final String filePath) {
+    private static InputStream openFileInputStream(final String path) {
         try {
-            return new FileInputStream(filePath);
+            return new FileInputStream(path);
         }
         catch (FileNotFoundException ex) {
-            IO.err(ex, "jeda.file.error.not-found", new Object[]{filePath});
+            IO.err(ex, "jeda.file.error.not-found", path);
         }
 
         return null;
     }
 
-    private static InputStream openRemoteInputStream(final String filePath) {
+    private static InputStream openRemoteInputStream(final String path) {
         try {
-            return new URL(filePath).openStream();
+            return new URL(path).openStream();
         }
         catch (MalformedURLException ex) {
-            IO.err(ex, "jeda.file.error.open", new Object[]{filePath});
+            IO.err(ex, "jeda.file.error.open", path);
             return null;
         }
         catch (IOException ex) {
-            IO.err(ex, "jeda.file.error.open", new Object[]{filePath});
+            IO.err(ex, "jeda.file.error.open", path);
         }
         return null;
     }
 
-    private static InputStream openResourceInputStream(final String filePath, final int prefixLength) {
-        String resourcePath = filePath.substring(prefixLength);
+    private static InputStream openResourceInputStream(final String path, final int prefixLength) {
+        String resourcePath = path.substring(prefixLength);
         URL url = findResource("res/" + resourcePath);
         if (url == null) {
             url = findResource(resourcePath);
         }
 
         if (url == null) {
-            IO.err("jeda.file.error.not-found", new Object[]{filePath});
+            IO.err("jeda.file.error.not-found", path);
             return null;
         }
 
@@ -125,7 +129,7 @@ class ResourceManager {
             return url.openStream();
         }
         catch (IOException ex) {
-            IO.err(ex, "jeda.file.error.open", new Object[]{filePath});
+            IO.err(ex, "jeda.file.error.open", path);
         }
 
         return null;

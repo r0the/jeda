@@ -21,6 +21,7 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
+import ch.jeda.platform.SoundImp;
 import ch.jeda.ui.TickEvent;
 import ch.jeda.ui.TickListener;
 import java.io.IOException;
@@ -97,6 +98,13 @@ class JedaEngine implements PlatformCallback, Runnable {
     }
 
     @Override
+    public void addTickListener(final TickListener listener) {
+        if (listener != null && !this.tickListeners.contains(listener)) {
+            this.tickListeners.add(listener);
+        }
+    }
+
+    @Override
     public void run() {
         this.timer.start();
         while (this.running.get()) {
@@ -128,12 +136,6 @@ class JedaEngine implements PlatformCallback, Runnable {
         }
     }
 
-    void addTickListener(final TickListener listener) {
-        if (listener != null && !this.tickListeners.contains(listener)) {
-            this.tickListeners.add(listener);
-        }
-    }
-
     public CanvasImp createCanvasImp(final int width, final int height) {
         return this.platform.createCanvasImp(width, height);
     }
@@ -146,6 +148,10 @@ class JedaEngine implements PlatformCallback, Runnable {
         else {
             return result;
         }
+    }
+
+    public SoundImp createSoundImp(final String path) {
+        return this.platform.createSoundImp(path);
     }
 
     float getTickFrequency() {
