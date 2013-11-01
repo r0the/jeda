@@ -16,7 +16,7 @@
  */
 package ch.jeda;
 
-import static ch.jeda.IO.err;
+import static ch.jeda.Log.err;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;

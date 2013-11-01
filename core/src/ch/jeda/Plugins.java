@@ -42,10 +42,10 @@ class Plugins {
             this.list.add(new PluginWrapper(instance));
         }
         catch (final InvocationTargetException ex) {
-            IO.err(ex.getCause(), "jeda.plugin.error.exception-in-constructor", candidate);
+            Log.err(ex.getCause(), "jeda.plugin.error.exception-in-constructor", candidate);
         }
         catch (final Exception ex) {
-            IO.err(ex, "jeda.plugin.error.instantiation-exception", candidate);
+            Log.err(ex, "jeda.plugin.error.instantiation-exception", candidate);
         }
     }
 
@@ -55,7 +55,7 @@ class Plugins {
                 this.list.get(i).initialize();
             }
             catch (final Throwable ex) {
-                IO.err(ex, "jeda.plugin.error.init", this.list.get(i));
+                Log.err(ex, "jeda.plugin.error.init", this.list.get(i));
             }
         }
     }

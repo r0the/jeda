@@ -90,7 +90,7 @@ class JedaEngine implements PlatformCallback, Runnable {
             }
         }
         catch (final Exception ex) {
-            IO.err(ex, "jeda.engine.error.init-classes");
+            Log.err(ex, "jeda.engine.error.init-classes");
         }
 
         this.programClasses = programClassList.toArray(new ProgramClassWrapper[programClassList.size()]);
@@ -115,7 +115,7 @@ class JedaEngine implements PlatformCallback, Runnable {
                     this.tickListeners.get(i).onTick(event);
                 }
                 catch (final Throwable ex) {
-                    IO.err(ex, "java.event.error");
+                    Log.err(ex, "java.event.error");
                 }
             }
 
@@ -194,7 +194,7 @@ class JedaEngine implements PlatformCallback, Runnable {
     void startProgram(final String programClassName) {
         synchronized (this.currentProgramLock) {
             if (this.currentProgram != null) {
-                IO.err("jeda.engine.error.program-already-running");
+                Log.err("jeda.engine.error.program-already-running");
             }
             else {
                 this.currentProgram = new JedaProgramExecutor(this, programClassName);
@@ -207,7 +207,7 @@ class JedaEngine implements PlatformCallback, Runnable {
 
     private static Platform initPlatform(final String platformClassName, final PlatformCallback callback) {
         if (platformClassName == null || platformClassName.isEmpty()) {
-            IO.err("jeda.engine.error.platform-missing-class-name");
+            Log.err("jeda.engine.error.platform-missing-class-name");
             return null;
         }
 
@@ -220,28 +220,28 @@ class JedaEngine implements PlatformCallback, Runnable {
                 return (Platform) ctor.newInstance(callback);
             }
             else {
-                IO.err("jeda.engine.error.platform-missing-interface", platformClassName, Platform.class);
+                Log.err("jeda.engine.error.platform-missing-interface", platformClassName, Platform.class);
                 return null;
             }
         }
         catch (final ClassNotFoundException ex) {
-            IO.err(ex, "jeda.engine.error.platform-class-not-found", platformClassName);
+            Log.err(ex, "jeda.engine.error.platform-class-not-found", platformClassName);
             return null;
         }
         catch (final NoSuchMethodException ex) {
-            IO.err(ex, "jeda.engine.error.platform-missing-constructor", platformClassName);
+            Log.err(ex, "jeda.engine.error.platform-missing-constructor", platformClassName);
             return null;
         }
         catch (final InstantiationException ex) {
-            IO.err(ex.getCause(), "jeda.engine.error.platform-instantiation-exception", platformClassName);
+            Log.err(ex.getCause(), "jeda.engine.error.platform-instantiation-exception", platformClassName);
             return null;
         }
         catch (final IllegalAccessException ex) {
-            IO.err(ex.getCause(), "jeda.engine.error.platform-constructor-access", platformClassName);
+            Log.err(ex.getCause(), "jeda.engine.error.platform-constructor-access", platformClassName);
             return null;
         }
         catch (final InvocationTargetException ex) {
-            IO.err(ex.getCause(), "jeda.engine.error.platform-exception-in-constructor", platformClassName);
+            Log.err(ex.getCause(), "jeda.engine.error.platform-exception-in-constructor", platformClassName);
             return null;
         }
     }
@@ -258,7 +258,7 @@ class JedaEngine implements PlatformCallback, Runnable {
     private static void loadProperties(final java.util.Properties properties, final String path) {
         final URL url = JedaEngine.class.getClassLoader().getResource(path);
         if (url == null) {
-            IO.err("jeda.engine.error.properties-not-found", path);
+            Log.err("jeda.engine.error.properties-not-found", path);
             return;
         }
 
@@ -268,7 +268,7 @@ class JedaEngine implements PlatformCallback, Runnable {
             properties.load(in);
         }
         catch (final Exception ex) {
-            IO.err("jeda.engine.error.properties-read", path);
+            Log.err("jeda.engine.error.properties-read", path);
         }
         finally {
             if (in != null) {

@@ -43,7 +43,7 @@ public final class Properties {
             this.imp.load(in);
         }
         catch (final Exception ex) {
-            IO.err("jeda.file.error.read", filePath);
+            Log.err("jeda.file.error.read", filePath);
         }
         finally {
             try {

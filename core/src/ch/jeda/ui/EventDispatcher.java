@@ -16,7 +16,7 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.IO;
+import ch.jeda.Log;
 import ch.jeda.event.ActionEvent;
 import ch.jeda.event.ActionListener;
 import ch.jeda.event.Event;
@@ -86,7 +86,7 @@ class EventDispatcher {
                 this.tickListeners.get(j).onTick(event);
             }
             catch (final Throwable ex) {
-                IO.err(ex, "java.event.error");
+                Log.err(ex, "java.event.error");
             }
         }
     }
@@ -111,7 +111,7 @@ class EventDispatcher {
                             this.keyDownListeners.get(j).onKeyDown((KeyEvent) event);
                         }
                         catch (final Throwable ex) {
-                            IO.err(ex, "java.event.error");
+                            Log.err(ex, "java.event.error");
                         }
                     }
 
@@ -122,7 +122,7 @@ class EventDispatcher {
                             this.keyTypedListeners.get(j).onKeyTyped((KeyEvent) event);
                         }
                         catch (final Throwable ex) {
-                            IO.err(ex, "java.event.error");
+                            Log.err(ex, "java.event.error");
                         }
                     }
 
@@ -133,7 +133,7 @@ class EventDispatcher {
                             this.keyUpListeners.get(j).onKeyUp((KeyEvent) event);
                         }
                         catch (final Throwable ex) {
-                            IO.err(ex, "java.event.error");
+                            Log.err(ex, "java.event.error");
                         }
                     }
 
@@ -144,7 +144,7 @@ class EventDispatcher {
                             this.pointerDownListeners.get(j).onPointerDown((PointerEvent) event);
                         }
                         catch (final Throwable ex) {
-                            IO.err(ex, "java.event.error");
+                            Log.err(ex, "java.event.error");
                         }
                     }
 
@@ -155,7 +155,7 @@ class EventDispatcher {
                             this.pointerMovedListeners.get(j).onPointerMoved((PointerEvent) event);
                         }
                         catch (final Throwable ex) {
-                            IO.err(ex, "java.event.error");
+                            Log.err(ex, "java.event.error");
                         }
                     }
 
@@ -166,7 +166,7 @@ class EventDispatcher {
                             this.pointerUpListeners.get(j).onPointerUp((PointerEvent) event);
                         }
                         catch (final Throwable ex) {
-                            IO.err(ex, "java.event.error");
+                            Log.err(ex, "java.event.error");
                         }
                     }
 
@@ -177,7 +177,7 @@ class EventDispatcher {
                             this.sensorListeners.get(j).onSensorChanged((SensorEvent) event);
                         }
                         catch (final Throwable ex) {
-                            IO.err(ex, "java.event.error");
+                            Log.err(ex, "java.event.error");
                         }
                     }
 
@@ -188,7 +188,7 @@ class EventDispatcher {
                             this.turnListeners.get(j).onTurn((TurnEvent) event);
                         }
                         catch (final Throwable ex) {
-                            IO.err(ex, "java.event.error");
+                            Log.err(ex, "java.event.error");
                         }
                     }
 
@@ -199,7 +199,7 @@ class EventDispatcher {
                             this.windowFocusLostListeners.get(j).onWindowFocusLost();
                         }
                         catch (final Throwable ex) {
-                            IO.err(ex, "java.event.error");
+                            Log.err(ex, "java.event.error");
                         }
                     }
 
@@ -213,7 +213,7 @@ class EventDispatcher {
                     this.actionListeners.get(j).onAction(this.actionEvents.get(i));
                 }
                 catch (final Throwable ex) {
-                    IO.err(ex, "java.event.error");
+                    Log.err(ex, "java.event.error");
                 }
             }
         }

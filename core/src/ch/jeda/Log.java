@@ -21,7 +21,7 @@ package ch.jeda;
  * <p>
  * Provides a low-level input/output interface for Jeda.
  */
-public class IO {
+public class Log {
 
     public static void dbg(final String message) {
         System.out.println(message);
@@ -48,6 +48,6 @@ public class IO {
         System.err.flush();
     }
 
-    private IO() {
+    private Log() {
     }
 }

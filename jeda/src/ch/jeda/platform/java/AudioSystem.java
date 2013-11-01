@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.IO;
+import ch.jeda.Log;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.ui.TickEvent;
 import ch.jeda.ui.TickListener;
@@ -86,10 +86,10 @@ class AudioSystem implements TickListener {
             return new JavaSoundImp(this, buffer.toByteArray());
         }
         catch (final UnsupportedAudioFileException ex) {
-            IO.err(ex, "TODO");
+            Log.err(ex, "TODO");
         }
         catch (final IOException ex) {
-            IO.err(ex, "TODO");
+            Log.err(ex, "TODO");
         }
 
         return null;
@@ -115,7 +115,7 @@ class AudioSystem implements TickListener {
 
         final AudioFormat fileFormat = audioStream.getFormat();
         if (!isSupported(fileFormat)) {
-            IO.err("jeda.sound.playback.format.error", fileFormat);
+            Log.err("jeda.sound.playback.format.error", fileFormat);
             return null;
         }
 
@@ -130,7 +130,7 @@ class AudioSystem implements TickListener {
                 line = (SourceDataLine) javax.sound.sampled.AudioSystem.getLine(dinfo);
             }
             catch (LineUnavailableException ex2) {
-                IO.err(ex2, "jeda.sound.playback.start.error");
+                Log.err(ex2, "jeda.sound.playback.start.error");
                 return null;
             }
         }
@@ -139,7 +139,7 @@ class AudioSystem implements TickListener {
             line.open(audioStream.getFormat());
         }
         catch (LineUnavailableException ex) {
-            IO.err(ex, "jeda.sound.playback.start.error");
+            Log.err(ex, "jeda.sound.playback.start.error");
             return null;
         }
 

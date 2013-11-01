@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.IO;
+import ch.jeda.Log;
 import ch.jeda.platform.SoundImp;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -43,10 +43,10 @@ class JavaSoundImp implements SoundImp {
                 new ByteArrayInputStream(this.data)));
         }
         catch (UnsupportedAudioFileException ex) {
-            IO.err("jeda.sound.open.format.error");
+            Log.err("jeda.sound.open.format.error");
         }
         catch (IOException ex) {
-            IO.err("jeda.sound.open.read.error");
+            Log.err("jeda.sound.open.read.error");
         }
     }
 

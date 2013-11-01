@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.IO;
+import ch.jeda.Log;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.SoundImp;
 import java.io.ByteArrayOutputStream;
@@ -58,7 +58,7 @@ class ResourceManager {
             return new JavaImageImp(ImageIO.read(in));
         }
         catch (Exception ex) {
-            IO.err(ex, "jeda.image.error.read", path);
+            Log.err(ex, "jeda.image.error.read", path);
             return null;
         }
         finally {
@@ -93,7 +93,7 @@ class ResourceManager {
             return new FileInputStream(path);
         }
         catch (FileNotFoundException ex) {
-            IO.err(ex, "jeda.file.error.not-found", path);
+            Log.err(ex, "jeda.file.error.not-found", path);
         }
 
         return null;
@@ -104,11 +104,11 @@ class ResourceManager {
             return new URL(path).openStream();
         }
         catch (MalformedURLException ex) {
-            IO.err(ex, "jeda.file.error.open", path);
+            Log.err(ex, "jeda.file.error.open", path);
             return null;
         }
         catch (IOException ex) {
-            IO.err(ex, "jeda.file.error.open", path);
+            Log.err(ex, "jeda.file.error.open", path);
         }
         return null;
     }
@@ -121,7 +121,7 @@ class ResourceManager {
         }
 
         if (url == null) {
-            IO.err("jeda.file.error.not-found", path);
+            Log.err("jeda.file.error.not-found", path);
             return null;
         }
 
@@ -129,7 +129,7 @@ class ResourceManager {
             return url.openStream();
         }
         catch (IOException ex) {
-            IO.err(ex, "jeda.file.error.open", path);
+            Log.err(ex, "jeda.file.error.open", path);
         }
 
         return null;
@@ -138,7 +138,7 @@ class ResourceManager {
     private static URL findResource(final String resourcePath) {
         URL result = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
         if (result == null) {
-            return IO.class.getClassLoader().getResource(resourcePath);
+            return Log.class.getClassLoader().getResource(resourcePath);
         }
         else {
             return result;
