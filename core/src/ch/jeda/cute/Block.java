@@ -31,7 +31,6 @@ public abstract class Block {
     public static final Block STONE = new Block.DefaultBlock("STONE");
     public static final Block WALL = new Block.DefaultBlock("WALL");
     public static final Block WATER = new Block.DefaultBlock("WATER");
-    public static final Block WINDOW = new Block.DefaultBlock("WINDOW");
     public static final Block WOOD = new Block.DefaultBlock("WOOD");
     public static final float SIZE_X = 100f;
     public static final float SIZE_Y = 82f;

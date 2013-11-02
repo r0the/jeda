@@ -42,7 +42,8 @@ public class CuteSprite extends CuteObject {
 
     public final void move(final Direction direction) {
         if (this.state == CuteSprite.ControlState.IDLE) {
-            this.state = new CuteSprite.MoveToState(getX() + direction.getDx(), getY(), getZ() + direction.getDy(), 5f);
+            this.state = new CuteSprite.MoveToState(this.getX() + direction.getDx(),
+                                                    this.getY() + direction.getDy(), this.getZ(), 5f);
         }
     }
 

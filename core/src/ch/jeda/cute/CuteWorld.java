@@ -133,11 +133,11 @@ public final class CuteWorld {
                     final Block block = slice.getBlockAt(x, z);
                     if (!block.isEmpty()) {
                         block.draw(canvas, screenX, screenY);
-                        if (this.getBlockAt(x, y + 1, z).isEmpty()) {
-                            boolean east = !this.getBlockAt(x + 1, y + 1, z).isEmpty();
-                            boolean north = !this.getBlockAt(x, y + 1, z - 1).isEmpty();
+                        if (this.getBlockAt(x, y, z + 1).isEmpty()) {
+                            boolean east = !this.getBlockAt(x + 1, y, z + 1).isEmpty();
+                            boolean north = !this.getBlockAt(x, y - 1, z + 1).isEmpty();
                             boolean south = !this.getBlockAt(x, y + 1, z + 1).isEmpty();
-                            boolean west = !this.getBlockAt(x - 1, y + 1, z).isEmpty();
+                            boolean west = !this.getBlockAt(x - 1, y, z + 1).isEmpty();
                             if (east) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.WEST), Alignment.BOTTOM_CENTER);
                             }
@@ -154,11 +154,11 @@ public final class CuteWorld {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.EAST), Alignment.BOTTOM_CENTER);
                             }
 
-                            if (!north && !east && !this.getBlockAt(x + 1, y + 1, z - 1).isEmpty()) {
+                            if (!north && !east && !this.getBlockAt(x + 1, y - 1, z + 1).isEmpty()) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH_WEST), Alignment.BOTTOM_CENTER);
                             }
 
-                            if (!north && !west && !this.getBlockAt(x - 1, y + 1, z - 1).isEmpty()) {
+                            if (!north && !west && !this.getBlockAt(x - 1, y - 1, z + 1).isEmpty()) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH_EAST), Alignment.BOTTOM_CENTER);
                             }
 
@@ -166,7 +166,7 @@ public final class CuteWorld {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.NORTH_WEST), Alignment.BOTTOM_CENTER);
                             }
 
-                            if (!south && !west && !getBlockAt(x - 1, y + 1, z + 1).isEmpty()) {
+                            if (!south && !west && !this.getBlockAt(x - 1, y + 1, z + 1).isEmpty()) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.NORTH_EAST), Alignment.BOTTOM_CENTER);
                             }
                         }
