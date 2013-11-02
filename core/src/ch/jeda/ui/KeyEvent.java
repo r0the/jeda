@@ -61,6 +61,21 @@ public final class KeyEvent extends Event {
         return this.repeatCount;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("KeyEvent(type=");
+        result.append(this.getType());
+        result.append(", key=");
+        result.append(this.key);
+        result.append(", keyChar=");
+        result.append(this.keyChar);
+        result.append(", repeatCount=");
+        result.append(this.repeatCount);
+        result.append(")");
+        return result.toString();
+    }
+
     private KeyEvent(final Object source, final EventType type, final Key key, final char keyChar, int repeatCount) {
         super(source, type);
         this.key = key;

@@ -38,12 +38,12 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
@@ -65,8 +65,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
     private static final Map<Integer, Key> BUTTON_MAP = initButtonMap();
     private static final Map<Integer, Map<Integer, Key>> KEY_MAP = initKeyMap();
     private final ImageCanvas canvas;
-    private final List<Event> events;
-    private final Object eventsLock;
+    private final Collection<Event> events;
     private final EnumSet<WindowFeature> features;
     private final int height;
     // BEGIN workaround to Java bug on Linux platform
@@ -94,8 +93,10 @@ class CanvasWindow extends BaseWindow implements FocusListener,
             }
 
             // BEGIN workaround to Java bug on Linux platform
-            if (this.keyReleaseTimer.containsKey(key)) {
-                this.keyReleaseTimer.get(key).cancel();
+            if (LINUX) {
+                if (this.keyReleaseTimer.containsKey(key)) {
+                    this.keyReleaseTimer.get(key).cancel();
+                }
             }
             // END workaround to Java bug on Linux platform
 
@@ -201,8 +202,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
                  final EnumSet<WindowFeature> features) {
         super(manager);
         this.canvas = new ImageCanvas(width, height);
-        this.events = new ArrayList<Event>();
-        this.eventsLock = new Object();
+        this.events = new ConcurrentLinkedQueue<Event>();
         this.features = features;
         this.height = height;
         this.keyRepeatCount = new EnumMap<Key, Integer>(Key.class);
@@ -214,21 +214,22 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         this.setUndecorated(features.contains(WindowFeature.FULLSCREEN));
         this.pack();
         this.init();
-        this.canvas.requestFocus();
 
+        this.canvas.setFocusable(true);
+        this.canvas.requestFocus();
         this.canvas.addFocusListener(this);
         this.canvas.addKeyListener(this);
+        this.getContentPane().addKeyListener(this);
+        this.addKeyListener(this);
         this.canvas.addMouseListener(this);
         this.canvas.addMouseMotionListener(this);
         this.canvas.addMouseWheelListener(this);
     }
 
     Event[] fetchEvents() {
-        synchronized (this.eventsLock) {
-            final Event[] result = this.events.toArray(new Event[this.events.size()]);
-            this.events.clear();
-            return result;
-        }
+        final Event[] result = this.events.toArray(new Event[0]);
+        this.events.clear();
+        return result;
     }
 
     EnumSet<WindowFeature> getFeatures() {
@@ -266,9 +267,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
     }
 
     private void addEvent(final Event event) {
-        synchronized (this.eventsLock) {
-            this.events.add(event);
-        }
+        this.events.add(event);
     }
 
     private void keyReleased(final Key key) {
@@ -318,6 +317,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         standard.put(java.awt.event.KeyEvent.VK_QUOTE, Key.APOSTROPHE);
         standard.put(java.awt.event.KeyEvent.VK_B, Key.B);
         standard.put(java.awt.event.KeyEvent.VK_BACK_QUOTE, Key.GRAVE);
+        standard.put(java.awt.event.KeyEvent.VK_BACK_SLASH, Key.BACKSLASH);
         standard.put(java.awt.event.KeyEvent.VK_BACK_SPACE, Key.BACKSPACE);
         standard.put(java.awt.event.KeyEvent.VK_C, Key.C);
         standard.put(java.awt.event.KeyEvent.VK_CAPS_LOCK, Key.CAPS_LOCK);
@@ -399,8 +399,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         standard.put(java.awt.event.KeyEvent.VK_UP, Key.UP);
         standard.put(java.awt.event.KeyEvent.VK_V, Key.V);
         standard.put(java.awt.event.KeyEvent.VK_W, Key.W);
-//        standard.put(java.awt.event.KeyEvent.VK_WINDOWS, Key.META);
-
+        standard.put(java.awt.event.KeyEvent.VK_WINDOWS, Key.META);
         standard.put(java.awt.event.KeyEvent.VK_X, Key.X);
         standard.put(java.awt.event.KeyEvent.VK_Y, Key.Y);
         standard.put(java.awt.event.KeyEvent.VK_Z, Key.Z);

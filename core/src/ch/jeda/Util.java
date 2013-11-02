@@ -130,8 +130,8 @@ public final class Util {
 
     public static String toString(final Object... objects) {
         final StringBuilder result = new StringBuilder();
-        for (final Object object : objects) {
-            result.append(objectToString(object));
+        for (int i = 0; i < objects.length; ++i) {
+            result.append(objectToString(objects[i]));
         }
 
         return result.toString();

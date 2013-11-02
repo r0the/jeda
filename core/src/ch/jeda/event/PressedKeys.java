@@ -16,20 +16,42 @@
  */
 package ch.jeda.event;
 
+import ch.jeda.Util;
 import ch.jeda.ui.Key;
 import ch.jeda.ui.KeyDownListener;
 import ch.jeda.ui.KeyEvent;
 import ch.jeda.ui.KeyUpListener;
 import java.util.EnumSet;
 
+/**
+ * Keeps track of pressed keys. A <tt>PressedKeys</tt> object can keep track of all keys that are currently pressed. In
+ * order to do so, the object must be added as event listener to a window using the method
+ * {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
+ *
+ * @since 1
+ */
 public final class PressedKeys implements KeyDownListener, KeyUpListener {
 
     private final EnumSet<Key> pressedKeys;
 
+    /**
+     * Constructs a new <tt>PressedKeys</tt> object.
+     *
+     * @since 1
+     */
     public PressedKeys() {
         this.pressedKeys = EnumSet.noneOf(Key.class);
     }
 
+    /**
+     * Checks if a key is currenty pressed. Returns <tt>true</tt> if the specified key is currently pressed, returns
+     * <tt>false</tt> otherwise.
+     *
+     * @param key the key to check
+     * @return <tt>true</tt> if the specified key is currently pressed, <tt>false</tt> otherwise.
+     *
+     * @since 1
+     */
     public boolean contains(final Key key) {
         return this.pressedKeys.contains(key);
     }
@@ -42,5 +64,21 @@ public final class PressedKeys implements KeyDownListener, KeyUpListener {
     @Override
     public void onKeyUp(final KeyEvent event) {
         this.pressedKeys.remove(event.getKey());
+    }
+
+    /**
+     * Returns an array of all currently pressed keys.
+     *
+     * @return an array of all currently pressed keys
+     *
+     * @since 1
+     */
+    public Key[] toArray() {
+        return this.pressedKeys.toArray(new Key[this.pressedKeys.size()]);
+    }
+
+    @Override
+    public String toString() {
+        return Util.toString(this.pressedKeys);
     }
 }

@@ -30,7 +30,7 @@ public enum Key {
      */
     A,
     /**
-     * The alt graph key.
+     * The alt graph key. This key is typically located right of the space key.
      */
     ALT_GRAPH,
     /**
@@ -42,7 +42,7 @@ public enum Key {
      */
     ALT_LEFT,
     /**
-     * The left alt key.
+     * The right alt key.
      */
     ALT_RIGHT,
     /**
@@ -57,6 +57,10 @@ public enum Key {
      * The back key.
      */
     BACK,
+    /**
+     * The Backslash key.
+     */
+    BACKSLASH,
     /**
      * The Backspace key.
      */
@@ -348,13 +352,23 @@ public enum Key {
     /**
      * The menu key.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png">
-     * Represents the context menu key on the keyboard (usually located left of the right control key.
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> Represents the context menu key on the keyboard
+     * (usually located left of the right control key.
      * <p>
      * <img src="../../../android.png"> Represents the menu key. This is the hardware key that is used to display a
      * menu.
      */
     MENU,
+    /**
+     * The meta key. The meaning of this key constant is OS-dependent.
+     * <p>
+     * <img src="../../../windows.png"> Represents the Windows key.
+     * <p>
+     * <img src="../../../linux.png"> Represents the Windows key.
+     * </p>
+     * <img src="../../../android.png"> The key is <b>not</b> available.
+     */
+    META,
     /**
      * The minus ("-") key.
      */
