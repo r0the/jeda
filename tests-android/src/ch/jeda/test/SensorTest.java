@@ -18,10 +18,10 @@ public class SensorTest extends Program implements SensorListener {
         window = new Window();
         window.setFontSize(12);
         yPos = new HashMap<Object, Float>();
-        Device.enableSensor(SensorType.GRAVITY);
-        Device.enableSensor(SensorType.ACCELERATION);
-        Device.enableSensor(SensorType.LINEAR_ACCELERATION);
-        Device.enableSensor(SensorType.MAGNETIC_FIELD);
+        Jeda.enableSensor(SensorType.GRAVITY);
+        Jeda.enableSensor(SensorType.ACCELERATION);
+        Jeda.enableSensor(SensorType.LINEAR_ACCELERATION);
+        Jeda.enableSensor(SensorType.MAGNETIC_FIELD);
         window.addEventListener(this);
     }
 

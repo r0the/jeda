@@ -16,21 +16,24 @@ public class InputTest extends Program implements KeyListener,
     @Override
     public void run() {
         window = new Window();
-        window.setColor(Color.WHITE);
-        window.fill();
+        reset();
         window.addEventListener(this);
     }
 
     void drawMessage(String message) {
         if (y > window.getHeight()) {
-            y = 10;
-            window.setColor(Color.WHITE);
-            window.fill();
-            window.setColor(Color.BLACK);
+            reset();
         }
 
         window.drawText(10, y, message);
         y += 15;
+    }
+
+    void reset() {
+        y = 10;
+        window.setColor(Color.WHITE);
+        window.fill();
+        window.setColor(Color.BLACK);
     }
 
     @Override
