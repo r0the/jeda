@@ -97,6 +97,17 @@ public class Jeda {
         ENGINE.getPlatform().setSensorEnabled(sensorType, true);
     }
 
+    /**
+     * Returns the name of the currently running Jeda program.
+     *
+     * @return the name of the currently running Jeda program
+     *
+     * @since 1
+     */
+    public static String getProgramName() {
+        return ENGINE.getProgramName();
+    }
+
     public static Properties getProperties() {
         return ENGINE.getProperties();
     }

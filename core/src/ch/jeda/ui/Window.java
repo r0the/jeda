@@ -104,7 +104,7 @@ public class Window extends Canvas {
         this.eventDispatcher = new EventDispatcher();
         this.events = new Events();
         this.eventDispatcher.addListener(this.events.listener);
-        this.title = Jeda.getProperties().getString("jeda.program.name");
+        this.title = Jeda.getProgramName();
         this.resetImp(width, height, toSet(features));
         Jeda.addTickListener(new EventLoop(this));
     }

@@ -58,6 +58,7 @@ class JedaEngine implements PlatformCallback, Runnable {
         final JedaEngine result = new JedaEngine();
         final Thread eventThread = new Thread(result);
         eventThread.setName(Helper.getMessage("jeda.engine.event-thread-name"));
+        eventThread.setDaemon(true);
         eventThread.start();
         return result;
     }
@@ -131,7 +132,6 @@ class JedaEngine implements PlatformCallback, Runnable {
                 this.currentProgram.stop();
             }
             else {
-                this.running.set(false);
                 this.platform.shutdown();
             }
         }
@@ -158,6 +158,17 @@ class JedaEngine implements PlatformCallback, Runnable {
         }
         else {
             return result;
+        }
+    }
+
+    String getProgramName() {
+        synchronized (this.currentProgramLock) {
+            if (this.currentProgram != null) {
+                return this.currentProgram.getProgramName();
+            }
+            else {
+                return null;
+            }
         }
     }
 
@@ -206,7 +217,7 @@ class JedaEngine implements PlatformCallback, Runnable {
             else {
                 this.currentProgram = new JedaProgramExecutor(this, programClassName);
                 final Thread programThread = new Thread(this.currentProgram);
-                programThread.setName(this.currentProgram.getProgramName());
+                programThread.setName(Helper.getMessage("jeda.engine.program-thread-name"));
                 programThread.start();
             }
         }
