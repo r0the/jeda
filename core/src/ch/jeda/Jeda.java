@@ -22,7 +22,6 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowImp;
-import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.TickListener;
 import ch.jeda.ui.WindowFeature;
 import java.io.BufferedReader;
@@ -43,13 +42,10 @@ public class Jeda {
 
     private static final JedaEngine ENGINE = JedaEngine.create();
 
-    private Jeda() {
-    }
-
     /**
      * Adds a tick listener to the Jeda engine. The listener will receive {@link ch.jeda.event.EventType#TICK} events in
-     * approximately the frequency set with {@link ch.jeda.Jeda#setFrameRate(float)}. Has no effect if <tt>listener</tt>
-     * is <tt>null</tt>.
+     * approximately the frequency set with {@link ch.jeda.Jeda#setTickFrequency(float)}. Has no effect if
+     * <tt>listener</tt> is <tt>null</tt>.
      *
      * @param listener the listener to add
      *
@@ -76,7 +72,7 @@ public class Jeda {
      * @since 1
      */
     public static void disableSensor(final SensorType sensorType) {
-        ENGINE.getPlatform().setSensorEnabled(sensorType, false);
+        ENGINE.setSensorEnabled(sensorType, false);
     }
 
     /**
@@ -94,7 +90,7 @@ public class Jeda {
      * @since 1
      */
     public static void enableSensor(final SensorType sensorType) {
-        ENGINE.getPlatform().setSensorEnabled(sensorType, true);
+        ENGINE.setSensorEnabled(sensorType, true);
     }
 
     /**
@@ -108,6 +104,13 @@ public class Jeda {
         return ENGINE.getProgramName();
     }
 
+    /**
+     * Returns the Jeda system properties.
+     *
+     * @return the Jeda system properties
+     *
+     * @since 1
+     */
     public static Properties getProperties() {
         return ENGINE.getProperties();
     }
@@ -140,7 +143,7 @@ public class Jeda {
      * @since 1
      */
     public static boolean isSensorAvailable(final SensorType sensorType) {
-        return ENGINE.getPlatform().isSensorAvailable(sensorType);
+        return ENGINE.isSensorAvailable(sensorType);
     }
 
     /**
@@ -160,11 +163,20 @@ public class Jeda {
      * @since 1
      */
     public static boolean isSensorEnabled(final SensorType sensorType) {
-        return ENGINE.getPlatform().isSensorEnabled(sensorType);
+        return ENGINE.isSensorEnabled(sensorType);
     }
 
-    public static String[] loadTextFile(final String filePath) {
-        final InputStream in = ENGINE.getPlatform().openResource(filePath);
+    /**
+     * Loads a text file and returns the content as a list of Strings. Each line of the text file will be represented by
+     * a <tt>String</tt> in the returned array. Returns <tt>null</tt> if the file is not present or cannot be read.
+     *
+     * To read a resource file, put 'res:' in front of the file path.
+     *
+     * @param path path to the file
+     * @return lines of the file as an array of <tt>String</tt>
+     */
+    public static String[] loadTextFile(final String path) {
+        final InputStream in = ENGINE.openResource(path);
         if (in == null) {
             return null;
         }
@@ -179,7 +191,7 @@ public class Jeda {
             return result.toArray(new String[result.size()]);
         }
         catch (final IOException ex) {
-            err("jeda.file.error.read", filePath, ex);
+            err("jeda.file.error.read", path, ex);
             return null;
         }
         finally {
@@ -192,17 +204,27 @@ public class Jeda {
         }
     }
 
+    /**
+     * Removes a tick listener from the Jeda engine. The listener will no longer receive
+     * {@link ch.jeda.event.EventType#TICK} events. Has no effect if <tt>listener</tt> is <tt>null</tt>.
+     *
+     * @param listener the listener to remove
+     *
+     * @see #addTickListener(ch.jeda.ui.TickListener)
+     * @see #setTickFrequency(float)
+     * @since 1
+     */
     public static void removeTickListener(final TickListener listener) {
         ENGINE.removeTickListener(listener);
     }
 
     /**
      * Sets the target tick frequency in Hertz. This is the frequency in which windows will be refreshed and
-     * {@link TickEvent} events will be emitted.
+     * {@link ch.jeda.event.EventType#TICK} events will be emitted.
      *
      * @param hertz new frame rate in hertz
      *
-     * @see #getFrameRate()
+     * @see #getTickFrequency()
      * @since 1
      */
     public static void setTickFrequency(final float hertz) {
@@ -245,14 +267,7 @@ public class Jeda {
     }
 
     static WindowImp createWindowImp(final int width, final int height, final EnumSet<WindowFeature> features) {
-        if (features == null) {
-            throw new NullPointerException("features");
-        }
-
-        final WindowRequest request = new WindowRequest(width, height, features);
-        ENGINE.getPlatform().showWindow(request);
-        request.waitForResult();
-        return request.getResult();
+        return ENGINE.createWindowImp(width, height, features);
     }
 
     static void log(final LogLevel logLevel, final String message) {
@@ -260,10 +275,13 @@ public class Jeda {
     }
 
     static InputStream openResource(final String path) {
-        return ENGINE.getPlatform().openResource(path);
+        return ENGINE.openResource(path);
     }
 
     static void showInputRequest(final InputRequest inputRequest) {
-        ENGINE.getPlatform().showInputRequest(inputRequest);
+        ENGINE.showInputRequest(inputRequest);
+    }
+
+    private Jeda() {
     }
 }

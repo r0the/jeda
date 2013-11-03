@@ -96,13 +96,7 @@ public final class Util {
     }
 
     /**
-     * Loads a text file and returns the content as a list of Strings. Each line of the text file will be represented by
-     * a <tt>String</tt> in the returned array. Returns <tt>null</tt> if the file is not present or cannot be read.
-     *
-     * To read a resource file, put ':' in front of the file path.
-     *
-     * @param filePath path to the file
-     * @return lines of the file as an array of <tt>String</tt>
+     * @deprecated Use {@link Jeda#loadTextFile(java.lang.String)} instead.
      */
     public static String[] loadTextFile(final String filePath) {
         return Jeda.loadTextFile(filePath);
@@ -231,9 +225,7 @@ public final class Util {
             }
         }
         else {
-            for (Object element : (Object[]) array) {
-                result.add(element);
-            }
+            result.addAll(Arrays.asList((Object[]) array));
         }
 
         return result;

@@ -18,18 +18,23 @@ package ch.jeda;
 
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
+import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.SoundImp;
+import ch.jeda.platform.WindowImp;
+import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.TickEvent;
 import ch.jeda.ui.TickListener;
+import ch.jeda.ui.WindowFeature;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -168,11 +173,11 @@ class JedaEngine implements PlatformCallback, Runnable {
         }
     }
 
-    public CanvasImp createCanvasImp(final int width, final int height) {
+    CanvasImp createCanvasImp(final int width, final int height) {
         return this.platform.createCanvasImp(width, height);
     }
 
-    public ImageImp createImageImp(final String path) {
+    ImageImp createImageImp(final String path) {
         final ImageImp result = this.platform.createImageImp(path);
         if (result == null) {
             return this.defaultImageImp;
@@ -182,7 +187,7 @@ class JedaEngine implements PlatformCallback, Runnable {
         }
     }
 
-    public SoundImp createSoundImp(final String path) {
+    SoundImp createSoundImp(final String path) {
         final SoundImp result = this.platform.createSoundImp(path);
         if (result == null) {
             return EMPTY_SOUND_IMP;
@@ -190,6 +195,17 @@ class JedaEngine implements PlatformCallback, Runnable {
         else {
             return result;
         }
+    }
+
+    WindowImp createWindowImp(final int width, final int height, final EnumSet<WindowFeature> features) {
+        if (features == null) {
+            throw new NullPointerException("features");
+        }
+
+        final WindowRequest request = new WindowRequest(width, height, features);
+        this.platform.showWindow(request);
+        request.waitForResult();
+        return request.getResult();
     }
 
     String getProgramName() {
@@ -207,17 +223,20 @@ class JedaEngine implements PlatformCallback, Runnable {
         return this.timer.getTargetFrequency();
     }
 
-    @Deprecated
-    Platform getPlatform() {
-        return this.platform;
-    }
-
     ProgramClassWrapper[] getProgramClasses() {
         return this.programClasses;
     }
 
     Properties getProperties() {
         return this.properties;
+    }
+
+    boolean isSensorAvailable(final SensorType sensorType) {
+        return this.platform.isSensorAvailable(sensorType);
+    }
+
+    boolean isSensorEnabled(final SensorType sensorType) {
+        return this.platform.isSensorEnabled(sensorType);
     }
 
     void log(final LogLevel logLevel, final String message) {
@@ -227,6 +246,10 @@ class JedaEngine implements PlatformCallback, Runnable {
         else {
             this.platform.log(logLevel, message);
         }
+    }
+
+    InputStream openResource(final String path) {
+        return this.platform.openResource(path);
     }
 
     void programTerminated() {
@@ -241,8 +264,16 @@ class JedaEngine implements PlatformCallback, Runnable {
         }
     }
 
+    void showInputRequest(final InputRequest request) {
+        this.platform.showInputRequest(request);
+    }
+
     void showSelectionRequest(final SelectionRequest request) {
         this.platform.showSelectionRequest(request);
+    }
+
+    void setSensorEnabled(final SensorType sensorType, final boolean enabled) {
+        this.platform.setSensorEnabled(sensorType, enabled);
     }
 
     void setTickFrequency(final float hertz) {

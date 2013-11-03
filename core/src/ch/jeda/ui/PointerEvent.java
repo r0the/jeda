@@ -71,4 +71,19 @@ public final class PointerEvent extends Event {
     public float getY() {
         return this.y;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("PointerEvent(type=");
+        result.append(this.getType());
+        result.append(", pointerId=");
+        result.append(this.pointerId);
+        result.append(", x=");
+        result.append(this.x);
+        result.append(", y=");
+        result.append(this.y);
+        result.append(")");
+        return result.toString();
+    }
 }

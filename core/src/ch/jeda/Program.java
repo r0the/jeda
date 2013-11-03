@@ -35,7 +35,7 @@ package ch.jeda;
 public abstract class Program implements Runnable {
 
     /**
-     * Constructs a program. The created program will have the state {@link ProgramState#CREATING}.
+     * Constructs a program.
      *
      * @since 1
      */
@@ -43,9 +43,7 @@ public abstract class Program implements Runnable {
     }
 
     /**
-     * Executes the program. Override this method to implement the program. The program should react to changes of the
-     * program state. It should not execute program logic while the program state is {@link ProgramState#PAUSED}. The
-     * program should return from the {@link #run()} method if the program state is {@link ProgramState#STOPPED}.
+     * Executes the program. Override this method to implement the program.
      *
      * @since 1
      */

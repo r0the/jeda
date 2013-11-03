@@ -55,7 +55,7 @@ public final class Properties {
         }
     }
 
-    public Properties(final java.util.Properties imp) {
+    Properties(final java.util.Properties imp) {
         this.imp = imp;
     }
 
@@ -65,6 +65,10 @@ public final class Properties {
 
     public void clear() {
         this.imp.clear();
+    }
+
+    public boolean containsKey(final String key) {
+        return this.imp.containsKey(key);
     }
 
     public double getDouble(final String key, final double defaultValue) {

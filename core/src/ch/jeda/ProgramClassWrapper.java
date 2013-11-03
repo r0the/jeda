@@ -50,8 +50,7 @@ abstract class ProgramClassWrapper {
 
     static ProgramClassWrapper tryCreateJedaProgram(final Class<?> candidate, final Properties properties) {
         try {
-            final Constructor<JedaProgram> constructor =
-                ((Class<JedaProgram>) candidate).getDeclaredConstructor();
+            final Constructor<JedaProgram> constructor = (Constructor<JedaProgram>) candidate.getDeclaredConstructor();
             constructor.setAccessible(true);
             return new JedaProgramClassWrapper(programName(candidate, properties), constructor);
         }

@@ -19,7 +19,7 @@ package ch.jeda.event;
 import ch.jeda.SensorType;
 
 /**
- * Represents an event of the type {@link EventType#SENSOR}.
+ * Represents an event of the type {@link ch.jeda.EventType#SENSOR}.
  *
  * @since 1
  */
@@ -118,5 +118,22 @@ public class SensorEvent extends Event {
      */
     public float getZ() {
         return this.z;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("SensorEvent(type=");
+        result.append(this.getType());
+        result.append(", sensorType=");
+        result.append(this.sensorType);
+        result.append(", x=");
+        result.append(this.x);
+        result.append(", y=");
+        result.append(this.y);
+        result.append(", z=");
+        result.append(this.z);
+        result.append(")");
+        return result.toString();
     }
 }

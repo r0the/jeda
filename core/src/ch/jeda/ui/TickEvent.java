@@ -54,4 +54,19 @@ public class TickEvent extends Event {
     public float getFrameRate() {
         return this.frameRate;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("TickEvent(type=");
+        result.append(this.getType());
+        result.append(", duration=");
+        result.append(this.duration);
+        result.append(", keyChar=");
+        result.append(this.frameRate);
+        result.append(", frameRate=");
+        result.append(this.frameRate);
+        result.append(")");
+        return result.toString();
+    }
 }

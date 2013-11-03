@@ -21,13 +21,15 @@ import ch.jeda.ui.PointerListener;
 import ch.jeda.ui.TickEvent;
 import ch.jeda.ui.TickListener;
 
-public class DragAndZoom implements PointerListener, TickListener {
+public class DragAndZoom implements PointerListener, TickListener, TurnListener {
 
     private PointerEvent lastPos;
     private float dx;
     private float dy;
     private float nextDx;
     private float nextDy;
+    private float nextZoom;
+    private float zoom;
 
     public float getDx() {
         return this.dx;
@@ -35,6 +37,10 @@ public class DragAndZoom implements PointerListener, TickListener {
 
     public float getDy() {
         return this.dy;
+    }
+
+    public float getZoom() {
+        return this.zoom;
     }
 
     public boolean isDragging() {
@@ -68,7 +74,16 @@ public class DragAndZoom implements PointerListener, TickListener {
     public void onTick(final TickEvent event) {
         this.dx = this.nextDx;
         this.dy = this.nextDy;
+        this.zoom = this.nextZoom;
         this.nextDx = 0f;
         this.nextDy = 0f;
+        this.nextZoom = 0f;
+    }
+
+    @Override
+    public void onTurn(final TurnEvent event) {
+        if (event.getAxis() == TurnAxis.MOUSE_WHEEL) {
+            this.nextZoom += event.getAmount();
+        }
     }
 }

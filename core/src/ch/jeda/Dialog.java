@@ -21,9 +21,6 @@ import ch.jeda.platform.InputType;
 
 public class Dialog {
 
-    private Dialog() {
-    }
-
     /**
      * Prompts the user to enter a <tt>double</tt> value. The specified message is presented to the user along with a
      * field to enter the <tt>double</tt>
@@ -44,12 +41,6 @@ public class Dialog {
         return request.getResult();
     }
 
-//    public static String selectFileName() {
-//        InputRequest<String> request = new InputRequest<String>((InputType.forFile(), null);
-//        Engine.getContext().showInputRequest(request);
-//        request.waitForResult();
-//        return request.getResult();
-//    }
     /**
      * Prompts the user to enter an <tt>int</tt> value. The specified message is presented to the user along with a
      * field to enter the <tt>int<//tt>
@@ -88,5 +79,8 @@ public class Dialog {
         Jeda.showInputRequest(request);
         request.waitForResult();
         return request.getResult();
+    }
+
+    private Dialog() {
     }
 }

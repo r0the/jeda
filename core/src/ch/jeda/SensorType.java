@@ -33,15 +33,21 @@ public enum SensorType {
     /**
      * Gravity sensor. The gravity sensor provides a three dimensional vector indicating the direction and magnitude of
      * gravity.
+     *
+     * @since 1
      */
     GRAVITY,
     /**
      * Linear acceleration sensor. The linear acceleration sensor provides you with a three-dimensional vector
      * representing acceleration along each device axis, excluding gravity.
+     *
+     * @since 1
      */
     LINEAR_ACCELERATION,
     /**
      * Magnetic field sensor. The magnetic field sensor measures the magnetic field.
+     *
+     * @since 1
      */
     MAGNETIC_FIELD
 }

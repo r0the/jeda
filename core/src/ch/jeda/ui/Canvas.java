@@ -224,6 +224,8 @@ public class Canvas {
      * @param points the points of the polygon as sequence of coordinate pairs
      * @throws IllegalArgumentException if less than 6 arguments are passed
      * @throws IllegalArgumentException if and odd number of arguments are passed
+     *
+     * @since 1
      */
     public void drawPolygon(final float... points) {
         if (points.length < 6 || points.length % 2 == 1) {
@@ -358,6 +360,8 @@ public class Canvas {
      * @param points the points of the polygon as sequence of coordinate pairs
      * @throws IllegalArgumentException if less than 6 arguments are passed
      * @throws IllegalArgumentException if and odd number of arguments are passed
+     *
+     * @since 1
      */
     public void fillPolygon(final float... points) {
         if (points.length < 6 || points.length % 2 == 1) {
@@ -490,6 +494,7 @@ public class Canvas {
      * Returns the current line width in pixels.
      *
      * @return current line width
+     * @since 1
      */
     public float getLineWidth() {
         return this.imp.getLineWidth();
@@ -568,7 +573,6 @@ public class Canvas {
      * @throws IllegalArgumentException if <tt>size</tt> is not positive
      *
      * @see #getFontSize()
-     *
      * @since 1
      */
     public void setFontSize(final int size) {
@@ -587,7 +591,6 @@ public class Canvas {
      * Set 0 for drawing hairlines independent of the transformation.
      *
      * @param lineWidth the new line width
-     *
      * @throws IllegalArgumentException if <tt>lineWidth</tt> is negative
      *
      * @since 1

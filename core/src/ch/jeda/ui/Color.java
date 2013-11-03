@@ -156,8 +156,8 @@ public final class Color implements Serializable {
      * @param red color's red component
      * @param green color's green component
      * @param blue color's blue component
-     *
      * @throws IllegalArgumentException if not all component values are valid (in the range from 0 to 255).
+     *
      * @since 1
      */
     public Color(final int red, final int green, final int blue) {
@@ -172,8 +172,8 @@ public final class Color implements Serializable {
      * @param green color's green component
      * @param blue color's blue component
      * @param alpha color's alpha component (opacity)
-     *
      * @throws IllegalArgumentException if not all component values are valid (in the range of 0 to 255).
+     *
      * @since 1
      */
     public Color(final int red, final int green, final int blue,

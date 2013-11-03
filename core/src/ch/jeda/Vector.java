@@ -103,6 +103,19 @@ public final class Vector implements Serializable {
     }
 
     /**
+     * Returns the direction. Calculates and returns the direction of the vector. The direction is measured
+     * mathematically. That means it is measured in radians, the x-axis has the direction 0 and the y-axis has the
+     * direction of π/2.
+     *
+     * @return current direction
+     *
+     * @since 1
+     */
+    public double direction() {
+        return Math.atan2(this.y, this.x);
+    }
+
+    /**
      * Calculates the dot product of two vectors.
      *
      * @param other other vector
@@ -170,6 +183,12 @@ public final class Vector implements Serializable {
 
     public void rotate(final double angle) {
         this.setDirection(this.direction() + angle);
+    }
+
+    public Vector rotatedBy(final double angle) {
+        final Vector result = new Vector(this);
+        result.setDirection(result.direction() + angle);
+        return result;
     }
 
     /**
@@ -277,17 +296,12 @@ public final class Vector implements Serializable {
         this.y = this.y - other.y;
     }
 
-    /**
-     * Returns the direction. Calculates and returns the direction of the vector. The direction is measured
-     * mathematically. That means it is measured in radians, the x-axis has the direction 0 and the y-axis has the
-     * direction of π/2.
-     *
-     * @return current direction
-     *
-     * @since 1
-     */
-    public double direction() {
-        return Math.atan2(this.y, this.x);
+    public Vector times(final double factor) {
+        return this.times((float) factor);
+    }
+
+    public Vector times(final float factor) {
+        return new Vector(this.x * factor, this.y * factor);
     }
 
     @Deprecated

@@ -18,19 +18,26 @@ package ch.jeda;
 
 /**
  * <b>Internal</b>. Do not use this class.
- * <p>
- * Provides a low-level input/output interface for Jeda.
  */
 public class Log {
 
+    /**
+     * <b>Internal</b>. Do not use this method.
+     */
     public static void dbg(final Object... message) {
         Jeda.log(LogLevel.DEBUG, Util.toString(message));
     }
 
+    /**
+     * <b>Internal</b>. Do not use this method.
+     */
     public static void err(final String messageKey, Object... args) {
         Jeda.log(LogLevel.ERROR, String.format(Helper.getMessage(messageKey), args) + "\n");
     }
 
+    /**
+     * <b>Internal</b>. Do not use this method.
+     */
     public static void err(final Throwable throwable, final String messageKey, Object... args) {
         Jeda.log(LogLevel.ERROR, String.format(Helper.getMessage(messageKey), args) + "\n");
         if (throwable != null) {
