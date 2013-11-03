@@ -18,17 +18,18 @@ package ch.jeda.platform.android;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import ch.jeda.Log;
 import ch.jeda.platform.SelectionRequest;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,43 +37,31 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class SelectionView extends DialogView {
+class SelectionDialogFragment extends DialogFragment {
 
-    static final String TITLE = "Title";
-    static final String ITEMS = "Items";
-    static final String SELECTED_INDEX = "SelectedIndex";
-    private final ListAdapterImp listAdapter;
-    private final ListView listView;
-    private SelectionRequest request;
+    private final SelectionRequest request;
+    private ListAdapterImp listAdapter;
     private int selectedItemPosition;
 
-    SelectionView(final ViewManager manager) {
-        super(manager);
-        this.listView = new ListView(this.getContext());
-        this.addContent(this.listView);
-        this.listAdapter = new ListAdapterImp(this.getContext());
-        this.listView.setAdapter(this.listAdapter);
-        this.listView.setOnItemClickListener(new OnItemClickListenerImp(this));
-    }
-
-    void setSelectionRequest(final SelectionRequest request) {
+    SelectionDialogFragment(final SelectionRequest request) {
         this.request = request;
-        this.setTitle(request.getTitle());
-        this.listAdapter.setItems(request.getDisplayItems());
+        this.setShowsDialog(false);
     }
 
     @Override
-    protected void onAccept() {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
+        final ListView result = new ListView(this.getActivity());
+        this.listAdapter = new ListAdapterImp(this.getActivity());
+        this.listAdapter.setItems(this.request.getDisplayItems());
+        result.setAdapter(this.listAdapter);
+        result.setOnItemClickListener(new OnItemClickListenerImp(this));
+        return result;
+    }
+
+    private void accept() {
         this.request.setSelectedIndex(selectedItemPosition);
-    }
-
-    @Override
-    protected void onButtonClicked(Button button) {
-    }
-
-    @Override
-    protected void onCancel() {
-        this.request.cancelRequest();
+        this.dismiss();
     }
 
     private static class ListAdapterImp implements ListAdapter {
@@ -180,9 +169,9 @@ class SelectionView extends DialogView {
 
     private static class OnItemClickListenerImp implements OnItemClickListener {
 
-        private final SelectionView selectionView;
+        private final SelectionDialogFragment selectionView;
 
-        public OnItemClickListenerImp(final SelectionView selectionView) {
+        public OnItemClickListenerImp(final SelectionDialogFragment selectionView) {
             this.selectionView = selectionView;
         }
 

@@ -19,32 +19,69 @@ package ch.jeda.platform.android;
 import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.Surface;
+import android.view.View;
+import android.view.ViewGroup;
 import ch.jeda.SensorType;
 import ch.jeda.event.SensorEvent;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-class SensorManager {
+class SensorManager extends Fragment {
 
-    private final android.hardware.SensorManager imp;
+    private final EnumSet<SensorType> enabledSensors;
     private final EnumMap<SensorType, Sensor> sensorMap;
     private final EnumMap<SensorType, SensorEventListener> sensorListenerMap;
-    private final Map<Sensor, SensorInfo> sensorReserveMap;
-    private final ViewManager viewManager;
+    private final Map<Sensor, SensorInfo> sensorInfoMap;
+    private boolean paused;
+    private android.hardware.SensorManager imp;
 
-    SensorManager(final Activity activity, final ViewManager viewManager) {
-        this.imp = (android.hardware.SensorManager) activity.getSystemService(Activity.SENSOR_SERVICE);
+    SensorManager() {
+        this.enabledSensors = EnumSet.noneOf(SensorType.class);
         this.sensorMap = new EnumMap<SensorType, Sensor>(SensorType.class);
         this.sensorListenerMap = new EnumMap<SensorType, SensorEventListener>(SensorType.class);
-        this.sensorReserveMap = new HashMap<Sensor, SensorInfo>();
-        this.viewManager = viewManager;
+        this.sensorInfoMap = new HashMap<Sensor, SensorInfo>();
+        this.setRetainInstance(true);
+    }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.sensorMap.clear();
+        this.sensorInfoMap.clear();
+        this.sensorListenerMap.clear();
+        this.imp = (android.hardware.SensorManager) activity.getSystemService(Activity.SENSOR_SERVICE);
         this.checkAdd(SensorType.ACCELERATION, this.imp.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
         this.checkAdd(SensorType.GRAVITY, this.imp.getDefaultSensor(Sensor.TYPE_GRAVITY));
         this.checkAdd(SensorType.LINEAR_ACCELERATION, this.imp.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
         this.checkAdd(SensorType.MAGNETIC_FIELD, this.imp.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD));
+    }
+
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
+        return null;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        for (final SensorType sensorType : this.sensorListenerMap.keySet()) {
+            this.deactivateSensor(sensorType);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        for (final SensorType sensorType : this.enabledSensors) {
+            this.activateSensor(sensorType);
+        }
     }
 
     boolean isAvailable(final SensorType sensorType) {
@@ -52,33 +89,35 @@ class SensorManager {
     }
 
     boolean isEnabled(final SensorType sensorType) {
-        return this.sensorListenerMap.containsKey(sensorType);
+        return this.enabledSensors.contains(sensorType);
     }
 
-    void setEnabled(final SensorType sensorType, final boolean enable) {
-        if (!isAvailable(sensorType) || enable == isEnabled(sensorType)) {
-            return;
-        }
-
-        if (enable) {
-            final SensorEventListener listener = this.createEventListener(sensorType);
-            if (listener != null) {
-                this.imp.registerListener(listener, this.sensorMap.get(sensorType), android.hardware.SensorManager.SENSOR_DELAY_UI);
-                this.sensorListenerMap.put(sensorType, listener);
-            }
+    void setEnabled(final SensorType sensorType, final boolean enabled) {
+        // Enable sensor only if it is available
+        if (enabled && this.sensorMap.containsKey(sensorType)) {
+            this.enabledSensors.add(sensorType);
         }
         else {
-            final SensorEventListener listener = this.sensorListenerMap.get(sensorType);
-            if (listener != null) {
-                this.imp.unregisterListener(listener);
-            }
+            this.enabledSensors.remove(sensorType);
+        }
+
+        this.updateListeners();
+    }
+
+    private void activateSensor(final SensorType sensorType) {
+        final SensorEventListener listener = this.createEventListener(sensorType);
+        if (listener != null) {
+            this.imp.registerListener(listener,
+                                      this.sensorMap.get(sensorType),
+                                      android.hardware.SensorManager.SENSOR_DELAY_UI);
+            this.sensorListenerMap.put(sensorType, listener);
         }
     }
 
     private void checkAdd(final SensorType sensorType, final Sensor sensor) {
         if (sensor != null) {
             this.sensorMap.put(sensorType, sensor);
-            this.sensorReserveMap.put(sensor, new SensorInfo(sensorType, sensor));
+            this.sensorInfoMap.put(sensor, new SensorInfo(sensorType, sensor));
         }
     }
 
@@ -88,19 +127,41 @@ class SensorManager {
             case GRAVITY:
             case LINEAR_ACCELERATION:
             case MAGNETIC_FIELD:
-                return new ThreeDeeSensorHandler(this.viewManager, this.sensorReserveMap);
+                return new ThreeDeeSensorHandler(this.getActivity(), this.sensorInfoMap);
             default:
                 return null;
         }
     }
 
+    private void deactivateSensor(final SensorType sensorType) {
+        final SensorEventListener listener = this.sensorListenerMap.get(sensorType);
+        if (listener != null) {
+            this.imp.unregisterListener(listener);
+            this.sensorListenerMap.remove(sensorType);
+        }
+    }
+
+    private void updateListeners() {
+        for (final SensorType sensorType : this.enabledSensors) {
+            if (!this.sensorListenerMap.containsKey(sensorType)) {
+                this.activateSensor(sensorType);
+            }
+        }
+
+        for (final SensorType sensorType : this.sensorListenerMap.keySet()) {
+            if (!this.enabledSensors.contains(sensorType)) {
+                this.deactivateSensor(sensorType);
+            }
+        }
+    }
+
     private static class ThreeDeeSensorHandler implements SensorEventListener {
 
-        private final ViewManager viewManager;
+        private final Activity activity;
         private final Map<Sensor, SensorInfo> sensorReserveMap;
 
-        public ThreeDeeSensorHandler(final ViewManager viewManager, final Map<Sensor, SensorInfo> sensorReserveMap) {
-            this.viewManager = viewManager;
+        public ThreeDeeSensorHandler(final Activity activity, final Map<Sensor, SensorInfo> sensorReserveMap) {
+            this.activity = activity;
             this.sensorReserveMap = sensorReserveMap;
         }
 
@@ -109,7 +170,7 @@ class SensorManager {
             float x = 0f;
             float y = 0f;
             final float z = event.values[2];
-            switch (this.viewManager.getRotation()) {
+            switch (this.activity.getWindowManager().getDefaultDisplay().getRotation()) {
                 case Surface.ROTATION_0:
                     x = -event.values[0];
                     y = event.values[1];
@@ -128,7 +189,7 @@ class SensorManager {
                     break;
             }
 
-            this.viewManager.addEvent(new SensorEvent(sensorInfo, sensorInfo.getSensorType(), x, y, z));
+            ((Main) this.activity).addEvent(new SensorEvent(sensorInfo, sensorInfo.getSensorType(), x, y, z));
         }
 
         public void onAccuracyChanged(final Sensor sensor, final int accuracy) {

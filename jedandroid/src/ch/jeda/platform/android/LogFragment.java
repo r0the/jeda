@@ -16,32 +16,44 @@
  */
 package ch.jeda.platform.android;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import ch.jeda.LogLevel;
 
-class LogView extends DialogView {
+class LogFragment extends Fragment {
 
-    private final ScrollView scrollView;
-    private final TextView textView;
+    private final StringBuilder log;
+    private ScrollView scrollView;
+    private TextView textView;
 
-    LogView(final ViewManager manager) {
-        super(manager);
-        this.setTitle("Jeda Log");
-        this.textView = new TextView(this.getContext());
-        this.textView.setLayoutParams(createFillLayout());
-        this.scrollView = new ScrollView(this.getContext());
-        this.scrollView.addView(this.textView);
-        this.addContent(this.scrollView);
-        this.addButton("Schliessen");
+    public LogFragment() {
+        this.log = new StringBuilder();
     }
 
     @Override
-    protected void onButtonClicked(final Button button) {
-        this.cancel();
+    public void onAttach(final Activity activity) {
+        super.onAttach(activity);
+        activity.setTitle("Jeda Log");
+    }
+
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
+        this.textView = new TextView(this.getActivity());
+        this.textView.setLayoutParams(new ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.FILL_PARENT,
+            ViewGroup.LayoutParams.FILL_PARENT));
+        this.scrollView = new ScrollView(this.getActivity());
+        this.scrollView.addView(this.textView);
+        this.updateView();
+        return this.scrollView;
     }
 
     void log(final LogLevel logLevel, final String message) {
@@ -61,8 +73,14 @@ class LogView extends DialogView {
     }
 
     void append(final String text) {
-        this.textView.append(text);
+        this.log.append(text);
+        if (this.isVisible()) {
+            this.updateView();
+        }
+    }
+
+    private void updateView() {
+        this.textView.setText(this.log.toString());
         this.scrollView.fullScroll(View.FOCUS_DOWN);
-        this.show();
     }
 }

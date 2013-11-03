@@ -24,7 +24,7 @@ import java.util.EnumSet;
 
 class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
 
-    private final CanvasView canvasView;
+    private final CanvasFragment canvasView;
 
     @Override
     public void close() {
@@ -42,12 +42,12 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
 
     @Override
     public boolean isActive() {
-        return this.canvasView.isShown();
+        return this.canvasView.isVisible();
     }
 
     @Override
     public boolean isValid() {
-        return this.canvasView.isShown();
+        return this.canvasView.isVisible();
     }
 
     @Override
@@ -70,11 +70,11 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
         this.canvasView.setBitmap(this.getBitmap());
     }
 
-    static AndroidWindowImp create(final CanvasView canvasView, final int width, final int height) {
+    static AndroidWindowImp create(final CanvasFragment canvasView, final int width, final int height) {
         return new AndroidWindowImp(canvasView, width, height);
     }
 
-    private AndroidWindowImp(final CanvasView canvasView, final int width, final int height) {
+    private AndroidWindowImp(final CanvasFragment canvasView, final int width, final int height) {
         this.canvasView = canvasView;
         this.init(width, height);
     }

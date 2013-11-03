@@ -16,92 +16,76 @@
  */
 package ch.jeda.platform.android;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import ch.jeda.platform.InputRequest;
 
-class InputView extends DialogView implements TextWatcher {
+class InputView extends DialogFragment implements TextWatcher, DialogInterface.OnClickListener {
 
-    private final Button acceptButton;
-    private final Button cancelButton;
-    private final EditText input;
-    private final TextView label;
-    private InputRequest request;
+    private final InputRequest request;
+    private EditText input;
+    private Dialog dialog;
 
-    public void beforeTextChanged(final CharSequence cs, final int start, final int count, final int after) {
+    InputView(final InputRequest request) {
+        this.request = request;
     }
 
-    public void onTextChanged(final CharSequence cs, final int start, final int count, final int after) {
-    }
-
+    @Override
     public void afterTextChanged(final Editable editable) {
         this.validateInput();
     }
 
-    InputView(final ViewManager manager) {
-        super(manager);
-        this.acceptButton = this.addButton("Ok");
-        this.cancelButton = this.addButton("Cancel");
-        final LinearLayout main = new LinearLayout(this.getContext());
-        main.setOrientation(LinearLayout.VERTICAL);
-        this.addContent(main);
+    @Override
+    public void beforeTextChanged(final CharSequence cs, final int start, final int count, final int after) {
+    }
+
+    @Override
+    public void onClick(final DialogInterface dialogInterface, final int which) {
+        switch (which) {
+            case Dialog.BUTTON_POSITIVE:
+                this.request.setResult(this.request.getInputType().parse(this.input.getText().toString()));
+                dialogInterface.dismiss();
+                break;
+            case Dialog.BUTTON_NEGATIVE:
+                this.request.cancelRequest();
+                dialogInterface.cancel();
+                break;
+        }
+    }
+
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+        builder.setTitle(this.request.getTitle());
+        builder.setMessage(this.request.getMessage());
+        this.input = new EditText(this.getActivity());
         // This is required in order to show soft keyboard when input is focused.
-        this.setFocusableInTouchMode(true);
-
-        this.input = new EditText(this.getContext());
-        this.input.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        this.label = new TextView(this.getContext());
-        this.label.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        main.addView(this.label);
-        main.addView(this.input);
-
+        this.input.setFocusableInTouchMode(true);
         this.input.setImeOptions(EditorInfo.IME_ACTION_DONE);
         this.input.setInputType(EditorInfo.TYPE_CLASS_TEXT);
         this.input.addTextChangedListener(this);
-
-        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(this.input, InputMethodManager.SHOW_IMPLICIT);
-    }
-
-    void setInputRequest(final InputRequest request) {
-        this.request = request;
-        this.setTitle(request.getTitle());
-        this.label.setText(request.getMessage());
-        this.input.setText("");
-        this.input.requestFocus();
-        this.validateInput();
+        builder.setView(this.input);
+        builder.setPositiveButton("OK", this);
+        builder.setNegativeButton("Abbrechen", this);
+        return builder.create();
     }
 
     @Override
-    protected void onAccept() {
-        this.request.setResult(this.request.getInputType().parse(this.input.getText().toString()));
-    }
-
-    @Override
-    protected void onCancel() {
-        this.request.cancelRequest();
-    }
-
-    @Override
-    protected void onButtonClicked(final Button button) {
-        if (button == this.acceptButton) {
-            this.accept();
-        }
-        else if (button == this.cancelButton) {
-            this.cancel();
-        }
+    public void onTextChanged(final CharSequence cs, final int start, final int count, final int after) {
     }
 
     private void validateInput() {
-        this.acceptButton.setEnabled(this.request.getInputType().validate(this.input.getText().toString()));
+//        this.acceptButton.setEnabled(this.request.getInputType().validate(this.input.getText().toString()));
     }
 }

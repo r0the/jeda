@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.android;
 
-import android.app.Activity;
 import android.view.WindowManager;
 import ch.jeda.LogLevel;
 import ch.jeda.SensorType;
@@ -35,8 +34,6 @@ class AndroidPlatform implements Platform {
     private static AndroidPlatform INSTANCE;
     private final PlatformCallback callback;
     private final ResourceManager resourceManager;
-    private final SensorManager sensorManager;
-    private final ViewManager viewManager;
     private boolean paused;
 
     static AndroidPlatform getInstance() {
@@ -46,10 +43,8 @@ class AndroidPlatform implements Platform {
     public AndroidPlatform(final PlatformCallback callback) {
         INSTANCE = this;
         this.callback = callback;
-        final Activity activity = Main.getInstance();
+        final Main activity = Main.getInstance();
         this.resourceManager = new ResourceManager(activity);
-        this.viewManager = new ViewManager(activity, callback);
-        this.sensorManager = new SensorManager(activity, this.viewManager);
         // Adjust window when soft keyboard is shown.
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         this.paused = false;
@@ -72,11 +67,11 @@ class AndroidPlatform implements Platform {
     }
 
     public boolean isSensorAvailable(final SensorType sensorType) {
-        return this.sensorManager.isAvailable(sensorType);
+        return Main.getInstance().isSensorAvailable(sensorType);
     }
 
     public boolean isSensorEnabled(final SensorType sensorType) {
-        return this.sensorManager.isEnabled(sensorType);
+        return Main.getInstance().isSensorEnabled(sensorType);
     }
 
     @Override
@@ -85,7 +80,7 @@ class AndroidPlatform implements Platform {
     }
 
     public void log(final LogLevel logLevel, String message) {
-        this.viewManager.log(logLevel, message);
+        Main.getInstance().log(logLevel, message);
     }
 
     public InputStream openResource(final String path) {
@@ -93,31 +88,27 @@ class AndroidPlatform implements Platform {
     }
 
     public void setSensorEnabled(final SensorType sensorType, boolean enabled) {
-        this.sensorManager.setEnabled(sensorType, enabled);
+        Main.getInstance().setSensorEnabled(sensorType, enabled);
     }
 
     @Override
     public void showInputRequest(final InputRequest inputRequest) {
-        this.viewManager.showInputRequest(inputRequest);
+        Main.getInstance().showInputRequest(inputRequest);
     }
 
     @Override
     public void showSelectionRequest(final SelectionRequest selectionRequest) {
-        this.viewManager.showSelectionRequest(selectionRequest);
+        Main.getInstance().showSelectionRequest(selectionRequest);
     }
 
     @Override
     public void showWindow(final WindowRequest windowRequest) {
-        this.viewManager.showWindow(windowRequest);
+        Main.getInstance().showWindow(windowRequest);
     }
 
     @Override
     public void shutdown() {
-        this.viewManager.shutdown();
-    }
-
-    void onBackPressed() {
-        this.viewManager.closeView();
+        Main.getInstance().shutdown();
     }
 
     void onPause() {

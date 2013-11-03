@@ -19,10 +19,14 @@ package ch.jeda.platform.android;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import ch.jeda.event.Event;
 import ch.jeda.event.EventType;
 import ch.jeda.platform.WindowRequest;
@@ -36,9 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class CanvasView extends BaseView implements SurfaceHolder.Callback,
-                                             View.OnKeyListener,
-                                             View.OnTouchListener {
+class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
+                                                 View.OnKeyListener,
+                                                 View.OnTouchListener {
 
     private static final Map<Integer, EventSource> INPUT_DEVICE_MAP = new HashMap<Integer, EventSource>();
     private static final Map<Integer, Key> KEY_MAP = initKeyMap();
@@ -47,7 +51,26 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
     private WindowRequest request;
     private boolean surfaceAvailable;
     private SurfaceHolder surfaceHolder;
-    private SurfaceView surfaceView;
+
+    CanvasFragment(final WindowRequest request) {
+        super();
+        this.events = new ArrayList();
+        this.features = request.getFeatures();
+        this.request = request;
+    }
+
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
+        final SurfaceView result = new SurfaceView(this.getActivity());
+        result.setFocusable(true);
+        result.setFocusableInTouchMode(true);
+        result.setOnKeyListener(this);
+        result.setOnTouchListener(this);
+        this.surfaceHolder = result.getHolder();
+        this.surfaceHolder.addCallback(this);
+        return result;
+    }
 
     @Override
     public boolean onKey(final View view, final int keyCode, final android.view.KeyEvent event) {
@@ -113,21 +136,6 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         this.surfaceAvailable = false;
     }
 
-    CanvasView(final ViewManager manager, final WindowRequest request) {
-        super(manager);
-        this.events = new ArrayList();
-        this.features = request.getFeatures();
-        this.request = request;
-        this.surfaceView = new SurfaceView(this.getContext());
-        this.surfaceView.setFocusable(true);
-        this.surfaceView.setFocusableInTouchMode(true);
-        this.surfaceView.setOnKeyListener(this);
-        this.surfaceView.setOnTouchListener(this);
-        this.surfaceHolder = this.surfaceView.getHolder();
-        this.surfaceHolder.addCallback(this);
-        this.addView(this.surfaceView);
-    }
-
     void addEvent(final Event event) {
         this.events.add(event);
     }
@@ -142,7 +150,6 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         return this.features;
     }
 
-    @Override
     int getOrientation(final int currentOrientation) {
         if (this.features.contains(WindowFeature.ORIENTATION_LANDSCAPE)) {
             return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
@@ -172,6 +179,14 @@ class CanvasView extends BaseView implements SurfaceHolder.Callback,
         else {
             this.features.remove(feature);
         }
+    }
+
+    void setTitle(final String title) {
+        this.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                getActivity().setTitle(title);
+            }
+        });
     }
 
     private static EventSource mapDevice(final android.view.InputEvent event) {

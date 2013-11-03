@@ -16,14 +16,28 @@
  */
 package ch.jeda.platform.android;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import ch.jeda.Jeda;
+import ch.jeda.LogLevel;
+import ch.jeda.SensorType;
+import ch.jeda.event.Event;
+import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.SelectionRequest;
+import ch.jeda.platform.WindowRequest;
 
-public final class Main extends Activity {
+public final class Main extends FragmentActivity {
 
+    private static final int CONTENT_ID = 4242;
     private static Main INSTANCE;
+    private final LogFragment logFragment;
+    private final SensorManager sensorManager;
+    private CanvasFragment topWindow;
 
     static Main getInstance() {
         return INSTANCE;
@@ -31,19 +45,27 @@ public final class Main extends Activity {
 
     public Main() {
         INSTANCE = this;
+        this.logFragment = new LogFragment();
+        this.sensorManager = new SensorManager();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Log.d("Jeda", "onBackPressed");
-        AndroidPlatform.getInstance().onBackPressed();
     }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final RelativeLayout layout = new RelativeLayout(this);
+        layout.setId(CONTENT_ID);
+        setContentView(layout, new ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.FILL_PARENT,
+            ViewGroup.LayoutParams.FILL_PARENT));
         Log.d("Jeda", "onCreate");
+
+        this.getSupportFragmentManager().beginTransaction().add(this.sensorManager, "SensorManager").commit();
         Jeda.startProgram();
     }
 
@@ -66,5 +88,104 @@ public final class Main extends Activity {
         super.onResume();
         Log.d("Jeda", "onResume");
         AndroidPlatform.getInstance().onResume();
+    }
+
+    /**
+     * Adds an event to be dispatched by the top view, if available.
+     *
+     * @param event
+     */
+    void addEvent(final Event event) {
+        if (this.topWindow != null) {
+            this.topWindow.addEvent(event);
+        }
+    }
+
+    boolean isSensorAvailable(final SensorType sensorType) {
+        return this.sensorManager.isAvailable(sensorType);
+    }
+
+    public boolean isSensorEnabled(final SensorType sensorType) {
+        return this.sensorManager.isEnabled(sensorType);
+    }
+
+    void log(final LogLevel logLevel, final String message) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                doLog(logLevel, message);
+            }
+        });
+    }
+
+    public void setSensorEnabled(final SensorType sensorType, boolean enabled) {
+        this.sensorManager.setEnabled(sensorType, enabled);
+    }
+
+    void showInputRequest(final InputRequest inputRequest) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                doShowInputRequest(inputRequest);
+            }
+        });
+    }
+
+    void showSelectionRequest(final SelectionRequest selectionRequest) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                doShowSelectionRequest(selectionRequest);
+            }
+        });
+    }
+
+    void showWindow(final WindowRequest request) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                doShowWindow(request);
+            }
+        });
+    }
+
+    void shutdown() {
+    }
+
+    private void doLog(final LogLevel logLevel, final String message) {
+        switch (logLevel) {
+            case DEBUG:
+                Log.d("Jeda", message);
+                break;
+            case ERROR:
+                Log.e("Jeda", message);
+                this.logFragment.append(message);
+                this.showFragment(this.logFragment);
+                break;
+            case INFO:
+                System.out.println(message);
+                this.logFragment.append(message);
+                this.showFragment(this.logFragment);
+                break;
+        }
+    }
+
+    void doShowInputRequest(final InputRequest inputRequest) {
+    }
+
+    private void doShowSelectionRequest(final SelectionRequest request) {
+        this.setTitle(request.getTitle());
+        this.showFragment(new SelectionDialogFragment(request));
+    }
+
+    private void doShowWindow(final WindowRequest request) {
+        this.topWindow = new CanvasFragment(request);
+        this.showFragment(this.topWindow);
+    }
+
+    private void showFragment(final Fragment fragment) {
+        final FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+        ft.replace(CONTENT_ID, fragment);
+        ft.commit();
     }
 }
