@@ -1,8 +1,7 @@
 package ch.jeda.test;
 
 import ch.jeda.*;
-import ch.jeda.event.TurnEvent;
-import ch.jeda.event.TurnListener;
+import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
 public class InputTest extends Program implements KeyListener,

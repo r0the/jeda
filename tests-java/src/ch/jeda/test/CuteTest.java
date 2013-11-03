@@ -43,6 +43,30 @@ public class CuteTest extends Program implements TickListener {
         addObject(CuteObjectType.PINK_GIRL);
         addObject(CuteObjectType.PRINCESS_GIRL);
 
+        x = 3;
+        y = 8;
+        addObject(CuteObjectType.BLUE_GEM);
+        addObject(CuteObjectType.GREEN_GEM);
+        addObject(CuteObjectType.ORANGE_GEM);
+        addObject(CuteObjectType.HEART);
+        addObject(CuteObjectType.STAR);
+        addObject(CuteObjectType.SELECTOR);
+
+        x = 3;
+        y = 11;
+        addObject(CuteObjectType.KEY);
+        addObject(CuteObjectType.CLOSED_CHEST);
+        addObject(CuteObjectType.OPEN_CHEST);
+        addObject(CuteObjectType.CLOSED_DOOR);
+        addObject(CuteObjectType.OPEN_DOOR);
+
+        x = 3;
+        y = 14;
+        addObject(CuteObjectType.ROCK);
+        addObject(CuteObjectType.SHORT_TREE);
+        addObject(CuteObjectType.TALL_TREE);
+        addObject(CuteObjectType.UGLY_TREE);
+        addObject(CuteObjectType.BIG_BUG);
         dz = new DragAndZoom();
 
         window.addEventListener(dz);
@@ -52,7 +76,6 @@ public class CuteTest extends Program implements TickListener {
     @Override
     public void onTick(TickEvent event) {
         world.scroll(-dz.getDx(), -dz.getDy());
-        System.out.println(-dz.getDx());
         // Update world
         world.update(event.getDuration());
         // Draw background
