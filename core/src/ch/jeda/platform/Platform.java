@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform;
 
+import ch.jeda.LogLevel;
 import ch.jeda.SensorType;
 import java.io.InputStream;
 
@@ -36,13 +37,13 @@ public interface Platform {
 
     Class<?>[] loadClasses() throws Exception;
 
+    void log(final LogLevel logLevel, final String message);
+
     InputStream openResource(String path);
 
     void setSensorEnabled(SensorType sensorType, boolean enabled);
 
     void showInputRequest(InputRequest inputRequest);
-
-    void showLog();
 
     void showSelectionRequest(SelectionRequest selectionRequest);
 

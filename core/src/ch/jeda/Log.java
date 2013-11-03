@@ -23,29 +23,23 @@ package ch.jeda;
  */
 public class Log {
 
-    public static void dbg(final String message) {
-        System.out.println(message);
-        System.out.flush();
+    public static void dbg(final Object... message) {
+        Jeda.log(LogLevel.DEBUG, Util.toString(message));
     }
 
     public static void err(final String messageKey, Object... args) {
-        System.err.format(Helper.getMessage(messageKey), args);
-        System.err.println();
-        System.err.flush();
+        Jeda.log(LogLevel.ERROR, String.format(Helper.getMessage(messageKey), args) + "\n");
     }
 
     public static void err(final Throwable throwable, final String messageKey, Object... args) {
-        System.err.format(Helper.getMessage(messageKey), args);
-        System.err.println();
+        Jeda.log(LogLevel.ERROR, String.format(Helper.getMessage(messageKey), args) + "\n");
         if (throwable != null) {
-            System.err.println("  " + throwable);
+            Jeda.log(LogLevel.ERROR, "  " + throwable + "\n");
             final StackTraceElement[] stackTrace = throwable.getStackTrace();
             for (int i = 0; i < stackTrace.length; ++i) {
-                System.err.println("   " + stackTrace[i].toString());
+                Jeda.log(LogLevel.ERROR, "   " + stackTrace[i].toString() + "\n");
             }
         }
-
-        System.err.flush();
     }
 
     private Log() {

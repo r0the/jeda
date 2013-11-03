@@ -255,6 +255,10 @@ public class Jeda {
         return request.getResult();
     }
 
+    static void log(final LogLevel logLevel, final String message) {
+        ENGINE.log(logLevel, message);
+    }
+
     static InputStream openResource(final String path) {
         return ENGINE.getPlatform().openResource(path);
     }

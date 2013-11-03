@@ -123,7 +123,6 @@ public abstract class Program implements Runnable {
     }
 
     protected final void write(final Object... args) {
-        System.out.print(Util.toString(args));
-        System.out.flush();
+        Jeda.log(LogLevel.INFO, Util.toString(args));
     }
 }

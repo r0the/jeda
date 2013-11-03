@@ -16,13 +16,12 @@
  */
 package ch.jeda.platform.android;
 
-import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import ch.jeda.LogLevel;
 
 class LogView extends DialogView {
 
@@ -38,8 +37,6 @@ class LogView extends DialogView {
         this.scrollView.addView(this.textView);
         this.addContent(this.scrollView);
         this.addButton("Schliessen");
-        System.setErr(new PrintStream(new ConsoleOutputStream(this, Color.RED, System.err)));
-        System.setOut(new PrintStream(new ConsoleOutputStream(this, Color.BLACK, System.out)));
     }
 
     @Override
@@ -47,37 +44,25 @@ class LogView extends DialogView {
         this.cancel();
     }
 
-    private void append(final String text) {
+    void log(final LogLevel logLevel, final String message) {
+        switch (logLevel) {
+            case DEBUG:
+                Log.d("Jeda", message);
+                break;
+            case ERROR:
+                Log.e("Jeda", message);
+                this.append(message);
+                break;
+            case INFO:
+                System.out.println(message);
+                this.append(message);
+                break;
+        }
+    }
+
+    void append(final String text) {
         this.textView.append(text);
         this.scrollView.fullScroll(View.FOCUS_DOWN);
         this.show();
-    }
-
-    private static class ConsoleOutputStream extends ByteArrayOutputStream {
-
-        private final LogView logView;
-        private final PrintStream printStream;
-
-        ConsoleOutputStream(final LogView logView, final int textColor, final PrintStream printStream) {
-            this.logView = logView;
-            this.printStream = printStream;
-        }
-
-        @Override
-        public void flush() {
-            final String content = this.toString();
-            if (content.isEmpty()) {
-                return;
-            }
-
-            this.reset();
-            this.printStream.print(content);
-            this.printStream.flush();
-            this.logView.runOnUiThread(new Runnable() {
-                public void run() {
-                    logView.append(content);
-                }
-            });
-        }
     }
 }

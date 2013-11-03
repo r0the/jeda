@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import ch.jeda.Log;
 import ch.jeda.platform.SelectionRequest;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -128,8 +129,7 @@ class SelectionView extends DialogView {
                 result = this.createRowView();
             }
 
-            ((TextView) result.findViewById(TEXT_VIEW_ID)).setText(
-                    this.items.get(position));
+            ((TextView) result.findViewById(TEXT_VIEW_ID)).setText(this.items.get(position));
             return result;
         }
 
@@ -157,7 +157,7 @@ class SelectionView extends DialogView {
         void setItems(final Collection<String> items) {
             this.items.clear();
             this.items.addAll(items);
-            for (DataSetObserver observer : this.observers) {
+            for (final DataSetObserver observer : this.observers) {
                 observer.onChanged();
             }
         }
@@ -168,7 +168,8 @@ class SelectionView extends DialogView {
             final TextView textView = new TextView(this.context);
             textView.setId(TEXT_VIEW_ID);
             textView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
             textView.setGravity(Gravity.CENTER_VERTICAL);
             textView.setHeight(50);
             textView.setTextSize(20);

@@ -18,21 +18,42 @@ package ch.jeda.platform.android;
 
 import android.app.Activity;
 import android.view.WindowManager;
+import ch.jeda.LogLevel;
 import ch.jeda.SensorType;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
+import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
+import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowRequest;
 import java.io.InputStream;
 
 class AndroidPlatform implements Platform {
 
-    private final Activity activity;
+    private static AndroidPlatform INSTANCE;
+    private final PlatformCallback callback;
     private final ResourceManager resourceManager;
     private final SensorManager sensorManager;
     private final ViewManager viewManager;
+    private boolean paused;
+
+    static AndroidPlatform getInstance() {
+        return INSTANCE;
+    }
+
+    public AndroidPlatform(final PlatformCallback callback) {
+        INSTANCE = this;
+        this.callback = callback;
+        final Activity activity = Main.getInstance();
+        this.resourceManager = new ResourceManager(activity);
+        this.viewManager = new ViewManager(activity, callback);
+        this.sensorManager = new SensorManager(activity, this.viewManager);
+        // Adjust window when soft keyboard is shown.
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        this.paused = false;
+    }
 
     @Override
     public CanvasImp createCanvasImp(final int width, final int height) {
@@ -41,8 +62,13 @@ class AndroidPlatform implements Platform {
         return result;
     }
 
+    @Override
     public ImageImp createImageImp(final String path) {
         return this.resourceManager.openImage(path);
+    }
+
+    public SoundImp createSoundImp(final String path) {
+        return null;
     }
 
     public boolean isSensorAvailable(final SensorType sensorType) {
@@ -58,6 +84,10 @@ class AndroidPlatform implements Platform {
         return this.resourceManager.loadClasses();
     }
 
+    public void log(final LogLevel logLevel, String message) {
+        this.viewManager.log(logLevel, message);
+    }
+
     public InputStream openResource(final String path) {
         return this.resourceManager.openInputStream(path);
     }
@@ -68,115 +98,34 @@ class AndroidPlatform implements Platform {
 
     @Override
     public void showInputRequest(final InputRequest inputRequest) {
-        this.activity.runOnUiThread(new ShowInputRequestTask(this.viewManager, inputRequest));
-    }
-
-    @Override
-    public void showLog() {
-        this.activity.runOnUiThread(new ShowLogTask(this.viewManager));
+        this.viewManager.showInputRequest(inputRequest);
     }
 
     @Override
     public void showSelectionRequest(final SelectionRequest selectionRequest) {
-        this.activity.runOnUiThread(new ShowSelectionRequestTask(this.viewManager, selectionRequest));
+        this.viewManager.showSelectionRequest(selectionRequest);
     }
 
     @Override
     public void showWindow(final WindowRequest windowRequest) {
-        this.activity.runOnUiThread(new ShowWindowTask(this.viewManager, windowRequest));
+        this.viewManager.showWindow(windowRequest);
     }
 
     @Override
     public void shutdown() {
-        this.activity.runOnUiThread(new ShutdownTask(this.viewManager));
+        this.viewManager.shutdown();
     }
 
-    AndroidPlatform(Activity activity) {
-        this.activity = activity;
-        this.resourceManager = new ResourceManager(activity);
-        this.viewManager = new ViewManager(activity);
-        this.sensorManager = new SensorManager(activity, this.viewManager);
-        // Adjust window when soft keyboard is shown.
-        this.activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-    }
-
-    void closeView() {
+    void onBackPressed() {
         this.viewManager.closeView();
     }
 
-    private static class ShowInputRequestTask implements Runnable {
-
-        private final ViewManager viewManager;
-        private final InputRequest inputRequest;
-
-        @Override
-        public void run() {
-            this.viewManager.showInputRequest(this.inputRequest);
-        }
-
-        ShowInputRequestTask(final ViewManager viewManager, final InputRequest inputRequest) {
-            this.viewManager = viewManager;
-            this.inputRequest = inputRequest;
-        }
+    void onPause() {
+        this.callback.pause();
+        this.paused = true;
     }
 
-    private static class ShowLogTask implements Runnable {
-
-        private final ViewManager viewManager;
-
-        @Override
-        public void run() {
-            this.viewManager.showLog();
-        }
-
-        ShowLogTask(final ViewManager viewManager) {
-            this.viewManager = viewManager;
-        }
-    }
-
-    private static class ShowSelectionRequestTask implements Runnable {
-
-        private final ViewManager viewManager;
-        private final SelectionRequest selectionRequest;
-
-        @Override
-        public void run() {
-            this.viewManager.showSelectionRequest(this.selectionRequest);
-        }
-
-        ShowSelectionRequestTask(final ViewManager viewManager, final SelectionRequest selectionRequest) {
-            this.viewManager = viewManager;
-            this.selectionRequest = selectionRequest;
-        }
-    }
-
-    private static class ShowWindowTask implements Runnable {
-
-        private final ViewManager viewManager;
-        private final WindowRequest windowRequest;
-
-        @Override
-        public void run() {
-            this.viewManager.showWindow(this.windowRequest);
-        }
-
-        ShowWindowTask(final ViewManager viewManager, final WindowRequest windowRequest) {
-            this.viewManager = viewManager;
-            this.windowRequest = windowRequest;
-        }
-    }
-
-    private static class ShutdownTask implements Runnable {
-
-        private final ViewManager viewManager;
-
-        @Override
-        public void run() {
-            this.viewManager.shutdown();
-        }
-
-        ShutdownTask(final ViewManager viewManager) {
-            this.viewManager = viewManager;
-        }
+    void onResume() {
+        this.callback.resume();
     }
 }

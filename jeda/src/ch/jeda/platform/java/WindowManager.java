@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.LogLevel;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
@@ -28,7 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 class WindowManager {
-    
+
     private static final GraphicsDevice GRAPHICS_DEVICE =
         GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private final PlatformCallback callback;
@@ -38,55 +39,55 @@ class WindowManager {
     private final Set<BaseWindow> windows;
     private CanvasWindow fullscreenWindow;
     private boolean shutdown;
-    
+
     WindowManager(final PlatformCallback callback) {
         this.callback = callback;
         this.inputWindow = new InputWindow(this);
         this.logWindow = new LogWindow(this);
         this.selectionWindow = new SelectionWindow(this);
         this.windows = new HashSet();
-        
+
         this.windows.add(this.inputWindow);
         this.windows.add(this.logWindow);
         this.windows.add(this.selectionWindow);
     }
-    
+
+    public void log(final LogLevel logLevel, final String message) {
+        this.logWindow.log(logLevel, message);
+    }
+
     void showInputRequest(final InputRequest inputRequest) {
         this.inputWindow.setRequest(inputRequest);
         this.inputWindow.setVisible(true);
     }
-    
-    void showLog() {
-        this.logWindow.setVisible(true);
-    }
-    
+
     void showSelectionRequest(final SelectionRequest selectionRequest) {
         this.selectionWindow.setListInfo(selectionRequest);
         this.selectionWindow.setVisible(true);
     }
-    
+
     void showWindow(final WindowRequest viewRequest) {
         final CanvasWindow window = this.createCanvasWindow(viewRequest);
         this.windows.add(window);
         window.setVisible(true);
         viewRequest.setResult(JavaWindowImp.create(window));
     }
-    
+
     void shutdown() {
         this.shutdown = true;
         this.checkWindowsClosed();
         System.exit(0);
     }
-    
+
     void windowClosed(final BaseWindow window) {
         if (window.equals(this.fullscreenWindow)) {
             this.fullscreenWindow = null;
             GRAPHICS_DEVICE.setFullScreenWindow(window);
         }
-        
+
         this.checkWindowsClosed();
     }
-    
+
     private void checkWindowsClosed() {
         // If no windows are visible, then we request Jeda to stop.
         for (BaseWindow w : this.windows) {
@@ -94,7 +95,7 @@ class WindowManager {
                 return;
             }
         }
-        
+
         if (this.shutdown) {
             for (BaseWindow window : this.windows) {
                 window.dispose();
@@ -104,18 +105,18 @@ class WindowManager {
             this.callback.stop();
         }
     }
-    
+
     private CanvasWindow createCanvasWindow(final WindowRequest request) {
         int width = request.getWidth();
         int height = request.getHeight();
         if (width < 1) {
             width = 800;
         }
-        
+
         if (height < 1) {
             height = 600;
         }
-        
+
         if (request.getFeatures().contains(WindowFeature.FULLSCREEN) && this.fullscreenWindow == null) {
             DisplayMode displayMode = findDisplayMode(width, height);
             width = displayMode.getWidth();
@@ -129,7 +130,7 @@ class WindowManager {
             return new CanvasWindow(this, width, height, request.getFeatures());
         }
     }
-    
+
     private static DisplayMode findDisplayMode(final int width, final int height) {
         DisplayMode result = null;
         int fdx = Integer.MAX_VALUE;
@@ -145,11 +146,11 @@ class WindowManager {
                 fcolor = result.getBitDepth();
             }
         }
-        
+
         if (result == null) {
             result = GRAPHICS_DEVICE.getDisplayMode();
         }
-        
+
         return result;
     }
 }

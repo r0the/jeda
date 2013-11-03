@@ -123,10 +123,6 @@ public final class Properties {
         return result;
     }
 
-    void loadFromSystem() {
-        this.imp.putAll(System.getProperties());
-    }
-
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();

@@ -67,10 +67,6 @@ class BaseView extends RelativeLayout {
     protected void onCancel() {
     }
 
-    protected final void runOnUiThread(final Runnable action) {
-        this.manager.runOnUiThread(action);
-    }
-
     protected static ViewGroup.LayoutParams createFillLayout() {
         return new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
     }

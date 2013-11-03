@@ -16,10 +16,9 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.LogLevel;
 import java.awt.Color;
 import java.awt.Font;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -28,6 +27,9 @@ import javax.swing.text.StyleConstants;
 
 class LogWindow extends AutoCloseWindow {
 
+    private final SimpleAttributeSet errorAttributes;
+    private final SimpleAttributeSet infoAttributes;
+
     LogWindow(final WindowManager manager) {
         super(manager);
         this.initComponents();
@@ -35,8 +37,26 @@ class LogWindow extends AutoCloseWindow {
         this.closeButton.setText("Schliessen");
         this.setDefaultButton(this.closeButton);
         this.init();
-        System.setErr(new PrintStream(new ConsoleOutputStream(this, Color.RED, System.err)));
-        System.setOut(new PrintStream(new ConsoleOutputStream(this, Color.BLACK, System.out)));
+        this.errorAttributes = new SimpleAttributeSet();
+        StyleConstants.setForeground(this.errorAttributes, Color.RED);
+        this.infoAttributes = new SimpleAttributeSet();
+        StyleConstants.setForeground(this.infoAttributes, Color.BLACK);
+    }
+
+    void log(final LogLevel logLevel, final String message) {
+        switch (logLevel) {
+            case DEBUG:
+                System.out.println(message);
+                break;
+            case ERROR:
+                System.err.print(message);
+                this.append(message, this.errorAttributes);
+                break;
+            case INFO:
+                System.out.print(message);
+                this.append(message, this.infoAttributes);
+                break;
+        }
     }
 
     private void append(final String content, final AttributeSet textAttributes) {
@@ -148,31 +168,4 @@ class LogWindow extends AutoCloseWindow {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea logTextArea;
     // End of variables declaration//GEN-END:variables
-
-    private static class ConsoleOutputStream extends ByteArrayOutputStream {
-
-        private final LogWindow logWindow;
-        private final PrintStream printStream;
-        private final SimpleAttributeSet textAttributes;
-
-        ConsoleOutputStream(final LogWindow logWindow, final Color textColor, final PrintStream printStream) {
-            this.logWindow = logWindow;
-            this.printStream = printStream;
-            this.textAttributes = new SimpleAttributeSet();
-            StyleConstants.setForeground(this.textAttributes, textColor);
-        }
-
-        @Override
-        public void flush() {
-            final String content = this.toString();
-            if (content.isEmpty()) {
-                return;
-            }
-
-            this.logWindow.append(content, this.textAttributes);
-            this.printStream.print(content);
-            this.printStream.flush();
-            this.reset();
-        }
-    }
 }

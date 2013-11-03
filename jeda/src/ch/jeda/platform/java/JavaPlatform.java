@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.LogLevel;
 import ch.jeda.SensorType;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.Platform;
@@ -72,6 +73,11 @@ class JavaPlatform implements Platform {
     }
 
     @Override
+    public void log(final LogLevel logLevel, final String message) {
+        this.windowManager.log(logLevel, message);
+    }
+
+    @Override
     public InputStream openResource(final String path) {
         return ResourceManager.openInputStream(path);
     }
@@ -84,11 +90,6 @@ class JavaPlatform implements Platform {
     @Override
     public void showInputRequest(final InputRequest inputRequest) {
         this.windowManager.showInputRequest(inputRequest);
-    }
-
-    @Override
-    public void showLog() {
-        this.windowManager.showLog();
     }
 
     @Override

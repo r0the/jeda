@@ -32,7 +32,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 class JedaEngine implements PlatformCallback, Runnable {
 
@@ -45,14 +44,15 @@ class JedaEngine implements PlatformCallback, Runnable {
     private final Object currentProgramLock;
     private final ImageImp defaultImageImp;
     private final FrequencyMeter frequencyMeter;
+    private final Object pauseLock;
     private final Platform platform;
     private final Plugins plugins;
     private final ProgramClassWrapper[] programClasses;
     private final Properties properties;
-    private final AtomicBoolean running;
     private final List<TickListener> tickListeners;
     private final Timer timer;
     private JedaProgramExecutor currentProgram;
+    private boolean paused;
 
     static JedaEngine create() {
         final JedaEngine result = new JedaEngine();
@@ -66,8 +66,8 @@ class JedaEngine implements PlatformCallback, Runnable {
     JedaEngine() {
         this.currentProgramLock = new Object();
         this.frequencyMeter = new FrequencyMeter();
+        this.pauseLock = new Object();
         this.plugins = new Plugins();
-        this.running = new AtomicBoolean(true);
         this.tickListeners = new CopyOnWriteArrayList<TickListener>();
         this.timer = new Timer(DEFAULT_TICK_FREQUENCY);
         // Load properties
@@ -97,6 +97,7 @@ class JedaEngine implements PlatformCallback, Runnable {
 
         this.programClasses = programClassList.toArray(new ProgramClassWrapper[programClassList.size()]);
         this.plugins.initialize();
+        this.paused = false;
     }
 
     @Override
@@ -109,19 +110,49 @@ class JedaEngine implements PlatformCallback, Runnable {
     @Override
     public void run() {
         this.timer.start();
-        while (this.running.get()) {
-            this.frequencyMeter.count();
-            final TickEvent event = new TickEvent(this, this.timer.getLastStepDuration(), this.frequencyMeter.getFrequency());
-            for (int i = 0; i < this.tickListeners.size(); ++i) {
+        while (true) {
+            // Application is paused
+            if (this.isPaused()) {
                 try {
-                    this.tickListeners.get(i).onTick(event);
+                    Thread.sleep(100);
                 }
-                catch (final Throwable ex) {
-                    Log.err(ex, "java.event.error");
+                catch (final InterruptedException ex) {
+                    // ignore
                 }
             }
+            // Application is running
+            else {
+                this.frequencyMeter.count();
+                final TickEvent event = new TickEvent(this, this.timer.getLastStepDuration(),
+                                                      this.frequencyMeter.getFrequency());
+                for (int i = 0; i < this.tickListeners.size(); ++i) {
+                    try {
+                        this.tickListeners.get(i).onTick(event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "java.event.error");
+                    }
+                }
 
-            this.timer.tick();
+                this.timer.tick();
+            }
+        }
+    }
+
+    @Override
+    public void pause() {
+        synchronized (this.pauseLock) {
+            this.paused = true;
+        }
+    }
+
+    @Override
+    public void resume() {
+        synchronized (this.pauseLock) {
+            if (this.paused) {
+                this.paused = false;
+                this.timer.start();
+            }
         }
     }
 
@@ -189,6 +220,15 @@ class JedaEngine implements PlatformCallback, Runnable {
         return this.properties;
     }
 
+    void log(final LogLevel logLevel, final String message) {
+        if (this.platform == null) {
+            System.err.print(message);
+        }
+        else {
+            this.platform.log(logLevel, message);
+        }
+    }
+
     void programTerminated() {
         synchronized (this.currentProgramLock) {
             this.currentProgram = null;
@@ -220,6 +260,12 @@ class JedaEngine implements PlatformCallback, Runnable {
                 programThread.setName(Helper.getMessage("jeda.engine.program-thread-name"));
                 programThread.start();
             }
+        }
+    }
+
+    private boolean isPaused() {
+        synchronized (this.pauseLock) {
+            return this.paused;
         }
     }
 

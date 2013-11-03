@@ -18,8 +18,11 @@ package ch.jeda.platform.android;
 
 import android.app.Activity;
 import android.content.Context;
+import ch.jeda.Log;
+import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
 import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
 import java.util.Stack;
@@ -27,19 +30,19 @@ import java.util.Stack;
 class ViewManager {
 
     private final Activity activity;
+    private final PlatformCallback callback;
     private final InputView inputView;
     private final LogView logView;
-    private final SelectionView selectionView;
     private final Stack<BaseView> visibleViews;
     private boolean shutdown;
 
-    ViewManager(final Activity activity) {
+    ViewManager(final Activity activity, final PlatformCallback callback) {
         this.activity = activity;
+        this.callback = callback;
         // Stack must be instantiated before any views
         this.visibleViews = new Stack();
         this.inputView = new InputView(this);
         this.logView = new LogView(this);
-        this.selectionView = new SelectionView(this);
     }
 
     /**
@@ -66,12 +69,13 @@ class ViewManager {
             final BaseView view = this.visibleViews.pop();
             view.cancel();
             if (this.visibleViews.isEmpty()) {
-                Engine.stop();
+                this.callback.stop();
             }
         }
     }
 
     void closing(final BaseView view) {
+        Log.dbg("Closing view ", view);
         this.visibleViews.remove(view);
         if (this.visibleViews.empty()) {
             this.checkStop();
@@ -89,12 +93,18 @@ class ViewManager {
         return this.activity.getWindowManager().getDefaultDisplay().getRotation();
     }
 
-    void runOnUiThread(final Runnable action) {
-        this.activity.runOnUiThread(action);
+    void log(final LogLevel logLevel, final String message) {
+        this.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                logView.log(logLevel, message);
+            }
+        });
     }
 
     void show(final BaseView view) {
         this.activity.runOnUiThread(new Runnable() {
+            @Override
             public void run() {
                 doShow(view);
             }
@@ -102,27 +112,44 @@ class ViewManager {
     }
 
     void showInputRequest(final InputRequest inputRequest) {
-        this.inputView.setInputRequest(inputRequest);
-        this.doShow(this.inputView);
-    }
-
-    void showLog() {
-        this.doShow(this.logView);
+        this.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                inputView.setInputRequest(inputRequest);
+                doShow(inputView);
+            }
+        });
     }
 
     void showSelectionRequest(final SelectionRequest selectionRequest) {
-        this.selectionView.setSelectionRequest(selectionRequest);
-        this.doShow(this.selectionView);
+        this.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                SelectionView view = new SelectionView(ViewManager.this);
+                view.setSelectionRequest(selectionRequest);
+                doShow(view);
+            }
+        });
     }
 
     void showWindow(final WindowRequest request) {
-        CanvasView displayView = new CanvasView(this, request);
-        this.doShow(displayView);
+        this.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                CanvasView displayView = new CanvasView(ViewManager.this, request);
+                doShow(displayView);
+            }
+        });
     }
 
     void shutdown() {
-        this.shutdown = true;
-        this.checkStop();
+        this.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                shutdown = true;
+                checkStop();
+            }
+        });
     }
 
     void titleChanged(final BaseView view) {
@@ -130,6 +157,7 @@ class ViewManager {
             this.activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.dbg("Setting activity title to '" + view.getTitle() + "'.");
                     activity.setTitle(view.getTitle());
                 }
             });
@@ -140,12 +168,16 @@ class ViewManager {
         this.activity.setContentView(view);
         this.activity.setRequestedOrientation(view.getOrientation(this.activity.getResources().getConfiguration().orientation));
         this.activity.setTitle(view.getTitle());
-        view.requestFocus();
+        Log.dbg("Activating view ", view, " with title ", view.getTitle());
+        if (!view.requestFocus()) {
+            Log.dbg("Request focus failed.");
+        }
     }
 
     private void checkStop() {
         if (this.visibleViews.empty() && this.shutdown) {
             this.activity.finish();
+            Log.dbg("Stopping Jeda activity.");
         }
     }
 

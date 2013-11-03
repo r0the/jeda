@@ -18,39 +18,53 @@ package ch.jeda.platform.android;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
+import ch.jeda.Jeda;
 
 public final class Main extends Activity {
 
+    private static Main INSTANCE;
+
+    static Main getInstance() {
+        return INSTANCE;
+    }
+
     public Main() {
+        INSTANCE = this;
     }
 
     @Override
     public void onBackPressed() {
-        this.contextImp.closeView();
+        super.onBackPressed();
+        Log.d("Jeda", "onBackPressed");
+        AndroidPlatform.getInstance().onBackPressed();
     }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.contextImp = new AndroidPlatform(this);
-        Engine.init(this.contextImp);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Engine.stop();
+        Log.d("Jeda", "onCreate");
+        Jeda.startProgram();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Engine.pause();
+        Log.d("Jeda", "onPause");
+        AndroidPlatform.getInstance().onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("Jeda", "onRestart");
+        Jeda.startProgram();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Engine.resume();
+        Log.d("Jeda", "onResume");
+        AndroidPlatform.getInstance().onResume();
     }
 }

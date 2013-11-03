@@ -22,5 +22,9 @@ public interface PlatformCallback {
 
     void addTickListener(TickListener listener);
 
+    void pause();
+
+    void resume();
+
     void stop();
 }
