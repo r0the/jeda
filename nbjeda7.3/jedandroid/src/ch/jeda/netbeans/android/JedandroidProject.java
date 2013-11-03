@@ -37,6 +37,8 @@ class JedandroidProject {
     private static final Image ICON = ImageUtilities.loadImage("ch/jeda/netbeans/android/res/icon.png");
     private static final String ANDROID_MANIFEST_XML = "AndroidManifest.xml";
     private static final String ANDROID_MANIFEST_XML_RES = "ch/jeda/netbeans/android/res/android_manifest.xml";
+    private static final String ANDROID_SUPPORT_V4_JAR = "libs/android-support-v4.jar";
+    private static final String ANDROID_SUPPORT_V4_JAR_RES = "ch/jeda/netbeans/android/res/android-support-v4.jar";
     private static final String APP_ICON = "res/drawable/icon.png";
     private static final String APP_ICON_RES = "ch/jeda/netbeans/android/res/app_icon.png";
     private static final String BUILD_XML = "build.xml";
@@ -98,6 +100,7 @@ class JedandroidProject {
                            new FileFilter.ProjectPropertiesFilter(projectDir.getName()));
 
         FileHelper.addFile(projectDir, JEDANDROID_JAR, JEDANDROID_JAR_RES);
+        FileHelper.addFile(projectDir, ANDROID_SUPPORT_V4_JAR, ANDROID_SUPPORT_V4_JAR_RES);
         FileHelper.addFile(projectDir, APP_ICON, APP_ICON_RES);
         if (!AndroidCommand.updateProject(projectDir.getPath())) {
             showError("Counldn't find android command. Please check your PATH variable.");
@@ -127,6 +130,8 @@ class JedandroidProject {
                                         new FileFilter.BuildXmlFilter(this.projectDir.getName()))) {
                 showError("Cannot replace build.xml");
             }
+
+            FileHelper.replaceFile(this.projectDir, ANDROID_SUPPORT_V4_JAR, ANDROID_SUPPORT_V4_JAR_RES);
 
             if (!FileHelper.replaceFile(this.projectDir, JEDANDROID_JAR, JEDANDROID_JAR_RES)) {
                 showError("Cannot replace jedandroid.jar");
