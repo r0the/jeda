@@ -29,13 +29,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import ch.jeda.platform.InputRequest;
 
-class InputView extends DialogFragment implements TextWatcher, DialogInterface.OnClickListener {
+class InputDialogFragment extends DialogFragment implements TextWatcher, DialogInterface.OnClickListener {
 
     private final InputRequest request;
     private EditText input;
     private Dialog dialog;
 
-    InputView(final InputRequest request) {
+    InputDialogFragment(final InputRequest request) {
         this.request = request;
     }
 

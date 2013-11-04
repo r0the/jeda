@@ -190,7 +190,8 @@ public final class Main extends FragmentActivity {
 
     void doShowInputRequest(final InputRequest request) {
         this.setTitle(request.getTitle());
-        this.showFragment(new InputDialogFragment(request));
+        InputDialogFragment dialog = new InputDialogFragment(request);
+        dialog.show(this.getSupportFragmentManager(), "InputDialog");
     }
 
     private void doShowSelectionRequest(final SelectionRequest request) {
