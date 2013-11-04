@@ -244,9 +244,9 @@ public final class CuteWorld {
         float maxScrollX = this.sizeX * Block.SIZE_X - canvas.getWidth();
         float maxScrollY = this.sizeY * Block.SIZE_Y + this.sizeZ * Block.SIZE_Z - canvas.getHeight();
         if (this.scrollLock != null) {
-            this.scrollX = (this.scrollLock.getX() * Block.SIZE_X + Block.SIZE_X / 2 - canvas.getWidth() / 2f);
-            this.scrollY = (this.scrollLock.getY() * Block.SIZE_Y + this.scrollLock.getZ() * Block.SIZE_Z -
-                            canvas.getHeight() / 2f);
+            this.scrollX = this.scrollLock.getX() * Block.SIZE_X + Block.SIZE_X / 2 - canvas.getWidth() / 2f;
+            this.scrollY = this.scrollLock.getY() * Block.SIZE_Y + this.scrollLock.getZ() * Block.SIZE_Z -
+                           canvas.getHeight() / 2f + this.sizeZ * Block.SIZE_Z - 2 * Block.SIZE_Z;
         }
 
         this.scrollX = Math.max(0f, Math.min(maxScrollX, this.scrollX));
