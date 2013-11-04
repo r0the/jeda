@@ -1,6 +1,8 @@
 package ch.jeda.test;
 
 import ch.jeda.*;
+import ch.jeda.event.*;
+import ch.jeda.ui.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

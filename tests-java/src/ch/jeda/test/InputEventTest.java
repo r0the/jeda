@@ -4,7 +4,7 @@ import ch.jeda.*;
 import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
-public class InputTest extends Program implements KeyListener,
+public class InputEventTest extends Program implements KeyListener,
                                                   KeyTypedListener,
                                                   PointerListener,
                                                   TurnListener {
