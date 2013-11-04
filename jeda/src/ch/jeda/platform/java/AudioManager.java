@@ -18,8 +18,8 @@ package ch.jeda.platform.java;
 
 import ch.jeda.Log;
 import ch.jeda.platform.SoundImp;
-import ch.jeda.ui.TickEvent;
-import ch.jeda.ui.TickListener;
+import ch.jeda.event.TickEvent;
+import ch.jeda.event.TickListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;

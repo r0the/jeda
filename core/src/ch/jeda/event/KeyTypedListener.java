@@ -14,22 +14,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.event;
 
 /**
- * The listener interface for receiving tick events. To have an object receive events of type
- * {@link ch.jeda.event.EventType#TICK}, have the class of the object implement the interface and register the object
- * with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
+ * The listener interface for receiving key typed events. To have an object receive events of type
+ * {@link ch.jeda.event.EventType#KEY_TYPED}, have the class of the object implement the interface and register the
+ * object with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
  *
  * @since 1
  */
-public interface TickListener {
+public interface KeyTypedListener {
 
     /**
-     * Invoked every time before the {@link Window} updates its contents.
+     * Invoked when a key has been typed.
      *
      * @param event the event
+     *
      * @since 1
      */
-    void onTick(TickEvent event);
+    void onKeyTyped(KeyEvent event);
 }

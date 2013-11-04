@@ -16,6 +16,12 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.event.KeyDownListener;
+import ch.jeda.event.KeyEvent;
+import ch.jeda.event.KeyUpListener;
+import ch.jeda.event.Key;
+import ch.jeda.event.PointerEvent;
+import ch.jeda.event.PointerListener;
 import java.util.EnumSet;
 
 public abstract class AbstractButton implements KeyDownListener, KeyUpListener, PointerListener {

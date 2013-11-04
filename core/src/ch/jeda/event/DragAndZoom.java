@@ -16,11 +16,6 @@
  */
 package ch.jeda.event;
 
-import ch.jeda.ui.PointerEvent;
-import ch.jeda.ui.PointerListener;
-import ch.jeda.ui.TickEvent;
-import ch.jeda.ui.TickListener;
-
 public class DragAndZoom implements PointerListener, TickListener, TurnListener {
 
     private PointerEvent lastPos;

@@ -16,6 +16,12 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.event.KeyTypedListener;
+import ch.jeda.event.KeyEvent;
+import ch.jeda.event.Key;
+import ch.jeda.event.PointerEvent;
+import ch.jeda.event.KeyListener;
+import ch.jeda.event.PointerListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

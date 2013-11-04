@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.event;
 
 /**
- * Represents a key that can be typed by the user. Key values are used by the {@link Events} class to represent which
- * keys have been pressed or typed. The key value representing a specific keyboard key depends on the
+ * Represents a key that can be typed by the user. Key values are used by the {@link ch.jeda.event.KeyEvent} class to
+ * represent which keys have been pressed or typed. The key value representing a specific keyboard key depends on the
  * <a href="http://en.wikipedia.org/wiki/Keyboard_layout">keyboard layout</a>.
  *
- * @see Events
+ * @since 1
  */
 public enum Key {
 

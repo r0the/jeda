@@ -18,6 +18,8 @@ package ch.jeda.ui;
 
 import ch.jeda.Jeda;
 import ch.jeda.JedaInternal;
+import ch.jeda.event.TickEvent;
+import ch.jeda.event.TickListener;
 import ch.jeda.platform.WindowImp;
 import java.util.EnumSet;
 
@@ -34,7 +36,6 @@ import java.util.EnumSet;
 public class Window extends Canvas {
 
     private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
-    private static final int PAUSE_SLEEP_MILLIS = 200;
     private final Drawables drawables;
     private final EventDispatcher eventDispatcher;
     private final Events events;

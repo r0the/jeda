@@ -14,23 +14,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.event;
 
 /**
- * The listener interface for receiving key typed events. To have an object receive events of type
- * {@link ch.jeda.event.EventType#KEY_TYPED}, have the class of the object implement the interface and register the
+ * The listener interface for receiving key down events. To have an object receive events of type
+ * {@link ch.jeda.event.EventType#KEY_DOWN}, have the class of the object implement the interface and register the
  * object with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
  *
  * @since 1
  */
-public interface KeyTypedListener {
+public interface KeyDownListener {
 
     /**
-     * Invoked when a key has been typed.
+     * Invoked when a key has been pressed.
      *
      * @param event the event
      *
      * @since 1
      */
-    void onKeyTyped(KeyEvent event);
+    void onKeyDown(KeyEvent event);
 }

@@ -14,23 +14,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.event;
 
 /**
- * The listener interface for receiving pointer moved events. To have an object receive events of type
- * {@link ch.jeda.event.EventType#POINTER_MOVED}, have the class of the object implement the interface and register the
- * object with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
+ * The listener interface for receiving tick events. To have an object receive events of type
+ * {@link ch.jeda.event.EventType#TICK}, have the class of the object implement the interface and register the object
+ * with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
  *
  * @since 1
  */
-public interface PointerMovedListener {
+public interface TickListener {
 
     /**
-     * Invoked when a pointer has been moved.
+     * Invoked every time before the {@link Window} updates its contents.
      *
      * @param event the event
      *
      * @since 1
      */
-    void onPointerMoved(PointerEvent event);
+    void onTick(TickEvent event);
 }

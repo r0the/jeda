@@ -50,7 +50,7 @@ class SensorManager extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(final Activity activity) {
         super.onAttach(activity);
         this.sensorMap.clear();
         this.sensorInfoMap.clear();

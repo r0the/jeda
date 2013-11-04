@@ -14,10 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
-
-import ch.jeda.event.Event;
-import ch.jeda.event.EventType;
+package ch.jeda.event;
 
 /**
  * Represents an event of the type {@link EventType#POINTER_DOWN}, {@link EventType#POINTER_MOVED}, or
@@ -47,6 +44,7 @@ public final class PointerEvent extends Event {
      * Returns the id of the pointer.
      *
      * @return id of the pointer
+     *
      * @since 1
      */
     public int getPointerId() {
@@ -57,6 +55,8 @@ public final class PointerEvent extends Event {
      * Returns the x coordinate of the pointer.
      *
      * @return x coordinate of the pointer
+     *
+     * @since 1
      */
     public float getX() {
         return this.x;
@@ -66,6 +66,7 @@ public final class PointerEvent extends Event {
      * Returns the y coordinate of the pointer.
      *
      * @return y coordinate of the pointer
+     *
      * @since 1
      */
     public float getY() {

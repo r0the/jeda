@@ -17,10 +17,6 @@
 package ch.jeda.event;
 
 import ch.jeda.Util;
-import ch.jeda.ui.Key;
-import ch.jeda.ui.KeyDownListener;
-import ch.jeda.ui.KeyEvent;
-import ch.jeda.ui.KeyUpListener;
 import java.util.EnumSet;
 
 /**

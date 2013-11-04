@@ -16,13 +16,12 @@
  */
 package ch.jeda;
 
-import static ch.jeda.Log.err;
+import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowImp;
-import ch.jeda.ui.TickListener;
 import ch.jeda.ui.WindowFeature;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -191,7 +190,7 @@ public class Jeda {
             return result.toArray(new String[result.size()]);
         }
         catch (final IOException ex) {
-            err("jeda.file.error.read", path, ex);
+            Log.err("jeda.file.error.read", path, ex);
             return null;
         }
         finally {

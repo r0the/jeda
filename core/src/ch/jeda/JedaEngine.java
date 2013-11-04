@@ -16,6 +16,8 @@
  */
 package ch.jeda;
 
+import ch.jeda.event.TickEvent;
+import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
@@ -25,8 +27,6 @@ import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.platform.WindowRequest;
-import ch.jeda.ui.TickEvent;
-import ch.jeda.ui.TickListener;
 import ch.jeda.ui.WindowFeature;
 import java.io.IOException;
 import java.io.InputStream;
@@ -302,7 +302,7 @@ class JedaEngine implements PlatformCallback, Runnable {
 
     private static Platform initPlatform(final String platformClassName, final PlatformCallback callback) {
         if (platformClassName == null || platformClassName.isEmpty()) {
-            Log.err("jeda.engine.error.platform-missing-class-name");
+            initErr("jeda.engine.error.platform-missing-class-name");
             return null;
         }
 
@@ -315,28 +315,28 @@ class JedaEngine implements PlatformCallback, Runnable {
                 return (Platform) ctor.newInstance(callback);
             }
             else {
-                Log.err("jeda.engine.error.platform-missing-interface", platformClassName, Platform.class);
+                initErr("jeda.engine.error.platform-missing-interface", platformClassName, Platform.class);
                 return null;
             }
         }
         catch (final ClassNotFoundException ex) {
-            Log.err(ex, "jeda.engine.error.platform-class-not-found", platformClassName);
+            initErr(ex, "jeda.engine.error.platform-class-not-found", platformClassName);
             return null;
         }
         catch (final NoSuchMethodException ex) {
-            Log.err(ex, "jeda.engine.error.platform-missing-constructor", platformClassName);
+            initErr(ex, "jeda.engine.error.platform-missing-constructor", platformClassName);
             return null;
         }
         catch (final InstantiationException ex) {
-            Log.err(ex.getCause(), "jeda.engine.error.platform-instantiation-exception", platformClassName);
+            initErr(ex.getCause(), "jeda.engine.error.platform-instantiation-exception", platformClassName);
             return null;
         }
         catch (final IllegalAccessException ex) {
-            Log.err(ex.getCause(), "jeda.engine.error.platform-constructor-access", platformClassName);
+            initErr(ex.getCause(), "jeda.engine.error.platform-constructor-access", platformClassName);
             return null;
         }
         catch (final InvocationTargetException ex) {
-            Log.err(ex.getCause(), "jeda.engine.error.platform-exception-in-constructor", platformClassName);
+            initErr(ex.getCause(), "jeda.engine.error.platform-exception-in-constructor", platformClassName);
             return null;
         }
     }
@@ -373,6 +373,23 @@ class JedaEngine implements PlatformCallback, Runnable {
                 catch (final IOException ex) {
                     // ignore
                 }
+            }
+        }
+    }
+
+    private static void initErr(final String messageKey, Object... args) {
+        System.err.format(Helper.getMessage(messageKey), args);
+        System.err.println();
+    }
+
+    private static void initErr(final Throwable throwable, final String messageKey, Object... args) {
+        System.err.format(Helper.getMessage(messageKey), args);
+        System.err.println();
+        if (throwable != null) {
+            System.err.println("  " + throwable);
+            final StackTraceElement[] stackTrace = throwable.getStackTrace();
+            for (int i = 0; i < stackTrace.length; ++i) {
+                System.err.println("   " + stackTrace[i].toString());
             }
         }
     }

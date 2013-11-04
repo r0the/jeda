@@ -1,6 +1,7 @@
 package ch.jeda.test;
 
 import ch.jeda.*;
+import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
 public class CanvasTest extends Program implements KeyDownListener,

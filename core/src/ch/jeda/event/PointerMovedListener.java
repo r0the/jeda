@@ -14,23 +14,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.event;
 
 /**
- * The listener interface for receiving key down events. To have an object receive events of type
- * {@link ch.jeda.event.EventType#KEY_DOWN}, have the class of the object implement the interface and register the
+ * The listener interface for receiving pointer moved events. To have an object receive events of type
+ * {@link ch.jeda.event.EventType#POINTER_MOVED}, have the class of the object implement the interface and register the
  * object with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
  *
  * @since 1
  */
-public interface KeyDownListener {
+public interface PointerMovedListener {
 
     /**
-     * Invoked when a key has been pressed.
+     * Invoked when a pointer has been moved.
      *
      * @param event the event
      *
      * @since 1
      */
-    void onKeyDown(KeyEvent event);
+    void onPointerMoved(PointerEvent event);
 }

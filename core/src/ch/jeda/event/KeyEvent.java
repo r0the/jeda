@@ -14,10 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
-
-import ch.jeda.event.Event;
-import ch.jeda.event.EventType;
+package ch.jeda.event;
 
 /**
  * Represents an event of the type {@link EventType#KEY_DOWN}, {@link EventType#KEY_TYPED}, or {@link EventType#KEY_UP}.

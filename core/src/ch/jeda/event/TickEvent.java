@@ -14,10 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
-
-import ch.jeda.event.Event;
-import ch.jeda.event.EventType;
+package ch.jeda.event;
 
 /**
  * Represents an event of the type {@link EventType#TICK}.
@@ -39,6 +36,7 @@ public class TickEvent extends Event {
      * Returns the duration of the last frame in seconds. This value can be used to calculate smooth movements.
      *
      * @return duration of last frame in seconds
+     *
      * @since 1
      */
     public float getDuration() {
@@ -49,6 +47,7 @@ public class TickEvent extends Event {
      * Returns the current frame rate.
      *
      * @return the current frame rate
+     *
      * @since 1
      */
     public float getFrameRate() {

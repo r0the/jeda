@@ -16,8 +16,8 @@
  */
 package ch.jeda;
 
-import ch.jeda.ui.TickEvent;
-import ch.jeda.ui.TickListener;
+import ch.jeda.event.TickEvent;
+import ch.jeda.event.TickListener;
 
 /**
  * @deprecated Use {@link Program} with an {@link TickListener} instead.

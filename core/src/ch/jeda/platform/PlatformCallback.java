@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.ui.TickListener;
+import ch.jeda.event.TickListener;
 
 public interface PlatformCallback {
 

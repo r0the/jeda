@@ -14,23 +14,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.event;
 
-/**
- * The listener interface for receiving pointer down events. To have an object receive events of type
- * {@link ch.jeda.event.EventType#POINTER_DOWN}, have the class of the object implement the interface and register the
- * object with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
- *
- * @since 1
- */
-public interface PointerDownListener {
-
-    /**
-     * Invoked when a new pointer has been detected.
-     *
-     * @param event the event
-     *
-     * @since 1
-     */
-    void onPointerDown(PointerEvent event);
+public interface PointerListener extends PointerDownListener,
+                                         PointerMovedListener,
+                                         PointerUpListener {
 }
