@@ -36,6 +36,7 @@ public final class WindowRequest {
         this.height = height;
         this.features = features;
         this.lock = new Object();
+        this.result = null;
     }
 
     public WindowImp getResult() {
@@ -56,8 +57,10 @@ public final class WindowRequest {
 
     public void setResult(final WindowImp result) {
         synchronized (this.lock) {
-            this.result = result;
-            this.lock.notify();
+            if (this.result == null) {
+                this.result = result;
+                this.lock.notify();
+            }
         }
     }
 
