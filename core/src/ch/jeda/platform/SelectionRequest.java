@@ -29,42 +29,25 @@ public final class SelectionRequest<T> extends Request {
     private static final Comparator<ListItem> LIST_ITEM_BY_NAME = new ListItemByName();
     private final List<ListItem<T>> items;
     private final Object lock;
-    private boolean cancelled;
     private boolean done;
     private int selectedIndex;
 
     public SelectionRequest() {
         this.lock = new Object();
         this.items = new ArrayList<ListItem<T>>();
+        this.selectedIndex = -1;
     }
 
     public void addItem(final String name, final T item) {
         this.items.add(new ListItem<T>(this.items.size(), name, item));
     }
 
-    public void cancelRequest() {
-        synchronized (this.lock) {
-            this.done = true;
-            this.cancelled = true;
-            this.lock.notify();
-        }
-    }
-
     public T getResult() {
-        return this.items.get(this.selectedIndex).item;
-    }
-
-    public void setSelectedIndex(final int index) {
-        synchronized (this.lock) {
-            if (0 <= index && index < items.size()) {
-                this.selectedIndex = index;
-            }
-            else {
-                this.cancelled = true;
-            }
-
-            this.done = true;
-            this.lock.notify();
+        if (this.isCancelled()) {
+            return null;
+        }
+        else {
+            return this.items.get(this.selectedIndex).item;
         }
     }
 
@@ -78,7 +61,23 @@ public final class SelectionRequest<T> extends Request {
     }
 
     public boolean isCancelled() {
-        return this.cancelled;
+        return this.selectedIndex < 0;
+    }
+
+    public void setResult(final int index) {
+        synchronized (this.lock) {
+            if (!this.done) {
+                if (0 <= index && index < items.size()) {
+                    this.selectedIndex = index;
+                }
+                else {
+                    this.selectedIndex = -1;
+                }
+
+                this.done = true;
+                this.lock.notify();
+            }
+        }
     }
 
     public void sortItemsByName() {

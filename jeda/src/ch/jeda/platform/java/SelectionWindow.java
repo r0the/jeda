@@ -22,7 +22,7 @@ import java.awt.event.MouseEvent;
 
 class SelectionWindow extends BaseWindow {
 
-    private SelectionRequest listInfo;
+    private SelectionRequest request;
 
     SelectionWindow(final WindowManager manager) {
         super(manager);
@@ -33,7 +33,7 @@ class SelectionWindow extends BaseWindow {
     }
 
     void setListInfo(final SelectionRequest listInfo) {
-        this.listInfo = listInfo;
+        this.request = listInfo;
         this.setTitle(listInfo.getTitle());
         this.list.setListData(listInfo.getDisplayItems().toArray());
         if (this.list.getModel().getSize() > 0) {
@@ -43,12 +43,12 @@ class SelectionWindow extends BaseWindow {
 
     @Override
     protected void onAccept() {
-        this.listInfo.setSelectedIndex(this.list.getSelectedIndex());
+        this.request.setResult(this.list.getSelectedIndex());
     }
 
     @Override
     protected void onCancel() {
-        this.listInfo.cancelRequest();
+        this.request.setResult(-1);
     }
 
     private static class MouseListenerImp extends MouseAdapter {

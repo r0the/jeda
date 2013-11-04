@@ -56,12 +56,14 @@ class SelectionDialogFragment extends DialogFragment {
         this.listAdapter.setItems(this.request.getDisplayItems());
         result.setAdapter(this.listAdapter);
         result.setOnItemClickListener(new OnItemClickListenerImp(this));
+        this.selectedItemPosition = -1;
         return result;
     }
 
-    private void accept() {
-        this.request.setSelectedIndex(selectedItemPosition);
-        this.dismiss();
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        this.request.setResult(this.selectedItemPosition);
     }
 
     private static class ListAdapterImp implements ListAdapter {
@@ -178,7 +180,7 @@ class SelectionDialogFragment extends DialogFragment {
         @Override
         public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
             this.selectionView.selectedItemPosition = position;
-            this.selectionView.accept();
+            this.selectionView.dismiss();
         }
     }
 }
