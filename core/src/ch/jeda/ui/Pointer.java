@@ -17,7 +17,7 @@
 package ch.jeda.ui;
 
 /**
- * Represents a pointer (a finger, pen, or mouse cursor) on a window.
+ * @deprecated Use event system instead.
  */
 public final class Pointer {
 
@@ -28,6 +28,9 @@ public final class Pointer {
     private int y;
 
     @Override
+    /**
+     * @deprecated Use event system instead.
+     */
     public boolean equals(Object object) {
         if (object instanceof Pointer) {
             return this.id == ((Pointer) object).id;
@@ -37,54 +40,44 @@ public final class Pointer {
         }
     }
 
+    /**
+     * @deprecated Use event system instead.
+     */
     public int getDeltaX() {
         return this.deltaX;
     }
 
+    /**
+     * @deprecated Use event system instead.
+     */
     public int getDeltaY() {
         return this.deltaY;
     }
 
     /**
-     * Returns the x coordinate of the pointer in window coordinates. Returns
-     * <tt>-1</tt> if the pointer is currently not available.
-     *
-     * @return x coordinate or <tt>-1</tt>
-     * @see #getY()
-     * @since 1
+     * @deprecated Use event system instead.
      */
     public int getX() {
         return this.x;
     }
 
     /**
-     * Returns the y coordinate of the pointer in window coordinates. Returns
-     * <tt>-1</tt> if the pointer is currently not available.
-     *
-     * @return y coordinate or <tt>-1</tt>
-     * @see #getX()
-     * @since 1
+     * @deprecated Use event system instead.
      */
     public int getY() {
         return this.y;
     }
 
+    /**
+     * @deprecated Use event system instead.
+     */
     @Override
     public int hashCode() {
         return this.id;
     }
 
     /**
-     * Checks if the pointer is currently available. On a device with touch screen, a pointer becomes available if the
-     * screen is touched. The pointer remains available while the screen is being touched. On a device with mouse
-     * cursor, the behavior depends on the {@link Window} feature {@link WindowFeature#HoveringPointer}. If the feature
-     * is set, the pointer representing the mouse cursor becomes available if the cursor enters the window and remains
-     * available while the mouse cursor is inside the window. If the feature is not set, the pointer becomes available
-     * if a mouse button is pressed while the mouse cursor is inside the window and remains available until the button
-     * is released.
-     *
-     * @return <tt>true</tt> if the pointer is available, <tt>false</tt>
-     * otherwise
+     * @deprecated Use event system instead.
      */
     public boolean isAvailable() {
         return this.x != -1;

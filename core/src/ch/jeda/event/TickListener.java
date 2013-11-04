@@ -26,7 +26,7 @@ package ch.jeda.event;
 public interface TickListener {
 
     /**
-     * Invoked every time before the {@link Window} updates its contents.
+     * Invoked every time before the {@link ch.jeda.ui.Window} updates its contents.
      *
      * @param event the event
      *

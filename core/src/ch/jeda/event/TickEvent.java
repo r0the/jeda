@@ -39,7 +39,7 @@ public class TickEvent extends Event {
      *
      * @since 1
      */
-    public float getDuration() {
+    public final float getDuration() {
         return this.duration;
     }
 
@@ -50,7 +50,7 @@ public class TickEvent extends Event {
      *
      * @since 1
      */
-    public float getFrameRate() {
+    public final float getFrameRate() {
         return this.frameRate;
     }
 

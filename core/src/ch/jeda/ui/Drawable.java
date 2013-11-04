@@ -16,7 +16,7 @@
  */
 package ch.jeda.ui;
 
-public interface Drawable {
+interface Drawable {
 
     void draw(Canvas canvas);
 

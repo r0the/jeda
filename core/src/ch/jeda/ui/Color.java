@@ -81,10 +81,6 @@ public final class Color implements Serializable {
      */
     public static final Color NAVY = new Color(0, 0, 128);
     /**
-     * The fully transparent color.
-     */
-    public static final Color NONE = new Color(255, 255, 255, 0);
-    /**
      * The VGA color <i>olive</i>. Same as <tt>new Color(128, 128, 0)</tt>.
      *
      * @since 1
@@ -115,11 +111,11 @@ public final class Color implements Serializable {
      */
     public static final Color TEAL = new Color(0, 128, 128);
     /**
-     * The fully transparent color. Same as <tt>new Color(0, 0, 0, 255)</tt>.
+     * The fully transparent color.
      *
      * @since 1
      */
-    public static final Color TRANSPARENT = new Color(0, 0, 0, 255);
+    public static final Color TRANSPARENT = new Color(255, 255, 255, 0);
     /**
      * The VGA color <i>white</i>. Same as <tt>new Color(255, 255, 255)</tt>.
      *
@@ -176,8 +172,7 @@ public final class Color implements Serializable {
      *
      * @since 1
      */
-    public Color(final int red, final int green, final int blue,
-                 final int alpha) {
+    public Color(final int red, final int green, final int blue, final int alpha) {
         if (red < 0 || 255 < red) {
             throw new IllegalArgumentException("red");
         }

@@ -31,17 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents events that are taking place on this window. These are typically keys pressed or typed by the user or
- * motion events such as moving or clicking with a mouse, trackball, pen or finger.
- *
- * <p>
- * <strong>Example:</strong>
- * <pre><code>Events events = window.getEvents();
- * if (events.isKeyPressed(Key.A)) {
- *     window.drawText(10, 10, "Taste A ist gedrückt.");
- * }</code></pre>
- *
- * @since 1
+ * @deprecated Use event system instead.
  */
 public final class Events {
 
@@ -54,93 +44,49 @@ public final class Events {
     private StringBuilder typedChars;
 
     /**
-     * Returns the main pointer. The behaviour of this method depends on the platform:
-     * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> Returns the pointer representing the mouse.
-     * Returns <tt>null</tt> if the mouse pointer is outside the window.
-     * <p>
-     * <img src="../../../android.png"> Returns the pointer that first touched the surface. Returns <tt>null</tt> if no
-     * pointer touches the surface.
-     *
-     * @return main pointer
-     *
-     * @since 1
+     * @deprecated Use event system instead.
      */
     public Pointer getMainPointer() {
         return this.mainPointer;
     }
 
     /**
-     * Returns a list of all pointers. The behaviour of this method depends on the platform:
-     * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> Returns a list containing the pointer
-     * representing the mouse. Returns an empty list if the mouse pointer is outside the window.
-     * <p>
-     * <img src="../../../android.png"> Returns a list of all pointers that are touching the surface. Returns an empty
-     * list if no pointer touches the surface.
-     *
-     * @return list of all pointers
-     *
-     * @since 1
+     * @deprecated Use event system instead.
      */
     public Iterable<Pointer> getPointers() {
         return this.pointers.values();
     }
 
     /**
-     * Returns all pointers that have become available in the window since the last call to {@link Window#update()}.
-     *
-     * @return all new pointers
-     *
-     * @since 1
+     * @deprecated Use event system instead.
      */
     public Iterable<Pointer> getNewPointers() {
         return this.newPointers;
     }
 
     /**
-     * Returns a set of all pressed keys.
-     *
-     * @return set of all keys that are pressed.
-     *
-     * @since 1
+     * @deprecated Use event system instead.
      */
     public Set<Key> getPressedKeys() {
         return Collections.unmodifiableSet(this.pressedKeys);
     }
 
     /**
-     * Returns a String representing the recently typed characters. When a character is typed, it is appended to the
-     * String. The string is cleared when {@link Window#update()} is called. Returns an empty String ("") when no
-     * characters have been typed since the last call to {@link Window#update()}.
-     *
-     * @return recently typed characters or ""
-     *
-     * @since 1
+     * @deprecated Use event system instead.
      */
     public String getTypedChars() {
         return this.typedChars.toString();
     }
 
     /**
-     * Returns a list of all typed keys.
-     *
-     * @return recently typed keys
-     *
-     * @since 1
+     * @deprecated Use event system instead.
      */
     public List<Key> getTypedKeys() {
         return Collections.unmodifiableList(this.typedKeys);
     }
 
     /**
-     * Checks if a key is pressed. Returns <tt>true</tt> if the specified key is pressed.
-     *
-     * @param key the key to check for
-     * @return <tt>true</tt> if specified key is currently pressed
-     * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>
-     *
-     * @since 1
+     * @deprecated Use event system instead.
      */
     public boolean isKeyPressed(final Key key) {
         if (key == null) {
@@ -151,13 +97,7 @@ public final class Events {
     }
 
     /**
-     * Checks if a key was typed. Returns <tt>true</tt> if the specified key has been typed.
-     *
-     * @param key the key to check
-     * @return <tt>true</tt> if specified key ha been typed
-     * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>
-     *
-     * @since 1
+     * @deprecated Use event system instead.
      */
     public boolean isKeyTyped(final Key key) {
         if (key == null) {

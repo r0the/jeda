@@ -55,7 +55,7 @@ public class Event {
      *
      * @since 1
      */
-    public Object getSource() {
+    public final Object getSource() {
         return this.source;
     }
 

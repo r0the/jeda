@@ -46,15 +46,15 @@ public final class KeyEvent extends Event {
      *
      * @since 1
      */
-    public Key getKey() {
+    public final Key getKey() {
         return this.key;
     }
 
-    public char getKeyChar() {
+    public final char getKeyChar() {
         return this.keyChar;
     }
 
-    public int getRepeatCount() {
+    public final int getRepeatCount() {
         return this.repeatCount;
     }
 

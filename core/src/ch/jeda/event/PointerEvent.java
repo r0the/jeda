@@ -47,7 +47,7 @@ public final class PointerEvent extends Event {
      *
      * @since 1
      */
-    public int getPointerId() {
+    public final int getPointerId() {
         return this.pointerId;
     }
 
@@ -58,7 +58,7 @@ public final class PointerEvent extends Event {
      *
      * @since 1
      */
-    public float getX() {
+    public final float getX() {
         return this.x;
     }
 
@@ -69,7 +69,7 @@ public final class PointerEvent extends Event {
      *
      * @since 1
      */
-    public float getY() {
+    public final float getY() {
         return this.y;
     }
 

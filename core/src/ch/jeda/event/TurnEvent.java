@@ -27,11 +27,11 @@ public class TurnEvent extends Event {
         this.axis = axis;
     }
 
-    public float getAmount() {
+    public final float getAmount() {
         return this.amount;
     }
 
-    public TurnAxis getAxis() {
+    public final TurnAxis getAxis() {
         return this.axis;
     }
 }

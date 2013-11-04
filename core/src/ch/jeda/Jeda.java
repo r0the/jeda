@@ -48,7 +48,7 @@ public class Jeda {
      *
      * @param listener the listener to add
      *
-     * @see #removeTickListener(ch.jeda.ui.TickListener)
+     * @see #removeTickListener(ch.jeda.event.TickListener)
      * @see #setTickFrequency(float)
      * @since 1
      */
@@ -209,7 +209,7 @@ public class Jeda {
      *
      * @param listener the listener to remove
      *
-     * @see #addTickListener(ch.jeda.ui.TickListener)
+     * @see #addTickListener(ch.jeda.event.TickListener)
      * @see #setTickFrequency(float)
      * @since 1
      */

@@ -110,16 +110,12 @@ public class Window extends Canvas {
         Jeda.addTickListener(new EventLoop(this));
     }
 
-    public void addDrawable(final Drawable drawable) {
-        this.drawables.addDrawable(drawable);
-        this.eventDispatcher.addListener(drawable);
-    }
-
     /**
      * Adds an event listener to the window. The specified object will receive events for all events listener interfaces
      * it implements.
      *
      * @param listener the event listener
+     *
      * @since 1
      */
     public void addEventListener(final Object listener) {
@@ -185,10 +181,6 @@ public class Window extends Canvas {
      */
     public void removeEventListener(final Object listener) {
         this.eventDispatcher.removeListener(listener);
-    }
-
-    public void sendAction(final Object source, final String name) {
-        this.eventDispatcher.addAction(source, name);
     }
 
     /**
@@ -264,6 +256,15 @@ public class Window extends Canvas {
      * @deprecated This call is not needed anymore.
      */
     public void update() {
+    }
+
+    void addDrawable(final Drawable drawable) {
+        this.drawables.addDrawable(drawable);
+        this.eventDispatcher.addListener(drawable);
+    }
+
+    void sendAction(final Object source, final String name) {
+        this.eventDispatcher.addAction(source, name);
     }
 
     private void tick(final TickEvent event) {

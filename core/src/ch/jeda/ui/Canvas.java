@@ -319,14 +319,6 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use {@link #drawPolygon(float[])} instead
-     */
-    @Deprecated
-    public void drawTriangle(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
-        this.imp.drawPolygon(new float[]{x1, y1, x2, y2, x3, y3});
-    }
-
-    /**
      * Fills the entire canvas. The canvas is filled using the current color.
      *
      * @since 1
@@ -415,13 +407,6 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use {@link #fillPolygon(float[])} instead
-     */
-    public void fillTriangle(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
-        this.imp.fillPolygon(new float[]{x1, y1, x2, y2, x3, y3});
-    }
-
-    /**
      * <b>Experimental</b>
      */
     public void floodFill(int x, int y, final Color oldColor, final Color newColor) {
@@ -502,7 +487,7 @@ public class Canvas {
 
     /**
      * Returns the color of a pixel. Returns the color of the pixel at the coordinates (<tt>x</tt>, <tt>y</tt>). Returns
-     * {@link ch.jeda.ui.Color#NONE} if the coordinates do not reference a pixel inside the canvas.
+     * {@link ch.jeda.ui.Color#TRANSPARENT} if the coordinates do not reference a pixel inside the canvas.
      *
      * @param x the x coordinate of the pixel
      * @param y the y coordinate of the pixel
@@ -516,7 +501,7 @@ public class Canvas {
             return this.imp.getPixelAt(x, y);
         }
         else {
-            return Color.NONE;
+            return Color.TRANSPARENT;
         }
     }
 
