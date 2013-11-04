@@ -16,11 +16,14 @@
  */
 package ch.jeda.platform.android;
 
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Surface;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import ch.jeda.Jeda;
@@ -30,6 +33,7 @@ import ch.jeda.event.Event;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
+import ch.jeda.ui.WindowFeature;
 
 public final class Main extends FragmentActivity {
 
@@ -65,8 +69,10 @@ public final class Main extends FragmentActivity {
             ViewGroup.LayoutParams.FILL_PARENT));
         Log.d("Jeda", "onCreate");
 
-        this.getSupportFragmentManager().beginTransaction().add(this.sensorManager, "SensorManager").commit();
-        Jeda.startProgram();
+        if (savedInstanceState == null) {
+            this.getSupportFragmentManager().beginTransaction().add(this.sensorManager, "SensorManager").commit();
+            Jeda.startProgram();
+        }
     }
 
     @Override
@@ -84,10 +90,22 @@ public final class Main extends FragmentActivity {
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d("Jeda", "onRestoreInstanceState");
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         Log.d("Jeda", "onResume");
         AndroidPlatform.getInstance().onResume();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d("Jeda", "onSaveInstanceState");
     }
 
     /**
@@ -170,7 +188,9 @@ public final class Main extends FragmentActivity {
         }
     }
 
-    void doShowInputRequest(final InputRequest inputRequest) {
+    void doShowInputRequest(final InputRequest request) {
+        this.setTitle(request.getTitle());
+        this.showFragment(new InputDialogFragment(request));
     }
 
     private void doShowSelectionRequest(final SelectionRequest request) {
@@ -180,6 +200,9 @@ public final class Main extends FragmentActivity {
 
     private void doShowWindow(final WindowRequest request) {
         this.topWindow = new CanvasFragment(request);
+        final int orientation = this.getScreenOrientation(request);
+        Log.d("Jeda", "Setting screen orientation to " + orientation);
+        this.setRequestedOrientation(orientation);
         this.showFragment(this.topWindow);
     }
 
@@ -187,5 +210,33 @@ public final class Main extends FragmentActivity {
         final FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
         ft.replace(CONTENT_ID, fragment);
         ft.commit();
+    }
+
+    private int getScreenOrientation(final WindowRequest request) {
+        if (request.getFeatures().contains(WindowFeature.ORIENTATION_LANDSCAPE)) {
+            return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        }
+        else if (request.getFeatures().contains(WindowFeature.ORIENTATION_PORTRAIT)) {
+            return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        }
+        else {
+            final int rotation = this.getWindowManager().getDefaultDisplay().getRotation();
+            if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_90) {
+                    return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                }
+                else {
+                    return ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                }
+            }
+            else {
+                if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_90) {
+                    return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                }
+                else {
+                    return ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                }
+            }
+        }
     }
 }
