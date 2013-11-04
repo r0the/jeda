@@ -380,15 +380,7 @@ class JedaEngine implements PlatformCallback, Runnable {
     private static class EmptySoundImp implements SoundImp {
 
         @Override
-        public void load() {
-        }
-
-        @Override
         public void play() {
-        }
-
-        @Override
-        public void unload() {
         }
     }
 }

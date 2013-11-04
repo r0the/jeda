@@ -30,16 +30,21 @@ import ch.jeda.Jeda;
 import ch.jeda.LogLevel;
 import ch.jeda.SensorType;
 import ch.jeda.event.Event;
+import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
+import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.WindowFeature;
+import java.io.InputStream;
 
 public final class Main extends FragmentActivity {
 
     private static final int CONTENT_ID = 4242;
     private static Main INSTANCE;
+    private final AudioManager audioManager;
     private final LogFragment logFragment;
+    private final ResourceManager resourceManager;
     private final SensorManager sensorManager;
     private CanvasFragment topWindow;
 
@@ -49,7 +54,9 @@ public final class Main extends FragmentActivity {
 
     public Main() {
         INSTANCE = this;
+        this.audioManager = new AudioManager();
         this.logFragment = new LogFragment();
+        this.resourceManager = new ResourceManager(this);
         this.sensorManager = new SensorManager();
     }
 
@@ -68,9 +75,9 @@ public final class Main extends FragmentActivity {
             ViewGroup.LayoutParams.FILL_PARENT,
             ViewGroup.LayoutParams.FILL_PARENT));
         Log.d("Jeda", "onCreate");
-
         if (savedInstanceState == null) {
-            this.getSupportFragmentManager().beginTransaction().add(this.sensorManager, "SensorManager").commit();
+            this.addManager(this.audioManager, "AudioManager");
+            this.addManager(this.sensorManager, "SensorManager");
             Jeda.startProgram();
         }
     }
@@ -119,12 +126,24 @@ public final class Main extends FragmentActivity {
         }
     }
 
+    ImageImp createImageImp(final String path) {
+        return this.resourceManager.openImage(path);
+    }
+
+    SoundImp createSoundImp(final String path) {
+        return this.audioManager.createSoundImp(path);
+    }
+
     boolean isSensorAvailable(final SensorType sensorType) {
         return this.sensorManager.isAvailable(sensorType);
     }
 
     public boolean isSensorEnabled(final SensorType sensorType) {
         return this.sensorManager.isEnabled(sensorType);
+    }
+
+    Class<?>[] loadClasses() throws Exception {
+        return this.resourceManager.loadClasses();
     }
 
     void log(final LogLevel logLevel, final String message) {
@@ -134,6 +153,10 @@ public final class Main extends FragmentActivity {
                 doLog(logLevel, message);
             }
         });
+    }
+
+    InputStream openResource(final String path) {
+        return this.resourceManager.openInputStream(path);
     }
 
     public void setSensorEnabled(final SensorType sensorType, boolean enabled) {
@@ -168,6 +191,12 @@ public final class Main extends FragmentActivity {
     }
 
     void shutdown() {
+    }
+
+    private void addManager(final Fragment fragment, final String tag) {
+        final FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+        ft.add(fragment, tag);
+        ft.commit();
     }
 
     private void doLog(final LogLevel logLevel, final String message) {

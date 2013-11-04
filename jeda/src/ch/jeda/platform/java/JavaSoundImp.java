@@ -25,21 +25,17 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 class JavaSoundImp implements SoundImp {
 
     private final byte[] data;
-    private final AudioSystem audioSystem;
+    private final AudioManager audioManager;
 
-    JavaSoundImp(final AudioSystem audioSystem, final byte[] data) {
-        this.audioSystem = audioSystem;
+    JavaSoundImp(final AudioManager audioManager, final byte[] data) {
+        this.audioManager = audioManager;
         this.data = data;
-    }
-
-    @Override
-    public void load() {
     }
 
     @Override
     public void play() {
         try {
-            this.audioSystem.playSound(javax.sound.sampled.AudioSystem.getAudioInputStream(
+            this.audioManager.playSound(javax.sound.sampled.AudioSystem.getAudioInputStream(
                 new ByteArrayInputStream(this.data)));
         }
         catch (UnsupportedAudioFileException ex) {
@@ -48,9 +44,5 @@ class JavaSoundImp implements SoundImp {
         catch (IOException ex) {
             Log.err("jeda.sound.open.read.error");
         }
-    }
-
-    @Override
-    public void unload() {
     }
 }

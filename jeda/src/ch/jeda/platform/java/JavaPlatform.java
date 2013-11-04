@@ -32,13 +32,13 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 class JavaPlatform implements Platform {
 
-    private final AudioSystem audioSystem;
+    private final AudioManager audioManager;
     private final WindowManager windowManager;
 
     public JavaPlatform(final PlatformCallback callback) {
         setLookAndFeel();
-        this.audioSystem = new AudioSystem();
-        callback.addTickListener(this.audioSystem);
+        this.audioManager = new AudioManager();
+        callback.addTickListener(this.audioManager);
         this.windowManager = new WindowManager(callback);
     }
 
@@ -54,7 +54,7 @@ class JavaPlatform implements Platform {
 
     @Override
     public SoundImp createSoundImp(String path) {
-        return this.audioSystem.createSoundImp(path);
+        return this.audioManager.createSoundImp(path);
     }
 
     @Override

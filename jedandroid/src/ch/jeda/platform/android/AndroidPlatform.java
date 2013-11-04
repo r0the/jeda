@@ -33,8 +33,6 @@ class AndroidPlatform implements Platform {
 
     private static AndroidPlatform INSTANCE;
     private final PlatformCallback callback;
-    private final ResourceManager resourceManager;
-    private boolean paused;
 
     static AndroidPlatform getInstance() {
         return INSTANCE;
@@ -44,10 +42,8 @@ class AndroidPlatform implements Platform {
         INSTANCE = this;
         this.callback = callback;
         final Main activity = Main.getInstance();
-        this.resourceManager = new ResourceManager(activity);
         // Adjust window when soft keyboard is shown.
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        this.paused = false;
     }
 
     @Override
@@ -59,11 +55,11 @@ class AndroidPlatform implements Platform {
 
     @Override
     public ImageImp createImageImp(final String path) {
-        return this.resourceManager.openImage(path);
+        return Main.getInstance().createImageImp(path);
     }
 
     public SoundImp createSoundImp(final String path) {
-        return null;
+        return Main.getInstance().createSoundImp(path);
     }
 
     public boolean isSensorAvailable(final SensorType sensorType) {
@@ -76,7 +72,7 @@ class AndroidPlatform implements Platform {
 
     @Override
     public Class<?>[] loadClasses() throws Exception {
-        return this.resourceManager.loadClasses();
+        return Main.getInstance().loadClasses();
     }
 
     public void log(final LogLevel logLevel, String message) {
@@ -84,7 +80,7 @@ class AndroidPlatform implements Platform {
     }
 
     public InputStream openResource(final String path) {
-        return this.resourceManager.openInputStream(path);
+        return Main.getInstance().openResource(path);
     }
 
     public void setSensorEnabled(final SensorType sensorType, boolean enabled) {
@@ -113,7 +109,6 @@ class AndroidPlatform implements Platform {
 
     void onPause() {
         this.callback.pause();
-        this.paused = true;
     }
 
     void onResume() {

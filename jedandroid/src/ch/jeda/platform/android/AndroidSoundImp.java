@@ -14,9 +14,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.platform;
+package ch.jeda.platform.android;
 
-public interface SoundImp {
+import ch.jeda.platform.SoundImp;
 
-    void play();
+class AndroidSoundImp implements SoundImp {
+
+    private final AudioManager audioManager;
+    private final int soundId;
+
+    public AndroidSoundImp(final AudioManager audioManager, final int soundId) {
+        this.audioManager = audioManager;
+        this.soundId = soundId;
+    }
+
+    public void play() {
+        this.audioManager.play(this.soundId);
+    }
 }

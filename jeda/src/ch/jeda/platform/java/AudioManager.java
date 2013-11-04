@@ -35,16 +35,15 @@ import javax.sound.sampled.Mixer;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-class AudioSystem implements TickListener {
+class AudioManager implements TickListener {
 
-    private static final int MAX_BUFFER_SIZE = 100000;
     private final Mixer mixer;
     private final List<AudioPlayback> pendingDeletions;
     private final List<AudioPlayback> pendingInsertions;
     private final List<AudioPlayback> playing;
     private final List<AudioFormat> supportedFormats;
 
-    AudioSystem() {
+    AudioManager() {
         this.mixer = findMixer();
         this.pendingDeletions = new ArrayList<AudioPlayback>();
         this.pendingInsertions = new ArrayList<AudioPlayback>();
