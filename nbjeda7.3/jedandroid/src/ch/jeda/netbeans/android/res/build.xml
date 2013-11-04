@@ -19,9 +19,13 @@
       android:versionName="]]>${jeda.application.version.name}<![CDATA[">
     <supports-screens android:largeScreens="true"
                       android:xlargeScreens="true"/>
-    <uses-sdk android:minSdkVersion="10"
-              android:targetSdkVersion="15"/>
 ]]></property>
+    <property name="jeda.android-manifest.sdk.10"><![CDATA[
+    <uses-sdk android:minSdkVersion="10"
+          android:targetSdkVersion="10"/>]]></property>
+    <property name="jeda.android-manifest.sdk.15"><![CDATA[
+    <uses-sdk android:minSdkVersion="10"
+          android:targetSdkVersion="15"/>]]></property>
     <property name="jeda.android-manifest.permission.internet.true"><![CDATA[    <uses-permission android:name="android.permission.INTERNET"/>
 ]]></property>
     <property name="jeda.android-manifest.application.10"><![CDATA[    <application android:label="@string/app_name"
@@ -48,6 +52,13 @@
 ]]></property>
 
     <!-- Choose AndroidManifest blocks according to Jeda project configuration. -->
+    <condition property="jeda.android-manifest.sdk" value="${jeda.android-manifest.sdk.15}">
+        <equals arg1="${jeda.android.platform}" arg2="15" casesensitive="false"/>
+    </condition>
+    <condition property="jeda.android-manifest.sdk" value="${jeda.android-manifest.sdk.10}">
+        <equals arg1="${jeda.android.platform}" arg2="10" casesensitive="false"/>
+    </condition>
+
     <condition property="jeda.android-manifest.application" value="${jeda.android-manifest.application.15}">
         <equals arg1="${jeda.android.platform}" arg2="15" casesensitive="false"/>
     </condition>
@@ -63,6 +74,7 @@
     <!-- Write AndroidManifest.xml. -->
     <!-- This cannot be done with the echoxml task because of namespace problems. -->
     <echo output="AndroidManifest.xml" append="false" message="${jeda.android-manifest.start}"/>
+    <echo output="AndroidManifest.xml" append="true" message="${jeda.android-manifest.sdk}"/>
     <echo output="AndroidManifest.xml" append="true" message="${jeda.android-manifest.permission.internet}"/>
     <echo output="AndroidManifest.xml" append="true" message="${jeda.android-manifest.application}"/>
     <echo output="AndroidManifest.xml" append="true" message="${jeda.android-manifest.end}"/>
