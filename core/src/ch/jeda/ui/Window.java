@@ -38,7 +38,6 @@ public class Window extends Canvas {
     private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
     private final Drawables drawables;
     private final EventDispatcher eventDispatcher;
-    private final Events events;
     private WindowImp imp;
     private String title;
 
@@ -103,8 +102,6 @@ public class Window extends Canvas {
     public Window(final int width, final int height, final WindowFeature... features) {
         this.drawables = new Drawables();
         this.eventDispatcher = new EventDispatcher();
-        this.events = new Events();
-        this.eventDispatcher.addListener(this.events.listener);
         this.title = Jeda.getProgramName();
         this.resetImp(width, height, toSet(features));
         Jeda.addTickListener(new EventLoop(this));
@@ -129,13 +126,6 @@ public class Window extends Canvas {
      */
     public void close() {
         this.imp.close();
-    }
-
-    /**
-     * @deprecated Use {@link Window#addEventListener(java.lang.Object)} instead.
-     */
-    public Events getEvents() {
-        return this.events;
     }
 
     /**
@@ -168,7 +158,7 @@ public class Window extends Canvas {
         return this.imp.getFeatures().contains(feature);
     }
 
-    public void removeDrawable(final Drawable drawable) {
+    void removeDrawable(final Drawable drawable) {
         this.drawables.removeDrawable(drawable);
         this.eventDispatcher.removeListener(drawable);
     }
@@ -252,12 +242,6 @@ public class Window extends Canvas {
         this.imp.setTitle(title);
     }
 
-    /**
-     * @deprecated This call is not needed anymore.
-     */
-    public void update() {
-    }
-
     void addDrawable(final Drawable drawable) {
         this.drawables.addDrawable(drawable);
         this.eventDispatcher.addListener(drawable);
@@ -269,7 +253,6 @@ public class Window extends Canvas {
 
     private void tick(final TickEvent event) {
         if (this.imp.isValid() && this.imp.isActive()) {
-            this.events.prepare();
             this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
             this.eventDispatcher.dispatchTick(event);
             this.drawables.draw(this);
@@ -285,7 +268,6 @@ public class Window extends Canvas {
         fixWindowFeatures(features);
 
         this.imp = JedaInternal.createWindowImp(width, height, features);
-        this.events.reset();
         this.imp.setTitle(this.title);
         if (!this.hasFeature(WindowFeature.DOUBLE_BUFFERED)) {
             this.imp.setColor(Color.WHITE);
