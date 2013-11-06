@@ -19,16 +19,34 @@ package ch.jeda.event;
 import ch.jeda.SensorType;
 
 /**
- * Represents an event of the type {@link ch.jeda.event.EventType#SENSOR}.
+ * Represents an event of the type {@link ch.jeda.event.EventType#SENSOR}. All sensor values are given in SI base units.
+ * <p>
+ * <img src="../../../windows.png"> <img src="../../../linux.png"> Sensors are not supported.
+ * <p>
+ * <img src="../../../android.png"> Sensors may be available depending on the device.
  *
  * @since 1
  */
 public class SensorEvent extends Event {
 
-    private SensorType sensorType;
-    private float x;
-    private float y;
-    private float z;
+    private final SensorType sensorType;
+    private final float value;
+    private final float x;
+    private final float y;
+    private final float z;
+
+    /**
+     * Constructs a sensor event.
+     *
+     * @param source the event source that generates the event
+     * @param sensorType the type of sensor that generated the event
+     * @param value the currently sensed value
+     *
+     * @since 1
+     */
+    public SensorEvent(final Object source, final SensorType sensorType, float value) {
+        this(source, sensorType, value, 0f, 0f, 0f);
+    }
 
     /**
      * Constructs a sensor event.
@@ -42,11 +60,7 @@ public class SensorEvent extends Event {
      * @since 1
      */
     public SensorEvent(final Object source, final SensorType sensorType, float x, final float y, final float z) {
-        super(source, EventType.SENSOR);
-        this.sensorType = sensorType;
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this(source, sensorType, (float) Math.sqrt(x * x + y * y + z * z), x, y, z);
     }
 
     /**
@@ -61,17 +75,40 @@ public class SensorEvent extends Event {
     }
 
     /**
+     * Returns the currently sensed value. Depending on the sensor type, this is:
+     * <ul>
+     * <li>For {@link ch.jeda.SensorType#ACCELERATION}: The absolute value of the acceleration in meter per square
+     * second [m/s<sup>2</sup>].
+     * <li>For {@link ch.jeda.SensorType#GRAVITY}: The absolute value of the gravity in meter per square second.
+     * <li>For {@link ch.jeda.SensorType#LINEAR_ACCELERATION}: The absolute value of the acceleration in meter per
+     * square second [m/s<sup>2</sup>].
+     * <li>For {@link ch.jeda.SensorType#MAGNETIC_FIELD}: The absolute value of the magnetic field in Tesla [T].
+     * <li>For {@link ch.jeda.SensorType#LIGHT}: The abmient light level in lux [lx].
+     * <li>For {@link ch.jeda.SensorType#PRESSURE}: The air pressure in Pascal [Pa].
+     * <li>For {@link ch.jeda.SensorType#PROXIMITY}: The proximity distance in meter [m].
+     * <li>For {@link ch.jeda.SensorType#RELATIVE_HUMIDITY}: The relative air humidity in percent [%].
+     * <li>For {@link ch.jeda.SensorType#TEMPERATURE}: The air temperature in Kelvin [K].
+     * </ul>
+     *
+     * @return the currently sensed value
+     */
+    public final float getValue() {
+        return this.value;
+    }
+
+    /**
      * Returns the x-axis component of the currently sensed value. Depending on the sensor type, these are:
      * <ul>
-     * <li>For {@link SensorType#ACCELERATION}: The acceleration in meter per square second in direction of the positive
-     * x-axis of the {@link ch.jeda.ui.Window}, i.e. to the right.
-     * <li>For {@link SensorType#GRAVITY}: The gravity component in meter per square second in direction of the positive
-     * x-axis of the {@link ch.jeda.ui.Window}, i.e. to the right.
-     * <li>For {@link SensorType#LINEAR_ACCELERATION}: The acceleration in meter per square second in direction of the
-     * positive x-axis of the {@link ch.jeda.ui.Window}, i.e. to the right.
-     * <li>For {@link SensorType#MAGNETIC_FIELD}: The magnetic field component in Microtesla in direction of the
+     * <li>For {@link ch.jeda.SensorType#ACCELERATION}: The acceleration in meter per square second [m/s<sup>2</sup>] in
+     * direction of the positive x-axis of the {@link ch.jeda.ui.Window}, i.e. to the right.
+     * <li>For {@link ch.jeda.SensorType#GRAVITY}: The gravity component in meter per square second [m/s<sup>2</sup>] in
+     * direction of the positive x-axis of the {@link ch.jeda.ui.Window}, i.e. to the right.
+     * <li>For {@link ch.jeda.SensorType#LINEAR_ACCELERATION}: The acceleration in meter per square second
+     * [m/s<sup>2</sup>] in direction of the positive x-axis of the {@link ch.jeda.ui.Window}, i.e. to the right.
+     * <li>For {@link ch.jeda.SensorType#MAGNETIC_FIELD}: The magnetic field component in Tesla [T] in direction of the
      * positive x-axis of the {@link ch.jeda.ui.Window}, i.e. to the right.
      * </ul>
+     * For other sensor types, the method always returns zero.
      *
      * @return the x-axis component of the currently sensed value
      *
@@ -84,15 +121,17 @@ public class SensorEvent extends Event {
     /**
      * Returns the y-axis component of the currently sensed value. Depending on the sensor type, these are:
      * <ul>
-     * <li>For {@link SensorType#ACCELERATION}: The acceleration in meter per square second in direction of the positive
-     * y-axis of the {@link ch.jeda.ui.Window}, i.e. downwards on the screen.
-     * <li>For {@link SensorType#GRAVITY}: The gravity component in meter per square second in direction of the positive
-     * y-axis of the {@link ch.jeda.ui.Window}, i.e. downwards on the screen.
-     * <li>For {@link SensorType#LINEAR_ACCELERATION}: The acceleration in meter per square second in direction of the
-     * positive y-axis of the {@link ch.jeda.ui.Window}, i.e. downwards on the screen.
-     * <li>For {@link SensorType#MAGNETIC_FIELD}: The magnetic field component in Microtesla in direction of the
+     * <li>For {@link ch.jeda.SensorType#ACCELERATION}: The acceleration in meter per square second [m/s<sup>2</sup>] in
+     * direction of the positive y-axis of the {@link ch.jeda.ui.Window}, i.e. downwards on the screen.
+     * <li>For {@link ch.jeda.SensorType#GRAVITY}: The gravity component in meter per square second [m/s<sup>2</sup>] in
+     * direction of the positive y-axis of the {@link ch.jeda.ui.Window}, i.e. downwards on the screen.
+     * <li>For {@link ch.jeda.SensorType#LINEAR_ACCELERATION}: The acceleration in meter per square second
+     * [m/s<sup>2</sup>] in direction of the positive y-axis of the {@link ch.jeda.ui.Window}, i.e. downwards on the
+     * screen.
+     * <li>For {@link ch.jeda.SensorType#MAGNETIC_FIELD}: The magnetic field component in Tesla [T] in direction of the
      * positive y-axis of the {@link ch.jeda.ui.Window}, i.e. downwards on the screen.
      * </ul>
+     * For other sensor types, the method always returns zero.
      *
      * @return the y-axis component of the currently sensed value
      *
@@ -105,12 +144,16 @@ public class SensorEvent extends Event {
     /**
      * Returns the z-axis component of the currently sensed value. Depending on the sensor type, these are:
      * <ul>
-     * <li>For {@link SensorType#ACCELERATION}: The acceleration in meter per square second upwards from the screen.
-     * <li>For {@link SensorType#GRAVITY}: The gravity component in meter per square second upwards from the screen.
-     * <li>For {@link SensorType#LINEAR_ACCELERATION}: The acceleration in meter per square second upwards from the
+     * <li>For {@link ch.jeda.SensorType#ACCELERATION}: The acceleration in meter per square second [m/s<sup>2</sup>]
+     * upwards from the screen.
+     * <li>For {@link ch.jeda.SensorType#GRAVITY}: The gravity component in meter per square second [m/s<sup>2</sup>]
+     * upwards from the screen.
+     * <li>For {@link ch.jeda.SensorType#LINEAR_ACCELERATION}: The acceleration in meter per square second
+     * [m/s<sup>2</sup>] upwards from the screen.
+     * <li>For {@link ch.jeda.SensorType#MAGNETIC_FIELD}: The magnetic field component in Tesla [T] upwards from the
      * screen.
-     * <li>For {@link SensorType#MAGNETIC_FIELD}: The magnetic field component in Microtesla upwards from the screen.
      * </ul>
+     * For other sensor types, the method always returns zero.
      *
      * @return the z-axis component of the currently sensed value
      *
@@ -135,5 +178,15 @@ public class SensorEvent extends Event {
         result.append(this.z);
         result.append(")");
         return result.toString();
+    }
+
+    private SensorEvent(final Object source, final SensorType sensorType, float value,
+                        float x, final float y, final float z) {
+        super(source, EventType.SENSOR);
+        this.sensorType = sensorType;
+        this.value = value;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 }

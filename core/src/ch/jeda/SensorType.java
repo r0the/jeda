@@ -18,6 +18,10 @@ package ch.jeda;
 
 /**
  * Defines available sensor types.
+ * <p>
+ * <img src="../../../windows.png"> <img src="../../../linux.png"> Sensors are not supported.
+ * <p>
+ * <img src="../../../android.png"> Sensors may be available depending on the device.
  *
  * @since 1
  */
@@ -26,28 +30,92 @@ public enum SensorType {
     /**
      * Acceleration sensor. An acceleration sensor measures the acceleration applied to the device, including the force
      * of gravity.
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The sensor is not available.
+     * <p>
+     * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
+     * @see ch.jeda.event.SensorEvent
      * @since 1
      */
     ACCELERATION,
     /**
      * Gravity sensor. The gravity sensor provides a three dimensional vector indicating the direction and magnitude of
      * gravity.
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The sensor is not available.
+     * <p>
+     * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
+     * @see ch.jeda.event.SensorEvent
      * @since 1
      */
     GRAVITY,
     /**
+     * Light sensor. The light sensor measures the ambient light level.
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The sensor is not available.
+     * <p>
+     * <img src="../../../android.png"> The sensor may be available depending on the device.
+     *
+     * @see ch.jeda.event.SensorEvent
+     * @since 1
+     */
+    LIGHT,
+    /**
      * Linear acceleration sensor. The linear acceleration sensor provides you with a three-dimensional vector
      * representing acceleration along each device axis, excluding gravity.
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The sensor is not available.
+     * <p>
+     * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
+     * @see ch.jeda.event.SensorEvent
      * @since 1
      */
     LINEAR_ACCELERATION,
     /**
      * Magnetic field sensor. The magnetic field sensor measures the magnetic field.
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The sensor is not available.
+     * <p>
+     * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
+     * @see ch.jeda.event.SensorEvent
      * @since 1
      */
-    MAGNETIC_FIELD
+    MAGNETIC_FIELD,
+    /**
+     * Pressure sensor. The sensor measures the air pressure.
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The sensor is not available.
+     * <p>
+     * <img src="../../../android.png"> The sensor may be available depending on the device.
+     *
+     * @see ch.jeda.event.SensorEvent
+     * @since 1
+     */
+    PRESSURE,
+    /**
+     * Proximity sensor. The sensor measures the distance to the nearest object, usually the user.
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The sensor is not available.
+     * <p>
+     * <img src="../../../android.png"> The sensor may be available depending on the device.
+     *
+     * @see ch.jeda.event.SensorEvent
+     * @since 1
+     */
+    PROXIMITY,
+    /**
+     * Temperature sensor. The sensor measures the air temperature.
+     * <p>
+     * <img src="../../../windows.png"> <img src="../../../linux.png"> The sensor is not available.
+     * <p>
+     * <img src="../../../android.png"> The sensor may be available depending on the device.
+     *
+     * @see ch.jeda.event.SensorEvent
+     * @since 1
+     */
+    TEMPERATURE
 }

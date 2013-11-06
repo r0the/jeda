@@ -38,7 +38,6 @@ class SensorManager extends Fragment {
     private final EnumMap<SensorType, Sensor> sensorMap;
     private final EnumMap<SensorType, SensorEventListener> sensorListenerMap;
     private final Map<Sensor, SensorInfo> sensorInfoMap;
-    private boolean paused;
     private android.hardware.SensorManager imp;
 
     SensorManager() {
@@ -56,10 +55,18 @@ class SensorManager extends Fragment {
         this.sensorInfoMap.clear();
         this.sensorListenerMap.clear();
         this.imp = (android.hardware.SensorManager) activity.getSystemService(Activity.SENSOR_SERVICE);
-        this.checkAdd(SensorType.ACCELERATION, this.imp.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
-        this.checkAdd(SensorType.GRAVITY, this.imp.getDefaultSensor(Sensor.TYPE_GRAVITY));
-        this.checkAdd(SensorType.LINEAR_ACCELERATION, this.imp.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
-        this.checkAdd(SensorType.MAGNETIC_FIELD, this.imp.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD));
+        this.checkAdd(SensorType.ACCELERATION, 1f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+        this.checkAdd(SensorType.GRAVITY, 1f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_GRAVITY));
+        this.checkAdd(SensorType.LIGHT, 1f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_LIGHT));
+        this.checkAdd(SensorType.LINEAR_ACCELERATION, 1f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
+        // Android returns values in micro Tesla
+        this.checkAdd(SensorType.MAGNETIC_FIELD, 1e-6f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD));
+        // Android returns value in hekto Pascal
+        this.checkAdd(SensorType.PRESSURE, 100f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_PRESSURE));
+        // Android returns value in centimeter
+        this.checkAdd(SensorType.PROXIMITY, 0.01f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_PROXIMITY));
+        // Android returns value in degrees Celcius
+        this.checkAdd(SensorType.TEMPERATURE, 1f, -273.15f, this.imp.getDefaultSensor(Sensor.TYPE_TEMPERATURE));
     }
 
     @Override
@@ -114,10 +121,10 @@ class SensorManager extends Fragment {
         }
     }
 
-    private void checkAdd(final SensorType sensorType, final Sensor sensor) {
+    private void checkAdd(final SensorType sensorType, final float factor, final float shift, final Sensor sensor) {
         if (sensor != null) {
             this.sensorMap.put(sensorType, sensor);
-            this.sensorInfoMap.put(sensor, new SensorInfo(sensorType, sensor));
+            this.sensorInfoMap.put(sensor, new SensorInfo(sensorType, sensor, factor, shift));
         }
     }
 
@@ -128,6 +135,11 @@ class SensorManager extends Fragment {
             case LINEAR_ACCELERATION:
             case MAGNETIC_FIELD:
                 return new ThreeDeeSensorHandler(this.getActivity(), this.sensorInfoMap);
+            case LIGHT:
+            case PRESSURE:
+            case PROXIMITY:
+            case TEMPERATURE:
+                return new ValueSensorHandler(this.getActivity(), this.sensorInfoMap);
             default:
                 return null;
         }
@@ -169,27 +181,47 @@ class SensorManager extends Fragment {
             final SensorInfo sensorInfo = this.sensorReserveMap.get(event.sensor);
             float x = 0f;
             float y = 0f;
-            final float z = event.values[2];
+            final float z = event.values[2] * sensorInfo.factor;
             switch (this.activity.getWindowManager().getDefaultDisplay().getRotation()) {
                 case Surface.ROTATION_0:
-                    x = -event.values[0];
-                    y = event.values[1];
+                    x = -event.values[0] * sensorInfo.factor;
+                    y = event.values[1] * sensorInfo.factor;
                     break;
                 case Surface.ROTATION_90:
-                    x = event.values[1];
-                    y = event.values[0];
+                    x = event.values[1] * sensorInfo.factor;
+                    y = event.values[0] * sensorInfo.factor;
                     break;
                 case Surface.ROTATION_180:
-                    x = event.values[0];
-                    y = -event.values[1];
+                    x = event.values[0] * sensorInfo.factor;
+                    y = -event.values[1] * sensorInfo.factor;
                     break;
                 case Surface.ROTATION_270:
-                    x = -event.values[1];
-                    y = -event.values[0];
+                    x = -event.values[1] * sensorInfo.factor;
+                    y = -event.values[0] * sensorInfo.factor;
                     break;
             }
 
-            ((Main) this.activity).addEvent(new SensorEvent(sensorInfo, sensorInfo.getSensorType(), x, y, z));
+            ((Main) this.activity).addEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, x, y, z));
+        }
+
+        public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
+        }
+    }
+
+    private static class ValueSensorHandler implements SensorEventListener {
+
+        private final Activity activity;
+        private final Map<Sensor, SensorInfo> sensorReserveMap;
+
+        public ValueSensorHandler(final Activity activity, final Map<Sensor, SensorInfo> sensorReserveMap) {
+            this.activity = activity;
+            this.sensorReserveMap = sensorReserveMap;
+        }
+
+        public void onSensorChanged(final android.hardware.SensorEvent event) {
+            final SensorInfo sensorInfo = this.sensorReserveMap.get(event.sensor);
+            final float value = event.values[0] * sensorInfo.factor + sensorInfo.shift;
+            ((Main) this.activity).addEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, value));
         }
 
         public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
@@ -198,16 +230,16 @@ class SensorManager extends Fragment {
 
     private static class SensorInfo {
 
+        final float factor;
+        final float shift;
+        final SensorType sensorType;
         private final Sensor sensor;
-        private final SensorType sensorType;
 
-        public SensorInfo(final SensorType sensorType, final Sensor sensor) {
+        public SensorInfo(final SensorType sensorType, final Sensor sensor, final float factor, final float shift) {
+            this.factor = factor;
             this.sensor = sensor;
             this.sensorType = sensorType;
-        }
-
-        SensorType getSensorType() {
-            return this.sensorType;
+            this.shift = shift;
         }
 
         @Override

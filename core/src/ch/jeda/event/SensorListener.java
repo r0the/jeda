@@ -23,6 +23,10 @@ package ch.jeda.event;
  *
  * To reveice sensor events, the corresponding sensor must be enabled by calling
  * {@link ch.jeda.Device#enableSensor(ch.jeda.SensorType)}.
+ * <p>
+ * <img src="../../../windows.png"> <img src="../../../linux.png"> Sensors are not supported.
+ * <p>
+ * <img src="../../../android.png"> Sensors may be available depending on the device.
  *
  * @since 1
  */
