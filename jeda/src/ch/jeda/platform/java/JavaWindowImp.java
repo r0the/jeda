@@ -23,13 +23,12 @@ import ch.jeda.ui.WindowFeature;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
+import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 
 abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
 
-    private static final Map<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
+    private static final EnumMap<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
     protected final CanvasWindow canvasWindow;
 
     @Override
@@ -97,8 +96,8 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         return toolkit.createCustomCursor(image, new java.awt.Point(0, 0), "invisibleCursor");
     }
 
-    private static Map<MouseCursor, Cursor> initCursorMap() {
-        final Map<MouseCursor, Cursor> result = new HashMap();
+    private static EnumMap<MouseCursor, Cursor> initCursorMap() {
+        final EnumMap<MouseCursor, Cursor> result = new EnumMap(MouseCursor.class);
         result.put(MouseCursor.CROSSHAIR, new Cursor(Cursor.CROSSHAIR_CURSOR));
         result.put(MouseCursor.DEFAULT, new Cursor(Cursor.DEFAULT_CURSOR));
         result.put(MouseCursor.HAND, new Cursor(Cursor.HAND_CURSOR));

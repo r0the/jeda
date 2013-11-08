@@ -16,74 +16,43 @@
  */
 package ch.jeda.ui;
 
-import java.io.Serializable;
-
 /**
- * Represents a mouse cursor. The mouse cursor is the small picture that
- * indicates the location of the mouse on the screen). Mouse cursors can be
- * changed using the {@link Window#setMouseCursor(ch.jeda.ui.MouseCursor)}
- * method.
+ * Represents a mouse cursor. The mouse cursor is the small picture that indicates the location of the mouse on the
+ * screen). Mouse cursors can be changed using the {@link Window#setMouseCursor(ch.jeda.ui.MouseCursor)} method.
  *
  * @see Window
  * @since 1
  */
-public final class MouseCursor implements Serializable {
+public enum MouseCursor {
 
     /**
      * A crosshair mouse cursor.
      *
      * @since 1
      */
-    public static final MouseCursor CROSSHAIR = new MouseCursor(1, "Crosshair");
+    CROSSHAIR,
     /**
      * The default mouse cursor (an arrow).
      *
      * @since 1
      */
-    public static final MouseCursor DEFAULT = new MouseCursor(0, "Default");
+    DEFAULT,
     /**
      * A hand mouse cursor.
      *
      * @since 1
      */
-    public static final MouseCursor HAND = new MouseCursor(12, "Hand");
+    HAND,
     /**
      * An invisible mouse cursor.
      *
      * @since 1
      */
-    public static final MouseCursor INVISIBLE = new MouseCursor(0, "Invisible");
+    INVISIBLE,
     /**
      * A text input mouse cursor (the shape of an I).
      *
      * @since 1
      */
-    public static final MouseCursor TEXT = new MouseCursor(2, "Text");
-    private final int cursor;
-    private final String name;
-
-    @Override
-    public boolean equals(final Object object) {
-        if (object instanceof MouseCursor) {
-            return this.cursor == ((MouseCursor) object).cursor;
-        }
-        else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return this.cursor;
-    }
-
-    @Override
-    public String toString() {
-        return this.name;
-    }
-
-    private MouseCursor(final int cursor, final String name) {
-        this.cursor = cursor;
-        this.name = name;
-    }
+    TEXT
 }
