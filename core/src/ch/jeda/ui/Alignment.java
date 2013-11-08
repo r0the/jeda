@@ -16,8 +16,6 @@
  */
 package ch.jeda.ui;
 
-import java.io.Serializable;
-
 /**
  * This class provides constants to specify alignment when drawing on a {@link Canvas}. The alignment specifies how the
  * element to be drawn is positioned relative to the given coordinates (the alignment point).
@@ -31,65 +29,62 @@ import java.io.Serializable;
  *
  * @since 1
  */
-public final class Alignment implements Serializable {
+public enum Alignment {
 
-    private static final Align LEFT_TOP_IMPL = new AlignLeftTop();
-    private static final Align RIGHT_BOTTOM_IMPL = new AlignRightBottom();
-    private static final Align CENTER_IMPL = new AlignCenter();
     /**
      * Align at the bottom vertically and center horizontally.
      *
      * @since 1
      */
-    public static final Alignment BOTTOM_CENTER = new Alignment(CENTER_IMPL, RIGHT_BOTTOM_IMPL);
+    BOTTOM_CENTER(Align.CENTER, Align.RIGHT_BOTTOM),
     /**
      * Align at the bottom vertically and left horizontally.
      *
      * @since 1
      */
-    public static final Alignment BOTTOM_LEFT = new Alignment(LEFT_TOP_IMPL, RIGHT_BOTTOM_IMPL);
+    BOTTOM_LEFT(Align.LEFT_TOP, Align.RIGHT_BOTTOM),
     /**
      * Align at the bottom vertically and right horizontally.
      *
      * @since 1
      */
-    public static final Alignment BOTTOM_RIGHT = new Alignment(RIGHT_BOTTOM_IMPL, RIGHT_BOTTOM_IMPL);
+    BOTTOM_RIGHT(Align.RIGHT_BOTTOM, Align.RIGHT_BOTTOM),
     /**
      * Center both vertically and horizontally.
      *
      * @since 1
      */
-    public static final Alignment CENTER = new Alignment(CENTER_IMPL, CENTER_IMPL);
+    CENTER(Align.CENTER, Align.CENTER),
     /**
      * Center vertically and align left horizontally.
      *
      * @since 1
      */
-    public static final Alignment LEFT = new Alignment(LEFT_TOP_IMPL, CENTER_IMPL);
+    LEFT(Align.LEFT_TOP, Align.CENTER),
     /**
      * Center vertically and align right horizontally.
      *
      * @since 1
      */
-    public static final Alignment RIGHT = new Alignment(RIGHT_BOTTOM_IMPL, CENTER_IMPL);
+    RIGHT(Align.RIGHT_BOTTOM, Align.CENTER),
     /**
      * Align at the top vertically and center horizontally.
      *
      * @since 1
      */
-    public static final Alignment TOP_CENTER = new Alignment(CENTER_IMPL, LEFT_TOP_IMPL);
+    TOP_CENTER(Align.CENTER, Align.LEFT_TOP),
     /**
      * Align at the top vertically and left horizontally.
      *
      * @since 1
      */
-    public static final Alignment TOP_LEFT = new Alignment(LEFT_TOP_IMPL, LEFT_TOP_IMPL);
+    TOP_LEFT(Align.LEFT_TOP, Align.LEFT_TOP),
     /**
      * Align at the top vertically and right horizontally.
      *
      * @since 1
      */
-    public static final Alignment TOP_RIGHT = new Alignment(RIGHT_BOTTOM_IMPL, LEFT_TOP_IMPL);
+    TOP_RIGHT(Align.RIGHT_BOTTOM, Align.LEFT_TOP);
     private final Align horizontal;
     private final Align vertical;
 
@@ -104,34 +99,5 @@ public final class Alignment implements Serializable {
     private Alignment(final Align horizontal, final Align vertical) {
         this.horizontal = horizontal;
         this.vertical = vertical;
-    }
-
-    private static abstract class Align implements Serializable {
-
-        public abstract float align(float pos, float size);
-    }
-
-    private static class AlignLeftTop extends Align {
-
-        @Override
-        public float align(final float pos, final float size) {
-            return pos;
-        }
-    }
-
-    private static class AlignCenter extends Align {
-
-        @Override
-        public float align(final float pos, final float size) {
-            return pos - size / 2;
-        }
-    }
-
-    private static class AlignRightBottom extends Align {
-
-        @Override
-        public float align(final float pos, final float size) {
-            return pos - size;
-        }
     }
 }
