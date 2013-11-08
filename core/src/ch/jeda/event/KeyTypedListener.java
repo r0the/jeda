@@ -26,7 +26,11 @@ package ch.jeda.event;
 public interface KeyTypedListener {
 
     /**
-     * Invoked when a key has been typed.
+     * Invoked when a key has been typed. This event occurs when the system constructs a key type out of one or multiple
+     * key presses. This behaviour depends largely on the system's keyboard layout settings. While the user keeps
+     * pressing the key, the event may occur repeatedly. Use {@link ch.jeda.event.KeyEvent#getRepeatCount()} to check if
+     * the event is a repetition. Use {@link ch.jeda.event.KeyEvent#getKeyChar()} to get the character that has been
+     * generated.
      *
      * @param event the event
      *

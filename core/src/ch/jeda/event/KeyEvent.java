@@ -17,7 +17,8 @@
 package ch.jeda.event;
 
 /**
- * Represents an event of the type {@link EventType#KEY_DOWN}, {@link EventType#KEY_TYPED}, or {@link EventType#KEY_UP}.
+ * Represents an event of the type {@link ch.jeda.event.EventType#KEY_DOWN}, {@link ch.jeda.event.EventType#KEY_TYPED},
+ * or {@link ch.jeda.event.EventType#KEY_UP}.
  *
  * @since 1
  */
@@ -27,14 +28,42 @@ public final class KeyEvent extends Event {
     private final char keyChar;
     private final int repeatCount;
 
+    /**
+     * Constructs a key event.
+     *
+     * @param source the event source that generates the event
+     * @param type the event type
+     * @param key the key
+     *
+     * @since 1
+     */
     public KeyEvent(final Object source, final EventType type, final Key key) {
         this(source, type, key, '\0', 0);
     }
 
+    /**
+     * Constructs a key event.
+     *
+     * @param source the event source that generates the event
+     * @param type the event type
+     * @param key the key
+     * @param repeatCount the repeat count
+     *
+     * @since 1
+     */
     public KeyEvent(final Object source, final EventType type, final Key key, int repeatCount) {
         this(source, type, key, '\0', repeatCount);
     }
 
+    /**
+     * Constructs a key event.
+     *
+     * @param source the event source that generates the event
+     * @param type the event type
+     * @param keyChar the typed character
+     *
+     * @since 1
+     */
     public KeyEvent(final Object source, final EventType type, final char keyChar) {
         this(source, type, Key.UNDEFINED, keyChar, 0);
     }
@@ -50,10 +79,24 @@ public final class KeyEvent extends Event {
         return this.key;
     }
 
+    /**
+     * Returns the typed character.
+     *
+     * @return the type character
+     *
+     * @since 1
+     */
     public final char getKeyChar() {
         return this.keyChar;
     }
 
+    /**
+     * Returns the number of repetitive key presses of this key.
+     *
+     * @return the number of repetitive key presses of this key
+     *
+     * @since 1
+     */
     public final int getRepeatCount() {
         return this.repeatCount;
     }

@@ -18,6 +18,9 @@ package ch.jeda.platform;
 
 import ch.jeda.event.TickListener;
 
+/**
+ * <b>Internal</b>. Do not use this interface.
+ */
 public interface PlatformCallback {
 
     void addTickListener(TickListener listener);

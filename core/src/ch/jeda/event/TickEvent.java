@@ -17,7 +17,7 @@
 package ch.jeda.event;
 
 /**
- * Represents an event of the type {@link EventType#TICK}.
+ * Represents an event of the type {@link ch.jeda.event.EventType#TICK}.
  *
  * @since 1
  */

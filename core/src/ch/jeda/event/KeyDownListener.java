@@ -26,7 +26,10 @@ package ch.jeda.event;
 public interface KeyDownListener {
 
     /**
-     * Invoked when a key has been pressed.
+     * Invoked when a key has been pressed. A key down event can occur when the user presses a key on the keyboard, a
+     * hardware button on the device, or a button on an input device. While the user keeps pressing the key or button,
+     * the event may occur repeatedly. Use {@link ch.jeda.event.KeyEvent#getRepeatCount()} to check if the event
+     * is a repetition. Use {@link ch.jeda.event.KeyEvent#getKey()} to get the key that has/is been pressed.
      *
      * @param event the event
      *

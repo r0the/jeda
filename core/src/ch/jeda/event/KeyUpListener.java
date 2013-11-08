@@ -26,7 +26,9 @@ package ch.jeda.event;
 public interface KeyUpListener {
 
     /**
-     * Invoked when a key has been released.
+     * Invoked when a key has been released. This type of event occurs when the user releases a key on the keyboard, a
+     * hardware button on the device, or a button on an input device. Use {@link ch.jeda.event.KeyEvent#getKey()} to get
+     * the key that has been released.
      *
      * @param event the event
      *
