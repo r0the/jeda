@@ -286,7 +286,13 @@ class CanvasWindow extends BaseWindow implements FocusListener,
     private static Key mapKey(final java.awt.event.KeyEvent event) {
         final int keyLocation = event.getKeyLocation();
         if (KEY_MAP.containsKey(keyLocation)) {
-            return KEY_MAP.get(keyLocation).get(event.getExtendedKeyCode());
+            int keyCode = event.getExtendedKeyCode();
+            // Java on MacOS doesn't return extended key codes
+            if (keyCode == 0) {
+                keyCode = event.getKeyCode();
+            }
+
+            return KEY_MAP.get(keyLocation).get(keyCode);
         }
         else {
             return null;
@@ -312,6 +318,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         standard.put(java.awt.event.KeyEvent.VK_8, Key.DIGIT_8);
         standard.put(java.awt.event.KeyEvent.VK_9, Key.DIGIT_9);
         standard.put(java.awt.event.KeyEvent.VK_A, Key.A);
+        standard.put(java.awt.event.KeyEvent.VK_ALT_GRAPH, Key.ALT_GRAPH);
         left.put(java.awt.event.KeyEvent.VK_ALT, Key.ALT_LEFT);
         right.put(java.awt.event.KeyEvent.VK_ALT, Key.ALT_RIGHT);
         standard.put(java.awt.event.KeyEvent.VK_QUOTE, Key.APOSTROPHE);
