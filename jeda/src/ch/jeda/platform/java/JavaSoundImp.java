@@ -38,11 +38,11 @@ class JavaSoundImp implements SoundImp {
             this.audioManager.playSound(javax.sound.sampled.AudioSystem.getAudioInputStream(
                 new ByteArrayInputStream(this.data)));
         }
-        catch (UnsupportedAudioFileException ex) {
-            Log.err("jeda.sound.open.format.error");
+        catch (final UnsupportedAudioFileException ex) {
+            Log.err(ex, "jeda.audio.error.unsupported-format");
         }
-        catch (IOException ex) {
-            Log.err("jeda.sound.open.read.error");
+        catch (final IOException ex) {
+            Log.err(ex, "jeda.audio.error.internal-open");
         }
     }
 }

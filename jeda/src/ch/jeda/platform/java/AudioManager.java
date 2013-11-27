@@ -20,11 +20,14 @@ import ch.jeda.Log;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
+import ch.jeda.platform.MusicImp;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -77,24 +80,37 @@ class AudioManager implements TickListener {
         this.pendingDeletions.clear();
     }
 
+    MusicImp createMusicImp(final String path) {
+        if (path != null & path.toLowerCase().endsWith(".mid")) {
+            try {
+                return new JavaMidiMusicImp(path, MidiSystem.getSequencer());
+            }
+            catch (final MidiUnavailableException ex) {
+                Log.err("jeda.audio.error.midi-unavailable", path);
+                return null;
+            }
+        }
+        else {
+            Log.err("jeda.audio.error.unsupported-file-format", path);
+            return null;
+        }
+    }
+
     SoundImp createSoundImp(final String path) {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         try {
-            AudioInputStream in = javax.sound.sampled.AudioSystem.getAudioInputStream(ResourceManager.openInputStream(path));
+            final AudioInputStream in = javax.sound.sampled.AudioSystem.getAudioInputStream(ResourceManager.openInputStream(path));
             javax.sound.sampled.AudioSystem.write(in, AudioFileFormat.Type.WAVE, buffer);
             return new JavaSoundImp(this, buffer.toByteArray());
         }
         catch (final UnsupportedAudioFileException ex) {
-            Log.err(ex, "TODO");
+            Log.err("jeda.audio.error.unsupported-file-format", path);
         }
         catch (final IOException ex) {
-            Log.err(ex, "TODO");
+            Log.err(ex, "jeda.audio.error.read", path);
         }
 
         return null;
-    }
-
-    void add(AudioPlayback playback) {
     }
 
     boolean isSupported(final AudioFormat audioFormat) {
@@ -114,7 +130,7 @@ class AudioManager implements TickListener {
 
         final AudioFormat fileFormat = audioStream.getFormat();
         if (!isSupported(fileFormat)) {
-            Log.err("jeda.sound.playback.format.error", fileFormat);
+            Log.err("jeda.audio.error.unsupported-format", fileFormat);
             return null;
         }
 
@@ -124,12 +140,12 @@ class AudioManager implements TickListener {
         try {
             line = (SourceDataLine) this.mixer.getLine(dinfo);
         }
-        catch (LineUnavailableException ex) {
+        catch (final LineUnavailableException ex) {
             try {
                 line = (SourceDataLine) javax.sound.sampled.AudioSystem.getLine(dinfo);
             }
-            catch (LineUnavailableException ex2) {
-                Log.err(ex2, "jeda.sound.playback.start.error");
+            catch (final LineUnavailableException ex2) {
+                Log.err(ex2, "jeda.audio.error.line-unavailable");
                 return null;
             }
         }
@@ -137,8 +153,8 @@ class AudioManager implements TickListener {
         try {
             line.open(audioStream.getFormat());
         }
-        catch (LineUnavailableException ex) {
-            Log.err(ex, "jeda.sound.playback.start.error");
+        catch (final LineUnavailableException ex) {
+            Log.err(ex, "jeda.audio.error.line-unavailable");
             return null;
         }
 

@@ -17,6 +17,7 @@
 package ch.jeda.platform.android;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import ch.jeda.Log;
+import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.SoundImp;
 
 class AudioManager extends Fragment {
@@ -51,27 +53,50 @@ class AudioManager extends Fragment {
 
     SoundImp createSoundImp(final String path) {
         if (path.startsWith(RES_PREFIX)) {
-            int slashPos = path.indexOf('/');
-            int dotPos = path.lastIndexOf('.');
-            if (slashPos == -1 || dotPos == -1) {
-                Log.err("jeda.sound.invalid-resource-name", path);
+            final int resId = this.getResourceId(path);
+            if (resId == 0) {
                 return null;
             }
-
-            final String type = path.substring(RES_PREFIX.length(), slashPos);
-            final String name = path.substring(slashPos + 1, dotPos);
-            int resId = this.getResources().getIdentifier(name, type,
-                                                          getActivity().getApplicationContext().getPackageName());
-            return new AndroidSoundImp(this, this.soundPool.load(this.getActivity(), resId, DEFAULT_PRIORITY));
+            else {
+                return new AndroidSoundImp(this, this.soundPool.load(this.getActivity(), resId, DEFAULT_PRIORITY));
+            }
         }
         else {
             return new AndroidSoundImp(this, this.soundPool.load(path, DEFAULT_PRIORITY));
         }
     }
 
+    MusicImp createMusicImp(final String path) {
+        if (path.startsWith(RES_PREFIX)) {
+            final int resId = this.getResourceId(path);
+            if (resId == 0) {
+                return null;
+            }
+            else {
+                return new AndroidMusicImp(path, MediaPlayer.create(this.getActivity(), resId));
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
     void play(final int soundId) {
         final float volume = this.getVolume();
         this.soundPool.play(soundId, volume, volume, 0, 0, 1.0f);
+    }
+
+    private int getResourceId(final String path) {
+        final int slashPos = path.indexOf('/');
+        final int dotPos = path.lastIndexOf('.');
+        if (slashPos == -1 || dotPos == -1) {
+            Log.err("jeda.audio.error.invalid-resource-name", path);
+            return 0;
+        }
+
+        final String type = path.substring(RES_PREFIX.length(), slashPos);
+        final String name = path.substring(slashPos + 1, dotPos);
+        return this.getResources().getIdentifier(name, type, getActivity().getApplicationContext().getPackageName());
     }
 
     private float getVolume() {

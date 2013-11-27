@@ -36,10 +36,10 @@ import ch.jeda.platform.SoundImp;
  * <li><a href="http://en.wikipedia.org/wiki/Ogg">Ogg</a> (Codec: Vorbis)
  * <li><a href="http://en.wikipedia.org/wiki/Wav">WAV</a> (Codec: PCM)
  * </ul>
- * 
+ *
  * @since 1
  */
-public class Sound {
+public final class Sound {
 
     private final SoundImp imp;
 

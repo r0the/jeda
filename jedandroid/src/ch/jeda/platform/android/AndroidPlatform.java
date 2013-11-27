@@ -22,6 +22,7 @@ import ch.jeda.SensorType;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
@@ -56,6 +57,10 @@ class AndroidPlatform implements Platform {
     @Override
     public ImageImp createImageImp(final String path) {
         return Main.getInstance().createImageImp(path);
+    }
+
+    public MusicImp createMusicImp(final String path) {
+        return Main.getInstance().createMusicImp(path);
     }
 
     public SoundImp createSoundImp(final String path) {

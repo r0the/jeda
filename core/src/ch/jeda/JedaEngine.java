@@ -21,6 +21,7 @@ import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
@@ -40,6 +41,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 class JedaEngine implements PlatformCallback, Runnable {
 
+    private static final MusicImp EMPTY_MUSIC_IMP = new EmptyMusicImp();
     private static final SoundImp EMPTY_SOUND_IMP = new EmptySoundImp();
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
     private static final float DEFAULT_TICK_FREQUENCY = 60f;
@@ -181,6 +183,16 @@ class JedaEngine implements PlatformCallback, Runnable {
         final ImageImp result = this.platform.createImageImp(path);
         if (result == null) {
             return this.defaultImageImp;
+        }
+        else {
+            return result;
+        }
+    }
+
+    MusicImp createMusicImp(final String path) {
+        final MusicImp result = this.platform.createMusicImp(path);
+        if (result == null) {
+            return EMPTY_MUSIC_IMP;
         }
         else {
             return result;
@@ -391,6 +403,21 @@ class JedaEngine implements PlatformCallback, Runnable {
             for (int i = 0; i < stackTrace.length; ++i) {
                 System.err.println("   " + stackTrace[i].toString());
             }
+        }
+    }
+
+    private static class EmptyMusicImp implements MusicImp {
+
+        @Override
+        public void pause() {
+        }
+
+        @Override
+        public void play() {
+        }
+
+        @Override
+        public void stop() {
         }
     }
 

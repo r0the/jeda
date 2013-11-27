@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.Log;
 import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.BooleanControl;
@@ -98,7 +99,7 @@ class AudioPlayback {
                 this.data.close();
             }
             catch (final IOException ex) {
-//            Log.warning(ex, "jeda.sound.playback.stop.error");
+                Log.err(ex, "jeda.audio.error.internal-close");
             }
         }
     }
@@ -134,7 +135,7 @@ class AudioPlayback {
             }
         }
         catch (final IOException ex) {
-//            Log.warning(ex, "jeda.sound.playback.read.error");
+            Log.err(ex, "jeda.audio.error.internal-read");
         }
     }
 }

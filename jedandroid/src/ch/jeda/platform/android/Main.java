@@ -32,6 +32,7 @@ import ch.jeda.SensorType;
 import ch.jeda.event.Event;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowRequest;
@@ -128,6 +129,10 @@ public final class Main extends FragmentActivity {
 
     ImageImp createImageImp(final String path) {
         return this.resourceManager.openImage(path);
+    }
+
+    MusicImp createMusicImp(final String path) {
+        return this.audioManager.createMusicImp(path);
     }
 
     SoundImp createSoundImp(final String path) {

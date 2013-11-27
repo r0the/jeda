@@ -22,6 +22,7 @@ import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.SoundImp;
@@ -53,7 +54,12 @@ class JavaPlatform implements Platform {
     }
 
     @Override
-    public SoundImp createSoundImp(String path) {
+    public MusicImp createMusicImp(final String path) {
+        return this.audioManager.createMusicImp(path);
+    }
+
+    @Override
+    public SoundImp createSoundImp(final String path) {
         return this.audioManager.createSoundImp(path);
     }
 

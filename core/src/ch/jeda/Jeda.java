@@ -20,6 +20,7 @@ import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.WindowFeature;
@@ -259,6 +260,10 @@ public class Jeda {
 
     static ImageImp createImageImp(final String path) {
         return ENGINE.createImageImp(path);
+    }
+
+    static MusicImp createMusicImp(final String path) {
+        return ENGINE.createMusicImp(path);
     }
 
     static SoundImp createSoundImp(final String path) {
