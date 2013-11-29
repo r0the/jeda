@@ -44,11 +44,11 @@ public final class Sound {
     private final SoundImp imp;
 
     /**
-     * Constructs a new Sound object representing the contents of the specified sound file.
+     * Constructs a new Sound object representing the contents of the specified audio file.
      *
      * To read a resource file, put 'res:' in front of the file path.
      *
-     * @param path path to the sound file
+     * @param path path to the audio file
      *
      * @since 1
      */

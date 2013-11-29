@@ -18,22 +18,66 @@ package ch.jeda;
 
 import ch.jeda.platform.MusicImp;
 
+/**
+ * This class represents music data. The music data can be retrieved from a file or a resource.
+ *
+ * <p>
+ * <img src="../../../windows.png"> <img src="../../../linux.png"> Supported audio formats are:
+ * <ul>
+ * <li><a href="http://de.wikipedia.org/wiki/Musical_Instrument_Digital_Interface">MIDI</a>
+ * </ul>
+ * <p>
+ * <img src="../../../android.png"> Supported audio formats are:
+ * <ul>
+ * <li><a href="http://de.wikipedia.org/wiki/Musical_Instrument_Digital_Interface">MIDI</a>
+ * <li><a href="http://en.wikipedia.org/wiki/Mp3">MP3</a> (Codec: MP3)
+ * <li><a href="http://en.wikipedia.org/wiki/Mp4">MP4</a> (Codecs: AAC LC, HE-AACv1, HE-AACv2)
+ * <li><a href="http://en.wikipedia.org/wiki/Ogg">Ogg</a> (Codec: Vorbis)
+ * <li><a href="http://en.wikipedia.org/wiki/Wav">WAV</a> (Codec: PCM)
+ * </ul>
+ *
+ * @since 1
+ */
 public final class Music {
 
     private final MusicImp imp;
 
+    /**
+     * Constructs a new Music object representing the contents of the specified audio file.
+     *
+     * To read a resource file, put 'res:' in front of the file path.
+     *
+     * @param path path to the audio file
+     *
+     * @since 1
+     */
     public Music(final String path) {
         this.imp = Jeda.createMusicImp(path);
     }
 
+    /**
+     * Pauses the playback of the music.
+     *
+     * @since 1
+     */
     public void pause() {
         this.imp.pause();
     }
 
+    /**
+     * Starts or resumes the playback of the music.
+     *
+     * @since 1
+     */
     public void play() {
         this.imp.play();
     }
 
+    /**
+     * Stops the playback of the music.
+     *
+     * @since 1
+     */
     public void stop() {
         this.imp.stop();
     }
