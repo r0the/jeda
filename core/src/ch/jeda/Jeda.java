@@ -16,6 +16,7 @@
  */
 package ch.jeda;
 
+import ch.jeda.event.SensorType;
 import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;

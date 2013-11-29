@@ -18,7 +18,7 @@ package ch.jeda.platform.android;
 
 import android.view.WindowManager;
 import ch.jeda.LogLevel;
-import ch.jeda.SensorType;
+import ch.jeda.event.SensorType;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;

@@ -17,7 +17,7 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.LogLevel;
-import ch.jeda.SensorType;
+import ch.jeda.event.SensorType;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.ImageImp;

@@ -16,8 +16,6 @@
  */
 package ch.jeda.event;
 
-import ch.jeda.SensorType;
-
 /**
  * Represents an event of the type {@link ch.jeda.event.EventType#SENSOR}. All sensor values are given in SI base units.
  * <p>

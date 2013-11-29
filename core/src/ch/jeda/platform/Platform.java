@@ -17,7 +17,7 @@
 package ch.jeda.platform;
 
 import ch.jeda.LogLevel;
-import ch.jeda.SensorType;
+import ch.jeda.event.SensorType;
 import java.io.InputStream;
 
 /**
