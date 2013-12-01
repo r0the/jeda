@@ -23,7 +23,7 @@ import ch.jeda.ui.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpeechBubble {
+class SpeechBubble {
 
     private static final String SPEECH_PREFIX = "says:";
     private static final Image INFO_BUBBLE = Cute.loadImage("info_bubble");
