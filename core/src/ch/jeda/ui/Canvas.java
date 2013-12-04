@@ -545,9 +545,9 @@ public class Canvas {
 
     /**
      * Enables or disables the anti-aliasing filter. The borders of drawn text or shapes may not appear "smooth". This
-     * effect is called <a href="http://en.wikipedia.org/wiki/Jaggies">Jaggies</a>. To counter this effect, an <a
-     * href=http://en.wikipedia.org/wiki/Anti-aliasing_filter">anti-aliasing filter</a> is used when rendering the text
-     * or shapes.
+     * effect is called <a href="http://en.wikipedia.org/wiki/Jaggies" target="_blank">Jaggies</a>. To counter this
+     * effect, an <a href=http://en.wikipedia.org/wiki/Anti-aliasing_filter" target="_blank">anti-aliasing filter</a> is
+     * used when rendering the text or shapes.
      *
      * @param antiAliasing <tt>true</tt> to enable the anti-aliasing filter, <tt>false</tt> to disable it.
      */

@@ -61,15 +61,15 @@ public class Jeda {
     /**
      * Disables the sensor of the specified type on the device.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> No sensors are supported.
+     * <img src="../../windows.png"> <img src="../../linux.png"> No sensors are supported.
      * <p>
-     * <img src="../../../android.png"> All available sensor types are supported.
+     * <img src="../../android.png"> All available sensor types are supported.
      *
      * @param sensorType the type of sensor to disable
      *
-     * @see #enableSensor(ch.jeda.SensorType)
-     * @see #isSensorAvailable(ch.jeda.SensorType)
-     * @see #isSensorEnabled(ch.jeda.SensorType)
+     * @see #enableSensor(ch.jeda.event.SensorType)
+     * @see #isSensorAvailable(ch.jeda.event.SensorType)
+     * @see #isSensorEnabled(ch.jeda.event.SensorType)
      * @since 1
      */
     public static void disableSensor(final SensorType sensorType) {
@@ -79,15 +79,15 @@ public class Jeda {
     /**
      * Enables the sensor of the specified type on the device.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> No sensors are supported.
+     * <img src="../../windows.png"> <img src="../../linux.png"> No sensors are supported.
      * <p>
-     * <img src="../../../android.png"> All available sensor types are supported.
+     * <img src="../../android.png"> All available sensor types are supported.
      *
      * @param sensorType the type of sensor to enable
      *
-     * @see #disableSensor(ch.jeda.SensorType)
-     * @see #isSensorAvailable(ch.jeda.SensorType)
-     * @see #isSensorEnabled(ch.jeda.SensorType)
+     * @see #disableSensor(ch.jeda.event.SensorType)
+     * @see #isSensorAvailable(ch.jeda.event.SensorType)
+     * @see #isSensorEnabled(ch.jeda.event.SensorType)
      * @since 1
      */
     public static void enableSensor(final SensorType sensorType) {
@@ -131,16 +131,16 @@ public class Jeda {
     /**
      * Checks if a sensor of the specified type is available on the device.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> No sensors are supported.
+     * <img src="../../windows.png"> <img src="../../linux.png"> No sensors are supported.
      * <p>
-     * <img src="../../../android.png"> All available sensor types are supported.
+     * <img src="../../android.png"> All available sensor types are supported.
      *
      * @param sensorType the type of sensor to check for
      * @return <tt>true</tt> if the specified sensor type is available on the device, otherwise <tt>false</tt>
      *
-     * @see #disableSensor(ch.jeda.SensorType)
-     * @see #enableSensor(ch.jeda.SensorType)
-     * @see #isSensorEnabled(ch.jeda.SensorType)
+     * @see #disableSensor(ch.jeda.event.SensorType)
+     * @see #enableSensor(ch.jeda.event.SensorType)
+     * @see #isSensorEnabled(ch.jeda.event.SensorType)
      * @since 1
      */
     public static boolean isSensorAvailable(final SensorType sensorType) {
@@ -150,17 +150,17 @@ public class Jeda {
     /**
      * Checks if the sensor of the specified type is currently enabled on the device.
      * <p>
-     * <img src="../../../windows.png"> <img src="../../../linux.png"> No sensors are supported.
+     * <img src="../../windows.png"> <img src="../../linux.png"> No sensors are supported.
      * <p>
-     * <img src="../../../android.png"> All available sensor types are supported.
+     * <img src="../../android.png"> All available sensor types are supported.
      *
      * @param sensorType the type of sensor to check for
      * @return <tt>true</tt> if the sensor of the specified type is currently enabled on the device, otherwise
      * <tt>false</tt>
      *
-     * @see #disableSensor(ch.jeda.SensorType)
-     * @see #enableSensor(ch.jeda.SensorType)
-     * @see #isSensorAvailable(ch.jeda.SensorType)
+     * @see #disableSensor(ch.jeda.event.SensorType)
+     * @see #enableSensor(ch.jeda.event.SensorType)
+     * @see #isSensorAvailable(ch.jeda.event.SensorType)
      * @since 1
      */
     public static boolean isSensorEnabled(final SensorType sensorType) {

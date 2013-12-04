@@ -22,7 +22,7 @@ package ch.jeda.event;
  * with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
  *
  * To reveice sensor events, the corresponding sensor must be enabled by calling
- * {@link ch.jeda.Device#enableSensor(ch.jeda.SensorType)}.
+ * {@link ch.jeda.Jeda#enableSensor(ch.jeda.event.SensorType)}.
  * <p>
  * <img src="../../../windows.png"> <img src="../../../linux.png"> Sensors are not supported.
  * <p>
