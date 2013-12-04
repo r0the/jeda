@@ -139,6 +139,12 @@ class AndroidCanvasImp implements CanvasImp {
         return this.bitmap.getWidth();
     }
 
+    public void setAntiAliasing(final boolean antiAliasing) {
+        this.fillPaint.setAntiAlias(antiAliasing);
+        this.strokePaint.setAntiAlias(antiAliasing);
+        this.textPaint.setAntiAlias(antiAliasing);
+    }
+
     public void setColor(final Color color) {
         assert color != null;
 

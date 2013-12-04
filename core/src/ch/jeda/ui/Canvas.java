@@ -47,6 +47,7 @@ public class Canvas {
 
     private static final int DEFAULT_FONT_SIZE = 16;
     private static final Color DEFAULT_FOREGROUND = Color.BLACK;
+    private boolean antiAliasing;
     private Color color;
     private int fontSize;
     private CanvasImp imp;
@@ -74,6 +75,7 @@ public class Canvas {
             throw new IllegalArgumentException("height");
         }
 
+        this.antiAliasing = false;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
         this.transformation = new Transformation();
@@ -530,6 +532,33 @@ public class Canvas {
     }
 
     /**
+     * Checks is anti-aliasing is enabled.
+     *
+     * @return <tt>true</tt> if anti-aliasing is enabled, otherwise <tt>false</tt>
+     *
+     * @see #setAntiAliasing(boolean)
+     * @since 1
+     */
+    public boolean isAntiAliasing() {
+        return this.antiAliasing;
+    }
+
+    /**
+     * Enables or disables the anti-aliasing filter. The borders of drawn text or shapes may not appear "smooth". This
+     * effect is called <a href="http://en.wikipedia.org/wiki/Jaggies">Jaggies</a>. To counter this effect, an <a
+     * href=http://en.wikipedia.org/wiki/Anti-aliasing_filter">anti-aliasing filter</a> is used when rendering the text
+     * or shapes.
+     *
+     * @param antiAliasing <tt>true</tt> to enable the anti-aliasing filter, <tt>false</tt> to disable it.
+     */
+    public void setAntiAliasing(final boolean antiAliasing) {
+        if (this.antiAliasing != antiAliasing) {
+            this.antiAliasing = antiAliasing;
+            this.imp.setAntiAliasing(this.antiAliasing);
+        }
+    }
+
+    /**
      * Sets the drawing color. The value set by this method is applied to all subsequent <tt>draw...</tt> and
      * <tt>fill...</tt> operations.
      *
@@ -586,7 +615,7 @@ public class Canvas {
         }
 
         this.lineWidth = lineWidth;
-        this.imp.setLineWidth(lineWidth);
+        this.imp.setLineWidth(this.lineWidth);
     }
 
     /**
@@ -687,6 +716,7 @@ public class Canvas {
 
     final void setImp(final CanvasImp imp) {
         this.imp = imp;
+        this.imp.setAntiAliasing(this.antiAliasing);
         this.imp.setColor(this.color);
         this.imp.setFontSize(this.fontSize);
         this.imp.setLineWidth(this.lineWidth);

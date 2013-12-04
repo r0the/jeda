@@ -54,6 +54,8 @@ public interface CanvasImp {
 
     int getWidth();
 
+    void setAntiAliasing(final boolean antiAliasing);
+
     void setColor(Color color);
 
     void setFontSize(int fontSize);

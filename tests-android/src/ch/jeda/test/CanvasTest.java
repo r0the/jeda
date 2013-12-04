@@ -23,7 +23,7 @@ public class CanvasTest extends Program implements KeyDownListener,
     }
 
     @Override
-    public void onPointerDown(PointerEvent pe) {
+    public void onPointerDown(PointerEvent event) {
         nextStep();
     }
 
@@ -90,6 +90,9 @@ public class CanvasTest extends Program implements KeyDownListener,
                 fillCircleTest();
                 break;
             case 13:
+                antiAliasingTest();
+                break;
+            case 14:
                 window.close();
                 break;
         }
@@ -221,5 +224,16 @@ public class CanvasTest extends Program implements KeyDownListener,
         window.setFontSize(20);
         window.drawText(5, 65, "font size 20");
         msg("drawText() with different font sizes");
+    }
+
+    private void antiAliasingTest() {
+        window.setFontSize(50);
+        window.fillCircle(100, 100, 50);
+        window.drawText(170, 100, "Here be 'Jaggies'", Alignment.LEFT);
+
+        window.setAntiAliasing(true);
+        window.fillCircle(100, 400, 50);
+        window.drawText(170, 400, "Anti-Aliasing Enabled", Alignment.LEFT);
+        msg("Effect of setAntiAliasing()");
     }
 }

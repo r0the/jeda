@@ -26,6 +26,7 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Polygon;
+import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
@@ -37,6 +38,8 @@ import java.util.Map;
 
 class JavaCanvasImp implements CanvasImp {
 
+    private static final Map<?, ?> ALIASING_RENDERING_HINTS = initAliasingRenderingHints();
+    private static final Map<?, ?> ANTI_ALIASING_RENDERING_HINTS = initAntiAliasingRenderingHints();
     private static final AffineTransform IDENTITY = new AffineTransform();
     private final AffineTransform affineTransform;
     private final float[] matrix;
@@ -175,6 +178,16 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
+    public void setAntiAliasing(final boolean antiAliasing) {
+        if (antiAliasing) {
+            this.graphics.setRenderingHints(ANTI_ALIASING_RENDERING_HINTS);
+        }
+        else {
+            this.graphics.setRenderingHints(ALIASING_RENDERING_HINTS);
+        }
+    }
+
+    @Override
     public void setColor(final Color color) {
         assert color != null;
 
@@ -209,8 +222,8 @@ class JavaCanvasImp implements CanvasImp {
 
         transformation.copyToArray(this.matrix);
         this.affineTransform.setTransform(
-                this.matrix[0], this.matrix[3], this.matrix[1],
-                this.matrix[4], this.matrix[2], this.matrix[5]);
+            this.matrix[0], this.matrix[3], this.matrix[1],
+            this.matrix[4], this.matrix[2], this.matrix[5]);
         this.graphics.setTransform(this.affineTransform);
     }
 
@@ -283,8 +296,8 @@ class JavaCanvasImp implements CanvasImp {
 
     static BufferedImage createBufferedImage(final int width, final int height) {
         return GraphicsEnvironment.getLocalGraphicsEnvironment().
-                getDefaultScreenDevice().getDefaultConfiguration().
-                createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+            getDefaultScreenDevice().getDefaultConfiguration().
+            createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
     private static Polygon createPolygon(final float[] points) {
@@ -293,6 +306,20 @@ class JavaCanvasImp implements CanvasImp {
             result.addPoint((int) points[i], (int) points[i + 1]);
         }
 
+        return result;
+    }
+
+    private static Map<?, ?> initAliasingRenderingHints() {
+        final Map<RenderingHints.Key, Object> result = new HashMap<RenderingHints.Key, Object>();
+        result.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        result.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+        return result;
+    }
+
+    private static Map<?, ?> initAntiAliasingRenderingHints() {
+        final Map<RenderingHints.Key, Object> result = new HashMap<RenderingHints.Key, Object>();
+        result.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        result.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         return result;
     }
 }
