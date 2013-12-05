@@ -16,7 +16,7 @@
  */
 package ch.jeda.ui;
 
-public class Button extends AbstractButton implements Drawable {
+public class Button extends AbstractButton {
 
     private static Color BG_NORMAL_COLOR = new Color(230, 230, 230);
     private static Color BG_PRESSED_COLOR = new Color(130, 130, 130);
@@ -25,14 +25,13 @@ public class Button extends AbstractButton implements Drawable {
     private float height;
     private String text;
     private float width;
-    private float x;
-    private float y;
 
     public Button(final Window window, final String action) {
         super(window, action);
-        window.addDrawable(this);
+        window.add(this);
         this.width = 100;
         this.height = 50;
+        this.setDrawOrder(Integer.MAX_VALUE);
     }
 
     public Button(final Window window, final float x, final float y, final String text) {
@@ -41,10 +40,16 @@ public class Button extends AbstractButton implements Drawable {
 
     public Button(final Window window, final float x, final float y, final String text, final Alignment alignment) {
         this(window, text);
-        window.addDrawable(this);
-        this.x = alignment.alignX(x, this.width);
-        this.y = alignment.alignY(y, this.height);
+        window.add(this);
+        this.setPosition(alignment.alignX(x, this.width), alignment.alignY(y, this.height));
         this.text = text;
+    }
+
+    @Override
+    protected boolean contains(final float x, final float y) {
+        return this.getX() <= x && x < this.getX() + this.width &&
+               this.getY() <= y && y < this.getY() + this.height;
+
     }
 
     public String getText() {
@@ -64,31 +69,14 @@ public class Button extends AbstractButton implements Drawable {
             canvas.setColor(BG_NORMAL_COLOR);
         }
 
-        canvas.fillRectangle(this.x, this.y, this.width, this.height);
+        canvas.fillRectangle(0f, 0f, this.width, this.height);
         canvas.setColor(BORDER_COLOR);
-        canvas.drawRectangle(this.x, this.y, this.width, this.height);
+        canvas.drawRectangle(0f, 0f, this.width, this.height);
         canvas.setColor(TEXT_COLOR);
-        canvas.drawText(this.x + this.width / 2f, this.y + this.height / 2f, text, Alignment.CENTER);
-    }
-
-    @Override
-    public int drawOrder() {
-        return Integer.MAX_VALUE;
-    }
-
-    public void setPosition(final float x, final float y) {
-        this.x = x;
-        this.y = y;
+        canvas.drawText(this.width / 2f, this.height / 2f, text, Alignment.CENTER);
     }
 
     public void setText(final String text) {
         this.text = text;
-    }
-
-    @Override
-    protected boolean contains(final float x, final float y) {
-        return this.x <= x && x < this.x + this.width &&
-               this.y <= y && y < this.y + this.height;
-
     }
 }

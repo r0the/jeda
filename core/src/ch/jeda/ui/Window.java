@@ -36,8 +36,8 @@ import java.util.EnumSet;
 public class Window extends Canvas {
 
     private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
-    private final Drawables drawables;
     private final EventDispatcher eventDispatcher;
+    private final GraphicsItems graphicsItems;
     private WindowImp imp;
     private String title;
 
@@ -100,11 +100,16 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window(final int width, final int height, final WindowFeature... features) {
-        this.drawables = new Drawables();
+        this.graphicsItems = new GraphicsItems();
         this.eventDispatcher = new EventDispatcher();
         this.title = Jeda.getProgramName();
         this.resetImp(width, height, toSet(features));
         Jeda.addTickListener(new EventLoop(this));
+    }
+
+    public final void add(final GraphicsItem graphicsItem) {
+        this.graphicsItems.add(graphicsItem);
+        this.eventDispatcher.addListener(graphicsItem);
     }
 
     /**
@@ -115,7 +120,7 @@ public class Window extends Canvas {
      *
      * @since 1
      */
-    public void addEventListener(final Object listener) {
+    public final void addEventListener(final Object listener) {
         this.eventDispatcher.addListener(listener);
     }
 
@@ -124,7 +129,7 @@ public class Window extends Canvas {
      *
      * @since 1
      */
-    public void close() {
+    public final void close() {
         this.imp.close();
     }
 
@@ -136,7 +141,7 @@ public class Window extends Canvas {
      * @see #setTitle(java.lang.String)
      * @since 1
      */
-    public String getTitle() {
+    public final String getTitle() {
         return this.title;
     }
 
@@ -150,7 +155,7 @@ public class Window extends Canvas {
      * @see #setFeature(WindowFeature, boolean)
      * @since 1
      */
-    public boolean hasFeature(final WindowFeature feature) {
+    public final boolean hasFeature(final WindowFeature feature) {
         if (feature == null) {
             throw new NullPointerException("feature");
         }
@@ -158,9 +163,9 @@ public class Window extends Canvas {
         return this.imp.getFeatures().contains(feature);
     }
 
-    void removeDrawable(final Drawable drawable) {
-        this.drawables.removeDrawable(drawable);
-        this.eventDispatcher.removeListener(drawable);
+    public final void remove(final GraphicsItem item) {
+        this.eventDispatcher.removeListener(item);
+        this.graphicsItems.remove(item);
     }
 
     /**
@@ -169,7 +174,7 @@ public class Window extends Canvas {
      * @param listener the event listener
      * @since 1
      */
-    public void removeEventListener(final Object listener) {
+    public final void removeEventListener(final Object listener) {
         this.eventDispatcher.removeListener(listener);
     }
 
@@ -184,7 +189,7 @@ public class Window extends Canvas {
      * @see #hasFeature(WindowFeature)
      * @since 1
      */
-    public void setFeature(final WindowFeature feature, final boolean enabled) {
+    public final void setFeature(final WindowFeature feature, final boolean enabled) {
         if (feature == null) {
             throw new NullPointerException("feature");
         }
@@ -216,7 +221,7 @@ public class Window extends Canvas {
      * @see MouseCursor
      * @since 1
      */
-    public void setMouseCursor(final MouseCursor mouseCursor) {
+    public final void setMouseCursor(final MouseCursor mouseCursor) {
         if (mouseCursor == null) {
             throw new NullPointerException("mouseCursor");
         }
@@ -233,18 +238,13 @@ public class Window extends Canvas {
      * @see #getTitle()
      * @since 1
      */
-    public void setTitle(final String title) {
+    public final void setTitle(final String title) {
         if (title == null) {
             throw new NullPointerException("title");
         }
 
         this.title = title;
         this.imp.setTitle(title);
-    }
-
-    void addDrawable(final Drawable drawable) {
-        this.drawables.addDrawable(drawable);
-        this.eventDispatcher.addListener(drawable);
     }
 
     void sendAction(final Object source, final String name) {
@@ -255,7 +255,8 @@ public class Window extends Canvas {
         if (this.imp.isValid() && this.imp.isActive()) {
             this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
             this.eventDispatcher.dispatchTick(event);
-            this.drawables.draw(this);
+            this.graphicsItems.processPending();
+            this.graphicsItems.draw(this);
             this.imp.update();
         }
     }

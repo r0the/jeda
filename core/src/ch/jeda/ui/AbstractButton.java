@@ -24,7 +24,7 @@ import ch.jeda.event.PointerEvent;
 import ch.jeda.event.PointerListener;
 import java.util.EnumSet;
 
-public abstract class AbstractButton implements KeyDownListener, KeyUpListener, PointerListener {
+public abstract class AbstractButton extends GraphicsItem implements KeyDownListener, KeyUpListener, PointerListener {
 
     private final EnumSet<Key> keys;
     private final EnumSet<Key> pressedKeys;
@@ -97,6 +97,4 @@ public abstract class AbstractButton implements KeyDownListener, KeyUpListener, 
     public final void setAction(final String action) {
         this.action = action;
     }
-
-    protected abstract boolean contains(float x, float y);
 }
