@@ -54,7 +54,6 @@ class JedaEngine implements PlatformCallback, Runnable {
     private final FrequencyMeter frequencyMeter;
     private final Object pauseLock;
     private final Platform platform;
-    private final Plugins plugins;
     private final ProgramClassWrapper[] programClasses;
     private final Properties properties;
     private final List<TickListener> tickListeners;
@@ -65,7 +64,7 @@ class JedaEngine implements PlatformCallback, Runnable {
     static JedaEngine create() {
         final JedaEngine result = new JedaEngine();
         final Thread eventThread = new Thread(result);
-        eventThread.setName(Helper.getMessage("jeda.engine.event-thread-name"));
+        eventThread.setName(Log.getMessage("jeda.engine.event-thread-name"));
         eventThread.setDaemon(true);
         eventThread.start();
         return result;
@@ -75,7 +74,6 @@ class JedaEngine implements PlatformCallback, Runnable {
         this.currentProgramLock = new Object();
         this.frequencyMeter = new FrequencyMeter();
         this.pauseLock = new Object();
-        this.plugins = new Plugins();
         this.tickListeners = new CopyOnWriteArrayList<TickListener>();
         this.timer = new Timer(DEFAULT_TICK_FREQUENCY);
         // Load properties
@@ -94,9 +92,6 @@ class JedaEngine implements PlatformCallback, Runnable {
                 if (pcw != null) {
                     programClassList.add(pcw);
                 }
-                else {
-                    this.plugins.tryAddPlugin(classes[i]);
-                }
             }
         }
         catch (final Exception ex) {
@@ -104,7 +99,6 @@ class JedaEngine implements PlatformCallback, Runnable {
         }
 
         this.programClasses = programClassList.toArray(new ProgramClassWrapper[programClassList.size()]);
-        this.plugins.initialize();
         this.paused = false;
     }
 
@@ -232,16 +226,16 @@ class JedaEngine implements PlatformCallback, Runnable {
         }
     }
 
-    float getTickFrequency() {
-        return this.timer.getTargetFrequency();
-    }
-
     ProgramClassWrapper[] getProgramClasses() {
         return this.programClasses;
     }
 
     Properties getProperties() {
         return this.properties;
+    }
+
+    float getTickFrequency() {
+        return this.timer.getTargetFrequency();
     }
 
     boolean isSensorAvailable(final SensorType sensorType) {
@@ -301,7 +295,7 @@ class JedaEngine implements PlatformCallback, Runnable {
             else {
                 this.currentProgram = new JedaProgramExecutor(this, programClassName);
                 final Thread programThread = new Thread(this.currentProgram);
-                programThread.setName(Helper.getMessage("jeda.engine.program-thread-name"));
+                programThread.setName(Log.getMessage("jeda.engine.program-thread-name"));
                 programThread.start();
             }
         }
@@ -391,12 +385,12 @@ class JedaEngine implements PlatformCallback, Runnable {
     }
 
     private static void initErr(final String messageKey, Object... args) {
-        System.err.format(Helper.getMessage(messageKey), args);
+        System.err.format(Log.getMessage(messageKey), args);
         System.err.println();
     }
 
     private static void initErr(final Throwable throwable, final String messageKey, Object... args) {
-        System.err.format(Helper.getMessage(messageKey), args);
+        System.err.format(Log.getMessage(messageKey), args);
         System.err.println();
         if (throwable != null) {
             System.err.println("  " + throwable);

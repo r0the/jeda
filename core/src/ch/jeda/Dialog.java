@@ -36,7 +36,7 @@ public class Dialog<T> {
     public static double readDouble(final Object... message) {
         final Dialog<Double> dialog = new Dialog<Double>(Double.class);
         dialog.setMessage(message);
-        dialog.setTitle(Helper.getMessage("jeda.gui.input-title"));
+        dialog.setTitle(Log.getMessage("jeda.gui.input-title"));
         dialog.show();
         if (dialog.getResult() == null) {
             return 0d;
@@ -60,7 +60,7 @@ public class Dialog<T> {
     public static int readInt(final Object... message) {
         final Dialog<Integer> dialog = new Dialog<Integer>(Integer.class);
         dialog.setMessage(message);
-        dialog.setTitle(Helper.getMessage("jeda.gui.input-title"));
+        dialog.setTitle(Log.getMessage("jeda.gui.input-title"));
         dialog.show();
         if (dialog.getResult() == null) {
             return 0;
@@ -84,7 +84,7 @@ public class Dialog<T> {
     public static String readString(final Object... message) {
         final Dialog<String> dialog = new Dialog<String>(String.class);
         dialog.setMessage(message);
-        dialog.setTitle(Helper.getMessage("jeda.gui.input-title"));
+        dialog.setTitle(Log.getMessage("jeda.gui.input-title"));
         dialog.show();
         if (dialog.getResult() == null) {
             return "";

@@ -31,7 +31,7 @@ class FrequencyMeter {
         this.startTime = System.currentTimeMillis();
     }
 
-    public void count() {
+    void count() {
         final long now = System.currentTimeMillis();
         this.durations[this.index] = now - this.startTime;
         this.startTime = now;

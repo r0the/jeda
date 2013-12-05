@@ -32,12 +32,16 @@ abstract class ProgramClassWrapper {
         else if (Program.class.isAssignableFrom(candidate)) {
             return tryCreateInherited((Class<Program>) candidate, properties);
         }
-        else if (Helper.hasInterface(candidate, JedaProgram.class)) {
+        else if (hasInterface(candidate, JedaProgram.class)) {
             return tryCreateJedaProgram(candidate, properties);
         }
         else {
             return null;
         }
+    }
+
+    ProgramClassWrapper(final String name) {
+        this.name = name;
     }
 
     abstract Runnable createInstance() throws Throwable;
@@ -48,7 +52,18 @@ abstract class ProgramClassWrapper {
 
     abstract String getProgramClassName();
 
-    static ProgramClassWrapper tryCreateJedaProgram(final Class<?> candidate, final Properties properties) {
+    private static boolean hasInterface(final Class<?> candidateClass, final Class<?> targetInterface) {
+        final Class[] interfaces = candidateClass.getInterfaces();
+        for (int i = 0; i < interfaces.length; ++i) {
+            if (interfaces[i].equals(targetInterface)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static ProgramClassWrapper tryCreateJedaProgram(final Class<?> candidate, final Properties properties) {
         try {
             final Constructor<JedaProgram> constructor = (Constructor<JedaProgram>) candidate.getDeclaredConstructor();
             constructor.setAccessible(true);
@@ -84,10 +99,6 @@ abstract class ProgramClassWrapper {
         else {
             return name;
         }
-    }
-
-    ProgramClassWrapper(final String name) {
-        this.name = name;
     }
 
     private static final class JedaProgramClassWrapper extends ProgramClassWrapper {

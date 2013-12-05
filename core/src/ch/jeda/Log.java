@@ -16,6 +16,9 @@
  */
 package ch.jeda;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /**
  * <b>Internal</b>. Do not use this class.
  */
@@ -32,14 +35,14 @@ public class Log {
      * <b>Internal</b>. Do not use this method.
      */
     public static void err(final String messageKey, Object... args) {
-        Jeda.log(LogLevel.ERROR, String.format(Helper.getMessage(messageKey), args) + "\n");
+        Jeda.log(LogLevel.ERROR, String.format(Log.getMessage(messageKey), args) + "\n");
     }
 
     /**
      * <b>Internal</b>. Do not use this method.
      */
     public static void err(final Throwable throwable, final String messageKey, Object... args) {
-        Jeda.log(LogLevel.ERROR, String.format(Helper.getMessage(messageKey), args) + "\n");
+        Jeda.log(LogLevel.ERROR, String.format(Log.getMessage(messageKey), args) + "\n");
         if (throwable != null) {
             Jeda.log(LogLevel.ERROR, "  " + throwable + "\n");
             final StackTraceElement[] stackTrace = throwable.getStackTrace();
@@ -47,6 +50,20 @@ public class Log {
                 Jeda.log(LogLevel.ERROR, "   " + stackTrace[i].toString() + "\n");
             }
         }
+    }
+
+    static String getMessage(final String key) {
+        try {
+            final ResourceBundle rb = ResourceBundle.getBundle("res/jeda/translations", Locale.getDefault());
+            if (rb.containsKey(key)) {
+                return rb.getString(key);
+            }
+        }
+        catch (final Exception ex) {
+            // ignore
+        }
+
+        return "<" + key + ">";
     }
 
     private Log() {

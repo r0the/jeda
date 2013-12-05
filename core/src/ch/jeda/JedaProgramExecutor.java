@@ -117,7 +117,7 @@ class JedaProgramExecutor implements Runnable {
             }
 
             request.sortItemsByName();
-            request.setTitle(Helper.getMessage("jeda.gui.select-program.title"));
+            request.setTitle(Log.getMessage("jeda.gui.select-program.title"));
             this.engine.showSelectionRequest(request);
             request.waitForResult();
             if (request.isCancelled()) {
