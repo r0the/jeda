@@ -21,16 +21,16 @@ package ch.jeda.platform;
  */
 public abstract class InputType<T> {
 
-    public static InputType<Double> forDouble() {
-        return new DoubleInputType();
-    }
-
-    public static InputType<Integer> forInt() {
-        return new IntInputType();
-    }
-
-    public static InputType<String> forString() {
-        return new StringInputType();
+    public static <T> InputType<T> forClass(final Class<T> clazz) {
+        if (Integer.class.equals(clazz)) {
+            return (InputType<T>) new IntInputType();
+        }
+        else if (Double.class.equals(clazz)) {
+            return (InputType<T>) new DoubleInputType();
+        }
+        else {
+            return (InputType<T>) new StringInputType();
+        }
     }
 
     private InputType() {

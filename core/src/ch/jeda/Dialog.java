@@ -17,9 +17,10 @@
 package ch.jeda;
 
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.InputType;
 
-public class Dialog {
+public class Dialog<T> {
+
+    private final InputRequest<T> inputRequest;
 
     /**
      * Prompts the user to enter a <tt>double</tt> value. The specified message is presented to the user along with a
@@ -33,12 +34,16 @@ public class Dialog {
      * @since 1
      */
     public static double readDouble(final Object... message) {
-        final InputRequest<Double> request = new InputRequest<Double>(InputType.forDouble(), 0d);
-        request.setMessage(Util.toString(message));
-        request.setTitle(Helper.getMessage("jeda.gui.input-title"));
-        Jeda.showInputRequest(request);
-        request.waitForResult();
-        return request.getResult();
+        final Dialog<Double> dialog = new Dialog<Double>(Double.class);
+        dialog.setMessage(message);
+        dialog.setTitle(Helper.getMessage("jeda.gui.input-title"));
+        dialog.show();
+        if (dialog.getResult() == null) {
+            return 0d;
+        }
+        else {
+            return dialog.getResult();
+        }
     }
 
     /**
@@ -53,12 +58,16 @@ public class Dialog {
      * @since 1
      */
     public static int readInt(final Object... message) {
-        final InputRequest<Integer> request = new InputRequest<Integer>(InputType.forInt(), 0);
-        request.setMessage(Util.toString(message));
-        request.setTitle(Helper.getMessage("jeda.gui.input-title"));
-        Jeda.showInputRequest(request);
-        request.waitForResult();
-        return request.getResult();
+        final Dialog<Integer> dialog = new Dialog<Integer>(Integer.class);
+        dialog.setMessage(message);
+        dialog.setTitle(Helper.getMessage("jeda.gui.input-title"));
+        dialog.show();
+        if (dialog.getResult() == null) {
+            return 0;
+        }
+        else {
+            return dialog.getResult();
+        }
     }
 
     /**
@@ -73,14 +82,36 @@ public class Dialog {
      * @since 1
      */
     public static String readString(final Object... message) {
-        final InputRequest<String> request = new InputRequest<String>(InputType.forString(), "");
-        request.setMessage(Util.toString(message));
-        request.setTitle(Helper.getMessage("jeda.gui.input-title"));
-        Jeda.showInputRequest(request);
-        request.waitForResult();
-        return request.getResult();
+        final Dialog<String> dialog = new Dialog<String>(String.class);
+        dialog.setMessage(message);
+        dialog.setTitle(Helper.getMessage("jeda.gui.input-title"));
+        dialog.show();
+        if (dialog.getResult() == null) {
+            return "";
+        }
+        else {
+            return dialog.getResult();
+        }
     }
 
-    private Dialog() {
+    public Dialog(final Class<T> clazz) {
+        this.inputRequest = new InputRequest(clazz);
+    }
+
+    public void setMessage(final Object... message) {
+        this.inputRequest.setMessage(Util.toString(message));
+    }
+
+    public void setTitle(final Object... title) {
+        this.inputRequest.setTitle(Util.toString(title));
+    }
+
+    public void show() {
+        Jeda.showInputRequest(this.inputRequest);
+        this.inputRequest.waitForResult();
+    }
+
+    public T getResult() {
+        return this.inputRequest.getResult();
     }
 }

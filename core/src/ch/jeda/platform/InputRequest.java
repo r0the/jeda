@@ -27,12 +27,9 @@ public class InputRequest<T> extends Request {
     private boolean done;
     private T result;
 
-    public InputRequest(final InputType<T> inputType, final T defaultValue) {
-        assert inputType != null;
-
-        this.inputType = inputType;
+    public InputRequest(final Class<T> clazz) {
+        this.inputType = InputType.forClass(clazz);
         this.lock = new Object();
-        this.result = defaultValue;
     }
 
     public void cancelRequest() {
