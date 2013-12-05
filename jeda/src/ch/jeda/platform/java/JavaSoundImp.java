@@ -35,8 +35,7 @@ class JavaSoundImp implements SoundImp {
     @Override
     public void play() {
         try {
-            this.audioManager.playSound(javax.sound.sampled.AudioSystem.getAudioInputStream(
-                new ByteArrayInputStream(this.data)));
+            this.audioManager.playSound(new AudioStreamAdapter(new ByteArrayInputStream(this.data)));
         }
         catch (final UnsupportedAudioFileException ex) {
             Log.err(ex, "jeda.audio.error.unsupported-format");

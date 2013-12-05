@@ -31,6 +31,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
@@ -52,10 +53,10 @@ class AudioManager implements TickListener {
         this.pendingInsertions = new ArrayList<AudioPlayback>();
         this.playing = new ArrayList<AudioPlayback>();
         this.supportedFormats = new ArrayList<AudioFormat>();
-        Line.Info[] lineInfos = this.mixer.getSourceLineInfo();
-        for (Line.Info lineInfo : lineInfos) {
-            if (lineInfo instanceof SourceDataLine.Info) {
-                this.supportedFormats.addAll(Arrays.asList(((DataLine.Info) lineInfo).getFormats()));
+        final Line.Info[] lineInfos = this.mixer.getSourceLineInfo();
+        for (int i = 0; i < lineInfos.length; ++i) {
+            if (lineInfos[i] instanceof SourceDataLine.Info) {
+                this.supportedFormats.addAll(Arrays.asList(((SourceDataLine.Info) lineInfos[i]).getFormats()));
             }
         }
     }
@@ -123,12 +124,12 @@ class AudioManager implements TickListener {
         return false;
     }
 
-    AudioPlayback playSound(final AudioInputStream audioStream) {
-        if (audioStream == null) {
-            throw new NullPointerException("audioStream");
+    AudioPlayback playSound(final AudioDataSource source) {
+        if (source == null) {
+            throw new NullPointerException("audioData");
         }
 
-        final AudioFormat fileFormat = audioStream.getFormat();
+        final AudioFormat fileFormat = source.getFormat();
         if (!isSupported(fileFormat)) {
             Log.err("jeda.audio.error.unsupported-format", fileFormat);
             return null;
@@ -151,14 +152,14 @@ class AudioManager implements TickListener {
         }
 
         try {
-            line.open(audioStream.getFormat());
+            line.open(source.getFormat());
         }
         catch (final LineUnavailableException ex) {
             Log.err(ex, "jeda.audio.error.line-unavailable");
             return null;
         }
 
-        final AudioPlayback playback = new AudioPlayback(audioStream, line);
+        final AudioPlayback playback = new AudioPlayback(source, line);
         synchronized (this.pendingInsertions) {
             this.pendingInsertions.add(playback);
         }
@@ -167,9 +168,9 @@ class AudioManager implements TickListener {
     }
 
     private static Mixer findMixer() {
-        final Mixer.Info[] mixerInfos = javax.sound.sampled.AudioSystem.getMixerInfo();
-        for (final Mixer.Info mixerInfo : mixerInfos) {
-            final Mixer result = javax.sound.sampled.AudioSystem.getMixer(mixerInfo);
+        final Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
+        for (int i = 0; i < mixerInfos.length; ++i) {
+            final Mixer result = AudioSystem.getMixer(mixerInfos[i]);
             if (result.getSourceLineInfo().length > 0) {
                 return result;
             }

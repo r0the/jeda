@@ -18,7 +18,6 @@ package ch.jeda.platform.java;
 
 import ch.jeda.Log;
 import java.io.IOException;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.BooleanControl;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
@@ -26,15 +25,15 @@ import javax.sound.sampled.SourceDataLine;
 class AudioPlayback {
 
     private final FloatControl balanceControl;
-    private final AudioInputStream data;
     private final FloatControl gainControl;
     private final SourceDataLine line;
     private final Object lineLock;
     private final BooleanControl muteControl;
     private final FloatControl panControl;
+    private final AudioDataSource source;
 
-    AudioPlayback(final AudioInputStream data, final SourceDataLine line) {
-        this.data = data;
+    AudioPlayback(final AudioDataSource source, final SourceDataLine line) {
+        this.source = source;
         this.line = line;
         this.lineLock = new Object();
         if (line.isControlSupported(BooleanControl.Type.MUTE)) {
@@ -79,7 +78,7 @@ class AudioPlayback {
 
             try {
                 // Data is available -> not finished
-                if (this.data.available() > 0) {
+                if (this.source.available() > 0) {
                     return false;
                 }
             }
@@ -91,12 +90,40 @@ class AudioPlayback {
         }
     }
 
+    public void setBalance(final float balance) {
+        if (balance < -1f || balance > 1f) {
+            throw new IllegalArgumentException("Valid range of balance is -1 to 1.");
+        }
+
+        if (this.balanceControl != null) {
+            this.balanceControl.setValue(balance);
+        }
+    }
+
+    public void setDefaultGain() {
+        if (this.gainControl != null) {
+            this.gainControl.setValue(0f);
+        }
+    }
+
+    public void setGain(final float gain) {
+        if (gain < 0f || gain > 1f) {
+            throw new IllegalArgumentException("Valid range of gain is 0 to 1.");
+        }
+
+        if (this.gainControl != null) {
+            float max = this.gainControl.getMaximum();
+            float min = this.gainControl.getMinimum();
+            this.gainControl.setValue(min + (max - min) * gain);
+        }
+    }
+
     public void stop() {
         synchronized (this.lineLock) {
             this.line.flush();
             this.line.close();
             try {
-                this.data.close();
+                this.source.close();
             }
             catch (final IOException ex) {
                 Log.err(ex, "jeda.audio.error.internal-close");
@@ -127,7 +154,7 @@ class AudioPlayback {
 
         try {
             final byte[] buffer = new byte[1024];
-            final int read = this.data.read(buffer, 0, Math.min(line.available(), buffer.length));
+            final int read = this.source.read(buffer, Math.min(line.available(), buffer.length));
             if (read > 0) {
                 synchronized (this.lineLock) {
                     this.line.write(buffer, 0, read);
