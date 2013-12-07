@@ -16,6 +16,11 @@
             <zipfileset src="${jeda.core.dir}/dist/core.jar"/>
         </jar>
 
+        <!-- Add vorbis sound library to jar -->
+        <jar update="true" jarfile="${dist.jar}">
+            <zipfileset src="libs/vorbis-support-1.0.jar"/>
+        </jar>
+
         <!-- Add information to library manifest -->
         <jar update="true" destfile="${dist.jar}">
             <manifest>
