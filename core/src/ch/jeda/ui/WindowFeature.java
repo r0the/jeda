@@ -20,10 +20,8 @@ public enum WindowFeature {
 
     /**
      * Enables double buffering in a window. A double-buffered window performs drawing operations in an off-screen
-     * buffer. The {@link Window#update()} method must be called to display the contents of this buffer. This prevents
-     * flickering in animations.
+     * buffer. This prevents flickering in animations.
      *
-     * @see Window#update()
      * @since 1
      */
     DOUBLE_BUFFERED,
