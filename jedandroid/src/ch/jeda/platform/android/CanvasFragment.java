@@ -206,7 +206,9 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
         result.put(android.view.KeyEvent.KEYCODE_ALT_RIGHT, Key.ALT_RIGHT);
         result.put(android.view.KeyEvent.KEYCODE_APOSTROPHE, Key.APOSTROPHE);
         result.put(android.view.KeyEvent.KEYCODE_B, Key.B);
+        result.put(android.view.KeyEvent.KEYCODE_BACKSLASH, Key.BACKSLASH);
         result.put(android.view.KeyEvent.KEYCODE_COMMA, Key.COMMA);
+        // Android DEL key has the back space functionality
         result.put(android.view.KeyEvent.KEYCODE_DEL, Key.BACKSPACE);
         result.put(android.view.KeyEvent.KEYCODE_C, Key.C);
         result.put(android.view.KeyEvent.KEYCODE_D, Key.D);
