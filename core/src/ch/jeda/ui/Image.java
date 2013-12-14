@@ -59,18 +59,27 @@ public final class Image {
         this(loadImp(filePath));
     }
 
+    public Image createRotatedImage(final double angle) {
+        return new Image(this.imp.createRotatedImage(angle));
+    }
+
     /**
      * Creates a scaled copy of the image. Width and height are both scaled proportionally.
      *
      * @param factor the scaling factor
      * @return scaled image
+     * @throws IllegalArgumentException if <tt>factor</tt> is not positive
      *
      * @see #createScaledImage(int, int)
      * @since 1
      */
     public Image createScaledImage(float factor) {
-        final int width = (int) (this.getWidth() * factor);
-        final int height = (int) (this.getHeight() * factor);
+        if (factor <= 0f) {
+            throw new IllegalArgumentException("factor");
+        }
+
+        final int width = Math.max((int) (this.getWidth() * factor), 1);
+        final int height = Math.max((int) (this.getHeight() * factor), 1);
         return this.createScaledImage(width, height);
     }
 
@@ -81,12 +90,23 @@ public final class Image {
      * @param width the width of the new image
      * @param height the height of the new image
      * @return scaled image
+     * @throws IllegalArgumentException if <tt>x</tt> or <tt>y</tt> are smaller than 0
      * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are smaller than 1
+     * @throws IllegalArgumentException if <tt>x + width</tt> is greater or equal to the image width
+     * @throws IllegalArgumentException if <tt>y + height</tt> is greater or equal to the image height
      *
      * @see #createScaledImage(float)
      * @since 1
      */
     public Image createScaledImage(final int width, final int height) {
+        if (width < 1) {
+            throw new IllegalArgumentException("width");
+        }
+
+        if (height < 1) {
+            throw new IllegalArgumentException("height");
+        }
+
         return new Image(this.imp.createScaledImage(width, height));
     }
 
@@ -97,20 +117,46 @@ public final class Image {
      * @param y the y coordinate of the top left corner of the part
      * @param width the width of the part
      * @param height the height of the part
-     * @return specified part of image
+     * @return the specified part of the image
+     * @throws IllegalArgumentException if <tt>x</tt> or <tt>y</tt> are smaller than 0
      * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are smaller than 1
+     * @throws IllegalArgumentException if <tt>x + width</tt> is greater or equal to the image width
+     * @throws IllegalArgumentException if <tt>y + height</tt> is greater or equal to the image height
      *
      * @since 1
      */
-    public Image createSubImage(final int x, final int y,
-                                final int width, final int height) {
+    public Image createSubImage(final int x, final int y, final int width, final int height) {
+        if (width < 1) {
+            throw new IllegalArgumentException("width");
+        }
+
+        if (height < 1) {
+            throw new IllegalArgumentException("height");
+        }
+
+        if (x < 0) {
+            throw new IllegalArgumentException("x");
+        }
+
+        if (y < 0) {
+            throw new IllegalArgumentException("y");
+        }
+
+        if (x + width > this.imp.getWidth()) {
+            throw new IllegalArgumentException("x + width");
+        }
+
+        if (y + height > this.imp.getHeight()) {
+            throw new IllegalArgumentException("y + height");
+        }
+
         return new Image(this.imp.createSubImage(x, y, width, height));
     }
 
     /**
      * Returns the height of the image in pixels.
      *
-     * @return height of image
+     * @return height of the image
      *
      * @see #getWidth()
      * @since 1
@@ -120,9 +166,49 @@ public final class Image {
     }
 
     /**
+     * Returns the pixel values of a rectangular part of the image.
+     *
+     * @param x the x coordinate of the top left corner of the part
+     * @param y the y coordinate of the top left corner of the part
+     * @param width the width of the part
+     * @param height the heigh of the part
+     * @return an array containing the pixels of the specified part of the image
+     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are smaller than 1
+     *
+     * @since 1
+     */
+    public int[] getPixels(final int x, final int y, final int width, final int height) {
+        if (width < 1) {
+            throw new IllegalArgumentException("width");
+        }
+
+        if (height < 1) {
+            throw new IllegalArgumentException("height");
+        }
+
+        if (x < 0) {
+            throw new IllegalArgumentException("x");
+        }
+
+        if (y < 0) {
+            throw new IllegalArgumentException("y");
+        }
+
+        if (x + width > this.imp.getWidth()) {
+            throw new IllegalArgumentException("x + width");
+        }
+
+        if (y + height > this.imp.getHeight()) {
+            throw new IllegalArgumentException("y + height");
+        }
+
+        return this.imp.getPixels(x, y, width, height);
+    }
+
+    /**
      * Returns the width of the image in pixels.
      *
-     * @return width of image
+     * @return width of the image
      *
      * @see #getHeight()
      * @since 1

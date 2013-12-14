@@ -12,17 +12,22 @@ public class ImageTest extends Program {
         Image image = new Image("res:drawable/background.jpg");
         window.drawImage(0, 0, image);
 
-        Image balloon = Image.JEDA_LOGO_64x64.createScaledImage(2f);
+        Image example = Image.JEDA_LOGO_64x64.createScaledImage(2f);
         int alpha = 255;
         window.setFontSize(15);
         int x = 100;
+        double angle = 0;
         while (x <= 700) {
             window.setColor(Color.WHITE);
             window.fillRectangle(x, 40, 90, 40, Alignment.TOP_CENTER);
             window.setColor(Color.BLACK);
             window.drawText(x, 50, "alpha=" + alpha, Alignment.CENTER);
-            window.drawImage(x, 150, balloon, alpha, Alignment.CENTER);
+            window.drawImage(x, 150, example, alpha, Alignment.CENTER);
             alpha = alpha - 30;
+            Image i = Image.JEDA_LOGO_64x64.createRotatedImage(angle);
+            window.drawImage(x, 300, i, Alignment.CENTER);
+            window.drawRectangle(x - i.getWidth() / 2, 300 - i.getHeight() / 2, i.getWidth(), i.getHeight());
+            angle += Math.PI / 8;
             x = x + 100;
         }
 

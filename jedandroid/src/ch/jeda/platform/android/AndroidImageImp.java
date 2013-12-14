@@ -17,6 +17,7 @@
 package ch.jeda.platform.android;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.ui.Color;
 import java.io.IOException;
@@ -26,25 +27,43 @@ class AndroidImageImp implements ImageImp {
 
     final Bitmap bitmap;
 
+    public ImageImp createRotatedImage(double angle) {
+        final int width = this.bitmap.getWidth();
+        final int height = this.bitmap.getHeight();
+        final int diameter = (int) Math.ceil(Math.sqrt(width * width + height * height));
+        final Bitmap result = Bitmap.createBitmap(diameter, diameter, Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(result);
+        canvas.rotate((float) angle, diameter / 2, diameter / 2);
+        canvas.drawBitmap(this.bitmap, (diameter - width) / 2, (diameter - height) / 2, null);
+        return new AndroidImageImp(result);
+    }
+
     @Override
     public ImageImp createScaledImage(final int width, final int height) {
         assert width > 0;
         assert height > 0;
 
-        return new AndroidImageImp(Bitmap.createScaledBitmap(
-                this.bitmap, width, height, false));
+        return new AndroidImageImp(Bitmap.createScaledBitmap(this.bitmap, width, height, false));
     }
 
     @Override
-    public ImageImp createSubImage(final int x, final int y,
-                                   final int width, final int height) {
-        return new AndroidImageImp(Bitmap.createBitmap(
-                this.bitmap, x, y, width, height));
+    public ImageImp createSubImage(final int x, final int y, final int width, final int height) {
+        assert width > 0;
+        assert height > 0;
+
+        return new AndroidImageImp(Bitmap.createBitmap(this.bitmap, x, y, width, height));
     }
 
     @Override
     public int getHeight() {
         return this.bitmap.getHeight();
+    }
+
+    @Override
+    public int[] getPixels(final int x, final int y, final int width, final int height) {
+        final int[] result = new int[width * height];
+        this.bitmap.getPixels(result, 0, width, x, y, width, height);
+        return result;
     }
 
     @Override
@@ -62,7 +81,7 @@ class AndroidImageImp implements ImageImp {
 
     @Override
     public boolean write(final OutputStream out, final Encoding encoding)
-            throws IOException {
+        throws IOException {
         return this.bitmap.compress(convertEncoding(encoding), 100, out);
     }
 

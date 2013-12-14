@@ -30,11 +30,15 @@ public interface ImageImp {
         JPEG, PNG
     }
 
+    ImageImp createRotatedImage(double angle);
+
     ImageImp createScaledImage(int width, int height);
 
     ImageImp createSubImage(int x, int y, int width, int height);
 
     int getHeight();
+
+    int[] getPixels(int x, int y, int width, int height);
 
     int getWidth();
 

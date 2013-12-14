@@ -18,11 +18,13 @@ package ch.jeda.platform.java;
 
 import ch.jeda.platform.ImageImp;
 import ch.jeda.ui.Color;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Transparency;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
@@ -42,13 +44,27 @@ class JavaImageImp implements ImageImp {
     }
 
     @Override
+    public ImageImp createRotatedImage(final double angle) {
+        final int width = this.bufferedImage.getWidth();
+        final int height = this.bufferedImage.getHeight();
+        final int diameter = (int) Math.ceil(Math.sqrt(width * width + height * height));
+        final BufferedImage result = createImage(diameter, diameter);
+        final Graphics2D graphics = result.createGraphics();
+        final AffineTransform tx = new AffineTransform();
+        tx.rotate(angle, diameter / 2, diameter / 2);
+        graphics.setTransform(tx);
+        graphics.drawImage(this.bufferedImage, (diameter - width) / 2, (diameter - height) / 2, null);
+        return new JavaImageImp(result);
+    }
+
+    @Override
     public JavaImageImp createScaledImage(final int width, final int height) {
         assert width > 0;
         assert height > 0;
 
         final BufferedImage result = createImage(width, height);
         result.createGraphics().drawImage(
-                this.bufferedImage, 0, 0, width, height, null);
+            this.bufferedImage, 0, 0, width, height, null);
         return new JavaImageImp(result);
     }
 
@@ -58,12 +74,20 @@ class JavaImageImp implements ImageImp {
         assert height > 0;
 
         return new JavaImageImp(
-                this.bufferedImage.getSubimage(x, y, width, height));
+            this.bufferedImage.getSubimage(x, y, width, height));
     }
 
     @Override
     public int getHeight() {
         return this.bufferedImage.getHeight();
+    }
+
+    @Override
+    public int[] getPixels(final int x, final int y, final int width, final int height) {
+        assert width > 0;
+        assert height > 0;
+
+        return this.bufferedImage.getRGB(x, y, width, height, null, 0, width);
     }
 
     @Override
@@ -100,7 +124,7 @@ class JavaImageImp implements ImageImp {
 
     private static BufferedImage createImage(final int width, final int height) {
         final GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().
-                getDefaultScreenDevice().getDefaultConfiguration();
+            getDefaultScreenDevice().getDefaultConfiguration();
         return gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
