@@ -96,7 +96,7 @@ class EventDispatcher {
                 this.tickListeners.get(j).onTick(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, "java.event.error");
+                Log.err(ex, "jeda.event.error");
             }
         }
     }
@@ -121,7 +121,7 @@ class EventDispatcher {
                             this.keyDownListeners.get(j).onKeyDown((KeyEvent) event);
                         }
                         catch (final Throwable ex) {
-                            Log.err(ex, "java.event.error");
+                            Log.err(ex, "jeda.event.error");
                         }
                     }
 
@@ -132,7 +132,7 @@ class EventDispatcher {
                             this.keyTypedListeners.get(j).onKeyTyped((KeyEvent) event);
                         }
                         catch (final Throwable ex) {
-                            Log.err(ex, "java.event.error");
+                            Log.err(ex, "jeda.event.error");
                         }
                     }
 
@@ -143,7 +143,7 @@ class EventDispatcher {
                             this.keyUpListeners.get(j).onKeyUp((KeyEvent) event);
                         }
                         catch (final Throwable ex) {
-                            Log.err(ex, "java.event.error");
+                            Log.err(ex, "jeda.event.error");
                         }
                     }
 
@@ -154,7 +154,7 @@ class EventDispatcher {
                             this.pointerDownListeners.get(j).onPointerDown((PointerEvent) event);
                         }
                         catch (final Throwable ex) {
-                            Log.err(ex, "java.event.error");
+                            Log.err(ex, "jeda.event.error");
                         }
                     }
 
@@ -165,7 +165,7 @@ class EventDispatcher {
                             this.pointerMovedListeners.get(j).onPointerMoved((PointerEvent) event);
                         }
                         catch (final Throwable ex) {
-                            Log.err(ex, "java.event.error");
+                            Log.err(ex, "jeda.event.error");
                         }
                     }
 
@@ -176,7 +176,7 @@ class EventDispatcher {
                             this.pointerUpListeners.get(j).onPointerUp((PointerEvent) event);
                         }
                         catch (final Throwable ex) {
-                            Log.err(ex, "java.event.error");
+                            Log.err(ex, "jeda.event.error");
                         }
                     }
 
@@ -187,7 +187,7 @@ class EventDispatcher {
                             this.sensorListeners.get(j).onSensorChanged((SensorEvent) event);
                         }
                         catch (final Throwable ex) {
-                            Log.err(ex, "java.event.error");
+                            Log.err(ex, "jeda.event.error");
                         }
                     }
 
@@ -198,7 +198,7 @@ class EventDispatcher {
                             this.turnListeners.get(j).onTurn((TurnEvent) event);
                         }
                         catch (final Throwable ex) {
-                            Log.err(ex, "java.event.error");
+                            Log.err(ex, "jeda.event.error");
                         }
                     }
 
@@ -209,7 +209,7 @@ class EventDispatcher {
                             this.windowFocusLostListeners.get(j).onWindowFocusLost();
                         }
                         catch (final Throwable ex) {
-                            Log.err(ex, "java.event.error");
+                            Log.err(ex, "jeda.event.error");
                         }
                     }
 
@@ -223,7 +223,7 @@ class EventDispatcher {
                     this.actionListeners.get(j).onAction(this.actionEvents.get(i));
                 }
                 catch (final Throwable ex) {
-                    Log.err(ex, "java.event.error");
+                    Log.err(ex, "jeda.event.error");
                 }
             }
         }
