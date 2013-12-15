@@ -16,21 +16,19 @@
  */
 package ch.jeda.platform;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <b>Internal</b>. Do not use this class.
  */
 public abstract class InputType<T> {
 
+    private static Map<Class<?>, InputType<?>> MAP = initMap();
+
+    @SuppressWarnings("unchecked")
     public static <T> InputType<T> forClass(final Class<T> clazz) {
-        if (Integer.class.equals(clazz)) {
-            return (InputType<T>) new IntInputType();
-        }
-        else if (Double.class.equals(clazz)) {
-            return (InputType<T>) new DoubleInputType();
-        }
-        else {
-            return (InputType<T>) new StringInputType();
-        }
+        return (InputType<T>) MAP.get(clazz);
     }
 
     private InputType() {
@@ -39,6 +37,14 @@ public abstract class InputType<T> {
     public abstract T parse(String text);
 
     public abstract boolean validate(String text);
+
+    private static Map<Class<?>, InputType<?>> initMap() {
+        final Map<Class<?>, InputType<?>> result = new HashMap<Class<?>, InputType<?>>();
+        result.put(Double.class, new DoubleInputType());
+        result.put(Integer.class, new IntInputType());
+        result.put(String.class, new StringInputType());
+        return result;
+    }
 
     private static class DoubleInputType extends InputType<Double> {
 

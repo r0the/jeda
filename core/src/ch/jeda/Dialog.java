@@ -95,7 +95,7 @@ public class Dialog<T> {
     }
 
     public Dialog(final Class<T> clazz) {
-        this.inputRequest = new InputRequest(clazz);
+        this.inputRequest = new InputRequest<T>(clazz);
     }
 
     public void setMessage(final Object... message) {

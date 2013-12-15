@@ -24,6 +24,7 @@ abstract class ProgramClassWrapper {
 
     private final String name;
 
+    @SuppressWarnings("unchecked")
     static ProgramClassWrapper tryCreate(final Class<?> candidate, final Properties properties) {
         // An abstract class cannot be a valid Jeda program.
         if (Modifier.isAbstract(candidate.getModifiers())) {
@@ -63,6 +64,7 @@ abstract class ProgramClassWrapper {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     private static ProgramClassWrapper tryCreateJedaProgram(final Class<?> candidate, final Properties properties) {
         try {
             final Constructor<JedaProgram> constructor = (Constructor<JedaProgram>) candidate.getDeclaredConstructor();
