@@ -16,22 +16,18 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.Transformation;
 import java.util.Comparator;
 
 public abstract class GraphicsItem {
 
     static final Comparator<GraphicsItem> DRAW_ORDER = new DrawOrder();
     GraphicsItems owner;
-    private final Transformation transformation;
     private boolean dirty;
     private float x;
     private float y;
     private float drawOrder;
-    private float rotation;
 
     protected GraphicsItem() {
-        this.transformation = new Transformation();
     }
 
     public final float getDrawOrder() {
@@ -46,21 +42,6 @@ public abstract class GraphicsItem {
         return this.y;
     }
 
-    public final float getRotation() {
-        return this.rotation;
-    }
-
-    public final Transformation getTransformation() {
-        if (this.dirty) {
-            this.dirty = false;
-            this.transformation.setIdentity();
-            this.transformation.rotate(this.rotation);
-            this.transformation.translate(this.x, this.y);
-        }
-
-        return this.transformation;
-    }
-
     public final void setDrawOrder(final float drawOrder) {
         this.drawOrder = drawOrder;
         if (this.owner != null) {
@@ -71,11 +52,6 @@ public abstract class GraphicsItem {
     public final void setPosition(final float x, final float y) {
         this.x = x;
         this.y = y;
-        this.dirty = true;
-    }
-
-    public final void setRotation(final float rotation) {
-        this.rotation = rotation;
         this.dirty = true;
     }
 

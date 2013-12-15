@@ -27,13 +27,14 @@ import java.util.Stack;
  * <p>
  * A canvas has some attributes that influence the drawing operations:
  * <ul>
+ * <li> <b>anti-aliasing</b>:
  * <li> <b>color</b>: The color used to draw geometric primitives. Initially, the color is black. The color can be
  * changed with {@link #setColor(ch.jeda.ui.Color)}.
  * <li> <b>line width</b>: the line width used to draw geometric shapes. The line width can be changed with
  * {@link #setLineWidth(float)}.
  * <li> <b>font size</b>: the size of the font used to render text. Initially, the font size is 16. The font size can be
  * changed with {@link #setFontSize(int)}.
- * <lI> <b>transformation</b>: The canvas has an affine transformation that is applied to all drawing operations. The
+ * <li> <b>transformation</b>: The canvas has an affine transformation that is applied to all drawing operations. The
  * default transformation is the identity.
  * </ul>
  * <strong>Example:</strong>
@@ -508,12 +509,7 @@ public class Canvas {
     }
 
     /**
-     * Returns the current transformation for the canvas.
-     *
-     * @return the current transformation
-     *
-     * @see #setTransformation(ch.jeda.Transformation)
-     * @since 1
+     * @deprecated
      */
     public Transformation getTransformation() {
         return this.transformation;
@@ -641,14 +637,7 @@ public class Canvas {
     }
 
     /**
-     * Sets the affine transformation. The transformation set by this method is applied to all subsequent drawing
-     * operations.
-     *
-     * @param transformation the new transformation
-     * @throws NullPointerException if <tt>transformation</tt> is <tt>null</tt>
-     *
-     * @see #getTransformation()
-     * @since 1
+     * @deprecated
      */
     public void setTransformation(final Transformation transformation) {
         if (transformation == null) {

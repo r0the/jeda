@@ -69,11 +69,11 @@ public class Button extends AbstractButton {
             canvas.setColor(BG_NORMAL_COLOR);
         }
 
-        canvas.fillRectangle(0f, 0f, this.width, this.height);
+        canvas.fillRectangle(this.getX(), this.getY(), this.width, this.height);
         canvas.setColor(BORDER_COLOR);
-        canvas.drawRectangle(0f, 0f, this.width, this.height);
+        canvas.drawRectangle(this.getX(), this.getY(), this.width, this.height);
         canvas.setColor(TEXT_COLOR);
-        canvas.drawText(this.width / 2f, this.height / 2f, text, Alignment.CENTER);
+        canvas.drawText(this.getX() + this.width / 2f, this.getY() + this.height / 2f, text, Alignment.CENTER);
     }
 
     public void setText(final String text) {

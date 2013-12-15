@@ -28,7 +28,7 @@ import java.io.Serializable;
  * [  0   0   1]</pre>
  * <p>
  *
- * @since 1
+ * @deprecated
  */
 public final class Transformation implements Serializable {
 
@@ -48,8 +48,7 @@ public final class Transformation implements Serializable {
      */
     public Transformation() {
         this.m = new float[6];
-        this.m[M00] = 1f;
-        this.m[M11] = 1f;
+        this.setIdentity();
     }
 
     /**

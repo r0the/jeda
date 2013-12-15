@@ -48,7 +48,6 @@ class GraphicsItems {
 
     void draw(final Canvas canvas) {
         for (int i = 0; i < this.all.length; ++i) {
-            canvas.setTransformation(this.all[i].getTransformation());
             this.all[i].draw(canvas);
         }
     }
