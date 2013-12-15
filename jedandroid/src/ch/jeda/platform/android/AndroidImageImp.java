@@ -33,7 +33,7 @@ class AndroidImageImp implements ImageImp {
         final int diameter = (int) Math.ceil(Math.sqrt(width * width + height * height));
         final Bitmap result = Bitmap.createBitmap(diameter, diameter, Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(result);
-        canvas.rotate((float) angle, diameter / 2, diameter / 2);
+        canvas.rotate((float) (angle * 180 / Math.PI), diameter / 2, diameter / 2);
         canvas.drawBitmap(this.bitmap, (diameter - width) / 2, (diameter - height) / 2, null);
         return new AndroidImageImp(result);
     }

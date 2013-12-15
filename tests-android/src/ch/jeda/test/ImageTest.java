@@ -30,8 +30,5 @@ public class ImageTest extends Program {
             angle += Math.PI / 8;
             x = x + 100;
         }
-
-        Image defaultImage = new Image("no/such/image");
-        window.drawImage(100, 400, defaultImage);
     }
 }
