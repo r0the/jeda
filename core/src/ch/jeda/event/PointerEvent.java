@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,15 +25,15 @@ package ch.jeda.event;
 public final class PointerEvent extends Event {
 
     private final int pointerId;
-    private final float x;
-    private final float y;
+    private final int x;
+    private final int y;
 
     public PointerEvent(final Object source, final EventType type, final int pointerId) {
         this(source, type, pointerId, -1, -1);
     }
 
     public PointerEvent(final Object source, final EventType type, final int pointerId,
-                        final float x, final float y) {
+                        final int x, final int y) {
         super(source, type);
         this.pointerId = pointerId;
         this.x = x;
@@ -58,7 +58,7 @@ public final class PointerEvent extends Event {
      *
      * @since 1
      */
-    public final float getX() {
+    public final int getX() {
         return this.x;
     }
 
@@ -69,7 +69,7 @@ public final class PointerEvent extends Event {
      *
      * @since 1
      */
-    public final float getY() {
+    public final int getY() {
         return this.y;
     }
 

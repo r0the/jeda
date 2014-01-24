@@ -69,15 +69,15 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawCircle(final float x, final float y, final float radius) {
+    public void drawCircle(final int x, final int y, final int radius) {
         assert radius > 0;
 
-        final int diameter = (int) (2 * radius);
-        this.graphics.drawOval((int) (x - radius), (int) (y - radius), diameter, diameter);
+        final int diameter = 2 * radius;
+        this.graphics.drawOval(x - radius, y - radius, diameter, diameter);
     }
 
     @Override
-    public void drawImage(final float x, final float y, final ImageImp image, final int alpha) {
+    public void drawImage(final int x, final int y, final ImageImp image, final int alpha) {
         assert image != null;
         assert image instanceof JavaImageImp;
         assert 0 < alpha && alpha <= 255;
@@ -86,19 +86,19 @@ class JavaCanvasImp implements CanvasImp {
             this.graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha / 255f));
         }
 
-        this.graphics.drawImage(((JavaImageImp) image).bufferedImage, (int) x, (int) y, null);
+        this.graphics.drawImage(((JavaImageImp) image).bufferedImage, x, y, null);
         if (alpha != 255) {
             this.graphics.setPaintMode();
         }
     }
 
     @Override
-    public void drawLine(final float x1, final float y1, final float x2, final float y2) {
-        this.graphics.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+    public void drawLine(final int x1, final int y1, final int x2, final int y2) {
+        this.graphics.drawLine((int) x1, y1, x2, y2);
     }
 
     @Override
-    public void drawPolygon(final float[] points) {
+    public void drawPolygon(final int[] points) {
         assert points != null;
         assert points.length >= 6;
         assert points.length % 2 == 0;
@@ -107,12 +107,12 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawRectangle(final float x, final float y, final float width, final float height) {
-        this.graphics.drawRect((int) x, (int) y, (int) width, (int) height);
+    public void drawRectangle(final int x, final int y, final int width, final int height) {
+        this.graphics.drawRect(x, y, width, height);
     }
 
     @Override
-    public void drawText(final float x, final float y, String text) {
+    public void drawText(final int x, final int y, String text) {
         assert text != null;
 
         final TextLayout textLayout = this.textLayout(text);
@@ -134,15 +134,15 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillCircle(final float x, final float y, final float radius) {
+    public void fillCircle(final int x, final int y, final int radius) {
         assert radius > 0;
 
-        final int diameter = (int) (2 * radius);
-        this.graphics.fillOval((int) (x - radius), (int) (y - radius), diameter, diameter);
+        final int diameter = 2 * radius;
+        this.graphics.fillOval(x - radius, y - radius, diameter, diameter);
     }
 
     @Override
-    public void fillPolygon(final float[] points) {
+    public void fillPolygon(final int[] points) {
         assert points != null;
         assert points.length >= 6;
         assert points.length % 2 == 0;
@@ -151,8 +151,8 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillRectangle(final float x, final float y, final float width, final float height) {
-        this.graphics.fillRect((int) x, (int) y, (int) width, (int) height);
+    public void fillRectangle(final int x, final int y, final int width, final int height) {
+        this.graphics.fillRect(x, y, width, height);
     }
 
     @Override
@@ -300,10 +300,10 @@ class JavaCanvasImp implements CanvasImp {
             createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
-    private static Polygon createPolygon(final float[] points) {
+    private static Polygon createPolygon(final int[] points) {
         final Polygon result = new Polygon();
         for (int i = 0; i < points.length; i = i + 2) {
-            result.addPoint((int) points[i], (int) points[i + 1]);
+            result.addPoint(points[i], points[i + 1]);
         }
 
         return result;

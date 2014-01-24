@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,8 +23,8 @@ public abstract class GraphicsItem {
     static final Comparator<GraphicsItem> DRAW_ORDER = new DrawOrder();
     GraphicsItems owner;
     private boolean dirty;
-    private float x;
-    private float y;
+    private int x;
+    private int y;
     private float drawOrder;
 
     protected GraphicsItem() {
@@ -34,11 +34,11 @@ public abstract class GraphicsItem {
         return this.drawOrder;
     }
 
-    public final float getX() {
+    public final int getX() {
         return this.x;
     }
 
-    public final float getY() {
+    public final int getY() {
         return this.y;
     }
 
@@ -49,13 +49,13 @@ public abstract class GraphicsItem {
         }
     }
 
-    public final void setPosition(final float x, final float y) {
+    public final void setPosition(final int x, final int y) {
         this.x = x;
         this.y = y;
         this.dirty = true;
     }
 
-    protected abstract boolean contains(float x, float y);
+    protected abstract boolean contains(int x, int y);
 
     protected abstract void draw(Canvas canvas);
 

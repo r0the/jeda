@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,12 +24,12 @@ abstract class Align implements Serializable {
     static final Align RIGHT_BOTTOM = new AlignRightBottom();
     static final Align CENTER = new AlignCenter();
 
-    abstract float align(float pos, float size);
+    abstract int align(int pos, int size);
 
     private static class AlignLeftTop extends Align {
 
         @Override
-        public float align(final float pos, final float size) {
+        public int align(final int pos, final int size) {
             return pos;
         }
     }
@@ -37,7 +37,7 @@ abstract class Align implements Serializable {
     private static class AlignCenter extends Align {
 
         @Override
-        public float align(final float pos, final float size) {
+        public int align(final int pos, final int size) {
             return pos - size / 2;
         }
     }
@@ -45,7 +45,7 @@ abstract class Align implements Serializable {
     private static class AlignRightBottom extends Align {
 
         @Override
-        public float align(final float pos, final float size) {
+        public int align(final int pos, final int size) {
             return pos - size;
         }
     }

@@ -10,8 +10,8 @@ public class SoundTest extends Program implements ActionListener {
 
     Window window;
     Map<String, Sound> sounds;
-    float x;
-    float y;
+    int x;
+    int y;
 
     @Override
     public void run() {
@@ -20,14 +20,16 @@ public class SoundTest extends Program implements ActionListener {
         x = 10;
         y = 10;
 
-        addButton("Rooster", "rooster");
+        addButton("Rooster (WAV)", "rooster.wav");
+        addButton("Base (OGG)", "hands_of_time.ogg");
+        //    addButton("Base (OGG)", "base_under_attack.ogg");
         window.addEventListener(this);
     }
 
     private void addButton(String text, String sound) {
-        sounds.put(text, new Sound("res:raw/" + sound + ".wav"));
+        sounds.put(text, new Sound("res/raw/" + sound));
         new Button(window, x, y, text);
-        x = x + 50;
+        y = y + 50;
     }
 
     @Override

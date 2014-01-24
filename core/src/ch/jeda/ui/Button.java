@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,9 +22,9 @@ public class Button extends AbstractButton {
     private static Color BG_PRESSED_COLOR = new Color(130, 130, 130);
     private static Color BORDER_COLOR = new Color(90, 90, 90);
     private static Color TEXT_COLOR = new Color(0, 0, 0);
-    private float height;
+    private int height;
     private String text;
-    private float width;
+    private int width;
 
     public Button(final Window window, final String action) {
         super(window, action);
@@ -34,11 +34,11 @@ public class Button extends AbstractButton {
         this.setDrawOrder(Integer.MAX_VALUE);
     }
 
-    public Button(final Window window, final float x, final float y, final String text) {
+    public Button(final Window window, final int x, final int y, final String text) {
         this(window, x, y, text, Alignment.TOP_LEFT);
     }
 
-    public Button(final Window window, final float x, final float y, final String text, final Alignment alignment) {
+    public Button(final Window window, final int x, final int y, final String text, final Alignment alignment) {
         this(window, text);
         window.add(this);
         this.setPosition(alignment.alignX(x, this.width), alignment.alignY(y, this.height));
@@ -46,7 +46,7 @@ public class Button extends AbstractButton {
     }
 
     @Override
-    protected boolean contains(final float x, final float y) {
+    protected boolean contains(final int x, final int y) {
         return this.getX() <= x && x < this.getX() + this.width &&
                this.getY() <= y && y < this.getY() + this.height;
 

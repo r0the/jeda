@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,25 +26,25 @@ public interface CanvasImp {
 
     void copyFrom(int x, int y, CanvasImp source);
 
-    void drawCircle(float x, float y, float radius);
+    void drawCircle(int x, int y, int radius);
 
-    void drawImage(float x, float y, ImageImp image, int alpha);
+    void drawImage(int x, int y, ImageImp image, int alpha);
 
-    void drawLine(float x1, float y1, float x2, float y2);
+    void drawLine(int x1, int y1, int x2, int y2);
 
-    void drawPolygon(float[] points);
+    void drawPolygon(int[] points);
 
-    void drawRectangle(float x, float y, float width, float height);
+    void drawRectangle(int x, int y, int width, int height);
 
-    void drawText(float x, float y, String text);
+    void drawText(int x, int y, String text);
 
     void fill();
 
-    void fillCircle(float x, float y, float radius);
+    void fillCircle(int x, int y, int radius);
 
-    void fillPolygon(float[] points);
+    void fillPolygon(int[] points);
 
-    void fillRectangle(float x, float y, float width, float height);
+    void fillRectangle(int x, int y, int width, int height);
 
     int getHeight();
 

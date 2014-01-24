@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -99,18 +99,18 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
             case MotionEvent.ACTION_POINTER_DOWN:
                 index = event.getActionIndex();
                 this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_DOWN, event.getPointerId(index),
-                                                 event.getX(index), event.getY(index)));
+                                                 (int) event.getX(index), (int) event.getY(index)));
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 index = event.getActionIndex();
                 this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_UP, event.getPointerId(index),
-                                                 event.getX(index), event.getY(index)));
+                                                 (int) event.getX(index), (int) event.getY(index)));
                 break;
             case MotionEvent.ACTION_MOVE:
                 for (index = 0; index < event.getPointerCount(); ++index) {
                     this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_MOVED, event.getPointerId(index),
-                                                     event.getX(index), event.getY(index)));
+                                                     (int) event.getX(index), (int) event.getY(index)));
                 }
 
                 break;

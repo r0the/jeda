@@ -8,8 +8,8 @@ public class MusicTest extends Program implements ActionListener {
 
     Window window;
     Music music;
-    float x;
-    float y;
+    int x;
+    int y;
 
     @Override
     public void run() {

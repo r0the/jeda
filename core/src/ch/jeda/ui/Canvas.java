@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -104,9 +104,39 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawCircle(final float x, final float y, final float radius) {
+    public void drawCircle(final int x, final int y, final int radius) {
         if (radius > 0) {
             this.imp.drawCircle(x, y, radius);
+        }
+    }
+
+    /**
+     * Draws a circle. The circle is drawn using the current color, line width, and transformation. Has no effect if the
+     * specified radius is not positive.
+     *
+     * @param x the x coordinate of the circle's centre
+     * @param y the y coordinate of the circle's centre
+     * @param radius the circle's radius
+     *
+     * @since 1
+     */
+    public void drawCircle(final double x, final double y, final double radius) {
+        this.drawCircle((int) x, (int) y, (int) radius);
+    }
+
+    /**
+     * Draws an image. The image is drawn using the current transformation. The top left corner of the image is
+     * positioned at the specified coordinates. Has no effect if <tt>image</tt> is <tt>null</tt>.
+     *
+     * @param x the x coordinate of the image's top left corner
+     * @param y the y coordinate of the image's top left corner
+     * @param image the image to draw
+     *
+     * @since 1
+     */
+    public void drawImage(final int x, final int y, final Image image) {
+        if (image != null) {
+            this.imp.drawImage(x, y, image.getImp(), 255);
         }
     }
 
@@ -120,9 +150,31 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawImage(final float x, final float y, final Image image) {
-        if (image != null) {
-            this.imp.drawImage(x, y, image.getImp(), 255);
+    public void drawImage(final double x, final double y, final Image image) {
+        this.drawImage((int) x, (int) y, image);
+    }
+
+    /**
+     * Draws an image. The image is drawn using the current transformation. The top left corner of the image is
+     * positioned at the specified coordinates. The image is drawn with a translucency effect specified by the alpha
+     * value. Specify an alpha value of 255 for a completely opaque image, and alpha value of 0 for a completely
+     * transparent image. Has no effect if
+     * <tt>image</tt> is <tt>null</tt>.
+     *
+     * @param x the x coordinate of the image's top left corner
+     * @param y the y coordinate of the image's top left corner
+     * @param image the image to draw
+     * @param alpha the alpha value
+     *
+     * @since 1
+     */
+    public void drawImage(final int x, final int y, final Image image, final int alpha) {
+        if (alpha < 0 || 255 < alpha) {
+            throw new IllegalArgumentException("alpha");
+        }
+
+        if (image != null && alpha > 0) {
+            this.imp.drawImage(x, y, image.getImp(), alpha);
         }
     }
 
@@ -140,13 +192,31 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawImage(final float x, final float y, final Image image, final int alpha) {
-        if (alpha < 0 || 255 < alpha) {
-            throw new IllegalArgumentException("alpha");
+    public void drawImage(final double x, final double y, final Image image, final int alpha) {
+        this.drawImage((int) x, (int) y, image, alpha);
+    }
+
+    /**
+     * Draws an image. The image is drawn using the current transformation. The image is aligned relative to the
+     * specified coordinates (<tt>x</tt>,
+     * <tt>y</tt>). Has no effect if <tt>image</tt> is <tt>null</tt>.
+     *
+     * @param x the x coordinate of the alignment point
+     * @param y the y coordinate of the alignment point
+     * @param image the image to draw
+     * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
+     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     *
+     * @since 1
+     */
+    public void drawImage(final int x, final int y, final Image image, final Alignment alignment) {
+        if (alignment == null) {
+            throw new NullPointerException("alignment");
         }
 
-        if (image != null && alpha > 0) {
-            this.imp.drawImage(x, y, image.getImp(), alpha);
+        if (image != null) {
+            this.imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()),
+                               image.getImp(), 255);
         }
     }
 
@@ -163,13 +233,38 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawImage(final float x, final float y, final Image image, final Alignment alignment) {
+    public void drawImage(final double x, final double y, final Image image, final Alignment alignment) {
+        this.drawImage((int) x, (int) y, image, alignment);
+    }
+
+    /**
+     * Draws an image. The image is drawn using the current transformation. The image is aligned relative to the
+     * specified coordinates (<tt>x</tt>,
+     * <tt>y</tt>). The image is drawn with a translucency effect specified by the alpha value. Specify an alpha value
+     * of 255 for a completely opaque image, and alpha value of 0 for a completely transparent image. Has no effect if
+     * <tt>image</tt> is <tt>null</tt>.
+     *
+     * @param x the x coordinate of the alignment point
+     * @param y the y coordinate of the alignment point
+     * @param image the image to draw
+     * @param alpha the alpha value
+     * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
+     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     *
+     * @since 1
+     */
+    public void drawImage(final int x, final int y, final Image image, final int alpha, final Alignment alignment) {
         if (alignment == null) {
             throw new NullPointerException("alignment");
         }
 
-        if (image != null) {
-            this.imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()), image.getImp(), 255);
+        if (alpha < 0 || 255 < alpha) {
+            throw new IllegalArgumentException("alpha");
+        }
+
+        if (image != null && alpha > 0) {
+            this.imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()),
+                               image.getImp(), alpha);
         }
     }
 
@@ -189,18 +284,9 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawImage(final float x, final float y, final Image image, final int alpha, final Alignment alignment) {
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (alpha < 0 || 255 < alpha) {
-            throw new IllegalArgumentException("alpha");
-        }
-
-        if (image != null && alpha > 0) {
-            this.imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()), image.getImp(), alpha);
-        }
+    public void drawImage(final double x, final double y, final Image image, final int alpha,
+                          final Alignment alignment) {
+        this.drawImage(x, y, image, alpha, alignment);
     }
 
     /**
@@ -214,8 +300,23 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawLine(final float x1, final float y1, final float x2, final float y2) {
+    public void drawLine(final int x1, final int y1, final int x2, final int y2) {
         this.imp.drawLine(x1, y1, x2, y2);
+    }
+
+    /**
+     * Draws a straight line. The line is drawn from the coordinates (<tt>x1</tt>, <tt>y1</tt>) to the coordinates
+     * (<tt>x2</tt>, <tt>y2</tt>) with the current color, line width, and transformation.
+     *
+     * @param x1 the x coordinate of the line's start point
+     * @param y1 the y coordinate of the lines' start point
+     * @param x2 the x coordinate of the line's end point
+     * @param y2 the y coordinate of the line's end point
+     *
+     * @since 1
+     */
+    public void drawLine(final double x1, final double y1, final double x2, final double y2) {
+        this.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
     }
 
     /**
@@ -230,12 +331,28 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawPolygon(final float... points) {
+    public void drawPolygon(final int... points) {
         if (points.length < 6 || points.length % 2 == 1) {
             throw new IllegalArgumentException("points");
         }
 
         this.imp.drawPolygon(points);
+    }
+
+    /**
+     * Draws a polygon. The polygon is drawn using the current color, line width, and transformation. The polygon is
+     * defined by a sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
+     * <pre><code>drawPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the corners (x1, y2), (x2,
+     * y2), and (x3, y3).
+     *
+     * @param points the points of the polygon as sequence of coordinate pairs
+     * @throws IllegalArgumentException if less than 6 arguments are passed
+     * @throws IllegalArgumentException if and odd number of arguments are passed
+     *
+     * @since 1
+     */
+    public void drawPolygon(final double... points) {
+        this.imp.drawPolygon(toIntArray(points));
     }
 
     /**
@@ -250,9 +367,50 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawRectangle(final float x, final float y, final float width, final float height) {
+    public void drawRectangle(final int x, final int y, final int width, final int height) {
         if (width > 0 && height > 0) {
             this.imp.drawRectangle(x, y, width, height);
+        }
+    }
+
+    /**
+     * Draws a rectangle. The rectangle is drawn using the current color, line width, and transformation. The top left
+     * corner of the rectangle is positioned at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
+     * <tt>width</tt> or <tt>height</tt> are not positive.
+     *
+     * @param x the x coordinate of the rectangle's top left corner
+     * @param y the y coordinate of the rectangle's top left corner
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     *
+     * @since 1
+     */
+    public void drawRectangle(final double x, final double y, final double width, final double height) {
+        this.drawRectangle((int) x, (int) y, (int) width, (int) height);
+    }
+
+    /**
+     * Draws a rectangle. The rectangle is drawn using the current color, line width, and transformation. The rectangle
+     * is aligned relative to the specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
+     * <tt>width</tt> or <tt>height</tt> are not positive.
+     *
+     * @param x the x coordinate of the alignment point
+     * @param y the y coordinate of the alignment point
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>).
+     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     *
+     * @since 1
+     */
+    public void drawRectangle(final int x, final int y, final int width, final int height,
+                              final Alignment alignment) {
+        if (alignment == null) {
+            throw new NullPointerException("alignment");
+        }
+
+        if (width > 0 && height > 0) {
+            this.imp.drawRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
         }
     }
 
@@ -270,13 +428,25 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawRectangle(final float x, final float y, final float width, final float height, final Alignment alignment) {
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
+    public void drawRectangle(final double x, final double y, final double width, final double height,
+                              final Alignment alignment) {
+        this.drawRectangle((int) x, (int) y, (int) width, (int) height, alignment);
+    }
 
-        if (width > 0 && height > 0) {
-            this.imp.drawRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
+    /**
+     * Draws a text. The text is drawn using the current color, transformation, and font size. The top left corner of
+     * the text is positioned at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>text</tt>
+     * is <tt>null</tt> or empty.
+     *
+     * @param x the x coordinate of the top left corner
+     * @param y the y coordinate of the top left corner
+     * @param text the text to draw
+     *
+     * @since 1
+     */
+    public void drawText(final int x, final int y, final String text) {
+        if (text != null && !text.isEmpty()) {
+            this.imp.drawText(x, y, text);
         }
     }
 
@@ -291,9 +461,31 @@ public class Canvas {
      *
      * @since 1
      */
-    public void drawText(final float x, final float y, final String text) {
+    public void drawText(final double x, final double y, final String text) {
+        this.drawText((int) x, (int) y, text);
+    }
+
+    /**
+     * Draws a text. The text is drawn using the current color, transformation, and font size. The text is aligned
+     * relative to the specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>text</tt> is <tt>null</tt>
+     * or empty.
+     *
+     * @param x the x coordinate of the alignment point
+     * @param y the y coordinate of the alignment point
+     * @param text the text to draw
+     * @param alignment specifies how to align the text relative to (<tt>x</tt>,
+     * <tt>y</tt>)
+     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     *
+     * @since 1
+     */
+    public final void drawText(final int x, final int y, final String text, final Alignment alignment) {
+        if (alignment == null) {
+            throw new NullPointerException("alignment");
+        }
+
         if (text != null && !text.isEmpty()) {
-            this.imp.drawText(x, y, text);
+            this.imp.drawText(alignment.alignX(x, this.imp.textWidth(text)), alignment.alignY(y, this.imp.textHeight(text)), text);
         }
     }
 
@@ -311,14 +503,8 @@ public class Canvas {
      *
      * @since 1
      */
-    public final void drawText(final float x, final float y, final String text, final Alignment alignment) {
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (text != null && !text.isEmpty()) {
-            this.imp.drawText(alignment.alignX(x, this.imp.textWidth(text)), alignment.alignY(y, this.imp.textHeight(text)), text);
-        }
+    public final void drawText(final double x, final double y, final String text, final Alignment alignment) {
+        this.drawText((int) x, (int) y, text, alignment);
     }
 
     /**
@@ -340,10 +526,24 @@ public class Canvas {
      *
      * @since 1
      */
-    public void fillCircle(final float x, final float y, final float radius) {
+    public void fillCircle(final int x, final int y, final int radius) {
         if (radius > 0) {
             this.imp.fillCircle(x, y, radius);
         }
+    }
+
+    /**
+     * Draws a filled a circle. The circle is drawn using the current color and transformation. Has no effect if the
+     * specified radius is not positive.
+     *
+     * @param x the x coordinate of the circle's centre
+     * @param y the y coordinate of the circle's centre
+     * @param radius the circle's radius
+     *
+     * @since 1
+     */
+    public void fillCircle(final double x, final double y, final double radius) {
+        this.fillCircle((int) x, (int) y, (int) radius);
     }
 
     /**
@@ -358,12 +558,28 @@ public class Canvas {
      *
      * @since 1
      */
-    public void fillPolygon(final float... points) {
+    public void fillPolygon(final int... points) {
         if (points.length < 6 || points.length % 2 == 1) {
             throw new IllegalArgumentException("points");
         }
 
         this.imp.fillPolygon(points);
+    }
+
+    /**
+     * Draws a filled polygon. The polygon is drawn using the current color, line width, and transformation. The polygon
+     * is defined by a sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
+     * <pre><code>fillPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the corners (x1, y2), (x2,
+     * y2), and (x3, y3).
+     *
+     * @param points the points of the polygon as sequence of coordinate pairs
+     * @throws IllegalArgumentException if less than 6 arguments are passed
+     * @throws IllegalArgumentException if and odd number of arguments are passed
+     *
+     * @since 1
+     */
+    public void fillPolygon(final double... points) {
+        this.imp.fillPolygon(toIntArray(points));
     }
 
     /**
@@ -378,9 +594,50 @@ public class Canvas {
      *
      * @since 1
      */
-    public void fillRectangle(final float x, final float y, final float width, final float height) {
+    public void fillRectangle(final int x, final int y, final int width, final int height) {
         if (width > 0 && height > 0) {
             this.imp.fillRectangle(x, y, width, height);
+        }
+    }
+
+    /**
+     * Draws a filled rectangle. The rectangle is drawn using the current color and transformation. The top left corner
+     * of the rectangle is positioned at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
+     * <tt>width</tt> or <tt>height</tt> are not positive.
+     *
+     * @param x the x coordinate of the rectangle's top left corner
+     * @param y the y coordinate of the rectangle's top left corner
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     *
+     * @since 1
+     */
+    public void fillRectangle(final double x, final double y, final double width, final double height) {
+        this.fillRectangle((int) x, (int) y, (int) width, (int) height);
+    }
+
+    /**
+     * Draws a filled rectangle. The rectangle is drawn using the current color and transformation. The rectangle is
+     * aligned relative to the specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
+     * <tt>width</tt> or
+     * <tt>height</tt> are not positive.
+     *
+     * @param x the x coordinate of the alignment point
+     * @param y the y coordinate of the alignment point
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>).
+     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     *
+     * @since 1
+     */
+    public void fillRectangle(final int x, final int y, final int width, final int height, final Alignment alignment) {
+        if (alignment == null) {
+            throw new NullPointerException("alignment");
+        }
+
+        if (width > 0 && height > 0) {
+            this.imp.fillRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
         }
     }
 
@@ -399,14 +656,9 @@ public class Canvas {
      *
      * @since 1
      */
-    public void fillRectangle(final float x, final float y, final float width, final float height, final Alignment alignment) {
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (width > 0 && height > 0) {
-            this.imp.fillRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
-        }
+    public void fillRectangle(final double x, final double y, final double width, final double height,
+                              final Alignment alignment) {
+        this.fillRectangle((int) x, (int) y, (int) width, (int) height, alignment);
     }
 
     /**
@@ -508,9 +760,6 @@ public class Canvas {
         }
     }
 
-    /**
-     * @deprecated
-     */
     public Transformation getTransformation() {
         return this.transformation;
     }
@@ -636,9 +885,6 @@ public class Canvas {
         }
     }
 
-    /**
-     * @deprecated
-     */
     public void setTransformation(final Transformation transformation) {
         if (transformation == null) {
             throw new NullPointerException("transformation");
@@ -714,5 +960,14 @@ public class Canvas {
 
     private boolean contains(final int x, final int y) {
         return 0 <= x && x < this.getWidth() && 0 <= y && y < this.getHeight();
+    }
+
+    private static int[] toIntArray(double[] values) {
+        final int[] result = new int[values.length];
+        for (int i = 0; i < values.length; ++i) {
+            result[i] = (int) result[i];
+        }
+
+        return result;
     }
 }
