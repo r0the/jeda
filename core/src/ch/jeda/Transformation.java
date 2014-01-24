@@ -28,8 +28,8 @@ import java.io.Serializable;
  * [  0   0   1]</pre>
  * <p>
  *
- * @deprecated
  */
+@Deprecated
 public final class Transformation implements Serializable {
 
     private static final float[] IDENTITY = new float[]{1f, 0f, 0f, 0f, 1f, 0f};

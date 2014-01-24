@@ -885,6 +885,7 @@ public class Canvas {
         }
     }
 
+    @Deprecated
     public void setTransformation(final Transformation transformation) {
         if (transformation == null) {
             throw new NullPointerException("transformation");
