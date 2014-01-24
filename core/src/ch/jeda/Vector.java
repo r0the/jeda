@@ -18,11 +18,7 @@ package ch.jeda;
 
 import java.io.Serializable;
 
-/**
- * Represents a two-dimensional vector.
- *
- * @since 1
- */
+@Deprecated
 public final class Vector implements Serializable {
 
     /**
@@ -47,8 +43,6 @@ public final class Vector implements Serializable {
      *
      * @param x the x coordinate of the vector
      * @param y the y coordinate of the vector
-     *
-     * @since 1
      */
     public Vector(final float x, final float y) {
         this.x = x;
@@ -60,8 +54,6 @@ public final class Vector implements Serializable {
      *
      * @param x the x coordinate of the vector
      * @param y the y coordinate of the vector
-     *
-     * @since 1
      */
     public Vector(final double x, final double y) {
         this.x = (float) x;
@@ -73,8 +65,6 @@ public final class Vector implements Serializable {
      *
      * @param orig the original vector
      * @throws NullPointerException if <tt>orig</tt> is <tt>null</tt>
-     *
-     * @since 1
      */
     public Vector(final Vector orig) {
         if (orig == null) {
@@ -90,8 +80,6 @@ public final class Vector implements Serializable {
      *
      * @param other the vector to be added
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
-     *
-     * @since 1
      */
     public void add(final Vector other) {
         if (other == null) {
@@ -108,8 +96,6 @@ public final class Vector implements Serializable {
      * direction of π/2.
      *
      * @return current direction
-     *
-     * @since 1
      */
     public double direction() {
         return Math.atan2(this.y, this.x);
@@ -121,8 +107,6 @@ public final class Vector implements Serializable {
      * @param other other vector
      * @return dot product of both vectors
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
-     *
-     * @since 1
      */
     public float dot(final Vector other) {
         if (other == null) {
@@ -138,8 +122,6 @@ public final class Vector implements Serializable {
      * @param other the other vector
      * @return angle enclosed by <tt>this</tt> and <tt>other</tt>
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
-     *
-     * @since 1
      */
     public double enclosedAngle(final Vector other) {
         if (other == null) {
@@ -162,8 +144,6 @@ public final class Vector implements Serializable {
      * Returns the length. Calculates and returns the length of the vector.
      *
      * @return the length of the vector
-     *
-     * @since 1
      */
     public double length() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -172,8 +152,6 @@ public final class Vector implements Serializable {
     /**
      * Normalizes the vector. The operation sets the length of the vector to 1. The direction of the vector remains
      * unchanged.
-     *
-     * @since 1
      */
     public void normalize() {
         final float length = (float) this.length();
@@ -284,8 +262,6 @@ public final class Vector implements Serializable {
      *
      * @param other the vector to be subtracted
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
-     *
-     * @since 1
      */
     public void subtract(final Vector other) {
         if (other == null) {
@@ -318,8 +294,6 @@ public final class Vector implements Serializable {
      * @param other vector to be projected on
      * @return projection of this on other
      * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
-     *
-     * @since 1
      */
     @Deprecated
     public Vector projectOn(Vector other) {
