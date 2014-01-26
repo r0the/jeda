@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -57,7 +57,7 @@ public class SensorEvent extends Event {
      *
      * @since 1
      */
-    public SensorEvent(final Object source, final SensorType sensorType, float x, final float y, final float z) {
+    public SensorEvent(final Object source, final SensorType sensorType, final float x, final float y, final float z) {
         this(source, sensorType, (float) Math.sqrt(x * x + y * y + z * z), x, y, z);
     }
 
@@ -180,8 +180,8 @@ public class SensorEvent extends Event {
         return result.toString();
     }
 
-    private SensorEvent(final Object source, final SensorType sensorType, float value,
-                        float x, final float y, final float z) {
+    private SensorEvent(final Object source, final SensorType sensorType, final float value,
+                        final float x, final float y, final float z) {
         super(source, EventType.SENSOR);
         this.sensorType = sensorType;
         this.value = value;

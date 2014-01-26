@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -59,7 +59,7 @@ public abstract class Block {
         }
 
         @Override
-        public void draw(Canvas canvas, float x, float y, final int alpha) {
+        public void draw(final Canvas canvas, final float x, final float y, final int alpha) {
             canvas.drawImage(x, y, this.image, alpha, Alignment.BOTTOM_CENTER);
         }
 
