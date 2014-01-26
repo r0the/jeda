@@ -19,11 +19,9 @@ package ch.jeda.platform.android;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.ui.Color;
@@ -32,8 +30,6 @@ class AndroidCanvasImp implements CanvasImp {
 
     private final Paint fillPaint;
     private final Paint imagePaint;
-    private final Matrix matrix;
-    private final float[] matrixArray;
     private final Paint pixelPaint;
     private final Paint strokePaint;
     private final Paint textPaint;
@@ -175,18 +171,6 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setTransformation(final Transformation transformation) {
-        assert transformation != null;
-
-        this.matrixArray[Matrix.MPERSP_0] = 0;
-        this.matrixArray[Matrix.MPERSP_1] = 0;
-        this.matrixArray[Matrix.MPERSP_2] = 1;
-        transformation.copyToArray(this.matrixArray);
-        this.matrix.setValues(this.matrixArray);
-        this.canvas.setMatrix(this.matrix);
-    }
-
-    @Override
     public ImageImp takeSnapshot() {
         return new AndroidImageImp(Bitmap.createBitmap(this.bitmap));
     }
@@ -214,8 +198,6 @@ class AndroidCanvasImp implements CanvasImp {
         this.fillPaint.setStyle(Paint.Style.FILL);
         this.fillPaint.setAntiAlias(true);
         this.imagePaint = new Paint();
-        this.matrix = new Matrix();
-        this.matrixArray = new float[9];
         this.pixelPaint = new Paint();
         this.strokePaint = new Paint();
         this.strokePaint.setStyle(Paint.Style.STROKE);

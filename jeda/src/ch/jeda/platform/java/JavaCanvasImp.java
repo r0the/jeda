@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,7 +18,6 @@ package ch.jeda.platform.java;
 
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.CanvasImp;
-import ch.jeda.Transformation;
 import ch.jeda.ui.Color;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -30,7 +29,6 @@ import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -40,9 +38,6 @@ class JavaCanvasImp implements CanvasImp {
 
     private static final Map<?, ?> ALIASING_RENDERING_HINTS = initAliasingRenderingHints();
     private static final Map<?, ?> ANTI_ALIASING_RENDERING_HINTS = initAntiAliasingRenderingHints();
-    private static final AffineTransform IDENTITY = new AffineTransform();
-    private final AffineTransform affineTransform;
-    private final float[] matrix;
     private final Map<FontRenderContext, Map<java.awt.Font, Map<String, TextLayout>>> textLayoutCache;
     private BufferedImage buffer;
     private Graphics2D graphics;
@@ -50,8 +45,6 @@ class JavaCanvasImp implements CanvasImp {
     private int width;
 
     JavaCanvasImp() {
-        this.affineTransform = new AffineTransform();
-        this.matrix = new float[6];
         this.textLayoutCache = new HashMap();
     }
 
@@ -122,15 +115,7 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void fill() {
-        if (this.graphics.getTransform().isIdentity()) {
-            this.graphics.fillRect(0, 0, this.width, this.height);
-        }
-        else {
-            final AffineTransform oldTransform = this.graphics.getTransform();
-            this.graphics.setTransform(IDENTITY);
-            this.graphics.fillRect(0, 0, this.width, this.height);
-            this.graphics.setTransform(oldTransform);
-        }
+        this.graphics.fillRect(0, 0, this.width, this.height);
     }
 
     @Override
@@ -214,17 +199,6 @@ class JavaCanvasImp implements CanvasImp {
         assert color != null;
 
         this.buffer.setRGB(x, y, color.getValue());
-    }
-
-    @Override
-    public void setTransformation(final Transformation transformation) {
-        assert transformation != null;
-
-        transformation.copyToArray(this.matrix);
-        this.affineTransform.setTransform(
-            this.matrix[0], this.matrix[3], this.matrix[1],
-            this.matrix[4], this.matrix[2], this.matrix[5]);
-        this.graphics.setTransform(this.affineTransform);
     }
 
     @Override

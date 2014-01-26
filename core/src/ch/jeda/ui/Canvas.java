@@ -17,7 +17,6 @@
 package ch.jeda.ui;
 
 import ch.jeda.JedaInternal;
-import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import java.util.Stack;
 
@@ -31,7 +30,7 @@ import java.util.Stack;
  * <li> <b>color</b>: The color used to draw geometric primitives. Initially, the color is black. The color can be
  * changed with {@link #setColor(ch.jeda.ui.Color)}.
  * <li> <b>line width</b>: the line width used to draw geometric shapes. The line width can be changed with
- * {@link #setLineWidth(float)}.
+ * {@link #setLineWidth(double)}.
  * <li> <b>font size</b>: the size of the font used to render text. Initially, the font size is 16. The font size can be
  * changed with {@link #setFontSize(int)}.
  * <li> <b>transformation</b>: The canvas has an affine transformation that is applied to all drawing operations. The
@@ -53,7 +52,6 @@ public class Canvas {
     private int fontSize;
     private CanvasImp imp;
     private float lineWidth;
-    private Transformation transformation;
 
     /**
      * Constructs a drawing surface. The drawing surface has the specified width and height. A drawing surface
@@ -79,7 +77,6 @@ public class Canvas {
         this.antiAliasing = false;
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
-        this.transformation = new Transformation();
         this.setImp(JedaInternal.createCanvasImp(width, height));
     }
 
@@ -736,7 +733,7 @@ public class Canvas {
      * @return current line width
      * @since 1
      */
-    public float getLineWidth() {
+    public double getLineWidth() {
         return this.imp.getLineWidth();
     }
 
@@ -758,10 +755,6 @@ public class Canvas {
         else {
             return Color.TRANSPARENT;
         }
-    }
-
-    public Transformation getTransformation() {
-        return this.transformation;
     }
 
     /**
@@ -864,6 +857,19 @@ public class Canvas {
     }
 
     /**
+     * Sets the line width. The line width set by this method is applied to all subsequent <tt>draw...</tt> operations.
+     * Set 0 for drawing hairlines independent of the transformation.
+     *
+     * @param lineWidth the new line width
+     * @throws IllegalArgumentException if <tt>lineWidth</tt> is negative
+     *
+     * @since 1
+     */
+    public void setLineWidth(final double lineWidth) {
+        this.setLineWidth((float) lineWidth);
+    }
+
+    /**
      * Sets the color of a pixel. Sets the color of the pixel at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect
      * if the coordinates do not reference a pixel inside the canvas.
      *
@@ -883,16 +889,6 @@ public class Canvas {
         if (this.contains(x, y)) {
             this.imp.setPixelAt(x, y, color);
         }
-    }
-
-    @Deprecated
-    public void setTransformation(final Transformation transformation) {
-        if (transformation == null) {
-            throw new NullPointerException("transformation");
-        }
-
-        this.transformation = transformation;
-        this.imp.setTransformation(this.transformation);
     }
 
     /**
@@ -947,7 +943,6 @@ public class Canvas {
     Canvas() {
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
-        this.transformation = new Transformation();
     }
 
     final void setImp(final CanvasImp imp) {
@@ -956,7 +951,6 @@ public class Canvas {
         this.imp.setColor(this.color);
         this.imp.setFontSize(this.fontSize);
         this.imp.setLineWidth(this.lineWidth);
-        this.imp.setTransformation(this.transformation);
     }
 
     private boolean contains(final int x, final int y) {
