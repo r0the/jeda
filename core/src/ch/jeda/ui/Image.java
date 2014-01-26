@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -59,10 +59,6 @@ public final class Image {
         this(loadImp(filePath));
     }
 
-    public Image createRotatedImage(final double angle) {
-        return new Image(this.imp.createRotatedImage(angle));
-    }
-
     /**
      * Creates a scaled copy of the image. Width and height are both scaled proportionally.
      *
@@ -73,8 +69,8 @@ public final class Image {
      * @see #createScaledImage(int, int)
      * @since 1
      */
-    public Image createScaledImage(float factor) {
-        if (factor <= 0f) {
+    public Image createScaledImage(final double factor) {
+        if (factor <= 0.0) {
             throw new IllegalArgumentException("factor");
         }
 
@@ -95,7 +91,7 @@ public final class Image {
      * @throws IllegalArgumentException if <tt>x + width</tt> is greater or equal to the image width
      * @throws IllegalArgumentException if <tt>y + height</tt> is greater or equal to the image height
      *
-     * @see #createScaledImage(float)
+     * @see #createScaledImage(double)
      * @since 1
      */
     public Image createScaledImage(final int width, final int height) {
