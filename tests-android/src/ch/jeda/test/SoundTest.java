@@ -10,8 +10,8 @@ public class SoundTest extends Program implements ActionListener {
 
     Window window;
     Map<String, Sound> sounds;
-    float x;
-    float y;
+    int x;
+    int y;
 
     @Override
     public void run() {
