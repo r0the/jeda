@@ -960,7 +960,7 @@ public class Canvas {
     private static int[] toIntArray(double[] values) {
         final int[] result = new int[values.length];
         for (int i = 0; i < values.length; ++i) {
-            result[i] = (int) result[i];
+            result[i] = (int) values[i];
         }
 
         return result;
