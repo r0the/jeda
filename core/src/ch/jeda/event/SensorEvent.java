@@ -27,6 +27,7 @@ package ch.jeda.event;
  */
 public class SensorEvent extends Event {
 
+    private final boolean maximum;
     private final SensorType sensorType;
     private final float value;
     private final float x;
@@ -38,12 +39,13 @@ public class SensorEvent extends Event {
      *
      * @param source the event source that generates the event
      * @param sensorType the type of sensor that generated the event
+     * @param maximum is the reported value at the sensor's maximum range
      * @param value the currently sensed value
      *
      * @since 1
      */
-    public SensorEvent(final Object source, final SensorType sensorType, float value) {
-        this(source, sensorType, value, 0f, 0f, 0f);
+    public SensorEvent(final Object source, final SensorType sensorType, final boolean maxiumum, final float value) {
+        this(source, sensorType, maxiumum, value, 0f, 0f, 0f);
     }
 
     /**
@@ -58,7 +60,7 @@ public class SensorEvent extends Event {
      * @since 1
      */
     public SensorEvent(final Object source, final SensorType sensorType, final float x, final float y, final float z) {
-        this(source, sensorType, (float) Math.sqrt(x * x + y * y + z * z), x, y, z);
+        this(source, sensorType, false, (float) Math.sqrt(x * x + y * y + z * z), x, y, z);
     }
 
     /**
@@ -163,6 +165,18 @@ public class SensorEvent extends Event {
         return this.z;
     }
 
+    /**
+     * Returns <tt>true</tt> if the reported value is the maximum range of the sensor. This means that the actual value
+     * might be bigger, but the sensor is not capable of detecting it.
+     *
+     * @return <tt>true</tt> if the reported value is the maximum range of the sensor, otherwise <tt>false</tt>
+     *
+     * @since 1
+     */
+    public final boolean isMaxiumum() {
+        return this.maximum;
+    }
+
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
@@ -180,9 +194,10 @@ public class SensorEvent extends Event {
         return result.toString();
     }
 
-    private SensorEvent(final Object source, final SensorType sensorType, final float value,
+    private SensorEvent(final Object source, final SensorType sensorType, final boolean maxiumum, final float value,
                         final float x, final float y, final float z) {
         super(source, EventType.SENSOR);
+        this.maximum = maxiumum;
         this.sensorType = sensorType;
         this.value = value;
         this.x = x;

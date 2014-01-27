@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -220,8 +220,10 @@ class SensorManager extends Fragment {
 
         public void onSensorChanged(final android.hardware.SensorEvent event) {
             final SensorInfo sensorInfo = this.sensorReserveMap.get(event.sensor);
+            final boolean maxiumum = event.values[0] >= event.sensor.getMaximumRange() ||
+                                     event.values[0] <= -event.sensor.getMaximumRange();
             final float value = event.values[0] * sensorInfo.factor + sensorInfo.shift;
-            ((Main) this.activity).addEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, value));
+            ((Main) this.activity).addEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, maxiumum, value));
         }
 
         public void onAccuracyChanged(final Sensor sensor, final int accuracy) {

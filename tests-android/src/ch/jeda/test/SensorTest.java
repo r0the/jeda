@@ -11,7 +11,7 @@ public class SensorTest extends Program implements SensorListener {
     Window window;
     Map<Object, Float> yPos;
     float nextY = 10;
-    float height = 65;
+    float height = 77;
 
     @Override
     public void run() {
@@ -22,6 +22,10 @@ public class SensorTest extends Program implements SensorListener {
         Jeda.enableSensor(SensorType.ACCELERATION);
         Jeda.enableSensor(SensorType.LINEAR_ACCELERATION);
         Jeda.enableSensor(SensorType.MAGNETIC_FIELD);
+        Jeda.enableSensor(SensorType.LIGHT);
+        Jeda.enableSensor(SensorType.PRESSURE);
+        Jeda.enableSensor(SensorType.PROXIMITY);
+        Jeda.enableSensor(SensorType.TEMPERATURE);
         window.addEventListener(this);
     }
 
@@ -38,8 +42,9 @@ public class SensorTest extends Program implements SensorListener {
         window.setColor(Color.BLACK);
         window.drawText(10, y, "type=" + event.getSensorType());
         window.drawText(10, y + 12, "source=" + event.getSource());
-        window.drawText(10, y + 24, "x = " + event.getX());
-        window.drawText(10, y + 36, "y = " + event.getY());
-        window.drawText(10, y + 48, "z = " + event.getZ());
+        window.drawText(10, y + 24, "value = " + event.getValue());
+        window.drawText(10, y + 36, "x = " + event.getX());
+        window.drawText(10, y + 48, "y = " + event.getY());
+        window.drawText(10, y + 60, "z = " + event.getZ());
     }
 }
