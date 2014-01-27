@@ -43,14 +43,21 @@ public final class RotatedImage {
      * @since 1
      */
     public RotatedImage(final String path, final int steps) {
+        this(new Image(path), steps);
+    }
+
+    /**
+     * @since 1
+     */
+    public RotatedImage(final Image image, final int steps) {
         if (steps < 1) {
             throw new IllegalArgumentException("steps");
         }
 
         this.images = new Image[steps];
-        this.images[0] = new Image(path);
+        this.images[0] = image;
         for (int i = 1; i < steps; ++i) {
-            this.images[i] = new Image(this.images[0].getImp().createRotatedImage((float) (i * 2.0 * Math.PI / steps)));
+            this.images[i] = image.createRotatedImage(i * 2.0 * Math.PI / steps);
         }
     }
 

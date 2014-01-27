@@ -59,6 +59,10 @@ public final class Image {
         this(loadImp(filePath));
     }
 
+    public Image createRotatedImage(final double angle) {
+        return new Image(this.imp.createRotatedImage(angle));
+    }
+
     /**
      * Creates a scaled copy of the image. Width and height are both scaled proportionally.
      *
