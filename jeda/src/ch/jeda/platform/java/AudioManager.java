@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,7 @@ import ch.jeda.platform.SoundImp;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
 import ch.jeda.platform.MusicImp;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -100,7 +101,8 @@ class AudioManager implements TickListener {
     SoundImp createSoundImp(final String path) {
         final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         try {
-            final AudioInputStream in = javax.sound.sampled.AudioSystem.getAudioInputStream(ResourceManager.openInputStream(path));
+            final AudioInputStream in = javax.sound.sampled.AudioSystem.getAudioInputStream(
+                new BufferedInputStream(ResourceManager.openInputStream(path)));
             javax.sound.sampled.AudioSystem.write(in, AudioFileFormat.Type.WAVE, buffer);
             return new JavaSoundImp(this, buffer.toByteArray());
         }

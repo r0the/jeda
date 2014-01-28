@@ -120,6 +120,7 @@ class AudioPlayback {
 
     public void stop() {
         synchronized (this.lineLock) {
+            this.line.stop();
             this.line.flush();
             this.line.close();
             try {
