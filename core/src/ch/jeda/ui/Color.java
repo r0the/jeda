@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -62,6 +62,12 @@ public final class Color implements Serializable {
      * @since 1
      */
     public static final Color GREEN = new Color(0, 128, 0);
+    /**
+     * The Jeda color. Same as <tt>new Color(126, 218, 66)</tt>.
+     *
+     * @since 1
+     */
+    public static final Color JEDA = new Color(126, 218, 66);
     /**
      * The VGA color <i>lime</i>. Same as <tt>new Color(0, 255, 0)</tt>.
      *
@@ -128,12 +134,6 @@ public final class Color implements Serializable {
      * @since 1
      */
     public static final Color YELLOW = new Color(255, 255, 0);
-    /**
-     * The Jeda color. Same as <tt>new Color(126, 218, 66)</tt>.
-     *
-     * @since 1
-     */
-    public static final Color JEDA = new Color(126, 218, 66);
     private final int value;
 
     /**
@@ -190,6 +190,35 @@ public final class Color implements Serializable {
         }
 
         this.value = (alpha << 24) | (red << 16) | (green << 8) | blue;
+    }
+
+    /**
+     * Constructs a color from an HTML color specification. The string must contain an HTML color that starts with an
+     * '#', followed by three two-digit hex values for red, green, and blue (e.g. <b>#ABCDEF</b>).
+     *
+     * @param value the HTML color specification
+     * @throws NullPointerException if <tt>value</tt> is <tt>null</tt>
+     * @throws IllegalArgumentException if <tt>value</tt> does not contain a valid HTML color
+     *
+     * @since 1
+     */
+    public Color(final String value) {
+        if (value == null) {
+            throw new NullPointerException("value");
+        }
+
+        if (value.length() != 7) {
+            throw new IllegalArgumentException("'" + value + "' is not a valid HTML color, it's length is not 7.");
+        }
+
+        if (value.charAt(0) != '#') {
+            throw new IllegalArgumentException("'" + value + "' is not a valid HTML color, it doesn't start with #.");
+        }
+
+        final int red = Byte.parseByte(value.substring(1, 3));
+        final int green = Byte.parseByte(value.substring(3, 5));
+        final int blue = Byte.parseByte(value.substring(5, 7));
+        this.value = (red << 16) | (green << 8) | blue;
     }
 
     @Override
