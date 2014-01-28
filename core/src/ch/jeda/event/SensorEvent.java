@@ -173,7 +173,7 @@ public class SensorEvent extends Event {
      *
      * @since 1
      */
-    public final boolean isMaxiumum() {
+    public final boolean isMaximum() {
         return this.maximum;
     }
 
