@@ -21,7 +21,7 @@ public class SoundTest extends Program implements ActionListener {
         y = 10;
 
         addButton("Rooster (WAV)", "rooster.wav");
-        addButton("Base (OGG)", "hands_of_time.ogg");
+//        addButton("Base (OGG)", "hands_of_time.ogg");
         //    addButton("Base (OGG)", "base_under_attack.ogg");
         window.addEventListener(this);
     }

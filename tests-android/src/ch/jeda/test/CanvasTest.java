@@ -7,8 +7,6 @@ import ch.jeda.ui.*;
 public class CanvasTest extends Program implements KeyDownListener,
                                                    PointerDownListener {
 
-    private Transformation tid;
-    private Transformation trot;
     private int w;
     private int h;
     private int cx;
@@ -29,9 +27,6 @@ public class CanvasTest extends Program implements KeyDownListener,
 
     @Override
     public void run() {
-        tid = new Transformation();
-        trot = new Transformation();
-        trot.rotate(0.2);
         window = new Window();
         w = window.getWidth();
         h = window.getHeight() - 30;
@@ -46,7 +41,6 @@ public class CanvasTest extends Program implements KeyDownListener,
     public void nextStep() {
         window.setColor(Color.WHITE);
         window.fill();
-        window.setTransformation(tid);
         window.setColor(Color.BLACK);
 
         switch (step) {
@@ -81,7 +75,6 @@ public class CanvasTest extends Program implements KeyDownListener,
                 fillTest2();
                 break;
             case 10:
-                fillTest3();
                 break;
             case 11:
                 drawCircleTest();
@@ -101,7 +94,6 @@ public class CanvasTest extends Program implements KeyDownListener,
     }
 
     private void msg(String message) {
-        window.setTransformation(tid);
         window.setColor(new Color(200, 200, 200, 200));
         window.fillRectangle(5, h, w - 10, 25);
         window.setColor(Color.BLACK);
@@ -110,7 +102,6 @@ public class CanvasTest extends Program implements KeyDownListener,
     }
 
     private void drawCircleTest() {
-        window.getTransformation().setIdentity();
         window.setColor(Color.RED);
         window.fillCircle(cx, cy, r);
         msg("drawCircle() in red");
@@ -185,13 +176,6 @@ public class CanvasTest extends Program implements KeyDownListener,
     }
 
     private void fillTest2() {
-        window.setTransformation(trot);
-        window.setColor(Color.BLUE);
-        window.fill();
-        msg("fill() in blue (rotated)");
-    }
-
-    private void fillTest3() {
         window.setColor(new Color(0, 255, 0, 150));
         window.fill();
         msg("fill() in green with alpha=150");
