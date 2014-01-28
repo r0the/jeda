@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform;
 
+import ch.jeda.Transformation;
 import ch.jeda.ui.Color;
 
 /**
@@ -62,6 +63,8 @@ public interface CanvasImp {
     void setLineWidth(float lineWidth);
 
     void setPixelAt(int x, int y, Color color);
+
+    void setTransformation(Transformation transformation);
 
     ImageImp takeSnapshot();
 
