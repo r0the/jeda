@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,7 +16,7 @@
  */
 package ch.jeda.ui;
 
-public class TileSet {
+public final class TileSet {
 
     public final int height;
     public final int tileHeight;
@@ -25,13 +25,11 @@ public class TileSet {
     private final Image image;
     private final Image[] tiles;
 
-    public TileSet(final String filePath,
-                   final int tileWidth, final int tileHeight) {
+    public TileSet(final String filePath, final int tileWidth, final int tileHeight) {
         this(new Image(filePath), tileWidth, tileHeight);
     }
 
-    public TileSet(final Image image,
-                   final int tileWidth, final int tileHeight) {
+    public TileSet(final Image image, final int tileWidth, final int tileHeight) {
         if (image == null) {
             throw new NullPointerException("image");
         }
@@ -64,8 +62,8 @@ public class TileSet {
         int index = x + y * this.width;
         if (this.tiles[index] == null) {
             this.tiles[index] = this.image.createSubImage(
-                    x * this.tileWidth, y * this.tileHeight,
-                    this.tileWidth, this.tileHeight);
+                x * this.tileWidth, y * this.tileHeight,
+                this.tileWidth, this.tileHeight);
         }
 
         return this.tiles[index];
