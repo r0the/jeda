@@ -267,7 +267,7 @@ public final class Image {
             return this.imp.write(out, FORMAT_MAP.get(extension));
         }
         catch (final IOException ex) {
-            Log.err("jeda.image.error.write", filePath);
+            Log.err(ex, "jeda.image.error.write", filePath);
             return false;
         }
         finally {
