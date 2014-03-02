@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,6 +18,7 @@ package ch.jeda;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -26,6 +27,8 @@ import java.util.TreeSet;
  */
 public final class Properties {
 
+    private static final Set<String> FALSE_STRINGS = initFalseStrings();
+    private static final Set<String> TRUE_STRINGS = initTrueStrings();
     private final java.util.Properties imp;
 
     public Properties() {
@@ -69,6 +72,24 @@ public final class Properties {
 
     public boolean containsKey(final String key) {
         return this.imp.containsKey(key);
+    }
+
+    public boolean getBoolean(final String key, final boolean defaultValue) {
+        String value = this.getString(key);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        value = value.toLowerCase();
+        if (TRUE_STRINGS.contains(value)) {
+            return true;
+        }
+
+        if (FALSE_STRINGS.contains(value)) {
+            return false;
+        }
+
+        return defaultValue;
     }
 
     public double getDouble(final String key, final double defaultValue) {
@@ -138,5 +159,23 @@ public final class Properties {
         }
 
         return result.toString();
+    }
+
+    private static Set<String> initFalseStrings() {
+        final Set<String> result = new HashSet<String>();
+        result.add("0");
+        result.add("off");
+        result.add("no");
+        result.add("false");
+        return result;
+    }
+
+    private static Set<String> initTrueStrings() {
+        final Set<String> result = new HashSet<String>();
+        result.add("1");
+        result.add("on");
+        result.add("yes");
+        result.add("true");
+        return result;
     }
 }
