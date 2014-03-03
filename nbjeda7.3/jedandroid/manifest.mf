@@ -4,5 +4,5 @@ Created-By: 1.7.0_25-b30 (Oracle Corporation)
 OpenIDE-Module: ch.jeda.netbeans.android
 OpenIDE-Module-Localizing-Bundle: ch/jeda/netbeans/android/Bundle.prop
  erties
-OpenIDE-Module-Specification-Version: 0.9.22
+OpenIDE-Module-Specification-Version: 0.9.23
 
