@@ -18,5 +18,7 @@ public class ToStringTest extends Program {
         map.put(1, "eins");
         map.put(2, "zwei");
         write(map);
+        writeLines("This is a test for writeLines.", "This is the second line.");
+        write("This should be on a new line.");
     }
 }

@@ -123,4 +123,10 @@ public abstract class Program implements Runnable {
     protected final void write(final Object... args) {
         Jeda.log(LogLevel.INFO, Util.toString(args));
     }
+
+    protected final void writeLines(final Object... args) {
+        for (int i = 0; i < args.length; ++i) {
+            Jeda.log(LogLevel.INFO, Util.toString(args[i], "\n"));
+        }
+    }
 }
