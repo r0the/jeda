@@ -76,7 +76,6 @@ class WindowManager {
     void shutdown() {
         this.shutdown = true;
         this.checkWindowsClosed();
-        System.exit(0);
     }
 
     void windowClosed(final BaseWindow window) {
@@ -100,6 +99,8 @@ class WindowManager {
             for (BaseWindow window : this.windows) {
                 window.dispose();
             }
+
+            System.exit(0);
         }
         else {
             this.callback.stop();

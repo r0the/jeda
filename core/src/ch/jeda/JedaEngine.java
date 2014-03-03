@@ -262,6 +262,7 @@ class JedaEngine implements PlatformCallback, Runnable {
     void programTerminated() {
         synchronized (this.currentProgramLock) {
             this.currentProgram = null;
+            this.platform.shutdown();
         }
     }
 
