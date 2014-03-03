@@ -8,15 +8,15 @@ import java.util.Map;
 
 public class SensorTest extends Program implements SensorListener {
 
-    Window window;
+    Window fenster;
     Map<Object, Float> yPos;
     float nextY = 10;
     float height = 77;
 
     @Override
     public void run() {
-        window = new Window();
-        window.setFontSize(12);
+        fenster = new Window();
+        fenster.setFontSize(12);
         yPos = new HashMap<Object, Float>();
         Jeda.enableSensor(SensorType.GRAVITY);
         Jeda.enableSensor(SensorType.ACCELERATION);
@@ -26,7 +26,7 @@ public class SensorTest extends Program implements SensorListener {
         Jeda.enableSensor(SensorType.PRESSURE);
         Jeda.enableSensor(SensorType.PROXIMITY);
         Jeda.enableSensor(SensorType.TEMPERATURE);
-        window.addEventListener(this);
+        fenster.addEventListener(this);
     }
 
     @Override
@@ -37,14 +37,24 @@ public class SensorTest extends Program implements SensorListener {
         }
 
         float y = yPos.get(event.getSource());
-        window.setColor(Color.WHITE);
-        window.fillRectangle(0, y, window.getWidth(), height);
-        window.setColor(Color.BLACK);
-        window.drawText(10, y, "type=" + event.getSensorType());
-        window.drawText(10, y + 12, "source=" + event.getSource());
-        window.drawText(10, y + 24, "value = " + event.getValue());
-        window.drawText(10, y + 36, "x = " + event.getX());
-        window.drawText(10, y + 48, "y = " + event.getY());
-        window.drawText(10, y + 60, "z = " + event.getZ());
+        fenster.setColor(Color.WHITE);
+        fenster.fillRectangle(0, y, fenster.getWidth(), height);
+        fenster.setColor(Color.BLACK);
+        fenster.drawText(10, y, "type=" + event.getSensorType());
+        fenster.drawText(10, y + 12, "source=" + event.getSource());
+
+        fenster.drawText(10, y + 24, valueString(event));
+        fenster.drawText(10, y + 36, "x = " + event.getX());
+        fenster.drawText(10, y + 48, "y = " + event.getY());
+        fenster.drawText(10, y + 60, "z = " + event.getZ());
+    }
+
+    private String valueString(SensorEvent event) {
+        if (event.isMaximum()) {
+            return "value = " + event.getValue() + " (MAX)";
+        }
+        else {
+            return "value = " + event.getValue();
+        }
     }
 }
