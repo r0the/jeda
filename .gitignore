@@ -4,12 +4,16 @@ build/
 dist/
 
 */nbproject/*
+!*/nbproject/platform.properties
 !*/nbproject/project.properties
 !*/nbproject/project.xml
+!*/nbproject/suite.properties
 
 */*/nbproject/*
+!*/*/nbproject/platform.properties
 !*/*/nbproject/project.properties
 !*/*/nbproject/project.xml
+!*/*/nbproject/suite.properties
 
 
 # Jeda generated files
