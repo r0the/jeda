@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,7 +24,7 @@ import org.netbeans.spi.project.ui.support.NodeList;
 public class ConfigNodeFactory implements NodeFactory {
 
     @Override
-    public NodeList createNodes(final Project project) {
+    public NodeList<?> createNodes(final Project project) {
         return JedaProject.createConfigNode(project);
     }
 }

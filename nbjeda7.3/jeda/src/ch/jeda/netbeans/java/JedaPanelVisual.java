@@ -36,8 +36,8 @@ public class JedaPanelVisual extends JPanel implements DocumentListener {
         initComponents();
         this.panel = panel;
         // Register listener on the textFields to make the automatic updates
-        projectNameTextField.getDocument().addDocumentListener(this);
-        projectLocationTextField.getDocument().addDocumentListener(this);
+        this.projectNameTextField.getDocument().addDocumentListener(this);
+        this.projectLocationTextField.getDocument().addDocumentListener(this);
     }
 
     public String getProjectName() {
@@ -121,7 +121,6 @@ public class JedaPanelVisual extends JPanel implements DocumentListener {
         String command = evt.getActionCommand();
         if ("BROWSE".equals(command)) {
             JFileChooser chooser = new JFileChooser();
-            FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
             chooser.setDialogTitle("Select Project Location");
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             String path = this.projectLocationTextField.getText();
@@ -131,11 +130,13 @@ public class JedaPanelVisual extends JPanel implements DocumentListener {
                     chooser.setSelectedFile(f);
                 }
             }
+
             if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(this)) {
                 File projectDir = chooser.getSelectedFile();
-                projectLocationTextField.setText(FileUtil.normalizeFile(projectDir).getAbsolutePath());
+                this.projectLocationTextField.setText(FileUtil.normalizeFile(projectDir).getAbsolutePath());
             }
-            panel.fireChangeEvent();
+
+            this.panel.fireChangeEvent();
         }
 
     }//GEN-LAST:event_browseButtonActionPerformed
@@ -153,32 +154,31 @@ public class JedaPanelVisual extends JPanel implements DocumentListener {
     public void addNotify() {
         super.addNotify();
         //same problem as in 31086, initial focus on Cancel button
-        projectNameTextField.requestFocus();
+        this.projectNameTextField.requestFocus();
     }
 
     boolean valid(WizardDescriptor wizardDescriptor) {
-
-        if (projectNameTextField.getText().length() == 0) {
+        if (this.projectNameTextField.getText().length() == 0) {
             // TODO if using org.openide.dialogs >= 7.8, can use WizardDescriptor.PROP_ERROR_MESSAGE:
             wizardDescriptor.putProperty("WizardPanel_errorMessage",
                                          "Project Name is not a valid folder name.");
             return false; // Display name not specified
         }
-        File f = FileUtil.normalizeFile(new File(projectLocationTextField.getText()).getAbsoluteFile());
-        if (!f.isDirectory()) {
+
+        final File file = FileUtil.normalizeFile(new File(this.projectLocationTextField.getText()).getAbsoluteFile());
+        if (!file.isDirectory()) {
             String message = "Project Folder is not a valid path.";
             wizardDescriptor.putProperty("WizardPanel_errorMessage", message);
             return false;
         }
-        final File destFolder = FileUtil.normalizeFile(new File(createdFolderTextField.getText()).getAbsoluteFile());
 
+        final File destFolder = FileUtil.normalizeFile(new File(this.createdFolderTextField.getText()).getAbsoluteFile());
         File projLoc = destFolder;
         while (projLoc != null && !projLoc.exists()) {
             projLoc = projLoc.getParentFile();
         }
         if (projLoc == null || !projLoc.canWrite()) {
-            wizardDescriptor.putProperty("WizardPanel_errorMessage",
-                                         "Project Folder cannot be created.");
+            wizardDescriptor.putProperty("WizardPanel_errorMessage", "Project Folder cannot be created.");
             return false;
         }
 
@@ -188,23 +188,22 @@ public class JedaPanelVisual extends JPanel implements DocumentListener {
             return false;
         }
 
-        File[] kids = destFolder.listFiles();
+        final File[] kids = destFolder.listFiles();
         if (destFolder.exists() && kids != null && kids.length > 0) {
             // Folder exists and is not empty
-            wizardDescriptor.putProperty("WizardPanel_errorMessage",
-                                         "Project Folder already exists and is not empty.");
+            wizardDescriptor.putProperty("WizardPanel_errorMessage", "Project Folder already exists and is not empty.");
             return false;
         }
+
         wizardDescriptor.putProperty("WizardPanel_errorMessage", "");
         return true;
     }
 
-    void store(WizardDescriptor d) {
-        String name = projectNameTextField.getText().trim();
-        String folder = createdFolderTextField.getText().trim();
-
-        d.putProperty("projdir", new File(folder));
-        d.putProperty("name", name);
+    void store(WizardDescriptor wizardDescriptor) {
+        final String name = this.projectNameTextField.getText().trim();
+        final File projectDirectory = new File(this.createdFolderTextField.getText().trim());
+        wizardDescriptor.putProperty("projdir", projectDirectory);
+        wizardDescriptor.putProperty("name", name);
     }
 
     void read(WizardDescriptor settings) {
@@ -230,6 +229,7 @@ public class JedaPanelVisual extends JPanel implements DocumentListener {
     }
 
     // Implementation of DocumentListener --------------------------------------
+    @Override
     public void changedUpdate(DocumentEvent e) {
         updateTexts(e);
         if (this.projectNameTextField.getDocument() == e.getDocument()) {
@@ -237,6 +237,7 @@ public class JedaPanelVisual extends JPanel implements DocumentListener {
         }
     }
 
+    @Override
     public void insertUpdate(DocumentEvent e) {
         updateTexts(e);
         if (this.projectNameTextField.getDocument() == e.getDocument()) {
@@ -244,6 +245,7 @@ public class JedaPanelVisual extends JPanel implements DocumentListener {
         }
     }
 
+    @Override
     public void removeUpdate(DocumentEvent e) {
         updateTexts(e);
         if (this.projectNameTextField.getDocument() == e.getDocument()) {
@@ -254,21 +256,20 @@ public class JedaPanelVisual extends JPanel implements DocumentListener {
     /**
      * Handles changes in the Project name and project directory,
      */
-    private void updateTexts(DocumentEvent e) {
+    private void updateTexts(final DocumentEvent event) {
 
-        Document doc = e.getDocument();
+        Document doc = event.getDocument();
 
-        if (doc == projectNameTextField.getDocument() || doc == projectLocationTextField.getDocument()) {
+        if (doc == this.projectNameTextField.getDocument() || doc == this.projectLocationTextField.getDocument()) {
             // Change in the project name
-
-            String projectName = projectNameTextField.getText();
-            String projectFolder = projectLocationTextField.getText();
-
+            String projectName = this.projectNameTextField.getText();
+            String projectFolder = this.projectLocationTextField.getText();
             //if (projectFolder.trim().length() == 0 || projectFolder.equals(oldName)) {
-            createdFolderTextField.setText(projectFolder + File.separatorChar + projectName);
+            this.createdFolderTextField.setText(projectFolder + File.separatorChar + projectName);
             //}
 
         }
-        panel.fireChangeEvent(); // Notify that the panel changed
+
+        this.panel.fireChangeEvent(); // Notify that the panel changed
     }
 }

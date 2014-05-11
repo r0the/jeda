@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,6 @@ package ch.jeda.netbeans.android;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -41,37 +40,61 @@ import org.openide.util.NbBundle.Messages;
     description = "JedandroidDescription.html",
     iconBase = "ch/jeda/netbeans/android/res/icon.png")
 @Messages("Jedandroid_displayName=Jeda Application for Android")
-public class JedandroidWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
+public class JedandroidWizardIterator implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 
-    private int index;
-    private WizardDescriptor.Panel[] panels;
-    private WizardDescriptor wiz;
-
-    public JedandroidWizardIterator() {
-    }
+    private static final String PROJECT_DIR_PROPERTY = "projdir";
+    private static final String NAME_PROPERTY = "name";
+    private WizardDescriptor.Panel<WizardDescriptor> panel;
+    private WizardDescriptor wizard;
 
     public static JedandroidWizardIterator createIterator() {
         return new JedandroidWizardIterator();
     }
 
-    private WizardDescriptor.Panel[] createPanels() {
-        return new WizardDescriptor.Panel[]{
-            new JedandroidWizardPanel(),};
-    }
-
-    private String[] createSteps() {
-        return new String[]{
-            NbBundle.getMessage(JedandroidWizardIterator.class, "LBL_CreateProjectStep")
-        };
+    public JedandroidWizardIterator() {
     }
 
     @Override
-    public Set/*<FileObject>*/ instantiate(/*ProgressHandle handle*/) throws IOException {
+    public final void addChangeListener(final ChangeListener listener) {
+    }
+
+    @Override
+    public WizardDescriptor.Panel<WizardDescriptor> current() {
+        return this.panel;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return false;
+    }
+
+    @Override
+    public boolean hasPrevious() {
+        return false;
+    }
+
+    @Override
+    public void initialize(WizardDescriptor wizard) {
+        this.wizard = wizard;
+        this.panel = new JedandroidWizardPanel();
+        final Component component = this.panel.getComponent();
+        if (component instanceof JComponent) {
+            final JComponent jc = (JComponent) component;
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, this.stepName());
+            jc.putClientProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, true);
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, true);
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, true);
+        }
+    }
+
+    @Override
+    public Set<?> instantiate() throws IOException {
         Set<FileObject> resultSet = new LinkedHashSet<FileObject>();
-        File dirF = FileUtil.normalizeFile((File) wiz.getProperty("projdir"));
+        File dirF = FileUtil.normalizeFile((File) wizard.getProperty(PROJECT_DIR_PROPERTY));
         dirF.mkdirs();
 
-        FileObject template = Templates.getTemplate(wiz);
+        FileObject template = Templates.getTemplate(wizard);
         FileObject dir = FileUtil.toFileObject(dirF);
 
         JedandroidProject.init(dir);
@@ -88,83 +111,33 @@ public class JedandroidWizardIterator implements WizardDescriptor./*Progress*/In
     }
 
     @Override
-    public void initialize(WizardDescriptor wiz) {
-        this.wiz = wiz;
-        index = 0;
-        panels = createPanels();
-        // Make sure list of steps is accurate.
-        String[] steps = createSteps();
-        for (int i = 0; i < panels.length; i++) {
-            Component c = panels[i].getComponent();
-            if (steps[i] == null) {
-                // Default step name to component name of panel.
-                // Mainly useful for getting the name of the target
-                // chooser to appear in the list of steps.
-                steps[i] = c.getName();
-            }
-            if (c instanceof JComponent) { // assume Swing components
-                JComponent jc = (JComponent) c;
-                // Step #.
-                // TODO if using org.openide.dialogs >= 7.8, can use WizardDescriptor.PROP_*:
-                jc.putClientProperty("WizardPanel_contentSelectedIndex", new Integer(i));
-                // Step name (actually the whole list for reference).
-                jc.putClientProperty("WizardPanel_contentData", steps);
-            }
-        }
-    }
-
-    @Override
-    public void uninitialize(final WizardDescriptor wiz) {
-        this.wiz.putProperty("projdir", null);
-        this.wiz.putProperty("name", null);
-        this.wiz = null;
-        this.panels = null;
-    }
-
-    @Override
     public String name() {
-        return MessageFormat.format("{0} of {1}", new Object[]{
-            new Integer(this.index + 1), new Integer(this.panels.length)});
-    }
-
-    @Override
-    public boolean hasNext() {
-        return this.index < this.panels.length - 1;
-    }
-
-    @Override
-    public boolean hasPrevious() {
-        return this.index > 0;
+        return "1 of 1";
     }
 
     @Override
     public void nextPanel() {
-        if (!this.hasNext()) {
-            throw new NoSuchElementException();
-        }
-
-        this.index++;
+        throw new NoSuchElementException();
     }
 
     @Override
     public void previousPanel() {
-        if (!this.hasPrevious()) {
-            throw new NoSuchElementException();
-        }
-
-        this.index--;
+        throw new NoSuchElementException();
     }
 
     @Override
-    public WizardDescriptor.Panel current() {
-        return this.panels[this.index];
+    public final void removeChangeListener(final ChangeListener listener) {
     }
 
     @Override
-    public final void addChangeListener(final ChangeListener l) {
+    public void uninitialize(final WizardDescriptor wizard) {
+        this.wizard.putProperty(NAME_PROPERTY, null);
+        this.wizard.putProperty(PROJECT_DIR_PROPERTY, null);
+        this.wizard = null;
+        this.panel = null;
     }
 
-    @Override
-    public final void removeChangeListener(final ChangeListener l) {
+    private String stepName() {
+        return NbBundle.getMessage(JedandroidWizardIterator.class, "LBL_CreateProjectStep");
     }
 }

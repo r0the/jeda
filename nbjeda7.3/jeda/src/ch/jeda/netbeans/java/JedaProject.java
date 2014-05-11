@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -57,35 +57,35 @@ class JedaProject {
         return orig;
     }
 
-    static NodeList createConfigNode(final Project project) {
+    static NodeList<?> createConfigNode(final Project project) {
         if (isJedaProject(project)) {
             try {
-                return NodeFactorySupport.fixedNodeList(new Node[]{new Node(getJedaPropertiesFile(project), "Jeda Configuration")});
+                return NodeFactorySupport.fixedNodeList(new Node(getJedaPropertiesFile(project), "Jeda Configuration"));
             }
             catch (final DataObjectNotFoundException ex) {
                 // ignore
             }
         }
 
-        return NodeFactorySupport.fixedNodeList(new Node[0]);
+        return NodeFactorySupport.fixedNodeList();
     }
 
-    static NodeList createResourcesNode(final Project project) {
+    static NodeList<?> createResourcesNode(final Project project) {
         final FileObject resources = project.getProjectDirectory().getFileObject(RES);
         if ((isJedaProject(project)) && (resources != null)) {
             try {
-                return NodeFactorySupport.fixedNodeList(new Node[]{new Node(resources, "Resources")});
+                return NodeFactorySupport.fixedNodeList(new Node(resources, "Resources"));
             }
             catch (final DataObjectNotFoundException ex) {
                 // ignore
             }
         }
 
-        return NodeFactorySupport.fixedNodeList(new Node[0]);
+        return NodeFactorySupport.fixedNodeList();
     }
 
     static Lookup fixLookup(final Lookup lookup) {
-        final Project project = (Project) lookup.lookup(Project.class);
+        final Project project = lookup.lookup(Project.class);
         if (isJedaProject(project)) {
             return Lookups.fixed(new Object[]{new JedaProjectIconAnnotator(), new JedaProjectOpenedHook(project)});
         }

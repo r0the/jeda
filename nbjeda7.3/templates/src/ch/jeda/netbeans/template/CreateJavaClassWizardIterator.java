@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,12 +16,15 @@
  */
 package ch.jeda.netbeans.template;
 
+import java.awt.Component;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
-import org.netbeans.api.java.classpath.ClassPath;
+import javax.swing.JComponent;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -36,10 +39,68 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.TemplateWizard;
 import org.openide.util.NbBundle;
 
-public class CreateJavaClassWizard extends AbstractWizard {
+public class CreateJavaClassWizardIterator {
 
-    @Override
-    protected Set<?> createFiles(final WizardDescriptor wizard) throws IOException {
+    private WizardDescriptor.Panel<WizardDescriptor> panel;
+    private WizardDescriptor wizard;
+
+    protected CreateJavaClassWizardIterator() {
+    }
+
+    public final void addChangeListener(final ChangeListener listener) {
+    }
+
+    public final WizardDescriptor.Panel<WizardDescriptor> current() {
+        return this.panel;
+    }
+
+    public final boolean hasNext() {
+        return false;
+    }
+
+    public final boolean hasPrevious() {
+        return false;
+    }
+
+    public final void initialize(final WizardDescriptor wizard) {
+        this.wizard = wizard;
+        this.panel = this.createPanel(wizard);
+        final Component component = this.panel.getComponent();
+        if (component instanceof JComponent) {
+            final JComponent jc = (JComponent) component;
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, this.stepName());
+            jc.putClientProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, true);
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, true);
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, true);
+        }
+    }
+
+    public final Set<?> instantiate() throws IOException {
+        return this.createFiles(this.wizard);
+    }
+
+    public final String name() {
+        return "1 of 1";
+    }
+
+    public final void nextPanel() {
+        throw new NoSuchElementException();
+    }
+
+    public final void previousPanel() {
+        throw new NoSuchElementException();
+    }
+
+    public final void removeChangeListener(final ChangeListener listener) {
+    }
+
+    public final void uninitialize(final WizardDescriptor wizard) {
+        this.wizard = null;
+        this.panel = null;
+    }
+
+    private Set<?> createFiles(final WizardDescriptor wizard) throws IOException {
         // Create file from template
         final String className = Templates.getTargetName(wizard);
         final FileObject pkg = Templates.getTargetFolder(wizard);
@@ -47,7 +108,6 @@ public class CreateJavaClassWizard extends AbstractWizard {
         final TemplateWizard template = (TemplateWizard) wizard;
         final DataObject doTemplate = template.getTemplate();
         final Set<DataObject> result = new HashSet<DataObject>();
-
         final String projectDir = Templates.getProject(wizard).getProjectDirectory().getPath() + "/src/";
         String packageName = pkg.getPath().substring(projectDir.length());
         packageName = packageName.replace('/', '.');
@@ -59,16 +119,14 @@ public class CreateJavaClassWizard extends AbstractWizard {
         return result;
     }
 
-    @Override
-    protected WizardDescriptor.Panel createPanel(final WizardDescriptor wizard) {
+    private WizardDescriptor.Panel<WizardDescriptor> createPanel(final WizardDescriptor wizard) {
         final Project project = Templates.getProject(wizard);
-        final Sources sources = (Sources) ProjectUtils.getSources(project);
+        final Sources sources = ProjectUtils.getSources(project);
         final SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         return JavaTemplates.createPackageChooser(project, groups);
     }
 
-    @Override
-    protected String stepName() {
+    private String stepName() {
         return NbBundle.getMessage(JedaProgramWizardIterator.class, "LBL_CreateClassStep");
     }
 }

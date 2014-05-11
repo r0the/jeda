@@ -24,7 +24,7 @@ import org.netbeans.spi.project.ui.support.NodeList;
 public class ResourcesNodeFactory implements NodeFactory {
 
     @Override
-    public NodeList createNodes(final Project project) {
+    public NodeList<?> createNodes(final Project project) {
         return JedaProject.createResourcesNode(project);
     }
 }

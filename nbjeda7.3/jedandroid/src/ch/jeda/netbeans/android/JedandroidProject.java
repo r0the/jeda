@@ -60,10 +60,10 @@ class JedandroidProject {
         return orig;
     }
 
-    static NodeList createConfigNode(final Project project) {
+    static NodeList<?> createConfigNode(final Project project) {
         if (isJedaProject(project)) {
             try {
-                return NodeFactorySupport.fixedNodeList(new Node[]{new JedandroidProject.Node(getJedaPropertiesFile(project), "Jeda Configuration")});
+                return NodeFactorySupport.fixedNodeList(new JedandroidProject.Node(getJedaPropertiesFile(project), "Jeda Configuration"));
             }
             catch (final DataObjectNotFoundException ex) {
                 // ignore
@@ -74,12 +74,12 @@ class JedandroidProject {
     }
 
     static Lookup fixLookup(final Lookup lookup) {
-        final Project project = (Project) lookup.lookup(Project.class);
+        final Project project = lookup.lookup(Project.class);
         if (isJedaProject(project)) {
-            return Lookups.fixed(new Object[]{new JedandroidProjectIconAnnotator(), new JedandroidProjectOpenedHook(project)});
+            return Lookups.fixed(new JedandroidProjectIconAnnotator(), new JedandroidProjectOpenedHook(project));
         }
         else {
-            return Lookups.fixed(new Object[0]);
+            return Lookups.fixed();
         }
     }
 

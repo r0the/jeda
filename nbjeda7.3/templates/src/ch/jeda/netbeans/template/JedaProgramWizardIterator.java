@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,6 +28,6 @@ import org.openide.util.NbBundle.Messages;
     description = "JedaProgramDescription.html",
     scriptEngine = "freemarker")
 @Messages(value = {"JedaProgramWizardIterator_displayName=Jeda Program"})
-public final class JedaProgramWizardIterator extends CreateJavaClassWizard
+public final class JedaProgramWizardIterator extends CreateJavaClassWizardIterator
     implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 }
