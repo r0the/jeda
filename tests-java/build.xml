@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="tests" default="default" basedir=".">
-    <description>Builds, tests, and runs the project tests.</description>
+<project name="tests-java" default="default" basedir=".">
+    <description>Builds, tests, and runs the project tests-java.</description>
     <import file="nbproject/build-impl.xml"/>
 
     <target name="-post-compile">

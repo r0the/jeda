@@ -16,7 +16,7 @@ public class SoundTest extends Program implements ActionListener {
     @Override
     public void run() {
         window = new Window();
-        sounds = new HashMap<String, Sound>();
+        sounds = new HashMap<>();
         x = 10;
         y = 10;
 

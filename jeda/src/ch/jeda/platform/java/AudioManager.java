@@ -20,15 +20,12 @@ import ch.jeda.Log;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
-import ch.jeda.platform.MusicImp;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -80,22 +77,6 @@ class AudioManager implements TickListener {
 
         this.playing.removeAll(this.pendingDeletions);
         this.pendingDeletions.clear();
-    }
-
-    MusicImp createMusicImp(final String path) {
-        if (path != null & path.toLowerCase().endsWith(".mid")) {
-            try {
-                return new JavaMidiMusicImp(path, MidiSystem.getSequencer());
-            }
-            catch (final MidiUnavailableException ex) {
-                Log.err("jeda.audio.error.midi-unavailable", path);
-                return null;
-            }
-        }
-        else {
-            Log.err("jeda.audio.error.unsupported-file-format", path);
-            return null;
-        }
     }
 
     SoundImp createSoundImp(final String path) {

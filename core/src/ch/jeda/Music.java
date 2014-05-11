@@ -24,7 +24,7 @@ import ch.jeda.platform.MusicImp;
  * <p>
  * <img src="../../windows.png"> <img src="../../linux.png"> Supported audio formats are:
  * <ul>
- * <li><a href="http://de.wikipedia.org/wiki/Musical_Instrument_Digital_Interface" target="_blank">MIDI</a>
+ * <li><a href="http://en.wikipedia.org/wiki/Mp3" target="_blank">MP3</a> (Codec: MP3)
  * </ul>
  * <p>
  * <img src="../../android.png"> Supported audio formats are:

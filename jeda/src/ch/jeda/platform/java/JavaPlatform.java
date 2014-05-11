@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.Log;
 import ch.jeda.LogLevel;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.CanvasImp;
@@ -55,7 +56,15 @@ class JavaPlatform implements Platform {
 
     @Override
     public MusicImp createMusicImp(final String path) {
-        return this.audioManager.createMusicImp(path);
+        assert (path != null);
+
+        if (path.toLowerCase().endsWith(".mp3")) {
+            return new JavaMp3MusicImp(path);
+        }
+        else {
+            Log.err("jeda.audio.error.unsupported-file-format", path);
+            return null;
+        }
     }
 
     @Override

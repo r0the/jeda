@@ -14,7 +14,8 @@ public class MusicTest extends Program implements ActionListener {
     @Override
     public void run() {
         window = new Window();
-        music = new Music("res:raw/battle.mid");
+//        music = new Music("res:raw/battle.mid");
+        music = new Music("res:raw/move_forward.mp3");
         x = 10;
         y = 10;
 
