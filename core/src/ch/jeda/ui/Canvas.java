@@ -286,7 +286,7 @@ public class Canvas {
      */
     public void drawImage(final double x, final double y, final Image image, final int alpha,
                           final Alignment alignment) {
-        this.drawImage(x, y, image, alpha, alignment);
+        this.drawImage((int) x, (int) y, image, alpha, alignment);
     }
 
     /**
