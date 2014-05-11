@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -175,6 +175,10 @@ class JedaEngine implements PlatformCallback, Runnable {
     }
 
     ImageImp createImageImp(final String path) {
+        if (path == null) {
+            return this.defaultImageImp;
+        }
+
         final ImageImp result = this.platform.createImageImp(path);
         if (result == null) {
             return this.defaultImageImp;
@@ -185,6 +189,10 @@ class JedaEngine implements PlatformCallback, Runnable {
     }
 
     MusicImp createMusicImp(final String path) {
+        if (path == null) {
+            return EMPTY_MUSIC_IMP;
+        }
+
         final MusicImp result = this.platform.createMusicImp(path);
         if (result == null) {
             return EMPTY_MUSIC_IMP;
@@ -195,6 +203,10 @@ class JedaEngine implements PlatformCallback, Runnable {
     }
 
     SoundImp createSoundImp(final String path) {
+        if (path == null) {
+            return EMPTY_SOUND_IMP;
+        }
+
         final SoundImp result = this.platform.createSoundImp(path);
         if (result == null) {
             return EMPTY_SOUND_IMP;
