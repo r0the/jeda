@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -252,7 +252,7 @@ public class Window extends Canvas {
     }
 
     private void tick(final TickEvent event) {
-        if (this.imp.isValid() && this.imp.isActive()) {
+        if (this.imp.isVisible()) {
             this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
             this.eventDispatcher.dispatchTick(event);
             this.graphicsItems.processPending();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -41,12 +41,7 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     }
 
     @Override
-    public boolean isActive() {
-        return this.canvasView.isVisible();
-    }
-
-    @Override
-    public boolean isValid() {
+    public boolean isVisible() {
         return this.canvasView.isVisible();
     }
 
