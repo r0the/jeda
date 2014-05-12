@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,7 +29,6 @@ import ch.jeda.platform.MusicImp;
  * <p>
  * <img src="../../android.png"> Supported audio formats are:
  * <ul>
- * <li><a href="http://de.wikipedia.org/wiki/Musical_Instrument_Digital_Interface" target="_blank">MIDI</a>
  * <li><a href="http://en.wikipedia.org/wiki/Mp3" target="_blank">MP3</a> (Codec: MP3)
  * <li><a href="http://en.wikipedia.org/wiki/Mp4" target="_blank">MP4</a> (Codecs: AAC LC, HE-AACv1, HE-AACv2)
  * <li><a href="http://en.wikipedia.org/wiki/Ogg" target="_blank">Ogg</a> (Codec: Vorbis)
