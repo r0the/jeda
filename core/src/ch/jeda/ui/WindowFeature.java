@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,7 +38,7 @@ public enum WindowFeature {
      */
     FULLSCREEN,
     /**
-     *
+     * @since 1
      */
     HOVERING_POINTER,
     /**
@@ -62,25 +62,5 @@ public enum WindowFeature {
      *
      * @since 1
      */
-    ORIENTATION_PORTRAIT,
-    /**
-     * @deprecated Use {@link #DOUBLE_BUFFERED} instead.
-     */
-    DoubleBuffered,
-    /**
-     * @deprecated Use {@link #FULLSCREEN} instead.
-     */
-    Fullscreen,
-    /**
-     * @deprecated Use {@link #HOVERING_POINTER} instead.
-     */
-    HoveringPointer,
-    /**
-     * @deprecated Use {@link #ORIENTATION_LANDSCAPE} instead.
-     */
-    OrientationLandscape,
-    /**
-     * @deprecated Use {@link #ORIENTATION_PORTRAIT} instead.
-     */
-    OrientationPortrait
+    ORIENTATION_PORTRAIT
 }
