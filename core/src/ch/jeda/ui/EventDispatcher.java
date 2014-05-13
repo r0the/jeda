@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -55,7 +55,6 @@ class EventDispatcher {
     private final List<SensorListener> sensorListeners;
     private final List<TickListener> tickListeners;
     private final List<TurnListener> turnListeners;
-    private final List<WindowFocusLostListener> windowFocusLostListeners;
 
     EventDispatcher() {
         this.actionEvents = new ArrayList<ActionEvent>();
@@ -72,7 +71,6 @@ class EventDispatcher {
         this.sensorListeners = new ArrayList<SensorListener>();
         this.tickListeners = new ArrayList<TickListener>();
         this.turnListeners = new ArrayList<TurnListener>();
-        this.windowFocusLostListeners = new ArrayList<WindowFocusLostListener>();
     }
 
     void addAction(final Object source, final String action) {
@@ -203,17 +201,6 @@ class EventDispatcher {
                     }
 
                     break;
-                case WINDOW_FOCUS_LOST:
-                    for (int j = 0; j < this.windowFocusLostListeners.size(); ++j) {
-                        try {
-                            this.windowFocusLostListeners.get(j).onWindowFocusLost();
-                        }
-                        catch (final Throwable ex) {
-                            Log.err(ex, "jeda.event.error");
-                        }
-                    }
-
-                    break;
             }
         }
 
@@ -284,9 +271,6 @@ class EventDispatcher {
             this.turnListeners.add((TurnListener) listener);
         }
 
-        if (listener instanceof WindowFocusLostListener) {
-            this.windowFocusLostListeners.add((WindowFocusLostListener) listener);
-        }
     }
 
     private void doRemoveListener(final Object listener) {
@@ -331,8 +315,5 @@ class EventDispatcher {
             this.turnListeners.remove((TurnListener) listener);
         }
 
-        if (listener instanceof WindowFocusLostListener) {
-            this.windowFocusLostListeners.remove((WindowFocusLostListener) listener);
-        }
     }
 }
