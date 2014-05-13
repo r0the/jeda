@@ -32,14 +32,14 @@ public abstract class Block {
     public static final Block WALL = new Block.DefaultBlock("WALL");
     public static final Block WATER = new Block.DefaultBlock("WATER");
     public static final Block WOOD = new Block.DefaultBlock("WOOD");
-    public static final float SIZE_X = 100f;
-    public static final float SIZE_Y = 82f;
-    public static final float SIZE_Z = 40f;
-    public static final float TOP_OFFSET = 120f;
+    public static final int SIZE_X = 100;
+    public static final int SIZE_Y = 82;
+    public static final int SIZE_Z = 40;
+    public static final int TOP_OFFSET = 120;
 
-    public abstract void draw(Canvas canvas, float x, float y);
+    public abstract void draw(Canvas canvas, double x, double y);
 
-    public abstract void draw(Canvas canvas, float x, float y, int alpha);
+    public abstract void draw(Canvas canvas, double x, double y, int alpha);
 
     public abstract boolean isEmpty();
 
@@ -54,12 +54,12 @@ public abstract class Block {
         }
 
         @Override
-        public void draw(final Canvas canvas, final float x, final float y) {
+        public void draw(final Canvas canvas, final double x, final double y) {
             canvas.drawImage(x, y, this.image, Alignment.BOTTOM_CENTER);
         }
 
         @Override
-        public void draw(final Canvas canvas, final float x, final float y, final int alpha) {
+        public void draw(final Canvas canvas, final double x, final double y, final int alpha) {
             canvas.drawImage(x, y, this.image, alpha, Alignment.BOTTOM_CENTER);
         }
 
@@ -77,11 +77,11 @@ public abstract class Block {
     private static class EmptyBlock extends Block {
 
         @Override
-        public void draw(final Canvas canvas, final float x, final float y) {
+        public void draw(final Canvas canvas, final double x, final double y) {
         }
 
         @Override
-        public void draw(final Canvas canvas, final float x, final float y, final int alpha) {
+        public void draw(final Canvas canvas, final double x, final double y, final int alpha) {
         }
 
         @Override

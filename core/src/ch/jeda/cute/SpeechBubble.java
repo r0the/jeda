@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,23 +28,35 @@ class SpeechBubble {
     private static final String SPEECH_PREFIX = "says:";
     private static final Image INFO_BUBBLE = Cute.loadImage("info_bubble");
     private static final Image SPEECH_BUBBLE = Cute.loadImage("speech_bubble");
+    private static final int BORDER = 10;
+    private static final int LINE_HEIGHT = 20;
+    private static final int FONT_SIZE = 20;
 
-    static void draw(final Canvas canvas, float x, float y, String message) {
+    static void draw(final Canvas canvas, double x, double y, String message) {
+        final Image image = imageFor(message);
         if (message.startsWith(SPEECH_PREFIX)) {
-            canvas.drawImage(x, y, SPEECH_BUBBLE, Alignment.BOTTOM_CENTER);
             message = message.substring(SPEECH_PREFIX.length());
         }
-        else {
-            canvas.drawImage(x, y, INFO_BUBBLE, Alignment.BOTTOM_CENTER);
-        }
 
+
+        canvas.drawImage(x, y, image, Alignment.BOTTOM_CENTER);
         canvas.setColor(Color.BLACK);
-        final List<String> lines = lineBreak(canvas, message, 90);
-        y -= 204f;
-        x = x - 50f + 5f;
-        for (final String line : lines) {
-            canvas.drawText(x, y, line, Alignment.TOP_LEFT);
-            y += 20f;
+        canvas.setFontSize(FONT_SIZE);
+        final List<String> lines = lineBreak(canvas, message, image.getWidth() - 2 * BORDER);
+        y -= 204;
+        x = x - image.getWidth() / 2 + BORDER;
+        for (int i = 0; i < lines.size(); ++i) {
+            canvas.drawText(x, y, lines.get(i), Alignment.TOP_LEFT);
+            y += LINE_HEIGHT;
+        }
+    }
+
+    private static Image imageFor(final String message) {
+        if (message.startsWith(SPEECH_PREFIX)) {
+            return SPEECH_BUBBLE;
+        }
+        else {
+            return INFO_BUBBLE;
         }
     }
 
@@ -52,23 +64,25 @@ class SpeechBubble {
         final String[] words = message.split(" ");
         final List<String> result = new ArrayList<String>();
 
-        int i = 0;
-        while (i < words.length) {
-            String lookahead = words[i];
-            String line = null;
-            while ((canvas.textWidth(lookahead) < maxWidth) && (i + 1 < words.length)) {
-                line = lookahead;
-                i++;
-                lookahead = line + " " + words[i];
+        String line = "";
+        String lookahead = null;
+        for (int i = 0; i < words.length; ++i) {
+            lookahead = line;
+            if (!lookahead.isEmpty()) {
+                lookahead = lookahead + " ";
             }
 
-            if (line == null) {
+            lookahead = lookahead + words[i];
+            if (canvas.textWidth(lookahead) < maxWidth) {
                 line = lookahead;
-                i++;
             }
-
-            result.add(line);
+            else {
+                result.add(line);
+                line = words[i];
+            }
         }
+
+        result.add(line);
         return result;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,14 +26,9 @@ public class CuteSprite extends CuteObject {
         this(objectType, 0f, 0f, 0f);
     }
 
-    public CuteSprite(final CuteObjectType image, final float x, final float y, final float z) {
+    public CuteSprite(final CuteObjectType image, final double x, final double y, final double z) {
         super(image, x, y, z);
         this.state = CuteSprite.ControlState.IDLE;
-    }
-
-    @Override
-    public void draw(final Canvas canvas, final float x, final float y) {
-        super.draw(canvas, x, y);
     }
 
     public final boolean isMoving() {
@@ -43,7 +38,7 @@ public class CuteSprite extends CuteObject {
     public final void move(final Direction direction) {
         if (this.state == CuteSprite.ControlState.IDLE) {
             this.state = new CuteSprite.MoveToState(this.getX() + direction.getDx(),
-                                                    this.getY() + direction.getDy(), this.getZ(), 5f);
+                                                    this.getY() + direction.getDy(), this.getZ(), 5.0);
         }
     }
 
@@ -52,7 +47,12 @@ public class CuteSprite extends CuteObject {
     }
 
     @Override
-    public void update(final float dt) {
+    protected void draw(final Canvas canvas, final double x, final double y) {
+        super.draw(canvas, x, y);
+    }
+
+    @Override
+    protected void update(final double dt) {
         this.state.update(dt, this);
     }
 
@@ -60,24 +60,24 @@ public class CuteSprite extends CuteObject {
 
         static final ControlState IDLE = new IdleState();
 
-        abstract void update(float paramFloat, CuteSprite paramCuteSprite);
+        abstract void update(double dt, CuteSprite object);
     }
 
     private static class IdleState extends ControlState {
 
         @Override
-        void update(float dt, CuteSprite object) {
+        void update(double dt, CuteSprite object) {
         }
     }
 
     private static class MoveToState extends ControlState {
 
-        private final float speed;
-        private final float targetX;
-        private final float targetY;
-        private final float targetZ;
+        private final double speed;
+        private final double targetX;
+        private final double targetY;
+        private final double targetZ;
 
-        MoveToState(final float targetX, final float targetY, final float targetZ, final float speed) {
+        MoveToState(final double targetX, final double targetY, final double targetZ, final double speed) {
             this.speed = speed;
             this.targetX = targetX;
             this.targetY = targetY;
@@ -85,20 +85,20 @@ public class CuteSprite extends CuteObject {
         }
 
         @Override
-        void update(final float dt, final CuteSprite object) {
-            float dx = this.targetX - object.getX();
-            float dy = this.targetY - object.getY();
-            float dz = this.targetZ - object.getZ();
-            float d = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+        void update(final double dt, final CuteSprite object) {
+            double dx = this.targetX - object.getX();
+            double dy = this.targetY - object.getY();
+            double dz = this.targetZ - object.getZ();
+            double d = Math.sqrt(dx * dx + dy * dy + dz * dz);
             if (Math.abs(d) < this.speed * dt) {
                 object.setPosition(this.targetX, this.targetY, this.targetZ);
-                object.setVx(0f);
-                object.setVy(0f);
-                object.setVz(0f);
+                object.setVx(0.0);
+                object.setVy(0.0);
+                object.setVz(0.0);
                 object.state = ControlState.IDLE;
             }
             else {
-                float f = this.speed / d;
+                double f = this.speed / d;
                 object.setVx(dx * f);
                 object.setVy(dy * f);
                 object.setVz(dz * f);

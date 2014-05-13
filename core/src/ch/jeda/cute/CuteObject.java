@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,21 +23,22 @@ public class CuteObject {
 
     private Box box;
     private String message;
-    private float messageTimeout;
+    private double messageTimeout;
     private CuteObjectType objectType;
+    private double radius;
     private CuteWorld world;
-    private float vx;
-    private float vy;
-    private float vz;
-    private float x;
-    private float y;
-    private float z;
+    private double vx;
+    private double vy;
+    private double vz;
+    private double x;
+    private double y;
+    private double z;
 
     public CuteObject(final CuteObjectType objectType) {
         this(objectType, 0f, 0f, 0f);
     }
 
-    public CuteObject(final CuteObjectType objectType, final float x, final float y, final float z) {
+    public CuteObject(final CuteObjectType objectType, final double x, final double y, final double z) {
         if (objectType == null) {
             this.objectType = CuteObjectType.EMPTY;
         }
@@ -49,25 +50,27 @@ public class CuteObject {
         this.z = z;
     }
 
-    public void draw(final Canvas canvas, final float x, final float y) {
-        if (this.objectType != null) {
-            canvas.drawImage(x, y, this.objectType.getImage(), Alignment.BOTTOM_CENTER);
+    public final double distanceTo(final CuteObject object) {
+        if (object == null) {
+            throw new NullPointerException("object");
         }
-        if (this.message != null) {
-            SpeechBubble.draw(canvas, x, y, this.message);
-        }
+
+        final double dx = object.x - this.x;
+        final double dy = object.y - this.y;
+        final double dz = object.z - this.z;
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 
     public final int getIntX() {
-        return Math.round(this.x);
+        return (int) Math.round(this.x);
     }
 
     public final int getIntY() {
-        return Math.round(this.y);
+        return (int) Math.round(this.y);
     }
 
     public final int getIntZ() {
-        return Math.round(this.z);
+        return (int) Math.round(this.z);
     }
 
     public final String getMessage() {
@@ -78,66 +81,92 @@ public class CuteObject {
         return this.objectType;
     }
 
-    public final float getVx() {
+    public final double getRadius() {
+        return this.radius;
+    }
+
+    public final double getVx() {
         return this.vx;
     }
 
-    public final float getVy() {
+    public final double getVy() {
         return this.vy;
     }
 
-    public final float getVz() {
+    public final double getVz() {
         return this.vz;
     }
 
-    public final float getX() {
+    public final double getX() {
         return this.x;
     }
 
-    public final float getY() {
+    public final double getY() {
         return this.y;
     }
 
-    public final float getZ() {
+    public final double getZ() {
         return this.z;
+    }
+
+    public final void remove() {
+        this.world.removeObject(this);
     }
 
     public final void setMessage(final String message) {
         this.setMessage(message, -1f);
     }
 
-    public final void setMessage(final String message, final float seconds) {
+    public final void setMessage(final String message, final double seconds) {
         this.message = message;
         this.messageTimeout = seconds;
     }
 
-    public final void setPosition(final float x, final float y, final float z) {
+    public final void setPosition(final double x, final double y, final double z) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.changed();
     }
 
-    public final void setVx(final float vx) {
+    public final void setRadius(final double radius) {
+        if (radius < 0) {
+            this.radius = 0;
+        }
+        else {
+            this.radius = radius;
+        }
+    }
+
+    public final void setVx(final double vx) {
         this.vx = vx;
     }
 
-    public final void setVy(final float vy) {
+    public final void setVy(final double vy) {
         this.vy = vy;
     }
 
-    public final void setVz(final float vz) {
+    public final void setVz(final double vz) {
         this.vz = vz;
     }
 
-    public void update(final float dt) {
+    protected void collideWith(final CuteObject other) {
     }
 
-    protected void moveTo(final float newX, final float newY, final float newZ) {
+    protected void draw(final Canvas canvas, final double x, final double y) {
+        if (this.objectType != null) {
+            canvas.drawImage(x, y, this.objectType.getImage(), Alignment.BOTTOM_CENTER);
+        }
+    }
+
+    protected void moveTo(final double newX, final double newY, final double newZ) {
         this.setPosition(newX, newY, newZ);
     }
 
-    void internalUpdate(final float dt) {
+    protected void update(final double dt) {
+    }
+
+    void internalUpdate(final double dt) {
         if (this.messageTimeout > 0f) {
             this.messageTimeout -= dt;
             if (this.messageTimeout < 0f) {
@@ -146,9 +175,9 @@ public class CuteObject {
         }
 
         this.update(dt);
-        float newX = getX() + this.vx * dt;
-        float newY = getY() + this.vy * dt;
-        float newZ = getZ() + this.vz * dt;
+        double newX = getX() + this.vx * dt;
+        double newY = getY() + this.vy * dt;
+        double newZ = getZ() + this.vz * dt;
         this.moveTo(newX, newY, newZ);
     }
 
