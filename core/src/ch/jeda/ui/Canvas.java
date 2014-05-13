@@ -31,7 +31,7 @@ import java.util.Stack;
  * <li> <b>color</b>: The color used to draw geometric primitives. Initially, the color is black. The color can be
  * changed with {@link #setColor(ch.jeda.ui.Color)}.
  * <li> <b>line width</b>: the line width used to draw geometric shapes. The line width can be changed with
- * {@link #setLineWidth(float)}.
+ * {@link #setLineWidth(double)}.
  * <li> <b>font size</b>: the size of the font used to render text. Initially, the font size is 16. The font size can be
  * changed with {@link #setFontSize(int)}.
  * <li> <b>transformation</b>: The canvas has an affine transformation that is applied to all drawing operations. The

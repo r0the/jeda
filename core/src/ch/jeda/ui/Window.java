@@ -205,7 +205,7 @@ public class Window extends Canvas {
      * Removes a {@link ch.jeda.ui.GraphicsItem} from the window. Has no effect if <tt>graphicsItem</tt> is
      * <tt>null</tt>.
      *
-     * @param graphicsItem the graphics item to be removed from the window
+     * @param item the graphics item to be removed from the window
      *
      * @see ch.jeda.ui.GraphicsItem
      * @since 1

@@ -18,17 +18,6 @@ package ch.jeda;
 
 import java.io.Serializable;
 
-/**
- * Represents a two-dimensional affine transformation. Transformations can be applied either to {@link Vector} objects
- * or a {@link ch.jeda.ui.Canvas}.
- * <p>
- * A transformation is represented as an 3x3 affine transformation matrix. It has the form
- * <pre>[m00 m01 m02]
- * [m10 m11 m12]
- * [  0   0   1]</pre>
- * <p>
- *
- */
 @Deprecated
 public final class Transformation implements Serializable {
 
@@ -41,24 +30,13 @@ public final class Transformation implements Serializable {
     private static final int M12 = 5;
     private final float[] m;
 
-    /**
-     * Constructs an identity transformation.
-     *
-     * @since 1
-     */
+    @Deprecated
     public Transformation() {
         this.m = new float[6];
         this.setIdentity();
     }
 
-    /**
-     * Combines two transformations. Concatenates the transformation with the specified other transformation.
-     *
-     * @param other the other transformation
-     * @throws NullPointerException if <tt>other</tt> is <tt>null</tt>
-     *
-     * @since 1
-     */
+    @Deprecated
     public void concatenate(final Transformation other) {
         if (other == null) {
             throw new NullPointerException("other");
@@ -78,6 +56,7 @@ public final class Transformation implements Serializable {
         this.m[M12] = m12;
     }
 
+    @Deprecated
     public float[] copyToArray(final float[] target) {
         if (target != null && target.length >= 6) {
             System.arraycopy(this.m, 0, target, 0, 6);
@@ -90,6 +69,7 @@ public final class Transformation implements Serializable {
         }
     }
 
+    @Deprecated
     public boolean invert(final Transformation inverse) {
         final float d = this.m[M00] * this.m[M11] - this.m[M01] * this.m[M10];
 
@@ -109,12 +89,7 @@ public final class Transformation implements Serializable {
         return true;
     }
 
-    /**
-     * Adds a rotation to the transformation. Concatenates the transformation with add a rotation by the specified
-     * angle.
-     *
-     * @param angle the rotation angle
-     */
+    @Deprecated
     public void rotate(final double angle) {
         final float sin = (float) Math.sin(angle);
         final float cos = (float) Math.cos(angle);
@@ -129,37 +104,23 @@ public final class Transformation implements Serializable {
         this.m[M11] = -sin * m10 + cos * m11;
     }
 
-    /**
-     * Adds a scaling to the transformation. Concatenates the transformation with add a scaling by the specified
-     * factors.
-     *
-     * @param sx the scaling factor along the x-axis
-     * @param sy the scaling factor along the y-axis
-     */
+    @Deprecated
     public void scale(final float sx, final float sy) {
         this.m[M00] *= sx;
         this.m[M11] *= sy;
     }
 
+    @Deprecated
     public void set(final Transformation other) {
         System.arraycopy(other.m, 0, this.m, 0, 6);
     }
 
-    /**
-     * Sets the transformation to the identity.
-     */
+    @Deprecated
     public void setIdentity() {
         System.arraycopy(IDENTITY, 0, this.m, 0, 6);
     }
 
-    /**
-     * Adds a translation to the transformation.
-     *
-     * @param tx the translation along the x-axis
-     * @param ty the translation along the y-axis
-     *
-     * @since 1
-     */
+    @Deprecated
     public void translate(final float tx, final float ty) {
         this.m[M02] += tx;
         this.m[M12] += ty;

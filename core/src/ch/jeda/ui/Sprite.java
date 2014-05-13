@@ -58,6 +58,7 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
         this.vy = speed * Math.sin(direction);
     }
 
+    @SuppressWarnings("unchecked")
     public final <T extends Sprite> T[] getCollidingSprites(final Class<T> clazz) {
         final List<T> result = new ArrayList<T>();
         if (this.getWindow() != null) {
@@ -68,6 +69,7 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
             }
         }
 
+        // Unchecked cast
         return result.toArray((T[]) Array.newInstance(clazz, result.size()));
     }
 

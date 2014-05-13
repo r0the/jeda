@@ -57,25 +57,17 @@ class GraphicsItems {
         }
     }
 
-    void drawCollisionShapes(final Canvas canvas) {
-//        for (int i = 0; i < this.all.length; ++i) {
-//            final Shape shape = this.all[i].getCollisionShape();
-//            canvas.setColor(DEBUG_FILL_COLOR);
-//            shape.fill(canvas);
-//            canvas.setColor(DEBUG_OUTLINE_COLOR);
-//            shape.draw(canvas);
-//        }
-    }
-
     @SuppressWarnings("unchecked")
     final <T extends GraphicsItem> T[] get(final Class<T> clazz) {
         final List<T> result = new ArrayList<T>();
         for (final GraphicsItem item : this.all) {
             if (clazz.isInstance(item)) {
+                // Unchecked cast
                 result.add((T) item);
             }
         }
 
+        // Unchecked cast
         return result.toArray((T[]) Array.newInstance(clazz, result.size()));
     }
 
