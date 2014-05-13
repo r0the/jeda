@@ -19,24 +19,24 @@ package ch.jeda;
 class Timer {
 
     private long adjustment;
-    private float targetFrequency;
+    private double targetFrequency;
     private long lastStepDuration;
     private long start;
     private long period;
 
-    Timer(final float targetFrequency) {
+    Timer(final double targetFrequency) {
         this.targetFrequency = targetFrequency;
     }
 
-    float getTargetFrequency() {
+    double getTargetFrequency() {
         return this.targetFrequency;
     }
 
-    float getLastStepDuration() {
-        return this.lastStepDuration / 1000f;
+    double getLastStepDuration() {
+        return this.lastStepDuration / 1000.0;
     }
 
-    void setTargetFrequency(final float hertz) {
+    void setTargetFrequency(final double hertz) {
         if (this.targetFrequency != hertz) {
             this.targetFrequency = hertz;
             this.refresh();

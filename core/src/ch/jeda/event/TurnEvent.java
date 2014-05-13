@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,18 +16,21 @@
  */
 package ch.jeda.event;
 
+/**
+ *
+ */
 public class TurnEvent extends Event {
 
-    private final float amount;
+    private final double amount;
     private final TurnAxis axis;
 
-    public TurnEvent(final Object source, final float amount, final TurnAxis axis) {
+    public TurnEvent(final Object source, final double amount, final TurnAxis axis) {
         super(source, EventType.TURN);
         this.amount = amount;
         this.axis = axis;
     }
 
-    public final float getAmount() {
+    public final double getAmount() {
         return this.amount;
     }
 

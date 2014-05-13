@@ -48,19 +48,19 @@ public interface CanvasImp {
 
     int getHeight();
 
-    float getLineWidth();
+    double getLineWidth();
 
     Color getPixelAt(int x, int y);
 
     int getWidth();
 
-    void setAntiAliasing(final boolean antiAliasing);
+    void setAntiAliasing(boolean antiAliasing);
 
     void setColor(Color color);
 
     void setFontSize(int fontSize);
 
-    void setLineWidth(float lineWidth);
+    void setLineWidth(double lineWidth);
 
     void setPixelAt(int x, int y, Color color);
 

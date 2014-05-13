@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,10 +23,10 @@ package ch.jeda.event;
  */
 public class TickEvent extends Event {
 
-    private final float duration;
-    private final float frameRate;
+    private final double duration;
+    private final double frameRate;
 
-    public TickEvent(final Object source, final float duration, final float frameRate) {
+    public TickEvent(final Object source, final double duration, final double frameRate) {
         super(source, EventType.TICK);
         this.duration = duration;
         this.frameRate = frameRate;
@@ -39,7 +39,7 @@ public class TickEvent extends Event {
      *
      * @since 1
      */
-    public final float getDuration() {
+    public final double getDuration() {
         return this.duration;
     }
 
@@ -50,7 +50,7 @@ public class TickEvent extends Event {
      *
      * @since 1
      */
-    public final float getFrameRate() {
+    public final double getFrameRate() {
         return this.frameRate;
     }
 
@@ -61,8 +61,6 @@ public class TickEvent extends Event {
         result.append(this.getType());
         result.append(", duration=");
         result.append(this.duration);
-        result.append(", keyChar=");
-        result.append(this.frameRate);
         result.append(", frameRate=");
         result.append(this.frameRate);
         result.append(")");

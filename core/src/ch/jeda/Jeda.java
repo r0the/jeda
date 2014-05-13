@@ -45,13 +45,13 @@ public class Jeda {
 
     /**
      * Adds a tick listener to the Jeda engine. The listener will receive {@link ch.jeda.event.EventType#TICK} events in
-     * approximately the frequency set with {@link ch.jeda.Jeda#setTickFrequency(float)}. Has no effect if
+     * approximately the frequency set with {@link ch.jeda.Jeda#setTickFrequency(double)}. Has no effect if
      * <tt>listener</tt> is <tt>null</tt>.
      *
      * @param listener the listener to add
      *
      * @see #removeTickListener(ch.jeda.event.TickListener)
-     * @see #setTickFrequency(float)
+     * @see #setTickFrequency(double)
      * @since 1
      */
     public static void addTickListener(final TickListener listener) {
@@ -121,10 +121,10 @@ public class Jeda {
      *
      * @return the target tick frequency in Hertz [Hz].
      *
-     * @see #setTickFrequency(float)
+     * @see #setTickFrequency(double)
      * @since 1
      */
-    public static float getTickFrequency() {
+    public static double getTickFrequency() {
         return ENGINE.getTickFrequency();
     }
 
@@ -212,7 +212,7 @@ public class Jeda {
      * @param listener the listener to remove
      *
      * @see #addTickListener(ch.jeda.event.TickListener)
-     * @see #setTickFrequency(float)
+     * @see #setTickFrequency(double)
      * @since 1
      */
     public static void removeTickListener(final TickListener listener) {
@@ -228,7 +228,7 @@ public class Jeda {
      * @see #getTickFrequency()
      * @since 1
      */
-    public static void setTickFrequency(final float hertz) {
+    public static void setTickFrequency(final double hertz) {
         ENGINE.setTickFrequency(hertz);
     }
 

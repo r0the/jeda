@@ -123,7 +123,7 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public float getLineWidth() {
+    public double getLineWidth() {
         return this.strokePaint.getStrokeWidth();
     }
 
@@ -159,10 +159,10 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setLineWidth(final float lineWidth) {
-        assert lineWidth >= 0f;
+    public void setLineWidth(final double lineWidth) {
+        assert lineWidth >= 0.0;
 
-        this.strokePaint.setStrokeWidth(lineWidth);
+        this.strokePaint.setStrokeWidth((float) lineWidth);
     }
 
     @Override

@@ -45,7 +45,7 @@ class JedaEngine implements PlatformCallback, Runnable {
     private static final MusicImp EMPTY_MUSIC_IMP = new EmptyMusicImp();
     private static final SoundImp EMPTY_SOUND_IMP = new EmptySoundImp();
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
-    private static final float DEFAULT_TICK_FREQUENCY = 60f;
+    private static final double DEFAULT_TICK_FREQUENCY = 60.0;
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = "res/jeda.properties";
     private static final String JEDA_PLATFORM_PROPERTIES_FILE = "res/jeda/platform.properties";
     private static final String JEDA_SYSTEM_PROPERTIES_FILE = "res/jeda/system.properties";
@@ -246,7 +246,7 @@ class JedaEngine implements PlatformCallback, Runnable {
         return this.properties;
     }
 
-    float getTickFrequency() {
+    double getTickFrequency() {
         return this.timer.getTargetFrequency();
     }
 
@@ -296,7 +296,7 @@ class JedaEngine implements PlatformCallback, Runnable {
         this.platform.setSensorEnabled(sensorType, enabled);
     }
 
-    void setTickFrequency(final float hertz) {
+    void setTickFrequency(final double hertz) {
         this.timer.setTargetFrequency(hertz);
     }
 

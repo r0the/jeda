@@ -29,10 +29,10 @@ public class SensorEvent extends Event {
 
     private final boolean maximum;
     private final SensorType sensorType;
-    private final float value;
-    private final float x;
-    private final float y;
-    private final float z;
+    private final double value;
+    private final double x;
+    private final double y;
+    private final double z;
 
     /**
      * Constructs a sensor event.
@@ -44,7 +44,7 @@ public class SensorEvent extends Event {
      *
      * @since 1
      */
-    public SensorEvent(final Object source, final SensorType sensorType, final boolean maxiumum, final float value) {
+    public SensorEvent(final Object source, final SensorType sensorType, final boolean maxiumum, final double value) {
         this(source, sensorType, maxiumum, value, 0f, 0f, 0f);
     }
 
@@ -59,8 +59,9 @@ public class SensorEvent extends Event {
      *
      * @since 1
      */
-    public SensorEvent(final Object source, final SensorType sensorType, final float x, final float y, final float z) {
-        this(source, sensorType, false, (float) Math.sqrt(x * x + y * y + z * z), x, y, z);
+    public SensorEvent(final Object source, final SensorType sensorType,
+                       final double x, final double y, final double z) {
+        this(source, sensorType, false, Math.sqrt(x * x + y * y + z * z), x, y, z);
     }
 
     /**
@@ -92,7 +93,7 @@ public class SensorEvent extends Event {
      *
      * @return the currently sensed value
      */
-    public final float getValue() {
+    public final double getValue() {
         return this.value;
     }
 
@@ -114,7 +115,7 @@ public class SensorEvent extends Event {
      *
      * @since 1
      */
-    public final float getX() {
+    public final double getX() {
         return this.x;
     }
 
@@ -139,7 +140,7 @@ public class SensorEvent extends Event {
      *
      * @since 1
      */
-    public final float getY() {
+    public final double getY() {
         return this.y;
     }
 
@@ -161,7 +162,7 @@ public class SensorEvent extends Event {
      *
      * @since 1
      */
-    public final float getZ() {
+    public final double getZ() {
         return this.z;
     }
 
@@ -182,6 +183,8 @@ public class SensorEvent extends Event {
         final StringBuilder result = new StringBuilder();
         result.append("SensorEvent(type=");
         result.append(this.getType());
+        result.append(", maxiumum=");
+        result.append(this.maximum);
         result.append(", sensorType=");
         result.append(this.sensorType);
         result.append(", x=");
@@ -194,8 +197,8 @@ public class SensorEvent extends Event {
         return result.toString();
     }
 
-    private SensorEvent(final Object source, final SensorType sensorType, final boolean maxiumum, final float value,
-                        final float x, final float y, final float z) {
+    private SensorEvent(final Object source, final SensorType sensorType, final boolean maxiumum, final double value,
+                        final double x, final double y, final double z) {
         super(source, EventType.SENSOR);
         this.maximum = maxiumum;
         this.sensorType = sensorType;

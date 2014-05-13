@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -161,7 +161,7 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public float getLineWidth() {
+    public double getLineWidth() {
         return ((BasicStroke) this.graphics.getStroke()).getLineWidth();
     }
 
@@ -202,10 +202,10 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setLineWidth(final float lineWidth) {
-        assert lineWidth >= 0f;
+    public void setLineWidth(final double lineWidth) {
+        assert lineWidth >= 0.0;
 
-        this.graphics.setStroke(new BasicStroke(lineWidth));
+        this.graphics.setStroke(new BasicStroke((float) lineWidth));
     }
 
     @Override

@@ -20,7 +20,7 @@ class FrequencyMeter {
 
     private static final int MAX_VALUES = 60;
     private final long[] durations;
-    private float frequency;
+    private double frequency;
     private int index;
     private long startTime;
 
@@ -50,7 +50,7 @@ class FrequencyMeter {
         this.frequency = this.frequency / MAX_VALUES;
     }
 
-    float getFrequency() {
-        return 1000f / this.frequency;
+    double getFrequency() {
+        return 1000.0 / this.frequency;
     }
 }

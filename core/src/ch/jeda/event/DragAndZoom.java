@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,22 +19,22 @@ package ch.jeda.event;
 public class DragAndZoom implements PointerListener, TickListener, TurnListener {
 
     private PointerEvent lastPos;
-    private float dx;
-    private float dy;
-    private float nextDx;
-    private float nextDy;
-    private float nextZoom;
-    private float zoom;
+    private double dx;
+    private double dy;
+    private double nextDx;
+    private double nextDy;
+    private double nextZoom;
+    private double zoom;
 
-    public float getDx() {
+    public double getDx() {
         return this.dx;
     }
 
-    public float getDy() {
+    public double getDy() {
         return this.dy;
     }
 
-    public float getZoom() {
+    public double getZoom() {
         return this.zoom;
     }
 

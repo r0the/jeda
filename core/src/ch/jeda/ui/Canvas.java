@@ -52,7 +52,7 @@ public class Canvas {
     private Color color;
     private int fontSize;
     private CanvasImp imp;
-    private float lineWidth;
+    private double lineWidth;
     private Transformation transformation;
 
     /**
@@ -734,9 +734,11 @@ public class Canvas {
      * Returns the current line width in pixels.
      *
      * @return current line width
+     *
+     * @see #setLineWidth(double)
      * @since 1
      */
-    public float getLineWidth() {
+    public double getLineWidth() {
         return this.imp.getLineWidth();
     }
 
@@ -852,10 +854,11 @@ public class Canvas {
      * @param lineWidth the new line width
      * @throws IllegalArgumentException if <tt>lineWidth</tt> is negative
      *
+     * @see #getLineWidth()
      * @since 1
      */
-    public void setLineWidth(final float lineWidth) {
-        if (lineWidth < 0f) {
+    public void setLineWidth(final double lineWidth) {
+        if (lineWidth < 0.0) {
             throw new IllegalArgumentException("lineWidth");
         }
 

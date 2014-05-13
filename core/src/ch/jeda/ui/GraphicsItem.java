@@ -25,12 +25,12 @@ public abstract class GraphicsItem {
     private boolean dirty;
     private int x;
     private int y;
-    private float drawOrder;
+    private int drawOrder;
 
     protected GraphicsItem() {
     }
 
-    public final float getDrawOrder() {
+    public final int getDrawOrder() {
         return this.drawOrder;
     }
 
@@ -42,7 +42,7 @@ public abstract class GraphicsItem {
         return this.y;
     }
 
-    public final void setDrawOrder(final float drawOrder) {
+    public final void setDrawOrder(final int drawOrder) {
         this.drawOrder = drawOrder;
         if (this.owner != null) {
             this.owner.setDirty();
@@ -63,7 +63,7 @@ public abstract class GraphicsItem {
 
         @Override
         public int compare(final GraphicsItem object1, final GraphicsItem object2) {
-            return (int) Math.signum(object1.drawOrder - object2.drawOrder);
+            return object1.drawOrder - object2.drawOrder;
         }
     }
 }
