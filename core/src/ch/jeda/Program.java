@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -121,12 +121,12 @@ public abstract class Program implements Runnable {
     }
 
     protected final void write(final Object... args) {
-        Jeda.log(LogLevel.INFO, Util.toString(args));
+        Jeda.log(LogLevel.INFO, Convert.toString(args));
     }
 
     protected final void writeLines(final Object... args) {
         for (int i = 0; i < args.length; ++i) {
-            Jeda.log(LogLevel.INFO, Util.toString(args[i], "\n"));
+            Jeda.log(LogLevel.INFO, Convert.toString(args[i], "\n"));
         }
     }
 }

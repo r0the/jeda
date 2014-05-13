@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,7 +16,7 @@
  */
 package ch.jeda.event;
 
-import ch.jeda.Util;
+import ch.jeda.Convert;
 import java.util.EnumSet;
 
 /**
@@ -75,6 +75,6 @@ public final class PressedKeys implements KeyDownListener, KeyUpListener {
 
     @Override
     public String toString() {
-        return Util.toString(this.pressedKeys);
+        return Convert.toString(this.pressedKeys);
     }
 }

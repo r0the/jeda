@@ -44,8 +44,8 @@ public class SensorEvent extends Event {
      *
      * @since 1
      */
-    public SensorEvent(final Object source, final SensorType sensorType, final boolean maxiumum, final double value) {
-        this(source, sensorType, maxiumum, value, 0f, 0f, 0f);
+    public SensorEvent(final Object source, final SensorType sensorType, final boolean maximum, final double value) {
+        this(source, sensorType, maximum, value, 0f, 0f, 0f);
     }
 
     /**
@@ -87,7 +87,6 @@ public class SensorEvent extends Event {
      * <li>For {@link ch.jeda.event.SensorType#LIGHT}: The abmient light level in lux [lx].
      * <li>For {@link ch.jeda.event.SensorType#PRESSURE}: The air pressure in Pascal [Pa].
      * <li>For {@link ch.jeda.event.SensorType#PROXIMITY}: The proximity distance in meter [m].
-     * <li>For {@link ch.jeda.event.SensorType#RELATIVE_HUMIDITY}: The relative air humidity in percent [%].
      * <li>For {@link ch.jeda.event.SensorType#TEMPERATURE}: The air temperature in Kelvin [K].
      * </ul>
      *

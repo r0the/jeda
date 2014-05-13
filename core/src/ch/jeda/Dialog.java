@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -99,11 +99,11 @@ public class Dialog<T> {
     }
 
     public void setMessage(final Object... message) {
-        this.inputRequest.setMessage(Util.toString(message));
+        this.inputRequest.setMessage(Convert.toString(message));
     }
 
     public void setTitle(final Object... title) {
-        this.inputRequest.setTitle(Util.toString(title));
+        this.inputRequest.setTitle(Convert.toString(title));
     }
 
     public void show() {

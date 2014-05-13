@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +28,7 @@ public class Log {
      * <b>Internal</b>. Do not use this method.
      */
     public static void dbg(final Object... message) {
-        Jeda.log(LogLevel.DEBUG, Util.toString(message));
+        Jeda.log(LogLevel.DEBUG, Convert.toString(message));
     }
 
     /**
