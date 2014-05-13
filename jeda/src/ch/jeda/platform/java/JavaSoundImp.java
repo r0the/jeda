@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,6 +30,11 @@ class JavaSoundImp implements SoundImp {
     JavaSoundImp(final AudioManager audioManager, final byte[] data) {
         this.audioManager = audioManager;
         this.data = data;
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return true;
     }
 
     @Override

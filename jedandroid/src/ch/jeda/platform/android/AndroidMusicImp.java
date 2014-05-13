@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +17,7 @@
 package ch.jeda.platform.android;
 
 import android.media.MediaPlayer;
+import ch.jeda.PlaybackState;
 import ch.jeda.platform.MusicImp;
 
 public class AndroidMusicImp implements MusicImp {
@@ -27,6 +28,24 @@ public class AndroidMusicImp implements MusicImp {
     public AndroidMusicImp(final String path, final MediaPlayer mediaPlayer) {
         this.path = path;
         this.mediaPlayer = mediaPlayer;
+    }
+
+    @Override
+    public PlaybackState getPlaybackState() {
+        if (this.mediaPlayer.isPlaying()) {
+            return PlaybackState.PLAYING;
+        }
+        else if (this.mediaPlayer.getCurrentPosition() == 0) {
+            return PlaybackState.STOPPED;
+        }
+        else {
+            return PlaybackState.PAUSED;
+        }
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return true;
     }
 
     @Override

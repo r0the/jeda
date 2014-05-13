@@ -4,7 +4,7 @@ import ch.jeda.*;
 import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
-public class MusicTest extends Program implements ActionListener {
+public class MusicTest extends Program implements ActionListener, TickListener {
 
     Window window;
     Music music;
@@ -14,7 +14,6 @@ public class MusicTest extends Program implements ActionListener {
     @Override
     public void run() {
         window = new Window();
-//        music = new Music("res:raw/battle.mid");
         music = new Music("res:raw/move_forward.mp3");
         x = 10;
         y = 10;
@@ -43,5 +42,19 @@ public class MusicTest extends Program implements ActionListener {
                 music.pause();
                 break;
         }
+
+        updateStatus();
+    }
+
+    private void updateStatus() {
+        window.setColor(Color.WHITE);
+        window.fill();
+        window.setColor(Color.BLACK);
+        window.drawText(200, 10, music.getPlaybackState().toString());
+    }
+
+    @Override
+    public void onTick(TickEvent te) {
+        updateStatus();
     }
 }

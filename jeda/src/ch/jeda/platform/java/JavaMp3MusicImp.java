@@ -17,6 +17,7 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Log;
+import ch.jeda.PlaybackState;
 import ch.jeda.platform.MusicImp;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -37,34 +38,71 @@ public class JavaMp3MusicImp implements MusicImp, Runnable {
     }
 
     @Override
-    public void pause() {
+    public PlaybackState getPlaybackState() {
         synchronized (this.lock) {
-            if (this.thread != null) {
-                this.decoder.pause();
+            if (this.thread == null) {
+                return PlaybackState.STOPPED;
+            }
+            else if (this.decoder.isPaused()) {
+                return PlaybackState.PAUSED;
+            }
+            else {
+                return PlaybackState.PLAYING;
             }
         }
     }
 
     @Override
+    public boolean isAvailable() {
+        return true;
+    }
+
+    @Override
+    public void pause() {
+        switch (this.getPlaybackState()) {
+            case PLAYING:
+                synchronized (this.lock) {
+                    this.decoder.setPaused(true);
+                }
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
     public void play() {
-        synchronized (this.lock) {
-            if (this.thread == null) {
-                this.decoder = new Decoder();
-                this.thread = new Thread(this);
-                this.thread.setPriority(Thread.MAX_PRIORITY);
-                this.thread.start();
-            }
-            else {
-                this.decoder.pause();
-            }
+        switch (this.getPlaybackState()) {
+            case PAUSED:
+                synchronized (this.lock) {
+                    this.decoder.setPaused(false);
+                }
+
+                break;
+            case STOPPED:
+                synchronized (this.lock) {
+                    this.decoder = new Decoder();
+                    this.thread = new Thread(this);
+                    this.thread.setPriority(Thread.MAX_PRIORITY);
+                    this.thread.start();
+                }
+
+                break;
+            default:
+                break;
         }
     }
 
     @Override
     public void run() {
         try {
-            BufferedInputStream bin = new BufferedInputStream(ResourceManager.openInputStream(this.path), STREAM_BUFFER_SIZE);
+            final BufferedInputStream bin = new BufferedInputStream(ResourceManager.openInputStream(this.path), STREAM_BUFFER_SIZE);
             this.decoder.play(this.path, bin);
+            synchronized (this.lock) {
+                this.decoder = null;
+                this.thread = null;
+            }
         }
         catch (final IOException ex) {
             Log.err(ex, "jeda.audio.error.read", this.path);
@@ -73,19 +111,16 @@ public class JavaMp3MusicImp implements MusicImp, Runnable {
 
     @Override
     public void stop() {
-        synchronized (this.lock) {
-            if (this.thread != null) {
-                this.decoder.stop();
-                try {
-                    this.thread.join();
-                }
-                catch (final InterruptedException ex) {
-                    // ignore
+        switch (this.getPlaybackState()) {
+            case PAUSED:
+            case PLAYING:
+                synchronized (this.lock) {
+                    this.decoder.requestStop();
                 }
 
-                this.decoder = null;
-                this.thread = null;
-            }
+                break;
+            default:
+                break;
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,27 +14,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.platform.android;
+package ch.jeda;
 
-import ch.jeda.platform.SoundImp;
+/**
+ * Represents the state of a media playback.
+ */
+public enum PlaybackState {
 
-class AndroidSoundImp implements SoundImp {
-
-    private final AudioManager audioManager;
-    private final int soundId;
-
-    public AndroidSoundImp(final AudioManager audioManager, final int soundId) {
-        this.audioManager = audioManager;
-        this.soundId = soundId;
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return true;
-    }
-
-    @Override
-    public void play() {
-        this.audioManager.play(this.soundId);
-    }
+    /**
+     * The playback has been paused.
+     */
+    PAUSED,
+    /**
+     * The playback is currently in progress.
+     */
+    PLAYING,
+    /**
+     * The playback is not in progress. It has either not started yet or has already finished.
+     */
+    STOPPED
 }

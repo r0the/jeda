@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -55,6 +55,19 @@ public final class Sound {
      */
     public Sound(final String path) {
         this.imp = Jeda.createSoundImp(path);
+    }
+
+    /**
+     * Checks if the sound is available. Returns <tt>true</tt> if the sound is available to be played. Returns
+     * <tt>false</tt> if the sound is not available (e.g. because the specified file is not present or has the wrong
+     * format.
+     *
+     * @return <tt>true</tt> if the sound is available, otherwise <tt>false</tt>
+     *
+     * @since 1
+     */
+    public boolean isAvailable() {
+        return this.imp.isAvailable();
     }
 
     /**

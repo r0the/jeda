@@ -55,6 +55,28 @@ public final class Music {
     }
 
     /**
+     * Returns the current playback state of this Music object.
+     *
+     * @return the current playback state of this Music object.
+     */
+    public PlaybackState getPlaybackState() {
+        return this.imp.getPlaybackState();
+    }
+
+    /**
+     * Checks if the music is available. Returns <tt>true</tt> if the music is available to be played. Returns
+     * <tt>false</tt> if the music is not available (e.g. because the specified file is not present or has the wrong
+     * format.
+     *
+     * @return <tt>true</tt> if the music is available, otherwise <tt>false</tt>
+     *
+     * @since 1
+     */
+    public boolean isAvailable() {
+        return this.imp.isAvailable();
+    }
+
+    /**
      * Pauses the playback of the music.
      *
      * @since 1

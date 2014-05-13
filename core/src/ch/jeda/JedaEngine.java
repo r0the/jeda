@@ -417,6 +417,16 @@ class JedaEngine implements PlatformCallback, Runnable {
     private static class EmptyMusicImp implements MusicImp {
 
         @Override
+        public PlaybackState getPlaybackState() {
+            return PlaybackState.STOPPED;
+        }
+
+        @Override
+        public boolean isAvailable() {
+            return false;
+        }
+
+        @Override
         public void pause() {
         }
 
@@ -430,6 +440,11 @@ class JedaEngine implements PlatformCallback, Runnable {
     }
 
     private static class EmptySoundImp implements SoundImp {
+
+        @Override
+        public boolean isAvailable() {
+            return false;
+        }
 
         @Override
         public void play() {
