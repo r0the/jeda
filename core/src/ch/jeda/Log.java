@@ -54,7 +54,7 @@ public class Log {
 
     static String getMessage(final String key) {
         try {
-            final ResourceBundle rb = ResourceBundle.getBundle("res/jeda/translations", Locale.getDefault());
+            final ResourceBundle rb = ResourceBundle.getBundle("res/jeda/translations", Locale.GERMAN);
             if (rb.containsKey(key)) {
                 return rb.getString(key);
             }
