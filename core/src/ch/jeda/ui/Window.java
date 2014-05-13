@@ -100,21 +100,30 @@ public class Window extends Canvas {
      * @since 1
      */
     public Window(final int width, final int height, final WindowFeature... features) {
-        this.graphicsItems = new GraphicsItems();
+        this.graphicsItems = new GraphicsItems(this);
         this.eventDispatcher = new EventDispatcher();
         this.title = Jeda.getProgramName();
         this.resetImp(width, height, toSet(features));
         Jeda.addTickListener(new EventLoop(this));
     }
 
+    /**
+     * Adds a {@link ch.jeda.ui.GraphicsItem} to the window. Has no effect if <tt>graphicsItem</tt> is <tt>null</tt>.
+     *
+     * @param graphicsItem the graphics item to be added to the window
+     *
+     * @see #remove(ch.jeda.ui.GraphicsItem)
+     * @see #getGraphicsItems()
+     * @see #getGraphicsItems(java.lang.Class)
+     * @since 1
+     */
     public final void add(final GraphicsItem graphicsItem) {
         this.graphicsItems.add(graphicsItem);
-        this.eventDispatcher.addListener(graphicsItem);
     }
 
     /**
      * Adds an event listener to the window. The specified object will receive events for all events listener interfaces
-     * it implements.
+     * it implements. Has no effect if <tt>listener</tt> is <tt>null</tt>.
      *
      * @param listener the event listener
      *
@@ -131,6 +140,35 @@ public class Window extends Canvas {
      */
     public final void close() {
         this.imp.close();
+    }
+
+    /**
+     * Returns all graphics items currently managed by the window.
+     *
+     * @return all graphics items currently managed by the window.
+     *
+     * @see #add(ch.jeda.ui.GraphicsItem)
+     * @see #getGraphicsItems(java.lang.Class)
+     * @see #remove(ch.jeda.ui.GraphicsItem)
+     * @since 1
+     */
+    public final GraphicsItem[] getGraphicsItems() {
+        return this.graphicsItems.getAll();
+    }
+
+    /**
+     * Returns all graphics items of the specified class currently managed by the window.
+     *
+     * @return all graphics items currently managed by the window.
+     * @throws NullPointerException if <tt>clazz</tt> is <tt>null</tt>
+     *
+     * @see #add(ch.jeda.ui.GraphicsItem)
+     * @see #getGraphicsItems()
+     * @see #getGraphicsItems(java.lang.Class)
+     * @since 1
+     */
+    public final <T extends GraphicsItem> T[] getGraphicsItems(final Class<T> clazz) {
+        return this.graphicsItems.get(clazz);
     }
 
     /**
@@ -163,13 +201,22 @@ public class Window extends Canvas {
         return this.imp.getFeatures().contains(feature);
     }
 
+    /**
+     * Removes a {@link ch.jeda.ui.GraphicsItem} from the window. Has no effect if <tt>graphicsItem</tt> is
+     * <tt>null</tt>.
+     *
+     * @param graphicsItem the graphics item to be removed from the window
+     *
+     * @see ch.jeda.ui.GraphicsItem
+     * @since 1
+     */
     public final void remove(final GraphicsItem item) {
-        this.eventDispatcher.removeListener(item);
         this.graphicsItems.remove(item);
     }
 
     /**
-     * Removes an event listener from the window. The specified object will not receive events anymore.
+     * Removes an event listener from the window. The specified object will not receive events anymore. Has no effect if
+     * <tt>listener</tt> is <tt>null</tt>.
      *
      * @param listener the event listener
      * @since 1

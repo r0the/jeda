@@ -16,6 +16,7 @@
  */
 package ch.jeda.ui;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,20 +27,24 @@ class GraphicsItems {
 
     private final List<GraphicsItem> pendingDeletions;
     private final List<GraphicsItem> pendingInsertions;
+    private final Window window;
     private GraphicsItem[] all;
     private boolean dirty;
 
-    GraphicsItems() {
+    GraphicsItems(final Window window) {
         this.pendingDeletions = new ArrayList<GraphicsItem>();
         this.pendingInsertions = new ArrayList<GraphicsItem>();
+        this.window = window;
         this.all = new GraphicsItem[0];
         this.dirty = false;
     }
 
     void add(final GraphicsItem object) {
-        this.pendingDeletions.remove(object);
-        this.pendingInsertions.add(object);
-        this.dirty = true;
+        if (object != null) {
+            this.pendingDeletions.remove(object);
+            this.pendingInsertions.add(object);
+            this.dirty = true;
+        }
     }
 
     int count() {
@@ -62,8 +67,24 @@ class GraphicsItems {
 //        }
     }
 
+    @SuppressWarnings("unchecked")
+    final <T extends GraphicsItem> T[] get(final Class<T> clazz) {
+        final List<T> result = new ArrayList<T>();
+        for (final GraphicsItem item : this.all) {
+            if (clazz.isInstance(item)) {
+                result.add((T) item);
+            }
+        }
+
+        return result.toArray((T[]) Array.newInstance(clazz, result.size()));
+    }
+
     final GraphicsItem[] getAll() {
         return Arrays.copyOf(this.all, this.all.length);
+    }
+
+    Window getWindow() {
+        return this.window;
     }
 
     void processPending() {
@@ -74,6 +95,7 @@ class GraphicsItems {
                 final GraphicsItem item = this.pendingDeletions.get(i);
                 if (itemSet.remove(item)) {
                     allChanged = true;
+                    this.window.removeEventListener(item);
                     item.owner = null;
                 }
             }
@@ -83,6 +105,7 @@ class GraphicsItems {
                 if (!itemSet.contains(item)) {
                     if (itemSet.add(item)) {
                         item.owner = this;
+                        this.window.addEventListener(item);
                         allChanged = true;
                     }
                 }
@@ -100,9 +123,11 @@ class GraphicsItems {
     }
 
     void remove(final GraphicsItem object) {
-        this.pendingDeletions.add(object);
-        this.pendingInsertions.remove(object);
-        this.dirty = true;
+        if (object != null) {
+            this.pendingDeletions.add(object);
+            this.pendingInsertions.remove(object);
+            this.dirty = true;
+        }
     }
 
     void setDirty() {

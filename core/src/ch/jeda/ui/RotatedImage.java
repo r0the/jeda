@@ -36,7 +36,7 @@ public final class RotatedImage {
      *
      * Rotates the image by the specified number of steps.
      *
-     * @param filePath path to the image file
+     * @param path path to the image file
      * @param steps the number of steps for a full rotation of the image
      * @throws IllegalArgumentException if <tt>steps</tt> is smaller than 1
      *

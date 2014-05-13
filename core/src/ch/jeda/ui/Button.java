@@ -25,6 +25,8 @@ public class Button extends AbstractButton {
     private int height;
     private String text;
     private int width;
+    private int x;
+    private int y;
 
     public Button(final Window window, final String action) {
         super(window, action);
@@ -41,14 +43,15 @@ public class Button extends AbstractButton {
     public Button(final Window window, final int x, final int y, final String text, final Alignment alignment) {
         this(window, text);
         window.add(this);
-        this.setPosition(alignment.alignX(x, this.width), alignment.alignY(y, this.height));
+        this.x = alignment.alignX(x, this.width);
+        this.y = alignment.alignY(y, this.height);
         this.text = text;
     }
 
     @Override
     protected boolean contains(final int x, final int y) {
-        return this.getX() <= x && x < this.getX() + this.width &&
-               this.getY() <= y && y < this.getY() + this.height;
+        return this.x <= x && x < this.x + this.width &&
+               this.y <= y && y < this.y + this.height;
 
     }
 
@@ -69,11 +72,11 @@ public class Button extends AbstractButton {
             canvas.setColor(BG_NORMAL_COLOR);
         }
 
-        canvas.fillRectangle(this.getX(), this.getY(), this.width, this.height);
+        canvas.fillRectangle(this.x, this.y, this.width, this.height);
         canvas.setColor(BORDER_COLOR);
-        canvas.drawRectangle(this.getX(), this.getY(), this.width, this.height);
+        canvas.drawRectangle(this.x, this.y, this.width, this.height);
         canvas.setColor(TEXT_COLOR);
-        canvas.drawText(this.getX() + this.width / 2f, this.getY() + this.height / 2f, text, Alignment.CENTER);
+        canvas.drawText(this.x + this.width / 2, this.y + this.height / 2, text, Alignment.CENTER);
     }
 
     public void setText(final String text) {
