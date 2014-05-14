@@ -16,30 +16,27 @@
  */
 package ch.jeda.platform.android;
 
-import android.media.MediaPlayer;
 import ch.jeda.PlaybackState;
 import ch.jeda.platform.MusicImp;
 
-public class AndroidMusicImp implements MusicImp {
+final class AndroidMusicImp implements MusicImp {
 
+    private final AudioManager audioManager;
+    private final Object lock;
     private final String path;
-    private final MediaPlayer mediaPlayer;
+    private PlaybackState playbackState;
 
-    public AndroidMusicImp(final String path, final MediaPlayer mediaPlayer) {
+    AndroidMusicImp(final AudioManager audioManager, final String path) {
+        this.audioManager = audioManager;
+        this.lock = new Object();
         this.path = path;
-        this.mediaPlayer = mediaPlayer;
+        this.playbackState = PlaybackState.STOPPED;
     }
 
     @Override
     public PlaybackState getPlaybackState() {
-        if (this.mediaPlayer.isPlaying()) {
-            return PlaybackState.PLAYING;
-        }
-        else if (this.mediaPlayer.getCurrentPosition() == 0) {
-            return PlaybackState.STOPPED;
-        }
-        else {
-            return PlaybackState.PAUSED;
+        synchronized (this.lock) {
+            return this.playbackState;
         }
     }
 
@@ -50,22 +47,27 @@ public class AndroidMusicImp implements MusicImp {
 
     @Override
     public void pause() {
-        if (this.mediaPlayer.isPlaying()) {
-            this.mediaPlayer.pause();
-        }
+        this.audioManager.pauseMusic(this);
     }
 
     @Override
     public void play() {
-        if (!this.mediaPlayer.isPlaying()) {
-            this.mediaPlayer.start();
-        }
+        this.audioManager.playMusic(this);
     }
 
     @Override
     public void stop() {
-        if (this.mediaPlayer.isPlaying()) {
-            this.mediaPlayer.stop();
+        this.audioManager.stopMusic(this);
+
+    }
+
+    void setPlaybackState(final PlaybackState playbackState) {
+        synchronized (this.lock) {
+            this.playbackState = playbackState;
         }
+    }
+
+    String getPath() {
+        return this.path;
     }
 }

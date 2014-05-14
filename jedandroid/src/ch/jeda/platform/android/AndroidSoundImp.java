@@ -35,6 +35,6 @@ class AndroidSoundImp implements SoundImp {
 
     @Override
     public void play() {
-        this.audioManager.play(this.soundId);
+        this.audioManager.playSound(this.soundId);
     }
 }

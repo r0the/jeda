@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,17 +25,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import ch.jeda.Log;
+import ch.jeda.PlaybackState;
 import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.SoundImp;
 
-class AudioManager extends Fragment {
+class AudioManager extends Fragment implements MediaPlayer.OnCompletionListener {
 
     private static final String RES_PREFIX = "res:";
     private static final int DEFAULT_PRIORITY = 0;
+    private final Object lock;
+    private AndroidMusicImp currentMusic;
     private android.media.AudioManager imp;
+    private MediaPlayer mediaPlayer;
     private SoundPool soundPool;
 
     public AudioManager() {
+        this.lock = new Object();
     }
 
     @Override
@@ -49,6 +54,10 @@ class AudioManager extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         return null;
+    }
+
+    public void onCompletion(final MediaPlayer mediaPlayer) {
+        this.stopMusic(this.getCurrentMusic());
     }
 
     SoundImp createSoundImp(final String path) {
@@ -68,22 +77,73 @@ class AudioManager extends Fragment {
 
     MusicImp createMusicImp(final String path) {
         if (path.startsWith(RES_PREFIX)) {
-            final int resId = this.getResourceId(path);
-            if (resId == 0) {
-                return null;
-            }
-            else {
-                return new AndroidMusicImp(path, MediaPlayer.create(this.getActivity(), resId));
-            }
+            return new AndroidMusicImp(this, path);
         }
         else {
             return null;
         }
     }
 
-    void play(final int soundId) {
+    void pauseMusic(final AndroidMusicImp music) {
+        switch (music.getPlaybackState()) {
+            case PLAYING:
+                if (this.getCurrentMusic() == music) {
+                    synchronized (this.lock) {
+                        this.mediaPlayer.pause();
+                        this.currentMusic.setPlaybackState(PlaybackState.PAUSED);
+                    }
+                }
+        }
+    }
+
+    void playMusic(final AndroidMusicImp music) {
+        switch (music.getPlaybackState()) {
+            case STOPPED:
+                if (this.getCurrentMusic() == null) {
+                    final int resId = this.getResourceId(music.getPath());
+                    if (resId != 0) {
+                        synchronized (this.lock) {
+                            this.mediaPlayer = MediaPlayer.create(this.getActivity(), resId);
+                            this.mediaPlayer.setOnCompletionListener(this);
+                            this.mediaPlayer.start();
+                            this.currentMusic = music;
+                            this.currentMusic.setPlaybackState(PlaybackState.PLAYING);
+                        }
+                    }
+                }
+            case PAUSED:
+                if (this.getCurrentMusic() == music) {
+                    synchronized (this.lock) {
+                        this.mediaPlayer.start();
+                        this.currentMusic.setPlaybackState(PlaybackState.PLAYING);
+                    }
+                }
+        }
+    }
+
+    void stopMusic(final AndroidMusicImp music) {
+        switch (music.getPlaybackState()) {
+            case PLAYING:
+            case PAUSED:
+                if (this.getCurrentMusic() == music) {
+                    this.mediaPlayer.stop();
+                    this.mediaPlayer.release();
+                    this.mediaPlayer = null;
+                    music.setPlaybackState(PlaybackState.STOPPED);
+                    this.currentMusic = null;
+                }
+        }
+    }
+
+    void playSound(final int soundId) {
         final float volume = this.getVolume();
         this.soundPool.play(soundId, volume, volume, 0, 0, 1.0f);
+    }
+
+    private AndroidMusicImp getCurrentMusic() {
+        synchronized (this.lock) {
+            return this.currentMusic;
+        }
     }
 
     private int getResourceId(final String path) {
