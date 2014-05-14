@@ -24,6 +24,8 @@ import java.util.TreeSet;
 
 /**
  * Represents a map of keys to values.
+ *
+ * @since 1
  */
 public final class Properties {
 
@@ -31,10 +33,16 @@ public final class Properties {
     private static final Set<String> TRUE_STRINGS = initTrueStrings();
     private final java.util.Properties imp;
 
+    /**
+     * @since 1
+     */
     public Properties() {
         this.imp = new java.util.Properties();
     }
 
+    /**
+     * @since 1
+     */
     public Properties(final String filePath) {
         this();
         final InputStream in = Jeda.openResource(filePath);
@@ -62,18 +70,30 @@ public final class Properties {
         this.imp = imp;
     }
 
+    /**
+     * @since 1
+     */
     public void addAll(final Properties properties) {
         this.imp.putAll(properties.imp);
     }
 
+    /**
+     * @since 1
+     */
     public void clear() {
         this.imp.clear();
     }
 
+    /**
+     * @since 1
+     */
     public boolean containsKey(final String key) {
         return this.imp.containsKey(key);
     }
 
+    /**
+     * @since 1
+     */
     public boolean getBoolean(final String key, final boolean defaultValue) {
         String value = this.getString(key);
         if (value == null) {
@@ -92,6 +112,9 @@ public final class Properties {
         return defaultValue;
     }
 
+    /**
+     * @since 1
+     */
     public double getDouble(final String key, final double defaultValue) {
         try {
             return Double.parseDouble(this.getString(key));
@@ -101,6 +124,9 @@ public final class Properties {
         }
     }
 
+    /**
+     * @since 1
+     */
     public int getInt(final String key, final int defaultValue) {
 
         try {
@@ -111,10 +137,16 @@ public final class Properties {
         }
     }
 
+    /**
+     * @since 1
+     */
     public String getString(final String key) {
         return this.imp.getProperty(key);
     }
 
+    /**
+     * @since 1
+     */
     public Set<String> keys() {
         final Set<String> result = new TreeSet<String>();
         for (Object key : this.imp.keySet()) {
@@ -124,6 +156,9 @@ public final class Properties {
         return result;
     }
 
+    /**
+     * @since 1
+     */
     public Set<String> sections() {
         final Set<String> result = new TreeSet<String>();
         for (String key : this.keys()) {
@@ -136,6 +171,9 @@ public final class Properties {
         return result;
     }
 
+    /**
+     * @since 1
+     */
     public Properties section(final String prefix) {
         final int len = prefix.length() + 1;
         final Properties result = new Properties();

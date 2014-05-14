@@ -54,7 +54,9 @@ public abstract class Program implements Runnable {
      * Returns the Jeda system properties.
      *
      * @return Jeda system properties.
+     *
      * @see Properties
+     * @since 1
      */
     protected final Properties getProperties() {
         return Jeda.getProperties();
@@ -120,10 +122,16 @@ public abstract class Program implements Runnable {
         }
     }
 
+    /**
+     * @since 1
+     */
     protected final void write(final Object... args) {
         Jeda.log(LogLevel.INFO, Convert.toString(args));
     }
 
+    /**
+     * @since 1
+     */
     protected final void writeLines(final Object... args) {
         for (int i = 0; i < args.length; ++i) {
             Jeda.log(LogLevel.INFO, Convert.toString(args[i], "\n"));

@@ -16,6 +16,11 @@
  */
 package ch.jeda.event;
 
+/**
+ * <b>Note:</b> You should not inherit from this class. It will be marked as <tt>final</tt> in the future.
+ *
+ * @since 1
+ */
 public class DragAndZoom implements PointerListener, TickListener, TurnListener {
 
     private PointerEvent lastPos;
@@ -26,18 +31,30 @@ public class DragAndZoom implements PointerListener, TickListener, TurnListener 
     private double nextZoom;
     private double zoom;
 
+    /**
+     * @since 1
+     */
     public double getDx() {
         return this.dx;
     }
 
+    /**
+     * @since 1
+     */
     public double getDy() {
         return this.dy;
     }
 
+    /**
+     * @since 1
+     */
     public double getZoom() {
         return this.zoom;
     }
 
+    /**
+     * @since 1
+     */
     public boolean isDragging() {
         return this.lastPos != null;
     }

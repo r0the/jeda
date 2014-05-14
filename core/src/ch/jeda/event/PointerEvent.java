@@ -28,10 +28,16 @@ public final class PointerEvent extends Event {
     private final int x;
     private final int y;
 
+    /**
+     * @since 1
+     */
     public PointerEvent(final Object source, final EventType type, final int pointerId) {
         this(source, type, pointerId, -1, -1);
     }
 
+    /**
+     * @since 1
+     */
     public PointerEvent(final Object source, final EventType type, final int pointerId,
                         final int x, final int y) {
         super(source, type);

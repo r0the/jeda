@@ -25,6 +25,7 @@ import java.util.Comparator;
  *
  * @see ch.jeda.ui.Window#add(ch.jeda.ui.GraphicsItem)
  * @see ch.jeda.ui.Window#remove(ch.jeda.ui.GraphicsItem)
+ * @since 1
  */
 public abstract class GraphicsItem {
 
@@ -88,6 +89,7 @@ public abstract class GraphicsItem {
      * added to a window.
      *
      * @return the window containing the graphics item
+     * @since 1
      */
     protected final Window getWindow() {
         if (this.owner == null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,9 @@
  */
 package ch.jeda.event;
 
+/**
+ * @since 1
+ */
 public interface PointerListener extends PointerDownListener,
                                          PointerMovedListener,
                                          PointerUpListener {

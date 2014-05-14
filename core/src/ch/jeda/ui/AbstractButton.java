@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,6 +24,9 @@ import ch.jeda.event.PointerEvent;
 import ch.jeda.event.PointerListener;
 import java.util.EnumSet;
 
+/**
+ * @since 1
+ */
 public abstract class AbstractButton extends GraphicsItem implements KeyDownListener, KeyUpListener, PointerListener {
 
     private final EnumSet<Key> keys;
@@ -32,6 +35,9 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
     private Integer pointerId;
     private final Window window;
 
+    /**
+     * @since 1
+     */
     protected AbstractButton(final Window window, final String action) {
         this.action = action;
         this.keys = EnumSet.noneOf(Key.class);
@@ -40,14 +46,23 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
         this.window.addEventListener(this);
     }
 
+    /**
+     * @since 1
+     */
     public final void addKey(final Key key) {
         this.keys.add(key);
     }
 
+    /**
+     * @since 1
+     */
     public final String getAction() {
         return this.action;
     }
 
+    /**
+     * @since 1
+     */
     public final boolean isPressed() {
         return !this.pressedKeys.isEmpty() || pointerId != null;
     }
@@ -66,6 +81,9 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
         }
     }
 
+    /**
+     * @since 1
+     */
     public final void removeKey(final Key key) {
         this.keys.remove(key);
     }
@@ -94,6 +112,9 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
         }
     }
 
+    /**
+     * @since 1
+     */
     public final void setAction(final String action) {
         this.action = action;
     }

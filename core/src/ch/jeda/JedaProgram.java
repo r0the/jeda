@@ -16,5 +16,8 @@
  */
 package ch.jeda;
 
+/**
+ * @since 1
+ */
 public interface JedaProgram extends Runnable {
 }

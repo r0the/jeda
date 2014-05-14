@@ -19,7 +19,8 @@ package ch.jeda;
 import ch.jeda.platform.MusicImp;
 
 /**
- * This class represents music data. The music data can be retrieved from a file or a resource.
+ * This class represents music data. The music data can be loaded from a file or a resource. The music can be played
+ * back. Only one music can be played at a time.
  *
  * <p>
  * <img src="../../windows.png"> <img src="../../linux.png"> Supported audio formats are:
@@ -42,7 +43,7 @@ public final class Music {
     private final MusicImp imp;
 
     /**
-     * Constructs a new Music object representing the contents of the specified audio file.
+     * Constructs a new music object representing the contents of the specified audio file.
      *
      * To read a resource file, put 'res:' in front of the file path.
      *
@@ -58,6 +59,8 @@ public final class Music {
      * Returns the current playback state of this Music object.
      *
      * @return the current playback state of this Music object.
+     *
+     * @since 1
      */
     public PlaybackState getPlaybackState() {
         return this.imp.getPlaybackState();
@@ -77,7 +80,7 @@ public final class Music {
     }
 
     /**
-     * Pauses the playback of the music.
+     * Pauses the playback of the music. Has not effect if the music is not playing.
      *
      * @since 1
      */
@@ -86,7 +89,7 @@ public final class Music {
     }
 
     /**
-     * Starts or resumes the playback of the music.
+     * Starts or resumes the playback of the music. Has no effect if another music is already playing.
      *
      * @since 1
      */
@@ -95,7 +98,7 @@ public final class Music {
     }
 
     /**
-     * Stops the playback of the music.
+     * Stops the playback of the music. Has no effect if the music is not playing or paused.
      *
      * @since 1
      */

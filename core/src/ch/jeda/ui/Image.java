@@ -36,8 +36,17 @@ public final class Image {
 
     private static final Map<String, ImageImp> CACHE = new HashMap<String, ImageImp>();
     private static final Map<String, ImageImp.Encoding> FORMAT_MAP = initFormatMap();
+    /**
+     * @since 1
+     */
     public static final Image JEDA_LOGO_16x16 = new Image("res:jeda/logo-16x16.png");
+    /**
+     * @since 1
+     */
     public static final Image JEDA_LOGO_48x48 = new Image("res:jeda/logo-48x48.png");
+    /**
+     * @since 1
+     */
     public static final Image JEDA_LOGO_64x64 = new Image("res:jeda/logo-64x64.png");
     private final ImageImp imp;
 
@@ -59,6 +68,9 @@ public final class Image {
         this(loadImp(filePath));
     }
 
+    /**
+     * @since 1
+     */
     public Image createRotatedImage(final double angle) {
         return new Image(this.imp.createRotatedImage(angle));
     }

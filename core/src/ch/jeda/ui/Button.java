@@ -16,6 +16,9 @@
  */
 package ch.jeda.ui;
 
+/**
+ * @since 1
+ */
 public class Button extends AbstractButton {
 
     private static Color BG_NORMAL_COLOR = new Color(230, 230, 230);
@@ -28,6 +31,9 @@ public class Button extends AbstractButton {
     private int x;
     private int y;
 
+    /**
+     * @since 1
+     */
     public Button(final Window window, final String action) {
         super(window, action);
         window.add(this);
@@ -36,10 +42,16 @@ public class Button extends AbstractButton {
         this.setDrawOrder(Integer.MAX_VALUE);
     }
 
+    /**
+     * @since 1
+     */
     public Button(final Window window, final int x, final int y, final String text) {
         this(window, x, y, text, Alignment.TOP_LEFT);
     }
 
+    /**
+     * @since 1
+     */
     public Button(final Window window, final int x, final int y, final String text, final Alignment alignment) {
         this(window, text);
         window.add(this);
@@ -55,6 +67,9 @@ public class Button extends AbstractButton {
 
     }
 
+    /**
+     * @since 1
+     */
     public String getText() {
         return this.text;
     }
@@ -79,6 +94,9 @@ public class Button extends AbstractButton {
         canvas.drawText(this.x + this.width / 2, this.y + this.height / 2, text, Alignment.CENTER);
     }
 
+    /**
+     * @since 1
+     */
     public void setText(final String text) {
         this.text = text;
     }

@@ -175,6 +175,7 @@ public class Jeda {
      *
      * @param path path to the file
      * @return lines of the file as an array of <tt>String</tt>
+     * @since 1
      */
     public static String[] loadTextFile(final String path) {
         final InputStream in = ENGINE.openResource(path);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,15 +16,24 @@
  */
 package ch.jeda.event;
 
+/**
+ * @since 1
+ */
 public class ActionEvent extends Event {
 
     private final String name;
 
+    /**
+     * @since 1
+     */
     public ActionEvent(final Object source, final String name) {
         super(source, EventType.ACTION);
         this.name = name;
     }
 
+    /**
+     * @since 1
+     */
     public String getName() {
         return this.name;
     }

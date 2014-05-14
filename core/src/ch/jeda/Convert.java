@@ -33,6 +33,8 @@ public final class Convert {
      *
      * @param values comma-separated double values
      * @return a list of double values
+     *
+     * @since 1
      */
     public static List<Double> toList(final double... values) {
         final ArrayList<Double> result = new ArrayList<Double>();

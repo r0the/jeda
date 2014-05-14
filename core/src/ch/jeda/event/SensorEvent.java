@@ -91,6 +91,8 @@ public class SensorEvent extends Event {
      * </ul>
      *
      * @return the currently sensed value
+     *
+     * @since 1
      */
     public final double getValue() {
         return this.value;

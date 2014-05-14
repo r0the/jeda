@@ -16,6 +16,9 @@
  */
 package ch.jeda.ui;
 
+/**
+ * @since 1
+ */
 public final class TileSet {
 
     public final int height;
@@ -25,10 +28,16 @@ public final class TileSet {
     private final Image image;
     private final Image[] tiles;
 
+    /**
+     * @since 1
+     */
     public TileSet(final String filePath, final int tileWidth, final int tileHeight) {
         this(new Image(filePath), tileWidth, tileHeight);
     }
 
+    /**
+     * @since 1
+     */
     public TileSet(final Image image, final int tileWidth, final int tileHeight) {
         if (image == null) {
             throw new NullPointerException("image");
@@ -50,10 +59,16 @@ public final class TileSet {
         this.tiles = new Image[this.width * this.height];
     }
 
+    /**
+     * @since 1
+     */
     public int getHeight() {
         return this.height;
     }
 
+    /**
+     * @since 1
+     */
     public Image getTileAt(final int x, final int y) {
         if (!this.contains(x, y)) {
             throw new IllegalArgumentException("x, y");
@@ -69,14 +84,23 @@ public final class TileSet {
         return this.tiles[index];
     }
 
+    /**
+     * @since 1
+     */
     public int getTileHeight() {
         return this.tileHeight;
     }
 
+    /**
+     * @since 1
+     */
     public int getTileWidth() {
         return this.tileWidth;
     }
 
+    /**
+     * @since 1
+     */
     public int getWidth() {
         return this.width;
     }

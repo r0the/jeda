@@ -23,9 +23,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents an movable, rotatable object represented by an image.
+ * Represents an movable, rotatable object represented by an image. A sprite has the following properties:
+ * <ul>
+ * <li><b>Position</b>: The coordinates of the sprite's center in pixels. The position can be set with
+ * {@link #setPosition(double, double)} and be retrieved with {@link #getX()} and {@link #getY()}.
+ * <li><b>Speed</b>: The current speed of the sprite in pixels per second. The speed can be retrieved with
+ * {@link #getSpeed()}.
+ * <li><b>Direction</b>: The direction in which the sprite moves in radians. The direction 0 points to the left, the
+ * direction <tt>Math.PI/2</tt> points down.
+ * <li><b>Acceleration</b></li>: The current acceleration of the sprite in pixels per second per second. The
+ * acceleration can be set with {@link #setAcceleration(double, double)}.
+ * <li><b>Rotation</b>: The current rotation of the sprite's image in radians. The sprite's rotation is independent of
+ * it's direction.
+ * <li><b>Radius</b>: The radius of the sprite's collision circle.
+ * </ul>
+ *
+ * @since 1
  */
-public abstract class Sprite extends GraphicsItem implements TickListener {
+public class Sprite extends GraphicsItem implements TickListener {
 
     private double ax;
     private double ay;
@@ -39,6 +54,8 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
 
     /**
      * Constructs a new sprite located at the origin of the window.
+     *
+     * @since 1
      */
     public Sprite() {
         this(0.0, 0.0, 0.0, 0.0);
@@ -46,11 +63,18 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
 
     /**
      * Constructs a new sprite located at the specified coordinates.
+     *
+     * @since 1
      */
     public Sprite(final double x, final double y) {
         this(x, y, 0.0, 0.0);
     }
 
+    /**
+     * Constructs a new sprite located at the specified coordinates with the specified initial speed.
+     *
+     * @since 1
+     */
     public Sprite(final double x, final double y, final double speed, final double direction) {
         this.rotate(direction);
         this.setPosition(x, y);
@@ -58,6 +82,20 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
         this.vy = speed * Math.sin(direction);
     }
 
+    /**
+     * Returns an array of all other sprites of the specified class in the same window that collide with the sprite. The
+     * collision algorithm works as follows:
+     * <ul>
+     * <li>Get a list of all sprites of the specified class and do for every one:
+     * <li>Check if the collision circles of this sprite and the other sprite overlap.
+     * <li>If so, perform a pixel-by-pixel collision based on the images returned by {@link #getRotatedImage()} of the
+     * two sprites.
+     * </ul>
+     *
+     * <b>Warning:</b>The collision algorithm is no sophisticated and may be very slow with a large number of sprites.
+     *
+     * @since 1
+     */
     @SuppressWarnings("unchecked")
     public final <T extends Sprite> T[] getCollidingSprites(final Class<T> clazz) {
         final List<T> result = new ArrayList<T>();
@@ -73,10 +111,18 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
         return result.toArray((T[]) Array.newInstance(clazz, result.size()));
     }
 
+    /**
+     * Returns the current direction of the sprite. The direction influences the movement of the sprite.
+     *
+     * @since 1
+     */
     public final double getDirection() {
         return Math.atan2(this.vy, this.vx);
     }
 
+    /**
+     * @since 1
+     */
     public final Image getRotatedImage() {
         if (this.image == null) {
             return null;
@@ -86,14 +132,28 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
         }
     }
 
+    /**
+     * @since 1
+     */
     public final double getRadius() {
         return this.radius;
     }
 
+    /**
+     * Returns the current rotation of the sprite. The rotation influences the graphical representation of the sprite.
+     *
+     * @see #rotate(double)
+     * @since 1
+     */
     public final double getRotation() {
         return this.rotation;
     }
 
+    /**
+     * Returns the current speed of the sprite in pixels per second.
+     *
+     * @since 1
+     */
     public final double getSpeed() {
         return Math.sqrt(this.vx * this.vx + this.vy * this.vy);
     }
@@ -102,6 +162,10 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
      * Returns the current x coordinate of this sprite.
      *
      * @return the current x coordinate of this sprite
+     *
+     * @see #getY()
+     * @see #setPosition(double, double)
+     * @since 1
      */
     public final double getX() {
         return this.x;
@@ -111,6 +175,10 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
      * Returns the current y coordinate of this sprite.
      *
      * @return the current y coordinate of this sprite
+     *
+     * @see #getX()
+     * @see #setPosition(double, double)
+     * @since 1
      */
     public final double getY() {
         return this.y;
@@ -125,6 +193,9 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
         this.update(event.getDuration(), newX, newY);
     }
 
+    /**
+     * @since 1
+     */
     public final void rotate(final double angle) {
         this.rotation = this.rotation + angle;
         while (this.rotation < 0) {
@@ -136,24 +207,39 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
         }
     }
 
+    /**
+     * @since 1
+     */
     public final void setAcceleration(final double ax, final double ay) {
         this.ax = ax;
         this.ay = ay;
     }
 
+    /**
+     * @since 1
+     */
     public final void setImage(final String path) {
         this.setImage(path, 1);
     }
 
+    /**
+     * @since 1
+     */
     public final void setImage(final String path, final int steps) {
         this.image = new RotatedImage(new Image(path), steps);
     }
 
+    /**
+     * @since 1
+     */
     public final void setPosition(final double x, final double y) {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * @since 1
+     */
     public final void setRadius(final double radius) {
         this.radius = radius;
     }
@@ -163,6 +249,9 @@ public abstract class Sprite extends GraphicsItem implements TickListener {
         canvas.drawImage(this.x, this.y, this.getRotatedImage(), Alignment.CENTER);
     }
 
+    /**
+     * @since 1
+     */
     protected void update(final double dt, final double newX, final double newY) {
         this.setPosition(newX, newY);
     }

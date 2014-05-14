@@ -26,6 +26,9 @@ public class TickEvent extends Event {
     private final double duration;
     private final double frameRate;
 
+    /**
+     * @since 1
+     */
     public TickEvent(final Object source, final double duration, final double frameRate) {
         super(source, EventType.TICK);
         this.duration = duration;

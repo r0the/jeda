@@ -18,6 +18,9 @@ package ch.jeda;
 
 import ch.jeda.platform.InputRequest;
 
+/**
+ * @since 1
+ */
 public class Dialog<T> {
 
     private final InputRequest<T> inputRequest;
@@ -94,23 +97,38 @@ public class Dialog<T> {
         }
     }
 
+    /**
+     * @since 1
+     */
     public Dialog(final Class<T> clazz) {
         this.inputRequest = new InputRequest<T>(clazz);
     }
 
+    /**
+     * @since 1
+     */
     public void setMessage(final Object... message) {
         this.inputRequest.setMessage(Convert.toString(message));
     }
 
+    /**
+     * @since 1
+     */
     public void setTitle(final Object... title) {
         this.inputRequest.setTitle(Convert.toString(title));
     }
 
+    /**
+     * @since 1
+     */
     public void show() {
         Jeda.showInputRequest(this.inputRequest);
         this.inputRequest.waitForResult();
     }
 
+    /**
+     * @since 1
+     */
     public T getResult() {
         return this.inputRequest.getResult();
     }
