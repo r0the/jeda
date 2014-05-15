@@ -245,7 +245,7 @@ class JavaCanvasImp implements CanvasImp {
     public int textWidth(final String text) {
         assert text != null;
 
-        return (int) textLayout(text).getBounds().getWidth();
+        return (int) textLayout(text).getAdvance();
     }
 
     private TextLayout textLayout(final String text) {
