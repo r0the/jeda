@@ -70,6 +70,9 @@ public abstract class GraphicsItem {
         }
     }
 
+    /**
+     * @deprecated This method should be defined in inherited classes when needed.
+     */
     protected boolean contains(int x, int y) {
         return false;
     }
