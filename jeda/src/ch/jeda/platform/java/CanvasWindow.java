@@ -127,8 +127,25 @@ class CanvasWindow extends BaseWindow implements FocusListener,
     @Override
     public void keyTyped(final java.awt.event.KeyEvent event) {
         final char ch = event.getKeyChar();
-        if (ch >= 32 && ch != 127) {
-            this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, ch));
+        switch (ch) {
+            case '\b':
+                this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.BACKSPACE));
+                break;
+            case '\t':
+                this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.TAB));
+                break;
+            case '\n':
+                this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.ENTER));
+                break;
+            case '\r':
+                this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.ENTER));
+                break;
+            default:
+                if (!Character.isISOControl(ch)) {
+                    this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, ch));
+                }
+
+                break;
         }
     }
 
