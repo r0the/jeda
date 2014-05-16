@@ -39,7 +39,7 @@ public class LightSensorTest extends Program implements SensorListener {
     }
 
     private String toMessage(SensorEvent event) {
-        return Util.toString("type=", event.getSensorType(), ", value=", event.getValue(), ", x=",
-                             event.getX(), ", y=", event.getY(), ", z=", event.getZ());
+        return Convert.toString("type=", event.getSensorType(), ", value=", event.getValue(), ", x=",
+                                event.getX(), ", y=", event.getY(), ", z=", event.getZ());
     }
 }

@@ -66,9 +66,11 @@
         <equals arg1="${jeda.android.platform}" arg2="10" casesensitive="false"/>
     </condition>
 
-    <property name="jeda.android-manifest.permission.internet" value=""/>
     <condition property="jeda.android-manifest.permission.internet" value="${jeda.android-manifest.permission.internet.true}">
         <equals arg1="${jeda.android.networking}" arg2="true" casesensitive="false"/>
+    </condition>
+    <condition property="jeda.android-manifest.permission.internet" value="">
+        <not><equals arg1="${jeda.android.networking}" arg2="true" casesensitive="false"/></not>
     </condition>
 
     <!-- Write AndroidManifest.xml. -->

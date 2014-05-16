@@ -12,7 +12,7 @@ public class ToStringTest extends Program {
         write("String", ", int=", 42, ", boolean=", true, ", float=", 3.141f, "\n");
         int[] iarr = {1, 2, 3, 4};
         write(iarr, "\n");
-        List<Integer> ilist = Util.intList(1, 2, 3, 4);
+        List<Integer> ilist = Convert.toList(1, 2, 3, 4);
         write(ilist, "\n");
         Map<Integer, String> map = new HashMap<Integer, String>();
         map.put(1, "eins");

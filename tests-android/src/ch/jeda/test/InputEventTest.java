@@ -5,9 +5,9 @@ import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
 public class InputEventTest extends Program implements KeyListener,
-                                                  KeyTypedListener,
-                                                  PointerListener,
-                                                  TurnListener {
+                                                       KeyTypedListener,
+                                                       PointerListener,
+                                                       TurnListener {
 
     Window window;
     int y;
@@ -71,17 +71,17 @@ public class InputEventTest extends Program implements KeyListener,
     }
 
     private String toMessage(PointerEvent event) {
-        return Util.toString("type=", event.getType(), ", id=", event.getPointerId(), ", x=",
-                             event.getX(), ", y=", event.getY(), ", device=", event.getSource());
+        return Convert.toString("type=", event.getType(), ", id=", event.getPointerId(), ", x=",
+                                event.getX(), ", y=", event.getY(), ", device=", event.getSource());
     }
 
     private String toMessage(TurnEvent event) {
-        return Util.toString("type=", event.getType(), ", amount=", event.getAmount(), ", axis=",
-                             event.getAxis(), ", device=", event.getSource());
+        return Convert.toString("type=", event.getType(), ", amount=", event.getAmount(), ", axis=",
+                                event.getAxis(), ", device=", event.getSource());
     }
 
     private String toMessage(KeyEvent event) {
-        return Util.toString("type=", event.getType(), ", key=", event.getKey(), ", repeat=",
-                             event.getRepeatCount(), ", device=", event.getSource());
+        return Convert.toString("type=", event.getType(), ", key=", event.getKey(), ", repeat=",
+                                event.getRepeatCount(), ", device=", event.getSource());
     }
 }
