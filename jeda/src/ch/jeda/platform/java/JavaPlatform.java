@@ -19,11 +19,11 @@ package ch.jeda.platform.java;
 import ch.jeda.Log;
 import ch.jeda.LogLevel;
 import ch.jeda.event.SensorType;
+import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.SoundImp;
@@ -55,21 +55,13 @@ class JavaPlatform implements Platform {
     }
 
     @Override
-    public MusicImp createMusicImp(final String path) {
-        assert (path != null);
-
-        if (path.toLowerCase().endsWith(".mp3")) {
-            return new JavaMp3MusicImp(path);
-        }
-        else {
-            Log.err("jeda.audio.error.unsupported-file-format", path);
-            return null;
-        }
+    public SoundImp createSoundImp(final String path) {
+        return this.audioManager.createSoundImp(path);
     }
 
     @Override
-    public SoundImp createSoundImp(final String path) {
-        return this.audioManager.createSoundImp(path);
+    public AudioManagerImp getAudioManagerImp() {
+        return this.audioManager;
     }
 
     @Override

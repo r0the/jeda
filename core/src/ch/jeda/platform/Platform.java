@@ -29,9 +29,9 @@ public interface Platform {
 
     ImageImp createImageImp(String path);
 
-    MusicImp createMusicImp(String path);
-
     SoundImp createSoundImp(String path);
+
+    AudioManagerImp getAudioManagerImp();
 
     boolean isSensorAvailable(SensorType sensorType);
 

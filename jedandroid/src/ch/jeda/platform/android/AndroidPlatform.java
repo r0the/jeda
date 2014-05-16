@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,10 +19,10 @@ package ch.jeda.platform.android;
 import android.view.WindowManager;
 import ch.jeda.LogLevel;
 import ch.jeda.event.SensorType;
+import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
@@ -59,18 +59,22 @@ class AndroidPlatform implements Platform {
         return Main.getInstance().createImageImp(path);
     }
 
-    public MusicImp createMusicImp(final String path) {
-        return Main.getInstance().createMusicImp(path);
-    }
-
+    @Override
     public SoundImp createSoundImp(final String path) {
         return Main.getInstance().createSoundImp(path);
     }
 
+    @Override
+    public AudioManagerImp getAudioManagerImp() {
+        return Main.getInstance().getAudioManagerImp();
+    }
+
+    @Override
     public boolean isSensorAvailable(final SensorType sensorType) {
         return Main.getInstance().isSensorAvailable(sensorType);
     }
 
+    @Override
     public boolean isSensorEnabled(final SensorType sensorType) {
         return Main.getInstance().isSensorEnabled(sensorType);
     }
@@ -80,14 +84,17 @@ class AndroidPlatform implements Platform {
         return Main.getInstance().loadClasses();
     }
 
+    @Override
     public void log(final LogLevel logLevel, String message) {
         Main.getInstance().log(logLevel, message);
     }
 
+    @Override
     public InputStream openResource(final String path) {
         return Main.getInstance().openResource(path);
     }
 
+    @Override
     public void setSensorEnabled(final SensorType sensorType, boolean enabled) {
         Main.getInstance().setSensorEnabled(sensorType, enabled);
     }

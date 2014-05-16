@@ -4,10 +4,10 @@ import ch.jeda.*;
 import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
-public class MusicTest extends Program implements ActionListener {
+public class MusicTest extends Program implements ActionListener, TickListener {
 
     Window window;
-    Music midiMusic;
+    Music mp3Music;
     Music oggMusic;
     int x;
     int y;
@@ -15,17 +15,17 @@ public class MusicTest extends Program implements ActionListener {
     @Override
     public void run() {
         window = new Window();
-        midiMusic = new Music("res:raw/battle.ogg");
+        mp3Music = new Music("res:raw/move_forward.mp3");
         oggMusic = new Music("res:raw/base_under_attack.ogg");
         x = 10;
-        y = 10;
+        y = 40;
 
-        addButton("Play MIDI");
-        addButton("Pause MIDI");
-        addButton("Stop MIDI");
+        addButton("Play MP3");
+        addButton("Pause MP3");
+        addButton("Stop MP3");
 
-        x = 120;
-        y = 10;
+        x = 200;
+        y = 40;
         addButton("Play OGG");
         addButton("Pause OGG");
         addButton("Stop OGG");
@@ -39,16 +39,16 @@ public class MusicTest extends Program implements ActionListener {
 
     @Override
     public void onAction(ActionEvent event) {
-        if ("Play MIDI".equals(event.getName())) {
-            midiMusic.play();
+        if ("Play MP3".equals(event.getName())) {
+            mp3Music.play();
         }
-        else if ("Pause MIDI".equals(event.getName())) {
-            midiMusic.pause();
+        else if ("Pause MP3".equals(event.getName())) {
+            mp3Music.pause();
         }
-        else if ("Stop MIDI".equals(event.getName())) {
-            midiMusic.stop();
+        else if ("Stop MP3".equals(event.getName())) {
+            mp3Music.stop();
         }
-        if ("Play OGG".equals(event.getName())) {
+        else if ("Play OGG".equals(event.getName())) {
             oggMusic.play();
         }
         else if ("Pause OGG".equals(event.getName())) {
@@ -57,5 +57,13 @@ public class MusicTest extends Program implements ActionListener {
         else if ("Stop OGG".equals(event.getName())) {
             oggMusic.stop();
         }
+    }
+
+    public void onTick(TickEvent te) {
+        window.setColor(Color.WHITE);
+        window.fill();
+        window.setColor(Color.BLACK);
+        window.drawText(10, 10, mp3Music.getPlaybackState().toString());
+        window.drawText(200, 10, oggMusic.getPlaybackState().toString());
     }
 }

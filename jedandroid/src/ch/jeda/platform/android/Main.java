@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,9 +30,9 @@ import ch.jeda.Jeda;
 import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
 import ch.jeda.event.SensorType;
+import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowRequest;
@@ -131,12 +131,12 @@ public final class Main extends FragmentActivity {
         return this.resourceManager.openImage(path);
     }
 
-    MusicImp createMusicImp(final String path) {
-        return this.audioManager.createMusicImp(path);
-    }
-
     SoundImp createSoundImp(final String path) {
         return this.audioManager.createSoundImp(path);
+    }
+
+    public AudioManagerImp getAudioManagerImp() {
+        return this.audioManager;
     }
 
     boolean isSensorAvailable(final SensorType sensorType) {

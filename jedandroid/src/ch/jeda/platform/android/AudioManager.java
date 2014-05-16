@@ -25,23 +25,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import ch.jeda.Log;
-import ch.jeda.PlaybackState;
-import ch.jeda.platform.MusicImp;
+import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.SoundImp;
 
-class AudioManager extends Fragment implements MediaPlayer.OnCompletionListener {
+class AudioManager extends Fragment implements AudioManagerImp, MediaPlayer.OnCompletionListener {
 
     private static final String RES_PREFIX = "res:";
     private static final int DEFAULT_PRIORITY = 0;
-    private final Object lock;
-    private AndroidMusicImp currentMusic;
+    private AudioManagerImp.Callback callback;
     private android.media.AudioManager imp;
     private MediaPlayer mediaPlayer;
     private SoundPool soundPool;
-
-    public AudioManager() {
-        this.lock = new Object();
-    }
 
     @Override
     public void onAttach(final Activity activity) {
@@ -57,7 +51,9 @@ class AudioManager extends Fragment implements MediaPlayer.OnCompletionListener 
     }
 
     public void onCompletion(final MediaPlayer mediaPlayer) {
-        this.stopMusic(this.getCurrentMusic());
+        if (this.callback != null) {
+            this.callback.playbackStopped();
+        }
     }
 
     SoundImp createSoundImp(final String path) {
@@ -75,75 +71,45 @@ class AudioManager extends Fragment implements MediaPlayer.OnCompletionListener 
         }
     }
 
-    MusicImp createMusicImp(final String path) {
-        if (path.startsWith(RES_PREFIX)) {
-            return new AndroidMusicImp(this, path);
-        }
-        else {
-            return null;
-        }
+    @Override
+    public void pausePlayback() {
+        this.mediaPlayer.pause();
     }
 
-    void pauseMusic(final AndroidMusicImp music) {
-        switch (music.getPlaybackState()) {
-            case PLAYING:
-                if (this.getCurrentMusic() == music) {
-                    synchronized (this.lock) {
-                        this.mediaPlayer.pause();
-                        this.currentMusic.setPlaybackState(PlaybackState.PAUSED);
-                    }
-                }
-        }
+    @Override
+    public void resumePlayback() {
+        this.mediaPlayer.start();
     }
 
-    void playMusic(final AndroidMusicImp music) {
-        switch (music.getPlaybackState()) {
-            case STOPPED:
-                if (this.getCurrentMusic() == null) {
-                    final int resId = this.getResourceId(music.getPath());
-                    if (resId != 0) {
-                        synchronized (this.lock) {
-                            this.mediaPlayer = MediaPlayer.create(this.getActivity(), resId);
-                            this.mediaPlayer.setOnCompletionListener(this);
-                            this.mediaPlayer.start();
-                            this.currentMusic = music;
-                            this.currentMusic.setPlaybackState(PlaybackState.PLAYING);
-                        }
-                    }
-                }
-            case PAUSED:
-                if (this.getCurrentMusic() == music) {
-                    synchronized (this.lock) {
-                        this.mediaPlayer.start();
-                        this.currentMusic.setPlaybackState(PlaybackState.PLAYING);
-                    }
-                }
-        }
+    @Override
+    public void setCallback(final Callback callback) {
+        this.callback = callback;
     }
 
-    void stopMusic(final AndroidMusicImp music) {
-        switch (music.getPlaybackState()) {
-            case PLAYING:
-            case PAUSED:
-                if (this.getCurrentMusic() == music) {
-                    this.mediaPlayer.stop();
-                    this.mediaPlayer.release();
-                    this.mediaPlayer = null;
-                    music.setPlaybackState(PlaybackState.STOPPED);
-                    this.currentMusic = null;
-                }
+    @Override
+    public boolean startPlayback(final String path) {
+        final int resId = this.getResourceId(path);
+        if (resId == 0) {
+            return false;
         }
+
+        this.mediaPlayer = MediaPlayer.create(this.getActivity(), resId);
+        this.mediaPlayer.setOnCompletionListener(this);
+        this.mediaPlayer.start();
+        return true;
+    }
+
+    @Override
+    public void stopPlayback() {
+        this.mediaPlayer.stop();
+        this.mediaPlayer.release();
+        this.mediaPlayer = null;
+        this.callback.playbackStopped();
     }
 
     void playSound(final int soundId) {
         final float volume = this.getVolume();
         this.soundPool.play(soundId, volume, volume, 0, 0, 1.0f);
-    }
-
-    private AndroidMusicImp getCurrentMusic() {
-        synchronized (this.lock) {
-            return this.currentMusic;
-        }
     }
 
     private int getResourceId(final String path) {

@@ -20,6 +20,7 @@ import ch.jeda.Log;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
+import ch.jeda.platform.AudioManagerImp;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,13 +38,15 @@ import javax.sound.sampled.Mixer;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-class AudioManager implements TickListener {
+class AudioManager implements AudioManagerImp, TickListener {
 
     private final Mixer mixer;
     private final List<AudioPlayback> pendingDeletions;
     private final List<AudioPlayback> pendingInsertions;
     private final List<AudioPlayback> playing;
     private final List<AudioFormat> supportedFormats;
+    private Callback callback;
+    private AudioPlayer musicPlayer;
 
     AudioManager() {
         this.mixer = findMixer();
@@ -160,5 +163,60 @@ class AudioManager implements TickListener {
         }
 
         return null;
+    }
+
+    @Override
+    public void pausePlayback() {
+        if (this.musicPlayer != null) {
+            this.musicPlayer.pause();
+        }
+    }
+
+    @Override
+    public void resumePlayback() {
+        if (this.musicPlayer != null) {
+            this.musicPlayer.resume();
+        }
+    }
+
+    @Override
+    public void setCallback(final Callback callback) {
+        this.callback = callback;
+    }
+
+    @Override
+    public boolean startPlayback(final String path) {
+        if (this.musicPlayer != null) {
+            return false;
+        }
+
+        this.musicPlayer = this.createAudioPlayer(path);
+        if (this.musicPlayer == null) {
+            return false;
+        }
+        else {
+            this.musicPlayer.start();
+            return true;
+        }
+    }
+
+    @Override
+    public void stopPlayback() {
+        this.musicPlayer.stop();
+        this.musicPlayer = null;
+    }
+
+    void playbackStopped() {
+        this.musicPlayer = null;
+        this.callback.playbackStopped();
+    }
+
+    private AudioPlayer createAudioPlayer(final String path) {
+        if (path.endsWith(".mp3")) {
+            return new Mp3AudioPlayer(this, path);
+        }
+        else {
+            return null;
+        }
     }
 }

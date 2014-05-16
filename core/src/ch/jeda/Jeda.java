@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,7 +21,6 @@ import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.WindowFeature;
@@ -264,16 +263,16 @@ public class Jeda {
         return ENGINE.createImageImp(path);
     }
 
-    static MusicImp createMusicImp(final String path) {
-        return ENGINE.createMusicImp(path);
-    }
-
     static SoundImp createSoundImp(final String path) {
         return ENGINE.createSoundImp(path);
     }
 
     static WindowImp createWindowImp(final int width, final int height, final EnumSet<WindowFeature> features) {
         return ENGINE.createWindowImp(width, height, features);
+    }
+
+    static AudioManager getAudioManager() {
+        return ENGINE.getAudioManager();
     }
 
     static void log(final LogLevel logLevel, final String message) {

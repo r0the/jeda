@@ -125,7 +125,6 @@ public class Decoder {
         // int testing;
         // frameCount = 100;
 
-        Decoder decoder = new Decoder();
         Bitstream stream = new Bitstream(in);
         SourceDataLine line = null;
         int error = 0;
@@ -148,7 +147,7 @@ public class Decoder {
                 if (header == null) {
                     break;
                 }
-                if (decoder.channels == 0) {
+                if (this.channels == 0) {
                     int channels = (header.mode() == Header.MODE_SINGLE_CHANNEL) ? 1 : 2;
                     float sampleRate = header.frequency();
                     int sampleSize = 16;
@@ -161,10 +160,10 @@ public class Decoder {
                         SourceDataLine.class, format);
                     line = (SourceDataLine) AudioSystem.getLine(info);
                     if (BENCHMARK) {
-                        decoder.initOutputBuffer(null, channels);
+                        this.initOutputBuffer(null, channels);
                     }
                     else {
-                        decoder.initOutputBuffer(line, channels);
+                        this.initOutputBuffer(line, channels);
                     }
                     // TODO sometimes the line can not be opened (maybe not enough system resources?): display error message
                     // System.out.println(line.getFormat().toString());
@@ -175,7 +174,7 @@ public class Decoder {
                     Thread.yield();
                     Thread.sleep(20);
                 }
-                decoder.decodeFrame(header, stream);
+                this.decodeFrame(header, stream);
             }
             catch (Exception e) {
                 if (error++ > 1000) {

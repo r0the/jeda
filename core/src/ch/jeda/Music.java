@@ -16,8 +16,6 @@
  */
 package ch.jeda;
 
-import ch.jeda.platform.MusicImp;
-
 /**
  * This class represents music data. The music data can be loaded from a file or a resource. The music can be played
  * back. Only one music can be played at a time.
@@ -40,7 +38,9 @@ import ch.jeda.platform.MusicImp;
  */
 public final class Music {
 
-    private final MusicImp imp;
+    private final Object lock;
+    private final String path;
+    private PlaybackState playbackState;
 
     /**
      * Constructs a new music object representing the contents of the specified audio file.
@@ -52,7 +52,9 @@ public final class Music {
      * @since 1
      */
     public Music(final String path) {
-        this.imp = Jeda.createMusicImp(path);
+        this.lock = new Object();
+        this.path = path;
+        this.playbackState = PlaybackState.STOPPED;
     }
 
     /**
@@ -63,7 +65,9 @@ public final class Music {
      * @since 1
      */
     public PlaybackState getPlaybackState() {
-        return this.imp.getPlaybackState();
+        synchronized (this.lock) {
+            return this.playbackState;
+        }
     }
 
     /**
@@ -76,7 +80,7 @@ public final class Music {
      * @since 1
      */
     public boolean isAvailable() {
-        return this.imp.isAvailable();
+        return true;
     }
 
     /**
@@ -85,7 +89,7 @@ public final class Music {
      * @since 1
      */
     public void pause() {
-        this.imp.pause();
+        Jeda.getAudioManager().pauseMusic(this);
     }
 
     /**
@@ -94,7 +98,7 @@ public final class Music {
      * @since 1
      */
     public void play() {
-        this.imp.play();
+        Jeda.getAudioManager().playMusic(this);
     }
 
     /**
@@ -103,6 +107,16 @@ public final class Music {
      * @since 1
      */
     public void stop() {
-        this.imp.stop();
+        Jeda.getAudioManager().stopMusic(this);
+    }
+
+    void setPlaybackState(final PlaybackState playbackState) {
+        synchronized (this.lock) {
+            this.playbackState = playbackState;
+        }
+    }
+
+    String getPath() {
+        return this.path;
     }
 }

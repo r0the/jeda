@@ -22,7 +22,6 @@ import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.MusicImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
@@ -42,13 +41,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 class JedaEngine implements PlatformCallback, Runnable {
 
-    private static final MusicImp EMPTY_MUSIC_IMP = new EmptyMusicImp();
     private static final SoundImp EMPTY_SOUND_IMP = new EmptySoundImp();
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
     private static final double DEFAULT_TICK_FREQUENCY = 60.0;
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = "res/jeda.properties";
     private static final String JEDA_PLATFORM_PROPERTIES_FILE = "res/jeda/platform.properties";
     private static final String JEDA_SYSTEM_PROPERTIES_FILE = "res/jeda/system.properties";
+    private final AudioManager audioManager;
     private final Object currentProgramLock;
     private final ImageImp defaultImageImp;
     private final FrequencyMeter frequencyMeter;
@@ -80,6 +79,8 @@ class JedaEngine implements PlatformCallback, Runnable {
         this.properties = initProperties();
         // Init platform
         this.platform = initPlatform(this.properties.getString("jeda.platform.class"), this);
+        // Init audio manager
+        this.audioManager = new AudioManager(this.platform.getAudioManagerImp());
         // Load default image
         this.defaultImageImp = this.platform.createImageImp(DEFAULT_IMAGE_PATH);
         // Find Jeda programs and plugins
@@ -188,20 +189,6 @@ class JedaEngine implements PlatformCallback, Runnable {
         }
     }
 
-    MusicImp createMusicImp(final String path) {
-        if (path == null) {
-            return EMPTY_MUSIC_IMP;
-        }
-
-        final MusicImp result = this.platform.createMusicImp(path);
-        if (result == null) {
-            return EMPTY_MUSIC_IMP;
-        }
-        else {
-            return result;
-        }
-    }
-
     SoundImp createSoundImp(final String path) {
         if (path == null) {
             return EMPTY_SOUND_IMP;
@@ -225,6 +212,10 @@ class JedaEngine implements PlatformCallback, Runnable {
         this.platform.showWindow(request);
         request.waitForResult();
         return request.getResult();
+    }
+
+    AudioManager getAudioManager() {
+        return this.audioManager;
     }
 
     String getProgramName() {
@@ -411,31 +402,6 @@ class JedaEngine implements PlatformCallback, Runnable {
             for (int i = 0; i < stackTrace.length; ++i) {
                 System.err.println("   " + stackTrace[i].toString());
             }
-        }
-    }
-
-    private static class EmptyMusicImp implements MusicImp {
-
-        @Override
-        public PlaybackState getPlaybackState() {
-            return PlaybackState.STOPPED;
-        }
-
-        @Override
-        public boolean isAvailable() {
-            return false;
-        }
-
-        @Override
-        public void pause() {
-        }
-
-        @Override
-        public void play() {
-        }
-
-        @Override
-        public void stop() {
         }
     }
 
