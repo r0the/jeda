@@ -1,0 +1,18 @@
+Jeda
+----
+
+Jeda is written by Stefan Rothe. It is released under the GNU Lesser General
+Public Licence. See COPYING for details.
+
+Third-Party Contributions
+-------------------------
+
+* The Jeda logo and Jeda cute graphics are taken from/based on
+
+  "Planet Cute" art by Daniel Cook (Lostgarden.com)
+  Licenced under the Creative Commons Attribution 3.0 Licence
+  http://www.lostgarden.com/2007/05/dancs-miraculously-flexible-game.html
+
+* The Mp3 decoder is based on Java MP3 Decoder / Player by Thomas Mueller
+  http://code.google.com/p/mp3transform/
+
