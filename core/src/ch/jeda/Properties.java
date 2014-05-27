@@ -26,6 +26,7 @@ import java.util.TreeSet;
  * Represents a map of keys to values.
  *
  * @since 1
+ * @version 2
  */
 public final class Properties {
 
@@ -34,6 +35,8 @@ public final class Properties {
     private final java.util.Properties imp;
 
     /**
+     * Constructs empty properties.
+     *
      * @since 1
      */
     public Properties() {
@@ -41,6 +44,12 @@ public final class Properties {
     }
 
     /**
+     * Loads properties from the specified file. The file must be a Java properties file.
+     *
+     * To read a resource file, put 'res:' in front of the file path.
+     *
+     * @param filePath the path of the file to read
+     *
      * @since 1
      */
     public Properties(final String filePath) {
@@ -71,13 +80,23 @@ public final class Properties {
     }
 
     /**
+     * Adds the specified properties to these properties. Values of existing keys are overwritten by the values of
+     * corresponding keys in <tt>properties</tt>. Has no effect if <tt>properties</tt> is <tt>null</tt>.
+     *
+     * @param properties the properties to be added to these properties
+     * @deprecated Use {@link #putAll(ch.jeda.Properties)} instead
+     *
      * @since 1
      */
     public void addAll(final Properties properties) {
-        this.imp.putAll(properties.imp);
+        if (properties != null) {
+            this.imp.putAll(properties.imp);
+        }
     }
 
     /**
+     * Removes all keys and values from the properties.
+     *
      * @since 1
      */
     public void clear() {
@@ -85,17 +104,43 @@ public final class Properties {
     }
 
     /**
+     * Checks if the properties contains the specified key. Returns <tt>false</tt> if <tt>key</tt> is <tt>null</tt>.
+     *
+     * @param key the key to be checked for
+     * @return <tt>true</tt> if the specified is present, <tt>false</tt> otherwise
+     *
      * @since 1
      */
     public boolean containsKey(final String key) {
-        return this.imp.containsKey(key);
+        if (key == null) {
+            return false;
+        }
+        else {
+            return this.imp.containsKey(key);
+        }
     }
 
     /**
+     * Returns the value associated with the specified key as <tt>boolean</tt>. Returns <dd>defaultValue</tt> if the
+     * specified key is not present or is <tt>null</tt> or if the value associated with the key cannot be converted to a
+     * <tt>boolean</tt>. Valid <tt>boolean</tt> values are (case insensitive):
+     * <ul>
+     * <li>For <tt>true</tt>: <tt>"1"</tt>, <tt>"on"</tt>, <tt>"true"</tt>, <tt>"yes"</tt>,
+     * <li>For <tt>false</tt>: <tt>"0"</tt>, <tt>"off"</tt>, <tt>"false"</tt>, <tt>"no"</tt>,
+     * </ul>
+     *
+     * @param key the key of the required value
+     * @param defaultValue the value to return when the key is not present
+     * @return the value associated with the key as <tt>boolean</tt>
+     *
      * @since 1
      */
     public boolean getBoolean(final String key, final boolean defaultValue) {
-        String value = this.getString(key);
+        if (!this.imp.containsKey(key)) {
+            return defaultValue;
+        }
+
+        String value = this.imp.getProperty(key);
         if (value == null) {
             return defaultValue;
         }
@@ -113,35 +158,88 @@ public final class Properties {
     }
 
     /**
+     * Returns the value associated with the specified key as <tt>double</tt>. Returns <dd>defaultValue</tt> if the
+     * specified key is not present or is <tt>null</tt> or if the value associated with the key cannot be converted to a
+     * <tt>double</tt>.
+     *
+     * @param key the key of the required value
+     * @param defaultValue the value to return when the key is not present
+     * @return the value associated with the key as <tt>double</tt>
+     *
      * @since 1
      */
     public double getDouble(final String key, final double defaultValue) {
-        try {
-            return Double.parseDouble(this.getString(key));
+        if (!this.imp.containsKey(key)) {
+            return defaultValue;
         }
-        catch (Exception ex) {
+
+        try {
+            return Double.parseDouble(this.imp.getProperty(key));
+        }
+        catch (final Exception ex) {
             return defaultValue;
         }
     }
 
     /**
+     * Returns the value associated with the specified key as <tt>int</tt>. Returns <dd>defaultValue</tt> if the
+     * specified key is not present or is <tt>null</tt> or if the value associated with the key cannot be converted to
+     * an <tt>int</tt>.
+     *
+     * @param key the key of the required value
+     * @param defaultValue the value to return when the key is not present
+     * @return the value associated with the key as <tt>double</tt>
+     *
      * @since 1
      */
     public int getInt(final String key, final int defaultValue) {
+        if (!this.imp.containsKey(key)) {
+            return defaultValue;
+        }
 
         try {
-            return Integer.parseInt(this.getString(key));
+            return Integer.parseInt(this.imp.getProperty(key));
         }
-        catch (Exception ex) {
+        catch (final Exception ex) {
             return defaultValue;
         }
     }
 
     /**
+     * Returns the value associated with the specified key as <tt>String</tt>. Returns <dd>null</tt> if the specified
+     * key is not present or is <tt>null</tt>.
+     *
+     * @param key the key of the required value
+     * @return the value associated with the key as <tt>String</tt>
+     *
      * @since 1
      */
     public String getString(final String key) {
-        return this.imp.getProperty(key);
+        if (this.imp.containsKey(key)) {
+            return this.imp.getProperty(key);
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the value associated with the specified key as <tt>String</tt>. Returns <dd>defaultValue</tt> if the
+     * specified key is not present or is <tt>null</tt>.
+     *
+     * @param key the key of the required value
+     * @param defaultValue the value to return when the key is not present
+     * @return the value associated with the key as <tt>String</tt>
+     *
+     * @since 2
+     */
+    public String getString(final String key, final String defaultValue) {
+        if (this.imp.containsKey(key)) {
+            return this.imp.getProperty(key);
+        }
+        else {
+            return defaultValue;
+        }
     }
 
     /**
@@ -154,6 +252,56 @@ public final class Properties {
         }
 
         return result;
+    }
+
+    /**
+     * Associate the specified key with the specified value.
+     *
+     * @since 2
+     */
+    public void put(final String key, final boolean value) {
+        this.imp.put(key, String.valueOf(value));
+    }
+
+    /**
+     * Associate the specified key with the specified value.
+     *
+     * @since 2
+     */
+    public void put(final String key, final double value) {
+        this.imp.put(key, String.valueOf(value));
+    }
+
+    /**
+     * Associate the specified key with the specified value.
+     *
+     * @since 2
+     */
+    public void put(final String key, final int value) {
+        this.imp.put(key, String.valueOf(value));
+    }
+
+    /**
+     * Associate the specified key with the specified value.
+     *
+     * @since 2
+     */
+    public void put(final String key, final String value) {
+        this.imp.put(key, value);
+    }
+
+    /**
+     * Adds the specified properties to these properties. Values of existing keys are overwritten by the values of
+     * corresponding keys in <tt>properties</tt>. Has no effect if <tt>properties</tt> is <tt>null</tt>.
+     *
+     * @param properties the properties to be added to these properties
+     *
+     * @since 2
+     */
+    public void putAll(final Properties properties) {
+        if (properties != null) {
+            this.imp.putAll(properties.imp);
+        }
     }
 
     /**
