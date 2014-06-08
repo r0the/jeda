@@ -34,7 +34,7 @@ package ch.jeda;
  * <li><a href="http://en.wikipedia.org/wiki/Wav" target="_blank">WAV</a> (Codec: PCM)
  * </ul>
  *
- * @since 1
+ * @since 1.0
  */
 public final class Music {
 
@@ -49,7 +49,7 @@ public final class Music {
      *
      * @param path path to the audio file
      *
-     * @since 1
+     * @since 1.0
      */
     public Music(final String path) {
         this.lock = new Object();
@@ -62,7 +62,7 @@ public final class Music {
      *
      * @return the current playback state of this Music object.
      *
-     * @since 1
+     * @since 1.0
      */
     public PlaybackState getPlaybackState() {
         synchronized (this.lock) {
@@ -77,7 +77,7 @@ public final class Music {
      *
      * @return <tt>true</tt> if the music is available, otherwise <tt>false</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public boolean isAvailable() {
         return true;
@@ -86,7 +86,7 @@ public final class Music {
     /**
      * Pauses the playback of the music. Has not effect if the music is not playing.
      *
-     * @since 1
+     * @since 1.0
      */
     public void pause() {
         Jeda.getAudioManager().pauseMusic(this);
@@ -95,7 +95,7 @@ public final class Music {
     /**
      * Starts or resumes the playback of the music. Has no effect if another music is already playing.
      *
-     * @since 1
+     * @since 1.0
      */
     public void play() {
         Jeda.getAudioManager().playMusic(this);
@@ -104,7 +104,7 @@ public final class Music {
     /**
      * Stops the playback of the music. Has no effect if the music is not playing or paused.
      *
-     * @since 1
+     * @since 1.0
      */
     public void stop() {
         Jeda.getAudioManager().stopMusic(this);

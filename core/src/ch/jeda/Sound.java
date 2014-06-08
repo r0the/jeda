@@ -38,7 +38,7 @@ import ch.jeda.platform.SoundImp;
  * <li><a href="http://en.wikipedia.org/wiki/Wav" target="_blank">WAV</a> (Codec: PCM)
  * </ul>
  *
- * @since 1
+ * @since 1.0
  */
 public final class Sound {
 
@@ -51,7 +51,7 @@ public final class Sound {
      *
      * @param path path to the audio file
      *
-     * @since 1
+     * @since 1.0
      */
     public Sound(final String path) {
         this.imp = Jeda.createSoundImp(path);
@@ -64,7 +64,7 @@ public final class Sound {
      *
      * @return <tt>true</tt> if the sound is available, otherwise <tt>false</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public boolean isAvailable() {
         return this.imp.isAvailable();
@@ -73,7 +73,7 @@ public final class Sound {
     /**
      * Starts the playback of the sound. Multiple playbacks of the same sound can be started simultaneously.
      *
-     * @since 1
+     * @since 1.0
      */
     public void play() {
         this.imp.play();

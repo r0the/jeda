@@ -23,7 +23,7 @@ package ch.jeda.event;
  * <p>
  * <img src="../../../android.png"> Sensors may be available depending on the device.
  *
- * @since 1
+ * @since 1.0
  */
 public class SensorEvent extends Event {
 
@@ -42,7 +42,7 @@ public class SensorEvent extends Event {
      * @param maximum is the reported value at the sensor's maximum range
      * @param value the currently sensed value
      *
-     * @since 1
+     * @since 1.0
      */
     public SensorEvent(final Object source, final SensorType sensorType, final boolean maximum, final double value) {
         this(source, sensorType, maximum, value, 0f, 0f, 0f);
@@ -57,7 +57,7 @@ public class SensorEvent extends Event {
      * @param y the y-axis component of the currently sensed value
      * @param z the z-axis component of the currently sensed value
      *
-     * @since 1
+     * @since 1.0
      */
     public SensorEvent(final Object source, final SensorType sensorType,
                        final double x, final double y, final double z) {
@@ -69,7 +69,7 @@ public class SensorEvent extends Event {
      *
      * @return the type of sensor that generated the event
      *
-     * @since 1
+     * @since 1.0
      */
     public final SensorType getSensorType() {
         return this.sensorType;
@@ -92,7 +92,7 @@ public class SensorEvent extends Event {
      *
      * @return the currently sensed value
      *
-     * @since 1
+     * @since 1.0
      */
     public final double getValue() {
         return this.value;
@@ -114,7 +114,7 @@ public class SensorEvent extends Event {
      *
      * @return the x-axis component of the currently sensed value
      *
-     * @since 1
+     * @since 1.0
      */
     public final double getX() {
         return this.x;
@@ -139,7 +139,7 @@ public class SensorEvent extends Event {
      *
      * @return the y-axis component of the currently sensed value
      *
-     * @since 1
+     * @since 1.0
      */
     public final double getY() {
         return this.y;
@@ -161,7 +161,7 @@ public class SensorEvent extends Event {
      *
      * @return the z-axis component of the currently sensed value
      *
-     * @since 1
+     * @since 1.0
      */
     public final double getZ() {
         return this.z;
@@ -173,7 +173,7 @@ public class SensorEvent extends Event {
      *
      * @return <tt>true</tt> if the reported value is the maximum range of the sensor, otherwise <tt>false</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public final boolean isMaximum() {
         return this.maximum;

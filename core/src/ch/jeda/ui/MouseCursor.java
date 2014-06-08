@@ -22,38 +22,38 @@ package ch.jeda.ui;
  * method.
  *
  * @see ch.jeda.ui.Window
- * @since 1
+ * @since 1.0
  */
 public enum MouseCursor {
 
     /**
      * A crosshair mouse cursor.
      *
-     * @since 1
+     * @since 1.0
      */
     CROSSHAIR,
     /**
      * The default mouse cursor (an arrow).
      *
-     * @since 1
+     * @since 1.0
      */
     DEFAULT,
     /**
      * A hand mouse cursor.
      *
-     * @since 1
+     * @since 1.0
      */
     HAND,
     /**
      * An invisible mouse cursor.
      *
-     * @since 1
+     * @since 1.0
      */
     INVISIBLE,
     /**
      * A text input mouse cursor (the shape of an I).
      *
-     * @since 1
+     * @since 1.0
      */
     TEXT
 }

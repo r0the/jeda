@@ -31,7 +31,7 @@ import java.util.EnumSet;
  * <li> user input: the window provides means to query keyboard and mouse input.
  * </ul>
  *
- * @since 1
+ * @since 1.0
  */
 public class Window extends Canvas {
 
@@ -53,7 +53,7 @@ public class Window extends Canvas {
      * <p>
      * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.
      *
-     * @since 1
+     * @since 1.0
      */
     public Window() {
         this(0, 0);
@@ -73,7 +73,7 @@ public class Window extends Canvas {
      *
      * @param features the features of the window
      *
-     * @since 1
+     * @since 1.0
      */
     public Window(final WindowFeature... features) {
         this(0, 0, features);
@@ -97,7 +97,7 @@ public class Window extends Canvas {
      * @param features the features of the window
      * @throws IllegalArgumentException if width or height are smaller than 1
      *
-     * @since 1
+     * @since 1.0
      */
     public Window(final int width, final int height, final WindowFeature... features) {
         this.graphicsItems = new GraphicsItems(this);
@@ -115,7 +115,7 @@ public class Window extends Canvas {
      * @see #remove(ch.jeda.ui.GraphicsItem)
      * @see #getGraphicsItems()
      * @see #getGraphicsItems(java.lang.Class)
-     * @since 1
+     * @since 1.0
      */
     public final void add(final GraphicsItem graphicsItem) {
         this.graphicsItems.add(graphicsItem);
@@ -127,7 +127,7 @@ public class Window extends Canvas {
      *
      * @param listener the event listener
      *
-     * @since 1
+     * @since 1.0
      */
     public final void addEventListener(final Object listener) {
         this.eventDispatcher.addListener(listener);
@@ -136,7 +136,7 @@ public class Window extends Canvas {
     /**
      * Closes the window. The window becomes invalid, all subsequent method calls to the window will cause an error.
      *
-     * @since 1
+     * @since 1.0
      */
     public final void close() {
         this.imp.close();
@@ -150,7 +150,7 @@ public class Window extends Canvas {
      * @see #add(ch.jeda.ui.GraphicsItem)
      * @see #getGraphicsItems(java.lang.Class)
      * @see #remove(ch.jeda.ui.GraphicsItem)
-     * @since 1
+     * @since 1.0
      */
     public final GraphicsItem[] getGraphicsItems() {
         return this.graphicsItems.getAll();
@@ -165,7 +165,7 @@ public class Window extends Canvas {
      * @see #add(ch.jeda.ui.GraphicsItem)
      * @see #getGraphicsItems()
      * @see #getGraphicsItems(java.lang.Class)
-     * @since 1
+     * @since 1.0
      */
     public final <T extends GraphicsItem> T[] getGraphicsItems(final Class<T> clazz) {
         return this.graphicsItems.get(clazz);
@@ -177,7 +177,7 @@ public class Window extends Canvas {
      * @return current window title
      *
      * @see #setTitle(java.lang.String)
-     * @since 1
+     * @since 1.0
      */
     public final String getTitle() {
         return this.title;
@@ -191,7 +191,7 @@ public class Window extends Canvas {
      * @throws NullPointerException if <tt>feature</tt> is <tt>null</tt>
      *
      * @see #setFeature(WindowFeature, boolean)
-     * @since 1
+     * @since 1.0
      */
     public final boolean hasFeature(final WindowFeature feature) {
         if (feature == null) {
@@ -208,7 +208,7 @@ public class Window extends Canvas {
      * @param item the graphics item to be removed from the window
      *
      * @see ch.jeda.ui.GraphicsItem
-     * @since 1
+     * @since 1.0
      */
     public final void remove(final GraphicsItem item) {
         this.graphicsItems.remove(item);
@@ -219,7 +219,7 @@ public class Window extends Canvas {
      * <tt>listener</tt> is <tt>null</tt>.
      *
      * @param listener the event listener
-     * @since 1
+     * @since 1.0
      */
     public final void removeEventListener(final Object listener) {
         this.eventDispatcher.removeListener(listener);
@@ -234,7 +234,7 @@ public class Window extends Canvas {
      * @throws NullPointerException if <tt>feature</tt> is <tt>null</tt>
      *
      * @see #hasFeature(WindowFeature)
-     * @since 1
+     * @since 1.0
      */
     public final void setFeature(final WindowFeature feature, final boolean enabled) {
         if (feature == null) {
@@ -266,7 +266,7 @@ public class Window extends Canvas {
      * <tt>null</tt>
      *
      * @see MouseCursor
-     * @since 1
+     * @since 1.0
      */
     public final void setMouseCursor(final MouseCursor mouseCursor) {
         if (mouseCursor == null) {
@@ -283,7 +283,7 @@ public class Window extends Canvas {
      * @throws NullPointerException if <tt>title</tt> is <tt>null</tt>
      *
      * @see #getTitle()
-     * @since 1
+     * @since 1.0
      */
     public final void setTitle(final String title) {
         if (title == null) {

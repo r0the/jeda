@@ -17,12 +17,12 @@
 package ch.jeda.event;
 
 /**
- * @since 1
+ * @since 1.0
  */
 public enum TurnAxis {
 
     /**
-     * @since 1
+     * @since 1.0
      */
     MOUSE_WHEEL,
 }

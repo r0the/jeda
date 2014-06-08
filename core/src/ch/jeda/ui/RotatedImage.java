@@ -19,7 +19,7 @@ package ch.jeda.ui;
 /**
  * Represents a rotated bitmap image. A bitmap image can be loaded from an image file.
  *
- * @since 1
+ * @since 1.0
  */
 public final class RotatedImage {
 
@@ -40,14 +40,14 @@ public final class RotatedImage {
      * @param steps the number of steps for a full rotation of the image
      * @throws IllegalArgumentException if <tt>steps</tt> is smaller than 1
      *
-     * @since 1
+     * @since 1.0
      */
     public RotatedImage(final String path, final int steps) {
         this(new Image(path), steps);
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public RotatedImage(final Image image, final int steps) {
         if (steps < 1) {
@@ -67,7 +67,7 @@ public final class RotatedImage {
      * @param angle
      * @return rotated image
      *
-     * @since 1
+     * @since 1.0
      */
     public Image getImage(final double angle) {
         int index = (int) Math.round(angle / (2.0 * Math.PI) * this.images.length);

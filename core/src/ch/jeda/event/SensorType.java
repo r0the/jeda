@@ -23,7 +23,7 @@ package ch.jeda.event;
  * <p>
  * <img src="../../../android.png"> Sensors may be available depending on the device.
  *
- * @since 1
+ * @since 1.0
  */
 public enum SensorType {
 
@@ -36,7 +36,7 @@ public enum SensorType {
      * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
      * @see ch.jeda.event.SensorEvent
-     * @since 1
+     * @since 1.0
      */
     ACCELERATION,
     /**
@@ -48,7 +48,7 @@ public enum SensorType {
      * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
      * @see ch.jeda.event.SensorEvent
-     * @since 1
+     * @since 1.0
      */
     GRAVITY,
     /**
@@ -59,7 +59,7 @@ public enum SensorType {
      * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
      * @see ch.jeda.event.SensorEvent
-     * @since 1
+     * @since 1.0
      */
     LIGHT,
     /**
@@ -71,7 +71,7 @@ public enum SensorType {
      * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
      * @see ch.jeda.event.SensorEvent
-     * @since 1
+     * @since 1.0
      */
     LINEAR_ACCELERATION,
     /**
@@ -82,7 +82,7 @@ public enum SensorType {
      * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
      * @see ch.jeda.event.SensorEvent
-     * @since 1
+     * @since 1.0
      */
     MAGNETIC_FIELD,
     /**
@@ -93,7 +93,7 @@ public enum SensorType {
      * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
      * @see ch.jeda.event.SensorEvent
-     * @since 1
+     * @since 1.0
      */
     PRESSURE,
     /**
@@ -104,7 +104,7 @@ public enum SensorType {
      * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
      * @see ch.jeda.event.SensorEvent
-     * @since 1
+     * @since 1.0
      */
     PROXIMITY,
     /**
@@ -115,7 +115,7 @@ public enum SensorType {
      * <img src="../../../android.png"> The sensor may be available depending on the device.
      *
      * @see ch.jeda.event.SensorEvent
-     * @since 1
+     * @since 1.0
      */
     TEMPERATURE
 }

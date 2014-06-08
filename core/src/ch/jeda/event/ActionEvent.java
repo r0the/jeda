@@ -17,14 +17,14 @@
 package ch.jeda.event;
 
 /**
- * @since 1
+ * @since 1.0
  */
 public class ActionEvent extends Event {
 
     private final String name;
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public ActionEvent(final Object source, final String name) {
         super(source, EventType.ACTION);
@@ -32,7 +32,7 @@ public class ActionEvent extends Event {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public String getName() {
         return this.name;

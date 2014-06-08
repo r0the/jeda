@@ -22,7 +22,7 @@ public enum WindowFeature {
      * Enables double buffering in a window. A double-buffered window performs drawing operations in an off-screen
      * buffer. This prevents flickering in animations.
      *
-     * @since 1
+     * @since 1.0
      */
     DOUBLE_BUFFERED,
     /**
@@ -34,11 +34,11 @@ public enum WindowFeature {
      * <p>
      * <img src="../../../android.png"> Fullscreen mode is not yet supported on Android devices.
      *
-     * @since 1
+     * @since 1.0
      */
     FULLSCREEN,
     /**
-     * @since 1
+     * @since 1.0
      */
     HOVERING_POINTER,
     /**
@@ -49,7 +49,7 @@ public enum WindowFeature {
      * <img src="../../../android.png"> The screen orientation of the device is set to landscape. Thus, the width of the
      * window's drawing area is larger than it's height.
      *
-     * @since 1
+     * @since 1.0
      */
     ORIENTATION_LANDSCAPE,
     /**
@@ -60,7 +60,7 @@ public enum WindowFeature {
      * <img src="../../../android.png"> The screen orientation of the device is set to portrait. Thus, the width of the
      * window's drawing area is smaller than it's height.
      *
-     * @since 1
+     * @since 1.0
      */
     ORIENTATION_PORTRAIT
 }

@@ -28,7 +28,7 @@ package ch.jeda.event;
  * <p>
  * <img src="../../../android.png"> Sensors may be available depending on the device.
  *
- * @since 1
+ * @since 1.0
  */
 public interface SensorListener {
 
@@ -37,7 +37,7 @@ public interface SensorListener {
      *
      * @param event the event
      *
-     * @since 1
+     * @since 1.0
      */
     void onSensorChanged(SensorEvent event);
 }

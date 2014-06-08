@@ -20,7 +20,7 @@ package ch.jeda.event;
  * Represents an event of the type {@link EventType#POINTER_DOWN}, {@link EventType#POINTER_MOVED}, or
  * {@link EventType#POINTER_UP}.
  *
- * @since 1
+ * @since 1.0
  */
 public final class PointerEvent extends Event {
 
@@ -29,14 +29,14 @@ public final class PointerEvent extends Event {
     private final int y;
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public PointerEvent(final Object source, final EventType type, final int pointerId) {
         this(source, type, pointerId, -1, -1);
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public PointerEvent(final Object source, final EventType type, final int pointerId,
                         final int x, final int y) {
@@ -51,7 +51,7 @@ public final class PointerEvent extends Event {
      *
      * @return id of the pointer
      *
-     * @since 1
+     * @since 1.0
      */
     public final int getPointerId() {
         return this.pointerId;
@@ -62,7 +62,7 @@ public final class PointerEvent extends Event {
      *
      * @return x coordinate of the pointer
      *
-     * @since 1
+     * @since 1.0
      */
     public final int getX() {
         return this.x;
@@ -73,7 +73,7 @@ public final class PointerEvent extends Event {
      *
      * @return y coordinate of the pointer
      *
-     * @since 1
+     * @since 1.0
      */
     public final int getY() {
         return this.y;

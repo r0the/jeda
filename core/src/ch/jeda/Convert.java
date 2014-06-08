@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Provides conversion methods.
  *
- * @since 1
+ * @since 1.0
  */
 public final class Convert {
 
@@ -34,7 +34,7 @@ public final class Convert {
      * @param values comma-separated double values
      * @return a list of double values
      *
-     * @since 1
+     * @since 1.0
      */
     public static List<Double> toList(final double... values) {
         final ArrayList<Double> result = new ArrayList<Double>();
@@ -51,7 +51,7 @@ public final class Convert {
      * @param values comma-separated float values
      * @return a list of float values
      *
-     * @since 1
+     * @since 1.0
      */
     public static List<Float> toList(final float... values) {
         final ArrayList<Float> result = new ArrayList<Float>();
@@ -68,7 +68,7 @@ public final class Convert {
      * @param values comma-separated int values
      * @return a list of int values
      *
-     * @since 1
+     * @since 1.0
      */
     public static List<Integer> toList(final int... values) {
         final ArrayList<Integer> result = new ArrayList<Integer>();
@@ -85,7 +85,7 @@ public final class Convert {
      * @param values comma-separated String values
      * @return a list of String values
      *
-     * @since 1
+     * @since 1.0
      */
     public static List<String> toList(final String... values) {
         return Arrays.asList(values);
@@ -97,7 +97,7 @@ public final class Convert {
      * @param objects comma-separated objects
      * @return a string representation of the specified objects
      *
-     * @since 1
+     * @since 1.0
      */
     public static String toString(final Object... objects) {
         final StringBuilder result = new StringBuilder();

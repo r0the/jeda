@@ -19,7 +19,7 @@ package ch.jeda.event;
 /**
  * Represents an event of the type {@link ch.jeda.event.EventType#TICK}.
  *
- * @since 1
+ * @since 1.0
  */
 public class TickEvent extends Event {
 
@@ -27,7 +27,7 @@ public class TickEvent extends Event {
     private final double frameRate;
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public TickEvent(final Object source, final double duration, final double frameRate) {
         super(source, EventType.TICK);
@@ -40,7 +40,7 @@ public class TickEvent extends Event {
      *
      * @return duration of last frame in seconds
      *
-     * @since 1
+     * @since 1.0
      */
     public final double getDuration() {
         return this.duration;
@@ -51,7 +51,7 @@ public class TickEvent extends Event {
      *
      * @return the current frame rate
      *
-     * @since 1
+     * @since 1.0
      */
     public final double getFrameRate() {
         return this.frameRate;

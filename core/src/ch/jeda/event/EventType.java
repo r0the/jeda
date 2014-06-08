@@ -19,14 +19,14 @@ package ch.jeda.event;
 /**
  * The types of events supported by Jeda.
  *
- * @since 1
+ * @since 1.0
  */
 public enum EventType {
 
     /**
      * An action event.
      *
-     * @since 1
+     * @since 1.0
      */
     ACTION,
     /**
@@ -34,7 +34,7 @@ public enum EventType {
      * the device, or a button on an input device. While the user keeps pressing the key or button, the event may occur
      * repeatedly.
      *
-     * @since 1
+     * @since 1.0
      */
     KEY_DOWN,
     /**
@@ -42,40 +42,40 @@ public enum EventType {
      * This behaviour depends largely on the system's keyboard layout settings. While the user keeps pressing the key,
      * the event may occur repeatedly.
      *
-     * @since 1
+     * @since 1.0
      */
     KEY_TYPED,
     /**
      * A key up event. This type of event occurs when the user releases a key on the keyboard, a hardware button on the
      * device, or a button on an input device.
      *
-     * @since 1
+     * @since 1.0
      */
     KEY_UP,
     /**
      * A pointer down event.
      *
-     * @since 1
+     * @since 1.0
      */
     POINTER_DOWN,
     /**
-     * @since 1
+     * @since 1.0
      */
     POINTER_MOVED,
     /**
-     * @since 1
+     * @since 1.0
      */
     POINTER_UP,
     /**
-     * @since 1
+     * @since 1.0
      */
     SENSOR,
     /**
-     * @since 1
+     * @since 1.0
      */
     TICK,
     /**
-     * @since 1
+     * @since 1.0
      */
     TURN,
 }

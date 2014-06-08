@@ -30,22 +30,22 @@ import java.util.Map;
  * Represents a bitmap image. A bitmap image can be loaded from an image file or be obtained by making a snapshot of a
  * {@link Canvas}. Simple image transformations are also supported.
  *
- * @since 1
+ * @since 1.0
  */
 public final class Image {
 
     private static final Map<String, ImageImp> CACHE = new HashMap<String, ImageImp>();
     private static final Map<String, ImageImp.Encoding> FORMAT_MAP = initFormatMap();
     /**
-     * @since 1
+     * @since 1.0
      */
     public static final Image JEDA_LOGO_16x16 = new Image("res:jeda/logo-16x16.png");
     /**
-     * @since 1
+     * @since 1.0
      */
     public static final Image JEDA_LOGO_48x48 = new Image("res:jeda/logo-48x48.png");
     /**
-     * @since 1
+     * @since 1.0
      */
     public static final Image JEDA_LOGO_64x64 = new Image("res:jeda/logo-64x64.png");
     private final ImageImp imp;
@@ -62,14 +62,14 @@ public final class Image {
      *
      * @param filePath path to the image file
      *
-     * @since 1
+     * @since 1.0
      */
     public Image(final String filePath) {
         this(loadImp(filePath));
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public Image createRotatedImage(final double angle) {
         return new Image(this.imp.createRotatedImage(angle));
@@ -83,7 +83,7 @@ public final class Image {
      * @throws IllegalArgumentException if <tt>factor</tt> is not positive
      *
      * @see #createScaledImage(int, int)
-     * @since 1
+     * @since 1.0
      */
     public Image createScaledImage(final double factor) {
         if (factor <= 0.0) {
@@ -108,7 +108,7 @@ public final class Image {
      * @throws IllegalArgumentException if <tt>y + height</tt> is greater or equal to the image height
      *
      * @see #createScaledImage(double)
-     * @since 1
+     * @since 1.0
      */
     public Image createScaledImage(final int width, final int height) {
         if (width < 1) {
@@ -135,7 +135,7 @@ public final class Image {
      * @throws IllegalArgumentException if <tt>x + width</tt> is greater or equal to the image width
      * @throws IllegalArgumentException if <tt>y + height</tt> is greater or equal to the image height
      *
-     * @since 1
+     * @since 1.0
      */
     public Image createSubImage(final int x, final int y, final int width, final int height) {
         if (width < 1) {
@@ -171,7 +171,7 @@ public final class Image {
      * @return height of the image
      *
      * @see #getWidth()
-     * @since 1
+     * @since 1.0
      */
     public int getHeight() {
         return this.imp.getHeight();
@@ -187,7 +187,7 @@ public final class Image {
      * @return an array containing the pixels of the specified part of the image
      * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are smaller than 1
      *
-     * @since 1
+     * @since 1.0
      */
     public int[] getPixels(final int x, final int y, final int width, final int height) {
         if (width < 1) {
@@ -223,7 +223,7 @@ public final class Image {
      * @return width of the image
      *
      * @see #getHeight()
-     * @since 1
+     * @since 1.0
      */
     public int getWidth() {
         return this.imp.getWidth();
@@ -235,7 +235,7 @@ public final class Image {
      * @param oldColor color to be replaced
      * @param newColor color to replace oldColor
      *
-     * @since 1
+     * @since 1.0
      */
     public Image replacePixels(final Color oldColor, final Color newColor) {
         return new Image(this.imp.replacePixels(oldColor, newColor));
@@ -250,7 +250,7 @@ public final class Image {
      * @return <tt>true</tt> if file has been saved sucessfully
      * @throws NullPointerException if <tt>filePath</tt> is <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public boolean save(final String filePath) {
         if (filePath == null) {

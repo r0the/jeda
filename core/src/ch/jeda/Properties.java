@@ -25,7 +25,7 @@ import java.util.TreeSet;
 /**
  * Represents a map of keys to values.
  *
- * @since 1
+ * @since 1.0
  * @version 2
  */
 public final class Properties {
@@ -37,7 +37,7 @@ public final class Properties {
     /**
      * Constructs empty properties.
      *
-     * @since 1
+     * @since 1.0
      */
     public Properties() {
         this.imp = new java.util.Properties();
@@ -50,7 +50,7 @@ public final class Properties {
      *
      * @param filePath the path of the file to read
      *
-     * @since 1
+     * @since 1.0
      */
     public Properties(final String filePath) {
         this();
@@ -86,7 +86,7 @@ public final class Properties {
      * @param properties the properties to be added to these properties
      * @deprecated Use {@link #putAll(ch.jeda.Properties)} instead
      *
-     * @since 1
+     * @since 1.0
      */
     public void addAll(final Properties properties) {
         if (properties != null) {
@@ -97,7 +97,7 @@ public final class Properties {
     /**
      * Removes all keys and values from the properties.
      *
-     * @since 1
+     * @since 1.0
      */
     public void clear() {
         this.imp.clear();
@@ -109,7 +109,7 @@ public final class Properties {
      * @param key the key to be checked for
      * @return <tt>true</tt> if the specified is present, <tt>false</tt> otherwise
      *
-     * @since 1
+     * @since 1.0
      */
     public boolean containsKey(final String key) {
         if (key == null) {
@@ -133,7 +133,7 @@ public final class Properties {
      * @param defaultValue the value to return when the key is not present
      * @return the value associated with the key as <tt>boolean</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public boolean getBoolean(final String key, final boolean defaultValue) {
         if (!this.imp.containsKey(key)) {
@@ -166,7 +166,7 @@ public final class Properties {
      * @param defaultValue the value to return when the key is not present
      * @return the value associated with the key as <tt>double</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public double getDouble(final String key, final double defaultValue) {
         if (!this.imp.containsKey(key)) {
@@ -190,7 +190,7 @@ public final class Properties {
      * @param defaultValue the value to return when the key is not present
      * @return the value associated with the key as <tt>double</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public int getInt(final String key, final int defaultValue) {
         if (!this.imp.containsKey(key)) {
@@ -212,7 +212,7 @@ public final class Properties {
      * @param key the key of the required value
      * @return the value associated with the key as <tt>String</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public String getString(final String key) {
         if (this.imp.containsKey(key)) {
@@ -243,7 +243,7 @@ public final class Properties {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public Set<String> keys() {
         final Set<String> result = new TreeSet<String>();
@@ -305,7 +305,7 @@ public final class Properties {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public Set<String> sections() {
         final Set<String> result = new TreeSet<String>();
@@ -320,7 +320,7 @@ public final class Properties {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public Properties section(final String prefix) {
         final int len = prefix.length() + 1;

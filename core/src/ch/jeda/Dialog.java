@@ -19,7 +19,7 @@ package ch.jeda;
 import ch.jeda.platform.InputRequest;
 
 /**
- * @since 1
+ * @since 1.0
  */
 public class Dialog<T> {
 
@@ -34,7 +34,7 @@ public class Dialog<T> {
      * @param message the message
      * @return <tt>double</tt> value entered by the user or <tt>0.0</tt.
      *
-     * @since 1
+     * @since 1.0
      */
     public static double readDouble(final Object... message) {
         final Dialog<Double> dialog = new Dialog<Double>(Double.class);
@@ -58,7 +58,7 @@ public class Dialog<T> {
      * @param message the message
      * @return <tt>int</tt> value entered by the user or <tt>0</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public static int readInt(final Object... message) {
         final Dialog<Integer> dialog = new Dialog<Integer>(Integer.class);
@@ -82,7 +82,7 @@ public class Dialog<T> {
      * @param message the message
      * @return <tt>String</tt> value entered by the user or <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public static String readString(final Object... message) {
         final Dialog<String> dialog = new Dialog<String>(String.class);
@@ -98,28 +98,28 @@ public class Dialog<T> {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public Dialog(final Class<T> clazz) {
         this.inputRequest = new InputRequest<T>(clazz);
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public void setMessage(final Object... message) {
         this.inputRequest.setMessage(Convert.toString(message));
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public void setTitle(final Object... title) {
         this.inputRequest.setTitle(Convert.toString(title));
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public void show() {
         Jeda.showInputRequest(this.inputRequest);
@@ -127,7 +127,7 @@ public class Dialog<T> {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public T getResult() {
         return this.inputRequest.getResult();

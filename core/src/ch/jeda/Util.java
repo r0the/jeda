@@ -19,7 +19,7 @@ package ch.jeda;
 /**
  * Provides utility functions.
  *
- * @since 1
+ * @since 1.0
  */
 public final class Util {
 
@@ -30,7 +30,7 @@ public final class Util {
      * @param y the y coordinate of the point
      * @return the Euclidean distance between the origin and the point
      *
-     * @since 1
+     * @since 1.0
      */
     public static double distance(final double x, final double y) {
         return Math.sqrt(x * x + y * y);
@@ -43,7 +43,7 @@ public final class Util {
      * @param f the <tt>float</tt> value
      * @return <tt>true</tt> if <tt>f</tt> is almost zero, <tt>false</tt> otherwise.
      *
-     * @since 1
+     * @since 1.0
      */
     public static boolean isZero(final float f) {
         return Math.abs(f) < 5f * Float.MIN_VALUE;
@@ -51,7 +51,7 @@ public final class Util {
 
     /**
      * @deprecated Use {@link Jeda#loadTextFile(java.lang.String)} instead.
-     * @since 1
+     * @since 1.0
      */
     public static String[] loadTextFile(final String filePath) {
         return Jeda.loadTextFile(filePath);
@@ -63,7 +63,7 @@ public final class Util {
      * @param max the upper limit for the random number
      * @return random number
      *
-     * @since 1
+     * @since 1.0
      */
     public static int randomInt(final int max) {
         return (int) (Math.random() * max);

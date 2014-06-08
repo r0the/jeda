@@ -25,7 +25,7 @@ import ch.jeda.event.PointerListener;
 import java.util.EnumSet;
 
 /**
- * @since 1
+ * @since 1.0
  */
 public abstract class AbstractButton extends GraphicsItem implements KeyDownListener, KeyUpListener, PointerListener {
 
@@ -36,7 +36,7 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
     private final Window window;
 
     /**
-     * @since 1
+     * @since 1.0
      */
     protected AbstractButton(final Window window, final String action) {
         this.action = action;
@@ -47,21 +47,21 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final void addKey(final Key key) {
         this.keys.add(key);
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final String getAction() {
         return this.action;
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final boolean isPressed() {
         return !this.pressedKeys.isEmpty() || pointerId != null;
@@ -82,7 +82,7 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final void removeKey(final Key key) {
         this.keys.remove(key);
@@ -113,7 +113,7 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final void setAction(final String action) {
         this.action = action;

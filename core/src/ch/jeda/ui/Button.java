@@ -17,7 +17,7 @@
 package ch.jeda.ui;
 
 /**
- * @since 1
+ * @since 1.0
  */
 public class Button extends AbstractButton {
 
@@ -32,7 +32,7 @@ public class Button extends AbstractButton {
     private int y;
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public Button(final Window window, final String action) {
         super(window, action);
@@ -43,14 +43,14 @@ public class Button extends AbstractButton {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public Button(final Window window, final int x, final int y, final String text) {
         this(window, x, y, text, Alignment.TOP_LEFT);
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public Button(final Window window, final int x, final int y, final String text, final Alignment alignment) {
         this(window, text);
@@ -68,7 +68,7 @@ public class Button extends AbstractButton {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public String getText() {
         return this.text;
@@ -95,7 +95,7 @@ public class Button extends AbstractButton {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public void setText(final String text) {
         this.text = text;

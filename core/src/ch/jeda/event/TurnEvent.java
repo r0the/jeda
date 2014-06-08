@@ -17,7 +17,7 @@
 package ch.jeda.event;
 
 /**
- * @since 1
+ * @since 1.0
  */
 public class TurnEvent extends Event {
 
@@ -25,7 +25,7 @@ public class TurnEvent extends Event {
     private final TurnAxis axis;
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public TurnEvent(final Object source, final double amount, final TurnAxis axis) {
         super(source, EventType.TURN);
@@ -34,14 +34,14 @@ public class TurnEvent extends Event {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final double getAmount() {
         return this.amount;
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final TurnAxis getAxis() {
         return this.axis;

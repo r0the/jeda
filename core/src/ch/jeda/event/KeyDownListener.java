@@ -21,7 +21,7 @@ package ch.jeda.event;
  * {@link ch.jeda.event.EventType#KEY_DOWN}, have the class of the object implement the interface and register the
  * object with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
  *
- * @since 1
+ * @since 1.0
  */
 public interface KeyDownListener {
 
@@ -33,7 +33,7 @@ public interface KeyDownListener {
      *
      * @param event the event
      *
-     * @since 1
+     * @since 1.0
      */
     void onKeyDown(KeyEvent event);
 }

@@ -30,14 +30,14 @@ package ch.jeda;
  *    write("Hello World");
  * }</code></pre>
  *
- * @since 1
+ * @since 1.0
  */
 public abstract class Program implements Runnable {
 
     /**
      * Constructs a program.
      *
-     * @since 1
+     * @since 1.0
      */
     protected Program() {
     }
@@ -45,7 +45,7 @@ public abstract class Program implements Runnable {
     /**
      * Executes the program. Override this method to implement the program.
      *
-     * @since 1
+     * @since 1.0
      */
     @Override
     public abstract void run();
@@ -56,7 +56,7 @@ public abstract class Program implements Runnable {
      * @return Jeda system properties.
      *
      * @see Properties
-     * @since 1
+     * @since 1.0
      */
     protected final Properties getProperties() {
         return Jeda.getProperties();
@@ -71,7 +71,7 @@ public abstract class Program implements Runnable {
      * @param message the message
      * @return <tt>double</tt> value entered by the user or <tt>0.0</tt.
      *
-     * @since 1
+     * @since 1.0
      */
     protected final double readDouble(final Object... message) {
         return Dialog.readDouble(message);
@@ -86,7 +86,7 @@ public abstract class Program implements Runnable {
      * @param message the message
      * @return <tt>int</tt> value entered by the user or <tt>0</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     protected final int readInt(final Object... message) {
         return Dialog.readInt(message);
@@ -101,7 +101,7 @@ public abstract class Program implements Runnable {
      * @param message the message
      * @return <tt>String</tt> value entered by the user or <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     protected final String readString(final Object... message) {
         return Dialog.readString(message);
@@ -112,7 +112,7 @@ public abstract class Program implements Runnable {
      *
      * @param milliseconds the amount of milliseconds to wait
      *
-     * @since 1
+     * @since 1.0
      */
     protected final void sleep(final int milliseconds) {
         try {
@@ -123,14 +123,14 @@ public abstract class Program implements Runnable {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     protected final void write(final Object... args) {
         Jeda.log(LogLevel.INFO, Convert.toString(args));
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     protected final void writeLines(final Object... args) {
         for (int i = 0; i < args.length; ++i) {

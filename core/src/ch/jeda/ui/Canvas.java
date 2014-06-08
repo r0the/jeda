@@ -42,7 +42,7 @@ import java.util.Stack;
  * canvas.setColor(Color.RED);
  * canvas.fillCircle(50, 50, 20);</code></pre>
  *
- * @since 1
+ * @since 1.0
  */
 public class Canvas {
 
@@ -65,7 +65,7 @@ public class Canvas {
      * @param height the height of the canvas in pixels
      * @throws IllegalArgumentException if width or height are smaller than 1
      *
-     * @since 1
+     * @since 1.0
      */
     public Canvas(final int width, final int height) {
         if (width < 1) {
@@ -102,7 +102,7 @@ public class Canvas {
      * @param y the y coordinate of the circle's centre
      * @param radius the circle's radius
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawCircle(final int x, final int y, final int radius) {
         if (radius > 0) {
@@ -118,7 +118,7 @@ public class Canvas {
      * @param y the y coordinate of the circle's centre
      * @param radius the circle's radius
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawCircle(final double x, final double y, final double radius) {
         this.drawCircle((int) x, (int) y, (int) radius);
@@ -132,7 +132,7 @@ public class Canvas {
      * @param y the y coordinate of the image's top left corner
      * @param image the image to draw
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawImage(final int x, final int y, final Image image) {
         if (image != null) {
@@ -148,7 +148,7 @@ public class Canvas {
      * @param y the y coordinate of the image's top left corner
      * @param image the image to draw
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawImage(final double x, final double y, final Image image) {
         this.drawImage((int) x, (int) y, image);
@@ -166,7 +166,7 @@ public class Canvas {
      * @param image the image to draw
      * @param alpha the alpha value
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawImage(final int x, final int y, final Image image, final int alpha) {
         if (alpha < 0 || 255 < alpha) {
@@ -190,7 +190,7 @@ public class Canvas {
      * @param image the image to draw
      * @param alpha the alpha value
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawImage(final double x, final double y, final Image image, final int alpha) {
         this.drawImage((int) x, (int) y, image, alpha);
@@ -207,7 +207,7 @@ public class Canvas {
      * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawImage(final int x, final int y, final Image image, final Alignment alignment) {
         if (alignment == null) {
@@ -231,7 +231,7 @@ public class Canvas {
      * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawImage(final double x, final double y, final Image image, final Alignment alignment) {
         this.drawImage((int) x, (int) y, image, alignment);
@@ -251,7 +251,7 @@ public class Canvas {
      * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawImage(final int x, final int y, final Image image, final int alpha, final Alignment alignment) {
         if (alignment == null) {
@@ -282,7 +282,7 @@ public class Canvas {
      * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawImage(final double x, final double y, final Image image, final int alpha,
                           final Alignment alignment) {
@@ -298,7 +298,7 @@ public class Canvas {
      * @param x2 the x coordinate of the line's end point
      * @param y2 the y coordinate of the line's end point
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawLine(final int x1, final int y1, final int x2, final int y2) {
         this.imp.drawLine(x1, y1, x2, y2);
@@ -313,7 +313,7 @@ public class Canvas {
      * @param x2 the x coordinate of the line's end point
      * @param y2 the y coordinate of the line's end point
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawLine(final double x1, final double y1, final double x2, final double y2) {
         this.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
@@ -329,7 +329,7 @@ public class Canvas {
      * @throws IllegalArgumentException if less than 6 arguments are passed
      * @throws IllegalArgumentException if and odd number of arguments are passed
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawPolygon(final int... points) {
         if (points.length < 6 || points.length % 2 == 1) {
@@ -349,7 +349,7 @@ public class Canvas {
      * @throws IllegalArgumentException if less than 6 arguments are passed
      * @throws IllegalArgumentException if and odd number of arguments are passed
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawPolygon(final double... points) {
         this.imp.drawPolygon(toIntArray(points));
@@ -365,7 +365,7 @@ public class Canvas {
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawRectangle(final int x, final int y, final int width, final int height) {
         if (width > 0 && height > 0) {
@@ -383,7 +383,7 @@ public class Canvas {
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawRectangle(final double x, final double y, final double width, final double height) {
         this.drawRectangle((int) x, (int) y, (int) width, (int) height);
@@ -401,7 +401,7 @@ public class Canvas {
      * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>).
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawRectangle(final int x, final int y, final int width, final int height,
                               final Alignment alignment) {
@@ -426,7 +426,7 @@ public class Canvas {
      * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>).
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawRectangle(final double x, final double y, final double width, final double height,
                               final Alignment alignment) {
@@ -442,7 +442,7 @@ public class Canvas {
      * @param y the y coordinate of the top left corner
      * @param text the text to draw
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawText(final int x, final int y, final String text) {
         if (text != null && !text.isEmpty()) {
@@ -459,7 +459,7 @@ public class Canvas {
      * @param y the y coordinate of the top left corner
      * @param text the text to draw
      *
-     * @since 1
+     * @since 1.0
      */
     public void drawText(final double x, final double y, final String text) {
         this.drawText((int) x, (int) y, text);
@@ -477,7 +477,7 @@ public class Canvas {
      * <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public final void drawText(final int x, final int y, final String text, final Alignment alignment) {
         if (alignment == null) {
@@ -501,7 +501,7 @@ public class Canvas {
      * <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public final void drawText(final double x, final double y, final String text, final Alignment alignment) {
         this.drawText((int) x, (int) y, text, alignment);
@@ -510,7 +510,7 @@ public class Canvas {
     /**
      * Fills the entire canvas. The canvas is filled using the current color.
      *
-     * @since 1
+     * @since 1.0
      */
     public void fill() {
         this.imp.fill();
@@ -524,7 +524,7 @@ public class Canvas {
      * @param y the y coordinate of the circle's centre
      * @param radius the circle's radius
      *
-     * @since 1
+     * @since 1.0
      */
     public void fillCircle(final int x, final int y, final int radius) {
         if (radius > 0) {
@@ -540,7 +540,7 @@ public class Canvas {
      * @param y the y coordinate of the circle's centre
      * @param radius the circle's radius
      *
-     * @since 1
+     * @since 1.0
      */
     public void fillCircle(final double x, final double y, final double radius) {
         this.fillCircle((int) x, (int) y, (int) radius);
@@ -556,7 +556,7 @@ public class Canvas {
      * @throws IllegalArgumentException if less than 6 arguments are passed
      * @throws IllegalArgumentException if and odd number of arguments are passed
      *
-     * @since 1
+     * @since 1.0
      */
     public void fillPolygon(final int... points) {
         if (points.length < 6 || points.length % 2 == 1) {
@@ -576,7 +576,7 @@ public class Canvas {
      * @throws IllegalArgumentException if less than 6 arguments are passed
      * @throws IllegalArgumentException if and odd number of arguments are passed
      *
-     * @since 1
+     * @since 1.0
      */
     public void fillPolygon(final double... points) {
         this.imp.fillPolygon(toIntArray(points));
@@ -592,7 +592,7 @@ public class Canvas {
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      *
-     * @since 1
+     * @since 1.0
      */
     public void fillRectangle(final int x, final int y, final int width, final int height) {
         if (width > 0 && height > 0) {
@@ -610,7 +610,7 @@ public class Canvas {
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      *
-     * @since 1
+     * @since 1.0
      */
     public void fillRectangle(final double x, final double y, final double width, final double height) {
         this.fillRectangle((int) x, (int) y, (int) width, (int) height);
@@ -629,7 +629,7 @@ public class Canvas {
      * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>).
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public void fillRectangle(final int x, final int y, final int width, final int height, final Alignment alignment) {
         if (alignment == null) {
@@ -654,7 +654,7 @@ public class Canvas {
      * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>).
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1
+     * @since 1.0
      */
     public void fillRectangle(final double x, final double y, final double width, final double height,
                               final Alignment alignment) {
@@ -700,7 +700,7 @@ public class Canvas {
      * @return current drawing color
      *
      * @see #setColor(ch.jeda.ui.Color)
-     * @since 1
+     * @since 1.0
      */
     public Color getColor() {
         return this.color;
@@ -712,7 +712,7 @@ public class Canvas {
      * @return current font size
      *
      * @see #setFontSize(int)
-     * @since 1
+     * @since 1.0
      */
     public int getFontSize() {
         return this.fontSize;
@@ -724,7 +724,7 @@ public class Canvas {
      * @return height of canvas
      *
      * @see #getWidth()
-     * @since 1
+     * @since 1.0
      */
     public int getHeight() {
         return this.imp.getHeight();
@@ -736,7 +736,7 @@ public class Canvas {
      * @return current line width
      *
      * @see #setLineWidth(double)
-     * @since 1
+     * @since 1.0
      */
     public double getLineWidth() {
         return this.imp.getLineWidth();
@@ -751,7 +751,7 @@ public class Canvas {
      * @return the color of the pixel at (<tt>x</tt>, <tt>y</tt>)
      *
      * @see #setPixelAt(int, int, ch.jeda.ui.Color)
-     * @since 1
+     * @since 1.0
      */
     public Color getPixelAt(final int x, final int y) {
         if (this.contains(x, y)) {
@@ -772,7 +772,7 @@ public class Canvas {
      * @return width of canvas
      *
      * @see #getHeight()
-     * @since 1
+     * @since 1.0
      */
     public int getWidth() {
         return this.imp.getWidth();
@@ -784,7 +784,7 @@ public class Canvas {
      * @return <tt>true</tt> if anti-aliasing is enabled, otherwise <tt>false</tt>
      *
      * @see #setAntiAliasing(boolean)
-     * @since 1
+     * @since 1.0
      */
     public boolean isAntiAliasing() {
         return this.antiAliasing;
@@ -813,7 +813,7 @@ public class Canvas {
      * @throws NullPointerException if <tt>color</tt> is <tt>null</tt>
      *
      * @see #getColor()
-     * @since 1
+     * @since 1.0
      */
     public void setColor(final Color color) {
         if (color == null) {
@@ -834,7 +834,7 @@ public class Canvas {
      * @throws IllegalArgumentException if <tt>size</tt> is not positive
      *
      * @see #getFontSize()
-     * @since 1
+     * @since 1.0
      */
     public void setFontSize(final int size) {
         if (size <= 0) {
@@ -855,7 +855,7 @@ public class Canvas {
      * @throws IllegalArgumentException if <tt>lineWidth</tt> is negative
      *
      * @see #getLineWidth()
-     * @since 1
+     * @since 1.0
      */
     public void setLineWidth(final double lineWidth) {
         if (lineWidth < 0.0) {
@@ -876,7 +876,7 @@ public class Canvas {
      * @throws NullPointerException if <tt>color</tt> is <tt>null</tt>
      *
      * @see #getPixelAt(int, int)
-     * @since 1
+     * @since 1.0
      */
     public void setPixelAt(final int x, final int y, final Color color) {
         if (color == null) {
@@ -903,7 +903,7 @@ public class Canvas {
      *
      * @return image containing a copy of the canvas
      *
-     * @since 1
+     * @since 1.0
      */
     public Image takeSnapshot() {
         return new Image(this.imp.takeSnapshot());
@@ -917,7 +917,7 @@ public class Canvas {
      * @param text
      * @return height of text in pixels
      *
-     * @since 1
+     * @since 1.0
      */
     public int textHeight(final String text) {
         if (text == null || text.isEmpty()) {
@@ -936,7 +936,7 @@ public class Canvas {
      * @param text
      * @return width of text in pixels
      *
-     * @since 1
+     * @since 1.0
      */
     public int textWidth(final String text) {
         if (text == null || text.isEmpty()) {

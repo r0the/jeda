@@ -17,12 +17,12 @@
 package ch.jeda.event;
 
 /**
- * @since 1
+ * @since 1.0
  */
 public interface ActionListener {
 
     /**
-     * @since 1
+     * @since 1.0
      */
     void onAction(ActionEvent event);
 }

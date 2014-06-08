@@ -21,7 +21,7 @@ package ch.jeda.event;
  * {@link ch.jeda.event.EventType#POINTER_UP}, have the class of the object implement the interface and register the
  * object with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
  *
- * @since 1
+ * @since 1.0
  */
 public interface PointerUpListener {
 
@@ -30,7 +30,7 @@ public interface PointerUpListener {
      *
      * @param event the event
      *
-     * @since 1
+     * @since 1.0
      */
     void onPointerUp(PointerEvent event);
 }

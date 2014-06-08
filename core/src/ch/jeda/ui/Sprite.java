@@ -38,7 +38,7 @@ import java.util.List;
  * <li><b>Radius</b>: The radius of the sprite's collision circle.
  * </ul>
  *
- * @since 1
+ * @since 1.0
  */
 public class Sprite extends GraphicsItem implements TickListener {
 
@@ -55,7 +55,7 @@ public class Sprite extends GraphicsItem implements TickListener {
     /**
      * Constructs a new sprite located at the origin of the window.
      *
-     * @since 1
+     * @since 1.0
      */
     public Sprite() {
         this(0.0, 0.0, 0.0, 0.0);
@@ -64,7 +64,7 @@ public class Sprite extends GraphicsItem implements TickListener {
     /**
      * Constructs a new sprite located at the specified coordinates.
      *
-     * @since 1
+     * @since 1.0
      */
     public Sprite(final double x, final double y) {
         this(x, y, 0.0, 0.0);
@@ -73,7 +73,7 @@ public class Sprite extends GraphicsItem implements TickListener {
     /**
      * Constructs a new sprite located at the specified coordinates with the specified initial speed.
      *
-     * @since 1
+     * @since 1.0
      */
     public Sprite(final double x, final double y, final double speed, final double direction) {
         this.rotate(direction);
@@ -94,7 +94,7 @@ public class Sprite extends GraphicsItem implements TickListener {
      *
      * <b>Warning:</b>The collision algorithm is no sophisticated and may be very slow with a large number of sprites.
      *
-     * @since 1
+     * @since 1.0
      */
     @SuppressWarnings("unchecked")
     public final <T extends Sprite> T[] getCollidingSprites(final Class<T> clazz) {
@@ -114,14 +114,14 @@ public class Sprite extends GraphicsItem implements TickListener {
     /**
      * Returns the current direction of the sprite. The direction influences the movement of the sprite.
      *
-     * @since 1
+     * @since 1.0
      */
     public final double getDirection() {
         return Math.atan2(this.vy, this.vx);
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final Image getRotatedImage() {
         if (this.image == null) {
@@ -133,7 +133,7 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final double getRadius() {
         return this.radius;
@@ -143,7 +143,7 @@ public class Sprite extends GraphicsItem implements TickListener {
      * Returns the current rotation of the sprite. The rotation influences the graphical representation of the sprite.
      *
      * @see #rotate(double)
-     * @since 1
+     * @since 1.0
      */
     public final double getRotation() {
         return this.rotation;
@@ -152,7 +152,7 @@ public class Sprite extends GraphicsItem implements TickListener {
     /**
      * Returns the current speed of the sprite in pixels per second.
      *
-     * @since 1
+     * @since 1.0
      */
     public final double getSpeed() {
         return Math.sqrt(this.vx * this.vx + this.vy * this.vy);
@@ -165,7 +165,7 @@ public class Sprite extends GraphicsItem implements TickListener {
      *
      * @see #getY()
      * @see #setPosition(double, double)
-     * @since 1
+     * @since 1.0
      */
     public final double getX() {
         return this.x;
@@ -178,7 +178,7 @@ public class Sprite extends GraphicsItem implements TickListener {
      *
      * @see #getX()
      * @see #setPosition(double, double)
-     * @since 1
+     * @since 1.0
      */
     public final double getY() {
         return this.y;
@@ -194,7 +194,7 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final void rotate(final double angle) {
         this.rotation = this.rotation + angle;
@@ -208,7 +208,7 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final void setAcceleration(final double ax, final double ay) {
         this.ax = ax;
@@ -216,21 +216,21 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final void setImage(final String path) {
         this.setImage(path, 1);
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final void setImage(final String path, final int steps) {
         this.image = new RotatedImage(new Image(path), steps);
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final void setPosition(final double x, final double y) {
         this.x = x;
@@ -238,7 +238,7 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     public final void setRadius(final double radius) {
         this.radius = radius;
@@ -250,7 +250,7 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
-     * @since 1
+     * @since 1.0
      */
     protected void update(final double dt, final double newX, final double newY) {
         this.setPosition(newX, newY);

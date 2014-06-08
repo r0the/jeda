@@ -36,7 +36,7 @@ import java.util.List;
  * Represents the Jeda engine. Provides methods to control the Jeda engine as well as the platform/device the program
  * ist running on.
  *
- * @since 1
+ * @since 1.0
  */
 public class Jeda {
 
@@ -51,7 +51,7 @@ public class Jeda {
      *
      * @see #removeTickListener(ch.jeda.event.TickListener)
      * @see #setTickFrequency(double)
-     * @since 1
+     * @since 1.0
      */
     public static void addTickListener(final TickListener listener) {
         ENGINE.addTickListener(listener);
@@ -69,7 +69,7 @@ public class Jeda {
      * @see #enableSensor(ch.jeda.event.SensorType)
      * @see #isSensorAvailable(ch.jeda.event.SensorType)
      * @see #isSensorEnabled(ch.jeda.event.SensorType)
-     * @since 1
+     * @since 1.0
      */
     public static void disableSensor(final SensorType sensorType) {
         ENGINE.setSensorEnabled(sensorType, false);
@@ -87,7 +87,7 @@ public class Jeda {
      * @see #disableSensor(ch.jeda.event.SensorType)
      * @see #isSensorAvailable(ch.jeda.event.SensorType)
      * @see #isSensorEnabled(ch.jeda.event.SensorType)
-     * @since 1
+     * @since 1.0
      */
     public static void enableSensor(final SensorType sensorType) {
         ENGINE.setSensorEnabled(sensorType, true);
@@ -98,7 +98,7 @@ public class Jeda {
      *
      * @return the name of the currently running Jeda program
      *
-     * @since 1
+     * @since 1.0
      */
     public static String getProgramName() {
         return ENGINE.getProgramName();
@@ -109,7 +109,7 @@ public class Jeda {
      *
      * @return the Jeda system properties
      *
-     * @since 1
+     * @since 1.0
      */
     public static Properties getProperties() {
         return ENGINE.getProperties();
@@ -121,7 +121,7 @@ public class Jeda {
      * @return the target tick frequency in Hertz [Hz].
      *
      * @see #setTickFrequency(double)
-     * @since 1
+     * @since 1.0
      */
     public static double getTickFrequency() {
         return ENGINE.getTickFrequency();
@@ -140,7 +140,7 @@ public class Jeda {
      * @see #disableSensor(ch.jeda.event.SensorType)
      * @see #enableSensor(ch.jeda.event.SensorType)
      * @see #isSensorEnabled(ch.jeda.event.SensorType)
-     * @since 1
+     * @since 1.0
      */
     public static boolean isSensorAvailable(final SensorType sensorType) {
         return ENGINE.isSensorAvailable(sensorType);
@@ -160,7 +160,7 @@ public class Jeda {
      * @see #disableSensor(ch.jeda.event.SensorType)
      * @see #enableSensor(ch.jeda.event.SensorType)
      * @see #isSensorAvailable(ch.jeda.event.SensorType)
-     * @since 1
+     * @since 1.0
      */
     public static boolean isSensorEnabled(final SensorType sensorType) {
         return ENGINE.isSensorEnabled(sensorType);
@@ -174,7 +174,7 @@ public class Jeda {
      *
      * @param path path to the file
      * @return lines of the file as an array of <tt>String</tt>
-     * @since 1
+     * @since 1.0
      */
     public static String[] loadTextFile(final String path) {
         final InputStream in = ENGINE.openResource(path);
@@ -213,7 +213,7 @@ public class Jeda {
      *
      * @see #addTickListener(ch.jeda.event.TickListener)
      * @see #setTickFrequency(double)
-     * @since 1
+     * @since 1.0
      */
     public static void removeTickListener(final TickListener listener) {
         ENGINE.removeTickListener(listener);
@@ -226,7 +226,7 @@ public class Jeda {
      * @param hertz new frame rate in hertz
      *
      * @see #getTickFrequency()
-     * @since 1
+     * @since 1.0
      */
     public static void setTickFrequency(final double hertz) {
         ENGINE.setTickFrequency(hertz);
@@ -235,7 +235,7 @@ public class Jeda {
     /**
      * Starts a Jeda program. This method is called automatically when a Jeda application is started.
      *
-     * @since 1
+     * @since 1.0
      */
     public static void startProgram() {
         ENGINE.startProgram(null);
@@ -245,7 +245,7 @@ public class Jeda {
      * Starts the specified Jeda program.
      *
      * @param programClassName class name of the Jeda program to start.
-     * @since 1
+     * @since 1.0
      */
     public static void startProgram(final String programClassName) {
         if (programClassName == null) {

@@ -24,7 +24,7 @@ import java.util.EnumSet;
  * order to do so, the object must be added as event listener to a window using the method
  * {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
  *
- * @since 1
+ * @since 1.0
  */
 public final class PressedKeys implements KeyDownListener, KeyUpListener {
 
@@ -33,7 +33,7 @@ public final class PressedKeys implements KeyDownListener, KeyUpListener {
     /**
      * Constructs a new <tt>PressedKeys</tt> object.
      *
-     * @since 1
+     * @since 1.0
      */
     public PressedKeys() {
         this.pressedKeys = EnumSet.noneOf(Key.class);
@@ -46,7 +46,7 @@ public final class PressedKeys implements KeyDownListener, KeyUpListener {
      * @param key the key to check
      * @return <tt>true</tt> if the specified key is currently pressed, <tt>false</tt> otherwise.
      *
-     * @since 1
+     * @since 1.0
      */
     public boolean contains(final Key key) {
         return this.pressedKeys.contains(key);
@@ -67,7 +67,7 @@ public final class PressedKeys implements KeyDownListener, KeyUpListener {
      *
      * @return an array of all currently pressed keys
      *
-     * @since 1
+     * @since 1.0
      */
     public Key[] toArray() {
         return this.pressedKeys.toArray(new Key[this.pressedKeys.size()]);

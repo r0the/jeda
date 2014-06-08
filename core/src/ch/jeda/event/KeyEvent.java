@@ -20,7 +20,7 @@ package ch.jeda.event;
  * Represents an event of the type {@link ch.jeda.event.EventType#KEY_DOWN}, {@link ch.jeda.event.EventType#KEY_TYPED},
  * or {@link ch.jeda.event.EventType#KEY_UP}.
  *
- * @since 1
+ * @since 1.0
  */
 public final class KeyEvent extends Event {
 
@@ -35,7 +35,7 @@ public final class KeyEvent extends Event {
      * @param type the event type
      * @param key the key
      *
-     * @since 1
+     * @since 1.0
      */
     public KeyEvent(final Object source, final EventType type, final Key key) {
         this(source, type, key, '\0', 0);
@@ -49,7 +49,7 @@ public final class KeyEvent extends Event {
      * @param key the key
      * @param repeatCount the repeat count
      *
-     * @since 1
+     * @since 1.0
      */
     public KeyEvent(final Object source, final EventType type, final Key key, int repeatCount) {
         this(source, type, key, '\0', repeatCount);
@@ -62,7 +62,7 @@ public final class KeyEvent extends Event {
      * @param type the event type
      * @param keyChar the typed character
      *
-     * @since 1
+     * @since 1.0
      */
     public KeyEvent(final Object source, final EventType type, final char keyChar) {
         this(source, type, Key.UNDEFINED, keyChar, 0);
@@ -73,7 +73,7 @@ public final class KeyEvent extends Event {
      *
      * @return the key
      *
-     * @since 1
+     * @since 1.0
      */
     public final Key getKey() {
         return this.key;
@@ -84,7 +84,7 @@ public final class KeyEvent extends Event {
      *
      * @return the type character
      *
-     * @since 1
+     * @since 1.0
      */
     public final char getKeyChar() {
         return this.keyChar;
@@ -95,7 +95,7 @@ public final class KeyEvent extends Event {
      *
      * @return the number of repetitive key presses of this key
      *
-     * @since 1
+     * @since 1.0
      */
     public final int getRepeatCount() {
         return this.repeatCount;

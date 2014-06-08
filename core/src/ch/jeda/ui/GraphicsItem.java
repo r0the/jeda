@@ -25,7 +25,7 @@ import java.util.Comparator;
  *
  * @see ch.jeda.ui.Window#add(ch.jeda.ui.GraphicsItem)
  * @see ch.jeda.ui.Window#remove(ch.jeda.ui.GraphicsItem)
- * @since 1
+ * @since 1.0
  */
 public abstract class GraphicsItem {
 
@@ -36,7 +36,7 @@ public abstract class GraphicsItem {
     /**
      * Constructs a new graphics item.
      *
-     * @since 1
+     * @since 1.0
      */
     protected GraphicsItem() {
     }
@@ -48,7 +48,7 @@ public abstract class GraphicsItem {
      * @return the current draw order of this graphics item
      *
      * @see #setDrawOrder(int)
-     * @since 1
+     * @since 1.0
      */
     public final int getDrawOrder() {
         return this.drawOrder;
@@ -61,7 +61,7 @@ public abstract class GraphicsItem {
      * @param drawOrder the new draw order for this graphics item
      *
      * @see #getDrawOrder()
-     * @since 1
+     * @since 1.0
      */
     public final void setDrawOrder(final int drawOrder) {
         this.drawOrder = drawOrder;
@@ -83,7 +83,7 @@ public abstract class GraphicsItem {
      *
      * @param canvas the canvas on which the graphics item should be drawn.
      *
-     * @since 1
+     * @since 1.0
      */
     protected abstract void draw(final Canvas canvas);
 
@@ -92,7 +92,7 @@ public abstract class GraphicsItem {
      * added to a window.
      *
      * @return the window containing the graphics item
-     * @since 1
+     * @since 1.0
      */
     protected final Window getWindow() {
         if (this.owner == null) {

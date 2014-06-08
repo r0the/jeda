@@ -19,26 +19,26 @@ package ch.jeda;
 /**
  * Represents the state of a media playback.
  *
- * @since 1
+ * @since 1.0
  */
 public enum PlaybackState {
 
     /**
      * The playback has been paused.
      *
-     * @since 1
+     * @since 1.0
      */
     PAUSED,
     /**
      * The playback is currently in progress.
      *
-     * @since 1
+     * @since 1.0
      */
     PLAYING,
     /**
      * The playback is not in progress. It has either not started yet or has already finished.
      *
-     * @since 1
+     * @since 1.0
      */
     STOPPED
 }

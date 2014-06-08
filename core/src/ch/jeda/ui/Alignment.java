@@ -27,62 +27,62 @@ package ch.jeda.ui;
  * window.setColor(Color.RED);
  * window.fillCircle(190, 100, 4);</code></pre>
  *
- * @since 1
+ * @since 1.0
  */
 public enum Alignment {
 
     /**
      * Align at the bottom vertically and center horizontally.
      *
-     * @since 1
+     * @since 1.0
      */
     BOTTOM_CENTER(Align.CENTER, Align.RIGHT_BOTTOM),
     /**
      * Align at the bottom vertically and left horizontally.
      *
-     * @since 1
+     * @since 1.0
      */
     BOTTOM_LEFT(Align.LEFT_TOP, Align.RIGHT_BOTTOM),
     /**
      * Align at the bottom vertically and right horizontally.
      *
-     * @since 1
+     * @since 1.0
      */
     BOTTOM_RIGHT(Align.RIGHT_BOTTOM, Align.RIGHT_BOTTOM),
     /**
      * Center both vertically and horizontally.
      *
-     * @since 1
+     * @since 1.0
      */
     CENTER(Align.CENTER, Align.CENTER),
     /**
      * Center vertically and align left horizontally.
      *
-     * @since 1
+     * @since 1.0
      */
     LEFT(Align.LEFT_TOP, Align.CENTER),
     /**
      * Center vertically and align right horizontally.
      *
-     * @since 1
+     * @since 1.0
      */
     RIGHT(Align.RIGHT_BOTTOM, Align.CENTER),
     /**
      * Align at the top vertically and center horizontally.
      *
-     * @since 1
+     * @since 1.0
      */
     TOP_CENTER(Align.CENTER, Align.LEFT_TOP),
     /**
      * Align at the top vertically and left horizontally.
      *
-     * @since 1
+     * @since 1.0
      */
     TOP_LEFT(Align.LEFT_TOP, Align.LEFT_TOP),
     /**
      * Align at the top vertically and right horizontally.
      *
-     * @since 1
+     * @since 1.0
      */
     TOP_RIGHT(Align.RIGHT_BOTTOM, Align.LEFT_TOP);
     private final Align horizontal;

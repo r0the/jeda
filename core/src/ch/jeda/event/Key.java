@@ -21,14 +21,14 @@ package ch.jeda.event;
  * represent which keys have been pressed or typed. The key value representing a specific keyboard key depends on the
  * <a href="http://en.wikipedia.org/wiki/Keyboard_layout">keyboard layout</a>.
  *
- * @since 1
+ * @since 1.0
  */
 public enum Key {
 
     /**
      * The "A" key.
      *
-     * @since 1
+     * @since 1.0
      */
     A,
     /**
@@ -38,49 +38,49 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     ALT_GRAPH,
     /**
      * The left alt key.
      *
-     * @since 1
+     * @since 1.0
      */
     ALT_LEFT,
     /**
      * The right alt key.
      *
-     * @since 1
+     * @since 1.0
      */
     ALT_RIGHT,
     /**
      * The apostrophe key.
      *
-     * @since 1
+     * @since 1.0
      */
     APOSTROPHE,
     /**
      * The "B" key.
      *
-     * @since 1
+     * @since 1.0
      */
     B,
     /**
      * The Backslash key.
      *
-     * @since 1
+     * @since 1.0
      */
     BACKSLASH,
     /**
      * The Backspace key. Pressing this key usually deletes the character left of the cursor.
      *
-     * @since 1
+     * @since 1.0
      */
     BACKSPACE,
     /**
      * The "C" key.
      *
-     * @since 1
+     * @since 1.0
      */
     C,
     /**
@@ -90,13 +90,13 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     CAPS_LOCK,
     /**
      * The comma (",") key.
      *
-     * @since 1
+     * @since 1.0
      */
     COMMA,
     /**
@@ -106,7 +106,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     CTRL_LEFT,
     /**
@@ -116,13 +116,13 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     CTRL_RIGHT,
     /**
      * The "D" key.
      *
-     * @since 1
+     * @since 1.0
      */
     D,
     /**
@@ -132,7 +132,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     DEAD_DIAERESIS,
     /**
@@ -142,67 +142,67 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     DELETE,
     /**
      * The "0" digit key.
      *
-     * @since 1
+     * @since 1.0
      */
     DIGIT_0,
     /**
      * The "1" digit key.
      *
-     * @since 1
+     * @since 1.0
      */
     DIGIT_1,
     /**
      * The "2" digit key.
      *
-     * @since 1
+     * @since 1.0
      */
     DIGIT_2,
     /**
      * The "3" digit key.
      *
-     * @since 1
+     * @since 1.0
      */
     DIGIT_3,
     /**
      * The "4" digit key.
      *
-     * @since 1
+     * @since 1.0
      */
     DIGIT_4,
     /**
      * The "5" digit key.
      *
-     * @since 1
+     * @since 1.0
      */
     DIGIT_5,
     /**
      * The "6" digit key.
      *
-     * @since 1
+     * @since 1.0
      */
     DIGIT_6,
     /**
      * The "7" digit key.
      *
-     * @since 1
+     * @since 1.0
      */
     DIGIT_7,
     /**
      * The "8" digit key.
      *
-     * @since 1
+     * @since 1.0
      */
     DIGIT_8,
     /**
      * The "9" digit key.
      *
-     * @since 1
+     * @since 1.0
      */
     DIGIT_9,
     /**
@@ -212,7 +212,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     DOLLAR,
     /**
@@ -222,13 +222,13 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> Represents the directional pad down hardware key.
      *
-     * @since 1
+     * @since 1.0
      */
     DOWN,
     /**
      * The "E" key.
      *
-     * @since 1
+     * @since 1.0
      */
     E,
     /**
@@ -238,19 +238,19 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     END,
     /**
      * The enter key.
      *
-     * @since 1
+     * @since 1.0
      */
     ENTER,
     /**
      * The equals key.
      *
-     * @since 1
+     * @since 1.0
      */
     EQUALS,
     /**
@@ -260,13 +260,13 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     ESCAPE,
     /**
      * The "F" key.
      *
-     * @since 1
+     * @since 1.0
      */
     F,
     /**
@@ -276,7 +276,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F1,
     /**
@@ -286,7 +286,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F2,
     /**
@@ -296,7 +296,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F3,
     /**
@@ -306,7 +306,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F4,
     /**
@@ -316,7 +316,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F5,
     /**
@@ -326,7 +326,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F6,
     /**
@@ -336,7 +336,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F7,
     /**
@@ -346,7 +346,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F8,
     /**
@@ -356,7 +356,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F9,
     /**
@@ -366,7 +366,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F10,
     /**
@@ -376,7 +376,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F11,
     /**
@@ -386,25 +386,25 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     F12,
     /**
      * The "G" key.
      *
-     * @since 1
+     * @since 1.0
      */
     G,
     /**
      * The "`" key.
      *
-     * @since 1
+     * @since 1.0
      */
     GRAVE,
     /**
      * The "H" key.
      *
-     * @since 1
+     * @since 1.0
      */
     H,
     /**
@@ -414,13 +414,13 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     HOME,
     /**
      * The "I" key.
      *
-     * @since 1
+     * @since 1.0
      */
     I,
     /**
@@ -430,37 +430,37 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     INSERT,
     /**
      * The "J" key.
      *
-     * @since 1
+     * @since 1.0
      */
     J,
     /**
      * The "K" key.
      *
-     * @since 1
+     * @since 1.0
      */
     K,
     /**
      * The "L" key.
      *
-     * @since 1
+     * @since 1.0
      */
     L,
     /**
      * The cursor left key.
      *
-     * @since 1
+     * @since 1.0
      */
     LEFT,
     /**
      * The "M" key.
      *
-     * @since 1
+     * @since 1.0
      */
     M,
     /**
@@ -472,7 +472,7 @@ public enum Key {
      * <img src="../../../android.png"> Represents the menu key. This is the hardware key that is used to display a
      * menu.
      *
-     * @since 1
+     * @since 1.0
      */
     MENU,
     /**
@@ -484,43 +484,43 @@ public enum Key {
      * </p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     META,
     /**
      * The minus ("-") key.
      *
-     * @since 1
+     * @since 1.0
      */
     MINUS,
     /**
      * The middle mouse button.
      *
-     * @since 1
+     * @since 1.0
      */
     MOUSE_MIDDLE,
     /**
      * The primary mouse button (usually left).
      *
-     * @since 1
+     * @since 1.0
      */
     MOUSE_PRIMARY,
     /**
      * The seconary mouse button (usually right).
      *
-     * @since 1
+     * @since 1.0
      */
     MOUSE_SECONDARY,
     /**
      * The "N" key.
      *
-     * @since 1
+     * @since 1.0
      */
     N,
     /**
      * The num lock key.
      *
-     * @since 1
+     * @since 1.0
      */
     NUM_LOCK,
     /**
@@ -530,7 +530,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_0,
     /**
@@ -540,7 +540,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_1,
     /**
@@ -550,7 +550,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_2,
     /**
@@ -560,7 +560,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_3,
     /**
@@ -570,7 +570,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_4,
     /**
@@ -580,7 +580,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_5,
     /**
@@ -590,7 +590,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_6,
     /**
@@ -600,7 +600,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_7,
     /**
@@ -610,7 +610,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_8,
     /**
@@ -620,7 +620,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_9,
     /**
@@ -630,7 +630,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_ADD,
     /**
@@ -640,7 +640,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_DIVIDE,
     /**
@@ -650,7 +650,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_DOT,
     /**
@@ -660,7 +660,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_ENTER,
     /**
@@ -670,7 +670,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_MULTIPLY,
     /**
@@ -680,19 +680,19 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     NUMPAD_SUBTRACT,
     /**
      * The "O" key.
      *
-     * @since 1
+     * @since 1.0
      */
     O,
     /**
      * The "P" key.
      *
-     * @since 1
+     * @since 1.0
      */
     P,
     /**
@@ -702,7 +702,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     PAGE_DOWN,
     /**
@@ -712,7 +712,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     PAGE_UP,
     /**
@@ -722,13 +722,13 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     PAUSE,
     /**
      * The period (".") key.
      *
-     * @since 1
+     * @since 1.0
      */
     PERIOD,
     /**
@@ -738,31 +738,31 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     PRINT_SCREEN,
     /**
      * The "Q" key.
      *
-     * @since 1
+     * @since 1.0
      */
     Q,
     /**
      * The "R" key.
      *
-     * @since 1
+     * @since 1.0
      */
     R,
     /**
      * The cursor right key.
      *
-     * @since 1
+     * @since 1.0
      */
     RIGHT,
     /**
      * The "S" key.
      *
-     * @since 1
+     * @since 1.0
      */
     S,
     /**
@@ -772,67 +772,67 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is <b>not</b> available.
      *
-     * @since 1
+     * @since 1.0
      */
     SCROLL_LOCK,
     /**
      * The left shift key.
      *
-     * @since 1
+     * @since 1.0
      */
     SHIFT_LEFT,
     /**
      * The right shift key.
      *
-     * @since 1
+     * @since 1.0
      */
     SHIFT_RIGHT,
     /**
      * The forward slash ("/") key.
      *
-     * @since 1
+     * @since 1.0
      */
     SLASH,
     /**
      * The space key.
      *
-     * @since 1
+     * @since 1.0
      */
     SPACE,
     /**
      * The "T" key.
      *
-     * @since 1
+     * @since 1.0
      */
     T,
     /**
      * The tabulator key.
      *
-     * @since 1
+     * @since 1.0
      */
     TAB,
     /**
      * The "U" key.
      *
-     * @since 1
+     * @since 1.0
      */
     U,
     /**
      * The undefined key.
      *
-     * @since 1
+     * @since 1.0
      */
     UNDEFINED,
     /**
      * The cursor up key.
      *
-     * @since 1
+     * @since 1.0
      */
     UP,
     /**
      * The "V" key.
      *
-     * @since 1
+     * @since 1.0
      */
     V,
     /**
@@ -842,7 +842,7 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is available.
      *
-     * @since 1
+     * @since 1.0
      */
     VOLUME_DOWN,
     /**
@@ -852,31 +852,31 @@ public enum Key {
      * <p>
      * <img src="../../../android.png"> The key is available.
      *
-     * @since 1
+     * @since 1.0
      */
     VOLUME_UP,
     /**
      * The "W" key.
      *
-     * @since 1
+     * @since 1.0
      */
     W,
     /**
      * The "X" key.
      *
-     * @since 1
+     * @since 1.0
      */
     X,
     /**
      * The "Y" key.
      *
-     * @since 1
+     * @since 1.0
      */
     Y,
     /**
      * The "Z" key.
      *
-     * @since 1
+     * @since 1.0
      */
     Z
 }

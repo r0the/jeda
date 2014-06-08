@@ -17,7 +17,7 @@
 package ch.jeda.event;
 
 /**
- * @since 1
+ * @since 1.0
  */
 public interface PointerListener extends PointerDownListener,
                                          PointerMovedListener,
