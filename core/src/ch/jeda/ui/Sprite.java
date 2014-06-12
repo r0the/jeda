@@ -25,28 +25,30 @@ import java.util.List;
 /**
  * Represents an movable, rotatable object represented by an image. A sprite has the following properties:
  * <ul>
- * <li><b>Position</b>: The coordinates of the sprite's center in pixels. The position can be set with
+ * <li><b>Position</b>: The pixel coordinates of the sprite's center. The position can be set with
  * {@link #setPosition(double, double)} and be retrieved with {@link #getX()} and {@link #getY()}.
- * <li><b>Speed</b>: The current speed of the sprite in pixels per second. The speed can be retrieved with
- * {@link #getSpeed()}.
- * <li><b>Direction</b>: The direction in which the sprite moves in radians. The direction 0 points to the left, the
- * direction <tt>Math.PI/2</tt> points down.
- * <li><b>Acceleration</b></li>: The current acceleration of the sprite in pixels per second per second. The
- * acceleration can be set with {@link #setAcceleration(double, double)}.
+ * <li><b>Speed</b>: The current speed of the sprite in pixels per second.
+ * <li><b>Direction</b>: The movement direction of the sprite in radians. The sprite's direction is independent of it's
+ * rotation. The direction 0 points to the right, the direction <tt>Math.PI/2</tt> points down.
+ * <li><b>Acceleration</b></li>: The current acceleration of the sprite in pixels per second per second.
  * <li><b>Rotation</b>: The current rotation of the sprite's image in radians. The sprite's rotation is independent of
- * it's direction.
+ * the direction of its movement. The rotation 0 points to the right, the rotation <tt>Math.PI/2</tt> points down.
  * <li><b>Radius</b>: The radius of the sprite's collision circle.
  * </ul>
  *
  * @since 1.0
+ * @version 2
  */
 public class Sprite extends GraphicsItem implements TickListener {
 
+    private static final double TWO_PI = 2 * Math.PI;
     private double ax;
     private double ay;
+    private double direction;
     private RotatedImage image;
     private double radius;
     private double rotation;
+    private double speed;
     private double vx;
     private double vy;
     private double x;
@@ -64,6 +66,9 @@ public class Sprite extends GraphicsItem implements TickListener {
     /**
      * Constructs a new sprite located at the specified coordinates.
      *
+     * @param x x coordinate of the sprite's center
+     * @param y x coordinate of the sprite's center
+     *
      * @since 1.0
      */
     public Sprite(final double x, final double y) {
@@ -78,8 +83,9 @@ public class Sprite extends GraphicsItem implements TickListener {
     public Sprite(final double x, final double y, final double speed, final double direction) {
         this.rotate(direction);
         this.setPosition(x, y);
-        this.vx = speed * Math.cos(direction);
-        this.vy = speed * Math.sin(direction);
+        this.direction = normalizeAngle(direction);
+        this.speed = speed;
+        this.velocityChanged();
     }
 
     /**
@@ -112,12 +118,16 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
-     * Returns the current direction of the sprite. The direction influences the movement of the sprite.
+     * Returns the movement direction of the sprite in radians. The sprite's direction is independent of it's rotation.
+     * The direction 0 points to the right, the direction <tt>Math.PI/2</tt> points down.
      *
+     * @return the movement direction of the sprite in radians
+     *
+     * @see #setDirection(double)
      * @since 1.0
      */
     public final double getDirection() {
-        return Math.atan2(this.vy, this.vx);
+        return this.direction;
     }
 
     /**
@@ -140,7 +150,10 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
-     * Returns the current rotation of the sprite. The rotation influences the graphical representation of the sprite.
+     * Returns the current rotation of the sprite in radians. The sprite's rotation is independent of the direction of
+     * its movement. The rotation 0 points to the right, the rotation <tt>Math.PI/2</tt> points down.
+     *
+     * @return the current rotation of the sprite in radians.
      *
      * @see #rotate(double)
      * @since 1.0
@@ -150,12 +163,14 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
-     * Returns the current speed of the sprite in pixels per second.
+     * Returns the absolute speed of the sprite in pixels per second. The absolute speed can never be negative.
+     *
+     * @return absolute speed of the sprite
      *
      * @since 1.0
      */
     public final double getSpeed() {
-        return Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+        return this.speed;
     }
 
     /**
@@ -194,25 +209,45 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
+     * Changes the rotation of the sprite by the specified angle.
+     *
+     * @param angle angle to rotate
+     *
+     * @see #getRotation()
+     * @see #setRotation(double)
      * @since 1.0
      */
     public final void rotate(final double angle) {
-        this.rotation = this.rotation + angle;
-        while (this.rotation < 0) {
-            this.rotation = this.rotation + 2.0 * Math.PI;
-        }
-
-        while (this.rotation >= 2.0 * Math.PI) {
-            this.rotation = this.rotation - 2.0 * Math.PI;
-        }
+        this.setRotation(this.rotation + angle);
     }
 
     /**
+     * Sets the acceleration of the sprite component-wise. The acceleration is measured in pixels per second per second.
+     *
+     * @param ax the horizontal component of the acceleration
+     * @param ay the vertical component of the acceleration
+     *
+     * @see #getAcceleration()
+     * @see #setAcceleration(double)
      * @since 1.0
      */
     public final void setAcceleration(final double ax, final double ay) {
         this.ax = ax;
         this.ay = ay;
+    }
+
+    /**
+     * Sets the movement direction of the sprite in radians. The sprite's direction is independent of it's rotation. The
+     * direction 0 points to the right, the direction <tt>Math.PI/2</tt> points down.
+     *
+     * @param direction the movement direction of the sprite in radians
+     *
+     * @see #getDirection()
+     * @since 1.1
+     */
+    public final void setDirection(final double direction) {
+        this.direction = normalizeAngle(direction);
+        this.velocityChanged();
     }
 
     /**
@@ -230,6 +265,13 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
+     * Sets the position of the sprite.
+     *
+     * @param x the x coordinate of the position
+     * @param y the y coordinate of the position
+     *
+     * @see #getX()
+     * @see #getY()
      * @since 1.0
      */
     public final void setPosition(final double x, final double y) {
@@ -242,6 +284,44 @@ public class Sprite extends GraphicsItem implements TickListener {
      */
     public final void setRadius(final double radius) {
         this.radius = radius;
+    }
+
+    /**
+     * Set the current rotation of the sprite in radians. The sprite's rotation is independent of the direction of its
+     * movement. The rotation 0 points to the right, the rotation <tt>Math.PI/2</tt> points down.
+     *
+     * @param rotation the current rotation of the sprite in radians.
+     *
+     * @since 1.1
+     */
+    public final void setRotation(final double rotation) {
+        this.rotation = normalizeAngle(rotation);
+    }
+
+    /**
+     * Set the speed of the sprite in pixels per second.
+     *
+     * @param speed the speed of the sprite in pixels per second
+     *
+     * @see #getSpeed()
+     * @since 1.1
+     */
+    public final void setSpeed(final double speed) {
+        this.speed = speed;
+        this.velocityChanged();
+    }
+
+    /**
+     * Changes the movement direction of the sprite by the specified angle.
+     *
+     * @param angle angle to turn
+     *
+     * @see #getDirection()
+     * @see #setDirection(double)
+     * @since 1.1
+     */
+    public final void turn(final double angle) {
+        this.setDirection(this.direction + angle);
     }
 
     @Override
@@ -294,5 +374,19 @@ public class Sprite extends GraphicsItem implements TickListener {
         }
 
         return false;
+    }
+
+    private void velocityChanged() {
+        this.vx = this.speed * Math.cos(this.direction);
+        this.vy = this.speed * Math.sin(this.direction);
+    }
+
+    private static double normalizeAngle(double angle) {
+        angle = angle % TWO_PI;
+        if (angle < 0) {
+            angle = angle + TWO_PI;
+        }
+
+        return angle;
     }
 }
