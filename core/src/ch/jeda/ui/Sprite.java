@@ -399,6 +399,10 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     private boolean collidesWith(final Sprite other) {
+        if (this == other || this.radius <= 0 || other.radius <= 0) {
+            return false;
+        }
+
         final double dx = this.x - other.x;
         final double dy = this.y - other.y;
         final double r = this.radius + other.radius;
