@@ -94,6 +94,24 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
+     * Returns an array of all other sprites in the same window that collide with the sprite. The collision algorithm
+     * works as follows:
+     * <ul>
+     * <li>Get a list of all sprites and do for every one:
+     * <li>Check if the collision circles of this sprite and the other sprite overlap.
+     * <li>If so, perform a pixel-by-pixel collision based on the images returned by {@link #getRotatedImage()} of the
+     * two sprites.
+     * </ul>
+     *
+     * <b>Warning:</b>The collision algorithm is no sophisticated and may be very slow with a large number of sprites.
+     *
+     * @since 1.1
+     */
+    public final Sprite[] getCollidingSprites() {
+        return this.getCollidingSprites(Sprite.class);
+    }
+
+    /**
      * Returns an array of all other sprites of the specified class in the same window that collide with the sprite. The
      * collision algorithm works as follows:
      * <ul>
