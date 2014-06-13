@@ -78,6 +78,11 @@ public class Sprite extends GraphicsItem implements TickListener {
     /**
      * Constructs a new sprite located at the specified coordinates with the specified initial speed.
      *
+     * @param x x coordinate of the sprite's center
+     * @param y x coordinate of the sprite's center
+     * @param speed the sprite's initial speed in pixels per second
+     * @param direction the sprite's initial movement direction.
+     *
      * @since 1.0
      */
     public Sprite(final double x, final double y, final double speed, final double direction) {
@@ -131,6 +136,12 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
+     * Returns the rotated image of the sprite.
+     *
+     * @return the rotated image of the sprite.
+     *
+     * @see #getRotation()
+     * @see #setRotation(double)
      * @since 1.0
      */
     public final Image getRotatedImage() {
@@ -143,6 +154,11 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
+     * Returns the radius of the sprite's collision circle.
+     *
+     * @return the radius of the sprite's collision circle
+     *
+     * @see #setRadius(double)
      * @since 1.0
      */
     public final double getRadius() {
@@ -251,17 +267,59 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
-     * @since 1.0
+     * Sets the image representing the sprite.
+     *
+     * @param image image representing the sprite
+     *
+     * @see #setImage(java.lang.String)
+     * @see #setImage(ch.jeda.ui.Image, int)
+     * @see #setImage(java.lang.String, int)
+     * @since 1.1
      */
-    public final void setImage(final String path) {
-        this.setImage(path, 1);
+    public final void setImage(final Image image) {
+        this.setImage(image, 1);
     }
 
     /**
+     * Sets the image representing the sprite.
+     *
+     * @param path the file or resource path of the image representing the sprite
+     *
+     * @see #setImage(ch.jeda.ui.Image)
+     * @see #setImage(ch.jeda.ui.Image, int)
+     * @see #setImage(java.lang.String, int)
+     * @since 1.0
+     */
+    public final void setImage(final String path) {
+        this.setImage(new Image(path), 1);
+    }
+
+    /**
+     * Sets the image representing the sprite.
+     *
+     * @param image image representing the sprite
+     *
+     * @see #setImage(java.lang.String)
+     * @see #setImage(ch.jeda.ui.Image)
+     * @see #setImage(java.lang.String, int)
+     * @since 1.1
+     */
+    public final void setImage(final Image image, final int steps) {
+        this.image = new RotatedImage(image, steps);
+    }
+
+    /**
+     * Sets the image representing the sprite.
+     *
+     * @param path the file or resource path of the image representing the sprite
+     *
+     * @see #setImage(java.lang.String)
+     * @see #setImage(ch.jeda.ui.Image)
+     * @see #setImage(ch.jeda.ui.Image, int)
      * @since 1.0
      */
     public final void setImage(final String path, final int steps) {
-        this.image = new RotatedImage(new Image(path), steps);
+        this.setImage(new Image(path), steps);
     }
 
     /**
@@ -280,6 +338,10 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
+     * Set the radius of the sprite's collision circle.
+     *
+     * @param radius the radius of the sprite's collision circle
+     *
      * @since 1.0
      */
     public final void setRadius(final double radius) {
@@ -345,28 +407,28 @@ public class Sprite extends GraphicsItem implements TickListener {
 
     // Performs pixel collision
     private boolean pixelCollisionWith(final Sprite other) {
-        Image image1 = this.getRotatedImage();
-        Image image2 = other.getRotatedImage();
+        final Image image1 = this.getRotatedImage();
+        final Image image2 = other.getRotatedImage();
         if (image1 == null || image2 == null) {
             return false;
         }
 
-        int w1 = image1.getWidth() / 2;
-        int h1 = image1.getHeight() / 2;
-        int w2 = image2.getWidth() / 2;
-        int h2 = image2.getHeight() / 2;
+        final int w1 = image1.getWidth() / 2;
+        final int h1 = image1.getHeight() / 2;
+        final int w2 = image2.getWidth() / 2;
+        final int h2 = image2.getHeight() / 2;
 
-        int left = (int) Math.max(this.x - w1, other.x - w2);
-        int width = (int) Math.min(this.x + w1, other.x + w2) - left - 1;
-        int top = (int) Math.max(this.y - h1, other.y - h2);
-        int height = (int) Math.min(this.y + h1, other.y + h2) - top - 1;
+        final int left = (int) Math.max(this.x - w1, other.x - w2);
+        final int width = (int) Math.min(this.x + w1, other.x + w2) - left - 1;
+        final int top = (int) Math.max(this.y - h1, other.y - h2);
+        final int height = (int) Math.min(this.y + h1, other.y + h2) - top - 1;
 
         if (height < 1 || width < 1) {
             return false;
         }
 
-        int[] pixels1 = image1.getPixels((int) (left - this.x + w1), (int) (top - this.y + h1), width, height);
-        int[] pixels2 = image2.getPixels((int) (left - other.x + w2), (int) (top - other.y + h2), width, height);
+        final int[] pixels1 = image1.getPixels((int) (left - this.x + w1), (int) (top - this.y + h1), width, height);
+        final int[] pixels2 = image2.getPixels((int) (left - other.x + w2), (int) (top - other.y + h2), width, height);
         for (int i = 0; i < pixels1.length; ++i) {
             if ((pixels1[i] & 0xFF000000) != 0 && (pixels2[i] & 0xFF000000) != 0) {
                 return true;
