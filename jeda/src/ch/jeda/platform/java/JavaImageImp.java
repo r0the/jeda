@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -44,37 +44,23 @@ class JavaImageImp implements ImageImp {
     }
 
     @Override
-    public ImageImp createRotatedImage(final double angle) {
-        final int width = this.bufferedImage.getWidth();
-        final int height = this.bufferedImage.getHeight();
-        final int diameter = (int) Math.ceil(Math.sqrt(width * width + height * height));
-        final BufferedImage result = createImage(diameter, diameter);
-        final Graphics2D graphics = result.createGraphics();
-        final AffineTransform tx = new AffineTransform();
-        tx.rotate(angle, diameter / 2, diameter / 2);
-        graphics.setTransform(tx);
-        graphics.drawImage(this.bufferedImage, (diameter - width) / 2, (diameter - height) / 2, null);
-        return new JavaImageImp(result);
-    }
-
-    @Override
-    public JavaImageImp createScaledImage(final int width, final int height) {
-        assert width > 0;
-        assert height > 0;
-
+    public ImageImp flipHorizontally() {
+        final int height = this.getHeight();
+        final int width = this.getWidth();
         final BufferedImage result = createImage(width, height);
-        result.createGraphics().drawImage(
-            this.bufferedImage, 0, 0, width, height, null);
+
+        result.createGraphics().drawImage(this.bufferedImage, 0, height, width, 0, 0, 0, width, height, null);
         return new JavaImageImp(result);
     }
 
     @Override
-    public ImageImp createSubImage(final int x, final int y, final int width, final int height) {
-        assert width > 0;
-        assert height > 0;
+    public ImageImp flipVertically() {
+        final int height = this.getHeight();
+        final int width = this.getWidth();
+        final BufferedImage result = createImage(width, height);
 
-        return new JavaImageImp(
-            this.bufferedImage.getSubimage(x, y, width, height));
+        result.createGraphics().drawImage(this.bufferedImage, width, 0, 0, height, 0, 0, width, height, null);
+        return new JavaImageImp(result);
     }
 
     @Override
@@ -104,6 +90,40 @@ class JavaImageImp implements ImageImp {
         final BufferedImage result = createImage(this.getWidth(), this.getHeight());
         result.getGraphics().drawImage(image, 0, 0, null);
         return new JavaImageImp(result);
+    }
+
+    @Override
+    public ImageImp rotate(final double angle) {
+        final int width = this.bufferedImage.getWidth();
+        final int height = this.bufferedImage.getHeight();
+        final int diameter = (int) Math.ceil(Math.sqrt(width * width + height * height));
+        final BufferedImage result = createImage(diameter, diameter);
+        final Graphics2D graphics = result.createGraphics();
+        final AffineTransform tx = new AffineTransform();
+        tx.rotate(angle, diameter / 2, diameter / 2);
+        graphics.setTransform(tx);
+        graphics.drawImage(this.bufferedImage, (diameter - width) / 2, (diameter - height) / 2, null);
+        return new JavaImageImp(result);
+    }
+
+    @Override
+    public ImageImp scale(final int width, final int height) {
+        assert width > 0;
+        assert height > 0;
+
+        final BufferedImage result = createImage(width, height);
+        result.createGraphics().drawImage(
+            this.bufferedImage, 0, 0, width, height, null);
+        return new JavaImageImp(result);
+    }
+
+    @Override
+    public ImageImp subImage(final int x, final int y, final int width, final int height) {
+        assert width > 0;
+        assert height > 0;
+
+        return new JavaImageImp(
+            this.bufferedImage.getSubimage(x, y, width, height));
     }
 
     @Override

@@ -32,7 +32,7 @@ public final class RotatedImage {
      * The file can either be located on the local computer, or in the project. To read a resource file, put 'res:' in
      * front of the file path:
      *
-     * <pre><code>Image sample = new Image("res:/sample.png");</code></pre>
+     * <tt>RotatedImage sample = new RotatedImage("res:/sample.png");</tt>
      *
      * Rotates the image by the specified number of steps.
      *
@@ -57,7 +57,7 @@ public final class RotatedImage {
         this.images = new Image[steps];
         this.images[0] = image;
         for (int i = 1; i < steps; ++i) {
-            this.images[i] = image.createRotatedImage(i * 2.0 * Math.PI / steps);
+            this.images[i] = image.rotate(i * 2.0 * Math.PI / steps);
         }
     }
 

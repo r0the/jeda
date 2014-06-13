@@ -30,11 +30,9 @@ public interface ImageImp {
         JPEG, PNG
     }
 
-    ImageImp createRotatedImage(double angle);
+    ImageImp flipHorizontally();
 
-    ImageImp createScaledImage(int width, int height);
-
-    ImageImp createSubImage(int x, int y, int width, int height);
+    ImageImp flipVertically();
 
     int getHeight();
 
@@ -43,6 +41,12 @@ public interface ImageImp {
     int getWidth();
 
     ImageImp replacePixels(Color oldColor, Color newColor);
+
+    ImageImp rotate(double angle);
+
+    ImageImp scale(int width, int height);
+
+    ImageImp subImage(int x, int y, int width, int height);
 
     boolean write(OutputStream out, Encoding encoding) throws IOException;
 }

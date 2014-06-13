@@ -31,6 +31,7 @@ import java.util.Map;
  * {@link Canvas}. Simple image transformations are also supported.
  *
  * @since 1.0
+ * @version 2
  */
 public final class Image {
 
@@ -58,7 +59,7 @@ public final class Image {
      * put ':' in front of the file path. For example, use the following code to load an image located in the
      * <tt>ch.jeda.samples</tt> package of the project:
      *
-     * <pre><code>Image sample = new Image("src/ch/jeda/samples/sample.png");</code></pre>
+     * <tt>Image sample = new Image("src/ch/jeda/samples/sample.png");</tt>
      *
      * @param filePath path to the image file
      *
@@ -69,20 +70,15 @@ public final class Image {
     }
 
     /**
+     * @deprecated Use {@link #rotate(double)} instead.
      * @since 1.0
      */
     public Image createRotatedImage(final double angle) {
-        return new Image(this.imp.createRotatedImage(angle));
+        return new Image(this.imp.rotate(angle));
     }
 
     /**
-     * Creates a scaled copy of the image. Width and height are both scaled proportionally.
-     *
-     * @param factor the scaling factor
-     * @return scaled image
-     * @throws IllegalArgumentException if <tt>factor</tt> is not positive
-     *
-     * @see #createScaledImage(int, int)
+     * @deprecated Use {@link #scale(double)} instead.
      * @since 1.0
      */
     public Image createScaledImage(final double factor) {
@@ -96,18 +92,7 @@ public final class Image {
     }
 
     /**
-     * Creates a scaled copy of the image. Both width and height of the new image can be specified. The aspect ratio may
-     * not be preserved.
-     *
-     * @param width the width of the new image
-     * @param height the height of the new image
-     * @return scaled image
-     * @throws IllegalArgumentException if <tt>x</tt> or <tt>y</tt> are smaller than 0
-     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are smaller than 1
-     * @throws IllegalArgumentException if <tt>x + width</tt> is greater or equal to the image width
-     * @throws IllegalArgumentException if <tt>y + height</tt> is greater or equal to the image height
-     *
-     * @see #createScaledImage(double)
+     * @deprecated Use {@link #scale(int, int)} instead.
      * @since 1.0
      */
     public Image createScaledImage(final int width, final int height) {
@@ -119,50 +104,39 @@ public final class Image {
             throw new IllegalArgumentException("height");
         }
 
-        return new Image(this.imp.createScaledImage(width, height));
+        return new Image(this.imp.scale(width, height));
     }
 
     /**
-     * Returns a rectangular part of the image as a new image.
-     *
-     * @param x the x coordinate of the top left corner of the part
-     * @param y the y coordinate of the top left corner of the part
-     * @param width the width of the part
-     * @param height the height of the part
-     * @return the specified part of the image
-     * @throws IllegalArgumentException if <tt>x</tt> or <tt>y</tt> are smaller than 0
-     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are smaller than 1
-     * @throws IllegalArgumentException if <tt>x + width</tt> is greater or equal to the image width
-     * @throws IllegalArgumentException if <tt>y + height</tt> is greater or equal to the image height
-     *
+     * @deprecated Use {@link #subImage(int, int, int, int)} instead.
      * @since 1.0
      */
     public Image createSubImage(final int x, final int y, final int width, final int height) {
-        if (width < 1) {
-            throw new IllegalArgumentException("width");
-        }
+        return this.subImage(x, y, width, height);
+    }
 
-        if (height < 1) {
-            throw new IllegalArgumentException("height");
-        }
+    /**
+     * Creates a horizontally flipped copy of the image.
+     *
+     * @return a horizontally flipped copy of the image
+     *
+     * @see #flipVertically()
+     * @since 1.1
+     */
+    public Image flipHorizontally() {
+        return new Image(this.imp.flipHorizontally());
+    }
 
-        if (x < 0) {
-            throw new IllegalArgumentException("x");
-        }
-
-        if (y < 0) {
-            throw new IllegalArgumentException("y");
-        }
-
-        if (x + width > this.imp.getWidth()) {
-            throw new IllegalArgumentException("x + width");
-        }
-
-        if (y + height > this.imp.getHeight()) {
-            throw new IllegalArgumentException("y + height");
-        }
-
-        return new Image(this.imp.createSubImage(x, y, width, height));
+    /**
+     * Creates a vertically flipped copy of the image.
+     *
+     * @return a vertically flipped copy of the image
+     *
+     * @see #flipVertically()
+     * @since 1.1
+     */
+    public Image flipVertically() {
+        return new Image(this.imp.flipVertically());
     }
 
     /**
@@ -242,6 +216,13 @@ public final class Image {
     }
 
     /**
+     * @since 1.1
+     */
+    public Image rotate(final double angle) {
+        return new Image(this.imp.rotate(angle));
+    }
+
+    /**
      * Saves the contents of the image to a file. Saving to a resource file (i.e. a file path starting with ':') is not
      * allowed. The file path must end with a valid image file extension. Currently, the extension ".jpeg", ".jpg", and
      * ".png" are supported.
@@ -292,6 +273,96 @@ public final class Image {
                 }
             }
         }
+    }
+
+    /**
+     * Creates a scaled copy of the image. Width and height are both scaled proportionally.
+     *
+     * @param factor the scaling factor
+     * @return scaled image
+     * @throws IllegalArgumentException if <tt>factor</tt> is not positive
+     *
+     * @see #scale(int, int)
+     * @since 1.0
+     */
+    public Image scale(final double factor) {
+        if (factor <= 0.0) {
+            throw new IllegalArgumentException("factor");
+        }
+
+        final int width = Math.max((int) (this.getWidth() * factor), 1);
+        final int height = Math.max((int) (this.getHeight() * factor), 1);
+        return this.createScaledImage(width, height);
+    }
+
+    /**
+     * Creates a scaled copy of the image. Both width and height of the new image can be specified. The aspect ratio may
+     * not be preserved.
+     *
+     * @param width the width of the new image
+     * @param height the height of the new image
+     * @return scaled image
+     * @throws IllegalArgumentException if <tt>x</tt> or <tt>y</tt> are smaller than 0
+     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are smaller than 1
+     * @throws IllegalArgumentException if <tt>x + width</tt> is greater or equal to the image width
+     * @throws IllegalArgumentException if <tt>y + height</tt> is greater or equal to the image height
+     *
+     * @see #scale(double)
+     * @since 1.1
+     */
+    public Image scale(final int width, final int height) {
+        if (width < 1) {
+            throw new IllegalArgumentException("width");
+        }
+
+        if (height < 1) {
+            throw new IllegalArgumentException("height");
+        }
+
+        return new Image(this.imp.scale(width, height));
+    }
+
+    /**
+     * Returns a rectangular part of the image as a new image.
+     *
+     * @param x the x coordinate of the top left corner of the part
+     * @param y the y coordinate of the top left corner of the part
+     * @param width the width of the part
+     * @param height the height of the part
+     * @return the specified part of the image
+     * @throws IllegalArgumentException if <tt>x</tt> or <tt>y</tt> are smaller than 0
+     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are smaller than 1
+     * @throws IllegalArgumentException if <tt>x + width</tt> is greater or equal to the image width
+     * @throws IllegalArgumentException if <tt>y + height</tt> is greater or equal to the image height
+     *
+     * @since 1.1
+     */
+    public Image subImage(final int x, final int y, final int width, final int height) {
+        if (width < 1) {
+            throw new IllegalArgumentException("width");
+        }
+
+        if (height < 1) {
+            throw new IllegalArgumentException("height");
+        }
+
+        if (x < 0) {
+            throw new IllegalArgumentException("x");
+        }
+
+        if (y < 0) {
+            throw new IllegalArgumentException("y");
+        }
+
+        if (x + width > this.imp.getWidth()) {
+            throw new IllegalArgumentException("x + width");
+        }
+
+        if (y + height > this.imp.getHeight()) {
+            throw new IllegalArgumentException("y + height");
+        }
+
+        return new Image(this.imp.subImage(x, y, width, height));
     }
 
     Image(final ImageImp imp) {

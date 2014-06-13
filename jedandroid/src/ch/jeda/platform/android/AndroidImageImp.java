@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,6 +18,7 @@ package ch.jeda.platform.android;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.ui.Color;
 import java.io.IOException;
@@ -27,31 +28,20 @@ class AndroidImageImp implements ImageImp {
 
     final Bitmap bitmap;
 
-    public ImageImp createRotatedImage(double angle) {
-        final int width = this.bitmap.getWidth();
-        final int height = this.bitmap.getHeight();
-        final int diameter = (int) Math.ceil(Math.sqrt(width * width + height * height));
-        final Bitmap result = Bitmap.createBitmap(diameter, diameter, Bitmap.Config.ARGB_8888);
-        final Canvas canvas = new Canvas(result);
-        canvas.rotate((float) (angle * 180 / Math.PI), diameter / 2, diameter / 2);
-        canvas.drawBitmap(this.bitmap, (diameter - width) / 2, (diameter - height) / 2, null);
-        return new AndroidImageImp(result);
+    @Override
+    public ImageImp flipHorizontally() {
+        final Matrix matrix = new Matrix();
+        matrix.preScale(-1, 1);
+        return new AndroidImageImp(Bitmap.createBitmap(
+            this.bitmap, 0, 0, this.getWidth(), this.getHeight(), matrix, false));
     }
 
     @Override
-    public ImageImp createScaledImage(final int width, final int height) {
-        assert width > 0;
-        assert height > 0;
-
-        return new AndroidImageImp(Bitmap.createScaledBitmap(this.bitmap, width, height, false));
-    }
-
-    @Override
-    public ImageImp createSubImage(final int x, final int y, final int width, final int height) {
-        assert width > 0;
-        assert height > 0;
-
-        return new AndroidImageImp(Bitmap.createBitmap(this.bitmap, x, y, width, height));
+    public ImageImp flipVertically() {
+        final Matrix matrix = new Matrix();
+        matrix.preScale(1, -1);
+        return new AndroidImageImp(Bitmap.createBitmap(
+            this.bitmap, 0, 0, this.getWidth(), this.getHeight(), matrix, false));
     }
 
     @Override
@@ -77,6 +67,33 @@ class AndroidImageImp implements ImageImp {
         assert newColor != null;
 
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public ImageImp rotate(double angle) {
+        final int width = this.bitmap.getWidth();
+        final int height = this.bitmap.getHeight();
+        final int diameter = (int) Math.ceil(Math.sqrt(width * width + height * height));
+        final Bitmap result = Bitmap.createBitmap(diameter, diameter, Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(result);
+        canvas.rotate((float) (angle * 180 / Math.PI), diameter / 2, diameter / 2);
+        canvas.drawBitmap(this.bitmap, (diameter - width) / 2, (diameter - height) / 2, null);
+        return new AndroidImageImp(result);
+    }
+
+    @Override
+    public ImageImp scale(final int width, final int height) {
+        assert width > 0;
+        assert height > 0;
+
+        return new AndroidImageImp(Bitmap.createScaledBitmap(this.bitmap, width, height, false));
+    }
+
+    @Override
+    public ImageImp subImage(final int x, final int y, final int width, final int height) {
+        assert width > 0;
+        assert height > 0;
+
+        return new AndroidImageImp(Bitmap.createBitmap(this.bitmap, x, y, width, height));
     }
 
     @Override
