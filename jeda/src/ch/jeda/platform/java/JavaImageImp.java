@@ -49,7 +49,7 @@ class JavaImageImp implements ImageImp {
         final int width = this.getWidth();
         final BufferedImage result = createImage(width, height);
 
-        result.createGraphics().drawImage(this.bufferedImage, 0, height, width, 0, 0, 0, width, height, null);
+        result.createGraphics().drawImage(this.bufferedImage, width, 0, 0, height, 0, 0, width, height, null);
         return new JavaImageImp(result);
     }
 
@@ -59,7 +59,7 @@ class JavaImageImp implements ImageImp {
         final int width = this.getWidth();
         final BufferedImage result = createImage(width, height);
 
-        result.createGraphics().drawImage(this.bufferedImage, width, 0, 0, height, 0, 0, width, height, null);
+        result.createGraphics().drawImage(this.bufferedImage, 0, height, width, 0, 0, 0, width, height, null);
         return new JavaImageImp(result);
     }
 

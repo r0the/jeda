@@ -26,22 +26,20 @@ import java.io.OutputStream;
 
 class AndroidImageImp implements ImageImp {
 
+    private static final Matrix FLIP_HORIZONTALLY = initFlipHorizontallyMatrix();
+    private static final Matrix FLIP_VERTICALLY = initFlipVerticallyMatrix();
     final Bitmap bitmap;
 
     @Override
     public ImageImp flipHorizontally() {
-        final Matrix matrix = new Matrix();
-        matrix.preScale(-1, 1);
         return new AndroidImageImp(Bitmap.createBitmap(
-            this.bitmap, 0, 0, this.getWidth(), this.getHeight(), matrix, false));
+            this.bitmap, 0, 0, this.getWidth(), this.getHeight(), FLIP_HORIZONTALLY, false));
     }
 
     @Override
     public ImageImp flipVertically() {
-        final Matrix matrix = new Matrix();
-        matrix.preScale(1, -1);
         return new AndroidImageImp(Bitmap.createBitmap(
-            this.bitmap, 0, 0, this.getWidth(), this.getHeight(), matrix, false));
+            this.bitmap, 0, 0, this.getWidth(), this.getHeight(), FLIP_VERTICALLY, false));
     }
 
     @Override
@@ -115,5 +113,17 @@ class AndroidImageImp implements ImageImp {
             default:
                 return null;
         }
+    }
+
+    private static Matrix initFlipHorizontallyMatrix() {
+        final Matrix result = new Matrix();
+        result.preScale(-1, 1);
+        return result;
+    }
+
+    private static Matrix initFlipVerticallyMatrix() {
+        final Matrix result = new Matrix();
+        result.preScale(1, -1);
+        return result;
     }
 }
