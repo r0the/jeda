@@ -215,10 +215,10 @@ public final class Color implements Serializable {
             throw new IllegalArgumentException("'" + value + "' is not a valid HTML color, it doesn't start with #.");
         }
 
-        final int red = Byte.parseByte(value.substring(1, 3));
-        final int green = Byte.parseByte(value.substring(3, 5));
-        final int blue = Byte.parseByte(value.substring(5, 7));
-        this.value = (red << 16) | (green << 8) | blue;
+        final int red = Integer.parseInt(value.substring(1, 3), 16);
+        final int green = Integer.parseInt(value.substring(3, 5), 16);
+        final int blue = Integer.parseInt(value.substring(5, 7), 16);
+        this.value = (255 << 24) | (red << 16) | (green << 8) | blue;
     }
 
     @Override
