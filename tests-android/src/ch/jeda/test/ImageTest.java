@@ -36,7 +36,5 @@ public class ImageTest extends Program {
         window.drawImage(200, 400, pacman.flipHorizontally());
         window.drawImage(350, 400, pacman.flipVertically());
 
-        Image defaultImage = new Image("no/such/image");
-        window.drawImage(700, 400, defaultImage);
     }
 }
