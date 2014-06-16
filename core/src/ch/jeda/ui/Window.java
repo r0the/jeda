@@ -164,10 +164,14 @@ public class Window extends Canvas {
      *
      * @see #add(ch.jeda.ui.GraphicsItem)
      * @see #getGraphicsItems()
-     * @see #getGraphicsItems(java.lang.Class)
+     * @see #remove(ch.jeda.ui.GraphicsItem)
      * @since 1.0
      */
     public final <T extends GraphicsItem> T[] getGraphicsItems(final Class<T> clazz) {
+        if (clazz == null) {
+            throw new NullPointerException("clazz");
+        }
+
         return this.graphicsItems.get(clazz);
     }
 
