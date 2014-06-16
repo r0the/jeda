@@ -72,6 +72,7 @@ public abstract class GraphicsItem {
 
     /**
      * @deprecated This method should be defined in inherited classes when needed.
+     * @since 1.0
      */
     protected boolean contains(int x, int y) {
         return false;
@@ -92,6 +93,7 @@ public abstract class GraphicsItem {
      * added to a window.
      *
      * @return the window containing the graphics item
+     *
      * @since 1.0
      */
     protected final Window getWindow() {

@@ -261,8 +261,6 @@ public class Sprite extends GraphicsItem implements TickListener {
      * @param ax the horizontal component of the acceleration
      * @param ay the vertical component of the acceleration
      *
-     * @see #getAcceleration()
-     * @see #setAcceleration(double)
      * @since 1.0
      */
     public final void setAcceleration(final double ax, final double ay) {
