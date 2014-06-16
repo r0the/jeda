@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -96,6 +96,11 @@ class GraphicsItems {
                 final GraphicsItem item = this.pendingInsertions.get(i);
                 if (!itemSet.contains(item)) {
                     if (itemSet.add(item)) {
+                        // Remove item from old owner
+                        if (item.owner != null) {
+                            item.owner.remove(item);
+                        }
+
                         item.owner = this;
                         this.window.addEventListener(item);
                         allChanged = true;
