@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class Sprite extends GraphicsItem implements TickListener {
 
-    private static final double TWO_PI = 2 * Math.PI;
+    private static final double THRESHHOLD = 1E-3;
     private double ax;
     private double ay;
     private double direction;
@@ -88,7 +88,7 @@ public class Sprite extends GraphicsItem implements TickListener {
     public Sprite(final double x, final double y, final double speed, final double direction) {
         this.rotate(direction);
         this.setPosition(x, y);
-        this.direction = normalizeAngle(direction);
+        this.direction = MathUtil.normalizeAngle(direction);
         this.speed = speed;
         this.velocityChanged();
     }
@@ -235,8 +235,15 @@ public class Sprite extends GraphicsItem implements TickListener {
 
     @Override
     public final void onTick(final TickEvent event) {
-        this.vx = this.vx + this.ax * event.getDuration();
-        this.vy = this.vy + this.ay * event.getDuration();
+        if (!MathUtil.isZero(this.ax, THRESHHOLD) || !MathUtil.isZero(this.ay, THRESHHOLD)) {
+            this.vx = this.vx + this.ax * event.getDuration();
+            this.vy = this.vy + this.ay * event.getDuration();
+            this.speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+            if (!MathUtil.isZero(this.speed, THRESHHOLD)) {
+                this.direction = MathUtil.normalizeAngle(Math.atan2(this.vy, this.vx));
+            }
+        }
+
         final double newX = this.x + this.vx * event.getDuration();
         final double newY = this.y + this.vy * event.getDuration();
         this.update(event.getDuration(), newX, newY);
@@ -278,7 +285,7 @@ public class Sprite extends GraphicsItem implements TickListener {
      * @since 1.1
      */
     public final void setDirection(final double direction) {
-        this.direction = normalizeAngle(direction);
+        this.direction = MathUtil.normalizeAngle(direction);
         this.velocityChanged();
     }
 
@@ -373,7 +380,7 @@ public class Sprite extends GraphicsItem implements TickListener {
      * @since 1.1
      */
     public final void setRotation(final double rotation) {
-        this.rotation = normalizeAngle(rotation);
+        this.rotation = MathUtil.normalizeAngle(rotation);
     }
 
     /**
@@ -461,14 +468,5 @@ public class Sprite extends GraphicsItem implements TickListener {
     private void velocityChanged() {
         this.vx = this.speed * Math.cos(this.direction);
         this.vy = this.speed * Math.sin(this.direction);
-    }
-
-    private static double normalizeAngle(double angle) {
-        angle = angle % TWO_PI;
-        if (angle < 0) {
-            angle = angle + TWO_PI;
-        }
-
-        return angle;
     }
 }
