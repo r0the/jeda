@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -52,6 +52,11 @@ abstract class ProgramClassWrapper {
     }
 
     abstract String getProgramClassName();
+
+    @Override
+    public String toString() {
+        return this.getProgramClassName();
+    }
 
     private static boolean hasInterface(final Class<?> candidateClass, final Class<?> targetInterface) {
         final Class[] interfaces = candidateClass.getInterfaces();
