@@ -28,11 +28,78 @@ import java.util.Map;
  */
 public final class Convert {
 
+    private static final String FALSE_VALUE = "false";
+    private static final String TRUE_VALUE = "true";
+
     /**
-     * Convert double values to a list.
+     * Converts a @{link java.lang.String} to a <tt>boolean</tt> value. Returns the <tt>boolean</tt> value represented
+     * by the {@link java.lang.String}. Returns the <tt>defaultValue</tt>, if <tt>value</tt> does not represent a valid
+     * <tt>boolean</tt>.
      *
-     * @param values comma-separated double values
-     * @return a list of double values
+     * @param value the string to be converted to a <tt>boolean</tt>
+     * @param defaultValue the default value
+     * @return the <tt>boolean</tt> value represented by <tt>value</tt> or the <tt>defaultValue</tt>
+     *
+     * @see #toString(boolean)
+     * @since 1.2
+     */
+    public static boolean toBoolean(final String value, final boolean defaultValue) {
+        if (FALSE_VALUE.equals(value)) {
+            return false;
+        }
+        else if (TRUE_VALUE.equals(value)) {
+            return true;
+        }
+        else {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Converts a @{link java.lang.String} to a <tt>double</tt> value. Returns the <tt>double</tt> value represented by
+     * the {@link java.lang.String}. Returns the <tt>defaultValue</tt>, if <tt>value</tt> does not represent a valid
+     * <tt>double</tt>.
+     *
+     * @param value the string to be converted to a <tt>double</tt>
+     * @param defaultValue the default value
+     * @return the <tt>double</tt> value represented by <tt>value</tt> or the <tt>defaultValue</tt>
+     *
+     * @since 1.2
+     */
+    public static double toDouble(final String value, final double defaultValue) {
+        try {
+            return Double.parseDouble(value);
+        }
+        catch (final NumberFormatException ex) {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Converts a @{link java.lang.String} to an <tt>int</tt> value. Returns the <tt>int</tt> value represented by the
+     * {@link java.lang.String}. Returns the <tt>defaultValue</tt>, if <tt>value</tt> does not represent a valid
+     * <tt>int</tt>.
+     *
+     * @param value the string to be converted to a <tt>int</tt>
+     * @param defaultValue the default value
+     * @return the <tt>int</tt> value represented by <tt>value</tt> or the <tt>defaultValue</tt>
+     *
+     * @since 1.2
+     */
+    public static int toInt(final String value, final int defaultValue) {
+        try {
+            return Integer.parseInt(value);
+        }
+        catch (final NumberFormatException ex) {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Creates and returns a list of <tt>double</tt> values.
+     *
+     * @param values comma-separated <tt>double</tt> values
+     * @return a list of <tt>double</tt> values
      *
      * @since 1.0
      */
@@ -46,10 +113,10 @@ public final class Convert {
     }
 
     /**
-     * Creates and returns a list of float values.
+     * Creates and returns a list of <tt>float</tt> values.
      *
-     * @param values comma-separated float values
-     * @return a list of float values
+     * @param values comma-separated <tt>float</tt> values
+     * @return a list of <tt>float</tt> values
      *
      * @since 1.0
      */
@@ -63,10 +130,10 @@ public final class Convert {
     }
 
     /**
-     * Creates and returns a list of int values.
+     * Creates and returns a list of <tt>int</tt> values.
      *
-     * @param values comma-separated int values
-     * @return a list of int values
+     * @param values comma-separated <tt>int</tt> values
+     * @return a list of <tt>int</tt> values
      *
      * @since 1.0
      */
@@ -80,10 +147,10 @@ public final class Convert {
     }
 
     /**
-     * Creates and returns a list of String values.
+     * Creates and returns a list of {@link java.lang.String} values.
      *
-     * @param values comma-separated String values
-     * @return a list of String values
+     * @param values comma-separated {@link java.lang.String} values
+     * @return a list of {@link java.lang.String} values
      *
      * @since 1.0
      */
@@ -92,10 +159,55 @@ public final class Convert {
     }
 
     /**
-     * Converts the specified objects to a string.
+     * Converts a <tt>boolean</tt> value to a {@link java.lang.String}. Converts <tt>true</tt> to the string
+     * <tt>"true"</tt> and <tt>false</tt> to the string <tt>"false"</tt>.
+     *
+     * @param value the <tt>boolean</tt> value to be converted
+     * @return the {@link java.lang.String} representing the <tt>value</tt>
+     *
+     * @see #toBoolean(java.lang.String, boolean)
+     * @since 1.2
+     */
+    public static String toString(final boolean value) {
+        if (value) {
+            return TRUE_VALUE;
+        }
+        else {
+            return FALSE_VALUE;
+        }
+    }
+
+    /**
+     * Converts a <tt>double</tt> value to a {@link java.lang.String}.
+     *
+     * @param value the <tt>double</tt> value to be converted
+     * @return the {@link java.lang.String} representing the <tt>value</tt>
+     *
+     * @see #toDouble(java.lang.String, double)
+     * @since 1.2
+     */
+    public static String toString(final double value) {
+        return String.valueOf(value);
+    }
+
+    /**
+     * Converts an <tt>int</tt> value to a {@link java.lang.String}.
+     *
+     * @param value the <tt>int</tt> value to be converted
+     * @return the {@link java.lang.String} representing the <tt>value</tt>
+     *
+     * @see #toInt(java.lang.String, int)
+     * @since 1.2
+     */
+    public static String toString(final int value) {
+        return String.valueOf(value);
+    }
+
+    /**
+     * Converts the specified objects to a {@link java.lang.String}.
      *
      * @param objects comma-separated objects
-     * @return a string representation of the specified objects
+     * @return a {@link java.lang.String} representation of the specified objects
      *
      * @since 1.0
      */

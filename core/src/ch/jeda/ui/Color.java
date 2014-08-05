@@ -16,6 +16,8 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.Data;
+import ch.jeda.Storable;
 import java.io.Serializable;
 
 /**
@@ -24,8 +26,12 @@ import java.io.Serializable;
  *
  * @since 1.0
  */
-public final class Color implements Serializable {
+public final class Color implements Serializable, Storable {
 
+    private static final String R = "r";
+    private static final String G = "g";
+    private static final String B = "b";
+    private static final String A = "a";
     /**
      * The VGA color <i>aqua</i>. Same as <tt>new Color(0, 255, 255)</tt>.
      *
@@ -137,12 +143,25 @@ public final class Color implements Serializable {
     private final int value;
 
     /**
-     * Constructs a color from a specified value.
+     * Constructs a color from an internal value.
+     *
+     * @param value the internal value
      *
      * @since 1.0
      */
     public Color(final int value) {
         this.value = value;
+    }
+
+    /**
+     * Constructs a color from serialized data.
+     *
+     * @param data the serialized data
+     *
+     * @since 1.2
+     */
+    public Color(final Data data) {
+        this(data.readInt(R), data.readInt(G), data.readInt(B), data.readInt(A));
     }
 
     /**
@@ -321,5 +340,13 @@ public final class Color implements Serializable {
 
         result.append(")");
         return result.toString();
+    }
+
+    @Override
+    public void writeTo(final Data data) {
+        data.writeInt(R, this.getRed());
+        data.writeInt(G, this.getGreen());
+        data.writeInt(B, this.getBlue());
+        data.writeInt(A, this.getAlpha());
     }
 }
