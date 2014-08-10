@@ -4,7 +4,7 @@ import ch.jeda.*;
 import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
-public class NetworkTest extends Program implements TickListener {
+public class NetworkClientTest extends Program implements TickListener {
 
     NetworkSocket socket;
 
