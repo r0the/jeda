@@ -23,7 +23,10 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 /**
  * Represents an endpoint for a network connection. A socket can be connected to a remote socket. This class is
@@ -34,6 +37,7 @@ import java.nio.charset.Charset;
 public final class NetworkSocket {
 
     private final Charset charset;
+    private final Queue<String> inputBuffer;
     private final Object lock;
     private BufferedReader in;
     private PrintWriter out;
@@ -47,6 +51,7 @@ public final class NetworkSocket {
      */
     public NetworkSocket() {
         this.charset = Charset.forName("UTF-8");
+        this.inputBuffer = new ArrayDeque<String>();
         this.lock = new Object();
     }
 
@@ -96,6 +101,7 @@ public final class NetworkSocket {
                 this.socket = null;
                 this.in = null;
                 this.out = null;
+                this.inputBuffer.clear();
             }
         }
     }
@@ -109,7 +115,7 @@ public final class NetworkSocket {
      */
     public boolean isConnected() {
         synchronized (this.lock) {
-            return this.socket != null && !this.socket.isClosed();
+            return this.socket != null;
         }
     }
 
@@ -135,16 +141,15 @@ public final class NetworkSocket {
      */
     public boolean hasLine() {
         synchronized (this.lock) {
-            if (this.in == null) {
+            if (this.socket == null) {
                 return false;
             }
 
-            try {
-                return this.in.ready();
+            if (this.inputBuffer.isEmpty()) {
+                this.tryReceive();
             }
-            catch (final IOException ex) {
-                return false;
-            }
+
+            return !this.inputBuffer.isEmpty();
         }
     }
 
@@ -172,13 +177,8 @@ public final class NetworkSocket {
     public Data receiveData() {
         final Data result = new Data();
         synchronized (this.lock) {
-            if (this.in != null) {
-                try {
-                    result.loadFromLine(this.in.readLine());
-                }
-                catch (final IOException ex) {
-                    // ignore
-                }
+            if (this.socket != null) {
+                result.loadFromLine(this.receiveLine());
             }
         }
 
@@ -195,16 +195,15 @@ public final class NetworkSocket {
      */
     public String receiveLine() {
         synchronized (this.lock) {
-            if (this.in == null) {
+            if (this.socket == null) {
                 return null;
             }
 
-            try {
-                return this.in.readLine();
+            if (this.inputBuffer.isEmpty()) {
+                this.tryReceive();
             }
-            catch (final IOException ex) {
-                return null;
-            }
+
+            return this.inputBuffer.poll();
         }
     }
 
@@ -244,10 +243,29 @@ public final class NetworkSocket {
         try {
             synchronized (this.lock) {
                 this.socket = socket;
+                this.socket.setSoTimeout(1);
                 this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream(), this.charset));
                 this.out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream(), this.charset));
                 this.remoteAddress = Convert.toString(this.socket.getInetAddress().getHostAddress(), this.socket.getPort());
             }
+        }
+        catch (final IOException ex) {
+            this.disconnect();
+        }
+    }
+
+    private void tryReceive() {
+        try {
+            final String line = this.in.readLine();
+            if (line == null) {
+                this.disconnect();
+            }
+            else {
+                this.inputBuffer.add(line);
+            }
+        }
+        catch (final SocketTimeoutException ex) {
+            // no data to receive, ignore
         }
         catch (final IOException ex) {
             this.disconnect();
