@@ -210,10 +210,19 @@ public final class Image {
      * @param oldColor color to be replaced
      * @param newColor color to replace <tt>oldColor</tt>
      * @return the resulting image
+     * @throws NullPointerException if <tt>oldColor</tt> or <tt>newColor</tt> are <tt>null</tt>
      *
      * @since 1.0
      */
     public Image replacePixels(final Color oldColor, final Color newColor) {
+        if (oldColor == null) {
+            throw new NullPointerException("oldColor");
+        }
+
+        if (newColor == null) {
+            throw new NullPointerException("newColor");
+        }
+
         return new Image(this.imp.replacePixels(oldColor, newColor));
     }
 
