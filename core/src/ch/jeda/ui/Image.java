@@ -56,7 +56,7 @@ public final class Image {
      * formats JPEG, and PNG are supported.
      * <p>
      * The file can either be located on the local computer, or in the project. To read a file located in the project,
-     * put ':' in front of the file path. For example, use the following code to load an image located in the
+     * put 'res:' in front of the file path. For example, use the following code to load an image located in the
      * <tt>ch.jeda.samples</tt> package of the project:
      *
      * <tt>Image sample = new Image("src/ch/jeda/samples/sample.png");</tt>
@@ -204,10 +204,12 @@ public final class Image {
     }
 
     /**
-     * Replaces all pixels of one specific color with another color. This can be useful for creating transparent images.
+     * Creates a modified copy of the image in which all pixels of one specific color are replaced with another color.
+     * This can be useful for creating transparent images.
      *
      * @param oldColor color to be replaced
-     * @param newColor color to replace oldColor
+     * @param newColor color to replace <tt>oldColor</tt>
+     * @return the resulting image
      *
      * @since 1.0
      */
@@ -216,6 +218,11 @@ public final class Image {
     }
 
     /**
+     * Creates a rotated copy of the image.
+     *
+     * @param angle the angle in radians
+     * @return the rotated copy of the image
+     *
      * @since 1.1
      */
     public Image rotate(final double angle) {

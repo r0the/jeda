@@ -87,6 +87,8 @@ public class Canvas {
 
     /**
      * <b>Experimental</b>
+     *
+     * @since 1.0
      */
     public void copyFrom(final Canvas canvas) {
         if (canvas == null) {
@@ -665,6 +667,8 @@ public class Canvas {
 
     /**
      * <b>Experimental</b>
+     *
+     * @since 1.0
      */
     public void floodFill(int x, int y, final Color oldColor, final Color newColor) {
         if (oldColor == null) {
@@ -764,6 +768,9 @@ public class Canvas {
         }
     }
 
+    /**
+     * @deprecated
+     */
     public Transformation getTransformation() {
         return this.transformation;
     }
@@ -811,6 +818,7 @@ public class Canvas {
      * used when rendering the text or shapes.
      *
      * @param antiAliasing <tt>true</tt> to enable the anti-aliasing filter, <tt>false</tt> to disable it.
+     * @since 1.0
      */
     public void setAntiAliasing(final boolean antiAliasing) {
         if (this.antiAliasing != antiAliasing) {
@@ -902,7 +910,10 @@ public class Canvas {
         }
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link RotatedImage} to display rotated images.
+     * @since 1.0
+     */
     public void setTransformation(final Transformation transformation) {
         if (transformation == null) {
             throw new NullPointerException("transformation");

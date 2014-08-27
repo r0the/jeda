@@ -64,6 +64,7 @@ public interface CanvasImp {
 
     void setPixelAt(int x, int y, Color color);
 
+    @Deprecated
     void setTransformation(Transformation transformation);
 
     void setTypeface(TypefaceImp typeface);
