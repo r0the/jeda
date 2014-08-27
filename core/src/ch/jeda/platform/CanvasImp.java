@@ -66,6 +66,8 @@ public interface CanvasImp {
 
     void setTransformation(Transformation transformation);
 
+    void setTypeface(TypefaceImp typeface);
+
     ImageImp takeSnapshot();
 
     int textHeight(String text);

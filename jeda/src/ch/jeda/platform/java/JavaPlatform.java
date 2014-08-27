@@ -16,11 +16,11 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.Log;
 import ch.jeda.LogLevel;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.CanvasImp;
+import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
@@ -28,6 +28,7 @@ import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowRequest;
+import java.awt.Font;
 import java.io.InputStream;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -50,6 +51,11 @@ class JavaPlatform implements Platform {
     }
 
     @Override
+    public TypefaceImp createTypefaceImp(final String path) {
+        return ResourceManager.loadFont(path);
+    }
+
+    @Override
     public ImageImp createImageImp(final String path) {
         return ResourceManager.loadImage(path);
     }
@@ -62,6 +68,11 @@ class JavaPlatform implements Platform {
     @Override
     public AudioManagerImp getAudioManagerImp() {
         return this.audioManager;
+    }
+
+    @Override
+    public TypefaceImp getStandardTypefaceImp(final Platform.StandardTypeface standardFont) {
+        return new JavaTypefaceImp(new Font(lookupStandardTypeface(standardFont), 20, 0));
     }
 
     @Override
@@ -135,6 +146,19 @@ class JavaPlatform implements Platform {
         }
         catch (final IllegalAccessException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private static String lookupStandardTypeface(final Platform.StandardTypeface standardTypeface) {
+        switch (standardTypeface) {
+            case MONOSPACED:
+                return Font.MONOSPACED;
+            case SANS_SERIF:
+                return Font.SANS_SERIF;
+            case SERIF:
+                return Font.SERIF;
+            default:
+                return null;
         }
     }
 }

@@ -26,6 +26,7 @@ import android.graphics.Rect;
 import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
+import ch.jeda.platform.TypefaceImp;
 import ch.jeda.ui.Color;
 
 class AndroidCanvasImp implements CanvasImp {
@@ -139,12 +140,14 @@ class AndroidCanvasImp implements CanvasImp {
         return this.bitmap.getWidth();
     }
 
+    @Override
     public void setAntiAliasing(final boolean antiAliasing) {
         this.fillPaint.setAntiAlias(antiAliasing);
         this.strokePaint.setAntiAlias(antiAliasing);
         this.textPaint.setAntiAlias(antiAliasing);
     }
 
+    @Override
     public void setColor(final Color color) {
         assert color != null;
 
@@ -184,6 +187,13 @@ class AndroidCanvasImp implements CanvasImp {
         transformation.copyToArray(this.matrixArray);
         this.matrix.setValues(this.matrixArray);
         this.canvas.setMatrix(this.matrix);
+    }
+
+    @Override
+    public void setTypeface(final TypefaceImp typeface) {
+        assert typeface instanceof AndroidTypefaceImp;
+
+        this.textPaint.setTypeface(((AndroidTypefaceImp) typeface).imp);
     }
 
     @Override

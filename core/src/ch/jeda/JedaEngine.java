@@ -20,6 +20,7 @@ import ch.jeda.event.SensorType;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
+import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
@@ -42,6 +43,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 class JedaEngine implements PlatformCallback, Runnable {
 
     private static final SoundImp EMPTY_SOUND_IMP = new EmptySoundImp();
+    private static final TypefaceImp EMPTY_TYPEFACE_IMP = new EmptyTypefaceImp();
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
     private static final double DEFAULT_TICK_FREQUENCY = 60.0;
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = "res/jeda.properties";
@@ -175,6 +177,20 @@ class JedaEngine implements PlatformCallback, Runnable {
         return this.platform.createCanvasImp(width, height);
     }
 
+    TypefaceImp createTypefaceImp(final String path) {
+        if (path == null) {
+            return EMPTY_TYPEFACE_IMP;
+        }
+
+        final TypefaceImp result = this.platform.createTypefaceImp(path);
+        if (result == null) {
+            return EMPTY_TYPEFACE_IMP;
+        }
+        else {
+            return result;
+        }
+    }
+
     ImageImp createImageImp(final String path) {
         if (path == null) {
             return this.defaultImageImp;
@@ -235,6 +251,16 @@ class JedaEngine implements PlatformCallback, Runnable {
 
     Properties getProperties() {
         return this.properties;
+    }
+
+    TypefaceImp getStandardTypefaceImp(final Platform.StandardTypeface standardTypeface) {
+        final TypefaceImp result = this.platform.getStandardTypefaceImp(standardTypeface);
+        if (result == null) {
+            return EMPTY_TYPEFACE_IMP;
+        }
+        else {
+            return result;
+        }
     }
 
     double getTickFrequency() {
@@ -414,6 +440,19 @@ class JedaEngine implements PlatformCallback, Runnable {
 
         @Override
         public void play() {
+        }
+    }
+
+    private static class EmptyTypefaceImp implements TypefaceImp {
+
+        @Override
+        public boolean isAvailable() {
+            return false;
+        }
+
+        @Override
+        public String getName() {
+            return "";
         }
     }
 }

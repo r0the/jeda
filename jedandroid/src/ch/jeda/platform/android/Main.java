@@ -35,6 +35,7 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.SoundImp;
+import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.WindowFeature;
 import java.io.InputStream;
@@ -98,7 +99,7 @@ public final class Main extends FragmentActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Log.d("Jeda", "onRestoreInstanceState");
     }
@@ -111,7 +112,7 @@ public final class Main extends FragmentActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d("Jeda", "onSaveInstanceState");
     }
@@ -135,7 +136,11 @@ public final class Main extends FragmentActivity {
         return this.audioManager.createSoundImp(path);
     }
 
-    public AudioManagerImp getAudioManagerImp() {
+    TypefaceImp createTypefaceImp(final String path) {
+        return this.resourceManager.openTypeface(path);
+    }
+
+    AudioManagerImp getAudioManagerImp() {
         return this.audioManager;
     }
 
@@ -143,7 +148,7 @@ public final class Main extends FragmentActivity {
         return this.sensorManager.isAvailable(sensorType);
     }
 
-    public boolean isSensorEnabled(final SensorType sensorType) {
+    boolean isSensorEnabled(final SensorType sensorType) {
         return this.sensorManager.isEnabled(sensorType);
     }
 
@@ -164,7 +169,7 @@ public final class Main extends FragmentActivity {
         return this.resourceManager.openInputStream(path);
     }
 
-    public void setSensorEnabled(final SensorType sensorType, boolean enabled) {
+    void setSensorEnabled(final SensorType sensorType, final boolean enabled) {
         this.sensorManager.setEnabled(sensorType, enabled);
     }
 

@@ -19,6 +19,7 @@ package ch.jeda.platform.java;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.Transformation;
+import ch.jeda.platform.TypefaceImp;
 import ch.jeda.ui.Color;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -62,7 +63,6 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void copyFrom(final int x, final int y, final CanvasImp source) {
-        assert source != null;
         assert source instanceof JavaCanvasImp;
 
         this.graphics.drawImage(((JavaCanvasImp) source).buffer, x, y, null);
@@ -78,7 +78,6 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void drawImage(final int x, final int y, final ImageImp image, final int alpha) {
-        assert image != null;
         assert image instanceof JavaImageImp;
         assert 0 < alpha && alpha <= 255;
 
@@ -192,6 +191,13 @@ class JavaCanvasImp implements CanvasImp {
         assert color != null;
 
         this.graphics.setColor(new java.awt.Color(color.getValue(), true));
+    }
+
+    @Override
+    public void setTypeface(final TypefaceImp font) {
+        assert font instanceof JavaTypefaceImp;
+
+        this.graphics.setFont(((JavaTypefaceImp) font).font.deriveFont(this.graphics.getFont().getSize2D()));
     }
 
     @Override

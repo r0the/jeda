@@ -34,8 +34,7 @@ import java.util.Stack;
  * {@link #setLineWidth(double)}.
  * <li> <b>font size</b>: the size of the font used to render text. Initially, the font size is 16. The font size can be
  * changed with {@link #setFontSize(int)}.
- * <li> <b>transformation</b>: The canvas has an affine transformation that is applied to all drawing operations. The
- * default transformation is the identity.
+ * <li> <b>typeface</b>: The typeface (font family) used to render text.
  * </ul>
  * <strong>Example:</strong>
  * <pre><code> Canvas canvas = new Canvas(100, 100);
@@ -43,6 +42,7 @@ import java.util.Stack;
  * canvas.fillCircle(50, 50, 20);</code></pre>
  *
  * @since 1.0
+ * @version 2
  */
 public class Canvas {
 
@@ -54,6 +54,7 @@ public class Canvas {
     private CanvasImp imp;
     private double lineWidth;
     private Transformation transformation;
+    private Typeface typeface;
 
     /**
      * Constructs a drawing surface. The drawing surface has the specified width and height. A drawing surface
@@ -80,6 +81,7 @@ public class Canvas {
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
         this.transformation = new Transformation();
+        this.typeface = Typeface.SANS_SERIF;
         this.setImp(JedaInternal.createCanvasImp(width, height));
     }
 
@@ -767,6 +769,18 @@ public class Canvas {
     }
 
     /**
+     * Returns the typeface used by the canvas.
+     *
+     * @return the typeface used by the canvas
+     *
+     * @see #setTypeface(ch.jeda.ui.Typeface)
+     * @since 1.3
+     */
+    public Typeface getTypeface() {
+        return this.typeface;
+    }
+
+    /**
      * Returns the width of the canvas in pixels.
      *
      * @return width of canvas
@@ -899,6 +913,30 @@ public class Canvas {
     }
 
     /**
+     * Sets the typeface to be used to draw text.
+     *
+     * @param typeface the typeface to be used to draw text
+     * @throws NullPointerException if <tt>typeface</tt> is <tt>null</tt>
+     * @throws IllegalArgumentException if <tt>typeface.isAvailable()</tt> is <tt>false</tt>
+     *
+     * @since 1.3
+     */
+    public void setTypeface(final Typeface typeface) {
+        if (typeface == null) {
+            throw new NullPointerException("typeface");
+        }
+
+        if (!typeface.isAvailable()) {
+            throw new IllegalArgumentException("typeface");
+        }
+
+        if (!this.typeface.equals(typeface)) {
+            this.typeface = typeface;
+            this.imp.setTypeface(this.typeface.imp);
+        }
+    }
+
+    /**
      * Takes a snapshot of the canvas. Creates an image that contains a copy of the contents of the canvas.
      *
      * @return image containing a copy of the canvas
@@ -951,6 +989,7 @@ public class Canvas {
         this.color = DEFAULT_FOREGROUND;
         this.fontSize = DEFAULT_FONT_SIZE;
         this.transformation = new Transformation();
+        this.typeface = Typeface.SANS_SERIF;
     }
 
     final void setImp(final CanvasImp imp) {
@@ -960,6 +999,7 @@ public class Canvas {
         this.imp.setFontSize(this.fontSize);
         this.imp.setLineWidth(this.lineWidth);
         this.imp.setTransformation(this.transformation);
+        this.imp.setTypeface(this.typeface.imp);
     }
 
     private boolean contains(final int x, final int y) {

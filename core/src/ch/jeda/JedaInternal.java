@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,9 @@
 package ch.jeda;
 
 import ch.jeda.platform.CanvasImp;
+import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
+import ch.jeda.platform.Platform;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.WindowFeature;
 import java.util.EnumSet;
@@ -37,6 +39,13 @@ public class JedaInternal {
     /**
      * <b>Internal</b>. Do not use this method.
      */
+    public static TypefaceImp createTypefaceImp(final String path) {
+        return Jeda.createTypefaceImp(path);
+    }
+
+    /**
+     * <b>Internal</b>. Do not use this method.
+     */
     public static ImageImp createImageImp(final String path) {
         return Jeda.createImageImp(path);
     }
@@ -46,5 +55,12 @@ public class JedaInternal {
      */
     public static WindowImp createWindowImp(final int width, final int height, final EnumSet<WindowFeature> features) {
         return Jeda.createWindowImp(width, height, features);
+    }
+
+    /**
+     * <b>Internal</b>. Do not use this method.
+     */
+    public static TypefaceImp getStandardTypefaceImp(final Platform.StandardTypeface standardTypeface) {
+        return Jeda.getStandardTypefaceImp(standardTypeface);
     }
 }

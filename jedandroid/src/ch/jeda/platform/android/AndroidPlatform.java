@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.android;
 
+import android.graphics.Typeface;
 import android.view.WindowManager;
 import ch.jeda.LogLevel;
 import ch.jeda.event.SensorType;
@@ -24,9 +25,13 @@ import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
+import static ch.jeda.platform.Platform.StandardTypeface.MONOSPACED;
+import static ch.jeda.platform.Platform.StandardTypeface.SANS_SERIF;
+import static ch.jeda.platform.Platform.StandardTypeface.SERIF;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.SoundImp;
+import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.WindowRequest;
 import java.io.InputStream;
 
@@ -65,8 +70,18 @@ class AndroidPlatform implements Platform {
     }
 
     @Override
+    public TypefaceImp createTypefaceImp(final String path) {
+        return Main.getInstance().createTypefaceImp(path);
+    }
+
+    @Override
     public AudioManagerImp getAudioManagerImp() {
         return Main.getInstance().getAudioManagerImp();
+    }
+
+    @Override
+    public TypefaceImp getStandardTypefaceImp(StandardTypeface standardTypeface) {
+        return new AndroidTypefaceImp(lookupStandardTypeface(standardTypeface));
     }
 
     @Override
@@ -125,5 +140,18 @@ class AndroidPlatform implements Platform {
 
     void onResume() {
         this.callback.resume();
+    }
+
+    private static Typeface lookupStandardTypeface(final Platform.StandardTypeface standardTypeface) {
+        switch (standardTypeface) {
+            case MONOSPACED:
+                return Typeface.MONOSPACE;
+            case SANS_SERIF:
+                return Typeface.SANS_SERIF;
+            case SERIF:
+                return Typeface.SERIF;
+            default:
+                return null;
+        }
     }
 }

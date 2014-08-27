@@ -19,8 +19,10 @@ package ch.jeda;
 import ch.jeda.event.SensorType;
 import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
+import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
+import ch.jeda.platform.Platform;
 import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.WindowFeature;
@@ -259,6 +261,10 @@ public class Jeda {
         return ENGINE.createCanvasImp(width, height);
     }
 
+    static TypefaceImp createTypefaceImp(final String path) {
+        return ENGINE.createTypefaceImp(path);
+    }
+
     static ImageImp createImageImp(final String path) {
         return ENGINE.createImageImp(path);
     }
@@ -273,6 +279,10 @@ public class Jeda {
 
     static AudioManager getAudioManager() {
         return ENGINE.getAudioManager();
+    }
+
+    static TypefaceImp getStandardTypefaceImp(final Platform.StandardTypeface standardTypeface) {
+        return ENGINE.getStandardTypefaceImp(standardTypeface);
     }
 
     static void log(final LogLevel logLevel, final String message) {

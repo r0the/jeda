@@ -18,8 +18,10 @@ package ch.jeda.platform.android;
 
 import android.app.Activity;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import ch.jeda.Log;
 import ch.jeda.platform.ImageImp;
+import ch.jeda.platform.TypefaceImp;
 import dalvik.system.DexFile;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -67,8 +69,8 @@ class ResourceManager {
         return (Class[]) result.toArray(new Class[result.size()]);
     }
 
-    ImageImp openImage(final String filePath) {
-        final InputStream in = openInputStream(filePath);
+    ImageImp openImage(final String path) {
+        final InputStream in = this.openInputStream(path);
         if (in == null) {
             return null;
         }
@@ -76,7 +78,7 @@ class ResourceManager {
             return new AndroidImageImp(BitmapFactory.decodeStream(in));
         }
         catch (final Exception ex) {
-            Log.err(ex, "jeda.image.error.read", new Object[]{filePath});
+            Log.err(ex, "jeda.image.error.read", new Object[]{path});
             return null;
         }
         finally {
@@ -88,21 +90,37 @@ class ResourceManager {
         }
     }
 
-    InputStream openInputStream(final String filePath) {
-        if (filePath == null) {
+    TypefaceImp openTypeface(final String path) {
+        try {
+            if (path.startsWith(NEW_RESOURCE_PREFIX)) {
+                return new AndroidTypefaceImp(Typeface.createFromAsset(this.activity.getResources().getAssets(),
+                                                                       path.substring(NEW_RESOURCE_PREFIX.length())));
+
+            }
+            else {
+                return new AndroidTypefaceImp(Typeface.createFromFile(path));
+            }
+        }
+        catch (final RuntimeException ex) {
+            return null;
+        }
+    }
+
+    InputStream openInputStream(final String path) {
+        if (path == null) {
             throw new NullPointerException("filePath");
         }
-        else if (filePath.startsWith(NEW_RESOURCE_PREFIX)) {
-            return openResourceInputStream(filePath, NEW_RESOURCE_PREFIX.length());
+        else if (path.startsWith(NEW_RESOURCE_PREFIX)) {
+            return this.openResourceInputStream(path, NEW_RESOURCE_PREFIX.length());
         }
-        else if (filePath.startsWith(OLD_RESOURCE_PREFIX)) {
-            return openResourceInputStream(filePath, OLD_RESOURCE_PREFIX.length());
+        else if (path.startsWith(OLD_RESOURCE_PREFIX)) {
+            return this.openResourceInputStream(path, OLD_RESOURCE_PREFIX.length());
         }
-        else if (filePath.startsWith(HTTP_PREFIX)) {
-            return openRemoteInputStream(filePath);
+        else if (path.startsWith(HTTP_PREFIX)) {
+            return this.openRemoteInputStream(path);
         }
         else {
-            return openFileInputStream(filePath);
+            return this.openFileInputStream(path);
         }
     }
 

@@ -17,7 +17,9 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Log;
+import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
+import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,6 +43,28 @@ class ResourceManager {
     static Class<?>[] loadClasses()
         throws Exception {
         return RESOURCE_FINDER.loadClasses();
+    }
+
+    static TypefaceImp loadFont(final String path) {
+        final InputStream in = openInputStream(path);
+        if (in == null) {
+            return null;
+        }
+
+        try {
+            return new JavaTypefaceImp(Font.createFont(Font.TRUETYPE_FONT, in));
+        }
+        catch (Exception ex) {
+            Log.err(ex, "jeda.font.error.read", path);
+            return null;
+        }
+        finally {
+            try {
+                in.close();
+            }
+            catch (IOException ex) {
+            }
+        }
     }
 
     static ImageImp loadImage(final String path) {

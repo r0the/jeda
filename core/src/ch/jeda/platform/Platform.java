@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,13 +25,22 @@ import java.io.InputStream;
  */
 public interface Platform {
 
+    enum StandardTypeface {
+
+        MONOSPACED, SANS_SERIF, SERIF
+    }
+
     CanvasImp createCanvasImp(int width, int height);
+
+    TypefaceImp createTypefaceImp(String path);
 
     ImageImp createImageImp(String path);
 
     SoundImp createSoundImp(String path);
 
     AudioManagerImp getAudioManagerImp();
+
+    TypefaceImp getStandardTypefaceImp(final StandardTypeface standardTypeface);
 
     boolean isSensorAvailable(SensorType sensorType);
 
