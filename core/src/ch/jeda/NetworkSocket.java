@@ -175,14 +175,14 @@ public final class NetworkSocket {
      * @since 1.2
      */
     public Data receiveData() {
-        final Data result = new Data();
         synchronized (this.lock) {
             if (this.socket != null) {
-                result.loadFromLine(this.receiveLine());
+                return new Data(this.receiveLine());
+            }
+            else {
+                return new Data();
             }
         }
-
-        return result;
     }
 
     /**

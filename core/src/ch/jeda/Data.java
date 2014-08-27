@@ -49,6 +49,24 @@ public final class Data {
         this(new DefaultDataImp());
     }
 
+    /**
+     * Construct a data object from a string.
+     *
+     * @param string the string
+     *
+     * @since 1.3
+     */
+    public Data(final String string) {
+        this();
+        String[] entries = string.split(",");
+        for (final String entry : entries) {
+            String[] parts = entry.split("=");
+            if (parts.length == 2) {
+                this.imp.write(unescape(parts[0]), unescape(parts[1]));
+            }
+        }
+    }
+
     Data(final DataImp imp) {
         this.imp = imp;
     }
@@ -363,7 +381,6 @@ public final class Data {
      * {@link ch.jeda.Storable#readFrom(ch.jeda.Data)} method. Returns <tt>null</tt>, there is no valid object
      * associated with the name.
      *
-     *
      * @param <T> the class of the object to return
      * @param name the name of the object to retrieve
      * @return the {@link ch.jeda.Storable} object associated with the name or <tt>null</tt>
@@ -491,6 +508,28 @@ public final class Data {
                 this.imp.remove(candidate);
             }
         }
+    }
+
+    /**
+     * Serializes the data to a line of text.
+     *
+     * @return the serialized data as a line of text
+     *
+     * @since 1.3
+     */
+    public String toLine() {
+        final StringBuilder result = new StringBuilder();
+        for (final String name : this.imp.getNames()) {
+            if (result.length() > 0) {
+                result.append(',');
+            }
+
+            result.append(escape(name));
+            result.append('=');
+            result.append(escape(this.imp.read(name)));
+        }
+
+        return result.toString();
     }
 
     /**
@@ -758,31 +797,6 @@ public final class Data {
     @Override
     public String toString() {
         return this.toLine();
-    }
-
-    void loadFromLine(final String line) {
-        String[] entries = line.split(",");
-        for (final String entry : entries) {
-            String[] parts = entry.split("=");
-            if (parts.length == 2) {
-                this.imp.write(unescape(parts[0]), unescape(parts[1]));
-            }
-        }
-    }
-
-    String toLine() {
-        final StringBuilder result = new StringBuilder();
-        for (final String name : this.imp.getNames()) {
-            if (result.length() > 0) {
-                result.append(',');
-            }
-
-            result.append(escape(name));
-            result.append('=');
-            result.append(escape(this.imp.read(name)));
-        }
-
-        return result.toString();
     }
 
     private Data subData(final String namePrefix) {
