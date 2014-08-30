@@ -16,18 +16,19 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.event.ActionEvent;
 import ch.jeda.event.KeyDownListener;
 import ch.jeda.event.KeyEvent;
 import ch.jeda.event.KeyUpListener;
 import ch.jeda.event.Key;
-import ch.jeda.event.PointerEvent;
 import ch.jeda.event.PointerListener;
 import java.util.EnumSet;
 
 /**
  * @since 1.0
  */
-public abstract class AbstractButton extends GraphicsItem implements KeyDownListener, KeyUpListener, PointerListener {
+@Deprecated
+public abstract class AbstractButton extends Widget implements KeyDownListener, KeyUpListener, PointerListener {
 
     private final EnumSet<Key> keys;
     private final EnumSet<Key> pressedKeys;
@@ -38,7 +39,9 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
     /**
      * @since 1.0
      */
+    @Deprecated
     protected AbstractButton(final Window window, final String action) {
+        super(0, 0, Alignment.TOP_LEFT);
         this.action = action;
         this.keys = EnumSet.noneOf(Key.class);
         this.pressedKeys = EnumSet.noneOf(Key.class);
@@ -49,6 +52,7 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
     /**
      * @since 1.0
      */
+    @Deprecated
     public final void addKey(final Key key) {
         this.keys.add(key);
     }
@@ -56,15 +60,9 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
     /**
      * @since 1.0
      */
+    @Deprecated
     public final String getAction() {
         return this.action;
-    }
-
-    /**
-     * @since 1.0
-     */
-    public final boolean isPressed() {
-        return !this.pressedKeys.isEmpty() || pointerId != null;
     }
 
     @Override
@@ -77,44 +75,22 @@ public abstract class AbstractButton extends GraphicsItem implements KeyDownList
     @Override
     public final void onKeyUp(KeyEvent event) {
         if (this.pressedKeys.remove(event.getKey())) {
-            this.window.sendAction(this, this.action);
+            this.window.postEvent(new ActionEvent(this, this.action));
         }
     }
 
     /**
      * @since 1.0
      */
+    @Deprecated
     public final void removeKey(final Key key) {
         this.keys.remove(key);
     }
 
-    @Override
-    public final void onPointerDown(PointerEvent event) {
-        if (this.pointerId == null && contains(event.getX(), event.getY())) {
-            this.pointerId = event.getPointerId();
-        }
-    }
-
-    @Override
-    public final void onPointerMoved(PointerEvent event) {
-        if (this.pointerId != null && event.getPointerId() == this.pointerId && !contains(event.getX(), event.getY())) {
-            this.pointerId = null;
-        }
-    }
-
-    @Override
-    public final void onPointerUp(PointerEvent event) {
-        if (this.pointerId != null && event.getPointerId() == this.pointerId) {
-            this.pointerId = null;
-            if (this.contains(event.getX(), event.getY())) {
-                this.window.sendAction(this, this.action);
-            }
-        }
-    }
-
     /**
      * @since 1.0
      */
+    @Deprecated
     public final void setAction(final String action) {
         this.action = action;
     }

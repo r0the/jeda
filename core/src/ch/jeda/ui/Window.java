@@ -18,6 +18,7 @@ package ch.jeda.ui;
 
 import ch.jeda.Jeda;
 import ch.jeda.JedaInternal;
+import ch.jeda.event.Event;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
 import ch.jeda.platform.WindowImp;
@@ -246,8 +247,8 @@ public class Window extends Canvas {
         }
 
         if (IMP_CHANGING_FEATURES.contains(feature)) {
-            final EnumSet<WindowFeature> featureSet =
-                EnumSet.copyOf(this.imp.getFeatures());
+            final EnumSet<WindowFeature> featureSet
+                                         = EnumSet.copyOf(this.imp.getFeatures());
             if (enabled) {
                 featureSet.add(feature);
             }
@@ -298,8 +299,8 @@ public class Window extends Canvas {
         this.imp.setTitle(title);
     }
 
-    void sendAction(final Object source, final String name) {
-        this.eventDispatcher.addAction(source, name);
+    void postEvent(final Event event) {
+        this.eventDispatcher.addEvent(event);
     }
 
     private void tick(final TickEvent event) {

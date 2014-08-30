@@ -16,33 +16,97 @@
  */
 package ch.jeda.ui;
 
-/**
- * @since 1.0
- */
-public class Button extends AbstractButton {
+import ch.jeda.event.ActionEvent;
+import ch.jeda.event.EventType;
+import ch.jeda.event.Key;
+import ch.jeda.event.KeyDownListener;
+import ch.jeda.event.KeyEvent;
+import ch.jeda.event.KeyUpListener;
+import ch.jeda.event.PointerEvent;
+import ch.jeda.event.PointerListener;
 
-    private static Color BG_NORMAL_COLOR = new Color(230, 230, 230);
-    private static Color BG_PRESSED_COLOR = new Color(130, 130, 130);
-    private static Color BORDER_COLOR = new Color(90, 90, 90);
-    private static Color TEXT_COLOR = new Color(0, 0, 0);
-    private int height;
+/**
+ * Represents a button. A button is a {@link ch.jeda.ui.Widget} that allows the user to trigger an action by clicking on
+ * it.
+ *
+ * @since 1.0
+ * @version 2
+ */
+public class Button extends Widget implements KeyDownListener, KeyUpListener, PointerListener {
+
+    private Key key;
+    private boolean keyPressed;
+    private Integer pointerId;
+    private ButtonStyle style;
     private String text;
-    private int width;
-    private int x;
-    private int y;
 
     /**
-     * @since 1.0
+     * Constructs a button at the specified position.
+     *
+     * @param x the x coordinate of the button
+     * @param y the y coordinate of the button
+     *
+     * @since 1.3
      */
-    public Button(final Window window, final String action) {
-        super(window, action);
-        window.add(this);
-        this.width = 100;
-        this.height = 50;
-        this.setDrawOrder(Integer.MAX_VALUE);
+    public Button(final int x, final int y) {
+        this(x, y, Alignment.TOP_LEFT, null);
     }
 
     /**
+     * Constructs a button at the specified position with the specified alignment.
+     *
+     * @param x the x coordinate of the button
+     * @param y the y coordinate of the button
+     * @param alignment the alignment of the button
+     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     *
+     * @since 1.3
+     */
+    public Button(final int x, final int y, final Alignment alignment) {
+        this(x, y, alignment, null);
+    }
+
+    /**
+     * Constructs a button at the specified position with the specified text.
+     *
+     * @param x the x coordinate of the button
+     * @param y the y coordinate of the button
+     * @param text the button text
+     *
+     * @since 1.3
+     */
+    public Button(final int x, final int y, final String text) {
+        this(x, y, Alignment.TOP_LEFT, text);
+    }
+
+    /**
+     * Constructs a button at the specified position with the specified alignment and text.
+     *
+     * @param x the x coordinate of the button
+     * @param y the y coordinate of the button
+     * @param alignment the alignment of the button
+     * @param text the button text
+     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     *
+     * @since 1.3
+     */
+    public Button(final int x, final int y, final Alignment alignment, final String text) {
+        super(x, y, alignment);
+        this.key = Key.UNDEFINED;
+        this.style = Theme.getDefault().getDefaultButtonStyle();
+        this.text = text;
+    }
+
+    /**
+     * @deprecated Use <tt>window.add(new Button(0, 0, action))</tt> instead.
+     * @since 1.0
+     */
+    public Button(final Window window, final String action) {
+        this(window, 0, 0, action);
+    }
+
+    /**
+     * @deprecated Use <tt>window.add(new Button(x, y, text))</tt> instead.
      * @since 1.0
      */
     public Button(final Window window, final int x, final int y, final String text) {
@@ -50,54 +114,189 @@ public class Button extends AbstractButton {
     }
 
     /**
+     * @deprecated Use <tt>window.add(new Button(x, y, text, alignment))</tt> instead.
      * @since 1.0
      */
     public Button(final Window window, final int x, final int y, final String text, final Alignment alignment) {
-        this(window, text);
+        this(x, y, alignment, text);
         window.add(this);
-        this.x = alignment.alignX(x, this.width);
-        this.y = alignment.alignY(y, this.height);
-        this.text = text;
     }
 
     @Override
-    protected boolean contains(final int x, final int y) {
-        return this.x <= x && x < this.x + this.width &&
-               this.y <= y && y < this.y + this.height;
+    public final boolean contains(final int x, final int y) {
+        return this.style.contains(this, x, y);
+    }
 
+    @Override
+    public final int getHeight() {
+        return this.style.getHeight(this);
     }
 
     /**
+     * Returns the key associated with the button.
+     *
+     * @return the key associated with the button
+     *
+     * @see #setKey(ch.jeda.event.Key)
+     * @since 1.3
+     */
+    public Key getKey() {
+        return this.key;
+    }
+
+    /**
+     * Returns the current style of the button.
+     *
+     * @return the current style of the button
+     *
+     * @see #setStyle(ch.jeda.ui.ButtonStyle)
+     * @since 1.3
+     */
+    public final ButtonStyle getStyle() {
+        return this.style;
+    }
+
+    /**
+     * Returns the button text.
+     *
+     * @return the button text
+     *
      * @since 1.0
      */
-    public String getText() {
+    public final String getText() {
         return this.text;
     }
 
     @Override
-    public void draw(final Canvas canvas) {
-        if (this.text == null || this.text.isEmpty()) {
-            return;
-        }
-
-        if (this.isPressed()) {
-            canvas.setColor(BG_PRESSED_COLOR);
-        }
-        else {
-            canvas.setColor(BG_NORMAL_COLOR);
-        }
-
-        canvas.fillRectangle(this.x, this.y, this.width, this.height);
-        canvas.setColor(BORDER_COLOR);
-        canvas.drawRectangle(this.x, this.y, this.width, this.height);
-        canvas.setColor(TEXT_COLOR);
-        canvas.drawText(this.x + this.width / 2, this.y + this.height / 2, text, Alignment.CENTER);
+    public final int getWidth() {
+        return this.style.getWidth(this);
     }
 
     /**
+     * Checks if the widget is currently pressed.
+     *
+     * @return <tt>true</tt> if the widget is currently pressed, otherwise <tt>false</tt>
+     *
+     * @since 1.3
+     */
+    public final boolean isPressed() {
+        return this.keyPressed || this.pointerId != null;
+    }
+
+    @Override
+    public void onKeyDown(final KeyEvent event) {
+        if (Key.UNDEFINED != this.key && event.getKey() == this.key && event.getSource() != this && !this.keyPressed) {
+            this.keyPressed = true;
+            this.select();
+        }
+    }
+
+    @Override
+    public void onKeyUp(final KeyEvent event) {
+        if (Key.UNDEFINED != this.key && event.getKey() == this.key && event.getSource() != this && this.keyPressed) {
+            this.keyPressed = false;
+            this.clicked();
+        }
+    }
+
+    @Override
+    public void onPointerDown(final PointerEvent event) {
+        if (this.pointerId == null && contains(event.getX(), event.getY())) {
+            this.pointerId = event.getPointerId();
+            this.select();
+            this.sendKeyEvent(EventType.KEY_DOWN);
+        }
+    }
+
+    @Override
+    public void onPointerMoved(final PointerEvent event) {
+        if (this.pointerId != null && event.getPointerId() == this.pointerId) {
+            if (!contains(event.getX(), event.getY())) {
+                this.pointerId = null;
+                this.sendKeyEvent(EventType.KEY_UP);
+            }
+        }
+    }
+
+    @Override
+    public void onPointerUp(final PointerEvent event) {
+        if (this.pointerId != null && event.getPointerId() == this.pointerId) {
+            this.pointerId = null;
+            this.sendKeyEvent(EventType.KEY_UP);
+            if (this.contains(event.getX(), event.getY())) {
+                this.clicked();
+            }
+        }
+    }
+
+    /**
+     * Associates a key with the button. Associating a key with the button makes the button a virtual copy of the key:
+     * The button will be pressed and released synchronously with the key. Pressing and releasing the button will
+     * generate the corresponding key events.
+     *
+     * @param key the key to associate with the button.
+     * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>
+     *
+     * @see #getKey()
+     * @since 1.3
+     */
+    public void setKey(final Key key) {
+        if (key == null) {
+            throw new NullPointerException("key");
+        }
+
+        this.key = key;
+    }
+
+    /**
+     * Set the specified style for the button.
+     *
+     * @param style the style
+     * @throws NullPointerException if <tt>style</tt> is <tt>null</tt>
+     *
+     * @since 1.3
+     */
+    public final void setStyle(final ButtonStyle style) {
+        if (style == null) {
+            throw new NullPointerException("style");
+        }
+
+        this.style = style;
+    }
+
+    /**
+     * Sets the display text of the button
+     *
+     * @param text the display text of the button
+     *
+     * @see #getText()
      * @since 1.0
      */
-    public void setText(final String text) {
+    public final void setText(final String text) {
         this.text = text;
+    }
+
+    /**
+     * This method is called when the user has clicked the button. Override this method to add behaviour.
+     *
+     * @since 1.3
+     */
+    protected void clicked() {
+        final Window window = this.getWindow();
+        if (window != null) {
+            window.postEvent(new ActionEvent(this, this.text));
+        }
+    }
+
+    @Override
+    protected void draw(final Canvas canvas) {
+        this.style.draw(this, canvas);
+    }
+
+    private void sendKeyEvent(final EventType eventType) {
+        final Window window = this.getWindow();
+        if (this.key != Key.UNDEFINED && window != null) {
+            window.postEvent(new KeyEvent(this, eventType, this.key));
+        }
     }
 }

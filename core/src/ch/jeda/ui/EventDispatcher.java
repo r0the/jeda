@@ -41,7 +41,7 @@ import java.util.Set;
 
 class EventDispatcher {
 
-    private final List<ActionEvent> actionEvents;
+    private final List<Event> events;
     private final List<ActionListener> actionListeners;
     private final List<KeyDownListener> keyDownListeners;
     private final List<KeyTypedListener> keyTypedListeners;
@@ -57,7 +57,7 @@ class EventDispatcher {
     private final List<TurnListener> turnListeners;
 
     EventDispatcher() {
-        this.actionEvents = new ArrayList<ActionEvent>();
+        this.events = new ArrayList<Event>();
         this.actionListeners = new ArrayList<ActionListener>();
         this.keyDownListeners = new ArrayList<KeyDownListener>();
         this.keyTypedListeners = new ArrayList<KeyTypedListener>();
@@ -73,8 +73,8 @@ class EventDispatcher {
         this.turnListeners = new ArrayList<TurnListener>();
     }
 
-    void addAction(final Object source, final String action) {
-        this.actionEvents.add(new ActionEvent(source, action));
+    void addEvent(final Event event) {
+        this.events.add(event);
     }
 
     final void addListener(final Object listener) {
@@ -110,112 +110,9 @@ class EventDispatcher {
 
         this.pendingDeletions.clear();
         this.pendingInsertions.clear();
-        for (int i = 0; i < events.length; ++i) {
-            final Event event = events[i];
-            switch (event.getType()) {
-                case KEY_DOWN:
-                    for (int j = 0; j < this.keyDownListeners.size(); ++j) {
-                        try {
-                            this.keyDownListeners.get(j).onKeyDown((KeyEvent) event);
-                        }
-                        catch (final Throwable ex) {
-                            Log.err(ex, "jeda.event.error");
-                        }
-                    }
-
-                    break;
-                case KEY_TYPED:
-                    for (int j = 0; j < this.keyTypedListeners.size(); ++j) {
-                        try {
-                            this.keyTypedListeners.get(j).onKeyTyped((KeyEvent) event);
-                        }
-                        catch (final Throwable ex) {
-                            Log.err(ex, "jeda.event.error");
-                        }
-                    }
-
-                    break;
-                case KEY_UP:
-                    for (int j = 0; j < this.keyUpListeners.size(); ++j) {
-                        try {
-                            this.keyUpListeners.get(j).onKeyUp((KeyEvent) event);
-                        }
-                        catch (final Throwable ex) {
-                            Log.err(ex, "jeda.event.error");
-                        }
-                    }
-
-                    break;
-                case POINTER_DOWN:
-                    for (int j = 0; j < this.pointerDownListeners.size(); ++j) {
-                        try {
-                            this.pointerDownListeners.get(j).onPointerDown((PointerEvent) event);
-                        }
-                        catch (final Throwable ex) {
-                            Log.err(ex, "jeda.event.error");
-                        }
-                    }
-
-                    break;
-                case POINTER_MOVED:
-                    for (int j = 0; j < this.pointerMovedListeners.size(); ++j) {
-                        try {
-                            this.pointerMovedListeners.get(j).onPointerMoved((PointerEvent) event);
-                        }
-                        catch (final Throwable ex) {
-                            Log.err(ex, "jeda.event.error");
-                        }
-                    }
-
-                    break;
-                case POINTER_UP:
-                    for (int j = 0; j < this.pointerUpListeners.size(); ++j) {
-                        try {
-                            this.pointerUpListeners.get(j).onPointerUp((PointerEvent) event);
-                        }
-                        catch (final Throwable ex) {
-                            Log.err(ex, "jeda.event.error");
-                        }
-                    }
-
-                    break;
-                case SENSOR:
-                    for (int j = 0; j < this.sensorListeners.size(); ++j) {
-                        try {
-                            this.sensorListeners.get(j).onSensorChanged((SensorEvent) event);
-                        }
-                        catch (final Throwable ex) {
-                            Log.err(ex, "jeda.event.error");
-                        }
-                    }
-
-                    break;
-                case TURN:
-                    for (int j = 0; j < this.turnListeners.size(); ++j) {
-                        try {
-                            this.turnListeners.get(j).onTurn((TurnEvent) event);
-                        }
-                        catch (final Throwable ex) {
-                            Log.err(ex, "jeda.event.error");
-                        }
-                    }
-
-                    break;
-            }
-        }
-
-        for (int i = 0; i < this.actionEvents.size(); ++i) {
-            for (int j = 0; j < this.actionListeners.size(); ++j) {
-                try {
-                    this.actionListeners.get(j).onAction(this.actionEvents.get(i));
-                }
-                catch (final Throwable ex) {
-                    Log.err(ex, "jeda.event.error");
-                }
-            }
-        }
-
-        this.actionEvents.clear();
+        this.doDispatchEvents(events);
+        this.doDispatchEvents(this.events.toArray(new Event[this.events.size()]));
+        this.events.clear();
     }
 
     final void removeListener(final Object listener) {
@@ -226,6 +123,116 @@ class EventDispatcher {
             else if (!this.pendingDeletions.contains(listener)) {
                 this.pendingDeletions.add(listener);
             }
+        }
+    }
+
+    private void doDispatchEvents(final Event[] events) {
+        for (int i = 0; i < events.length; ++i) {
+            this.dispatchEvent(events[i]);
+        }
+    }
+
+    private void dispatchEvent(final Event event) {
+        switch (event.getType()) {
+            case ACTION:
+                for (int j = 0; j < this.actionListeners.size(); ++j) {
+                    try {
+                        this.actionListeners.get(j).onAction((ActionEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
+            case KEY_DOWN:
+                for (int j = 0; j < this.keyDownListeners.size(); ++j) {
+                    try {
+                        this.keyDownListeners.get(j).onKeyDown((KeyEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
+            case KEY_TYPED:
+                for (int j = 0; j < this.keyTypedListeners.size(); ++j) {
+                    try {
+                        this.keyTypedListeners.get(j).onKeyTyped((KeyEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
+            case KEY_UP:
+                for (int j = 0; j < this.keyUpListeners.size(); ++j) {
+                    try {
+                        this.keyUpListeners.get(j).onKeyUp((KeyEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
+            case POINTER_DOWN:
+                for (int j = 0; j < this.pointerDownListeners.size(); ++j) {
+                    try {
+                        this.pointerDownListeners.get(j).onPointerDown((PointerEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
+            case POINTER_MOVED:
+                for (int j = 0; j < this.pointerMovedListeners.size(); ++j) {
+                    try {
+                        this.pointerMovedListeners.get(j).onPointerMoved((PointerEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
+            case POINTER_UP:
+                for (int j = 0; j < this.pointerUpListeners.size(); ++j) {
+                    try {
+                        this.pointerUpListeners.get(j).onPointerUp((PointerEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
+            case SENSOR:
+                for (int j = 0; j < this.sensorListeners.size(); ++j) {
+                    try {
+                        this.sensorListeners.get(j).onSensorChanged((SensorEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
+            case TURN:
+                for (int j = 0; j < this.turnListeners.size(); ++j) {
+                    try {
+                        this.turnListeners.get(j).onTurn((TurnEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
         }
     }
 

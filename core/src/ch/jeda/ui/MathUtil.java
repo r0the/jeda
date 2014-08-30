@@ -20,6 +20,18 @@ class MathUtil {
 
     static final double TWO_PI = 2 * Math.PI;
 
+    static int signum(final int value) {
+        if (value > 0) {
+            return 1;
+        }
+        else if (value < 0) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
+    }
+
     static boolean isZero(final double value, final double threshold) {
         return Math.abs(value) < threshold;
     }
