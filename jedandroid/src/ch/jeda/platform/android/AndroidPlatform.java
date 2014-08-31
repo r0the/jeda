@@ -95,6 +95,11 @@ class AndroidPlatform implements Platform {
     }
 
     @Override
+    public boolean isVirtualKeyboardVisible() {
+        return Main.getInstance().isVirtualKeyboardVisible();
+    }
+
+    @Override
     public Class<?>[] loadClasses() throws Exception {
         return Main.getInstance().loadClasses();
     }
@@ -112,6 +117,11 @@ class AndroidPlatform implements Platform {
     @Override
     public void setSensorEnabled(final SensorType sensorType, boolean enabled) {
         Main.getInstance().setSensorEnabled(sensorType, enabled);
+    }
+
+    @Override
+    public void setVirtualKeyboardVisible(final boolean visible) {
+        Main.getInstance().setVirtualKeyboardVisible(visible);
     }
 
     @Override

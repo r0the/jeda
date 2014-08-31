@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.android;
 
+import android.app.Service;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Surface;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.view.inputmethod.InputMethodManager;
 import ch.jeda.Jeda;
 import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
@@ -48,6 +49,7 @@ public final class Main extends FragmentActivity {
     private final LogFragment logFragment;
     private final ResourceManager resourceManager;
     private final SensorManager sensorManager;
+    private JedaView contentView;
     private CanvasFragment topWindow;
 
     static Main getInstance() {
@@ -71,11 +73,11 @@ public final class Main extends FragmentActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final RelativeLayout layout = new RelativeLayout(this);
-        layout.setId(CONTENT_ID);
-        setContentView(layout, new ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.FILL_PARENT,
-            ViewGroup.LayoutParams.FILL_PARENT));
+        this.contentView = new JedaView(this);
+        this.contentView.setId(CONTENT_ID);
+        setContentView(this.contentView, new ViewGroup.LayoutParams(
+                       ViewGroup.LayoutParams.FILL_PARENT,
+                       ViewGroup.LayoutParams.FILL_PARENT));
         Log.d("Jeda", "onCreate");
         if (savedInstanceState == null) {
             this.addManager(this.audioManager, "AudioManager");
@@ -152,6 +154,10 @@ public final class Main extends FragmentActivity {
         return this.sensorManager.isEnabled(sensorType);
     }
 
+    boolean isVirtualKeyboardVisible() {
+        return this.getInputMethodManager().isActive();
+    }
+
     Class<?>[] loadClasses() throws Exception {
         return this.resourceManager.loadClasses();
     }
@@ -171,6 +177,17 @@ public final class Main extends FragmentActivity {
 
     void setSensorEnabled(final SensorType sensorType, final boolean enabled) {
         this.sensorManager.setEnabled(sensorType, enabled);
+    }
+
+    void setVirtualKeyboardVisible(final boolean visible) {
+        if (visible) {
+            Log.d("Jeda", "Showing virtual keyboard on " + this.contentView.getClass());
+            this.getInputMethodManager().showSoftInput(this.contentView, InputMethodManager.SHOW_FORCED);
+        }
+        else {
+            Log.d("Jeda", "Hiding virtual keyboard.");
+            this.getInputMethodManager().hideSoftInputFromWindow(this.contentView.getWindowToken(), 0);
+        }
     }
 
     void showInputRequest(final InputRequest inputRequest) {
@@ -244,6 +261,10 @@ public final class Main extends FragmentActivity {
         Log.d("Jeda", "Setting screen orientation to " + orientation);
         this.setRequestedOrientation(orientation);
         this.showFragment(this.topWindow);
+    }
+
+    private InputMethodManager getInputMethodManager() {
+        return (InputMethodManager) this.getSystemService(Service.INPUT_METHOD_SERVICE);
     }
 
     private void showFragment(final Fragment fragment) {

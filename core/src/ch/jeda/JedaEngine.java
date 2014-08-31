@@ -275,6 +275,10 @@ class JedaEngine implements PlatformCallback, Runnable {
         return this.platform.isSensorEnabled(sensorType);
     }
 
+    boolean isVirtualKeyboardVisible() {
+        return this.platform.isVirtualKeyboardVisible();
+    }
+
     void log(final LogLevel logLevel, final String message) {
         if (this.platform == null) {
             System.err.print(message);
@@ -315,6 +319,10 @@ class JedaEngine implements PlatformCallback, Runnable {
 
     void setTickFrequency(final double hertz) {
         this.timer.setTargetFrequency(hertz);
+    }
+
+    void setVirtualKeyboardVisible(final boolean visible) {
+        this.platform.setVirtualKeyboardVisible(visible);
     }
 
     void startProgram(final String programClassName) {

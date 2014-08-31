@@ -46,6 +46,8 @@ public interface Platform {
 
     boolean isSensorEnabled(SensorType sensorType);
 
+    boolean isVirtualKeyboardVisible();
+
     Class<?>[] loadClasses() throws Exception;
 
     void log(final LogLevel logLevel, final String message);
@@ -53,6 +55,8 @@ public interface Platform {
     InputStream openResource(String path);
 
     void setSensorEnabled(SensorType sensorType, boolean enabled);
+
+    void setVirtualKeyboardVisible(boolean visible);
 
     void showInputRequest(InputRequest inputRequest);
 

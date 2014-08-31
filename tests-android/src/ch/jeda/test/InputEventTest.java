@@ -7,15 +7,18 @@ import ch.jeda.ui.*;
 public class InputEventTest extends Program implements KeyListener,
                                                        KeyTypedListener,
                                                        PointerListener,
-                                                       TurnListener {
+                                                       TurnListener,
+                                                       ActionListener {
 
     Window window;
     int y;
+    boolean keyboard;
 
     @Override
     public void run() {
         window = new Window();
         reset();
+        window.add(new Button(10, 10, "Keyboard"));
         window.addEventListener(this);
     }
 
@@ -29,10 +32,16 @@ public class InputEventTest extends Program implements KeyListener,
     }
 
     void reset() {
-        y = 10;
+        y = 100;
         window.setColor(Color.WHITE);
         window.fill();
         window.setColor(Color.BLACK);
+    }
+
+    @Override
+    public void onAction(ActionEvent event) {
+        keyboard = !keyboard;
+        Jeda.setVirtualKeyboardVisible(keyboard);
     }
 
     @Override
@@ -81,7 +90,14 @@ public class InputEventTest extends Program implements KeyListener,
     }
 
     private String toMessage(KeyEvent event) {
-        return Convert.toString("type=", event.getType(), ", key=", event.getKey(), ", repeat=",
-                                event.getRepeatCount(), ", device=", event.getSource());
+        if (event.getKey() == Key.UNDEFINED) {
+            return Convert.toString("type=", event.getType(), ", char=", event.getKeyChar(), ", repeat=",
+                                    event.getRepeatCount(), ", device=", event.getSource());
+        }
+        else {
+            return Convert.toString("type=", event.getType(), ", key=", event.getKey(), ", repeat=",
+                                    event.getRepeatCount(), ", device=", event.getSource());
+        }
     }
+
 }

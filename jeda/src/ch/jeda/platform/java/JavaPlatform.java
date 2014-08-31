@@ -86,6 +86,11 @@ class JavaPlatform implements Platform {
     }
 
     @Override
+    public boolean isVirtualKeyboardVisible() {
+        return false;
+    }
+
+    @Override
     public Class<?>[] loadClasses() throws Exception {
         return ResourceManager.loadClasses();
     }
@@ -102,6 +107,11 @@ class JavaPlatform implements Platform {
 
     @Override
     public void setSensorEnabled(final SensorType sensorType, final boolean enabled) {
+        // ignore
+    }
+
+    @Override
+    public void setVirtualKeyboardVisible(final boolean visible) {
         // ignore
     }
 

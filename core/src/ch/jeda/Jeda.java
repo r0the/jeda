@@ -169,6 +169,22 @@ public class Jeda {
     }
 
     /**
+     * Checks if the virtual keyboard is currently visible.
+     * <p>
+     * <img src="../../windows.png"> <img src="../../linux.png"> Virtual keyboard is not supported.
+     * <p>
+     * <img src="../../android.png"> Virtual keyboard is supported.
+     *
+     * @return <tt>true</tt> if the virtual keyboard is visible, otherwise <tt>false</tt>
+     *
+     * @see #setVirtualKeyboardVisible(boolean)
+     * @since 1.3
+     */
+    public static boolean isVirtualKeyboardVisible() {
+        return ENGINE.isVirtualKeyboardVisible();
+    }
+
+    /**
      * Loads a text file and returns the content as a list of Strings. Each line of the text file will be represented by
      * a <tt>String</tt> in the returned array. Returns <tt>null</tt> if the file is not present or cannot be read.
      *
@@ -232,6 +248,22 @@ public class Jeda {
      */
     public static void setTickFrequency(final double hertz) {
         ENGINE.setTickFrequency(hertz);
+    }
+
+    /**
+     * Shows or hides the virtual keyboard.
+     * <p>
+     * <img src="../../windows.png"> <img src="../../linux.png"> Virtual keyboard is not supported.
+     * <p>
+     * <img src="../../android.png"> Virtual keyboard is supported.
+     *
+     * @param visible indicates if the virtual keyboard should be visible
+     *
+     * @see #isVirtualKeyboardVisible()
+     * @since 1.3
+     */
+    public static void setVirtualKeyboardVisible(final boolean visible) {
+        ENGINE.setVirtualKeyboardVisible(visible);
     }
 
     /**
