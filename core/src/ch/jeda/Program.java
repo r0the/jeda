@@ -71,6 +71,7 @@ public abstract class Program implements Runnable {
      * @param message the message
      * @return <tt>double</tt> value entered by the user or <tt>0.0</tt.
      *
+     * @deprecated Use {@link ch.jeda.ui.InputField} instead.
      * @since 1.0
      */
     protected final double readDouble(final Object... message) {
@@ -86,6 +87,7 @@ public abstract class Program implements Runnable {
      * @param message the message
      * @return <tt>int</tt> value entered by the user or <tt>0</tt>
      *
+     * @deprecated Use {@link ch.jeda.ui.IntInputField} instead.
      * @since 1.0
      */
     protected final int readInt(final Object... message) {
@@ -101,6 +103,7 @@ public abstract class Program implements Runnable {
      * @param message the message
      * @return <tt>String</tt> value entered by the user or <tt>null</tt>
      *
+     * @deprecated Use {@link ch.jeda.ui.StringInputField} instead.
      * @since 1.0
      */
     protected final String readString(final Object... message) {

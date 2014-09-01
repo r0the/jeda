@@ -19,6 +19,7 @@ package ch.jeda;
 import ch.jeda.platform.InputRequest;
 
 /**
+ * @deprecated Use a subclass of {@link ch.jeda.ui.InputField} instead.
  * @since 1.0
  */
 public class Dialog<T> {
@@ -34,6 +35,7 @@ public class Dialog<T> {
      * @param message the message
      * @return <tt>double</tt> value entered by the user or <tt>0.0</tt.
      *
+     * @deprecated Use {@link ch.jeda.ui.InputField} instead.
      * @since 1.0
      */
     public static double readDouble(final Object... message) {
@@ -58,6 +60,7 @@ public class Dialog<T> {
      * @param message the message
      * @return <tt>int</tt> value entered by the user or <tt>0</tt>
      *
+     * @deprecated Use {@link ch.jeda.ui.IntInputField} instead.
      * @since 1.0
      */
     public static int readInt(final Object... message) {
@@ -82,6 +85,7 @@ public class Dialog<T> {
      * @param message the message
      * @return <tt>String</tt> value entered by the user or <tt>null</tt>
      *
+     * @deprecated Use {@link ch.jeda.ui.StringInputField} instead.
      * @since 1.0
      */
     public static String readString(final Object... message) {
@@ -98,6 +102,7 @@ public class Dialog<T> {
     }
 
     /**
+     * @deprecated Use {@link ch.jeda.ui.InputField} instead.
      * @since 1.0
      */
     public Dialog(final Class<T> clazz) {
@@ -105,6 +110,7 @@ public class Dialog<T> {
     }
 
     /**
+     * @deprecated Use {@link ch.jeda.ui.InputField} instead.
      * @since 1.0
      */
     public void setMessage(final Object... message) {
@@ -112,6 +118,7 @@ public class Dialog<T> {
     }
 
     /**
+     * @deprecated Use {@link ch.jeda.ui.InputField} instead.
      * @since 1.0
      */
     public void setTitle(final Object... title) {
@@ -119,6 +126,7 @@ public class Dialog<T> {
     }
 
     /**
+     * @deprecated Use {@link ch.jeda.ui.InputField} instead.
      * @since 1.0
      */
     public void show() {
@@ -127,6 +135,7 @@ public class Dialog<T> {
     }
 
     /**
+     * @deprecated Use {@link ch.jeda.ui.InputField} instead.
      * @since 1.0
      */
     public T getResult() {
