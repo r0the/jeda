@@ -16,6 +16,8 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.Jeda;
+
 /**
  * Represents an element of a graphical user interface. A widget has a style that determines how to draw the widget.
  * <p>
@@ -208,6 +210,7 @@ public abstract class Widget extends GraphicsItem {
         }
 
         this.selected = true;
+        this.checkVirtualKeyboard();
     }
 
     /**
@@ -264,5 +267,13 @@ public abstract class Widget extends GraphicsItem {
 
         this.x = alignment.alignX(x, this.getWidth());
         this.y = alignment.alignY(y, this.getHeight());
+    }
+
+    private void checkVirtualKeyboard() {
+        final boolean isVisible = Jeda.isVirtualKeyboardVisible();
+        final boolean shouldBeVisible = this instanceof InputField;
+        if (isVisible != shouldBeVisible) {
+            Jeda.setVirtualKeyboardVisible(shouldBeVisible);
+        }
     }
 }

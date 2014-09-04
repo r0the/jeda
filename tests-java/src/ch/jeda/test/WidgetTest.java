@@ -18,12 +18,11 @@ public class WidgetTest extends Program implements TickListener, ActionListener 
         window = new Window();
         buttonAntique = new Button(0, 0, "Antique");
         buttonAntique.setPosition(window.getWidth() / 2, 100, Alignment.CENTER);
-        buttonAntique.setText("Antique");
         buttonAntique.setStyle(DefaultButtonStyle.ANTIQUE_BROWN);
 
-        buttonModern = new Button(0, 0, "Modern");
+        buttonModern = new Button(0, 0, "Jeda 1.3 Rikku");
         buttonModern.setPosition(window.getWidth() / 2, 200, Alignment.CENTER);
-        buttonModern.setText("Modern");
+        buttonModern.setStyle(DefaultButtonStyle.MODERN_GREEN);
 
         window.add(buttonAntique);
         window.add(buttonModern);
