@@ -83,11 +83,11 @@ public class DefaultInputFieldStyle extends DefaultTextStyle implements InputFie
     @Override
     public void draw(final InputField inputField, final Canvas canvas) {
         this.applyTextStyle(canvas);
-        canvas.drawImage(inputField.getX(), inputField.getY(), this.background);
+        canvas.drawImage(inputField.getLeft(), inputField.getTop(), this.background);
         final String visibleText = inputField.getVisibleText();
-        canvas.drawText(inputField.getX() + BORDER, inputField.getCenterY(), visibleText, Alignment.LEFT);
+        canvas.drawText(inputField.getLeft() + BORDER, inputField.getCenterY(), visibleText, Alignment.LEFT);
         if (inputField.isSelected()) {
-            canvas.drawImage(inputField.getX() + BORDER + canvas.textWidth(visibleText), inputField.getCenterY(),
+            canvas.drawImage(inputField.getLeft() + BORDER + canvas.textWidth(visibleText), inputField.getCenterY(),
                              this.cursor, Alignment.CENTER);
         }
     }
