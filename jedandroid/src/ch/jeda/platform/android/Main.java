@@ -51,6 +51,7 @@ public final class Main extends FragmentActivity {
     private final SensorManager sensorManager;
     private JedaView contentView;
     private CanvasFragment topWindow;
+    private boolean virtualKeyboardVisible;
 
     static Main getInstance() {
         return INSTANCE;
@@ -155,7 +156,7 @@ public final class Main extends FragmentActivity {
     }
 
     boolean isVirtualKeyboardVisible() {
-        return this.getInputMethodManager().isActive();
+        return this.virtualKeyboardVisible;
     }
 
     Class<?>[] loadClasses() throws Exception {
@@ -180,12 +181,12 @@ public final class Main extends FragmentActivity {
     }
 
     void setVirtualKeyboardVisible(final boolean visible) {
+        this.virtualKeyboardVisible = visible;
+
         if (visible) {
-            Log.d("Jeda", "Showing virtual keyboard on " + this.contentView.getClass());
             this.getInputMethodManager().showSoftInput(this.contentView, InputMethodManager.SHOW_FORCED);
         }
         else {
-            Log.d("Jeda", "Hiding virtual keyboard.");
             this.getInputMethodManager().hideSoftInputFromWindow(this.contentView.getWindowToken(), 0);
         }
     }
