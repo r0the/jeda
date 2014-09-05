@@ -23,7 +23,6 @@ import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
-import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.WindowFeature;
 import java.io.BufferedReader;
@@ -299,10 +298,6 @@ public class Jeda {
 
     static ImageImp createImageImp(final String path) {
         return ENGINE.createImageImp(path);
-    }
-
-    static SoundImp createSoundImp(final String path) {
-        return ENGINE.createSoundImp(path);
     }
 
     static WindowImp createWindowImp(final int width, final int height, final EnumSet<WindowFeature> features) {

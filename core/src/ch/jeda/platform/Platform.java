@@ -36,8 +36,6 @@ public interface Platform {
 
     ImageImp createImageImp(String path);
 
-    SoundImp createSoundImp(String path);
-
     AudioManagerImp getAudioManagerImp();
 
     TypefaceImp getStandardTypefaceImp(final StandardTypeface standardTypeface);

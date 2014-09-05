@@ -26,21 +26,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import ch.jeda.Log;
 import ch.jeda.platform.AudioManagerImp;
-import ch.jeda.platform.SoundImp;
+import java.util.HashMap;
+import java.util.Map;
 
-class AudioManager extends Fragment implements AudioManagerImp, MediaPlayer.OnCompletionListener {
+class AndroidAudioManagerImp extends Fragment implements AudioManagerImp, MediaPlayer.OnCompletionListener {
 
     private static final String RES_PREFIX = "res:";
     private static final int DEFAULT_PRIORITY = 0;
     private AudioManagerImp.Callback callback;
     private android.media.AudioManager imp;
     private MediaPlayer mediaPlayer;
+    private Map<String, Integer> soundMap;
     private SoundPool soundPool;
 
     @Override
     public void onAttach(final Activity activity) {
         super.onAttach(activity);
         this.imp = (android.media.AudioManager) activity.getSystemService(Activity.AUDIO_SERVICE);
+        this.soundMap = new HashMap<String, Integer>();
         this.soundPool = new SoundPool(10, android.media.AudioManager.STREAM_MUSIC, 0);
     }
 
@@ -56,24 +59,39 @@ class AudioManager extends Fragment implements AudioManagerImp, MediaPlayer.OnCo
         }
     }
 
-    SoundImp createSoundImp(final String path) {
+    @Override
+    public boolean isSoundAvailable(final String path) {
+        return this.soundMap.containsKey(path);
+    }
+
+    @Override
+    public void loadSound(final String path) {
+        if (this.soundMap.containsKey(path)) {
+            return;
+        }
+
         if (path.startsWith(RES_PREFIX)) {
             final int resId = this.getResourceId(path);
-            if (resId == 0) {
-                return null;
-            }
-            else {
-                return new AndroidSoundImp(this, this.soundPool.load(this.getActivity(), resId, DEFAULT_PRIORITY));
+            if (resId != 0) {
+                this.soundMap.put(path, this.soundPool.load(this.getActivity(), resId, DEFAULT_PRIORITY));
             }
         }
         else {
-            return new AndroidSoundImp(this, this.soundPool.load(path, DEFAULT_PRIORITY));
+            this.soundMap.put(path, this.soundPool.load(path, DEFAULT_PRIORITY));
         }
     }
 
     @Override
     public void pausePlayback() {
         this.mediaPlayer.pause();
+    }
+
+    @Override
+    public void playSound(final String path) {
+        if (this.soundMap.containsKey(path)) {
+            final float volume = this.getVolume();
+            this.soundPool.play(this.soundMap.get(path), volume, volume, 0, 0, 1.0f);
+        }
     }
 
     @Override
@@ -107,11 +125,6 @@ class AudioManager extends Fragment implements AudioManagerImp, MediaPlayer.OnCo
         this.callback.playbackStopped();
     }
 
-    void playSound(final int soundId) {
-        final float volume = this.getVolume();
-        this.soundPool.play(soundId, volume, volume, 0, 0, 1.0f);
-    }
-
     private int getResourceId(final String path) {
         final int slashPos = path.indexOf('/');
         final int dotPos = path.lastIndexOf('.');
@@ -126,7 +139,8 @@ class AudioManager extends Fragment implements AudioManagerImp, MediaPlayer.OnCo
     }
 
     private float getVolume() {
-        return (float) this.imp.getStreamVolume(android.media.AudioManager.STREAM_MUSIC) /
-               (float) this.imp.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC);
+        return (float) this.imp.getStreamVolume(android.media.AudioManager.STREAM_MUSIC)
+               / (float) this.imp.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC);
     }
+
 }

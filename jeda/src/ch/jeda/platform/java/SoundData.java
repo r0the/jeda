@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,27 +14,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.platform.android;
+package ch.jeda.platform.java;
 
-import ch.jeda.platform.SoundImp;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
-class AndroidSoundImp implements SoundImp {
+final class SoundData {
 
-    private final AudioManager audioManager;
-    private final int soundId;
+    private final byte[] buffer;
 
-    public AndroidSoundImp(final AudioManager audioManager, final int soundId) {
-        this.audioManager = audioManager;
-        this.soundId = soundId;
+    SoundData(byte[] buffer) {
+        this.buffer = buffer;
     }
 
-    @Override
-    public boolean isAvailable() {
-        return true;
+    InputStream openStream() {
+        return new BufferedInputStream(new ByteArrayInputStream(this.buffer));
     }
 
-    @Override
-    public void play() {
-        this.audioManager.playSound(this.soundId);
-    }
 }

@@ -35,7 +35,6 @@ import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
-import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.WindowFeature;
@@ -45,7 +44,7 @@ public final class Main extends FragmentActivity {
 
     private static final int CONTENT_ID = 4242;
     private static Main INSTANCE;
-    private final AudioManager audioManager;
+    private final AndroidAudioManagerImp audioManager;
     private final LogFragment logFragment;
     private final ResourceManager resourceManager;
     private final SensorManager sensorManager;
@@ -59,7 +58,7 @@ public final class Main extends FragmentActivity {
 
     public Main() {
         INSTANCE = this;
-        this.audioManager = new AudioManager();
+        this.audioManager = new AndroidAudioManagerImp();
         this.logFragment = new LogFragment();
         this.resourceManager = new ResourceManager(this);
         this.sensorManager = new SensorManager();
@@ -133,10 +132,6 @@ public final class Main extends FragmentActivity {
 
     ImageImp createImageImp(final String path) {
         return this.resourceManager.openImage(path);
-    }
-
-    SoundImp createSoundImp(final String path) {
-        return this.audioManager.createSoundImp(path);
     }
 
     TypefaceImp createTypefaceImp(final String path) {

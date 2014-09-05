@@ -27,7 +27,7 @@ class Mp3AudioPlayer extends AudioPlayer {
     private final Decoder decoder;
     private final String path;
 
-    Mp3AudioPlayer(final AudioManager audioManager, final String path) {
+    Mp3AudioPlayer(final JavaAudioManagerImp audioManager, final String path) {
         super(audioManager);
         this.decoder = new Decoder();
         this.path = path;

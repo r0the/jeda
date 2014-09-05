@@ -30,7 +30,6 @@ import static ch.jeda.platform.Platform.StandardTypeface.SANS_SERIF;
 import static ch.jeda.platform.Platform.StandardTypeface.SERIF;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
-import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.WindowRequest;
 import java.io.InputStream;
@@ -62,11 +61,6 @@ class AndroidPlatform implements Platform {
     @Override
     public ImageImp createImageImp(final String path) {
         return Main.getInstance().createImageImp(path);
-    }
-
-    @Override
-    public SoundImp createSoundImp(final String path) {
-        return Main.getInstance().createSoundImp(path);
     }
 
     @Override

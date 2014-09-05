@@ -26,7 +26,6 @@ import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
-import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.WindowFeature;
@@ -42,7 +41,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 class JedaEngine implements PlatformCallback, Runnable {
 
-    private static final SoundImp EMPTY_SOUND_IMP = new EmptySoundImp();
     private static final TypefaceImp EMPTY_TYPEFACE_IMP = new EmptyTypefaceImp();
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
     private static final double DEFAULT_TICK_FREQUENCY = 60.0;
@@ -199,20 +197,6 @@ class JedaEngine implements PlatformCallback, Runnable {
         final ImageImp result = this.platform.createImageImp(path);
         if (result == null) {
             return this.defaultImageImp;
-        }
-        else {
-            return result;
-        }
-    }
-
-    SoundImp createSoundImp(final String path) {
-        if (path == null) {
-            return EMPTY_SOUND_IMP;
-        }
-
-        final SoundImp result = this.platform.createSoundImp(path);
-        if (result == null) {
-            return EMPTY_SOUND_IMP;
         }
         else {
             return result;
@@ -436,18 +420,6 @@ class JedaEngine implements PlatformCallback, Runnable {
             for (int i = 0; i < stackTrace.length; ++i) {
                 System.err.println("   " + stackTrace[i].toString());
             }
-        }
-    }
-
-    private static class EmptySoundImp implements SoundImp {
-
-        @Override
-        public boolean isAvailable() {
-            return false;
-        }
-
-        @Override
-        public void play() {
         }
     }
 

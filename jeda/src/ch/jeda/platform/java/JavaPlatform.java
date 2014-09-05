@@ -26,7 +26,6 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
-import ch.jeda.platform.SoundImp;
 import ch.jeda.platform.WindowRequest;
 import java.awt.Font;
 import java.io.InputStream;
@@ -35,13 +34,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 class JavaPlatform implements Platform {
 
-    private final AudioManager audioManager;
+    private final JavaAudioManagerImp audioManager;
     private final WindowManager windowManager;
 
     public JavaPlatform(final PlatformCallback callback) {
         setLookAndFeel();
-        this.audioManager = new AudioManager();
-        callback.addTickListener(this.audioManager);
+        this.audioManager = new JavaAudioManagerImp();
         this.windowManager = new WindowManager(callback);
     }
 
@@ -58,11 +56,6 @@ class JavaPlatform implements Platform {
     @Override
     public ImageImp createImageImp(final String path) {
         return ResourceManager.loadImage(path);
-    }
-
-    @Override
-    public SoundImp createSoundImp(final String path) {
-        return this.audioManager.createSoundImp(path);
     }
 
     @Override

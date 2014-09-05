@@ -16,8 +16,6 @@
  */
 package ch.jeda;
 
-import ch.jeda.platform.SoundImp;
-
 /**
  * This class represents short sampled sound data. The sound data can be retrieved from a file or a resource.
  *
@@ -42,7 +40,7 @@ import ch.jeda.platform.SoundImp;
  */
 public final class Sound {
 
-    private final SoundImp imp;
+    private final String path;
 
     /**
      * Constructs a new Sound object representing the contents of the specified audio file.
@@ -54,7 +52,8 @@ public final class Sound {
      * @since 1.0
      */
     public Sound(final String path) {
-        this.imp = Jeda.createSoundImp(path);
+        this.path = path;
+        Jeda.getAudioManager().loadSound(this);
     }
 
     /**
@@ -67,7 +66,7 @@ public final class Sound {
      * @since 1.0
      */
     public boolean isAvailable() {
-        return this.imp.isAvailable();
+        return Jeda.getAudioManager().isSoundAvailable(this);
     }
 
     /**
@@ -76,6 +75,10 @@ public final class Sound {
      * @since 1.0
      */
     public void play() {
-        this.imp.play();
+        Jeda.getAudioManager().playSound(this);
+    }
+
+    String getPath() {
+        return this.path;
     }
 }

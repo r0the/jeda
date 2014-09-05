@@ -18,7 +18,7 @@ package ch.jeda;
 
 import ch.jeda.platform.AudioManagerImp;
 
-class AudioManager implements AudioManagerImp.Callback {
+final class AudioManager implements AudioManagerImp.Callback {
 
     private final AudioManagerImp imp;
     private final Object lock;
@@ -36,6 +36,14 @@ class AudioManager implements AudioManagerImp.Callback {
             this.currentMusic.setPlaybackState(PlaybackState.STOPPED);
             this.currentMusic = null;
         }
+    }
+
+    boolean isSoundAvailable(final Sound sound) {
+        return this.imp.isSoundAvailable(sound.getPath());
+    }
+
+    void loadSound(final Sound sound) {
+        this.imp.loadSound(sound.getPath());
     }
 
     void pauseMusic(final Music music) {
@@ -69,6 +77,10 @@ class AudioManager implements AudioManagerImp.Callback {
                     }
                 }
         }
+    }
+
+    void playSound(final Sound sound) {
+        this.imp.playSound(sound.getPath());
     }
 
     void stopMusic(final Music music) {

@@ -18,13 +18,13 @@ package ch.jeda.platform.java;
 
 abstract class AudioPlayer implements Runnable {
 
-    private final AudioManager audioManager;
+    private final JavaAudioManagerImp audioManager;
     private final Object lock;
     private final Thread thread;
     private boolean paused;
     private boolean stopRequested;
 
-    AudioPlayer(final AudioManager audioManager) {
+    AudioPlayer(final JavaAudioManagerImp audioManager) {
         this.audioManager = audioManager;
         this.lock = new Object();
         this.thread = new Thread(this);

@@ -18,7 +18,13 @@ package ch.jeda.platform;
 
 public interface AudioManagerImp {
 
+    boolean isSoundAvailable(String path);
+
+    void loadSound(String path);
+
     void pausePlayback();
+
+    void playSound(String path);
 
     void resumePlayback();
 
