@@ -56,6 +56,7 @@ public class IntInputField extends InputField {
         super(x, y, alignment);
         this.minimumValue = Integer.MIN_VALUE;
         this.maximumValue = Integer.MAX_VALUE;
+        this.setValue(0);
     }
 
     /**
@@ -153,7 +154,12 @@ public class IntInputField extends InputField {
             this.value = -this.value;
         }
         else if (Character.isDigit(ch)) {
-            long candidate = this.value * 10 + MathUtil.signum(this.value) * Character.digit(ch, 10);
+            final int digit = Character.digit(ch, 10);
+            long candidate = digit;
+            if (this.value != 0) {
+                candidate = this.value * 10l + MathUtil.signum(this.value) * digit;
+            }
+
             if (this.minimumValue <= candidate && candidate <= this.maximumValue) {
                 this.value = (int) candidate;
             }
@@ -164,5 +170,6 @@ public class IntInputField extends InputField {
 
     private void checkValue() {
         this.value = Math.max(this.minimumValue, Math.min(this.value, this.maximumValue));
+        this.setDisplayText(Convert.toString(this.value));
     }
 }
