@@ -666,7 +666,12 @@ public class Canvas {
     }
 
     /**
-     * <b>Experimental</b>
+     * Fills an area of a specified color with another color.
+     *
+     * @param x the x coordinate of the starting point
+     * @param y the y coordinate of the starting point
+     * @param oldColor the color to look for
+     * @param newColor the color to replace it with
      *
      * @since 1.0
      */

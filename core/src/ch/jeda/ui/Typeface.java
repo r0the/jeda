@@ -71,6 +71,12 @@ public final class Typeface {
         this(JedaInternal.createTypefaceImp(path));
     }
 
+    /**
+     * Check if the typeface is available. The typeface may not be available if the specified file or resource is
+     * missing, has an invalid format or if another error occured while loading the typeface.
+     *
+     * @return <tt>true</tt> if the typeface is available, otherwise <tt>false</tt>.
+     */
     public boolean isAvailable() {
         return this.imp.isAvailable();
     }

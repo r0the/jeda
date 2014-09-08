@@ -30,11 +30,11 @@ public final class RotatedImage {
      * formats JPEG, and PNG are supported.
      * <p>
      * The file can either be located on the local computer, or in the project. To read a resource file, put 'res:' in
-     * front of the file path:
+     * front of the file path:</p>
      *
      * <tt>RotatedImage sample = new RotatedImage("res:/sample.png");</tt>
-     *
-     * Rotates the image by the specified number of steps.
+     * <p>
+     * Rotates the image by the specified number of steps.</p>
      *
      * @param path path to the image file
      * @param steps the number of steps for a full rotation of the image

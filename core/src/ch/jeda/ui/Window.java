@@ -85,13 +85,12 @@ public class Window extends Canvas {
      * supported. The specified features will be enabled for the window.
      * <p>
      * The size of the window's drawing area depends on the platform:
-     * <p>
-     * <p>
+     * </p><p>
      * <img src="../../../windows.png"> <img src="../../../linux.png"> The drawing area of the window has the specified
      * <tt>width</tt> and
      * <tt>height</tt>.
-     * <p>
-     * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.
+     * </p><p>
+     * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.</p>
      *
      * @param width the width of the drawing area in pixels
      * @param height the height of the drawing area in pixels
@@ -160,6 +159,8 @@ public class Window extends Canvas {
     /**
      * Returns all graphics items of the specified class currently managed by the window.
      *
+     * @param <T> the type of graphics items to return
+     * @param clazz the class of graphics items to return
      * @return all graphics items currently managed by the window.
      * @throws NullPointerException if <tt>clazz</tt> is <tt>null</tt>
      *
@@ -191,6 +192,7 @@ public class Window extends Canvas {
     /**
      * Checks for a window feature. Returns <tt>true</tt> if the specified feature is currently enabled for the window.
      *
+     * @param feature the feature to check for
      * @return <tt>true</tt> if the feature is enabled, otherwise returns
      * <tt>false</tt>
      * @throws NullPointerException if <tt>feature</tt> is <tt>null</tt>

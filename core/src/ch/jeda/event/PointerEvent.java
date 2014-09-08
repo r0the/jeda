@@ -29,6 +29,12 @@ public final class PointerEvent extends Event {
     private final int y;
 
     /**
+     * Constructs a pointer event.
+     *
+     * @param source the event source that generates the event
+     * @param type the event type
+     * @param pointerId the id of the pointer
+     *
      * @since 1.0
      */
     public PointerEvent(final Object source, final EventType type, final int pointerId) {
@@ -36,6 +42,14 @@ public final class PointerEvent extends Event {
     }
 
     /**
+     * Constructs a pointer event.
+     *
+     * @param source the event source that generates the event
+     * @param type the event type
+     * @param pointerId the id of the pointer
+     * @param x the x coordinate of the pointer
+     * @param y the y coordinate of the pointer
+     *
      * @since 1.0
      */
     public PointerEvent(final Object source, final EventType type, final int pointerId,

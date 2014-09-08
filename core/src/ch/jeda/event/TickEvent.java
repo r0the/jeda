@@ -27,6 +27,12 @@ public class TickEvent extends Event {
     private final double frameRate;
 
     /**
+     * Constructs a tick event.
+     *
+     * @param source the event source that generates the event
+     * @param duration the duration since the last frame in seconds
+     * @param frameRate the current frame rate
+     *
      * @since 1.0
      */
     public TickEvent(final Object source, final double duration, final double frameRate) {

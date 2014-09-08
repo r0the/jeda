@@ -126,20 +126,47 @@ public final class Theme {
         return this.progressBarStyle;
     }
 
+    /**
+     * Sets the default button style of the theme.
+     *
+     * @param buttonStyle the default button style
+     *
+     * @since 1.3
+     */
     public void setButtonStyle(final ButtonStyle buttonStyle) {
         this.buttonStyle = buttonStyle;
     }
 
+    /**
+     * Sets the default check box style of the theme.
+     *
+     * @param checkBoxStyle the default check box style
+     *
+     * @since 1.3
+     */
     public void setCheckBoxStyle(final CheckBoxStyle checkBoxStyle) {
         this.checkBoxStyle = checkBoxStyle;
     }
 
+    /**
+     * Sets the default input field style of the theme.
+     *
+     * @param inputFieldStyle the default input field style
+     *
+     * @since 1.3
+     */
     public void setInputFieldStyle(final InputFieldStyle inputFieldStyle) {
         this.inputFieldStyle = inputFieldStyle;
     }
 
+    /**
+     * Sets the default progress base style of the theme.
+     *
+     * @param progressBarStyle the default progress base style
+     *
+     * @since 1.3
+     */
     public void setProgressBarStyle(final ProgressBarStyle progressBarStyle) {
         this.progressBarStyle = progressBarStyle;
     }
-
 }
