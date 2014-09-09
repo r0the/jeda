@@ -30,7 +30,7 @@ import java.util.Comparator;
 public abstract class GraphicsItem {
 
     static final Comparator<GraphicsItem> DRAW_ORDER = new DrawOrder();
-    GraphicsItems owner;
+    GraphicsItemsPage page;
     private int drawOrder;
 
     /**
@@ -65,8 +65,8 @@ public abstract class GraphicsItem {
      */
     public final void setDrawOrder(final int drawOrder) {
         this.drawOrder = drawOrder;
-        if (this.owner != null) {
-            this.owner.setDirty();
+        if (this.page != null) {
+            this.page.dirty = true;
         }
     }
 
@@ -97,11 +97,11 @@ public abstract class GraphicsItem {
      * @since 1.0
      */
     protected final Window getWindow() {
-        if (this.owner == null) {
+        if (this.page == null) {
             return null;
         }
         else {
-            return this.owner.getWindow();
+            return this.page.window;
         }
     }
 

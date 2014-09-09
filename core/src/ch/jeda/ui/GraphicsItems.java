@@ -19,51 +19,57 @@ package ch.jeda.ui;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-class GraphicsItems {
+final class GraphicsItems {
 
+    private final Map<String, GraphicsItemsPage> pages;
     private final List<GraphicsItem> pendingDeletions;
     private final List<GraphicsItem> pendingInsertions;
     private final Window window;
-    private GraphicsItem[] all;
-    private boolean dirty;
+    private GraphicsItem[] activeItems;
+    private GraphicsItemsPage activePage;
+    private GraphicsItemsPage currentPage;
 
     GraphicsItems(final Window window) {
+        this.pages = new HashMap<String, GraphicsItemsPage>();
         this.pendingDeletions = new ArrayList<GraphicsItem>();
         this.pendingInsertions = new ArrayList<GraphicsItem>();
         this.window = window;
-        this.all = new GraphicsItem[0];
-        this.dirty = false;
+        this.activeItems = new GraphicsItem[0];
+        this.activePage = new GraphicsItemsPage(window, "Main");
+        this.currentPage = this.activePage;
     }
 
     void add(final GraphicsItem object) {
-        if (object != null) {
+        if (this.currentPage.add(object) && this.currentPage.isActive()) {
             this.pendingDeletions.remove(object);
             this.pendingInsertions.add(object);
-            this.dirty = true;
         }
     }
 
     int count() {
-        return this.all.length;
+        return this.currentPage.count();
     }
 
     void draw(final Canvas canvas) {
-        for (int i = 0; i < this.all.length; ++i) {
-            this.all[i].draw(canvas);
+        for (int i = 0; i < this.activeItems.length; ++i) {
+            this.activeItems[i].draw(canvas);
         }
     }
 
     @SuppressWarnings("unchecked")
     final <T extends GraphicsItem> T[] get(final Class<T> clazz) {
         final List<T> result = new ArrayList<T>();
-        for (final GraphicsItem item : this.all) {
-            if (clazz.isInstance(item)) {
+        for (int i = 0; i < this.activeItems.length; ++i) {
+            if (clazz.isInstance(this.activeItems[i])) {
                 // Unchecked cast
-                result.add((T) item);
+                result.add((T) this.activeItems[i]);
             }
         }
 
@@ -72,23 +78,32 @@ class GraphicsItems {
     }
 
     final GraphicsItem[] getAll() {
-        return Arrays.copyOf(this.all, this.all.length);
+        return Arrays.copyOf(this.activeItems, this.activeItems.length);
     }
 
-    Window getWindow() {
-        return this.window;
+    String getCurrentPage() {
+        return this.currentPage.getName();
     }
 
     void processPending() {
-        if (this.dirty) {
+        if (!this.currentPage.isActive()) {
+            // Page change
+            this.removeEventListeners();
+            this.activePage.setActive(false);
+            this.activePage = this.currentPage;
+            this.activePage.setActive(true);
+            this.setActiveItems(this.currentPage.getItems());
+            this.addEventListeners();
+        }
+        else if (!this.pendingDeletions.isEmpty() || !this.pendingInsertions.isEmpty()) {
+            // Same page, but items changed
             boolean allChanged = false;
-            final Set<GraphicsItem> itemSet = new HashSet<GraphicsItem>(Arrays.asList(this.all));
+            final Set<GraphicsItem> itemSet = new HashSet<GraphicsItem>(Arrays.asList(this.activeItems));
             for (int i = 0; i < this.pendingDeletions.size(); ++i) {
                 final GraphicsItem item = this.pendingDeletions.get(i);
                 if (itemSet.remove(item)) {
                     allChanged = true;
                     this.window.removeEventListener(item);
-                    item.owner = null;
                 }
             }
 
@@ -96,12 +111,6 @@ class GraphicsItems {
                 final GraphicsItem item = this.pendingInsertions.get(i);
                 if (!itemSet.contains(item)) {
                     if (itemSet.add(item)) {
-                        // Remove item from old owner
-                        if (item.owner != null) {
-                            item.owner.remove(item);
-                        }
-
-                        item.owner = this;
                         this.window.addEventListener(item);
                         allChanged = true;
                     }
@@ -109,25 +118,45 @@ class GraphicsItems {
             }
 
             if (allChanged) {
-                this.all = itemSet.toArray(new GraphicsItem[itemSet.size()]);
+                this.setActiveItems(itemSet);
             }
 
-            Arrays.sort(this.all, GraphicsItem.DRAW_ORDER);
             this.pendingDeletions.clear();
             this.pendingInsertions.clear();
-            this.dirty = false;
         }
     }
 
     void remove(final GraphicsItem object) {
-        if (object != null) {
+        if (this.currentPage.remove(object)) {
             this.pendingDeletions.add(object);
             this.pendingInsertions.remove(object);
-            this.dirty = true;
         }
     }
 
-    void setDirty() {
-        this.dirty = true;
+    void setPage(final String page) {
+        if (!this.currentPage.getName().equals(page)) {
+            if (!this.pages.containsKey(page)) {
+                this.pages.put(page, new GraphicsItemsPage(window, page));
+            }
+
+            this.currentPage = this.pages.get(page);
+        }
+    }
+
+    private void addEventListeners() {
+        for (int i = 0; i < this.activeItems.length; ++i) {
+            this.window.addEventListener(this.activeItems[i]);
+        }
+    }
+
+    private void removeEventListeners() {
+        for (int i = 0; i < this.activeItems.length; ++i) {
+            this.window.removeEventListener(this.activeItems[i]);
+        }
+    }
+
+    private void setActiveItems(final Collection<GraphicsItem> items) {
+        this.activeItems = items.toArray(new GraphicsItem[items.size()]);
+        Arrays.sort(this.activeItems, GraphicsItem.DRAW_ORDER);
     }
 }

@@ -33,6 +33,7 @@ import java.util.EnumSet;
  * </ul>
  *
  * @since 1.0
+ * @version 2
  */
 public class Window extends Canvas {
 
@@ -108,7 +109,9 @@ public class Window extends Canvas {
     }
 
     /**
-     * Adds a {@link ch.jeda.ui.GraphicsItem} to the window. Has no effect if <tt>graphicsItem</tt> is <tt>null</tt>.
+     * Adds a {@link ch.jeda.ui.GraphicsItem} to the currnt page of the window. Has no effect if <tt>graphicsItem</tt>
+     * is <tt>null</tt>. The {@link ch.jeda.ui.GraphicsItem} becomes inactive (it no longer receives events) and
+     * insivible if the current page changes.
      *
      * @param graphicsItem the graphics item to be added to the window
      *
@@ -175,6 +178,19 @@ public class Window extends Canvas {
         }
 
         return this.graphicsItems.get(clazz);
+    }
+
+    /**
+     * Returns the current page of the window.
+     *
+     * @return the current page of the window
+     *
+     * @see #add(ch.jeda.ui.GraphicsItem)
+     * @see #setPage(java.lang.String)
+     * @since 1.4
+     */
+    public final String getPage() {
+        return this.graphicsItems.getCurrentPage();
     }
 
     /**
@@ -281,6 +297,20 @@ public class Window extends Canvas {
         }
 
         this.imp.setMouseCursor(mouseCursor);
+    }
+
+    /**
+     * Sets the current page of the window. All {@link ch.jeda.ui.GraphicsItem}s are added to the current page. They
+     * become inactive (they no longer receive events) and insivible if the current page changes.
+     *
+     * @param page the current page
+     *
+     * @see #add(ch.jeda.ui.GraphicsItem)
+     * @see #getPage()
+     * @since 1.4
+     */
+    public final void setPage(final String page) {
+        this.graphicsItems.setPage(page);
     }
 
     /**
