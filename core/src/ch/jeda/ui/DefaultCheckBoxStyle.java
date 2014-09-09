@@ -60,13 +60,13 @@ public class DefaultCheckBoxStyle implements CheckBoxStyle {
     private final Image unchecked;
 
     private DefaultCheckBoxStyle(final String type, final String color) {
-        this(new Image("res:jeda/ui/" + type + "_checkbox_unchecked.png"),
-             new Image("res:jeda/ui/" + type + "_checkbox_checked_" + color + ".png"));
+        this(new Image("res:jeda/ui/" + type + "_check_box_unchecked.png"),
+             new Image("res:jeda/ui/" + type + "_check_box_checked_" + color + ".png"));
     }
 
     private DefaultCheckBoxStyle(final String type, final String uncheckedColor, final String checkedColor) {
-        this(new Image("res:jeda/ui/" + type + "_checkbox_unchecked_" + uncheckedColor + ".png"),
-             new Image("res:jeda/ui/" + type + "_checkbox_checked_" + checkedColor + ".png"));
+        this(new Image("res:jeda/ui/" + type + "_check_box_unchecked_" + uncheckedColor + ".png"),
+             new Image("res:jeda/ui/" + type + "_check_box_checked_" + checkedColor + ".png"));
     }
 
     /**
