@@ -22,6 +22,7 @@ package ch.jeda.ui;
  * image for checked state.
  *
  * @since 1.3
+ * @version 2
  */
 public class DefaultCheckBoxStyle implements CheckBoxStyle {
 
@@ -30,7 +31,25 @@ public class DefaultCheckBoxStyle implements CheckBoxStyle {
      *
      * @since 1.3
      */
-    public static final CheckBoxStyle ANTIQUE_BEIGE = new DefaultCheckBoxStyle("antique", "beige", "beige");
+    public static final CheckBoxStyle ANTIQUE_BEIGE = new DefaultCheckBoxStyle("antique", "beige", "blue");
+    /**
+     * The Jeda antique check box style in blue.
+     *
+     * @since 1.4
+     */
+    public static final CheckBoxStyle ANTIQUE_BLUE = new DefaultCheckBoxStyle("antique", "blue", "grey");
+    /**
+     * The Jeda antique check box style in bronze.
+     *
+     * @since 1.4
+     */
+    public static final CheckBoxStyle ANTIQUE_BRONZE = new DefaultCheckBoxStyle("antique", "bronze", "grey");
+    /**
+     * The Jeda antique check box style in grey.
+     *
+     * @since 1.4
+     */
+    public static final CheckBoxStyle ANTIQUE_GREY = new DefaultCheckBoxStyle("antique", "grey", "blue");
     /**
      * The Jeda modern check box style in blue.
      *
