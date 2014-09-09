@@ -32,11 +32,11 @@ public class DefaultCheckBoxStyle implements CheckBoxStyle {
      */
     public static final CheckBoxStyle ANTIQUE_BEIGE = new DefaultCheckBoxStyle("antique", "beige", "beige");
     /**
-     * The Jeda modern check box style in red.
+     * The Jeda modern check box style in blue.
      *
      * @since 1.3
      */
-    public static final CheckBoxStyle MODERN_RED = new DefaultCheckBoxStyle("modern", "red");
+    public static final CheckBoxStyle MODERN_BLUE = new DefaultCheckBoxStyle("modern", "blue");
     /**
      * The Jeda modern check box style in green.
      *
@@ -44,11 +44,11 @@ public class DefaultCheckBoxStyle implements CheckBoxStyle {
      */
     public static final CheckBoxStyle MODERN_GREEN = new DefaultCheckBoxStyle("modern", "green");
     /**
-     * The Jeda modern check box style in blue.
+     * The Jeda modern check box style in red.
      *
      * @since 1.3
      */
-    public static final CheckBoxStyle MODERN_BLUE = new DefaultCheckBoxStyle("modern", "blue");
+    public static final CheckBoxStyle MODERN_RED = new DefaultCheckBoxStyle("modern", "red");
     /**
      * The Jeda modern check box style in yellow.
      *
