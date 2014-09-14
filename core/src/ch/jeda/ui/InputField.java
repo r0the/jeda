@@ -25,10 +25,13 @@ import ch.jeda.event.PointerEvent;
  * Represents a text field. A text field is a {@link ch.jeda.ui.Widget} that allows the user to enter text.
  *
  * @since 1.3
+ * @version 2
  */
 public abstract class InputField extends Widget implements KeyTypedListener, PointerDownListener {
 
+    private static final char HIDE_CHAR = '*';
     private String displayText;
+    private boolean inputHidden;
     private InputFieldStyle style;
     private String visibleText;
 
@@ -44,6 +47,7 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      */
     protected InputField(final int x, final int y, final Alignment alignment) {
         super(x, y, alignment);
+        this.inputHidden = false;
         this.style = Theme.getDefault().getDefaultInputFieldStyle();
     }
 
@@ -92,6 +96,32 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
     @Override
     public final int getWidth() {
         return this.style.getWidth(this);
+    }
+
+    /**
+     * Checks if the user input is hidden in the input field.
+     *
+     * @return <tt>true</tt> if the user input is hidden in the input field, otherwise <tt>false</tt>
+     *
+     * @see #setInputHidden(boolean)
+     * @since 1.4
+     */
+    public final boolean isInputHidden() {
+        return this.inputHidden;
+    }
+
+    /**
+     * Shows or hides the user input. If <tt>inputHidden</tt> is <tt>true</tt>, all entered characters are replaced by a
+     * placeholde character in the input field. This is useful for entering passwords.
+     *
+     * @param inputHidden should the user input be hidden
+     *
+     * @see #isInputHidden()
+     * @since 1.4
+     */
+    public void setInputHidden(final boolean inputHidden) {
+        this.inputHidden = inputHidden;
+        this.updateVisibleText();
     }
 
     /**
@@ -170,7 +200,7 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
     private void updateVisibleText() {
         final Window window = this.getWindow();
         if (window != null) {
-            final StringBuilder builder = new StringBuilder(this.displayText);
+            final StringBuilder builder = new StringBuilder(this.displayBaseText());
             while (!this.style.fits(this, window, builder.toString())) {
                 builder.deleteCharAt(0);
             }
@@ -179,6 +209,19 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
         }
         else {
             this.visibleText = this.displayText;
+        }
+    }
+
+    private String displayBaseText() {
+        if (this.inputHidden) {
+            final StringBuilder result = new StringBuilder();
+            for (int i = 0; i < this.displayText.length(); ++i) {
+                result.append(HIDE_CHAR);
+            }
+            return result.toString();
+        }
+        else {
+            return this.displayText;
         }
     }
 
