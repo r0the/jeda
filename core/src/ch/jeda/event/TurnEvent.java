@@ -19,6 +19,7 @@ package ch.jeda.event;
 /**
  * @since 1.0
  */
+@Deprecated
 public class TurnEvent extends Event {
 
     private final double amount;
@@ -27,6 +28,7 @@ public class TurnEvent extends Event {
     /**
      * @since 1.0
      */
+    @Deprecated
     public TurnEvent(final Object source, final double amount, final TurnAxis axis) {
         super(source, EventType.TURN);
         this.amount = amount;
@@ -36,6 +38,7 @@ public class TurnEvent extends Event {
     /**
      * @since 1.0
      */
+    @Deprecated
     public final double getAmount() {
         return this.amount;
     }
@@ -43,6 +46,7 @@ public class TurnEvent extends Event {
     /**
      * @since 1.0
      */
+    @Deprecated
     public final TurnAxis getAxis() {
         return this.axis;
     }

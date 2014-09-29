@@ -19,10 +19,12 @@ package ch.jeda.event;
 /**
  * @since 1.0
  */
+@Deprecated
 public enum TurnAxis {
 
     /**
      * @since 1.0
      */
+    @Deprecated
     MOUSE_WHEEL,
 }

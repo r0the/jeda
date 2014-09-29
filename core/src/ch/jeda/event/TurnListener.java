@@ -19,10 +19,12 @@ package ch.jeda.event;
 /**
  * @since 1.0
  */
+@Deprecated
 public interface TurnListener {
 
     /**
      * @since 1.0
      */
+    @Deprecated
     void onTurn(TurnEvent event);
 }
