@@ -19,7 +19,7 @@ public class TypefaceTest extends Program {
         drawFontSample("Default Monspaced Font: ", Typeface.MONSPACED);
         drawFontSample("Default Kenvector Future Font: ", Typeface.KENVECTOR_FUTURE);
         drawFontSample("Default Kenvector Future Thin Font: ", Typeface.KENVECTOR_FUTURE_THIN);
-        drawFontSample("Custom loaded Font: ", new Typeface("res:fonts/myfont.ttf"));
+        drawFontSample("Custom loaded Font: ", new Typeface("res:myfont.ttf"));
     }
 
     private void drawFontSample(String name, Typeface typeface) {

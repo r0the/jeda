@@ -20,11 +20,18 @@ public class TypefaceTest extends Program {
         drawFontSample("Default Kenvector Future Font: ", Typeface.KENVECTOR_FUTURE);
         drawFontSample("Default Kenvector Future Thin Font: ", Typeface.KENVECTOR_FUTURE_THIN);
         drawFontSample("Custom loaded Font: ", new Typeface("res:jeda/fonts/kenvector_future.ttf"));
+
+        String text = "Grumpy wizards make toxic brew for the evil Queen and Jack.";
+        drawFontSample(text, Typeface.SERIF);
+        drawFontSample(text, Typeface.SANS_SERIF);
+        drawFontSample(text, Typeface.MONSPACED);
+        drawFontSample(text, Typeface.KENVECTOR_FUTURE);
+        drawFontSample(text, Typeface.KENVECTOR_FUTURE_THIN);
     }
 
     private void drawFontSample(String name, Typeface typeface) {
         window.setTypeface(typeface);
-        window.drawText(10, y, name + typeface.toString());
+        window.drawText(10, y, name + typeface);
         y += 50;
     }
 }
