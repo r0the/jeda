@@ -399,6 +399,7 @@ public final class Data {
      * @param defaultValue the default value
      * @return the {@link ch.jeda.Storable} object associated with the name or <tt>defaultValue</tt>
      */
+    @SuppressWarnings("unchecked")
     public <T extends Storable> T readObject(final String name, final T defaultValue) {
         final String className = this.readString(name);
         try {
