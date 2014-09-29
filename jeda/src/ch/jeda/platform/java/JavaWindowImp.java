@@ -16,8 +16,8 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.event.EventQueue;
 import ch.jeda.platform.WindowImp;
-import ch.jeda.event.Event;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.WindowFeature;
 import java.awt.Cursor;
@@ -31,14 +31,13 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     private static final EnumMap<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
     protected final CanvasWindow canvasWindow;
 
-    @Override
-    public void close() {
-        this.canvasWindow.dispose();
+    JavaWindowImp(final CanvasWindow viewWindow) {
+        this.canvasWindow = viewWindow;
     }
 
     @Override
-    public Event[] fetchEvents() {
-        return this.canvasWindow.fetchEvents();
+    public void close() {
+        this.canvasWindow.dispose();
     }
 
     @Override
@@ -49,6 +48,11 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     @Override
     public boolean isVisible() {
         return this.canvasWindow.isVisible();
+    }
+
+    @Override
+    public void setEventQueue(final EventQueue eventQueue) {
+        this.canvasWindow.setEventQueue(eventQueue);
     }
 
     @Override
@@ -78,10 +82,6 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         else {
             return new SingleBufferedWindowImp(viewWindow);
         }
-    }
-
-    JavaWindowImp(final CanvasWindow viewWindow) {
-        this.canvasWindow = viewWindow;
     }
 
     private static Cursor createInvisibleCursor() {

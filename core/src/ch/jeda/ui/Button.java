@@ -282,10 +282,7 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
      * @since 1.3
      */
     protected void clicked() {
-        final Window window = this.getWindow();
-        if (window != null) {
-            window.postEvent(new ActionEvent(this, this.text));
-        }
+        this.action(this.text);
     }
 
     @Override

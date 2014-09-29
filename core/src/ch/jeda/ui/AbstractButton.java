@@ -16,7 +16,6 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.event.ActionEvent;
 import ch.jeda.event.KeyDownListener;
 import ch.jeda.event.KeyEvent;
 import ch.jeda.event.KeyUpListener;
@@ -74,9 +73,7 @@ public abstract class AbstractButton extends Widget implements KeyDownListener, 
 
     @Override
     public final void onKeyUp(KeyEvent event) {
-        if (this.pressedKeys.remove(event.getKey())) {
-            this.window.postEvent(new ActionEvent(this, this.action));
-        }
+        this.action(this.action);
     }
 
     /**

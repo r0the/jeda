@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.event.Event;
+import ch.jeda.event.EventQueue;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.WindowFeature;
 import java.util.EnumSet;
@@ -28,11 +28,11 @@ public interface WindowImp extends CanvasImp {
 
     void close();
 
-    Event[] fetchEvents();
-
     EnumSet<WindowFeature> getFeatures();
 
     boolean isVisible();
+
+    void setEventQueue(EventQueue eventQueue);
 
     void setFeature(WindowFeature feature, boolean enabled);
 
@@ -41,4 +41,5 @@ public interface WindowImp extends CanvasImp {
     void setTitle(String title);
 
     void update();
+
 }

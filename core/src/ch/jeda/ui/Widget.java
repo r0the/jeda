@@ -17,6 +17,7 @@
 package ch.jeda.ui;
 
 import ch.jeda.Jeda;
+import ch.jeda.event.ActionEvent;
 
 /**
  * Represents an element of a graphical user interface. A widget has a style that determines how to draw the widget.
@@ -25,6 +26,7 @@ import ch.jeda.Jeda;
  * selected at a time.
  *
  * @since 1.3
+ * @version 2
  */
 public abstract class Widget extends GraphicsItem {
 
@@ -267,6 +269,21 @@ public abstract class Widget extends GraphicsItem {
 
         this.x = alignment.alignX(x, this.getWidth());
         this.y = alignment.alignY(y, this.getHeight());
+    }
+
+    /**
+     * Creates a new action event and posts the event to the current window. The event will be processed during the next
+     * tick. Has no effect if the widget is part of a window.
+     *
+     * @param name the name of the action
+     *
+     * @since 1.4
+     */
+    protected void action(final String name) {
+        final Window window = this.getWindow();
+        if (window != null) {
+            window.postEvent(new ActionEvent(this, name));
+        }
     }
 
     private void checkVirtualKeyboard() {

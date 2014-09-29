@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,35 +14,25 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.ui;
+package ch.jeda.event;
 
 import ch.jeda.Log;
-import ch.jeda.event.KeyTypedListener;
-import ch.jeda.event.KeyDownListener;
-import ch.jeda.event.TickEvent;
-import ch.jeda.event.KeyEvent;
-import ch.jeda.event.KeyUpListener;
-import ch.jeda.event.PointerEvent;
-import ch.jeda.event.PointerUpListener;
-import ch.jeda.event.PointerDownListener;
-import ch.jeda.event.TickListener;
-import ch.jeda.event.PointerMovedListener;
-import ch.jeda.event.ActionEvent;
-import ch.jeda.event.ActionListener;
-import ch.jeda.event.Event;
-import ch.jeda.event.SensorEvent;
-import ch.jeda.event.SensorListener;
-import ch.jeda.event.TurnEvent;
-import ch.jeda.event.TurnListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class EventDispatcher {
+/**
+ * This class represents the an event queue.
+ *
+ * @since 1.4
+ */
+public final class EventQueue {
 
+    private static final String EVENT_ERROR = "jeda.event.error";
     private final List<Event> events;
     private final List<ActionListener> actionListeners;
+    private final List<EventQueue> eventQueues;
     private final List<KeyDownListener> keyDownListeners;
     private final List<KeyTypedListener> keyTypedListeners;
     private final List<KeyUpListener> keyUpListeners;
@@ -56,9 +46,15 @@ class EventDispatcher {
     private final List<TickListener> tickListeners;
     private final List<TurnListener> turnListeners;
 
-    EventDispatcher() {
+    /**
+     * Constructs a new event queue.
+     *
+     * @since 1.4
+     */
+    public EventQueue() {
         this.events = new ArrayList<Event>();
         this.actionListeners = new ArrayList<ActionListener>();
+        this.eventQueues = new ArrayList<EventQueue>();
         this.keyDownListeners = new ArrayList<KeyDownListener>();
         this.keyTypedListeners = new ArrayList<KeyTypedListener>();
         this.keyUpListeners = new ArrayList<KeyUpListener>();
@@ -73,11 +69,28 @@ class EventDispatcher {
         this.turnListeners = new ArrayList<TurnListener>();
     }
 
-    void addEvent(final Event event) {
-        this.events.add(event);
+    /**
+     * Adds an event to the event queue. Has no effect if <tt>event</tt> is <tt>null</tt>.
+     *
+     * @param event the event to add
+     *
+     * @since 1.4
+     */
+    public void addEvent(final Event event) {
+        if (event != null) {
+            this.events.add(event);
+        }
     }
 
-    final void addListener(final Object listener) {
+    /**
+     * Adds an event listener to the event queue. Has no effect if <tt>listener</tt> is <tt>null</tt> or the listener
+     * has already been added to the event queue.
+     *
+     * @param listener the listener to add
+     *
+     * @since 1.4
+     */
+    public void addListener(final Object listener) {
         if (listener != null) {
             if (this.listeners.contains(listener)) {
                 this.pendingDeletions.remove(listener);
@@ -88,18 +101,12 @@ class EventDispatcher {
         }
     }
 
-    void dispatchTick(final TickEvent event) {
-        for (int j = 0; j < this.tickListeners.size(); ++j) {
-            try {
-                this.tickListeners.get(j).onTick(event);
-            }
-            catch (final Throwable ex) {
-                Log.err(ex, "jeda.event.error");
-            }
-        }
-    }
-
-    final void dispatchEvents(final Event[] events) {
+    /**
+     * Sends all events in the queue to the appropriate registered listeners. Remoaves all events from the queue.
+     *
+     * @since 1.4
+     */
+    public void processEvents() {
         for (int i = 0; i < this.pendingDeletions.size(); ++i) {
             this.doRemoveListener(this.pendingDeletions.get(i));
         }
@@ -110,12 +117,27 @@ class EventDispatcher {
 
         this.pendingDeletions.clear();
         this.pendingInsertions.clear();
-        this.doDispatchEvents(events);
-        this.doDispatchEvents(this.events.toArray(new Event[this.events.size()]));
+        // Distribute events to child event queues.
+        for (int i = 0; i < this.eventQueues.size(); ++i) {
+            this.eventQueues.get(i).events.addAll(this.events);
+        }
+
+        final Event[] eventArray = this.events.toArray(new Event[this.events.size()]);
         this.events.clear();
+        for (int i = 0; i < eventArray.length; ++i) {
+            this.dispatchEvent(eventArray[i]);
+        }
     }
 
-    final void removeListener(final Object listener) {
+    /**
+     * Removes an event listener from the event queue. Has no effect if <tt>listener</tt> is <tt>null</tt> or the
+     * listener has not previously been added to the event queue.
+     *
+     * @param listener the listener to remove
+     *
+     * @since 1.4
+     */
+    public void removeListener(final Object listener) {
         if (listener != null) {
             if (!this.listeners.contains(listener)) {
                 this.pendingInsertions.remove(listener);
@@ -123,12 +145,6 @@ class EventDispatcher {
             else if (!this.pendingDeletions.contains(listener)) {
                 this.pendingDeletions.add(listener);
             }
-        }
-    }
-
-    private void doDispatchEvents(final Event[] events) {
-        for (int i = 0; i < events.length; ++i) {
-            this.dispatchEvent(events[i]);
         }
     }
 
@@ -140,7 +156,7 @@ class EventDispatcher {
                         this.actionListeners.get(j).onAction((ActionEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
@@ -217,7 +233,18 @@ class EventDispatcher {
                         this.sensorListeners.get(j).onSensorChanged((SensorEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
+                    }
+                }
+
+                break;
+            case TICK:
+                for (int j = 0; j < this.tickListeners.size(); ++j) {
+                    try {
+                        this.tickListeners.get(j).onTick((TickEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
@@ -240,6 +267,10 @@ class EventDispatcher {
         this.listeners.add(listener);
         if (listener instanceof ActionListener) {
             this.actionListeners.add((ActionListener) listener);
+        }
+
+        if (listener instanceof EventQueue) {
+            this.eventQueues.add((EventQueue) listener);
         }
 
         if (listener instanceof KeyDownListener) {
@@ -277,13 +308,16 @@ class EventDispatcher {
         if (listener instanceof TurnListener) {
             this.turnListeners.add((TurnListener) listener);
         }
-
     }
 
     private void doRemoveListener(final Object listener) {
         this.listeners.remove(listener);
         if (listener instanceof ActionListener) {
             this.actionListeners.remove((ActionListener) listener);
+        }
+
+        if (listener instanceof EventQueue) {
+            this.eventQueues.remove((EventQueue) listener);
         }
 
         if (listener instanceof KeyDownListener) {
@@ -298,6 +332,10 @@ class EventDispatcher {
             this.keyUpListeners.remove((KeyUpListener) listener);
         }
 
+        if (listener instanceof SensorListener) {
+            this.sensorListeners.remove((SensorListener) listener);
+        }
+
         if (listener instanceof PointerDownListener) {
             this.pointerDownListeners.remove((PointerDownListener) listener);
         }
@@ -310,10 +348,6 @@ class EventDispatcher {
             this.pointerUpListeners.remove((PointerUpListener) listener);
         }
 
-        if (listener instanceof SensorListener) {
-            this.sensorListeners.remove((SensorListener) listener);
-        }
-
         if (listener instanceof TickListener) {
             this.tickListeners.remove((TickListener) listener);
         }
@@ -321,6 +355,5 @@ class EventDispatcher {
         if (listener instanceof TurnListener) {
             this.turnListeners.remove((TurnListener) listener);
         }
-
     }
 }

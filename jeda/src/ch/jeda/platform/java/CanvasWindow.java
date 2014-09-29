@@ -17,6 +17,7 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.event.Event;
+import ch.jeda.event.EventQueue;
 import ch.jeda.event.EventType;
 import ch.jeda.event.TurnAxis;
 import ch.jeda.event.TurnEvent;
@@ -25,7 +26,6 @@ import ch.jeda.event.KeyEvent;
 import ch.jeda.event.PointerEvent;
 import ch.jeda.ui.WindowFeature;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,12 +38,10 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-import java.util.Collection;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
@@ -65,7 +63,6 @@ class CanvasWindow extends BaseWindow implements FocusListener,
     private static final Map<Integer, Key> BUTTON_MAP = initButtonMap();
     private static final Map<Integer, Map<Integer, Key>> KEY_MAP = initKeyMap();
     private final ImageCanvas canvas;
-    private final Collection<Event> events;
     private final EnumSet<WindowFeature> features;
     private final int height;
     // BEGIN workaround to Java bug on Linux platform
@@ -73,6 +70,34 @@ class CanvasWindow extends BaseWindow implements FocusListener,
     // END workaround to Java bug on Linux platform
     private final Map<Key, Integer> keyRepeatCount;
     private final int width;
+    private EventQueue eventQueue;
+
+    CanvasWindow(final WindowManager manager, final int width, final int height,
+                 final EnumSet<WindowFeature> features) {
+        super(manager);
+        this.canvas = new ImageCanvas(width, height);
+        this.features = features;
+        this.height = height;
+        this.keyRepeatCount = new EnumMap<Key, Integer>(Key.class);
+        this.keyReleaseTimer = new EnumMap<Key, KeyReleaseTimer>(Key.class);
+        this.width = width;
+        this.setResizable(false);
+        this.setIgnoreRepaint(true);
+        this.getContentPane().add(this.canvas);
+        this.setUndecorated(features.contains(WindowFeature.FULLSCREEN));
+        this.pack();
+        this.init();
+
+        this.canvas.setFocusable(true);
+        this.canvas.requestFocus();
+        this.canvas.addFocusListener(this);
+        this.canvas.addKeyListener(this);
+        this.getContentPane().addKeyListener(this);
+        this.addKeyListener(this);
+        this.canvas.addMouseListener(this);
+        this.canvas.addMouseMotionListener(this);
+        this.canvas.addMouseWheelListener(this);
+    }
 
     @Override
     public void focusGained(final FocusEvent event) {
@@ -99,7 +124,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
             }
             // END workaround to Java bug on Linux platform
 
-            this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_DOWN, key, count));
+            this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_DOWN, key, count));
             this.keyRepeatCount.put(key, count + 1);
         }
     }
@@ -129,20 +154,20 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         final char ch = event.getKeyChar();
         switch (ch) {
             case '\b':
-                this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.BACKSPACE));
+                this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.BACKSPACE));
                 break;
             case '\t':
-                this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.TAB));
+                this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.TAB));
                 break;
             case '\n':
-                this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.ENTER));
+                this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.ENTER));
                 break;
             case '\r':
-                this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.ENTER));
+                this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.ENTER));
                 break;
             default:
                 if (!Character.isISOControl(ch)) {
-                    this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, ch));
+                    this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, ch));
                 }
 
                 break;
@@ -155,31 +180,31 @@ class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void mouseDragged(final MouseEvent event) {
-        this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_MOVED,
-                                       POINTER_ID, event.getX(), event.getY()));
+        this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_MOVED,
+                                        POINTER_ID, event.getX(), event.getY()));
     }
 
     @Override
     public void mouseEntered(final MouseEvent event) {
         if (this.features.contains(WindowFeature.HOVERING_POINTER)) {
-            this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN,
-                                           POINTER_ID, event.getX(), event.getY()));
+            this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN,
+                                            POINTER_ID, event.getX(), event.getY()));
         }
     }
 
     @Override
     public void mouseExited(final MouseEvent event) {
         if (this.features.contains(WindowFeature.HOVERING_POINTER)) {
-            this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID,
-                                           event.getX(), event.getY()));
+            this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID,
+                                            event.getX(), event.getY()));
         }
     }
 
     @Override
     public void mouseMoved(final MouseEvent event) {
         if (this.features.contains(WindowFeature.HOVERING_POINTER)) {
-            this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_MOVED, POINTER_ID,
-                                           event.getX(), event.getY()));
+            this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_MOVED, POINTER_ID,
+                                            event.getX(), event.getY()));
         }
     }
 
@@ -187,12 +212,12 @@ class CanvasWindow extends BaseWindow implements FocusListener,
     public void mousePressed(final MouseEvent event) {
         final Key key = BUTTON_MAP.get(event.getButton());
         if (key != null) {
-            this.addEvent(new KeyEvent(MOUSE, EventType.KEY_DOWN, key));
+            this.postEvent(new KeyEvent(MOUSE, EventType.KEY_DOWN, key));
         }
 
         if (!this.features.contains(WindowFeature.HOVERING_POINTER)) {
-            this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN, POINTER_ID,
-                                           event.getX(), event.getY()));
+            this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN, POINTER_ID,
+                                            event.getX(), event.getY()));
         }
     }
 
@@ -200,52 +225,18 @@ class CanvasWindow extends BaseWindow implements FocusListener,
     public void mouseReleased(final MouseEvent event) {
         final Key key = BUTTON_MAP.get(event.getButton());
         if (key != null) {
-            this.addEvent(new KeyEvent(MOUSE, EventType.KEY_UP, key));
+            this.postEvent(new KeyEvent(MOUSE, EventType.KEY_UP, key));
         }
 
         if (!this.features.contains(WindowFeature.HOVERING_POINTER)) {
-            this.addEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID,
-                                           event.getX(), event.getY()));
+            this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID,
+                                            event.getX(), event.getY()));
         }
     }
 
     @Override
     public void mouseWheelMoved(final MouseWheelEvent event) {
-        this.addEvent(new TurnEvent(MOUSE, event.getWheelRotation(), TurnAxis.MOUSE_WHEEL));
-    }
-
-    CanvasWindow(final WindowManager manager, final int width, final int height,
-                 final EnumSet<WindowFeature> features) {
-        super(manager);
-        this.canvas = new ImageCanvas(width, height);
-        this.events = new ConcurrentLinkedQueue<Event>();
-        this.features = features;
-        this.height = height;
-        this.keyRepeatCount = new EnumMap<Key, Integer>(Key.class);
-        this.keyReleaseTimer = new EnumMap<Key, KeyReleaseTimer>(Key.class);
-        this.width = width;
-        this.setResizable(false);
-        this.setIgnoreRepaint(true);
-        this.getContentPane().add(this.canvas);
-        this.setUndecorated(features.contains(WindowFeature.FULLSCREEN));
-        this.pack();
-        this.init();
-
-        this.canvas.setFocusable(true);
-        this.canvas.requestFocus();
-        this.canvas.addFocusListener(this);
-        this.canvas.addKeyListener(this);
-        this.getContentPane().addKeyListener(this);
-        this.addKeyListener(this);
-        this.canvas.addMouseListener(this);
-        this.canvas.addMouseMotionListener(this);
-        this.canvas.addMouseWheelListener(this);
-    }
-
-    Event[] fetchEvents() {
-        final Event[] result = this.events.toArray(new Event[0]);
-        this.events.clear();
-        return result;
+        this.postEvent(new TurnEvent(MOUSE, event.getWheelRotation(), TurnAxis.MOUSE_WHEEL));
     }
 
     EnumSet<WindowFeature> getFeatures() {
@@ -258,6 +249,10 @@ class CanvasWindow extends BaseWindow implements FocusListener,
 
     int getImageWidth() {
         return this.width;
+    }
+
+    void setEventQueue(final EventQueue eventQueue) {
+        this.eventQueue = eventQueue;
     }
 
     void setFeature(final WindowFeature feature, final boolean enabled) {
@@ -282,13 +277,15 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         });
     }
 
-    private void addEvent(final Event event) {
-        this.events.add(event);
+    private void keyReleased(final Key key) {
+        this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_UP, key));
+        this.keyRepeatCount.remove(key);
     }
 
-    private void keyReleased(final Key key) {
-        this.addEvent(new KeyEvent(KEYBOARD, EventType.KEY_UP, key));
-        this.keyRepeatCount.remove(key);
+    private void postEvent(final Event event) {
+        if (this.eventQueue != null) {
+            this.eventQueue.addEvent(event);
+        }
     }
 
     private static Map<Integer, Key> initButtonMap() {
@@ -428,7 +425,6 @@ class CanvasWindow extends BaseWindow implements FocusListener,
         standard.put(java.awt.event.KeyEvent.VK_Z, Key.Z);
 
 //        result.put(java.awt.event.KeyEvent.VK_ALT_GRAPH, Key.ALT_GRAPH);
-
         // When caps lock is engaged, the letter keys have location unknown.
         unknown.put(java.awt.event.KeyEvent.VK_A, Key.A);
         unknown.put(java.awt.event.KeyEvent.VK_B, Key.B);
@@ -508,7 +504,6 @@ class CanvasWindow extends BaseWindow implements FocusListener,
 
         @Override
         public void actionPerformed(final ActionEvent event) {
-            assert EventQueue.isDispatchThread();
             if (this.ok) {
                 this.cancel();
                 this.window.keyReleased(key);

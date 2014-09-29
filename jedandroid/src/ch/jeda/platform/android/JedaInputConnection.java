@@ -42,7 +42,7 @@ class JedaInputConnection extends BaseInputConnection {
     @Override
     public boolean commitText(final CharSequence text, final int newCursorPosition) {
         for (int i = 0; i < text.length(); ++i) {
-            main.addEvent(new KeyEvent(this, EventType.KEY_TYPED, text.charAt(i)));
+            this.main.addEvent(new KeyEvent(this, EventType.KEY_TYPED, text.charAt(i)));
         }
 
         return super.commitText(text, newCursorPosition);

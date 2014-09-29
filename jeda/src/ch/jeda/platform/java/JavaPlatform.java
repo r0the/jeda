@@ -17,6 +17,7 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.LogLevel;
+import ch.jeda.event.EventQueue;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.CanvasImp;
@@ -99,6 +100,11 @@ class JavaPlatform implements Platform {
     }
 
     @Override
+    public void setEventQueue(final EventQueue eventQueue) {
+        // ignore
+    }
+
+    @Override
     public void setSensorEnabled(final SensorType sensorType, final boolean enabled) {
         // ignore
     }
@@ -164,4 +170,5 @@ class JavaPlatform implements Platform {
                 return null;
         }
     }
+
 }

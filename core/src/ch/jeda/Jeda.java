@@ -16,6 +16,7 @@
  */
 package ch.jeda;
 
+import ch.jeda.event.Event;
 import ch.jeda.event.SensorType;
 import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
@@ -38,10 +39,30 @@ import java.util.List;
  * ist running on.
  *
  * @since 1.0
+ * @version 2
  */
 public class Jeda {
 
     private static final JedaEngine ENGINE = JedaEngine.create();
+
+    /**
+     * Adds an event listener to the Jeda engine. The listener will receive the following events:
+     * <ul>
+     * <li>{@link ch.jeda.event.EventType#ACTION} events from {@link ch.jeda.ui.Widget}s
+     * <li>{@link ch.jeda.event.EventType#TICK} events from the Jeda engine
+     * <li>{@link ch.jeda.event.EventType#SENSOR} events from the system
+     * </ul>
+     * Has no effect if <tt>listener</tt> is <tt>null</tt>.
+     *
+     * @param listener the listener to add
+     *
+     * @see #postEvent(ch.jeda.event.Event)
+     * @see #removeEventListener(java.lang.Object)
+     * @since 1.4
+     */
+    public static void addEventListener(final Object listener) {
+        ENGINE.addEventListener(listener);
+    }
 
     /**
      * Adds a tick listener to the Jeda engine. The listener will receive {@link ch.jeda.event.EventType#TICK} events in
@@ -53,9 +74,10 @@ public class Jeda {
      * @see #removeTickListener(ch.jeda.event.TickListener)
      * @see #setTickFrequency(double)
      * @since 1.0
+     * @deprecated Use {@link #addEventListener(java.lang.Object)} instead.
      */
     public static void addTickListener(final TickListener listener) {
-        ENGINE.addTickListener(listener);
+        ENGINE.addEventListener(listener);
     }
 
     /**
@@ -223,6 +245,19 @@ public class Jeda {
     }
 
     /**
+     * Removes an event listener from the Jeda engine. The listener will no longer receive events. Has no effect if
+     * <tt>listener</tt> is <tt>null</tt>.
+     *
+     * @param listener the listener to remove
+     *
+     * @see #addEventListener(java.lang.Object)
+     * @since 1.4
+     */
+    public static void removeEventListener(final Object listener) {
+        ENGINE.removeEventListener(listener);
+    }
+
+    /**
      * Removes a tick listener from the Jeda engine. The listener will no longer receive
      * {@link ch.jeda.event.EventType#TICK} events. Has no effect if <tt>listener</tt> is <tt>null</tt>.
      *
@@ -231,9 +266,10 @@ public class Jeda {
      * @see #addTickListener(ch.jeda.event.TickListener)
      * @see #setTickFrequency(double)
      * @since 1.0
+     * @deprecated Use {@link #removeEventListener(java.lang.Object)} instead.
      */
     public static void removeTickListener(final TickListener listener) {
-        ENGINE.removeTickListener(listener);
+        ENGINE.removeEventListener(listener);
     }
 
     /**

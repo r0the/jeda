@@ -17,6 +17,7 @@
 package ch.jeda.platform;
 
 import ch.jeda.LogLevel;
+import ch.jeda.event.EventQueue;
 import ch.jeda.event.SensorType;
 import java.io.InputStream;
 
@@ -53,6 +54,8 @@ public interface Platform {
     InputStream openResource(String path);
 
     void setSensorEnabled(SensorType sensorType, boolean enabled);
+
+    void setEventQueue(EventQueue eventQueue);
 
     void setVirtualKeyboardVisible(boolean visible);
 

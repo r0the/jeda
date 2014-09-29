@@ -19,6 +19,7 @@ package ch.jeda.ui;
 import ch.jeda.Jeda;
 import ch.jeda.JedaInternal;
 import ch.jeda.event.Event;
+import ch.jeda.event.EventQueue;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
 import ch.jeda.platform.WindowImp;
@@ -38,7 +39,7 @@ import java.util.EnumSet;
 public class Window extends Canvas {
 
     private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
-    private final EventDispatcher eventDispatcher;
+    private final EventQueue eventQueue;
     private final GraphicsItems graphicsItems;
     private WindowImp imp;
     private String title;
@@ -102,10 +103,11 @@ public class Window extends Canvas {
      */
     public Window(final int width, final int height, final WindowFeature... features) {
         this.graphicsItems = new GraphicsItems(this);
-        this.eventDispatcher = new EventDispatcher();
+        this.eventQueue = new EventQueue();
         this.title = Jeda.getProgramName();
         this.resetImp(width, height, toSet(features));
-        Jeda.addTickListener(new EventLoop(this));
+        Jeda.addEventListener(this.eventQueue);
+        Jeda.addEventListener(new EventLoop(this));
     }
 
     /**
@@ -133,7 +135,7 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public final void addEventListener(final Object listener) {
-        this.eventDispatcher.addListener(listener);
+        this.eventQueue.addListener(listener);
     }
 
     /**
@@ -245,7 +247,7 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public final void removeEventListener(final Object listener) {
-        this.eventDispatcher.removeListener(listener);
+        this.eventQueue.removeListener(listener);
     }
 
     /**
@@ -265,8 +267,7 @@ public class Window extends Canvas {
         }
 
         if (IMP_CHANGING_FEATURES.contains(feature)) {
-            final EnumSet<WindowFeature> featureSet
-                                         = EnumSet.copyOf(this.imp.getFeatures());
+            final EnumSet<WindowFeature> featureSet = EnumSet.copyOf(this.imp.getFeatures());
             if (enabled) {
                 featureSet.add(feature);
             }
@@ -332,13 +333,12 @@ public class Window extends Canvas {
     }
 
     void postEvent(final Event event) {
-        this.eventDispatcher.addEvent(event);
+        this.eventQueue.addEvent(event);
     }
 
     private void tick(final TickEvent event) {
         if (this.imp.isVisible()) {
-            this.eventDispatcher.dispatchEvents(this.imp.fetchEvents());
-            this.eventDispatcher.dispatchTick(event);
+            this.eventQueue.processEvents();
             this.graphicsItems.processPending();
             this.graphicsItems.draw(this);
             this.imp.update();
@@ -351,6 +351,7 @@ public class Window extends Canvas {
         }
 
         this.imp = JedaInternal.createWindowImp(width, height, features);
+        this.imp.setEventQueue(this.eventQueue);
         this.imp.setTitle(this.title);
         if (!this.hasFeature(WindowFeature.DOUBLE_BUFFERED)) {
             this.imp.setColor(Color.WHITE);

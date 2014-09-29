@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import ch.jeda.event.EventQueue;
 import ch.jeda.event.SensorEvent;
 import ch.jeda.event.SensorType;
 import java.util.EnumMap;
@@ -134,12 +135,12 @@ class SensorManager extends Fragment {
             case GRAVITY:
             case LINEAR_ACCELERATION:
             case MAGNETIC_FIELD:
-                return new ThreeDeeSensorHandler(this.getActivity(), this.sensorInfoMap);
+                return new ThreeDeeSensorHandler((Main) this.getActivity(), this.sensorInfoMap);
             case LIGHT:
             case PRESSURE:
             case PROXIMITY:
             case TEMPERATURE:
-                return new ValueSensorHandler(this.getActivity(), this.sensorInfoMap);
+                return new ValueSensorHandler((Main) this.getActivity(), this.sensorInfoMap);
             default:
                 return null;
         }
@@ -169,10 +170,10 @@ class SensorManager extends Fragment {
 
     private static class ThreeDeeSensorHandler implements SensorEventListener {
 
-        private final Activity activity;
+        private final Main activity;
         private final Map<Sensor, SensorInfo> sensorReserveMap;
 
-        public ThreeDeeSensorHandler(final Activity activity, final Map<Sensor, SensorInfo> sensorReserveMap) {
+        ThreeDeeSensorHandler(final Main activity, final Map<Sensor, SensorInfo> sensorReserveMap) {
             this.activity = activity;
             this.sensorReserveMap = sensorReserveMap;
         }
@@ -201,7 +202,7 @@ class SensorManager extends Fragment {
                     break;
             }
 
-            ((Main) this.activity).addEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, x, y, z));
+            this.activity.postEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, x, y, z));
         }
 
         public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
@@ -210,10 +211,10 @@ class SensorManager extends Fragment {
 
     private static class ValueSensorHandler implements SensorEventListener {
 
-        private final Activity activity;
+        private final Main activity;
         private final Map<Sensor, SensorInfo> sensorReserveMap;
 
-        public ValueSensorHandler(final Activity activity, final Map<Sensor, SensorInfo> sensorReserveMap) {
+        ValueSensorHandler(final Main activity, final Map<Sensor, SensorInfo> sensorReserveMap) {
             this.activity = activity;
             this.sensorReserveMap = sensorReserveMap;
         }
@@ -223,7 +224,7 @@ class SensorManager extends Fragment {
             final boolean maxiumum = event.values[0] >= event.sensor.getMaximumRange() ||
                                      event.values[0] <= -event.sensor.getMaximumRange();
             final float value = event.values[0] * sensorInfo.factor + sensorInfo.shift;
-            ((Main) this.activity).addEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, maxiumum, value));
+            this.activity.postEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, maxiumum, value));
         }
 
         public void onAccuracyChanged(final Sensor sensor, final int accuracy) {

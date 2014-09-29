@@ -28,16 +28,15 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import ch.jeda.event.Event;
+import ch.jeda.event.EventQueue;
 import ch.jeda.event.EventType;
 import ch.jeda.event.Key;
 import ch.jeda.event.KeyEvent;
 import ch.jeda.event.PointerEvent;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.WindowFeature;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
@@ -46,15 +45,14 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
 
     private static final Map<Integer, EventSource> INPUT_DEVICE_MAP = new HashMap<Integer, EventSource>();
     private static final Map<Integer, Key> KEY_MAP = initKeyMap();
-    private final List<Event> events;
     private final EnumSet<WindowFeature> features;
+    private EventQueue eventQueue;
     private WindowRequest request;
     private boolean surfaceAvailable;
     private SurfaceHolder surfaceHolder;
 
     CanvasFragment(final WindowRequest request) {
         super();
-        this.events = new ArrayList();
         this.features = request.getFeatures();
         this.request = request;
     }
@@ -81,10 +79,10 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
 
         switch (event.getAction()) {
             case android.view.KeyEvent.ACTION_DOWN:
-                this.events.add(new KeyEvent(mapDevice(event), EventType.KEY_DOWN, key, event.getRepeatCount()));
+                this.postEvent(new KeyEvent(mapDevice(event), EventType.KEY_DOWN, key, event.getRepeatCount()));
                 break;
             case android.view.KeyEvent.ACTION_UP:
-                this.events.add(new KeyEvent(mapDevice(event), EventType.KEY_UP, key));
+                this.postEvent(new KeyEvent(mapDevice(event), EventType.KEY_UP, key));
                 break;
         }
 
@@ -98,19 +96,19 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
                 index = event.getActionIndex();
-                this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_DOWN, event.getPointerId(index),
-                                                 (int) event.getX(index), (int) event.getY(index)));
+                this.postEvent(new PointerEvent(mapDevice(event), EventType.POINTER_DOWN, event.getPointerId(index),
+                                                (int) event.getX(index), (int) event.getY(index)));
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 index = event.getActionIndex();
-                this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_UP, event.getPointerId(index),
-                                                 (int) event.getX(index), (int) event.getY(index)));
+                this.postEvent(new PointerEvent(mapDevice(event), EventType.POINTER_UP, event.getPointerId(index),
+                                                (int) event.getX(index), (int) event.getY(index)));
                 break;
             case MotionEvent.ACTION_MOVE:
                 for (index = 0; index < event.getPointerCount(); ++index) {
-                    this.events.add(new PointerEvent(mapDevice(event), EventType.POINTER_MOVED, event.getPointerId(index),
-                                                     (int) event.getX(index), (int) event.getY(index)));
+                    this.postEvent(new PointerEvent(mapDevice(event), EventType.POINTER_MOVED, event.getPointerId(index),
+                                                    (int) event.getX(index), (int) event.getY(index)));
                 }
 
                 break;
@@ -136,16 +134,6 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
         this.surfaceAvailable = false;
     }
 
-    void addEvent(final Event event) {
-        this.events.add(event);
-    }
-
-    Event[] fetchEvents() {
-        final Event[] result = this.events.toArray(new Event[this.events.size()]);
-        this.events.clear();
-        return result;
-    }
-
     EnumSet<WindowFeature> getFeatures() {
         return this.features;
     }
@@ -162,6 +150,12 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
         }
     }
 
+    void postEvent(final Event event) {
+        if (this.eventQueue != null) {
+            this.eventQueue.addEvent(event);
+        }
+    }
+
     void setBitmap(final Bitmap bitmap) {
         if (this.surfaceAvailable) {
             final Canvas canvas = this.surfaceHolder.lockCanvas();
@@ -170,6 +164,10 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
                 this.surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
+    }
+
+    void setEventQueue(final EventQueue eventQueue) {
+        this.eventQueue = eventQueue;
     }
 
     void setFeature(final WindowFeature feature, final boolean enabled) {
@@ -187,16 +185,6 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
                 getActivity().setTitle(title);
             }
         });
-    }
-
-    private static EventSource mapDevice(final android.view.InputEvent event) {
-        final android.view.InputDevice device = event.getDevice();
-        final int id = device.getId();
-        if (!INPUT_DEVICE_MAP.containsKey(id)) {
-            INPUT_DEVICE_MAP.put(id, new EventSource(device.getName()));
-        }
-
-        return INPUT_DEVICE_MAP.get(id);
     }
 
     private static Map<Integer, Key> initKeyMap() {
@@ -271,8 +259,6 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
 //        result.put(android.view.KeyEvent.KEYCODE_, Key.PRINT_SCREEN);
 //        result.put(android.view.KeyEvent.KEYCODE_, Key.INSERT);
 //        result.put(android.view.KeyEvent.KEYCODE_, Key.DELETE);
-
-
 // Only since API level 11
 //        result.put(android.view.KeyEvent.KEYCODE_ALT_GRAPH, Key.ALT_GRAPH);
 //        result.put(android.view.KeyEvent.KEYCODE_CAPS_LOCK, Key.CAPS_LOCK);
@@ -310,6 +296,16 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
 //        result.put(android.view.KeyEvent.KEYCODE_NUMPAD_SUBTRACT, Key.NUMPAD_SUBTRACT);
 //        result.put(android.view.KeyEvent.KEYCODE_SCROLL_LOCK, Key.SCROLL_LOCK);
         return result;
+    }
+
+    private static EventSource mapDevice(final android.view.InputEvent event) {
+        final android.view.InputDevice device = event.getDevice();
+        final int id = device.getId();
+        if (!INPUT_DEVICE_MAP.containsKey(id)) {
+            INPUT_DEVICE_MAP.put(id, new EventSource(device.getName()));
+        }
+
+        return INPUT_DEVICE_MAP.get(id);
     }
 
     private static class EventSource {

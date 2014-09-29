@@ -30,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 import ch.jeda.Jeda;
 import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
+import ch.jeda.event.EventQueue;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.ImageImp;
@@ -49,6 +50,7 @@ public final class Main extends FragmentActivity {
     private final ResourceManager resourceManager;
     private final SensorManager sensorManager;
     private JedaView contentView;
+    private EventQueue eventQueue;
     private CanvasFragment topWindow;
     private boolean virtualKeyboardVisible;
 
@@ -126,7 +128,7 @@ public final class Main extends FragmentActivity {
      */
     void addEvent(final Event event) {
         if (this.topWindow != null) {
-            this.topWindow.addEvent(event);
+            this.topWindow.postEvent(event);
         }
     }
 
@@ -169,6 +171,16 @@ public final class Main extends FragmentActivity {
 
     InputStream openResource(final String path) {
         return this.resourceManager.openInputStream(path);
+    }
+
+    void postEvent(final Event event) {
+        if (this.eventQueue != null) {
+            this.eventQueue.addEvent(event);
+        }
+    }
+
+    void setEventQueue(final EventQueue eventQueue) {
+        this.eventQueue = eventQueue;
     }
 
     void setSensorEnabled(final SensorType sensorType, final boolean enabled) {

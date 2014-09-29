@@ -19,6 +19,7 @@ package ch.jeda.platform.android;
 import android.graphics.Typeface;
 import android.view.WindowManager;
 import ch.jeda.LogLevel;
+import ch.jeda.event.EventQueue;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.CanvasImp;
@@ -109,6 +110,11 @@ class AndroidPlatform implements Platform {
     }
 
     @Override
+    public void setEventQueue(final EventQueue eventQueue) {
+        Main.getInstance().setEventQueue(eventQueue);
+    }
+
+    @Override
     public void setSensorEnabled(final SensorType sensorType, boolean enabled) {
         Main.getInstance().setSensorEnabled(sensorType, enabled);
     }
@@ -158,4 +164,5 @@ class AndroidPlatform implements Platform {
                 return null;
         }
     }
+
 }

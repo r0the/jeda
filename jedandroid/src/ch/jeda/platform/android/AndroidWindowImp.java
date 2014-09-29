@@ -16,8 +16,8 @@
  */
 package ch.jeda.platform.android;
 
+import ch.jeda.event.EventQueue;
 import ch.jeda.platform.WindowImp;
-import ch.jeda.event.Event;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.WindowFeature;
 import java.util.EnumSet;
@@ -31,11 +31,6 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     }
 
     @Override
-    public Event[] fetchEvents() {
-        return this.canvasView.fetchEvents();
-    }
-
-    @Override
     public EnumSet<WindowFeature> getFeatures() {
         return this.canvasView.getFeatures();
     }
@@ -43,6 +38,11 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     @Override
     public boolean isVisible() {
         return this.canvasView.isVisible();
+    }
+
+    @Override
+    public void setEventQueue(final EventQueue eventQueue) {
+        this.canvasView.setEventQueue(eventQueue);
     }
 
     @Override

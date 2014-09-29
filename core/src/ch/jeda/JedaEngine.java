@@ -16,9 +16,9 @@
  */
 package ch.jeda;
 
+import ch.jeda.event.EventQueue;
 import ch.jeda.event.SensorType;
 import ch.jeda.event.TickEvent;
-import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
@@ -37,7 +37,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 class JedaEngine implements PlatformCallback, Runnable {
 
@@ -50,12 +49,12 @@ class JedaEngine implements PlatformCallback, Runnable {
     private final AudioManager audioManager;
     private final Object currentProgramLock;
     private final ImageImp defaultImageImp;
+    private final EventQueue eventQueue;
     private final FrequencyMeter frequencyMeter;
     private final Object pauseLock;
     private final Platform platform;
     private final ProgramClassWrapper[] programClasses;
     private final Properties properties;
-    private final List<TickListener> tickListeners;
     private final Timer timer;
     private JedaProgramExecutor currentProgram;
     private boolean paused;
@@ -71,14 +70,15 @@ class JedaEngine implements PlatformCallback, Runnable {
 
     JedaEngine() {
         this.currentProgramLock = new Object();
+        this.eventQueue = new EventQueue();
         this.frequencyMeter = new FrequencyMeter();
         this.pauseLock = new Object();
-        this.tickListeners = new CopyOnWriteArrayList<TickListener>();
         this.timer = new Timer(DEFAULT_TICK_FREQUENCY);
         // Load properties
         this.properties = initProperties();
         // Init platform
         this.platform = initPlatform(this.properties.getString("jeda.platform.class"), this);
+        this.platform.setEventQueue(this.eventQueue);
         // Init audio manager
         this.audioManager = new AudioManager(this.platform.getAudioManagerImp());
         // Load default image
@@ -104,13 +104,6 @@ class JedaEngine implements PlatformCallback, Runnable {
     }
 
     @Override
-    public void addTickListener(final TickListener listener) {
-        if (listener != null && !this.tickListeners.contains(listener)) {
-            this.tickListeners.add(listener);
-        }
-    }
-
-    @Override
     public void run() {
         this.timer.start();
         while (true) {
@@ -128,15 +121,8 @@ class JedaEngine implements PlatformCallback, Runnable {
                 this.frequencyMeter.count();
                 final TickEvent event = new TickEvent(this, this.timer.getLastStepDuration(),
                                                       this.frequencyMeter.getFrequency());
-                for (int i = 0; i < this.tickListeners.size(); ++i) {
-                    try {
-                        this.tickListeners.get(i).onTick(event);
-                    }
-                    catch (final Throwable ex) {
-                        Log.err(ex, "java.event.error");
-                    }
-                }
-
+                this.eventQueue.addEvent(event);
+                this.eventQueue.processEvents();
                 this.timer.tick();
             }
         }
@@ -169,6 +155,10 @@ class JedaEngine implements PlatformCallback, Runnable {
                 this.platform.shutdown();
             }
         }
+    }
+
+    void addEventListener(final Object listener) {
+        this.eventQueue.addListener(listener);
     }
 
     CanvasImp createCanvasImp(final int width, final int height) {
@@ -283,10 +273,8 @@ class JedaEngine implements PlatformCallback, Runnable {
         }
     }
 
-    void removeTickListener(final TickListener listener) {
-        if (listener != null) {
-            this.tickListeners.remove(listener);
-        }
+    void removeEventListener(final Object listener) {
+        this.eventQueue.removeListener(listener);
     }
 
     void showInputRequest(final InputRequest request) {
