@@ -18,24 +18,26 @@ package ch.jeda.event;
 
 import ch.jeda.Log;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
- * This class represents the an event queue.
+ * This class represents the an event queue. This class is thread-safe.
  *
  * @since 1.4
  */
 public final class EventQueue {
 
     private static final String EVENT_ERROR = "jeda.event.error";
-    private final List<Event> events;
     private final List<ActionListener> actionListeners;
+    private final Object eventLock;
     private final List<EventQueue> eventQueues;
     private final List<KeyDownListener> keyDownListeners;
     private final List<KeyTypedListener> keyTypedListeners;
     private final List<KeyUpListener> keyUpListeners;
+    private final Object listenerLock;
     private final Set<Object> listeners;
     private final List<Object> pendingDeletions;
     private final List<Object> pendingInsertions;
@@ -45,6 +47,8 @@ public final class EventQueue {
     private final List<SensorListener> sensorListeners;
     private final List<TickListener> tickListeners;
     private final List<TurnListener> turnListeners;
+    private List<Event> eventsIn;
+    private List<Event> eventsOut;
 
     /**
      * Constructs a new event queue.
@@ -52,12 +56,13 @@ public final class EventQueue {
      * @since 1.4
      */
     public EventQueue() {
-        this.events = new ArrayList<Event>();
         this.actionListeners = new ArrayList<ActionListener>();
+        this.eventLock = new Object();
         this.eventQueues = new ArrayList<EventQueue>();
         this.keyDownListeners = new ArrayList<KeyDownListener>();
         this.keyTypedListeners = new ArrayList<KeyTypedListener>();
         this.keyUpListeners = new ArrayList<KeyUpListener>();
+        this.listenerLock = new Object();
         this.listeners = new HashSet<Object>();
         this.pendingDeletions = new ArrayList<Object>();
         this.pendingInsertions = new ArrayList<Object>();
@@ -67,6 +72,8 @@ public final class EventQueue {
         this.sensorListeners = new ArrayList<SensorListener>();
         this.tickListeners = new ArrayList<TickListener>();
         this.turnListeners = new ArrayList<TurnListener>();
+        this.eventsIn = new ArrayList<Event>();
+        this.eventsOut = new ArrayList<Event>();
     }
 
     /**
@@ -78,7 +85,24 @@ public final class EventQueue {
      */
     public void addEvent(final Event event) {
         if (event != null) {
-            this.events.add(event);
+            synchronized (this.eventLock) {
+                this.eventsIn.add(event);
+            }
+        }
+    }
+
+    /**
+     * Adds a collection of events to the event queue. Has no effect if <tt>events</tt> is <tt>null</tt>.
+     *
+     * @param events the collection of events to add
+     *
+     * @since 1.4
+     */
+    public void addEvents(final Collection<Event> events) {
+        if (events != null) {
+            synchronized (this.eventLock) {
+                this.eventsIn.addAll(events);
+            }
         }
     }
 
@@ -92,11 +116,13 @@ public final class EventQueue {
      */
     public void addListener(final Object listener) {
         if (listener != null) {
-            if (this.listeners.contains(listener)) {
-                this.pendingDeletions.remove(listener);
-            }
-            else if (!this.pendingInsertions.contains(listener)) {
-                this.pendingInsertions.add(listener);
+            synchronized (this.listenerLock) {
+                if (this.listeners.contains(listener)) {
+                    this.pendingDeletions.remove(listener);
+                }
+                else if (!this.pendingInsertions.contains(listener)) {
+                    this.pendingInsertions.add(listener);
+                }
             }
         }
     }
@@ -107,25 +133,35 @@ public final class EventQueue {
      * @since 1.4
      */
     public void processEvents() {
-        for (int i = 0; i < this.pendingDeletions.size(); ++i) {
-            this.doRemoveListener(this.pendingDeletions.get(i));
+        synchronized (this.listenerLock) {
+            for (int i = 0; i < this.pendingDeletions.size(); ++i) {
+                this.doRemoveListener(this.pendingDeletions.get(i));
+            }
+
+            for (int i = 0; i < this.pendingInsertions.size(); ++i) {
+                this.doAddListener(this.pendingInsertions.get(i));
+            }
+
+            this.pendingDeletions.clear();
+            this.pendingInsertions.clear();
         }
 
-        for (int i = 0; i < this.pendingInsertions.size(); ++i) {
-            this.doAddListener(this.pendingInsertions.get(i));
+        // Switch input and output list
+        synchronized (this.eventLock) {
+            final List<Event> temp = this.eventsOut;
+            this.eventsOut = this.eventsIn;
+            this.eventsIn = temp;
+            this.eventsIn.clear();
         }
 
-        this.pendingDeletions.clear();
-        this.pendingInsertions.clear();
         // Distribute events to child event queues.
         for (int i = 0; i < this.eventQueues.size(); ++i) {
-            this.eventQueues.get(i).events.addAll(this.events);
+            this.eventQueues.get(i).addEvents(this.eventsOut);
         }
 
-        final Event[] eventArray = this.events.toArray(new Event[this.events.size()]);
-        this.events.clear();
-        for (int i = 0; i < eventArray.length; ++i) {
-            this.dispatchEvent(eventArray[i]);
+        // Dispatch events
+        for (int i = 0; i < this.eventsOut.size(); ++i) {
+            this.dispatchEvent(this.eventsOut.get(i));
         }
     }
 
@@ -139,11 +175,13 @@ public final class EventQueue {
      */
     public void removeListener(final Object listener) {
         if (listener != null) {
-            if (!this.listeners.contains(listener)) {
-                this.pendingInsertions.remove(listener);
-            }
-            else if (!this.pendingDeletions.contains(listener)) {
-                this.pendingDeletions.add(listener);
+            synchronized (this.listenerLock) {
+                if (!this.listeners.contains(listener)) {
+                    this.pendingInsertions.remove(listener);
+                }
+                else if (!this.pendingDeletions.contains(listener)) {
+                    this.pendingDeletions.add(listener);
+                }
             }
         }
     }
