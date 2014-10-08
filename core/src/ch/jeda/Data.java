@@ -58,11 +58,13 @@ public final class Data {
      */
     public Data(final String string) {
         this();
-        String[] entries = string.split(",");
-        for (final String entry : entries) {
-            String[] parts = entry.split("=");
-            if (parts.length == 2) {
-                this.imp.write(unescape(parts[0]), unescape(parts[1]));
+        if (string != null) {
+            String[] entries = string.split(",");
+            for (final String entry : entries) {
+                String[] parts = entry.split("=");
+                if (parts.length == 2) {
+                    this.imp.write(unescape(parts[0]), unescape(parts[1]));
+                }
             }
         }
     }
