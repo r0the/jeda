@@ -27,6 +27,7 @@ import java.util.Collection;
  * a network.
  *
  * @since 1.2
+ * @version 2
  */
 public final class Data {
 
@@ -386,6 +387,8 @@ public final class Data {
      * @param <T> the class of the object to return
      * @param name the name of the object to retrieve
      * @return the {@link ch.jeda.Storable} object associated with the name or <tt>null</tt>
+     *
+     * @since 1.2
      */
     public <T extends Storable> T readObject(final String name) {
         return this.readObject(name, null);
@@ -400,6 +403,8 @@ public final class Data {
      * @param name the name of the object to retrieve
      * @param defaultValue the default value
      * @return the {@link ch.jeda.Storable} object associated with the name or <tt>defaultValue</tt>
+     *
+     * @since 1.2
      */
     @SuppressWarnings("unchecked")
     public <T extends Storable> T readObject(final String name, final T defaultValue) {
@@ -711,7 +716,7 @@ public final class Data {
      * @param value the {@link ch.jeda.Storable} object to store
      * @throws NullPointerException if <tt>name</tt> is <tt>null</tt>
      *
-     * @since
+     * @since 1.2
      */
     public void writeObject(final String name, final Storable value) {
         if (name == null) {
@@ -732,7 +737,7 @@ public final class Data {
      * @param values the array of {@link ch.jeda.Storable} objects to store
      * @throws NullPointerException if <tt>name</tt> or <tt>values</tt> is <tt>null</tt>
      *
-     * @since
+     * @since 1.2
      */
     public void writeObjects(final String name, final Storable[] values) {
         if (name == null) {

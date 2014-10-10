@@ -88,6 +88,8 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      * Returns the part of the text currently visible in the text field.
      *
      * @return the part of the text currently visible in the text field
+     *
+     * @since 1.4
      */
     public final String getVisibleText() {
         return this.visibleText;
