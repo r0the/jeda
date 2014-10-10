@@ -5,58 +5,66 @@ import ch.jeda.event.*;
 import ch.jeda.ui.*;
 import java.util.*;
 
-public class NetworkServer2Test extends Program implements TickListener {
+public class NetworkServer2Test extends Program implements ServerListener {
 
     private static final int MAX_CONNECTIONS = 2;
     private static final int PORT = 1248;
-    private NetworkServer server;
-    private List<NetworkSocket> sockets;
+    private TcpServer server;
+    private Map<Connection, String> clientNames;
 
     @Override
     public void run() {
-        sockets = new ArrayList<>();
-        server = new NetworkServer();
+        clientNames = new HashMap<Connection, String>();
+        server = new TcpServer();
+        Jeda.addEventListener(this);
         if (server.start(PORT)) {
             writeLines("Server listening on port " + PORT + ".");
         }
         else {
             writeLines("Can't start server. Check if port " + PORT + " is already in use.");
         }
-
-        Jeda.addTickListener(this);
     }
 
     @Override
-    public void onTick(TickEvent event) {
-        if (server.hasNewConnection()) {
-            NetworkSocket socket = server.acceptNewConnection();
-            if (sockets.size() < MAX_CONNECTIONS) {
-                writeLines("Accepting connection from " + socket.getRemoteAddress());
-                sockets.add(socket);
-            }
-            else {
-                socket.sendLine("We are full, sorry. Bye.");
-                socket.disconnect();
-            }
+    public void onConnectionAccepted(ConnectionEvent event) {
+        Connection connection = event.getConnection();
+        if (clientNames.size() > MAX_CONNECTIONS) {
+            connection.sendLine("Zur Zeit ist keine Verbindung möglich.");
+            connection.close();
         }
-
-        final List<NetworkSocket> deadSockets = new ArrayList<>();
-        for (NetworkSocket socket : sockets) {
-            if (socket.isConnected()) {
-                handleClient(socket);
-            }
-            else {
-                deadSockets.add(socket);
-                writeLines("Closing connection to " + socket.getRemoteAddress());
-            }
+        else {
+            connection.sendLine("Willkommen beim Chat-Server. Bitte geben Sie Ihren Namen mit 'NAME=Joda' an.");
+            clientNames.put(connection, "Unbekannt@" + connection.getRemoteAddress());
+            String name = clientNames.get(event.getConnection());
+            broadcast(name + " hat den Chat betreten.");
         }
-
-        sockets.removeAll(deadSockets);
     }
 
-    private void handleClient(NetworkSocket socket) {
-        if (socket.hasLine()) {
-            socket.sendLine("Echo: " + socket.receiveLine());
+    @Override
+    public void onConnectionClosed(ConnectionEvent event) {
+        clientNames.remove(event.getConnection());
+        String name = clientNames.get(event.getConnection());
+        broadcast(name + " hat den Chat verlassen.");
+    }
+
+    @Override
+    public void onMessageReceived(MessageEvent event) {
+        String line = event.getLine();
+        if (line.startsWith("NAME=")) {
+            String oldName = clientNames.get(event.getConnection());
+            clientNames.put(event.getConnection(), line.substring(5));
+            String name = clientNames.get(event.getConnection());
+            broadcast(oldName + " heisst nun " + name);
+        }
+        else {
+            String name = clientNames.get(event.getConnection());
+            broadcast(name + ": " + line);
+        }
+    }
+
+    public void broadcast(String line) {
+        for (Connection connection : clientNames.keySet()) {
+            connection.sendLine(line);
         }
     }
 }

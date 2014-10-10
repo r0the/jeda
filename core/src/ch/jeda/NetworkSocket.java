@@ -33,6 +33,7 @@ import java.util.Queue;
  * thread-safe.
  *
  * @since 1.2
+ * @deprecated Use {@link TcpConnection} instead.
  */
 public final class NetworkSocket {
 

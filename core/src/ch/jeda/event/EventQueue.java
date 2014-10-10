@@ -32,6 +32,8 @@ public final class EventQueue {
 
     private static final String EVENT_ERROR = "jeda.event.error";
     private final List<ActionListener> actionListeners;
+    private final List<ConnectionAcceptedListener> connectionAcceptedListeners;
+    private final List<ConnectionClosedListener> connectionClosedListeners;
     private final Object eventLock;
     private final List<EventQueue> eventQueues;
     private final List<KeyDownListener> keyDownListeners;
@@ -39,6 +41,7 @@ public final class EventQueue {
     private final List<KeyUpListener> keyUpListeners;
     private final Object listenerLock;
     private final Set<Object> listeners;
+    private final List<MessageReceivedListener> messageReceivedListeners;
     private final List<Object> pendingDeletions;
     private final List<Object> pendingInsertions;
     private final List<PointerDownListener> pointerDownListeners;
@@ -57,6 +60,8 @@ public final class EventQueue {
      */
     public EventQueue() {
         this.actionListeners = new ArrayList<ActionListener>();
+        this.connectionAcceptedListeners = new ArrayList<ConnectionAcceptedListener>();
+        this.connectionClosedListeners = new ArrayList<ConnectionClosedListener>();
         this.eventLock = new Object();
         this.eventQueues = new ArrayList<EventQueue>();
         this.keyDownListeners = new ArrayList<KeyDownListener>();
@@ -64,6 +69,7 @@ public final class EventQueue {
         this.keyUpListeners = new ArrayList<KeyUpListener>();
         this.listenerLock = new Object();
         this.listeners = new HashSet<Object>();
+        this.messageReceivedListeners = new ArrayList<MessageReceivedListener>();
         this.pendingDeletions = new ArrayList<Object>();
         this.pendingInsertions = new ArrayList<Object>();
         this.pointerDownListeners = new ArrayList<PointerDownListener>();
@@ -199,6 +205,28 @@ public final class EventQueue {
                 }
 
                 break;
+            case CONNECTION_ACCEPTED:
+                for (int j = 0; j < this.connectionAcceptedListeners.size(); ++j) {
+                    try {
+                        this.connectionAcceptedListeners.get(j).onConnectionAccepted((ConnectionEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
+            case CONNECTION_CLOSED:
+                for (int j = 0; j < this.connectionClosedListeners.size(); ++j) {
+                    try {
+                        this.connectionClosedListeners.get(j).onConnectionClosed((ConnectionEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
             case KEY_DOWN:
                 for (int j = 0; j < this.keyDownListeners.size(); ++j) {
                     try {
@@ -225,6 +253,17 @@ public final class EventQueue {
                 for (int j = 0; j < this.keyUpListeners.size(); ++j) {
                     try {
                         this.keyUpListeners.get(j).onKeyUp((KeyEvent) event);
+                    }
+                    catch (final Throwable ex) {
+                        Log.err(ex, "jeda.event.error");
+                    }
+                }
+
+                break;
+            case MESSAGE_RECEIVED:
+                for (int j = 0; j < this.messageReceivedListeners.size(); ++j) {
+                    try {
+                        this.messageReceivedListeners.get(j).onMessageReceived((MessageEvent) event);
                     }
                     catch (final Throwable ex) {
                         Log.err(ex, "jeda.event.error");
@@ -307,6 +346,14 @@ public final class EventQueue {
             this.actionListeners.add((ActionListener) listener);
         }
 
+        if (listener instanceof ConnectionAcceptedListener) {
+            this.connectionAcceptedListeners.add((ConnectionAcceptedListener) listener);
+        }
+
+        if (listener instanceof ConnectionClosedListener) {
+            this.connectionClosedListeners.add((ConnectionClosedListener) listener);
+        }
+
         if (listener instanceof EventQueue) {
             this.eventQueues.add((EventQueue) listener);
         }
@@ -321,6 +368,10 @@ public final class EventQueue {
 
         if (listener instanceof KeyUpListener) {
             this.keyUpListeners.add((KeyUpListener) listener);
+        }
+
+        if (listener instanceof MessageReceivedListener) {
+            this.messageReceivedListeners.add((MessageReceivedListener) listener);
         }
 
         if (listener instanceof PointerDownListener) {
@@ -354,6 +405,14 @@ public final class EventQueue {
             this.actionListeners.remove((ActionListener) listener);
         }
 
+        if (listener instanceof ConnectionAcceptedListener) {
+            this.connectionAcceptedListeners.remove((ConnectionAcceptedListener) listener);
+        }
+
+        if (listener instanceof ConnectionClosedListener) {
+            this.connectionClosedListeners.remove((ConnectionClosedListener) listener);
+        }
+
         if (listener instanceof EventQueue) {
             this.eventQueues.remove((EventQueue) listener);
         }
@@ -370,8 +429,8 @@ public final class EventQueue {
             this.keyUpListeners.remove((KeyUpListener) listener);
         }
 
-        if (listener instanceof SensorListener) {
-            this.sensorListeners.remove((SensorListener) listener);
+        if (listener instanceof MessageReceivedListener) {
+            this.messageReceivedListeners.remove((MessageReceivedListener) listener);
         }
 
         if (listener instanceof PointerDownListener) {
@@ -384,6 +443,10 @@ public final class EventQueue {
 
         if (listener instanceof PointerUpListener) {
             this.pointerUpListeners.remove((PointerUpListener) listener);
+        }
+
+        if (listener instanceof SensorListener) {
+            this.sensorListeners.remove((SensorListener) listener);
         }
 
         if (listener instanceof TickListener) {

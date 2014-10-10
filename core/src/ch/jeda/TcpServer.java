@@ -16,63 +16,37 @@
  */
 package ch.jeda;
 
+import ch.jeda.event.ConnectionEvent;
+import ch.jeda.event.EventType;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.net.Socket;
 
 /**
- * Represents a simple network server that listens for connections on a port. This class is thread-safe.
+ * Represents a TCP network server that listens for connections on a port. This class is thread-safe.
  *
- * @since 1.2
- * @deprecated Use {@link TcpServer} instead.
+ * @since 1.4
  */
-public final class NetworkServer {
+public final class TcpServer {
 
-    private static final int SERVER_SOCKET_TIMEOUT = 10; // milliseconds
     private final Object lock;
-    private final Queue<NetworkSocket> newConnections;
     private ServerSocket serverSocket;
 
     /**
      * Constructs a new network server. Initially, the server is not running.
      *
-     * @since 1.2
+     * @since 1.4
      */
-    public NetworkServer() {
+    public TcpServer() {
         this.lock = new Object();
-        this.newConnections = new ConcurrentLinkedQueue<NetworkSocket>();
-    }
-
-    /**
-     * Accepts a new connection from a client. Returns the network socket for the new connection. Returns <tt>null</tt>
-     * if there is no connection to be accepted.
-     *
-     * @return the network socket for the new connection
-     *
-     * @see #hasNewConnection()
-     * @since 1.2
-     */
-    public NetworkSocket acceptNewConnection() {
-        return this.newConnections.poll();
-    }
-
-    /**
-     * Checks if there is a new connection to be accepted.
-     *
-     * @return <tt>true</tt> if there is a new connection to be accepted, otherwise <tt>false</tt>
-     *
-     * @see #acceptNewConnection()
-     * @since 1.2
-     */
-    public boolean hasNewConnection() {
-        return !this.newConnections.isEmpty();
     }
 
     /**
      * Checks if the network server is running.
      *
      * @return <tt>true</tt> if the network server is running, otherwise <tt>false</tt>
+     *
+     * @since 1.4
      */
     public boolean isRunning() {
         synchronized (this.lock) {
@@ -81,7 +55,7 @@ public final class NetworkServer {
     }
 
     /**
-     * Starts the network server. The server tries to listen for connections at the specified port. Returns
+     * Starts the server. The server tries to listen for connections at the specified port. Returns
      * <tt>true</tt>, if the server started listening successfully. Returns <tt>false</tt> if there was an error. This
      * could mean that
      * <ul>
@@ -89,12 +63,12 @@ public final class NetworkServer {
      * <li>another application (or another instance of this application) is already using the specified port.
      * </ul>
      *
-     * @param port the port on which the server will listen for connections
+     * @param port the TCP port on which the server will listen for connections
      * @return <tt>true</tt> if the server started listening successfully, otherwise <tt>false</tt>
      * @throws IllegalArgumentException if the port number is not between 0 and 65535.
      * @throws IllegalStateException if the server is already running
      *
-     * @since 1.2
+     * @since 1.4
      */
     public boolean start(int port) {
         synchronized (this.lock) {
@@ -104,14 +78,7 @@ public final class NetworkServer {
 
             try {
                 this.serverSocket = new ServerSocket(port);
-                this.serverSocket.setSoTimeout(SERVER_SOCKET_TIMEOUT);
-                new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        listen();
-                    }
-                }).start();
+                new TcpServerThread(this).start();
                 return true;
             }
             catch (final SecurityException ex) {
@@ -124,9 +91,9 @@ public final class NetworkServer {
     }
 
     /**
-     * Stops the network server. The server stops listening. Has no effect if the server is not running.
+     * Stops the server. The server stops listening. Has no effect if the server is not running.
      *
-     * @since 1.2
+     * @since 1.4
      */
     public void stop() {
         synchronized (this.lock) {
@@ -143,22 +110,37 @@ public final class NetworkServer {
         }
     }
 
-    private void listen() {
-        ServerSocket s = null;
+    private Socket accept() {
         synchronized (this.lock) {
-            s = this.serverSocket;
-        }
+            if (this.serverSocket == null) {
+                return null;
+            }
 
-        while (s != null) {
             try {
-                this.newConnections.add(new NetworkSocket(s.accept()));
+                return this.serverSocket.accept();
             }
             catch (final IOException ex) {
-                // ignore
+                return null;
             }
+        }
+    }
 
-            synchronized (this.lock) {
-                s = this.serverSocket;
+    private static class TcpServerThread extends Thread {
+
+        private final TcpServer server;
+
+        public TcpServerThread(final TcpServer server) {
+            this.server = server;
+            this.setName("Jeda Tcp Server (Port " + server.serverSocket.getLocalPort() + ")");
+        }
+
+        @Override
+        public void run() {
+            while (this.server.isRunning()) {
+                final Socket socket = this.server.accept();
+                if (socket != null) {
+                    Jeda.postEvent(new ConnectionEvent(new TcpConnection(socket), EventType.CONNECTION_ACCEPTED));
+                }
             }
         }
     }

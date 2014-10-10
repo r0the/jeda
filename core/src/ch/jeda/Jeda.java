@@ -356,6 +356,10 @@ public class Jeda {
         return ENGINE.openResource(path);
     }
 
+    static void postEvent(final Event event) {
+        ENGINE.postEvent(event);
+    }
+
     static void showInputRequest(final InputRequest inputRequest) {
         ENGINE.showInputRequest(inputRequest);
     }

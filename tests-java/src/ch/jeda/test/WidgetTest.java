@@ -46,18 +46,16 @@ public class WidgetTest extends Program implements TickListener, ActionListener 
 
     @Override
     public void onAction(ActionEvent event) {
-        switch (event.getName()) {
-            case "Antique":
-                initAntique();
-                showSamples();
-                break;
-            case "Modern":
-                initModern();
-                showSamples();
-                break;
-            case "Start":
-                progressBar.setValue(0.0);
-                break;
+        if ("Antique".equals(event.getName())) {
+            initAntique();
+            showSamples();
+        }
+        else if ("Modern".equals(event.getName())) {
+            initModern();
+            showSamples();
+        }
+        else if ("Start".equals(event.getName())) {
+            progressBar.setValue(0.0);
         }
     }
 

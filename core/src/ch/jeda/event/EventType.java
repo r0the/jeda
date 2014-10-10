@@ -20,6 +20,7 @@ package ch.jeda.event;
  * The types of events supported by Jeda.
  *
  * @since 1.0
+ * @version 2
  */
 public enum EventType {
 
@@ -29,6 +30,18 @@ public enum EventType {
      * @since 1.0
      */
     ACTION,
+    /**
+     * A connection connect event. This type of event occurs when a new connection is accepted.
+     *
+     * @since 1.4
+     */
+    CONNECTION_ACCEPTED,
+    /**
+     * A connection disconnect event. This type of event occurs when a connection is closed.
+     *
+     * @since 1.4
+     */
+    CONNECTION_CLOSED,
     /**
      * A key down event. A key down event can occur when the user presses a key on the keyboard, a hardware button on
      * the device, or a button on an input device. While the user keeps pressing the key or button, the event may occur
@@ -52,6 +65,12 @@ public enum EventType {
      * @since 1.0
      */
     KEY_UP,
+    /**
+     * A message received event. This type of event occurs when a message is received via a connection.
+     *
+     * @since 1.4
+     */
+    MESSAGE_RECEIVED,
     /**
      * A pointer down event.
      *
@@ -77,5 +96,6 @@ public enum EventType {
     /**
      * @since 1.0
      */
+    @Deprecated
     TURN,
 }

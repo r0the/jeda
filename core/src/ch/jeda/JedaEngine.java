@@ -16,6 +16,7 @@
  */
 package ch.jeda;
 
+import ch.jeda.event.Event;
 import ch.jeda.event.EventQueue;
 import ch.jeda.event.SensorType;
 import ch.jeda.event.TickEvent;
@@ -264,6 +265,10 @@ class JedaEngine implements PlatformCallback, Runnable {
 
     InputStream openResource(final String path) {
         return this.platform.openResource(path);
+    }
+
+    void postEvent(final Event event) {
+        this.eventQueue.addEvent(event);
     }
 
     void programTerminated() {

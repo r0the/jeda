@@ -4,15 +4,14 @@ import ch.jeda.*;
 import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
-public class NetworkServer1Test extends Program implements TickListener {
+public class NetworkServer1Test extends Program implements ConnectionAcceptedListener,
+                                                           MessageReceivedListener {
 
-    NetworkServer server;
-    NetworkSocket socket;
+    TcpServer server;
 
     @Override
     public void run() {
-        socket = new NetworkSocket();
-        server = new NetworkServer();
+        server = new TcpServer();
         if (server.start(1248)) {
             writeLines("Server gestartet...");
         }
@@ -20,20 +19,18 @@ public class NetworkServer1Test extends Program implements TickListener {
             writeLines("Kann Server nicht starten.");
         }
 
-        Jeda.addTickListener(this);
+        Jeda.addEventListener(this);
     }
 
     @Override
-    public void onTick(final TickEvent event) {
-        if (socket.isConnected()) {
-            if (socket.hasLine()) {
-                String line = socket.receiveLine();
-                socket.sendLine("Echo: " + line);
-            }
-        }
-        else if (server.hasNewConnection()) {
-            writeLines("Akzeptiere Verbindung...");
-            socket = server.acceptNewConnection();
-        }
+    public void onConnectionAccepted(ConnectionEvent event) {
+        Connection connection = event.getConnection();
+        connection.sendLine("Willkommen beim Echo-Server.");
+    }
+
+    @Override
+    public void onMessageReceived(MessageEvent event) {
+        String line = event.getLine();
+        event.getConnection().sendLine("Echo: " + line);
     }
 }
