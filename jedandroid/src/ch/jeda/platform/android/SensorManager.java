@@ -25,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
-import ch.jeda.event.EventQueue;
 import ch.jeda.event.SensorEvent;
 import ch.jeda.event.SensorType;
 import java.util.EnumMap;

@@ -17,7 +17,6 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.LogLevel;
-import ch.jeda.event.EventQueue;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.CanvasImp;
@@ -25,7 +24,6 @@ import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
 import java.awt.Font;
@@ -38,7 +36,7 @@ class JavaPlatform implements Platform {
     private final JavaAudioManagerImp audioManager;
     private final WindowManager windowManager;
 
-    public JavaPlatform(final PlatformCallback callback) {
+    public JavaPlatform(final Platform.Callback callback) {
         setLookAndFeel();
         this.audioManager = new JavaAudioManagerImp();
         this.windowManager = new WindowManager(callback);
@@ -97,11 +95,6 @@ class JavaPlatform implements Platform {
     @Override
     public InputStream openResource(final String path) {
         return ResourceManager.openInputStream(path);
-    }
-
-    @Override
-    public void setEventQueue(final EventQueue eventQueue) {
-        // ignore
     }
 
     @Override

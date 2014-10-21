@@ -19,17 +19,13 @@ package ch.jeda.platform.android;
 import android.graphics.Typeface;
 import android.view.WindowManager;
 import ch.jeda.LogLevel;
-import ch.jeda.event.EventQueue;
+import ch.jeda.event.Event;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
-import static ch.jeda.platform.Platform.StandardTypeface.MONOSPACED;
-import static ch.jeda.platform.Platform.StandardTypeface.SANS_SERIF;
-import static ch.jeda.platform.Platform.StandardTypeface.SERIF;
-import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.WindowRequest;
@@ -38,18 +34,17 @@ import java.io.InputStream;
 class AndroidPlatform implements Platform {
 
     private static AndroidPlatform INSTANCE;
-    private final PlatformCallback callback;
+    private final Platform.Callback callback;
 
     static AndroidPlatform getInstance() {
         return INSTANCE;
     }
 
-    public AndroidPlatform(final PlatformCallback callback) {
+    public AndroidPlatform(final Platform.Callback callback) {
         INSTANCE = this;
         this.callback = callback;
-        final Main activity = Main.getInstance();
         // Adjust window when soft keyboard is shown.
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        Main.getInstance().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     @Override
@@ -110,11 +105,6 @@ class AndroidPlatform implements Platform {
     }
 
     @Override
-    public void setEventQueue(final EventQueue eventQueue) {
-        Main.getInstance().setEventQueue(eventQueue);
-    }
-
-    @Override
     public void setSensorEnabled(final SensorType sensorType, boolean enabled) {
         Main.getInstance().setSensorEnabled(sensorType, enabled);
     }
@@ -146,6 +136,10 @@ class AndroidPlatform implements Platform {
 
     void onPause() {
         this.callback.pause();
+    }
+
+    void postEvent(final Event event) {
+        this.callback.postEvent(event);
     }
 
     void onResume() {

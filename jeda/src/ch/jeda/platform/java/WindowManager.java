@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,7 +18,7 @@ package ch.jeda.platform.java;
 
 import ch.jeda.LogLevel;
 import ch.jeda.platform.InputRequest;
-import ch.jeda.platform.PlatformCallback;
+import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowRequest;
 import ch.jeda.ui.WindowFeature;
@@ -32,7 +32,7 @@ class WindowManager {
 
     private static final GraphicsDevice GRAPHICS_DEVICE =
         GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    private final PlatformCallback callback;
+    private final Platform.Callback callback;
     private final InputWindow inputWindow;
     private final LogWindow logWindow;
     private final SelectionWindow selectionWindow;
@@ -40,7 +40,7 @@ class WindowManager {
     private CanvasWindow fullscreenWindow;
     private boolean shutdown;
 
-    WindowManager(final PlatformCallback callback) {
+    WindowManager(final Platform.Callback callback) {
         this.callback = callback;
         this.inputWindow = new InputWindow(this);
         this.logWindow = new LogWindow(this);

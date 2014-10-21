@@ -25,7 +25,6 @@ import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
-import ch.jeda.platform.PlatformCallback;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.platform.WindowRequest;
@@ -39,7 +38,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-class JedaEngine implements PlatformCallback, Runnable {
+class JedaEngine implements Platform.Callback, Runnable {
 
     private static final TypefaceImp EMPTY_TYPEFACE_IMP = new EmptyTypefaceImp();
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
@@ -79,7 +78,6 @@ class JedaEngine implements PlatformCallback, Runnable {
         this.properties = initProperties();
         // Init platform
         this.platform = initPlatform(this.properties.getString("jeda.platform.class"), this);
-        this.platform.setEventQueue(this.eventQueue);
         // Init audio manager
         this.audioManager = new AudioManager(this.platform.getAudioManagerImp());
         // Load default image
@@ -105,6 +103,28 @@ class JedaEngine implements PlatformCallback, Runnable {
     }
 
     @Override
+    public void pause() {
+        synchronized (this.pauseLock) {
+            this.paused = true;
+        }
+    }
+
+    @Override
+    public void postEvent(final Event event) {
+        this.eventQueue.addEvent(event);
+    }
+
+    @Override
+    public void resume() {
+        synchronized (this.pauseLock) {
+            if (this.paused) {
+                this.paused = false;
+                this.timer.start();
+            }
+        }
+    }
+
+    @Override
     public void run() {
         this.timer.start();
         while (true) {
@@ -125,23 +145,6 @@ class JedaEngine implements PlatformCallback, Runnable {
                 this.eventQueue.addEvent(event);
                 this.eventQueue.processEvents();
                 this.timer.tick();
-            }
-        }
-    }
-
-    @Override
-    public void pause() {
-        synchronized (this.pauseLock) {
-            this.paused = true;
-        }
-    }
-
-    @Override
-    public void resume() {
-        synchronized (this.pauseLock) {
-            if (this.paused) {
-                this.paused = false;
-                this.timer.start();
             }
         }
     }
@@ -267,10 +270,6 @@ class JedaEngine implements PlatformCallback, Runnable {
         return this.platform.openResource(path);
     }
 
-    void postEvent(final Event event) {
-        this.eventQueue.addEvent(event);
-    }
-
     void programTerminated() {
         synchronized (this.currentProgramLock) {
             this.currentProgram = null;
@@ -322,7 +321,7 @@ class JedaEngine implements PlatformCallback, Runnable {
         }
     }
 
-    private static Platform initPlatform(final String platformClassName, final PlatformCallback callback) {
+    private static Platform initPlatform(final String platformClassName, final Platform.Callback callback) {
         if (platformClassName == null || platformClassName.isEmpty()) {
             initErr("jeda.engine.error.platform-missing-class-name");
             return null;
@@ -330,7 +329,7 @@ class JedaEngine implements PlatformCallback, Runnable {
 
         try {
             final Class<?> clazz = JedaEngine.class.getClassLoader().loadClass(platformClassName);
-            final Constructor<?> ctor = clazz.getConstructor(PlatformCallback.class);
+            final Constructor<?> ctor = clazz.getConstructor(Platform.Callback.class);
             ctor.setAccessible(true);
             final Object result = ctor.newInstance(callback);
             if (result instanceof Platform) {

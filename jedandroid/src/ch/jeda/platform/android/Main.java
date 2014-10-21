@@ -30,7 +30,6 @@ import android.view.inputmethod.InputMethodManager;
 import ch.jeda.Jeda;
 import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
-import ch.jeda.event.EventQueue;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.ImageImp;
@@ -45,12 +44,11 @@ public final class Main extends FragmentActivity {
 
     private static final int CONTENT_ID = 4242;
     private static Main INSTANCE;
-    private final AndroidAudioManagerImp audioManager;
     private final LogFragment logFragment;
     private final ResourceManager resourceManager;
     private final SensorManager sensorManager;
+    private AndroidAudioManagerImp audioManager;
     private JedaView contentView;
-    private EventQueue eventQueue;
     private CanvasFragment topWindow;
     private boolean virtualKeyboardVisible;
 
@@ -60,7 +58,6 @@ public final class Main extends FragmentActivity {
 
     public Main() {
         INSTANCE = this;
-        this.audioManager = new AndroidAudioManagerImp();
         this.logFragment = new LogFragment();
         this.resourceManager = new ResourceManager(this);
         this.sensorManager = new SensorManager();
@@ -75,15 +72,16 @@ public final class Main extends FragmentActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.audioManager = new AndroidAudioManagerImp(this);
         this.contentView = new JedaView(this);
         this.contentView.setId(CONTENT_ID);
         setContentView(this.contentView, new ViewGroup.LayoutParams(
                        ViewGroup.LayoutParams.FILL_PARENT,
                        ViewGroup.LayoutParams.FILL_PARENT));
         Log.d("Jeda", "onCreate");
+        this.addManager(this.sensorManager, "SensorManager");
+        Log.i("Jeda", "Starting Jeda " + Jeda.getProperties().getString("jeda.version"));
         if (savedInstanceState == null) {
-            this.addManager(this.audioManager, "AudioManager");
-            this.addManager(this.sensorManager, "SensorManager");
             Jeda.startProgram();
         }
     }
@@ -99,7 +97,6 @@ public final class Main extends FragmentActivity {
     protected void onRestart() {
         super.onRestart();
         Log.d("Jeda", "onRestart");
-        Jeda.startProgram();
     }
 
     @Override
@@ -174,13 +171,7 @@ public final class Main extends FragmentActivity {
     }
 
     void postEvent(final Event event) {
-        if (this.eventQueue != null) {
-            this.eventQueue.addEvent(event);
-        }
-    }
-
-    void setEventQueue(final EventQueue eventQueue) {
-        this.eventQueue = eventQueue;
+        AndroidPlatform.getInstance().postEvent(event);
     }
 
     void setSensorEnabled(final SensorType sensorType, final boolean enabled) {

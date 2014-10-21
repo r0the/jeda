@@ -19,38 +19,27 @@ package ch.jeda.platform.android;
 import android.app.Activity;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import ch.jeda.Log;
 import ch.jeda.platform.AudioManagerImp;
 import java.util.HashMap;
 import java.util.Map;
 
-class AndroidAudioManagerImp extends Fragment implements AudioManagerImp, MediaPlayer.OnCompletionListener {
+class AndroidAudioManagerImp implements AudioManagerImp, MediaPlayer.OnCompletionListener {
 
     private static final String RES_PREFIX = "res:";
     private static final int DEFAULT_PRIORITY = 0;
     private AudioManagerImp.Callback callback;
-    private android.media.AudioManager imp;
+    private final android.media.AudioManager imp;
+    private final Main main;
+    private final Map<String, Integer> soundMap;
+    private final SoundPool soundPool;
     private MediaPlayer mediaPlayer;
-    private Map<String, Integer> soundMap;
-    private SoundPool soundPool;
 
-    @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
-        this.imp = (android.media.AudioManager) activity.getSystemService(Activity.AUDIO_SERVICE);
+    public AndroidAudioManagerImp(final Main main) {
+        this.main = main;
+        this.imp = (android.media.AudioManager) main.getSystemService(Activity.AUDIO_SERVICE);
         this.soundMap = new HashMap<String, Integer>();
         this.soundPool = new SoundPool(10, android.media.AudioManager.STREAM_MUSIC, 0);
-    }
-
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
-        return null;
     }
 
     public void onCompletion(final MediaPlayer mediaPlayer) {
@@ -66,19 +55,24 @@ class AndroidAudioManagerImp extends Fragment implements AudioManagerImp, MediaP
 
     @Override
     public void loadSound(final String path) {
-        if (this.soundMap.containsKey(path)) {
-            return;
-        }
+        this.main.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (soundMap.containsKey(path)) {
+                    return;
+                }
 
-        if (path.startsWith(RES_PREFIX)) {
-            final int resId = this.getResourceId(path);
-            if (resId != 0) {
-                this.soundMap.put(path, this.soundPool.load(this.getActivity(), resId, DEFAULT_PRIORITY));
+                if (path.startsWith(RES_PREFIX)) {
+                    final int resId = getResourceId(path);
+                    if (resId != 0) {
+                        soundMap.put(path, soundPool.load(main, resId, DEFAULT_PRIORITY));
+                    }
+                }
+                else {
+                    soundMap.put(path, soundPool.load(path, DEFAULT_PRIORITY));
+                }
             }
-        }
-        else {
-            this.soundMap.put(path, this.soundPool.load(path, DEFAULT_PRIORITY));
-        }
+        });
     }
 
     @Override
@@ -111,7 +105,7 @@ class AndroidAudioManagerImp extends Fragment implements AudioManagerImp, MediaP
             return false;
         }
 
-        this.mediaPlayer = MediaPlayer.create(this.getActivity(), resId);
+        this.mediaPlayer = MediaPlayer.create(this.main, resId);
         this.mediaPlayer.setOnCompletionListener(this);
         this.mediaPlayer.start();
         return true;
@@ -135,12 +129,12 @@ class AndroidAudioManagerImp extends Fragment implements AudioManagerImp, MediaP
 
         final String type = path.substring(RES_PREFIX.length(), slashPos);
         final String name = path.substring(slashPos + 1, dotPos);
-        return this.getResources().getIdentifier(name, type, getActivity().getApplicationContext().getPackageName());
+        return this.main.getResources().getIdentifier(name, type, this.main.getApplicationContext().getPackageName());
     }
 
     private float getVolume() {
-        return (float) this.imp.getStreamVolume(android.media.AudioManager.STREAM_MUSIC)
-               / (float) this.imp.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC);
+        return (float) this.imp.getStreamVolume(android.media.AudioManager.STREAM_MUSIC) /
+               (float) this.imp.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC);
     }
 
 }
