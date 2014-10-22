@@ -139,19 +139,6 @@ public final class EventQueue {
      * @since 1.4
      */
     public void processEvents() {
-        synchronized (this.listenerLock) {
-            for (int i = 0; i < this.pendingDeletions.size(); ++i) {
-                this.doRemoveListener(this.pendingDeletions.get(i));
-            }
-
-            for (int i = 0; i < this.pendingInsertions.size(); ++i) {
-                this.doAddListener(this.pendingInsertions.get(i));
-            }
-
-            this.pendingDeletions.clear();
-            this.pendingInsertions.clear();
-        }
-
         // Switch input and output list
         synchronized (this.eventLock) {
             final List<Event> temp = this.eventsOut;
@@ -193,6 +180,9 @@ public final class EventQueue {
     }
 
     private void dispatchEvent(final Event event) {
+        // Pending listener operations must be processed before every event dispatch. Otherwise, an event might be
+        // delivered to a listener that has been removed during the last event dispatch.
+        this.processPendingListeners();
         switch (event.getType()) {
             case ACTION:
                 for (int j = 0; j < this.actionListeners.size(); ++j) {
@@ -455,6 +445,21 @@ public final class EventQueue {
 
         if (listener instanceof TurnListener) {
             this.turnListeners.remove((TurnListener) listener);
+        }
+    }
+
+    private void processPendingListeners() {
+        synchronized (this.listenerLock) {
+            for (int i = 0; i < this.pendingDeletions.size(); ++i) {
+                this.doRemoveListener(this.pendingDeletions.get(i));
+            }
+
+            for (int i = 0; i < this.pendingInsertions.size(); ++i) {
+                this.doAddListener(this.pendingInsertions.get(i));
+            }
+
+            this.pendingDeletions.clear();
+            this.pendingInsertions.clear();
         }
     }
 }
