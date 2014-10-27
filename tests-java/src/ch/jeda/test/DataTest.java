@@ -26,6 +26,8 @@ public class DataTest extends Program {
 
         writeLines(data.toString());
 
+        data = new Data(data.toLine());
+
         boolean b = data.readBoolean("Boolean");
         if (b != true) {
             writeLines("Boolean failed");

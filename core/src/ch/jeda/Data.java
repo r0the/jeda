@@ -845,13 +845,13 @@ public final class Data {
                     result.append("\\r");
                     break;
                 case ',':
-                    result.append("\\,");
+                    result.append("\\c");
                     break;
                 case '=':
-                    result.append("\\=");
+                    result.append("\\e");
                     break;
                 case '\\':
-                    result.append("\\\\");
+                    result.append("\\b");
                     break;
                 case NEW_LINE:
                     result.append("\\l");
@@ -888,13 +888,13 @@ public final class Data {
                     case 'r':
                         result.append("\r");
                         break;
-                    case ',':
+                    case 'c':
                         result.append(",");
                         break;
-                    case '=':
+                    case 'e':
                         result.append("=");
                         break;
-                    case '\\':
+                    case 'b':
                         result.append("\\");
                         break;
                     case 'l':
