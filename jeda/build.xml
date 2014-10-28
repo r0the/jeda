@@ -5,7 +5,7 @@
 
     <!-- Set properties -->
     <property name="jeda.core.dir" value="../core"/>
-    <property name="jeda.nbjeda.dir" value="../nbjeda7.3"/>
+    <property name="jeda.nbjeda.dir" value="../nbjeda8.0"/>
 
     <target name="-post-jar">
         <!-- Load jeda version -->

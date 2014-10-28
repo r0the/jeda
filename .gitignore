@@ -18,8 +18,8 @@ dist/
 
 # Jeda generated files
 
-nbjeda7.3/jedandroid/src/ch/jeda/netbeans/android/res/jedandroid.jar
-nbjeda7.3/jeda/src/ch/jeda/netbeans/java/res/jeda.jar
+nbjeda8.0/jedandroid/src/ch/jeda/netbeans/android/res/jedandroid.jar
+nbjeda8.0/jeda/src/ch/jeda/netbeans/java/res/jeda.jar
 
 # Android generated files
 

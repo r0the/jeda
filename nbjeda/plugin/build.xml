@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="ch.jeda.netbeans" default="netbeans" basedir=".">
-    <description>Builds, tests, and runs the project ch.jeda.netbeans.</description>
-    <import file="nbproject/build-impl.xml"/>
-</project>
