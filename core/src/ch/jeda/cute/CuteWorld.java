@@ -76,6 +76,15 @@ public final class CuteWorld {
         }
     }
 
+    public int getHeightAt(int x, int y) {
+        int height = this.sizeZ;
+        while (height > 0 && this.getBlockAt(x, y, height - 1).isEmpty()) {
+            --height;
+        }
+
+        return height;
+    }
+
     public CuteObject[] getObjectsAt(final int x, final int y, final int z) {
         final Box box = this.getBox(x, y, z);
         if (box != null) {
@@ -184,7 +193,7 @@ public final class CuteWorld {
                     for (final CuteObject object : slice.getObjectsAt(x, z)) {
                         object.draw(canvas,
                                     screenX + (object.getX() - object.getIntX()) * Block.SIZE_X,
-                                    screenY - (object.getY() - object.getIntY()) * Block.SIZE_Y -
+                                    screenY - (object.getIntY() - object.getY()) * Block.SIZE_Y -
                                     (object.getZ() - object.getIntZ()) * Block.SIZE_Z);
                     }
 
