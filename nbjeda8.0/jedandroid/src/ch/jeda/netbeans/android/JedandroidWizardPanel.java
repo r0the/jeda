@@ -45,7 +45,7 @@ public final class JedandroidWizardPanel implements WizardDescriptor.Panel<Wizar
     public Component getComponent() {
         if (this.component == null) {
             this.component = new JedandroidPanelVisual(this);
-            this.component.setName(NbBundle.getMessage(JedandroidWizardPanel.class, "LBL_CreateProjectStep"));
+            this.component.setName("Name and Location");
         }
         return this.component;
     }

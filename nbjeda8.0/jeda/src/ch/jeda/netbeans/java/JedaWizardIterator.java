@@ -19,7 +19,6 @@ package ch.jeda.netbeans.java;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -31,16 +30,13 @@ import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.NbBundle;
-import org.openide.util.NbBundle.Messages;
 
 // TODO define position attribute
 @TemplateRegistration(
     folder = "Project/Jeda",
-    displayName = "#Jeda_displayName",
+    displayName = "Jeda Application for Java",
     description = "JedaDescription.html",
     iconBase = "ch/jeda/netbeans/java/res/icon.png")
-@Messages("Jeda_displayName=Jeda Application for Java")
 public final class JedaWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator<WizardDescriptor> {
 
     private static final String PROJECT_DIR_PROPERTY = "projdir";
@@ -139,6 +135,6 @@ public final class JedaWizardIterator implements WizardDescriptor./*Progress*/In
     }
 
     private String stepName() {
-        return NbBundle.getMessage(JedaWizardIterator.class, "LBL_CreateProjectStep");
+        return "Name and Location";
     }
 }

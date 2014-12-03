@@ -31,15 +31,13 @@ import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
-import org.openide.util.NbBundle.Messages;
 
 // TODO define position attribute
 @TemplateRegistration(
     folder = "Project/Jeda",
-    displayName = "#Jedandroid_displayName",
+    displayName = "Jeda Application for Android",
     description = "JedandroidDescription.html",
     iconBase = "ch/jeda/netbeans/android/res/icon.png")
-@Messages("Jedandroid_displayName=Jeda Application for Android")
 public class JedandroidWizardIterator implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 
     private static final String PROJECT_DIR_PROPERTY = "projdir";
@@ -138,6 +136,6 @@ public class JedandroidWizardIterator implements WizardDescriptor.InstantiatingI
     }
 
     private String stepName() {
-        return NbBundle.getMessage(JedandroidWizardIterator.class, "LBL_CreateProjectStep");
+        return "Name and Location";
     }
 }

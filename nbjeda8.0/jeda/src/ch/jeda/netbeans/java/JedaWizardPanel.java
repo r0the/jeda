@@ -22,7 +22,6 @@ import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
-import org.openide.util.NbBundle;
 
 public final class JedaWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>,
                                               WizardDescriptor.ValidatingPanel<WizardDescriptor>,
@@ -45,7 +44,7 @@ public final class JedaWizardPanel implements WizardDescriptor.Panel<WizardDescr
     public Component getComponent() {
         if (this.component == null) {
             this.component = new JedaPanelVisual(this);
-            this.component.setName(NbBundle.getMessage(JedaWizardPanel.class, "LBL_CreateProjectStep"));
+            this.component.setName("Name and Location");
         }
         return this.component;
     }
