@@ -201,13 +201,6 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setFontSize(final int fontSize) {
-        assert fontSize > 0;
-
-        this.graphics.setFont(this.graphics.getFont().deriveFont((float) fontSize));
-    }
-
-    @Override
     public void setLineWidth(final double lineWidth) {
         assert lineWidth >= 0.0;
 
@@ -220,6 +213,13 @@ class JavaCanvasImp implements CanvasImp {
         assert color != null;
 
         this.buffer.setRGB(x, y, color.getValue());
+    }
+
+    @Override
+    public void setTextSize(final int textSize) {
+        assert textSize > 0;
+
+        this.graphics.setFont(this.graphics.getFont().deriveFont((float) textSize));
     }
 
     @Override

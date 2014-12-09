@@ -30,7 +30,7 @@ class SpeechBubble {
     private static final Image SPEECH_BUBBLE = Cute.loadImage("speech_bubble");
     private static final int BORDER = 10;
     private static final int LINE_HEIGHT = 20;
-    private static final int FONT_SIZE = 20;
+    private static final int TEXT_SIZE = 20;
 
     static void draw(final Canvas canvas, double x, double y, String message) {
         final Image image = imageFor(message);
@@ -38,10 +38,9 @@ class SpeechBubble {
             message = message.substring(SPEECH_PREFIX.length());
         }
 
-
         canvas.drawImage(x, y, image, Alignment.BOTTOM_CENTER);
         canvas.setColor(Color.BLACK);
-        canvas.setFontSize(FONT_SIZE);
+        canvas.setTextSize(TEXT_SIZE);
         final List<String> lines = lineBreak(canvas, message, image.getWidth() - 2 * BORDER);
         y -= 204;
         x = x - image.getWidth() / 2 + BORDER;

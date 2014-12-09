@@ -16,7 +16,7 @@ public class SensorTest extends Program implements SensorListener {
     @Override
     public void run() {
         window = new Window();
-        window.setFontSize(12);
+        window.setTextSize(12);
         yPos = new HashMap<Object, Float>();
         Jeda.enableSensor(SensorType.GRAVITY);
         Jeda.enableSensor(SensorType.ACCELERATION);

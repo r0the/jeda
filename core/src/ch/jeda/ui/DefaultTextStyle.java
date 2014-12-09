@@ -62,7 +62,7 @@ public class DefaultTextStyle {
     public void applyTextStyle(final Canvas canvas) {
         canvas.setColor(this.textColor);
         canvas.setTypeface(this.typeface);
-        canvas.setFontSize(this.textSize);
+        canvas.setTextSize(this.textSize);
     }
 
     /**

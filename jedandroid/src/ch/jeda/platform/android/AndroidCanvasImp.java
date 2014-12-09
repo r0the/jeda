@@ -157,11 +157,6 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setFontSize(final int fontSize) {
-        this.textPaint.setTextSize(fontSize);
-    }
-
-    @Override
     public void setLineWidth(final double lineWidth) {
         assert lineWidth >= 0.0;
 
@@ -175,6 +170,11 @@ class AndroidCanvasImp implements CanvasImp {
 
         this.pixelPaint.setColor(color.getValue());
         this.bitmap.setPixel(x, y, color.getValue());
+    }
+
+    @Override
+    public void setTextSize(final int textSize) {
+        this.textPaint.setTextSize(textSize);
     }
 
     @Override

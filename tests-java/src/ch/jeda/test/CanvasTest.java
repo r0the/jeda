@@ -97,7 +97,7 @@ public class CanvasTest extends Program implements KeyDownListener,
         window.setColor(new Color(200, 200, 200, 200));
         window.fillRectangle(5, h, w - 10, 25);
         window.setColor(Color.BLACK);
-        window.setFontSize(20);
+        window.setTextSize(20);
         window.drawText(10, h + 5, message);
     }
 
@@ -201,20 +201,19 @@ public class CanvasTest extends Program implements KeyDownListener,
 
     private void setFontSizeTest() {
         window.drawText(5, 5, "default font size");
-        window.setFontSize(10);
+        window.setTextSize(10);
         window.drawText(5, 25, "font size 10");
-        window.setFontSize(15);
+        window.setTextSize(15);
         window.drawText(5, 45, "font size 15");
-        window.setFontSize(20);
+        window.setTextSize(20);
         window.drawText(5, 65, "font size 20");
         msg("drawText() with different font sizes");
     }
 
     private void antiAliasingTest() {
-        window.setFontSize(50);
+        window.setTextSize(50);
         window.fillCircle(100, 100, 50);
         window.drawText(170, 100, "Here be 'Jaggies'", Alignment.LEFT);
-
         window.setAntiAliasing(true);
         window.fillCircle(100, 400, 50);
         window.drawText(170, 400, "Anti-Aliasing Enabled", Alignment.LEFT);

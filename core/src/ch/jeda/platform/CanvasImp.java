@@ -58,11 +58,11 @@ public interface CanvasImp {
 
     void setColor(Color color);
 
-    void setFontSize(int fontSize);
-
     void setLineWidth(double lineWidth);
 
     void setPixelAt(int x, int y, Color color);
+
+    void setTextSize(int textSize);
 
     @Deprecated
     void setTransformation(Transformation transformation);

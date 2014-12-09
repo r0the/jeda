@@ -32,8 +32,8 @@ import java.util.Stack;
  * changed with {@link #setColor(ch.jeda.ui.Color)}.
  * <li> <b>line width</b>: the line width used to draw geometric shapes. The line width can be changed with
  * {@link #setLineWidth(double)}.
- * <li> <b>font size</b>: the size of the font used to render text. Initially, the font size is 16. The font size can be
- * changed with {@link #setFontSize(int)}.
+ * <li> <b>text size</b>: the size of the text. Initially, the text size is 16. The text size can be changed with
+ * {@link #setTextSize(int)}.
  * <li> <b>typeface</b>: The typeface (font family) used to render text.
  * </ul>
  * <strong>Example:</strong>
@@ -42,17 +42,17 @@ import java.util.Stack;
  * canvas.fillCircle(50, 50, 20);</code></pre>
  *
  * @since 1.0
- * @version 2
+ * @version 3
  */
 public class Canvas {
 
-    private static final int DEFAULT_FONT_SIZE = 16;
+    private static final int DEFAULT_TEXT_SIZE = 16;
     private static final Color DEFAULT_FOREGROUND = Color.BLACK;
     private boolean antiAliasing;
     private Color color;
-    private int fontSize;
     private CanvasImp imp;
     private double lineWidth;
+    private int textSize;
     private Transformation transformation;
     private Typeface typeface;
 
@@ -79,7 +79,7 @@ public class Canvas {
 
         this.antiAliasing = false;
         this.color = DEFAULT_FOREGROUND;
-        this.fontSize = DEFAULT_FONT_SIZE;
+        this.textSize = DEFAULT_TEXT_SIZE;
         this.transformation = new Transformation();
         this.typeface = Typeface.SANS_SERIF;
         this.setImp(JedaInternal.createCanvasImp(width, height));
@@ -684,8 +684,8 @@ public class Canvas {
             throw new NullPointerException("newColor");
         }
 
-        Stack<Integer> stackX = new Stack<Integer>();
-        Stack<Integer> stackY = new Stack<Integer>();
+        final Stack<Integer> stackX = new Stack<Integer>();
+        final Stack<Integer> stackY = new Stack<Integer>();
         stackX.push(x);
         stackY.push(y);
         while (!stackX.isEmpty()) {
@@ -718,15 +718,10 @@ public class Canvas {
     }
 
     /**
-     * Returns the current font size.
-     *
-     * @return current font size
-     *
-     * @see #setFontSize(int)
-     * @since 1.0
+     * @deprecated Use {@link #getTextSize()} instead.
      */
     public int getFontSize() {
-        return this.fontSize;
+        return this.getTextSize();
     }
 
     /**
@@ -774,10 +769,15 @@ public class Canvas {
     }
 
     /**
-     * @deprecated
+     * Returns the current text size.
+     *
+     * @return current text size
+     *
+     * @see #setTextSize(int)
+     * @since 1.0
      */
-    public Transformation getTransformation() {
-        return this.transformation;
+    public int getTextSize() {
+        return this.textSize;
     }
 
     /**
@@ -854,24 +854,10 @@ public class Canvas {
     }
 
     /**
-     * Sets the font size. The font size set by this method is applied to all subsequent <tt>drawText(...)</tt>
-     * operations.
-     *
-     * @param size the new font size
-     * @throws IllegalArgumentException if <tt>size</tt> is not positive
-     *
-     * @see #getFontSize()
-     * @since 1.0
+     * @deprecated Use {@link #setTextSize(int)} instead.
      */
-    public void setFontSize(final int size) {
-        if (size <= 0) {
-            throw new IllegalArgumentException("size");
-        }
-
-        if (this.fontSize != size) {
-            this.fontSize = size;
-            this.imp.setFontSize(this.fontSize);
-        }
+    public void setFontSize(int size) {
+        this.setTextSize(size);
     }
 
     /**
@@ -916,16 +902,24 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use {@link RotatedImage} to display rotated images.
+     * Sets the text size. The text size set by this method is applied to all subsequent <tt>drawText(...)</tt>
+     * operations.
+     *
+     * @param size the new text size
+     * @throws IllegalArgumentException if <tt>size</tt> is not positive
+     *
+     * @see #getTextSize()
      * @since 1.0
      */
-    public void setTransformation(final Transformation transformation) {
-        if (transformation == null) {
-            throw new NullPointerException("transformation");
+    public void setTextSize(final int size) {
+        if (size <= 0) {
+            throw new IllegalArgumentException("size");
         }
 
-        this.transformation = transformation;
-        this.imp.setTransformation(this.transformation);
+        if (this.textSize != size) {
+            this.textSize = size;
+            this.imp.setTextSize(this.textSize);
+        }
     }
 
     /**
@@ -1003,7 +997,7 @@ public class Canvas {
 
     Canvas() {
         this.color = DEFAULT_FOREGROUND;
-        this.fontSize = DEFAULT_FONT_SIZE;
+        this.textSize = DEFAULT_TEXT_SIZE;
         this.transformation = new Transformation();
         this.typeface = Typeface.SANS_SERIF;
     }
@@ -1012,7 +1006,7 @@ public class Canvas {
         this.imp = imp;
         this.imp.setAntiAliasing(this.antiAliasing);
         this.imp.setColor(this.color);
-        this.imp.setFontSize(this.fontSize);
+        this.imp.setTextSize(this.textSize);
         this.imp.setLineWidth(this.lineWidth);
         this.imp.setTransformation(this.transformation);
         this.imp.setTypeface(this.typeface.imp);

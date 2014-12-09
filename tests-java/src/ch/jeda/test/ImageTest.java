@@ -14,7 +14,7 @@ public class ImageTest extends Program {
 
         Image example = Image.JEDA_LOGO_64x64.scale(2.0);
         int alpha = 255;
-        window.setFontSize(15);
+        window.setTextSize(15);
         int x = 100;
         double angle = 0;
         while (x <= 700) {

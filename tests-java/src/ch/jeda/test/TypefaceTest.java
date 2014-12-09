@@ -12,7 +12,7 @@ public class TypefaceTest extends Program {
     public void run() {
         window = new Window();
         y = 10;
-        window.setFontSize(20);
+        window.setTextSize(20);
         window.setColor(Color.BLACK);
         drawFontSample("Default Serif Font: ", Typeface.SERIF);
         drawFontSample("Default Sans-Serif Font: ", Typeface.SANS_SERIF);
