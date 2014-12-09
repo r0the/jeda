@@ -20,6 +20,7 @@ import ch.jeda.event.Key;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Stores named values of different types. Each value is identified by a unique {@link java.lang.String} called
@@ -68,6 +69,17 @@ public final class Data {
                 }
             }
         }
+    }
+
+    /**
+     * Constructs a data object from a map of strings.
+     *
+     * @param map the map of strings
+     *
+     * @since 1.6
+     */
+    public Data(final Map<String, String> map) {
+        this(new DefaultDataImp(map));
     }
 
     Data(final DataImp imp) {

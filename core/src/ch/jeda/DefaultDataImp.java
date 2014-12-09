@@ -28,6 +28,10 @@ class DefaultDataImp implements DataImp {
         this.map = new TreeMap<String, String>();
     }
 
+    DefaultDataImp(final Map<String, String> map) {
+        this.map = new TreeMap<String, String>(map);
+    }
+
     @Override
     public void clear() {
         this.map.clear();
