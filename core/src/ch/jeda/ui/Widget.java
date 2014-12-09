@@ -28,7 +28,7 @@ import ch.jeda.event.ActionEvent;
  * @since 1.3
  * @version 2
  */
-public abstract class Widget extends GraphicsItem {
+public abstract class Widget extends Element {
 
     private static final int DEFAULT_DRAW_ORDER = 1000;
     private Alignment alignment;
@@ -200,11 +200,11 @@ public abstract class Widget extends GraphicsItem {
      * @since 1.3
      */
     public final void select() {
-        if (this.getWindow() == null) {
+        if (this.getView() == null) {
             return;
         }
 
-        final Widget[] widgets = this.getWindow().getGraphicsItems(Widget.class);
+        final Widget[] widgets = this.getView().getElements(Widget.class);
         for (int i = 0; i < widgets.length; ++i) {
             if (widgets[i].selected) {
                 widgets[i].selected = false;
@@ -280,7 +280,7 @@ public abstract class Widget extends GraphicsItem {
      * @since 1.4
      */
     protected void action(final String name) {
-        final Window window = this.getWindow();
+        final Window window = this.getView();
         if (window != null) {
             window.postEvent(new ActionEvent(this, name));
         }

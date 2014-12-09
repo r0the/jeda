@@ -39,7 +39,7 @@ import java.util.List;
  * @since 1.0
  * @version 3
  */
-public class Sprite extends GraphicsItem implements TickListener {
+public class Sprite extends Element implements TickListener {
 
     private static final double THRESHHOLD = 1E-3;
     private double ax;
@@ -130,8 +130,8 @@ public class Sprite extends GraphicsItem implements TickListener {
     @SuppressWarnings("unchecked")
     public final <T extends Sprite> T[] getCollidingSprites(final Class<T> clazz) {
         final List<T> result = new ArrayList<T>();
-        if (this.getWindow() != null) {
-            for (final T item : this.getWindow().getGraphicsItems(clazz)) {
+        if (this.getView() != null) {
+            for (final T item : this.getView().getElements(clazz)) {
                 if (this.collidesWith(item)) {
                     result.add(item);
                 }

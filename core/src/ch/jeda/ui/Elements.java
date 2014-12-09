@@ -26,30 +26,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-final class GraphicsItems {
+final class Elements {
 
-    private final Map<String, GraphicsItemsPage> pages;
-    private final List<GraphicsItem> pendingDeletions;
-    private final List<GraphicsItem> pendingInsertions;
+    private final Map<String, ViewPage> pages;
+    private final List<Element> pendingDeletions;
+    private final List<Element> pendingInsertions;
     private final Window window;
-    private GraphicsItem[] activeItems;
-    private GraphicsItemsPage activePage;
-    private GraphicsItemsPage currentPage;
+    private Element[] activeElements;
+    private ViewPage activePage;
+    private ViewPage currentPage;
 
-    GraphicsItems(final Window window) {
-        this.pages = new HashMap<String, GraphicsItemsPage>();
-        this.pendingDeletions = new ArrayList<GraphicsItem>();
-        this.pendingInsertions = new ArrayList<GraphicsItem>();
+    Elements(final Window window) {
+        this.pages = new HashMap<String, ViewPage>();
+        this.pendingDeletions = new ArrayList<Element>();
+        this.pendingInsertions = new ArrayList<Element>();
         this.window = window;
-        this.activeItems = new GraphicsItem[0];
-        this.activePage = new GraphicsItemsPage(window, "Main");
+        this.activeElements = new Element[0];
+        this.activePage = new ViewPage(window, "Main");
         this.currentPage = this.activePage;
     }
 
-    void add(final GraphicsItem object) {
-        if (this.currentPage.add(object) && this.currentPage.isActive()) {
-            this.pendingDeletions.remove(object);
-            this.pendingInsertions.add(object);
+    void add(final Element element) {
+        if (this.currentPage.add(element) && this.currentPage.isActive()) {
+            this.pendingDeletions.remove(element);
+            this.pendingInsertions.add(element);
         }
     }
 
@@ -58,18 +58,18 @@ final class GraphicsItems {
     }
 
     void draw(final Canvas canvas) {
-        for (int i = 0; i < this.activeItems.length; ++i) {
-            this.activeItems[i].draw(canvas);
+        for (int i = 0; i < this.activeElements.length; ++i) {
+            this.activeElements[i].draw(canvas);
         }
     }
 
     @SuppressWarnings("unchecked")
-    final <T extends GraphicsItem> T[] get(final Class<T> clazz) {
+    final <T extends Element> T[] get(final Class<T> clazz) {
         final List<T> result = new ArrayList<T>();
-        for (int i = 0; i < this.activeItems.length; ++i) {
-            if (clazz.isInstance(this.activeItems[i])) {
+        for (int i = 0; i < this.activeElements.length; ++i) {
+            if (clazz.isInstance(this.activeElements[i])) {
                 // Unchecked cast
-                result.add((T) this.activeItems[i]);
+                result.add((T) this.activeElements[i]);
             }
         }
 
@@ -77,8 +77,8 @@ final class GraphicsItems {
         return result.toArray((T[]) Array.newInstance(clazz, result.size()));
     }
 
-    final GraphicsItem[] getAll() {
-        return Arrays.copyOf(this.activeItems, this.activeItems.length);
+    final Element[] getAll() {
+        return Arrays.copyOf(this.activeElements, this.activeElements.length);
     }
 
     String getCurrentPage() {
@@ -92,33 +92,33 @@ final class GraphicsItems {
             this.activePage.setActive(false);
             this.activePage = this.currentPage;
             this.activePage.setActive(true);
-            this.setActiveItems(this.currentPage.getItems());
+            this.setActiveElements(this.currentPage.getElements());
             this.addEventListeners();
         }
         else if (!this.pendingDeletions.isEmpty() || !this.pendingInsertions.isEmpty()) {
             // Same page, but items changed
             boolean allChanged = false;
-            final Set<GraphicsItem> itemSet = new HashSet<GraphicsItem>(Arrays.asList(this.activeItems));
+            final Set<Element> elementSet = new HashSet<Element>(Arrays.asList(this.activeElements));
             for (int i = 0; i < this.pendingDeletions.size(); ++i) {
-                final GraphicsItem item = this.pendingDeletions.get(i);
-                if (itemSet.remove(item)) {
+                final Element element = this.pendingDeletions.get(i);
+                if (elementSet.remove(element)) {
                     allChanged = true;
-                    this.window.removeEventListener(item);
+                    this.window.removeEventListener(element);
                 }
             }
 
             for (int i = 0; i < this.pendingInsertions.size(); ++i) {
-                final GraphicsItem item = this.pendingInsertions.get(i);
-                if (!itemSet.contains(item)) {
-                    if (itemSet.add(item)) {
-                        this.window.addEventListener(item);
+                final Element element = this.pendingInsertions.get(i);
+                if (!elementSet.contains(element)) {
+                    if (elementSet.add(element)) {
+                        this.window.addEventListener(element);
                         allChanged = true;
                     }
                 }
             }
 
             if (allChanged) {
-                this.setActiveItems(itemSet);
+                this.setActiveElements(elementSet);
             }
 
             this.pendingDeletions.clear();
@@ -126,17 +126,17 @@ final class GraphicsItems {
         }
     }
 
-    void remove(final GraphicsItem object) {
-        if (this.currentPage.remove(object)) {
-            this.pendingDeletions.add(object);
-            this.pendingInsertions.remove(object);
+    void remove(final Element element) {
+        if (this.currentPage.remove(element)) {
+            this.pendingDeletions.add(element);
+            this.pendingInsertions.remove(element);
         }
     }
 
     void setPage(final String page) {
         if (!this.currentPage.getName().equals(page)) {
             if (!this.pages.containsKey(page)) {
-                this.pages.put(page, new GraphicsItemsPage(window, page));
+                this.pages.put(page, new ViewPage(window, page));
             }
 
             this.currentPage = this.pages.get(page);
@@ -144,19 +144,19 @@ final class GraphicsItems {
     }
 
     private void addEventListeners() {
-        for (int i = 0; i < this.activeItems.length; ++i) {
-            this.window.addEventListener(this.activeItems[i]);
+        for (int i = 0; i < this.activeElements.length; ++i) {
+            this.window.addEventListener(this.activeElements[i]);
         }
     }
 
     private void removeEventListeners() {
-        for (int i = 0; i < this.activeItems.length; ++i) {
-            this.window.removeEventListener(this.activeItems[i]);
+        for (int i = 0; i < this.activeElements.length; ++i) {
+            this.window.removeEventListener(this.activeElements[i]);
         }
     }
 
-    private void setActiveItems(final Collection<GraphicsItem> items) {
-        this.activeItems = items.toArray(new GraphicsItem[items.size()]);
-        Arrays.sort(this.activeItems, GraphicsItem.DRAW_ORDER);
+    private void setActiveElements(final Collection<Element> elements) {
+        this.activeElements = elements.toArray(new Element[elements.size()]);
+        Arrays.sort(this.activeElements, Element.DRAW_ORDER);
     }
 }

@@ -21,46 +21,46 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-final class GraphicsItemsPage {
+final class ViewPage {
 
     final Window window;
-    private final Set<GraphicsItem> itemSet;
+    private final Set<Element> elementSet;
     private final String name;
     private boolean active;
     boolean dirty;
 
-    GraphicsItemsPage(final Window window, final String name) {
-        this.itemSet = new HashSet<GraphicsItem>();
+    ViewPage(final Window window, final String name) {
+        this.elementSet = new HashSet<Element>();
         this.name = name;
         this.window = window;
         this.dirty = false;
     }
 
-    boolean add(final GraphicsItem object) {
-        if (object == null) {
+    boolean add(final Element element) {
+        if (element == null) {
             return false;
         }
 
-        if (this.itemSet.contains(object)) {
+        if (this.elementSet.contains(element)) {
             return false;
         }
 
-        if (object.page != null) {
-            this.window.remove(object);
+        if (element.page != null) {
+            this.window.remove(element);
         }
 
-        this.itemSet.add(object);
+        this.elementSet.add(element);
         this.dirty = true;
-        object.page = this;
+        element.page = this;
         return true;
     }
 
     int count() {
-        return this.itemSet.size();
+        return this.elementSet.size();
     }
 
-    Collection<GraphicsItem> getItems() {
-        return Collections.unmodifiableCollection(this.itemSet);
+    Collection<Element> getElements() {
+        return Collections.unmodifiableCollection(this.elementSet);
     }
 
     String getName() {
@@ -71,17 +71,17 @@ final class GraphicsItemsPage {
         return this.active;
     }
 
-    boolean remove(final GraphicsItem object) {
-        if (object == null) {
+    boolean remove(final Element element) {
+        if (element == null) {
             return false;
         }
 
-        if (!this.itemSet.contains(object)) {
+        if (!this.elementSet.contains(element)) {
             return false;
         }
 
-        this.itemSet.remove(object);
-        object.page = null;
+        this.elementSet.remove(element);
+        element.page = null;
         this.dirty = true;
         return true;
     }

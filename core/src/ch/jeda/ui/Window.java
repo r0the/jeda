@@ -39,8 +39,8 @@ import java.util.EnumSet;
 public class Window extends Canvas {
 
     private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
+    private final Elements elements;
     private final EventQueue eventQueue;
-    private final GraphicsItems graphicsItems;
     private WindowImp imp;
     private String title;
 
@@ -102,7 +102,7 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public Window(final int width, final int height, final WindowFeature... features) {
-        this.graphicsItems = new GraphicsItems(this);
+        this.elements = new Elements(this);
         this.eventQueue = new EventQueue();
         this.title = Jeda.getProgramName();
         this.resetImp(width, height, toSet(features));
@@ -111,19 +111,19 @@ public class Window extends Canvas {
     }
 
     /**
-     * Adds a {@link ch.jeda.ui.GraphicsItem} to the currnt page of the window. Has no effect if <tt>graphicsItem</tt>
-     * is <tt>null</tt>. The {@link ch.jeda.ui.GraphicsItem} becomes inactive (it no longer receives events) and
-     * insivible if the current page changes.
+     * Adds an {@link ch.jeda.ui.Element} to the currnt page of the window. Has no effect if <tt>element</tt>
+     * is <tt>null</tt>. The {@link ch.jeda.ui.Element} becomes inactive (it no longer receives events) and insivible if
+     * the current page changes.
      *
-     * @param graphicsItem the graphics item to be added to the window
+     * @param element the element to be added to the window
      *
-     * @see #remove(ch.jeda.ui.GraphicsItem)
-     * @see #getGraphicsItems()
-     * @see #getGraphicsItems(java.lang.Class)
-     * @since 1.0
+     * @see #remove(ch.jeda.ui.Element)
+     * @see #getElements()
+     * @see #getElements(java.lang.Class)
+     * @since 1.6
      */
-    public final void add(final GraphicsItem graphicsItem) {
-        this.graphicsItems.add(graphicsItem);
+    public final void add(final Element element) {
+        this.elements.add(element);
     }
 
     /**
@@ -152,13 +152,31 @@ public class Window extends Canvas {
      *
      * @return all graphics items currently managed by the window.
      *
-     * @see #add(ch.jeda.ui.GraphicsItem)
-     * @see #getGraphicsItems(java.lang.Class)
-     * @see #remove(ch.jeda.ui.GraphicsItem)
      * @since 1.0
+     * @deprecated Use {@link #getElements()} instead.
      */
     public final GraphicsItem[] getGraphicsItems() {
-        return this.graphicsItems.getAll();
+        final Element[] elements = this.getElements();
+        final GraphicsItem[] result = new GraphicsItem[elements.length];
+        for (int i = 0; i < elements.length; ++i) {
+            result[i] = (GraphicsItem) elements[i];
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns all elements currently managed by the window.
+     *
+     * @return all elements currently managed by the window.
+     *
+     * @see #add(ch.jeda.ui.Element)
+     * @see #getElements(java.lang.Class)
+     * @see #remove(ch.jeda.ui.Element)
+     * @since 1.6
+     */
+    public final Element[] getElements() {
+        return this.elements.getAll();
     }
 
     /**
@@ -169,17 +187,32 @@ public class Window extends Canvas {
      * @return all graphics items currently managed by the window.
      * @throws NullPointerException if <tt>clazz</tt> is <tt>null</tt>
      *
-     * @see #add(ch.jeda.ui.GraphicsItem)
-     * @see #getGraphicsItems()
-     * @see #remove(ch.jeda.ui.GraphicsItem)
      * @since 1.0
+     * @deprecated Use {@link #getElements(java.lang.Class)} instead.
      */
-    public final <T extends GraphicsItem> T[] getGraphicsItems(final Class<T> clazz) {
+    public final <T extends Element> T[] getGraphicsItems(final Class<T> clazz) {
+        return this.getElements(clazz);
+    }
+
+    /**
+     * Returns all elements of the specified class currently managed by the window.
+     *
+     * @param <T> the type of elements to return
+     * @param clazz the class of elements to return
+     * @return all elements currently managed by the window.
+     * @throws NullPointerException if <tt>clazz</tt> is <tt>null</tt>
+     *
+     * @see #add(ch.jeda.ui.Element)
+     * @see #getElements()
+     * @see #remove(ch.jeda.ui.Element)
+     * @since 1.6
+     */
+    public final <T extends Element> T[] getElements(final Class<T> clazz) {
         if (clazz == null) {
             throw new NullPointerException("clazz");
         }
 
-        return this.graphicsItems.get(clazz);
+        return this.elements.get(clazz);
     }
 
     /**
@@ -187,12 +220,12 @@ public class Window extends Canvas {
      *
      * @return the current page of the window
      *
-     * @see #add(ch.jeda.ui.GraphicsItem)
+     * @see #add(ch.jeda.ui.Element)
      * @see #setPage(java.lang.String)
      * @since 1.4
      */
     public final String getPage() {
-        return this.graphicsItems.getCurrentPage();
+        return this.elements.getCurrentPage();
     }
 
     /**
@@ -227,16 +260,15 @@ public class Window extends Canvas {
     }
 
     /**
-     * Removes a {@link ch.jeda.ui.GraphicsItem} from the window. Has no effect if <tt>graphicsItem</tt> is
-     * <tt>null</tt>.
+     * Removes a {@link ch.jeda.ui.Element} from the window. Has no effect if <tt>element</tt> is <tt>null</tt>.
      *
-     * @param item the graphics item to be removed from the window
+     * @param element the element to be removed from the window
      *
-     * @see ch.jeda.ui.GraphicsItem
-     * @since 1.0
+     * @see #add(ch.jeda.ui.Element)
+     * @since 1.6
      */
-    public final void remove(final GraphicsItem item) {
-        this.graphicsItems.remove(item);
+    public final void remove(final Element element) {
+        this.elements.remove(element);
     }
 
     /**
@@ -301,17 +333,17 @@ public class Window extends Canvas {
     }
 
     /**
-     * Sets the current page of the window. All {@link ch.jeda.ui.GraphicsItem}s are added to the current page. They
-     * become inactive (they no longer receive events) and insivible if the current page changes.
+     * Sets the current page of the window. All {@link ch.jeda.ui.Element}s are added to the current page. They become
+     * inactive (they no longer receive events) and insivible if the current page changes.
      *
      * @param page the current page
      *
-     * @see #add(ch.jeda.ui.GraphicsItem)
+     * @see #add(ch.jeda.ui.Element)
      * @see #getPage()
      * @since 1.4
      */
     public final void setPage(final String page) {
-        this.graphicsItems.setPage(page);
+        this.elements.setPage(page);
     }
 
     /**
@@ -339,8 +371,8 @@ public class Window extends Canvas {
     private void tick(final TickEvent event) {
         if (this.imp.isVisible()) {
             this.eventQueue.processEvents();
-            this.graphicsItems.processPending();
-            this.graphicsItems.draw(this);
+            this.elements.processPending();
+            this.elements.draw(this);
             this.imp.update();
         }
     }

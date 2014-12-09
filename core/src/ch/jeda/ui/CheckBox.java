@@ -230,7 +230,7 @@ public class CheckBox extends Widget implements KeyDownListener, KeyUpListener, 
     }
 
     private void sendKeyEvent(final EventType eventType) {
-        final Window window = this.getWindow();
+        final Window window = this.getView();
         if (this.key != Key.UNDEFINED && window != null) {
             window.postEvent(new KeyEvent(this, eventType, this.key));
         }
