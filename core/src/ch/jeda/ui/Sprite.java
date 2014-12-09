@@ -37,7 +37,7 @@ import java.util.List;
  * </ul>
  *
  * @since 1.0
- * @version 2
+ * @version 3
  */
 public class Sprite extends GraphicsItem implements TickListener {
 
@@ -45,7 +45,7 @@ public class Sprite extends GraphicsItem implements TickListener {
     private double ax;
     private double ay;
     private double direction;
-    private RotatedImage image;
+    private Image image;
     private double radius;
     private double rotation;
     private double speed;
@@ -105,6 +105,8 @@ public class Sprite extends GraphicsItem implements TickListener {
      *
      * <b>Warning:</b>The collision algorithm is no sophisticated and may be very slow with a large number of sprites.
      *
+     * @return an array of all other sprites in the same view that collide with the sprite
+     *
      * @since 1.1
      */
     public final Sprite[] getCollidingSprites() {
@@ -154,6 +156,29 @@ public class Sprite extends GraphicsItem implements TickListener {
     }
 
     /**
+     * Returns the image of the sprite.
+     *
+     * @return the image of the sprite.
+     *
+     * @since 1.6
+     */
+    public final Image getImage() {
+        return this.image;
+    }
+
+    /**
+     * Returns the radius of the sprite's collision circle.
+     *
+     * @return the radius of the sprite's collision circle
+     *
+     * @see #setRadius(double)
+     * @since 1.0
+     */
+    public final double getRadius() {
+        return this.radius;
+    }
+
+    /**
      * Returns the rotated image of the sprite.
      *
      * @return the rotated image of the sprite.
@@ -167,20 +192,8 @@ public class Sprite extends GraphicsItem implements TickListener {
             return null;
         }
         else {
-            return this.image.getImage(this.rotation);
+            return this.image.rotate(this.rotation);
         }
-    }
-
-    /**
-     * Returns the radius of the sprite's collision circle.
-     *
-     * @return the radius of the sprite's collision circle
-     *
-     * @see #setRadius(double)
-     * @since 1.0
-     */
-    public final double getRadius() {
-        return this.radius;
     }
 
     /**
@@ -235,18 +248,19 @@ public class Sprite extends GraphicsItem implements TickListener {
 
     @Override
     public final void onTick(final TickEvent event) {
+        final double dt = event.getDuration();
         if (!MathUtil.isZero(this.ax, THRESHHOLD) || !MathUtil.isZero(this.ay, THRESHHOLD)) {
-            this.vx = this.vx + this.ax * event.getDuration();
-            this.vy = this.vy + this.ay * event.getDuration();
+            this.vx = this.vx + this.ax * dt;
+            this.vy = this.vy + this.ay * dt;
             this.speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
             if (!MathUtil.isZero(this.speed, THRESHHOLD)) {
                 this.direction = MathUtil.normalizeAngle(Math.atan2(this.vy, this.vx));
             }
         }
 
-        final double newX = this.x + this.vx * event.getDuration();
-        final double newY = this.y + this.vy * event.getDuration();
-        this.update(event.getDuration(), newX, newY);
+        final double newX = this.x + this.vx * dt;
+        final double newY = this.y + this.vy * dt;
+        this.update(dt, newX, newY);
     }
 
     /**
@@ -300,7 +314,7 @@ public class Sprite extends GraphicsItem implements TickListener {
      * @since 1.1
      */
     public final void setImage(final Image image) {
-        this.setImage(image, 1);
+        this.image = image;
     }
 
     /**
@@ -314,35 +328,21 @@ public class Sprite extends GraphicsItem implements TickListener {
      * @since 1.0
      */
     public final void setImage(final String path) {
-        this.setImage(new Image(path), 1);
+        this.setImage(new Image(path));
     }
 
     /**
-     * Sets the image representing the sprite.
-     *
-     * @param image image representing the sprite
-     *
-     * @see #setImage(java.lang.String)
-     * @see #setImage(ch.jeda.ui.Image)
-     * @see #setImage(java.lang.String, int)
-     * @since 1.1
+     * @deprecated Use {@link #setImage(ch.jeda.ui.Image)} instead
      */
     public final void setImage(final Image image, final int steps) {
-        this.image = new RotatedImage(image, steps);
+        this.setImage(image);
     }
 
     /**
-     * Sets the image representing the sprite.
-     *
-     * @param path the file or resource path of the image representing the sprite
-     *
-     * @see #setImage(java.lang.String)
-     * @see #setImage(ch.jeda.ui.Image)
-     * @see #setImage(ch.jeda.ui.Image, int)
-     * @since 1.0
+     * @deprecated Use {@link #setImage(java.lang.String)} instead
      */
     public final void setImage(final String path, final int steps) {
-        this.setImage(new Image(path), steps);
+        this.setImage(path);
     }
 
     /**
@@ -411,7 +411,10 @@ public class Sprite extends GraphicsItem implements TickListener {
 
     @Override
     protected void draw(final Canvas canvas) {
-        canvas.drawImage(this.x, this.y, this.getRotatedImage(), Alignment.CENTER);
+        canvas.setTranslation(this.x, this.y);
+        canvas.setRotation(this.rotation);
+        canvas.drawImage(0, 0, this.getImage(), Alignment.CENTER);
+        canvas.resetTransformations();
     }
 
     /**

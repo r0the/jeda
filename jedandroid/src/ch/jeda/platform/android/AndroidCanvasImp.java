@@ -23,8 +23,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
+import ch.jeda.platform.CanvasTransformation;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.ui.Color;
@@ -34,12 +34,24 @@ class AndroidCanvasImp implements CanvasImp {
     private final Paint fillPaint;
     private final Paint imagePaint;
     private final Matrix matrix;
-    private final float[] matrixArray;
     private final Paint pixelPaint;
     private final Paint strokePaint;
     private final Paint textPaint;
     private Bitmap bitmap;
     private Canvas canvas;
+
+    AndroidCanvasImp() {
+        this.fillPaint = new Paint();
+        this.fillPaint.setStyle(Paint.Style.FILL);
+        this.fillPaint.setAntiAlias(true);
+        this.imagePaint = new Paint();
+        this.matrix = new Matrix();
+        this.pixelPaint = new Paint();
+        this.strokePaint = new Paint();
+        this.strokePaint.setStyle(Paint.Style.STROKE);
+        this.strokePaint.setAntiAlias(true);
+        this.textPaint = new Paint();
+    }
 
     @Override
     public void copyFrom(final int x, final int y, final CanvasImp source) {
@@ -178,14 +190,13 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setTransformation(final Transformation transformation) {
+    public void setTransformation(final CanvasTransformation transformation) {
         assert transformation != null;
 
-        this.matrixArray[Matrix.MPERSP_0] = 0;
-        this.matrixArray[Matrix.MPERSP_1] = 0;
-        this.matrixArray[Matrix.MPERSP_2] = 1;
-        transformation.copyToArray(this.matrixArray);
-        this.matrix.setValues(this.matrixArray);
+        this.matrix.setTranslate((float) transformation.translationX, (float) transformation.translationY);
+        this.matrix.preRotate((float) Math.toDegrees(transformation.rotation));
+        float scale = (float) transformation.scale;
+        this.matrix.preScale(scale, scale);
         this.canvas.setMatrix(this.matrix);
     }
 
@@ -217,20 +228,6 @@ class AndroidCanvasImp implements CanvasImp {
         Rect bounds = new Rect();
         this.textPaint.getTextBounds(text, 0, text.length(), bounds);
         return bounds.width();
-    }
-
-    AndroidCanvasImp() {
-        this.fillPaint = new Paint();
-        this.fillPaint.setStyle(Paint.Style.FILL);
-        this.fillPaint.setAntiAlias(true);
-        this.imagePaint = new Paint();
-        this.matrix = new Matrix();
-        this.matrixArray = new float[9];
-        this.pixelPaint = new Paint();
-        this.strokePaint = new Paint();
-        this.strokePaint.setStyle(Paint.Style.STROKE);
-        this.strokePaint.setAntiAlias(true);
-        this.textPaint = new Paint();
     }
 
     Canvas getCanvas() {

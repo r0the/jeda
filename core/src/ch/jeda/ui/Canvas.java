@@ -19,6 +19,7 @@ package ch.jeda.ui;
 import ch.jeda.JedaInternal;
 import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
+import ch.jeda.platform.CanvasTransformation;
 import java.util.Stack;
 
 /**
@@ -46,6 +47,7 @@ import java.util.Stack;
  */
 public class Canvas {
 
+    private static final double MINIMUM_SCALE = 1.0E-10;
     private static final int DEFAULT_TEXT_SIZE = 16;
     private static final Color DEFAULT_FOREGROUND = Color.BLACK;
     private boolean antiAliasing;
@@ -53,7 +55,7 @@ public class Canvas {
     private CanvasImp imp;
     private double lineWidth;
     private int textSize;
-    private Transformation transformation;
+    private CanvasTransformation transformation;
     private Typeface typeface;
 
     /**
@@ -80,15 +82,20 @@ public class Canvas {
         this.antiAliasing = false;
         this.color = DEFAULT_FOREGROUND;
         this.textSize = DEFAULT_TEXT_SIZE;
-        this.transformation = new Transformation();
+        this.transformation = new CanvasTransformation();
         this.typeface = Typeface.SANS_SERIF;
         this.setImp(JedaInternal.createCanvasImp(width, height));
     }
 
+    Canvas() {
+        this.color = DEFAULT_FOREGROUND;
+        this.textSize = DEFAULT_TEXT_SIZE;
+        this.transformation = new CanvasTransformation();
+        this.typeface = Typeface.SANS_SERIF;
+    }
+
     /**
-     * <b>Experimental</b>
-     *
-     * @since 1.0
+     * @deprecated
      */
     public void copyFrom(final Canvas canvas) {
         if (canvas == null) {
@@ -769,6 +776,30 @@ public class Canvas {
     }
 
     /**
+     * Returns the current rotation angle of the canvas.
+     *
+     * @return the current rotation angle of the canvas
+     *
+     * @since 1.6
+     * @see #setRotation(double)
+     */
+    public double getRotation() {
+        return this.transformation.rotation;
+    }
+
+    /**
+     * Returns the current scale of the canvas.
+     *
+     * @return the current scale of the canvas
+     *
+     * @since 1.6
+     * @see #setScale(double)
+     */
+    public double getScale() {
+        return this.transformation.scale;
+    }
+
+    /**
      * Returns the current text size.
      *
      * @return current text size
@@ -778,6 +809,41 @@ public class Canvas {
      */
     public int getTextSize() {
         return this.textSize;
+    }
+
+    /**
+     * Returns the current horizontal translation of the canvas.
+     *
+     * @return the current horizontal translation of the canvas
+     *
+     * @since 1.6
+     * @see #setTranslation(double, double)
+     */
+    public double getTranslationX() {
+        return this.transformation.translationX;
+    }
+
+    /**
+     * Returns the current vertical translation of the canvas.
+     *
+     * @return the current vertical translation of the canvas
+     *
+     * @since 1.6
+     * @see #setTranslation(double, double)
+     */
+    public double getTranslationY() {
+        return this.transformation.translationY;
+    }
+
+    /**
+     * @deprecated
+     */
+    public Transformation getTransformation() {
+        final Transformation result = new Transformation();
+        result.translate((float) this.transformation.translationX, (float) this.transformation.translationY);
+        result.scale((float) this.transformation.scale, (float) this.transformation.scale);
+        result.rotate((float) this.transformation.rotation);
+        return result;
     }
 
     /**
@@ -814,6 +880,20 @@ public class Canvas {
      */
     public boolean isAntiAliasing() {
         return this.antiAliasing;
+    }
+
+    /**
+     * Resets all canvas transformations (rotation, translation, and scale). All subsequent drawing operations will
+     * appear untransformed.
+     *
+     * @see #setRotation(double)
+     * @see #setScale(double)
+     * @see #setTranslation(double, double)
+     * @since 1.6
+     */
+    public void resetTransformations() {
+        this.transformation.reset();
+        this.imp.setTransformation(this.transformation);
     }
 
     /**
@@ -923,6 +1003,72 @@ public class Canvas {
     }
 
     /**
+     * Rotates the canvas. The rotation centre is the origin of the canvas. Setting a rotation causes all subsequent
+     * drawing operations to appear rotated by the specified angle.
+     *
+     * @param angle the rotation angle in radians
+     *
+     * @see #getRotation()
+     * @see #resetTransformations()
+     * @see #setTranslation(double, double)
+     * @see #setScale(double)
+     * @since 1.6
+     */
+    public void setRotation(final double angle) {
+        this.transformation.rotation = MathUtil.normalizeAngle(angle);
+        this.imp.setTransformation(this.transformation);
+    }
+
+    /**
+     * Translates the origin of the canvas. Setting a translation causes all subsequent drawing operations to appear
+     * translated by the specified <tt>dx</tt> and <tt>dy</tt>.
+     *
+     * @param dx the horizontal translation in pixels
+     * @param dy the vertical translation in pixels
+     *
+     * @see #getTranslationX()
+     * @see #getTranslationY()
+     * @see #resetTransformations()
+     * @see #setRotation(double)
+     * @see #setScale(double)
+     * @since 1.6
+     */
+    public void setTranslation(final double dx, final double dy) {
+        this.transformation.translationX = dx;
+        this.transformation.translationY = dy;
+        this.imp.setTransformation(this.transformation);
+    }
+
+    /**
+     * Scales the canvas. The scaling centre is the origin of the canvas. Setting a scale causes all subsequent drawing
+     * operations to appear scaled by the specified factor.
+     *
+     * @param scale the scaling factor
+     * @throws IllegalArgumentException if <tt>scale</tt> is too close to zero
+     *
+     * @see #getScale()
+     * @see #resetTransformations()
+     * @see #setRotation(double)
+     * @see #setTranslation(double, double)
+     * @since 1.6
+     */
+    public void setScale(final double scale) {
+        if (MathUtil.isZero(scale, MINIMUM_SCALE)) {
+            throw new IllegalArgumentException("scale");
+        }
+
+        this.transformation.scale = scale;
+        this.imp.setTransformation(this.transformation);
+    }
+
+    /**
+     * @deprecated Use {@link #setRotation(double)}, {@link #setScale(double)}, and
+     * {@link #setTranslation(double, double)} instead.
+     */
+    public void setTransformation(final Transformation transformation) {
+    }
+
+    /**
      * Sets the typeface to be used to draw text.
      *
      * @param typeface the typeface to be used to draw text
@@ -993,13 +1139,6 @@ public class Canvas {
         else {
             return this.imp.textWidth(text);
         }
-    }
-
-    Canvas() {
-        this.color = DEFAULT_FOREGROUND;
-        this.textSize = DEFAULT_TEXT_SIZE;
-        this.transformation = new Transformation();
-        this.typeface = Typeface.SANS_SERIF;
     }
 
     final void setImp(final CanvasImp imp) {

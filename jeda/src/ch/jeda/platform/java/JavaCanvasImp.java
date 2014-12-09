@@ -18,7 +18,7 @@ package ch.jeda.platform.java;
 
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.CanvasImp;
-import ch.jeda.Transformation;
+import ch.jeda.platform.CanvasTransformation;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.ui.Color;
 import java.awt.AlphaComposite;
@@ -223,13 +223,11 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setTransformation(final Transformation transformation) {
-        assert transformation != null;
-
-        transformation.copyToArray(this.matrix);
-        this.affineTransform.setTransform(
-            this.matrix[0], this.matrix[3], this.matrix[1],
-            this.matrix[4], this.matrix[2], this.matrix[5]);
+    public void setTransformation(final CanvasTransformation transformation) {
+        this.affineTransform.setToIdentity();
+        this.affineTransform.translate(transformation.translationX, transformation.translationY);
+        this.affineTransform.rotate(transformation.rotation);
+        this.affineTransform.scale(transformation.scale, transformation.scale);
         this.graphics.setTransform(this.affineTransform);
     }
 

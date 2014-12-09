@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.Transformation;
 import ch.jeda.ui.Color;
 
 /**
@@ -64,8 +63,7 @@ public interface CanvasImp {
 
     void setTextSize(int textSize);
 
-    @Deprecated
-    void setTransformation(Transformation transformation);
+    void setTransformation(CanvasTransformation transformation);
 
     void setTypeface(TypefaceImp typeface);
 

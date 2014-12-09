@@ -22,7 +22,7 @@ public class CanvasTest extends Program implements KeyDownListener,
 
     @Override
     public void onPointerDown(PointerEvent event) {
-        nextStep();
+//        nextStep();
     }
 
     @Override
@@ -48,7 +48,8 @@ public class CanvasTest extends Program implements KeyDownListener,
                 setFontSizeTest();
                 break;
             case 1:
-                jedaColorTest();
+                transformationTest();
+//                jedaColorTest();
                 break;
             case 2:
                 drawPolygonTest();
@@ -99,6 +100,19 @@ public class CanvasTest extends Program implements KeyDownListener,
         window.setColor(Color.BLACK);
         window.setTextSize(20);
         window.drawText(10, h + 5, message);
+    }
+
+    private void transformationTest() {
+        window.setRotation(Math.PI / 4);
+        window.setTranslation(w / 2, h / 2);
+        window.setTextSize(10);
+        window.setScale(5);
+        window.setColor(Color.RED);
+        window.fillRectangle(0, 0, 100, 30, Alignment.CENTER);
+        window.setColor(Color.BLACK);
+        window.drawText(0, 0, "Transformation", Alignment.CENTER);
+        window.resetTransformations();
+        msg("transformations");
     }
 
     private void drawCircleTest() {
