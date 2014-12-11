@@ -22,6 +22,7 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.WindowFeature;
+import java.io.InputStream;
 import java.util.EnumSet;
 
 /**
@@ -62,5 +63,12 @@ public class JedaInternal {
      */
     public static TypefaceImp getStandardTypefaceImp(final Platform.StandardTypeface standardTypeface) {
         return Jeda.getStandardTypefaceImp(standardTypeface);
+    }
+
+    /**
+     * <b>Internal</b>. Do not use this method.
+     */
+    public static InputStream openResource(final String path) {
+        return Jeda.openResource(path);
     }
 }
