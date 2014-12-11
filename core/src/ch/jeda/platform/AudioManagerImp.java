@@ -16,6 +16,9 @@
  */
 package ch.jeda.platform;
 
+/**
+ * <b>Internal</b>. Do not use this interface.
+ */
 public interface AudioManagerImp {
 
     boolean isSoundAvailable(String path);

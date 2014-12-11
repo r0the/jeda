@@ -16,7 +16,6 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.event.ActionEvent;
 import ch.jeda.event.EventType;
 import ch.jeda.event.Key;
 import ch.jeda.event.KeyDownListener;

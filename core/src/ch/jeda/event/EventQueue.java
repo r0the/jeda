@@ -201,7 +201,7 @@ public final class EventQueue {
                         this.connectionAcceptedListeners.get(j).onConnectionAccepted((ConnectionEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
@@ -212,7 +212,7 @@ public final class EventQueue {
                         this.connectionClosedListeners.get(j).onConnectionClosed((ConnectionEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
@@ -223,7 +223,7 @@ public final class EventQueue {
                         this.keyDownListeners.get(j).onKeyDown((KeyEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
@@ -234,7 +234,7 @@ public final class EventQueue {
                         this.keyTypedListeners.get(j).onKeyTyped((KeyEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
@@ -245,7 +245,7 @@ public final class EventQueue {
                         this.keyUpListeners.get(j).onKeyUp((KeyEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
@@ -256,7 +256,7 @@ public final class EventQueue {
                         this.messageReceivedListeners.get(j).onMessageReceived((MessageEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
@@ -267,7 +267,7 @@ public final class EventQueue {
                         this.pointerDownListeners.get(j).onPointerDown((PointerEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
@@ -278,7 +278,7 @@ public final class EventQueue {
                         this.pointerMovedListeners.get(j).onPointerMoved((PointerEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
@@ -289,7 +289,7 @@ public final class EventQueue {
                         this.pointerUpListeners.get(j).onPointerUp((PointerEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
@@ -322,7 +322,7 @@ public final class EventQueue {
                         this.turnListeners.get(j).onTurn((TurnEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, "jeda.event.error");
+                        Log.err(ex, EVENT_ERROR);
                     }
                 }
 
