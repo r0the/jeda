@@ -5,6 +5,7 @@
 
     <!-- Set properties -->
     <property name="jeda.core.dir" value="../core"/>
+    <property name="jeda.jbox2d.dir" value="../jbox2d"/>
     <property name="jeda.nbjeda.dir" value="../nbjeda8.0"/>
 
     <target name="-post-jar">
@@ -14,6 +15,11 @@
         <!-- Add core library to jar -->
         <jar update="true" jarfile="${dist.jar}">
             <zipfileset src="${jeda.core.dir}/dist/core.jar"/>
+        </jar>
+
+        <!-- Add jbox2d library to jar -->
+        <jar update="true" jarfile="${dist.jar}">
+            <zipfileset src="${jeda.jbox2d.dir}/dist/jbox2d.jar"/>
         </jar>
 
         <!-- Add vorbis sound library to jar -->

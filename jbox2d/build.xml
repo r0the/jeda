@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jbox2d." default="default" basedir=".">
+    <description>Builds, tests, and runs the project jbox2d.</description>
+    <import file="nbproject/build-impl.xml"/>
+
+    <target name="-post-jar">
+        <copy file="${dist.jar}" todir="../jedandroid/libs/"/>
+    </target>
+</project>
