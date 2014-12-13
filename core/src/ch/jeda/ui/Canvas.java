@@ -50,6 +50,7 @@ public class Canvas {
     private static final double MINIMUM_SCALE = 1.0E-10;
     private static final int DEFAULT_TEXT_SIZE = 16;
     private static final Color DEFAULT_FOREGROUND = Color.BLACK;
+    private final Stack<CanvasTransformation> transformationStack;
     private boolean antiAliasing;
     private Color color;
     private CanvasImp imp;
@@ -71,6 +72,7 @@ public class Canvas {
      * @since 1.0
      */
     public Canvas(final int width, final int height) {
+        this();
         if (width < 1) {
             throw new IllegalArgumentException("width");
         }
@@ -79,15 +81,12 @@ public class Canvas {
             throw new IllegalArgumentException("height");
         }
 
-        this.antiAliasing = false;
-        this.color = DEFAULT_FOREGROUND;
-        this.textSize = DEFAULT_TEXT_SIZE;
-        this.transformation = new CanvasTransformation();
-        this.typeface = Typeface.SANS_SERIF;
         this.setImp(JedaInternal.createCanvasImp(width, height));
     }
 
     Canvas() {
+        this.transformationStack = new Stack<CanvasTransformation>();
+        this.antiAliasing = false;
         this.color = DEFAULT_FOREGROUND;
         this.textSize = DEFAULT_TEXT_SIZE;
         this.transformation = new CanvasTransformation();
@@ -880,6 +879,28 @@ public class Canvas {
      */
     public boolean isAntiAliasing() {
         return this.antiAliasing;
+    }
+
+    /**
+     * Pops canvas transformations from the transformation stack. Has no effect if the transformation stack is empty.
+     *
+     * @since 1.6
+     */
+    public void popTransformations() {
+        if (!this.transformationStack.isEmpty()) {
+            this.transformation = this.transformationStack.pop();
+        }
+
+        this.imp.setTransformation(this.transformation);
+    }
+
+    /**
+     * Pushes the current canvas transformations on the transformation stack.
+     *
+     * @since 1.6
+     */
+    public void pushTransformations() {
+        this.transformationStack.push(new CanvasTransformation(this.transformation));
     }
 
     /**

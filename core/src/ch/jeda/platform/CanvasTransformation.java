@@ -30,6 +30,13 @@ public final class CanvasTransformation {
         this.reset();
     }
 
+    public CanvasTransformation(final CanvasTransformation other) {
+        this.rotation = other.rotation;
+        this.scale = other.scale;
+        this.translationX = other.translationX;
+        this.translationY = other.translationY;
+    }
+
     public void reset() {
         this.rotation = 0.0;
         this.scale = 1.0;
