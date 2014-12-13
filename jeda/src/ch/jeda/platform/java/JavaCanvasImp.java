@@ -69,11 +69,8 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawCircle(final int x, final int y, final int radius) {
-        assert radius > 0;
-
-        final int diameter = 2 * radius;
-        this.graphics.drawOval(x - radius, y - radius, diameter, diameter);
+    public void drawEllipse(final int x, final int y, final int width, final int height) {
+        this.graphics.drawOval(x, y, width, height);
     }
 
     @Override
@@ -133,11 +130,8 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillCircle(final int x, final int y, final int radius) {
-        assert radius > 0;
-
-        final int diameter = 2 * radius;
-        this.graphics.fillOval(x - radius, y - radius, diameter, diameter);
+    public void fillEllipse(final int x, final int y, final int width, final int height) {
+        this.graphics.fillOval(x, y, width, height);
     }
 
     @Override

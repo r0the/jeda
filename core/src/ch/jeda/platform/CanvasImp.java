@@ -25,7 +25,7 @@ public interface CanvasImp {
 
     void copyFrom(int x, int y, CanvasImp source);
 
-    void drawCircle(int x, int y, int radius);
+    void drawEllipse(int x, int y, int width, int height);
 
     void drawImage(int x, int y, ImageImp image, int alpha);
 
@@ -39,7 +39,7 @@ public interface CanvasImp {
 
     void fill();
 
-    void fillCircle(int x, int y, int radius);
+    void fillEllipse(int x, int y, int width, int height);
 
     void fillPolygon(int[] points);
 

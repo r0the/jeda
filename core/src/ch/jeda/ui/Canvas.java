@@ -43,7 +43,7 @@ import java.util.Stack;
  * canvas.fillCircle(50, 50, 20);</code></pre>
  *
  * @since 1.0
- * @version 3
+ * @version 4
  */
 public class Canvas {
 
@@ -116,7 +116,7 @@ public class Canvas {
      */
     public void drawCircle(final int x, final int y, final int radius) {
         if (radius > 0) {
-            this.imp.drawCircle(x, y, radius);
+            this.imp.drawEllipse(x - radius, y - radius, 2 * radius, 2 * radius);
         }
     }
 
@@ -132,6 +132,38 @@ public class Canvas {
      */
     public void drawCircle(final double x, final double y, final double radius) {
         this.drawCircle((int) x, (int) y, (int) radius);
+    }
+
+    /**
+     * Draws an ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no effect if
+     * the specified radii are not positive.
+     *
+     * @param x the x coordinate of the ellipse's centre
+     * @param y the y coordinate of the ellipse's centre
+     * @param rx the horizontal radius of the ellipse
+     * @param ry the vertical radius of the ellipse
+     *
+     * @since 1.6
+     */
+    public void drawEllipe(final int x, final int y, final int rx, final int ry) {
+        if (rx > 0 && ry > 0) {
+            this.imp.drawEllipse(x - rx, y - ry, 2 * rx, 2 * ry);
+        }
+    }
+
+    /**
+     * Draws an ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no effect if
+     * the specified radii are not positive.
+     *
+     * @param x the x coordinate of the ellipse's centre
+     * @param y the y coordinate of the ellipse's centre
+     * @param rx the horizontal radius of the ellipse
+     * @param ry the vertical radius of the ellipse
+     *
+     * @since 1.6
+     */
+    public void drawEllipe(final double x, final double y, final double rx, final double ry) {
+        this.drawEllipe((int) x, (int) y, (int) rx, (int) ry);
     }
 
     /**
@@ -538,7 +570,7 @@ public class Canvas {
      */
     public void fillCircle(final int x, final int y, final int radius) {
         if (radius > 0) {
-            this.imp.fillCircle(x, y, radius);
+            this.imp.fillEllipse(x - radius, y - radius, 2 * radius, 2 * radius);
         }
     }
 
@@ -554,6 +586,38 @@ public class Canvas {
      */
     public void fillCircle(final double x, final double y, final double radius) {
         this.fillCircle((int) x, (int) y, (int) radius);
+    }
+
+    /**
+     * Draws a filled ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no
+     * effect if the specified radii are not positive.
+     *
+     * @param x the x coordinate of the ellipse's centre
+     * @param y the y coordinate of the ellipse's centre
+     * @param rx the horizontal radius of the ellipse
+     * @param ry the vertical radius of the ellipse
+     *
+     * @since 1.6
+     */
+    public void fillEllipe(final int x, final int y, final int rx, final int ry) {
+        if (rx > 0 && ry > 0) {
+            this.imp.fillEllipse(x - rx, y - ry, 2 * rx, 2 * ry);
+        }
+    }
+
+    /**
+     * Draws a filled ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no
+     * effect if the specified radii are not positive.
+     *
+     * @param x the x coordinate of the ellipse's centre
+     * @param y the y coordinate of the ellipse's centre
+     * @param rx the horizontal radius of the ellipse
+     * @param ry the vertical radius of the ellipse
+     *
+     * @since 1.6
+     */
+    public void fillEllipe(final double x, final double y, final double rx, final double ry) {
+        this.fillEllipe((int) x, (int) y, (int) rx, (int) ry);
     }
 
     /**

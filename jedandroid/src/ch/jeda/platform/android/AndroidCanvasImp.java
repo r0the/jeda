@@ -23,6 +23,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.CanvasTransformation;
 import ch.jeda.platform.ImageImp;
@@ -62,10 +63,8 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawCircle(final int x, final int y, final int radius) {
-        assert radius > 0;
-
-        this.canvas.drawCircle(x, y, radius, this.strokePaint);
+    public void drawEllipse(final int x, final int y, final int width, final int height) {
+        this.canvas.drawOval(new RectF(x, y, x + width, y + height), this.strokePaint);
     }
 
     @Override
@@ -110,10 +109,8 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillCircle(final int x, final int y, final int radius) {
-        assert radius > 0;
-
-        this.canvas.drawCircle(x, y, radius, this.fillPaint);
+    public void fillEllipse(final int x, final int y, final int width, final int height) {
+        this.canvas.drawOval(new RectF(x, y, x + width, y + height), this.fillPaint);
     }
 
     @Override
