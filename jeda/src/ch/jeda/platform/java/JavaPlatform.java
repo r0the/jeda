@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.JedaError;
 import ch.jeda.LogLevel;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
@@ -30,6 +31,9 @@ import java.awt.Font;
 import java.io.InputStream;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 class JavaPlatform implements Platform {
 
@@ -48,13 +52,23 @@ class JavaPlatform implements Platform {
     }
 
     @Override
+    public ImageImp createImageImp(final String path) {
+        return ResourceManager.loadImage(path);
+    }
+
+    @Override
     public TypefaceImp createTypefaceImp(final String path) {
         return ResourceManager.loadFont(path);
     }
 
     @Override
-    public ImageImp createImageImp(final String path) {
-        return ResourceManager.loadImage(path);
+    public XMLReader createXmlReader() {
+        try {
+            return XMLReaderFactory.createXMLReader();
+        }
+        catch (final SAXException ex) {
+            throw new JedaError(JedaError.XML_READER_CREATION_FAILED, ex);
+        }
     }
 
     @Override
@@ -163,5 +177,4 @@ class JavaPlatform implements Platform {
                 return null;
         }
     }
-
 }

@@ -37,6 +37,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import org.xml.sax.XMLReader;
 
 class JedaEngine implements Platform.Callback, Runnable {
 
@@ -206,6 +207,10 @@ class JedaEngine implements Platform.Callback, Runnable {
         this.platform.showWindow(request);
         request.waitForResult();
         return request.getResult();
+    }
+
+    XMLReader createXmlReader() {
+        return this.platform.createXmlReader();
     }
 
     AudioManager getAudioManager() {

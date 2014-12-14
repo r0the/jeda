@@ -24,6 +24,7 @@ import ch.jeda.platform.WindowImp;
 import ch.jeda.ui.WindowFeature;
 import java.io.InputStream;
 import java.util.EnumSet;
+import org.xml.sax.XMLReader;
 
 /**
  * <b>Internal</b>. Do not use this class.
@@ -56,6 +57,13 @@ public class JedaInternal {
      */
     public static WindowImp createWindowImp(final int width, final int height, final EnumSet<WindowFeature> features) {
         return Jeda.createWindowImp(width, height, features);
+    }
+
+    /**
+     * <b>Internal</b>. Do not use this method.
+     */
+    public static XMLReader createXmlReader() {
+        return Jeda.createXmlReader();
     }
 
     /**

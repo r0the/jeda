@@ -20,6 +20,7 @@ import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
 import ch.jeda.event.SensorType;
 import java.io.InputStream;
+import org.xml.sax.XMLReader;
 
 /**
  * <b>Internal</b>. Do not use this interface.
@@ -36,6 +37,8 @@ public interface Platform {
     TypefaceImp createTypefaceImp(String path);
 
     ImageImp createImageImp(String path);
+
+    XMLReader createXmlReader();
 
     AudioManagerImp getAudioManagerImp();
 

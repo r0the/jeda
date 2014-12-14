@@ -18,6 +18,7 @@ package ch.jeda.platform.android;
 
 import android.graphics.Typeface;
 import android.view.WindowManager;
+import ch.jeda.JedaError;
 import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
 import ch.jeda.event.SensorType;
@@ -30,6 +31,11 @@ import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.WindowRequest;
 import java.io.InputStream;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 class AndroidPlatform implements Platform {
 
@@ -62,6 +68,21 @@ class AndroidPlatform implements Platform {
     @Override
     public TypefaceImp createTypefaceImp(final String path) {
         return Main.getInstance().createTypefaceImp(path);
+    }
+
+    @Override
+    public XMLReader createXmlReader() {
+        try {
+            final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+            final SAXParser parser = parserFactory.newSAXParser();
+            return parser.getXMLReader();
+        }
+        catch (final ParserConfigurationException ex) {
+            throw new JedaError(JedaError.XML_READER_CREATION_FAILED, ex);
+        }
+        catch (final SAXException ex) {
+            throw new JedaError(JedaError.XML_READER_CREATION_FAILED, ex);
+        }
     }
 
     @Override
@@ -158,5 +179,4 @@ class AndroidPlatform implements Platform {
                 return null;
         }
     }
-
 }

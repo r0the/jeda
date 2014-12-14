@@ -33,6 +33,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import org.xml.sax.XMLReader;
 
 /**
  * Represents the Jeda engine. Provides methods to control the Jeda engine as well as the platform/device the program
@@ -338,6 +339,10 @@ public class Jeda {
 
     static WindowImp createWindowImp(final int width, final int height, final EnumSet<WindowFeature> features) {
         return ENGINE.createWindowImp(width, height, features);
+    }
+
+    static XMLReader createXmlReader() {
+        return ENGINE.createXmlReader();
     }
 
     static AudioManager getAudioManager() {
