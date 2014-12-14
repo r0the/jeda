@@ -23,6 +23,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents a TMX map.
+ *
+ * @since 1.6
+ */
 public final class TmxMap {
 
     private final Color backgroundColor;
@@ -35,6 +40,13 @@ public final class TmxMap {
     private final int tileWidth;
     private final int width;
 
+    /**
+     * Constructs a new TMX map from the specified file.
+     *
+     * @param path the path to the TMX map file.
+     *
+     * @since 1.6
+     */
     public TmxMap(String path) {
         if (path == null) {
             throw new NullPointerException("path");
@@ -59,7 +71,7 @@ public final class TmxMap {
         this.tileHeight = element.getIntAttribute(Const.TILEHEIGHT);
         this.tileWidth = element.getIntAttribute(Const.TILEWIDTH);
         this.width = element.getIntAttribute(Const.WIDTH);
-        this.orientation = TmxHelper.parseOrientation(element.getStringAttribute(Const.ORIENTATION));
+        this.orientation = parseOrientation(element.getStringAttribute(Const.ORIENTATION));
         this.properties = element.parsePropertiesChild();
         // Read tile sets
         this.tileSets = new TmxTileSets();
@@ -89,6 +101,15 @@ public final class TmxMap {
         this.layers = layerList.toArray(new TmxLayer[layerList.size()]);
     }
 
+    /**
+     * Draws this map. The map is drawn on the specified canvas at the specified offset.
+     *
+     * @param canvas the canvas to draw the map on
+     * @param offsetX the horizontal offset
+     * @param offsetY the vertical offset
+     *
+     * @since 1.6
+     */
     public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
         canvas.setColor(this.backgroundColor);
         canvas.fill();
@@ -113,32 +134,101 @@ public final class TmxMap {
      * Returns the height of the map in tiles.
      *
      * @return the height of the map in tiles
+     *
+     * @since 1.6
      */
     public int getHeight() {
         return this.height;
     }
 
+    /**
+     * Returns all layers of this map.
+     *
+     * @return all layers of this map
+     *
+     * @since 1.6
+     */
     public TmxLayer[] getLayers() {
         return Arrays.copyOf(this.layers, this.layers.length);
     }
 
+    /**
+     * Returns the orientation of this map.
+     *
+     * @return the orientation of this map
+     *
+     * @since 1.6
+     */
     public TmxMapOrientation getOrientation() {
         return this.orientation;
     }
 
+    /**
+     * Returns the properties of this map.
+     *
+     * @return the properties of this map
+     *
+     * @since 1.6
+     */
+    public Data getProperties() {
+        return this.properties;
+    }
+
+    /**
+     * Returns the tile height of this map.
+     *
+     * @return the tile height of this map
+     *
+     * @since 1.6
+     */
     public int getTileHeight() {
         return this.tileHeight;
     }
 
+    /**
+     * Returns the tile width of this map.
+     *
+     * @return the tile width of this map
+     *
+     * @since 1.6
+     */
     public int getTileWidth() {
         return this.tileWidth;
     }
 
+    /**
+     * Returns the width of this map in tiles.
+     *
+     * @return the width of this map in tiles
+     *
+     * @since 1.6
+     */
     public int getWidth() {
         return this.width;
     }
 
+    /**
+     * Returns the tile with the specified global tile id. Returns <tt>null</tt> if no such tile exists in this map.
+     *
+     * @param globalId the global tile id
+     * @return the tile matching the id or <tt>null</tt>
+     *
+     * @since 1.6
+     */
     public TmxTile lookupTile(final int globalId) {
         return this.tileSets.lookupTile(globalId);
+    }
+
+    private static TmxMapOrientation parseOrientation(final String value) {
+        if (value == null) {
+            return TmxMapOrientation.ORTHOGONAL;
+        }
+
+        try {
+            return TmxMapOrientation.valueOf(value.toUpperCase());
+        }
+        catch (final IllegalArgumentException ex) {
+            return TmxMapOrientation.ORTHOGONAL;
+        }
     }
 }

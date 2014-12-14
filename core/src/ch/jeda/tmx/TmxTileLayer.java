@@ -94,16 +94,6 @@ public final class TmxTileLayer extends TmxLayer {
         return null;
     }
 
-    Image getTileImage(final int x, final int y) {
-        final TmxTile tile = this.getTile(x, y);
-        if (tile == null) {
-            return null;
-        }
-        else {
-            return tile.getImage();
-        }
-    }
-
     private void drawDebugOverlay(final Canvas canvas, final int offsetX, final int offsetY) {
         canvas.setColor(Color.RED);
         final int tileHeight = this.getMap().getTileHeight();

@@ -25,6 +25,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents a TMX tile.
+ *
+ * @since 1.6
+ */
 public class TmxTile {
 
     private final int id;
@@ -40,7 +45,9 @@ public class TmxTile {
         this.terrain = new TmxTerrain[4];
         this.tileSet = tileSet;
         if (element != null) {
+            // Read properties
             this.properties = element.parsePropertiesChild();
+            // Read terrain info
             final String terrainInfo = element.getStringAttribute(Const.TERRAIN);
             if (terrainInfo != null) {
                 final String[] parts = terrainInfo.split(",");
@@ -61,6 +68,7 @@ public class TmxTile {
             this.properties = new Data();
         }
 
+        // Read object group
         final List<TmxObject> objectList = new ArrayList<TmxObject>();
         if (element != null) {
             final Element objectGroupElement = element.getChild(Const.OBJECTGROUP);
@@ -72,8 +80,26 @@ public class TmxTile {
         }
 
         this.objects = objectList.toArray(new TmxObject[objectList.size()]);
+
+        // Read animation
+        if (element != null) {
+            final Element animationElement = element.getChild(Const.ANIMATION);
+            if (animationElement != null) {
+                for (final Element frameElement : animationElement.getChildren(Const.FRAME)) {
+
+                }
+            }
+        }
     }
 
+    /**
+     * Draws this tile at
+     *
+     * @param canvas
+     * @param x
+     * @param y
+     * @param alpha
+     */
     public final void draw(final Canvas canvas, final int x, final int y, final int alpha) {
         canvas.drawImage(x, y, this.getImage(), alpha, Alignment.BOTTOM_LEFT);
         canvas.setColor(Color.RED);
@@ -152,5 +178,4 @@ public class TmxTile {
         return (tileY + 1) * this.tileSet.getMap().getTileHeight() - this.tileSet.getTileHeight() / 2 +
                this.tileSet.getTileOffsetY();
     }
-
 }

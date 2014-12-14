@@ -18,15 +18,18 @@ package ch.jeda.tmx;
 
 class Const {
 
+    static final String ANIMATION = "animation";
     static final String BACKGROUNDCOLOR = "backgroundcolor";
     static final String BASE64 = "base64";
     static final String COLOR = "color";
     static final String COMPRESSION = "compression";
     static final String CSV = "csv";
     static final String DATA = "data";
+    static final String DURATION = "duration";
     static final String ELLIPSE = "ellipse";
     static final String ENCODING = "encoding";
     static final String FIRSTGID = "firstgid";
+    static final String FRAME = "frame";
     static final String GID = "gid";
     static final String GZIP = "gzip";
     static final String ZLIB = "zlib";
@@ -48,6 +51,7 @@ class Const {
     static final String TERRAINTYPES = "terraintypes";
     static final String TILEHEIGHT = "tileheight";
     static final String TILE = "tile";
+    static final String TILEID = "tileid";
     static final String TILESET = "tileset";
     static final String TILEWIDTH = "tilewidth";
     static final String TYPE = "type";
