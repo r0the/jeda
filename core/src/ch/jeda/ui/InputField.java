@@ -200,7 +200,7 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
     }
 
     private void updateVisibleText() {
-        final Window window = this.getView();
+        final Window window = this.getWindow();
         if (window != null) {
             final StringBuilder builder = new StringBuilder(this.displayBaseText());
             while (!this.style.fits(this, window, builder.toString())) {

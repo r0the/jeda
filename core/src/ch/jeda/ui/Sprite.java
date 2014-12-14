@@ -105,7 +105,7 @@ public class Sprite extends Element implements TickListener {
      *
      * <b>Warning:</b>The collision algorithm is no sophisticated and may be very slow with a large number of sprites.
      *
-     * @return an array of all other sprites in the same view that collide with the sprite
+     * @return an array of all other sprites in the same window that collide with the sprite
      *
      * @since 1.1
      */
@@ -130,10 +130,10 @@ public class Sprite extends Element implements TickListener {
     @SuppressWarnings("unchecked")
     public final <T extends Sprite> T[] getCollidingSprites(final Class<T> clazz) {
         final List<T> result = new ArrayList<T>();
-        if (this.getView() != null) {
-            for (final T item : this.getView().getElements(clazz)) {
-                if (this.collidesWith(item)) {
-                    result.add(item);
+        if (this.getWindow() != null) {
+            for (final T elements : this.getWindow().getElements(clazz)) {
+                if (this.collidesWith(elements)) {
+                    result.add(elements);
                 }
             }
         }

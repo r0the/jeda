@@ -8,11 +8,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY); without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package ch.jeda.ui;
 
@@ -28,28 +28,28 @@ import java.util.Set;
 
 final class Elements {
 
-    private final Map<String, ViewPage> pages;
+    private final Map<String, ElementsPage> pages;
     private final List<Element> pendingDeletions;
     private final List<Element> pendingInsertions;
     private final Window window;
     private Element[] activeElements;
-    private ViewPage activePage;
-    private ViewPage currentPage;
+    private ElementsPage activePage;
+    private ElementsPage currentPage;
 
     Elements(final Window window) {
-        this.pages = new HashMap<String, ViewPage>();
+        this.pages = new HashMap<String, ElementsPage>();
         this.pendingDeletions = new ArrayList<Element>();
         this.pendingInsertions = new ArrayList<Element>();
         this.window = window;
         this.activeElements = new Element[0];
-        this.activePage = new ViewPage(window, "Main");
+        this.activePage = new ElementsPage(window, "Main");
         this.currentPage = this.activePage;
     }
 
-    void add(final Element element) {
-        if (this.currentPage.add(element) && this.currentPage.isActive()) {
-            this.pendingDeletions.remove(element);
-            this.pendingInsertions.add(element);
+    void add(final Element object) {
+        if (this.currentPage.add(object) && this.currentPage.isActive()) {
+            this.pendingDeletions.remove(object);
+            this.pendingInsertions.add(object);
         }
     }
 
@@ -96,7 +96,7 @@ final class Elements {
             this.addEventListeners();
         }
         else if (!this.pendingDeletions.isEmpty() || !this.pendingInsertions.isEmpty()) {
-            // Same page, but items changed
+            // Same page, but elements changed
             boolean allChanged = false;
             final Set<Element> elementSet = new HashSet<Element>(Arrays.asList(this.activeElements));
             for (int i = 0; i < this.pendingDeletions.size(); ++i) {
@@ -126,17 +126,17 @@ final class Elements {
         }
     }
 
-    void remove(final Element element) {
-        if (this.currentPage.remove(element)) {
-            this.pendingDeletions.add(element);
-            this.pendingInsertions.remove(element);
+    void remove(final Element object) {
+        if (this.currentPage.remove(object)) {
+            this.pendingDeletions.add(object);
+            this.pendingInsertions.remove(object);
         }
     }
 
     void setPage(final String page) {
         if (!this.currentPage.getName().equals(page)) {
             if (!this.pages.containsKey(page)) {
-                this.pages.put(page, new ViewPage(window, page));
+                this.pages.put(page, new ElementsPage(window, page));
             }
 
             this.currentPage = this.pages.get(page);

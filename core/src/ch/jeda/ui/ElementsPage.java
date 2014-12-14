@@ -8,11 +8,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY); without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package ch.jeda.ui;
 
@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-final class ViewPage {
+final class ElementsPage {
 
     final Window window;
     private final Set<Element> elementSet;
@@ -29,7 +29,7 @@ final class ViewPage {
     private boolean active;
     boolean dirty;
 
-    ViewPage(final Window window, final String name) {
+    ElementsPage(final Window window, final String name) {
         this.elementSet = new HashSet<Element>();
         this.name = name;
         this.window = window;
@@ -40,15 +40,12 @@ final class ViewPage {
         if (element == null) {
             return false;
         }
-
         if (this.elementSet.contains(element)) {
             return false;
         }
-
         if (element.page != null) {
             this.window.remove(element);
         }
-
         this.elementSet.add(element);
         this.dirty = true;
         element.page = this;
@@ -75,11 +72,9 @@ final class ViewPage {
         if (element == null) {
             return false;
         }
-
         if (!this.elementSet.contains(element)) {
             return false;
         }
-
         this.elementSet.remove(element);
         element.page = null;
         this.dirty = true;

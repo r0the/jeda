@@ -34,7 +34,7 @@ import java.util.EnumSet;
  * </ul>
  *
  * @since 1.0
- * @version 2
+ * @version 3
  */
 public class Window extends Canvas {
 
@@ -111,7 +111,7 @@ public class Window extends Canvas {
     }
 
     /**
-     * Adds an {@link ch.jeda.ui.Element} to the currnt page of the window. Has no effect if <tt>element</tt>
+     * Adds a {@link ch.jeda.ui.Element} to the currnt page of the window. Has no effect if <tt>element</tt>
      * is <tt>null</tt>. The {@link ch.jeda.ui.Element} becomes inactive (it no longer receives events) and insivible if
      * the current page changes.
      *
@@ -120,7 +120,7 @@ public class Window extends Canvas {
      * @see #remove(ch.jeda.ui.Element)
      * @see #getElements()
      * @see #getElements(java.lang.Class)
-     * @since 1.6
+     * @since 1.0
      */
     public final void add(final Element element) {
         this.elements.add(element);
@@ -128,7 +128,7 @@ public class Window extends Canvas {
 
     /**
      * Adds an event listener to the window. The specified object will receive events for all events listener interfaces
-     * it implements. Has no effect if <tt>listener</tt> is <tt>null</tt>.
+     * it implements. Has no effect if <tt>listener</tt> is <tt>null</tt> or an element of this window.
      *
      * @param listener the event listener
      *
@@ -148,24 +148,6 @@ public class Window extends Canvas {
     }
 
     /**
-     * Returns all graphics items currently managed by the window.
-     *
-     * @return all graphics items currently managed by the window.
-     *
-     * @since 1.0
-     * @deprecated Use {@link #getElements()} instead.
-     */
-    public final GraphicsItem[] getGraphicsItems() {
-        final Element[] elements = this.getElements();
-        final GraphicsItem[] result = new GraphicsItem[elements.length];
-        for (int i = 0; i < elements.length; ++i) {
-            result[i] = (GraphicsItem) elements[i];
-        }
-
-        return result;
-    }
-
-    /**
      * Returns all elements currently managed by the window.
      *
      * @return all elements currently managed by the window.
@@ -177,21 +159,6 @@ public class Window extends Canvas {
      */
     public final Element[] getElements() {
         return this.elements.getAll();
-    }
-
-    /**
-     * Returns all graphics items of the specified class currently managed by the window.
-     *
-     * @param <T> the type of graphics items to return
-     * @param clazz the class of graphics items to return
-     * @return all graphics items currently managed by the window.
-     * @throws NullPointerException if <tt>clazz</tt> is <tt>null</tt>
-     *
-     * @since 1.0
-     * @deprecated Use {@link #getElements(java.lang.Class)} instead.
-     */
-    public final <T extends Element> T[] getGraphicsItems(final Class<T> clazz) {
-        return this.getElements(clazz);
     }
 
     /**
@@ -212,6 +179,20 @@ public class Window extends Canvas {
             throw new NullPointerException("clazz");
         }
 
+        return this.elements.get(clazz);
+    }
+
+    /**
+     * @deprecated Use {@link #getElements()} instead.
+     */
+    public final GraphicsItem[] getGraphicsItems() {
+        return this.elements.get(GraphicsItem.class);
+    }
+
+    /**
+     * @deprecated Use {@link #getElements(java.lang.Class)} instead.
+     */
+    public final <T extends GraphicsItem> T[] getGraphicsItems(final Class<T> clazz) {
         return this.elements.get(clazz);
     }
 
@@ -260,12 +241,13 @@ public class Window extends Canvas {
     }
 
     /**
-     * Removes a {@link ch.jeda.ui.Element} from the window. Has no effect if <tt>element</tt> is <tt>null</tt>.
+     * Removes a {@link ch.jeda.ui.Element} from the window. Has no effect if <tt>element</tt> is
+     * <tt>null</tt>.
      *
      * @param element the element to be removed from the window
      *
-     * @see #add(ch.jeda.ui.Element)
-     * @since 1.6
+     * @see ch.jeda.ui.Element
+     * @since 1.0
      */
     public final void remove(final Element element) {
         this.elements.remove(element);
@@ -273,7 +255,7 @@ public class Window extends Canvas {
 
     /**
      * Removes an event listener from the window. The specified object will not receive events anymore. Has no effect if
-     * <tt>listener</tt> is <tt>null</tt>.
+     * <tt>listener</tt> is <tt>null</tt> or an element of this window.
      *
      * @param listener the event listener
      * @since 1.0

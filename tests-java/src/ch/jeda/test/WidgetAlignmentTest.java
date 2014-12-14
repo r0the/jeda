@@ -35,7 +35,7 @@ public class WidgetAlignmentTest extends Program implements TickListener {
         window.fill();
     }
 
-    private static class Overlay extends GraphicsItem {
+    private static class Overlay extends Element {
 
         Overlay() {
             setDrawOrder(1001);

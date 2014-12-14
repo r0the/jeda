@@ -200,11 +200,11 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final void select() {
-        if (this.getView() == null) {
+        if (this.getWindow() == null) {
             return;
         }
 
-        final Widget[] widgets = this.getView().getElements(Widget.class);
+        final Widget[] widgets = this.getWindow().getElements(Widget.class);
         for (int i = 0; i < widgets.length; ++i) {
             if (widgets[i].selected) {
                 widgets[i].selected = false;
@@ -280,7 +280,7 @@ public abstract class Widget extends Element {
      * @since 1.4
      */
     protected void action(final String name) {
-        final Window window = this.getView();
+        final Window window = this.getWindow();
         if (window != null) {
             window.postEvent(new ActionEvent(this, name));
         }

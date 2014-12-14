@@ -95,7 +95,7 @@ public class DefaultInputFieldStyle extends DefaultTextStyle implements InputFie
     @Override
     public boolean fits(final InputField inputField, final Canvas canvas, final String text) {
         final int maxWidth = this.getWidth(inputField) - 2 * BORDER;
-        final Window window = inputField.getView();
+        final Window window = inputField.getWindow();
         window.setTypeface(this.getTypeface());
         window.setTextSize(this.getTextSize());
         return window.textWidth(text) <= maxWidth;

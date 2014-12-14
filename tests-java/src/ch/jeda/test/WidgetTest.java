@@ -15,7 +15,7 @@ public class WidgetTest extends Program implements TickListener, ActionListener 
 
     @Override
     public void run() {
-        window = new Window();
+        window = new Window(WindowFeature.DOUBLE_BUFFERED);
         buttonAntique = new Button(0, 0, "Antique");
         buttonAntique.setPosition(window.getWidth() / 2, 100, Alignment.CENTER);
         buttonAntique.setStyle(DefaultButtonStyle.ANTIQUE_BROWN);
