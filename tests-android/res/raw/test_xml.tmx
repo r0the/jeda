@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="left-up" width="10" height="10" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="aliens" tilewidth="70" tileheight="70">
+  <image source="aliens.png" width="210" height="350"/>
+ </tileset>
+ <tileset firstgid="16" name="blocks_70x140" tilewidth="70" tileheight="140">
+  <image source="blocks_70x140.png" width="350" height="700"/>
+ </tileset>
+ <tileset firstgid="41" name="blocks_140x70" tilewidth="140" tileheight="70">
+  <image source="blocks_140x70.png" width="700" height="700"/>
+ </tileset>
+ <imagelayer name="Bildebene 1" x="-101" y="-141">
+  <image source="colored_desert.png"/>
+ </imagelayer>
+ <layer name="Kachelebene 1" width="10" height="10">
+  <data>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="21"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="21"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="21"/>
+   <tile gid="13"/>
+   <tile gid="0"/>
+   <tile gid="10"/>
+   <tile gid="0"/>
+   <tile gid="5"/>
+   <tile gid="0"/>
+   <tile gid="1"/>
+   <tile gid="0"/>
+   <tile gid="21"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="21"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="21"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="21"/>
+   <tile gid="71"/>
+   <tile gid="0"/>
+   <tile gid="71"/>
+   <tile gid="0"/>
+   <tile gid="71"/>
+   <tile gid="0"/>
+   <tile gid="71"/>
+   <tile gid="0"/>
+   <tile gid="21"/>
+   <tile gid="76"/>
+   <tile gid="0"/>
+   <tile gid="76"/>
+   <tile gid="0"/>
+   <tile gid="76"/>
+   <tile gid="0"/>
+   <tile gid="76"/>
+   <tile gid="0"/>
+   <tile gid="76"/>
+   <tile gid="0"/>
+  </data>
+ </layer>
+</map>
