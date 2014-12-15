@@ -428,22 +428,22 @@ public final class Data {
             return (T) ctor.newInstance(this.subData(prefix(name)));
         }
         catch (final NoSuchMethodException ex) {
-            Log.err("jeda.data.error.constructor-not-found", className);
+            Log.err(Message.DATA_ERROR_CONSTRUCTOR_NOT_FOUND, className);
         }
         catch (final ClassNotFoundException ex) {
-            Log.err("jeda.data.error.class-not-found", className);
+            Log.err(Message.DATA_ERROR_CLASS_NOT_FOUND, className);
         }
         catch (final InstantiationException ex) {
-            Log.err("jeda.data.error.instantiation", className);
+            Log.err(Message.DATA_ERROR_INSTANTIATION, className);
         }
         catch (final IllegalAccessException ex) {
-            Log.err("jeda.data.error.access", className);
+            Log.err(Message.DATA_ERROR_ACCESS, className);
         }
         catch (final ExceptionInInitializerError ex) {
-            Log.err(ex.getCause(), "jeda.data.error.class-initializer", className);
+            Log.err(ex.getCause(), Message.DATA_ERROR_CLASS_INITIALIZER, className);
         }
         catch (final InvocationTargetException ex) {
-            Log.err(ex.getCause(), "jeda.data.error.constructor", className);
+            Log.err(ex.getCause(), Message.DATA_ERROR_CONSTRUCTOR, className);
         }
 
         return defaultValue;

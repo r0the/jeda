@@ -17,6 +17,7 @@
 package ch.jeda.event;
 
 import ch.jeda.Log;
+import ch.jeda.Message;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,7 +31,6 @@ import java.util.Set;
  */
 public final class EventQueue {
 
-    private static final String EVENT_ERROR = "jeda.event.error";
     private final List<ActionListener> actionListeners;
     private final List<ConnectionAcceptedListener> connectionAcceptedListeners;
     private final List<ConnectionClosedListener> connectionClosedListeners;
@@ -190,7 +190,7 @@ public final class EventQueue {
                         this.actionListeners.get(j).onAction((ActionEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -201,7 +201,7 @@ public final class EventQueue {
                         this.connectionAcceptedListeners.get(j).onConnectionAccepted((ConnectionEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -212,7 +212,7 @@ public final class EventQueue {
                         this.connectionClosedListeners.get(j).onConnectionClosed((ConnectionEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -223,7 +223,7 @@ public final class EventQueue {
                         this.keyDownListeners.get(j).onKeyDown((KeyEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -234,7 +234,7 @@ public final class EventQueue {
                         this.keyTypedListeners.get(j).onKeyTyped((KeyEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -245,7 +245,7 @@ public final class EventQueue {
                         this.keyUpListeners.get(j).onKeyUp((KeyEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -256,7 +256,7 @@ public final class EventQueue {
                         this.messageReceivedListeners.get(j).onMessageReceived((MessageEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -267,7 +267,7 @@ public final class EventQueue {
                         this.pointerDownListeners.get(j).onPointerDown((PointerEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -278,7 +278,7 @@ public final class EventQueue {
                         this.pointerMovedListeners.get(j).onPointerMoved((PointerEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -289,7 +289,7 @@ public final class EventQueue {
                         this.pointerUpListeners.get(j).onPointerUp((PointerEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -300,7 +300,7 @@ public final class EventQueue {
                         this.sensorListeners.get(j).onSensorChanged((SensorEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -311,7 +311,7 @@ public final class EventQueue {
                         this.tickListeners.get(j).onTick((TickEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 
@@ -322,7 +322,7 @@ public final class EventQueue {
                         this.turnListeners.get(j).onTurn((TurnEvent) event);
                     }
                     catch (final Throwable ex) {
-                        Log.err(ex, EVENT_ERROR);
+                        Log.err(ex, Message.EVENT_ERROR);
                     }
                 }
 

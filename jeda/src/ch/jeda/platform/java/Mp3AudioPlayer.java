@@ -17,6 +17,7 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Log;
+import ch.jeda.Message;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import org.mp3transform.Decoder;
@@ -58,7 +59,7 @@ class Mp3AudioPlayer extends AudioPlayer {
             this.decoder.play(this.path, bin);
         }
         catch (final IOException ex) {
-            Log.err(ex, "jeda.audio.error.read", this.path);
+            Log.err(ex, Message.AUDIO_ERROR_READ, this.path);
         }
     }
 }

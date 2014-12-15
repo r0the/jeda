@@ -64,7 +64,7 @@ class JedaProgramExecutor implements Runnable {
             program.run();
         }
         catch (final Throwable ex) {
-            Log.err(ex, "jeda.program.error.run", this.programClass);
+            Log.err(ex, Message.PROGRAM_ERROR_RUN, this.programClass);
         }
     }
 
@@ -73,7 +73,7 @@ class JedaProgramExecutor implements Runnable {
             return programClass.createInstance();
         }
         catch (final Throwable ex) {
-            Log.err(ex, "jeda.program.error.create");
+            Log.err(ex, Message.PROGRAM_ERROR_CREATE);
             return null;
         }
     }
@@ -88,7 +88,7 @@ class JedaProgramExecutor implements Runnable {
                 }
             }
 
-            Log.err("jeda.engine.error.program-class-not-found", this.programClassName);
+            Log.err(Message.PROGRAM_ERROR_CLASS_NOT_FOUND, this.programClassName);
             return null;
         }
 
@@ -106,7 +106,7 @@ class JedaProgramExecutor implements Runnable {
         }
 
         if (candidates.length == 0) {
-            Log.err("jeda.program.error.no-class-found");
+            Log.err(Message.PROGRAM_ERROR_NO_CLASS_FOUND);
             return null;
         }
 
@@ -117,7 +117,7 @@ class JedaProgramExecutor implements Runnable {
             }
 
             request.sortItemsByName();
-            request.setTitle(Log.getMessage("jeda.gui.select-program.title"));
+            request.setTitle(Message.get(Message.GUI_SELECT_PROGRAM_TITLE));
             this.engine.showSelectionRequest(request);
             request.waitForResult();
             if (request.isCancelled()) {
@@ -128,7 +128,7 @@ class JedaProgramExecutor implements Runnable {
             }
         }
         catch (final Exception ex) {
-            Log.err(ex, "jeda.program.error.select");
+            Log.err(ex, Message.PROGRAM_ERROR_SELECT);
             return null;
         }
 

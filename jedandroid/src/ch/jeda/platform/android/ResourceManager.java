@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import ch.jeda.Log;
+import ch.jeda.Message;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.TypefaceImp;
 import dalvik.system.DexFile;
@@ -78,7 +79,7 @@ class ResourceManager {
             return new AndroidImageImp(BitmapFactory.decodeStream(in));
         }
         catch (final Exception ex) {
-            Log.err(ex, "jeda.image.error.read", new Object[]{path});
+            Log.err(ex, Message.IMAGE_ERROR_READ, new Object[]{path});
             return null;
         }
         finally {
@@ -129,7 +130,7 @@ class ResourceManager {
             return new FileInputStream(filePath);
         }
         catch (final FileNotFoundException ex) {
-            Log.err(ex, "jeda.file.error.not-found", new Object[]{filePath});
+            Log.err(ex, Message.FILE_ERROR_NOT_FOUND, new Object[]{filePath});
         }
 
         return null;
@@ -140,11 +141,11 @@ class ResourceManager {
             return new URL(filePath).openStream();
         }
         catch (final MalformedURLException ex) {
-            Log.err(ex, "jeda.file.error.open", new Object[]{filePath});
+            Log.err(ex, Message.FILE_ERROR_OPEN, new Object[]{filePath});
             return null;
         }
         catch (final IOException ex) {
-            Log.err(ex, "jeda.file.error.open", new Object[]{filePath});
+            Log.err(ex, Message.FILE_ERROR_OPEN, new Object[]{filePath});
         }
 
         return null;
@@ -158,14 +159,14 @@ class ResourceManager {
         }
 
         if (url == null) {
-            Log.err("jeda.file.error.not-found", new Object[]{filePath});
+            Log.err(Message.FILE_ERROR_NOT_FOUND, new Object[]{filePath});
             return null;
         }
         try {
             return url.openStream();
         }
         catch (final IOException ex) {
-            Log.err(ex, "jeda.file.error.open", new Object[]{filePath});
+            Log.err(ex, Message.FILE_ERROR_OPEN, new Object[]{filePath});
         }
 
         return null;

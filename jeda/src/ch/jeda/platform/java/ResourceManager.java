@@ -17,9 +17,11 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Log;
+import ch.jeda.Message;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -45,7 +47,7 @@ class ResourceManager {
         return RESOURCE_FINDER.loadClasses();
     }
 
-    static TypefaceImp loadFont(final String path) {
+    static TypefaceImp loadTypeface(final String path) {
         final InputStream in = openInputStream(path);
         if (in == null) {
             return null;
@@ -54,8 +56,12 @@ class ResourceManager {
         try {
             return new JavaTypefaceImp(Font.createFont(Font.TRUETYPE_FONT, in));
         }
-        catch (Exception ex) {
-            Log.err(ex, "jeda.font.error.read", path);
+        catch (final IOException ex) {
+            Log.err(ex, Message.TYPEFACE_ERROR_READ, path);
+            return null;
+        }
+        catch (final FontFormatException ex) {
+            Log.err(ex, Message.TYPEFACE_ERROR_FORMAT, path);
             return null;
         }
         finally {
@@ -77,7 +83,7 @@ class ResourceManager {
             return new JavaImageImp(ImageIO.read(in));
         }
         catch (Exception ex) {
-            Log.err(ex, "jeda.image.error.read", path);
+            Log.err(ex, Message.IMAGE_ERROR_READ, path);
             return null;
         }
         finally {
@@ -112,7 +118,7 @@ class ResourceManager {
             return new FileInputStream(path);
         }
         catch (FileNotFoundException ex) {
-            Log.err(ex, "jeda.file.error.not-found", path);
+            Log.err(ex, Message.FILE_ERROR_NOT_FOUND, path);
         }
 
         return null;
@@ -123,11 +129,11 @@ class ResourceManager {
             return new URL(path).openStream();
         }
         catch (MalformedURLException ex) {
-            Log.err(ex, "jeda.file.error.open", path);
+            Log.err(ex, Message.FILE_ERROR_OPEN, path);
             return null;
         }
         catch (IOException ex) {
-            Log.err(ex, "jeda.file.error.open", path);
+            Log.err(ex, Message.FILE_ERROR_OPEN, path);
         }
         return null;
     }
@@ -140,7 +146,7 @@ class ResourceManager {
         }
 
         if (url == null) {
-            Log.err("jeda.file.error.not-found", path);
+            Log.err(Message.FILE_ERROR_NOT_FOUND, path);
             return null;
         }
 
@@ -148,7 +154,7 @@ class ResourceManager {
             return url.openStream();
         }
         catch (IOException ex) {
-            Log.err(ex, "jeda.file.error.open", path);
+            Log.err(ex, Message.FILE_ERROR_OPEN, path);
         }
 
         return null;

@@ -58,7 +58,7 @@ class JavaPlatform implements Platform {
 
     @Override
     public TypefaceImp createTypefaceImp(final String path) {
-        return ResourceManager.loadFont(path);
+        return ResourceManager.loadTypeface(path);
     }
 
     @Override
