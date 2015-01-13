@@ -29,7 +29,12 @@ class DefaultDataImp implements DataImp {
     }
 
     DefaultDataImp(final Map<String, String> map) {
-        this.map = new TreeMap<String, String>(map);
+        if (map == null) {
+            this.map = new TreeMap<String, String>();
+        }
+        else {
+            this.map = new TreeMap<String, String>(map);
+        }
     }
 
     @Override
