@@ -23,8 +23,8 @@ import java.util.Comparator;
  * window will automatically draw the elements. Every element has a <b>draw order</b> that determines the order in which
  * the elements are drawn. Elements with a smaller draw order are drawn first.
  *
- * @see ch.jeda.ui.Window#add(ch.jeda.ui.Elements)
- * @see ch.jeda.ui.Window#remove(ch.jeda.ui.Elements)
+ * @see ch.jeda.ui.Window#add(ch.jeda.ui.Element)
+ * @see ch.jeda.ui.Window#remove(ch.jeda.ui.Element)
  * @since 1.6
  */
 public abstract class Element {

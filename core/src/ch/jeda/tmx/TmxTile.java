@@ -109,6 +109,13 @@ public class TmxTile {
         }
     }
 
+    /**
+     * Returns the height of this tile in pixels.
+     *
+     * @return the height of this tile in pixels
+     *
+     * @since 1.6
+     */
     public final int getHeight() {
         return this.tileSet.getTileHeight();
     }
@@ -117,6 +124,13 @@ public class TmxTile {
         return this.id;
     }
 
+    /**
+     * Returns the image representing this tile.
+     *
+     * @return the image representing this tile
+     *
+     * @since 1.6
+     */
     public final Image getImage() {
         return this.image;
     }
