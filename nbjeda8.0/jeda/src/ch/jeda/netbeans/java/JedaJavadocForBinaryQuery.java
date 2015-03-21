@@ -45,9 +45,10 @@ public class JedaJavadocForBinaryQuery implements JavadocForBinaryQueryImplement
         private final URL[] roots;
 
         public JedaJavadocResult() {
-            this.roots = new URL[1];
+            this.roots = new URL[2];
             try {
                 this.roots[0] = new URL("http://www.jeda.ch/api/");
+                this.roots[1] = new URL("http://jeda.ch/api/");
             }
             catch (final MalformedURLException ex) {
                 // ignore
