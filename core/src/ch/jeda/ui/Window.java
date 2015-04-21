@@ -16,15 +16,6 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.Jeda;
-import ch.jeda.JedaInternal;
-import ch.jeda.event.Event;
-import ch.jeda.event.EventQueue;
-import ch.jeda.event.TickEvent;
-import ch.jeda.event.TickListener;
-import ch.jeda.platform.WindowImp;
-import java.util.EnumSet;
-
 /**
  * Represents a drawing window. The window class has the following functionality:
  * <ul>
@@ -36,13 +27,7 @@ import java.util.EnumSet;
  * @since 1.0
  * @version 3
  */
-public class Window extends Canvas {
-
-    private static final EnumSet<WindowFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
-    private final Elements elements;
-    private final EventQueue eventQueue;
-    private WindowImp imp;
-    private String title;
+public class Window extends View {
 
     /**
      * Constructs a window. The window is shown on the screen. All drawing methods inherited from {@link Canvas} are
@@ -102,123 +87,7 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public Window(final int width, final int height, final WindowFeature... features) {
-        this.elements = new Elements(this);
-        this.eventQueue = new EventQueue();
-        this.title = Jeda.getProgramName();
-        this.resetImp(width, height, toSet(features));
-        Jeda.addEventListener(this.eventQueue);
-        Jeda.addEventListener(new EventLoop(this));
-    }
-
-    /**
-     * Adds a {@link ch.jeda.ui.Element} to the currnt page of the window. Has no effect if <tt>element</tt>
-     * is <tt>null</tt>. The {@link ch.jeda.ui.Element} becomes inactive (it no longer receives events) and insivible if
-     * the current page changes.
-     *
-     * @param element the element to be added to the window
-     *
-     * @see #remove(ch.jeda.ui.Element)
-     * @see #getElements()
-     * @see #getElements(java.lang.Class)
-     * @since 1.0
-     */
-    public final void add(final Element element) {
-        this.elements.add(element);
-    }
-
-    /**
-     * Adds an event listener to the window. The specified object will receive events for all events listener interfaces
-     * it implements. Has no effect if <tt>listener</tt> is <tt>null</tt> or an element of this window.
-     *
-     * @param listener the event listener
-     *
-     * @since 1.0
-     */
-    public final void addEventListener(final Object listener) {
-        this.eventQueue.addListener(listener);
-    }
-
-    /**
-     * Closes the window. The window becomes invalid, all subsequent method calls to the window will cause an error.
-     *
-     * @since 1.0
-     */
-    public final void close() {
-        this.imp.close();
-    }
-
-    /**
-     * Returns all elements currently managed by the window.
-     *
-     * @return all elements currently managed by the window.
-     *
-     * @see #add(ch.jeda.ui.Element)
-     * @see #getElements(java.lang.Class)
-     * @see #remove(ch.jeda.ui.Element)
-     * @since 1.6
-     */
-    public final Element[] getElements() {
-        return this.elements.getAll();
-    }
-
-    /**
-     * Returns all elements of the specified class currently managed by the window.
-     *
-     * @param <T> the type of elements to return
-     * @param clazz the class of elements to return
-     * @return all elements currently managed by the window.
-     * @throws NullPointerException if <tt>clazz</tt> is <tt>null</tt>
-     *
-     * @see #add(ch.jeda.ui.Element)
-     * @see #getElements()
-     * @see #remove(ch.jeda.ui.Element)
-     * @since 1.6
-     */
-    public final <T extends Element> T[] getElements(final Class<T> clazz) {
-        if (clazz == null) {
-            throw new NullPointerException("clazz");
-        }
-
-        return this.elements.get(clazz);
-    }
-
-    /**
-     * @deprecated Use {@link #getElements()} instead.
-     */
-    public final GraphicsItem[] getGraphicsItems() {
-        return this.elements.get(GraphicsItem.class);
-    }
-
-    /**
-     * @deprecated Use {@link #getElements(java.lang.Class)} instead.
-     */
-    public final <T extends GraphicsItem> T[] getGraphicsItems(final Class<T> clazz) {
-        return this.elements.get(clazz);
-    }
-
-    /**
-     * Returns the current page of the window.
-     *
-     * @return the current page of the window
-     *
-     * @see #add(ch.jeda.ui.Element)
-     * @see #setPage(java.lang.String)
-     * @since 1.4
-     */
-    public final String getPage() {
-        return this.elements.getCurrentPage();
-    }
-
-    /**
-     * Returns the current window title.
-     *
-     * @return current window title
-     *
-     * @see #setTitle(java.lang.String)
-     * @since 1.0
-     */
-    public final String getTitle() {
-        return this.title;
+        super(width, height, convertFeatures(features));
     }
 
     /**
@@ -237,31 +106,7 @@ public class Window extends Canvas {
             throw new NullPointerException("feature");
         }
 
-        return this.imp.getFeatures().contains(feature);
-    }
-
-    /**
-     * Removes a {@link ch.jeda.ui.Element} from the window. Has no effect if <tt>element</tt> is
-     * <tt>null</tt>.
-     *
-     * @param element the element to be removed from the window
-     *
-     * @see ch.jeda.ui.Element
-     * @since 1.0
-     */
-    public final void remove(final Element element) {
-        this.elements.remove(element);
-    }
-
-    /**
-     * Removes an event listener from the window. The specified object will not receive events anymore. Has no effect if
-     * <tt>listener</tt> is <tt>null</tt> or an element of this window.
-     *
-     * @param listener the event listener
-     * @since 1.0
-     */
-    public final void removeEventListener(final Object listener) {
-        this.eventQueue.removeListener(listener);
+        return this.hasFeature(convertFeature(feature));
     }
 
     /**
@@ -276,132 +121,32 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public final void setFeature(final WindowFeature feature, final boolean enabled) {
-        if (feature == null) {
-            throw new NullPointerException("feature");
-        }
-
-        if (IMP_CHANGING_FEATURES.contains(feature)) {
-            final EnumSet<WindowFeature> featureSet = EnumSet.copyOf(this.imp.getFeatures());
-            if (enabled) {
-                featureSet.add(feature);
-            }
-            else {
-                featureSet.remove(feature);
-            }
-
-            this.resetImp(this.getWidth(), this.getHeight(), featureSet);
-        }
-        else {
-            this.imp.setFeature(feature, enabled);
-        }
+        this.setFeature(convertFeature(feature), enabled);
     }
 
-    /**
-     * Sets the shape of the mouse cursor.
-     *
-     * @param mouseCursor new shape of mouse cursor
-     * @throws NullPointerException if <tt>mouseCursor</tt> is
-     * <tt>null</tt>
-     *
-     * @see MouseCursor
-     * @since 1.0
-     */
-    public final void setMouseCursor(final MouseCursor mouseCursor) {
-        if (mouseCursor == null) {
-            throw new NullPointerException("mouseCursor");
-        }
-
-        this.imp.setMouseCursor(mouseCursor);
-    }
-
-    /**
-     * Sets the current page of the window. All {@link ch.jeda.ui.Element}s are added to the current page. They become
-     * inactive (they no longer receive events) and insivible if the current page changes.
-     *
-     * @param page the current page
-     *
-     * @see #add(ch.jeda.ui.Element)
-     * @see #getPage()
-     * @since 1.4
-     */
-    public final void setPage(final String page) {
-        this.elements.setPage(page);
-    }
-
-    /**
-     * Sets the window title.
-     *
-     * @param title new title of the window
-     * @throws NullPointerException if <tt>title</tt> is <tt>null</tt>
-     *
-     * @see #getTitle()
-     * @since 1.0
-     */
-    public final void setTitle(final String title) {
-        if (title == null) {
-            throw new NullPointerException("title");
-        }
-
-        this.title = title;
-        this.imp.setTitle(title);
-    }
-
-    void postEvent(final Event event) {
-        this.eventQueue.addEvent(event);
-    }
-
-    private void tick(final TickEvent event) {
-        if (this.imp.isVisible()) {
-            this.eventQueue.processEvents();
-            this.elements.processPending();
-            this.elements.draw(this);
-            this.imp.update();
+    private static ViewFeature convertFeature(final WindowFeature windowFeature) {
+        switch (windowFeature) {
+            case DOUBLE_BUFFERED:
+                return ViewFeature.DOUBLE_BUFFERED;
+            case FULLSCREEN:
+                return ViewFeature.FULLSCREEN;
+            case HOVERING_POINTER:
+                return ViewFeature.HOVERING_POINTER;
+            case ORIENTATION_LANDSCAPE:
+                return ViewFeature.ORIENTATION_LANDSCAPE;
+            case ORIENTATION_PORTRAIT:
+                return ViewFeature.ORIENTATION_PORTRAIT;
+            default:
+                return null;
         }
     }
 
-    private void resetImp(final int width, final int height, final EnumSet<WindowFeature> features) {
-        if (this.imp != null) {
-            this.imp.close();
-        }
-
-        this.imp = JedaInternal.createWindowImp(width, height, features);
-        this.imp.setEventQueue(this.eventQueue);
-        this.imp.setTitle(this.title);
-        if (!this.hasFeature(WindowFeature.DOUBLE_BUFFERED)) {
-            this.imp.setColor(Color.WHITE);
-            this.imp.fill();
-        }
-
-        super.setImp(this.imp);
-    }
-
-    private static EnumSet<WindowFeature> initImpChangingFeatures() {
-        final EnumSet<WindowFeature> result = EnumSet.noneOf(WindowFeature.class);
-        result.add(WindowFeature.DOUBLE_BUFFERED);
-        result.add(WindowFeature.FULLSCREEN);
-        return result;
-    }
-
-    private static EnumSet<WindowFeature> toSet(final WindowFeature... features) {
-        final EnumSet<WindowFeature> result = EnumSet.noneOf(WindowFeature.class);
-        for (WindowFeature feature : features) {
-            result.add(feature);
+    private static ViewFeature[] convertFeatures(final WindowFeature[] windowFeatures) {
+        ViewFeature[] result = new ViewFeature[windowFeatures.length];
+        for (int i = 0; i < windowFeatures.length; ++i) {
+            result[i] = convertFeature(windowFeatures[i]);
         }
 
         return result;
-    }
-
-    private static class EventLoop implements TickListener {
-
-        private final Window window;
-
-        public EventLoop(final Window window) {
-            this.window = window;
-        }
-
-        @Override
-        public void onTick(final TickEvent event) {
-            this.window.tick(event);
-        }
     }
 }

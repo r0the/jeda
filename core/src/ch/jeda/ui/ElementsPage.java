@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,16 +23,16 @@ import java.util.Set;
 
 final class ElementsPage {
 
-    final Window window;
+    final View view;
     private final Set<Element> elementSet;
     private final String name;
     private boolean active;
     boolean dirty;
 
-    ElementsPage(final Window window, final String name) {
+    ElementsPage(final View view, final String name) {
         this.elementSet = new HashSet<Element>();
         this.name = name;
-        this.window = window;
+        this.view = view;
         this.dirty = false;
     }
 
@@ -44,7 +44,7 @@ final class ElementsPage {
             return false;
         }
         if (element.page != null) {
-            this.window.remove(element);
+            this.view.remove(element);
         }
         this.elementSet.add(element);
         this.dirty = true;

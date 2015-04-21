@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,12 +19,12 @@ package ch.jeda.ui;
 import java.util.Comparator;
 
 /**
- * Represents an object with a graphical representation. Elements can be added to a {@link ch.jeda.ui.Window}. The
- * window will automatically draw the elements. Every element has a <b>draw order</b> that determines the order in which
- * the elements are drawn. Elements with a smaller draw order are drawn first.
+ * Base class for objects with a graphical representation. Elements can be added to a {@link ch.jeda.ui.View}. The view
+ * will automatically draw the elements. Every element has a <b>draw order</b> that determines the order in which the
+ * elements are drawn. Elements with a smaller draw order are drawn first.
  *
- * @see ch.jeda.ui.Window#add(ch.jeda.ui.Element)
- * @see ch.jeda.ui.Window#remove(ch.jeda.ui.Element)
+ * @see ch.jeda.ui.View#add(ch.jeda.ui.Element)
+ * @see ch.jeda.ui.View#remove(ch.jeda.ui.Element)
  * @since 1.6
  */
 public abstract class Element {
@@ -43,7 +43,7 @@ public abstract class Element {
 
     /**
      * Returns the current draw order of this element. The draw order determines the order in which the elements are
-     * drawn on a {@link ch.jeda.ui.Window}. Elements with a smaller draw order are drawn first.
+     * drawn on a {@link ch.jeda.ui.View}. Elements with a smaller draw order are drawn first.
      *
      * @return the current draw order of this element
      *
@@ -81,6 +81,22 @@ public abstract class Element {
     protected abstract void draw(final Canvas canvas);
 
     /**
+     * Returns the view containing the element. Returns <tt>null</tt> if the element has not yet been added to a view.
+     *
+     * @return the view containing the element
+     *
+     * @since 1.6
+     */
+    protected final View getView() {
+        if (this.page == null) {
+            return null;
+        }
+        else {
+            return this.page.view;
+        }
+    }
+
+    /**
      * Returns the window containing the element. Returns <tt>null</tt> if the element has not yet been added to a
      * window.
      *
@@ -92,8 +108,11 @@ public abstract class Element {
         if (this.page == null) {
             return null;
         }
+        else if (this.page.view instanceof Window) {
+            return (Window) this.page.view;
+        }
         else {
-            return this.page.window;
+            return null;
         }
     }
 

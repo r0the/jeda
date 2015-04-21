@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -36,7 +36,7 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.TypefaceImp;
-import ch.jeda.platform.WindowRequest;
+import ch.jeda.platform.ViewRequest;
 import ch.jeda.ui.WindowFeature;
 import java.io.InputStream;
 
@@ -207,11 +207,11 @@ public final class Main extends FragmentActivity {
         });
     }
 
-    void showWindow(final WindowRequest request) {
+    void showViewRequest(final ViewRequest request) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                doShowWindow(request);
+                doShowViewRequest(request);
             }
         });
     }
@@ -254,7 +254,7 @@ public final class Main extends FragmentActivity {
         this.showFragment(new SelectionDialogFragment(request));
     }
 
-    private void doShowWindow(final WindowRequest request) {
+    private void doShowViewRequest(final ViewRequest request) {
         this.topWindow = new CanvasFragment(request);
         final int orientation = this.getScreenOrientation(request);
         Log.d("Jeda", "Setting screen orientation to " + orientation);
@@ -272,7 +272,7 @@ public final class Main extends FragmentActivity {
         ft.commit();
     }
 
-    private int getScreenOrientation(final WindowRequest request) {
+    private int getScreenOrientation(final ViewRequest request) {
         if (request.getFeatures().contains(WindowFeature.ORIENTATION_LANDSCAPE)) {
             return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         }

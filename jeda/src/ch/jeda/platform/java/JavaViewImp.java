@@ -17,21 +17,21 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.event.EventQueue;
-import ch.jeda.platform.WindowImp;
+import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
-import ch.jeda.ui.WindowFeature;
+import ch.jeda.ui.ViewFeature;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.util.EnumMap;
 import java.util.EnumSet;
 
-abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
+abstract class JavaViewImp extends JavaCanvasImp implements ViewImp {
 
     private static final EnumMap<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
     protected final CanvasWindow canvasWindow;
 
-    JavaWindowImp(final CanvasWindow viewWindow) {
+    JavaViewImp(final CanvasWindow viewWindow) {
         this.canvasWindow = viewWindow;
     }
 
@@ -41,7 +41,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     }
 
     @Override
-    public EnumSet<WindowFeature> getFeatures() {
+    public EnumSet<ViewFeature> getFeatures() {
         return this.canvasWindow.getFeatures();
     }
 
@@ -56,7 +56,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     }
 
     @Override
-    public void setFeature(final WindowFeature feature, final boolean enabled) {
+    public void setFeature(final ViewFeature feature, final boolean enabled) {
         this.canvasWindow.setFeature(feature, enabled);
     }
 
@@ -75,8 +75,8 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
     @Override
     public abstract void update();
 
-    static JavaWindowImp create(final CanvasWindow viewWindow) {
-        if (viewWindow.getFeatures().contains(WindowFeature.DOUBLE_BUFFERED)) {
+    static JavaViewImp create(final CanvasWindow viewWindow) {
+        if (viewWindow.getFeatures().contains(ViewFeature.DOUBLE_BUFFERED)) {
             return new DoubleBufferedWindowImp(viewWindow);
         }
         else {
@@ -101,7 +101,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         return result;
     }
 
-    private static class DoubleBufferedWindowImp extends JavaWindowImp {
+    private static class DoubleBufferedWindowImp extends JavaViewImp {
 
         private BufferedImage backBuffer;
         private BufferedImage frontBuffer;
@@ -127,7 +127,7 @@ abstract class JavaWindowImp extends JavaCanvasImp implements WindowImp {
         }
     }
 
-    private static class SingleBufferedWindowImp extends JavaWindowImp {
+    private static class SingleBufferedWindowImp extends JavaViewImp {
 
         private final BufferedImage buffer;
 

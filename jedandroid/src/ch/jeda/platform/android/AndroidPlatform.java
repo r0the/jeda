@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,7 +29,7 @@ import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.TypefaceImp;
-import ch.jeda.platform.WindowRequest;
+import ch.jeda.platform.ViewRequest;
 import java.io.InputStream;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -146,8 +146,8 @@ class AndroidPlatform implements Platform {
     }
 
     @Override
-    public void showWindow(final WindowRequest windowRequest) {
-        Main.getInstance().showWindow(windowRequest);
+    public void showViewRequest(final ViewRequest viewRequest) {
+        Main.getInstance().showViewRequest(viewRequest);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -31,18 +31,18 @@ final class Elements {
     private final Map<String, ElementsPage> pages;
     private final List<Element> pendingDeletions;
     private final List<Element> pendingInsertions;
-    private final Window window;
+    private final View view;
     private Element[] activeElements;
     private ElementsPage activePage;
     private ElementsPage currentPage;
 
-    Elements(final Window window) {
+    Elements(final View view) {
         this.pages = new HashMap<String, ElementsPage>();
         this.pendingDeletions = new ArrayList<Element>();
         this.pendingInsertions = new ArrayList<Element>();
-        this.window = window;
+        this.view = view;
         this.activeElements = new Element[0];
-        this.activePage = new ElementsPage(window, "Main");
+        this.activePage = new ElementsPage(view, "Main");
         this.currentPage = this.activePage;
     }
 
@@ -103,7 +103,7 @@ final class Elements {
                 final Element element = this.pendingDeletions.get(i);
                 if (elementSet.remove(element)) {
                     allChanged = true;
-                    this.window.removeEventListener(element);
+                    this.view.removeEventListener(element);
                 }
             }
 
@@ -111,7 +111,7 @@ final class Elements {
                 final Element element = this.pendingInsertions.get(i);
                 if (!elementSet.contains(element)) {
                     if (elementSet.add(element)) {
-                        this.window.addEventListener(element);
+                        this.view.addEventListener(element);
                         allChanged = true;
                     }
                 }
@@ -136,7 +136,7 @@ final class Elements {
     void setPage(final String page) {
         if (!this.currentPage.getName().equals(page)) {
             if (!this.pages.containsKey(page)) {
-                this.pages.put(page, new ElementsPage(window, page));
+                this.pages.put(page, new ElementsPage(this.view, page));
             }
 
             this.currentPage = this.pages.get(page);
@@ -145,13 +145,13 @@ final class Elements {
 
     private void addEventListeners() {
         for (int i = 0; i < this.activeElements.length; ++i) {
-            this.window.addEventListener(this.activeElements[i]);
+            this.view.addEventListener(this.activeElements[i]);
         }
     }
 
     private void removeEventListeners() {
         for (int i = 0; i < this.activeElements.length; ++i) {
-            this.window.removeEventListener(this.activeElements[i]);
+            this.view.removeEventListener(this.activeElements[i]);
         }
     }
 

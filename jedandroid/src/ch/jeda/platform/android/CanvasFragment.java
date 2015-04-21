@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -33,8 +33,8 @@ import ch.jeda.event.EventType;
 import ch.jeda.event.Key;
 import ch.jeda.event.KeyEvent;
 import ch.jeda.event.PointerEvent;
-import ch.jeda.platform.WindowRequest;
-import ch.jeda.ui.WindowFeature;
+import ch.jeda.platform.ViewRequest;
+import ch.jeda.ui.ViewFeature;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,13 +45,13 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
 
     private static final Map<Integer, EventSource> INPUT_DEVICE_MAP = new HashMap<Integer, EventSource>();
     private static final Map<Integer, Key> KEY_MAP = initKeyMap();
-    private final EnumSet<WindowFeature> features;
+    private final EnumSet<ViewFeature> features;
     private EventQueue eventQueue;
-    private WindowRequest request;
+    private ViewRequest request;
     private boolean surfaceAvailable;
     private SurfaceHolder surfaceHolder;
 
-    CanvasFragment(final WindowRequest request) {
+    CanvasFragment(final ViewRequest request) {
         super();
         this.features = request.getFeatures();
         this.request = request;
@@ -124,7 +124,7 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
     @Override
     public void surfaceChanged(final SurfaceHolder holder, final int format, final int width, final int height) {
         if (this.request != null) {
-            this.request.setResult(AndroidWindowImp.create(this, width, height));
+            this.request.setResult(AndroidViewImp.create(this, width, height));
             this.request = null;
         }
     }
@@ -134,15 +134,15 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
         this.surfaceAvailable = false;
     }
 
-    EnumSet<WindowFeature> getFeatures() {
+    EnumSet<ViewFeature> getFeatures() {
         return this.features;
     }
 
     int getOrientation(final int currentOrientation) {
-        if (this.features.contains(WindowFeature.ORIENTATION_LANDSCAPE)) {
+        if (this.features.contains(ViewFeature.ORIENTATION_LANDSCAPE)) {
             return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         }
-        else if (this.features.contains(WindowFeature.ORIENTATION_PORTRAIT)) {
+        else if (this.features.contains(ViewFeature.ORIENTATION_PORTRAIT)) {
             return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         }
         else {
@@ -170,7 +170,7 @@ class CanvasFragment extends Fragment implements SurfaceHolder.Callback,
         this.eventQueue = eventQueue;
     }
 
-    void setFeature(final WindowFeature feature, final boolean enabled) {
+    void setFeature(final ViewFeature feature, final boolean enabled) {
         if (enabled) {
             this.features.add(feature);
         }

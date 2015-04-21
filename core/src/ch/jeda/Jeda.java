@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,8 +24,8 @@ import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
-import ch.jeda.platform.WindowImp;
-import ch.jeda.ui.WindowFeature;
+import ch.jeda.platform.ViewImp;
+import ch.jeda.ui.ViewFeature;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -337,8 +337,8 @@ public class Jeda {
         return ENGINE.createImageImp(path);
     }
 
-    static WindowImp createWindowImp(final int width, final int height, final EnumSet<WindowFeature> features) {
-        return ENGINE.createWindowImp(width, height, features);
+    static ViewImp createViewImp(final int width, final int height, final EnumSet<ViewFeature> features) {
+        return ENGINE.createViewImp(width, height, features);
     }
 
     static XMLReader createXmlReader() {

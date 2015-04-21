@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,12 +17,13 @@
 package ch.jeda.platform.android;
 
 import ch.jeda.event.EventQueue;
-import ch.jeda.platform.WindowImp;
+import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
+import ch.jeda.ui.ViewFeature;
 import ch.jeda.ui.WindowFeature;
 import java.util.EnumSet;
 
-class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
+class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
 
     private final CanvasFragment canvasView;
 
@@ -31,7 +32,7 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     }
 
     @Override
-    public EnumSet<WindowFeature> getFeatures() {
+    public EnumSet<ViewFeature> getFeatures() {
         return this.canvasView.getFeatures();
     }
 
@@ -46,7 +47,7 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
     }
 
     @Override
-    public void setFeature(final WindowFeature feature, final boolean enabled) {
+    public void setFeature(final ViewFeature feature, final boolean enabled) {
         this.canvasView.setFeature(feature, enabled);
     }
 
@@ -65,11 +66,11 @@ class AndroidWindowImp extends AndroidCanvasImp implements WindowImp {
         this.canvasView.setBitmap(this.getBitmap());
     }
 
-    static AndroidWindowImp create(final CanvasFragment canvasView, final int width, final int height) {
-        return new AndroidWindowImp(canvasView, width, height);
+    static AndroidViewImp create(final CanvasFragment canvasView, final int width, final int height) {
+        return new AndroidViewImp(canvasView, width, height);
     }
 
-    private AndroidWindowImp(final CanvasFragment canvasView, final int width, final int height) {
+    private AndroidViewImp(final CanvasFragment canvasView, final int width, final int height) {
         this.canvasView = canvasView;
         this.init(width, height);
     }

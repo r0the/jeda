@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,9 +26,9 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
-import ch.jeda.platform.WindowImp;
-import ch.jeda.platform.WindowRequest;
-import ch.jeda.ui.WindowFeature;
+import ch.jeda.platform.ViewImp;
+import ch.jeda.platform.ViewRequest;
+import ch.jeda.ui.ViewFeature;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -198,13 +198,13 @@ class JedaEngine implements Platform.Callback, Runnable {
         }
     }
 
-    WindowImp createWindowImp(final int width, final int height, final EnumSet<WindowFeature> features) {
+    ViewImp createViewImp(final int width, final int height, final EnumSet<ViewFeature> features) {
         if (features == null) {
             throw new NullPointerException("features");
         }
 
-        final WindowRequest request = new WindowRequest(width, height, features);
-        this.platform.showWindow(request);
+        final ViewRequest request = new ViewRequest(width, height, features);
+        this.platform.showViewRequest(request);
         request.waitForResult();
         return request.getResult();
     }
@@ -379,7 +379,7 @@ class JedaEngine implements Platform.Callback, Runnable {
     private static void loadProperties(final java.util.Properties properties, final String path) {
         final URL url = JedaEngine.class.getClassLoader().getResource(path);
         if (url == null) {
-            Log.err(Message.ENGINE_ERROR_PROPERTIES_NOT_FOUND, path);
+            initErr(Message.ENGINE_ERROR_PROPERTIES_NOT_FOUND, path);
             return;
         }
 
@@ -389,7 +389,7 @@ class JedaEngine implements Platform.Callback, Runnable {
             properties.load(in);
         }
         catch (final Exception ex) {
-            Log.err(Message.ENGINE_ERROR_PROPERTIES_READ, path);
+            initErr(Message.ENGINE_ERROR_PROPERTIES_READ, path);
         }
         finally {
             if (in != null) {

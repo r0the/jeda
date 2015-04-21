@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,8 +20,8 @@ import ch.jeda.LogLevel;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
-import ch.jeda.platform.WindowRequest;
-import ch.jeda.ui.WindowFeature;
+import ch.jeda.platform.ViewRequest;
+import ch.jeda.ui.ViewFeature;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -66,11 +66,11 @@ class WindowManager {
         this.selectionWindow.setVisible(true);
     }
 
-    void showWindow(final WindowRequest viewRequest) {
+    void showViewRequest(final ViewRequest viewRequest) {
         final CanvasWindow window = this.createCanvasWindow(viewRequest);
         this.windows.add(window);
         window.setVisible(true);
-        viewRequest.setResult(JavaWindowImp.create(window));
+        viewRequest.setResult(JavaViewImp.create(window));
     }
 
     void shutdown() {
@@ -107,7 +107,7 @@ class WindowManager {
         }
     }
 
-    private CanvasWindow createCanvasWindow(final WindowRequest request) {
+    private CanvasWindow createCanvasWindow(final ViewRequest request) {
         int width = request.getWidth();
         int height = request.getHeight();
         if (width < 1) {
@@ -118,7 +118,7 @@ class WindowManager {
             height = 600;
         }
 
-        if (request.getFeatures().contains(WindowFeature.FULLSCREEN) && this.fullscreenWindow == null) {
+        if (request.getFeatures().contains(ViewFeature.FULLSCREEN) && this.fullscreenWindow == null) {
             DisplayMode displayMode = findDisplayMode(width, height);
             width = displayMode.getWidth();
             height = displayMode.getHeight();

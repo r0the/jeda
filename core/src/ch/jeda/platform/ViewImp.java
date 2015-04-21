@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,23 +18,23 @@ package ch.jeda.platform;
 
 import ch.jeda.event.EventQueue;
 import ch.jeda.ui.MouseCursor;
-import ch.jeda.ui.WindowFeature;
+import ch.jeda.ui.ViewFeature;
 import java.util.EnumSet;
 
 /**
  * <b>Internal</b>. Do not use this interface.
  */
-public interface WindowImp extends CanvasImp {
+public interface ViewImp extends CanvasImp {
 
     void close();
 
-    EnumSet<WindowFeature> getFeatures();
+    EnumSet<ViewFeature> getFeatures();
 
     boolean isVisible();
 
     void setEventQueue(EventQueue eventQueue);
 
-    void setFeature(WindowFeature feature, boolean enabled);
+    void setFeature(ViewFeature feature, boolean enabled);
 
     void setMouseCursor(MouseCursor mouseCursor);
 

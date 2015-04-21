@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,7 +26,7 @@ import ch.jeda.platform.Platform;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
-import ch.jeda.platform.WindowRequest;
+import ch.jeda.platform.ViewRequest;
 import java.awt.Font;
 import java.io.InputStream;
 import javax.swing.UIManager;
@@ -132,8 +132,8 @@ class JavaPlatform implements Platform {
     }
 
     @Override
-    public void showWindow(final WindowRequest windowRequest) {
-        this.windowManager.showWindow(windowRequest);
+    public void showViewRequest(final ViewRequest viewRequest) {
+        this.windowManager.showViewRequest(viewRequest);
     }
 
     @Override
