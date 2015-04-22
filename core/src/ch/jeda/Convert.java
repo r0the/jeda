@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -184,10 +184,32 @@ public final class Convert {
      * @return the {@link java.lang.String} representing the <tt>value</tt>
      *
      * @see #toDouble(java.lang.String, double)
+     * @see #toString(double, int)
      * @since 1.2
      */
     public static String toString(final double value) {
         return String.valueOf(value);
+    }
+
+    /**
+     * Converts a <tt>double</tt> value to a {@link java.lang.String}, rounding to the specified number of decimal
+     * places.
+     *
+     * @param value the <tt>double</tt> value to be converted
+     * @param decimalPlaces the number of decimal places to round to
+     * @return the {@link java.lang.String} representing the <tt>value</tt>
+     * @throws IllegalArgumentException if <tt>decimalPlaces</tt> is negative
+     *
+     * @see #toDouble(java.lang.String, double)
+     * @see #toString(double)
+     * @since 1.6
+     */
+    public static String toString(final double value, final int decimalPlaces) {
+        if (decimalPlaces < 0) {
+            throw new IllegalArgumentException("decimalPlaces");
+        }
+
+        return String.format("%." + decimalPlaces + "g%n", value);
     }
 
     /**
