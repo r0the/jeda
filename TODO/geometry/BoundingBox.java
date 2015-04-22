@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.geometry;
+package ch.jeda.ui;
 
 public final class BoundingBox {
 
-    private float minX;
-    private float minY;
-    private float maxX;
-    private float maxY;
+    private double minX;
+    private double minY;
+    private double maxX;
+    private double maxY;
 
     public BoundingBox() {
         this.reset();
@@ -34,7 +34,7 @@ public final class BoundingBox {
         this.maxY = other.maxY;
     }
 
-    public boolean contains(final float x, final float y) {
+    public boolean contains(final double x, final double y) {
         return this.minX <= x && x <= this.maxX && this.minY <= y && y <= this.maxY;
     }
 
@@ -62,10 +62,10 @@ public final class BoundingBox {
     /**
      * Adjusts the bounding box to enclose all given points.
      */
-    void include(final float[] points) {
+    void include(final double[] points) {
         for (int i = 0; i < points.length; i = i + 2) {
-            final float x = points[i];
-            final float y = points[i + 1];
+            final double x = points[i];
+            final double y = points[i + 1];
             this.minX = Math.min(this.minX, x);
             this.minY = Math.min(this.minY, y);
             this.maxX = Math.max(this.maxX, x);

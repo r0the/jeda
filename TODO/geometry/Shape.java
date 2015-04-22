@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,18 +14,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.geometry;
+package ch.jeda.ui;
 
-import ch.jeda.ui.Canvas;
-import ch.jeda.ui.Color;
+import ch.jeda.event.PointerEvent;
+import ch.jeda.event.PointerListener;
 
-public abstract class Shape {
+public abstract class Shape extends Element implements PointerListener {
 
     protected static final Color DEBUG_FILL_COLOR = new Color(255, 0, 0, 70);
     protected static final Color DEBUG_OUTLINE_COLOR = Color.RED;
     protected static final Color DEBUG_TEXT_COLOR = Color.BLACK;
-    private Color outlineColor;
     private Color fillColor;
+    private PointerEvent lastEvent;
+    private Color outlineColor;
 
     public final Collision collideWith(final Shape other) {
         if (this.getBoundingBox().intersects(other.getBoundingBox())) {
@@ -37,11 +38,9 @@ public abstract class Shape {
         return null;
     }
 
-    public boolean contains(final float x, final float y) {
+    public boolean contains(final double x, final double y) {
         return this.getBoundingBox().contains(x, y) && this.doesContain(x, y);
     }
-
-    public abstract void draw(final Canvas canvas);
 
     public abstract BoundingBox getBoundingBox();
 
@@ -57,7 +56,36 @@ public abstract class Shape {
         return this.outlineColor;
     }
 
-    public abstract void move(float dx, float dy);
+    /**
+     * @since 1.0
+     */
+    public boolean isDragging() {
+        return this.lastEvent != null;
+    }
+
+    public abstract void move(double dx, double dy);
+
+    @Override
+    public void onPointerDown(final PointerEvent event) {
+        if (this.lastEvent == null) {
+            this.lastEvent = event;
+        }
+    }
+
+    @Override
+    public void onPointerMoved(final PointerEvent event) {
+        if ((this.lastEvent != null) && (event.getPointerId() == this.lastEvent.getPointerId())) {
+            this.move(event.getX() - this.lastEvent.getX(), event.getY() - this.lastEvent.getY());
+            this.lastEvent = event;
+        }
+    }
+
+    @Override
+    public void onPointerUp(final PointerEvent event) {
+        if ((this.lastEvent != null) && (event.getPointerId() == this.lastEvent.getPointerId())) {
+            this.lastEvent = null;
+        }
+    }
 
     public final void setFillColor(final Color value) {
         this.fillColor = value;
@@ -72,5 +100,5 @@ public abstract class Shape {
         this.outlineColor = Color.BLACK;
     }
 
-    abstract boolean doesContain(float x, float y);
+    abstract boolean doesContain(double x, double y);
 }

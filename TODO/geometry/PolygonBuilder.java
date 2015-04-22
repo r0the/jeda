@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,23 +14,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.geometry;
+package ch.jeda.ui;
 
-import ch.jeda.geometry.Polygon;
 import java.util.Arrays;
 
 final class PolygonBuilder {
 
     private static final int GROWTH = 20;
-    private float[] points;
+    private double[] points;
     private int size;
 
     PolygonBuilder() {
-        this.points = new float[GROWTH];
+        this.points = new double[GROWTH];
         this.size = 0;
     }
 
-    void addPoint(final float x, final float y) {
+    void addPoint(final double x, final double y) {
         if (this.points.length < this.size + 2) {
             this.points = Arrays.copyOf(this.points, this.points.length + GROWTH);
         }

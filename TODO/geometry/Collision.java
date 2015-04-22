@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.geometry;
+package ch.jeda.ui;
 
 import ch.jeda.Util;
 import java.io.Serializable;
@@ -24,21 +24,21 @@ import java.io.Serializable;
  */
 public final class Collision implements Serializable {
 
-    private final float penetrationDepth;
-    private Shape shape1;
-    private Shape shape2;
-    private float normalX;
-    private float normalY;
+    private final double penetrationDepth;
+    private final Shape shape1;
+    private final Shape shape2;
+    private final double normalX;
+    private final double normalY;
 
-    public float getNormalX() {
+    public double getNormalX() {
         return this.normalX;
     }
 
-    public float getNormalY() {
+    public double getNormalY() {
         return this.normalY;
     }
 
-    public float getPenetrationDepth() {
+    public double getPenetrationDepth() {
         return this.penetrationDepth;
     }
 
@@ -50,10 +50,10 @@ public final class Collision implements Serializable {
         return this.shape2;
     }
 
-    Collision(final Shape shape1, final Shape shape2, final float normalX, final float normalY,
-              final float penetrationDepth) {
-        assert Util.isZero(normalX * normalX + normalY * normalY - 1f);
-        assert penetrationDepth > 0f;
+    Collision(final Shape shape1, final Shape shape2, final double normalX, final double normalY,
+              final double penetrationDepth) {
+        assert Util.isZero(normalX * normalX + normalY * normalY - 1.0);
+        assert penetrationDepth > 0.0;
 
         this.penetrationDepth = penetrationDepth;
         this.normalX = normalX;

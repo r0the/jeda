@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.geometry;
+package ch.jeda.ui;
 
 import ch.jeda.Util;
 
@@ -161,7 +161,7 @@ class GreinerHormann {
         }
     }
 
-    private static float distance(final float x1, final float y1, final float x2, final float y2) {
+    private static double distance(final double x1, final double y1, final double x2, final double y2) {
         return Util.distance(x1 - x2, y1 - y2);
     }
 
@@ -173,22 +173,22 @@ class GreinerHormann {
         final Node p2 = p1.nextCorner();
         final Node q2 = q1.nextCorner();
 
-        final float par = (p2.x - p1.x) * (q2.y - q1.y) - (p2.y - p1.y) * (q2.x - q1.x);
+        final double par = (p2.x - p1.x) * (q2.y - q1.y) - (p2.y - p1.y) * (q2.x - q1.x);
         if (Util.isZero(par)) {
             // parallel lines
             return;
         }
 
-        final float tp = ((q1.x - p1.x) * (q2.y - q1.y) - (q1.y - p1.y) * (q2.x - q1.x)) / par;
-        final float tq = ((p2.y - p1.y) * (q1.x - p1.x) - (p2.x - p1.x) * (q1.y - p1.y)) / par;
+        final double tp = ((q1.x - p1.x) * (q2.y - q1.y) - (q1.y - p1.y) * (q2.x - q1.x)) / par;
+        final double tq = ((p2.y - p1.y) * (q1.x - p1.x) - (p2.x - p1.x) * (q1.y - p1.y)) / par;
         if (tp < 0f || tp > 1f || tq < 0f || tq > 1f) {
             return;
         }
 
-        final float x = p1.x + tp * (p2.x - p1.x);
-        final float y = p1.y + tp * (p2.y - p1.y);
-        final float alphaP = distance(p1.x, p1.y, x, y) / distance(p1.x, p1.y, p2.x, p2.y);
-        final float alphaQ = distance(q1.x, q1.y, x, y) / distance(q1.x, q1.y, q2.x, q2.y);
+        final double x = p1.x + tp * (p2.x - p1.x);
+        final double y = p1.y + tp * (p2.y - p1.y);
+        final double alphaP = distance(p1.x, p1.y, x, y) / distance(p1.x, p1.y, p2.x, p2.y);
+        final double alphaQ = distance(q1.x, q1.y, x, y) / distance(q1.x, q1.y, q2.x, q2.y);
         Node ip = Node.createIntersection(x, y, alphaP);
         Node iq = Node.createIntersection(x, y, alphaQ);
         ip.neighbour = iq;
@@ -214,31 +214,31 @@ class GreinerHormann {
 
     private static class Node {
 
-        float x;
-        float y;
+        double x;
+        double y;
         Node next;
         Node prev;
         boolean intersection;
         boolean entry;
         Node neighbour;
-        float alpha;
+        double alpha;
         boolean visited;
 
-        static Node createCorner(final float x, final float y) {
+        static Node createCorner(final double x, final double y) {
             final Node result = new Node(x, y);
             result.next = result;
             result.prev = result;
             return result;
         }
 
-        static Node createIntersection(final float x, final float y, final float alpha) {
+        static Node createIntersection(final double x, final double y, final double alpha) {
             final Node result = new Node(x, y);
             result.alpha = alpha;
             result.intersection = true;
             return result;
         }
 
-        public Node(float x, float y) {
+        public Node(double x, double y) {
             this.x = x;
             this.y = y;
         }

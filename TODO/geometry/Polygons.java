@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.geometry;
+package ch.jeda.ui;
 
-import ch.jeda.ui.Canvas;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -106,12 +105,12 @@ public final class Polygons extends Shape implements Iterable<Polygon> {
     }
 
     @Override
-    public void move(float dx, float dy) {
+    public void move(double dx, double dy) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    boolean doesContain(float x, float y) {
+    boolean doesContain(double x, double y) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

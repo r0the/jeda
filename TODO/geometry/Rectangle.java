@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2014 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.geometry;
+package ch.jeda.ui;
 
 public class Rectangle extends Polygon {
 
-    public Rectangle(final float x, final float y, final float width, final float height) {
+    public Rectangle(final double x, final double y, final double width, final double height) {
         super(x, y, x + width, y, x + width, y + height, x, y + height);
     }
 }
