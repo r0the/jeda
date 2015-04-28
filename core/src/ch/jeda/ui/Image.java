@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -31,7 +31,7 @@ import java.util.Map;
  * {@link Canvas}. Simple image transformations are also supported.
  *
  * @since 1.0
- * @version 2
+ * @version 3
  */
 public final class Image {
 
@@ -67,52 +67,6 @@ public final class Image {
      */
     public Image(final String filePath) {
         this(loadImp(filePath));
-    }
-
-    /**
-     * @deprecated Use {@link #rotate(double)} instead.
-     * @since 1.0
-     */
-    public Image createRotatedImage(final double angle) {
-        return new Image(this.imp.rotate(angle));
-    }
-
-    /**
-     * @deprecated Use {@link #scale(double)} instead.
-     * @since 1.0
-     */
-    public Image createScaledImage(final double factor) {
-        if (factor <= 0.0) {
-            throw new IllegalArgumentException("factor");
-        }
-
-        final int width = Math.max((int) (this.getWidth() * factor), 1);
-        final int height = Math.max((int) (this.getHeight() * factor), 1);
-        return this.createScaledImage(width, height);
-    }
-
-    /**
-     * @deprecated Use {@link #scale(int, int)} instead.
-     * @since 1.0
-     */
-    public Image createScaledImage(final int width, final int height) {
-        if (width < 1) {
-            throw new IllegalArgumentException("width");
-        }
-
-        if (height < 1) {
-            throw new IllegalArgumentException("height");
-        }
-
-        return new Image(this.imp.scale(width, height));
-    }
-
-    /**
-     * @deprecated Use {@link #subImage(int, int, int, int)} instead.
-     * @since 1.0
-     */
-    public Image createSubImage(final int x, final int y, final int width, final int height) {
-        return this.subImage(x, y, width, height);
     }
 
     /**
@@ -308,7 +262,7 @@ public final class Image {
 
         final int width = Math.max((int) (this.getWidth() * factor), 1);
         final int height = Math.max((int) (this.getHeight() * factor), 1);
-        return this.createScaledImage(width, height);
+        return this.scale(width, height);
     }
 
     /**

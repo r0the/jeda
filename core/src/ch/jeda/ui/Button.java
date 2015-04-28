@@ -96,31 +96,6 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
         this.text = text;
     }
 
-    /**
-     * @deprecated Use <tt>window.add(new Button(0, 0, action))</tt> instead.
-     * @since 1.0
-     */
-    public Button(final Window window, final String action) {
-        this(window, 0, 0, action);
-    }
-
-    /**
-     * @deprecated Use <tt>window.add(new Button(x, y, text))</tt> instead.
-     * @since 1.0
-     */
-    public Button(final Window window, final int x, final int y, final String text) {
-        this(window, x, y, text, Alignment.TOP_LEFT);
-    }
-
-    /**
-     * @deprecated Use <tt>window.add(new Button(x, y, text, alignment))</tt> instead.
-     * @since 1.0
-     */
-    public Button(final Window window, final int x, final int y, final String text, final Alignment alignment) {
-        this(x, y, alignment, text);
-        window.add(this);
-    }
-
     @Override
     public final boolean contains(final int x, final int y) {
         return this.style.contains(this, x, y);

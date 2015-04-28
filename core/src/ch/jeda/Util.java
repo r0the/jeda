@@ -50,14 +50,6 @@ public final class Util {
     }
 
     /**
-     * @deprecated Use {@link Jeda#loadTextFile(java.lang.String)} instead.
-     * @since 1.0
-     */
-    public static String[] loadTextFile(final String filePath) {
-        return Jeda.loadTextFile(filePath);
-    }
-
-    /**
      * Returns a random <tt>int</tt> value between <tt>0</tt> and <tt>(max - 1)</tt>.
      *
      * @param max the upper limit for the random number

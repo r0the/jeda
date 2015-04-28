@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,6 @@
 package ch.jeda.ui;
 
 import ch.jeda.JedaInternal;
-import ch.jeda.Transformation;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.CanvasTransformation;
 import java.util.Stack;
@@ -143,7 +142,7 @@ public class Canvas {
      * @param rx the horizontal radius of the ellipse
      * @param ry the vertical radius of the ellipse
      *
-     * @since 1.6
+     * @since 2.0
      */
     public void drawEllipe(final int x, final int y, final int rx, final int ry) {
         if (rx > 0 && ry > 0) {
@@ -160,7 +159,7 @@ public class Canvas {
      * @param rx the horizontal radius of the ellipse
      * @param ry the vertical radius of the ellipse
      *
-     * @since 1.6
+     * @since 2.0
      */
     public void drawEllipe(final double x, final double y, final double rx, final double ry) {
         this.drawEllipe((int) x, (int) y, (int) rx, (int) ry);
@@ -597,7 +596,7 @@ public class Canvas {
      * @param rx the horizontal radius of the ellipse
      * @param ry the vertical radius of the ellipse
      *
-     * @since 1.6
+     * @since 2.0
      */
     public void fillEllipe(final int x, final int y, final int rx, final int ry) {
         if (rx > 0 && ry > 0) {
@@ -614,7 +613,7 @@ public class Canvas {
      * @param rx the horizontal radius of the ellipse
      * @param ry the vertical radius of the ellipse
      *
-     * @since 1.6
+     * @since 2.0
      */
     public void fillEllipe(final double x, final double y, final double rx, final double ry) {
         this.fillEllipe((int) x, (int) y, (int) rx, (int) ry);
@@ -843,7 +842,7 @@ public class Canvas {
      *
      * @return the current rotation angle of the canvas
      *
-     * @since 1.6
+     * @since 2.0
      * @see #setRotation(double)
      */
     public double getRotation() {
@@ -855,7 +854,7 @@ public class Canvas {
      *
      * @return the current scale of the canvas
      *
-     * @since 1.6
+     * @since 2.0
      * @see #setScale(double)
      */
     public double getScale() {
@@ -879,7 +878,7 @@ public class Canvas {
      *
      * @return the current horizontal translation of the canvas
      *
-     * @since 1.6
+     * @since 2.0
      * @see #setTranslation(double, double)
      */
     public double getTranslationX() {
@@ -891,22 +890,11 @@ public class Canvas {
      *
      * @return the current vertical translation of the canvas
      *
-     * @since 1.6
+     * @since 2.0
      * @see #setTranslation(double, double)
      */
     public double getTranslationY() {
         return this.transformation.translationY;
-    }
-
-    /**
-     * @deprecated
-     */
-    public Transformation getTransformation() {
-        final Transformation result = new Transformation();
-        result.translate((float) this.transformation.translationX, (float) this.transformation.translationY);
-        result.scale((float) this.transformation.scale, (float) this.transformation.scale);
-        result.rotate((float) this.transformation.rotation);
-        return result;
     }
 
     /**
@@ -948,7 +936,7 @@ public class Canvas {
     /**
      * Pops canvas transformations from the transformation stack. Has no effect if the transformation stack is empty.
      *
-     * @since 1.6
+     * @since 2.0
      */
     public void popTransformations() {
         if (!this.transformationStack.isEmpty()) {
@@ -961,7 +949,7 @@ public class Canvas {
     /**
      * Pushes the current canvas transformations on the transformation stack.
      *
-     * @since 1.6
+     * @since 2.0
      */
     public void pushTransformations() {
         this.transformationStack.push(new CanvasTransformation(this.transformation));
@@ -974,7 +962,7 @@ public class Canvas {
      * @see #setRotation(double)
      * @see #setScale(double)
      * @see #setTranslation(double, double)
-     * @since 1.6
+     * @since 2.0
      */
     public void resetTransformations() {
         this.transformation.reset();
@@ -1097,7 +1085,7 @@ public class Canvas {
      * @see #resetTransformations()
      * @see #setTranslation(double, double)
      * @see #setScale(double)
-     * @since 1.6
+     * @since 2.0
      */
     public void setRotation(final double angle) {
         this.transformation.rotation = MathUtil.normalizeAngle(angle);
@@ -1116,7 +1104,7 @@ public class Canvas {
      * @see #resetTransformations()
      * @see #setRotation(double)
      * @see #setScale(double)
-     * @since 1.6
+     * @since 2.0
      */
     public void setTranslation(final double dx, final double dy) {
         this.transformation.translationX = dx;
@@ -1135,7 +1123,7 @@ public class Canvas {
      * @see #resetTransformations()
      * @see #setRotation(double)
      * @see #setTranslation(double, double)
-     * @since 1.6
+     * @since 2.0
      */
     public void setScale(final double scale) {
         if (MathUtil.isZero(scale, MINIMUM_SCALE)) {
@@ -1144,13 +1132,6 @@ public class Canvas {
 
         this.transformation.scale = scale;
         this.imp.setTransformation(this.transformation);
-    }
-
-    /**
-     * @deprecated Use {@link #setRotation(double)}, {@link #setScale(double)}, and
-     * {@link #setTranslation(double, double)} instead.
-     */
-    public void setTransformation(final Transformation transformation) {
     }
 
     /**
