@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +17,8 @@
 package ch.jeda.netbeans.java;
 
 import java.awt.Image;
+import java.io.IOException;
+import java.util.Properties;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
@@ -119,9 +121,11 @@ class JedaProject {
 
     private static class JedaProjectOpenedHook extends ProjectOpenedHook {
 
+        private final Project project;
         private final FileObject projectDir;
 
         JedaProjectOpenedHook(final Project project) {
+            this.project = project;
             this.projectDir = project.getProjectDirectory();
         }
 
@@ -136,13 +140,32 @@ class JedaProject {
                                        new FileFilter.ProjectPropertiesFilter(this.projectDir.getName()));
                 FileHelper.replaceFile(this.projectDir, PROJECT_XML, PROJECT_XML_RES,
                                        new FileFilter.ProjectXmlFilter(this.projectDir.getName()));
-                if (!FileHelper.replaceFile(this.projectDir, BUILD_XML, BUILD_XML_RES,
-                                            new FileFilter.BuildXmlFilter(this.projectDir.getName()))) {
-                    showError("Cannot replace build.xml");
-                }
+                FileHelper.replaceFile(this.projectDir, BUILD_XML, BUILD_XML_RES,
+                                       new FileFilter.BuildXmlFilter(this.projectDir.getName()));
             }
 
-            FileHelper.replaceFile(this.projectDir, JEDA_JAR, JEDA_JAR_RES);
+            if (this.isAutoUpdate()) {
+                if (!FileHelper.replaceFile(this.projectDir, JEDA_JAR, JEDA_JAR_RES)) {
+                    showError("Cannot replace jeda.jar");
+                }
+            }
+        }
+
+        private boolean isAutoUpdate() {
+            final Properties properties = this.loadJedaProperties();
+            return !"false".equals(properties.get("jeda.autoupdate"));
+        }
+
+        private Properties loadJedaProperties() {
+            Properties result = new Properties();
+            try {
+                result.load(getJedaPropertiesFile(this.project).getInputStream());
+            }
+            catch (IOException ex) {
+                // ignore
+            }
+
+            return result;
         }
     }
 

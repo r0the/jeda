@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +17,8 @@
 package ch.jeda.netbeans.android;
 
 import java.awt.Image;
+import java.io.IOException;
+import java.util.Properties;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
@@ -114,9 +116,11 @@ class JedandroidProject {
 
     private static class JedandroidProjectOpenedHook extends ProjectOpenedHook {
 
+        private final Project project;
         private final FileObject projectDir;
 
         JedandroidProjectOpenedHook(final Project project) {
+            this.project = project;
             this.projectDir = project.getProjectDirectory();
         }
 
@@ -132,10 +136,28 @@ class JedandroidProject {
             }
 
             FileHelper.replaceFile(this.projectDir, ANDROID_SUPPORT_V4_JAR, ANDROID_SUPPORT_V4_JAR_RES);
-
-            if (!FileHelper.replaceFile(this.projectDir, JEDANDROID_JAR, JEDANDROID_JAR_RES)) {
-                showError("Cannot replace jedandroid.jar");
+            if (this.isAutoUpdate()) {
+                if (!FileHelper.replaceFile(this.projectDir, JEDANDROID_JAR, JEDANDROID_JAR_RES)) {
+                    showError("Cannot replace jedandroid.jar");
+                }
             }
+        }
+
+        private boolean isAutoUpdate() {
+            final Properties properties = this.loadJedaProperties();
+            return !"false".equals(properties.get("jeda.autoupdate"));
+        }
+
+        private Properties loadJedaProperties() {
+            Properties result = new Properties();
+            try {
+                result.load(getJedaPropertiesFile(this.project).getInputStream());
+            }
+            catch (IOException ex) {
+                // ignore
+            }
+
+            return result;
         }
     }
 
