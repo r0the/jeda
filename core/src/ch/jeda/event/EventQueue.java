@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -49,7 +49,7 @@ public final class EventQueue {
     private final List<PointerUpListener> pointerUpListeners;
     private final List<SensorListener> sensorListeners;
     private final List<TickListener> tickListeners;
-    private final List<TurnListener> turnListeners;
+    private final List<ScrollListener> scrollListeners;
     private List<Event> eventsIn;
     private List<Event> eventsOut;
 
@@ -77,7 +77,7 @@ public final class EventQueue {
         this.pointerUpListeners = new ArrayList<PointerUpListener>();
         this.sensorListeners = new ArrayList<SensorListener>();
         this.tickListeners = new ArrayList<TickListener>();
-        this.turnListeners = new ArrayList<TurnListener>();
+        this.scrollListeners = new ArrayList<ScrollListener>();
         this.eventsIn = new ArrayList<Event>();
         this.eventsOut = new ArrayList<Event>();
     }
@@ -316,10 +316,10 @@ public final class EventQueue {
                 }
 
                 break;
-            case TURN:
-                for (int j = 0; j < this.turnListeners.size(); ++j) {
+            case SCROLL:
+                for (int j = 0; j < this.scrollListeners.size(); ++j) {
                     try {
-                        this.turnListeners.get(j).onTurn((TurnEvent) event);
+                        this.scrollListeners.get(j).onScroll((ScrollEvent) event);
                     }
                     catch (final Throwable ex) {
                         Log.err(ex, Message.EVENT_ERROR);
@@ -384,8 +384,8 @@ public final class EventQueue {
             this.tickListeners.add((TickListener) listener);
         }
 
-        if (listener instanceof TurnListener) {
-            this.turnListeners.add((TurnListener) listener);
+        if (listener instanceof ScrollListener) {
+            this.scrollListeners.add((ScrollListener) listener);
         }
     }
 
@@ -443,8 +443,8 @@ public final class EventQueue {
             this.tickListeners.remove((TickListener) listener);
         }
 
-        if (listener instanceof TurnListener) {
-            this.turnListeners.remove((TurnListener) listener);
+        if (listener instanceof ScrollListener) {
+            this.scrollListeners.remove((ScrollListener) listener);
         }
     }
 

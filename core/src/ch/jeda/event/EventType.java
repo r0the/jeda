@@ -86,16 +86,17 @@ public enum EventType {
      */
     POINTER_UP,
     /**
+     * A scroll event.
+     *
+     * @since 2.0
+     */
+    SCROLL,
+    /**
      * @since 1.0
      */
     SENSOR,
     /**
      * @since 1.0
      */
-    TICK,
-    /**
-     * @since 1.0
-     */
-    @Deprecated
-    TURN,
+    TICK
 }

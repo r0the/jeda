@@ -19,8 +19,7 @@ package ch.jeda.platform.java;
 import ch.jeda.event.Event;
 import ch.jeda.event.EventQueue;
 import ch.jeda.event.EventType;
-import ch.jeda.event.TurnAxis;
-import ch.jeda.event.TurnEvent;
+import ch.jeda.event.ScrollEvent;
 import ch.jeda.event.Key;
 import ch.jeda.event.KeyEvent;
 import ch.jeda.event.PointerEvent;
@@ -236,7 +235,7 @@ class CanvasWindow extends BaseWindow implements FocusListener,
 
     @Override
     public void mouseWheelMoved(final MouseWheelEvent event) {
-        this.postEvent(new TurnEvent(MOUSE, event.getWheelRotation(), TurnAxis.MOUSE_WHEEL));
+        this.postEvent(new ScrollEvent(MOUSE, 0.0, event.getWheelRotation()));
     }
 
     EnumSet<ViewFeature> getFeatures() {
