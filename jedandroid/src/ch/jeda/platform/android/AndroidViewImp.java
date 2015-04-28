@@ -20,7 +20,6 @@ import ch.jeda.event.EventQueue;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.ViewFeature;
-import ch.jeda.ui.WindowFeature;
 import java.util.EnumSet;
 
 class AndroidViewImp extends AndroidCanvasImp implements ViewImp {

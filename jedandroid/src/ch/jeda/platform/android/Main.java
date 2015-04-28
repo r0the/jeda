@@ -16,13 +16,13 @@
  */
 package ch.jeda.platform.android;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Surface;
 import android.view.ViewGroup;
@@ -40,7 +40,7 @@ import ch.jeda.platform.ViewRequest;
 import ch.jeda.ui.WindowFeature;
 import java.io.InputStream;
 
-public final class Main extends FragmentActivity {
+public final class Main extends Activity {
 
     private static final int CONTENT_ID = 4242;
     private static Main INSTANCE;
@@ -220,7 +220,7 @@ public final class Main extends FragmentActivity {
     }
 
     private void addManager(final Fragment fragment, final String tag) {
-        final FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+        final FragmentTransaction ft = this.getFragmentManager().beginTransaction();
         ft.add(fragment, tag);
         ft.commit();
     }
@@ -246,7 +246,7 @@ public final class Main extends FragmentActivity {
     void doShowInputRequest(final InputRequest request) {
         this.setTitle(request.getTitle());
         InputDialogFragment dialog = new InputDialogFragment(request);
-        dialog.show(this.getSupportFragmentManager(), "InputDialog");
+        dialog.show(this.getFragmentManager(), "InputDialog");
     }
 
     private void doShowSelectionRequest(final SelectionRequest request) {
@@ -267,7 +267,7 @@ public final class Main extends FragmentActivity {
     }
 
     private void showFragment(final Fragment fragment) {
-        final FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+        final FragmentTransaction ft = this.getFragmentManager().beginTransaction();
         ft.replace(CONTENT_ID, fragment);
         ft.commit();
     }

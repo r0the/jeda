@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,7 +18,7 @@ package ch.jeda.platform.android;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,8 +48,8 @@ class LogFragment extends Fragment {
                              final Bundle savedInstanceState) {
         this.textView = new TextView(this.getActivity());
         this.textView.setLayoutParams(new ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.FILL_PARENT,
-            ViewGroup.LayoutParams.FILL_PARENT));
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT));
         this.scrollView = new ScrollView(this.getActivity());
         this.scrollView.addView(this.textView);
         this.updateView();

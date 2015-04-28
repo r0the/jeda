@@ -135,8 +135,7 @@ class JedandroidProject {
                 showError("Cannot replace build.xml");
             }
 
-            FileHelper.replaceFile(this.projectDir, ANDROID_SUPPORT_V4_JAR, ANDROID_SUPPORT_V4_JAR_RES);
-            if (this.isAutoUpdate()) {
+            if (FileHelper.exists(this.projectDir.getFileObject(JEDANDROID_JAR)) || this.isAutoUpdate()) {
                 if (!FileHelper.replaceFile(this.projectDir, JEDANDROID_JAR, JEDANDROID_JAR_RES)) {
                     showError("Cannot replace jedandroid.jar");
                 }
