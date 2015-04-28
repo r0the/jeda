@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Represents a TMX tile.
  *
- * @since 1.6
+ * @since 2.0
  */
 public class TmxTile {
 
@@ -93,12 +93,14 @@ public class TmxTile {
     }
 
     /**
-     * Draws this tile at
+     * Draws this tile at the specified position.
      *
      * @param canvas
      * @param x
      * @param y
      * @param alpha
+     *
+     * @since 2.0
      */
     public final void draw(final Canvas canvas, final int x, final int y, final int alpha) {
         canvas.drawImage(x, y, this.getImage(), alpha, Alignment.BOTTOM_LEFT);
@@ -114,7 +116,7 @@ public class TmxTile {
      *
      * @return the height of this tile in pixels
      *
-     * @since 1.6
+     * @since 2.0
      */
     public final int getHeight() {
         return this.tileSet.getTileHeight();
@@ -129,7 +131,7 @@ public class TmxTile {
      *
      * @return the image representing this tile
      *
-     * @since 1.6
+     * @since 2.0
      */
     public final Image getImage() {
         return this.image;

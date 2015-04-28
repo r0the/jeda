@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Represents a TMX map.
  *
- * @since 1.6
+ * @since 2.0
  */
 public final class TmxMap {
 
@@ -45,7 +45,7 @@ public final class TmxMap {
      *
      * @param path the path to the TMX map file.
      *
-     * @since 1.6
+     * @since 2.0
      */
     public TmxMap(String path) {
         if (path == null) {
@@ -108,7 +108,7 @@ public final class TmxMap {
      * @param offsetX the horizontal offset
      * @param offsetY the vertical offset
      *
-     * @since 1.6
+     * @since 2.0
      */
     public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
         canvas.setColor(this.backgroundColor);
@@ -124,7 +124,7 @@ public final class TmxMap {
      *
      * @return the background color for the map
      *
-     * @since 1.6
+     * @since 2.0
      */
     public Color getBackgroundColor() {
         return this.backgroundColor;
@@ -135,7 +135,7 @@ public final class TmxMap {
      *
      * @return the height of the map in tiles
      *
-     * @since 1.6
+     * @since 2.0
      */
     public int getHeight() {
         return this.height;
@@ -146,7 +146,7 @@ public final class TmxMap {
      *
      * @return all layers of this map
      *
-     * @since 1.6
+     * @since 2.0
      */
     public TmxLayer[] getLayers() {
         return Arrays.copyOf(this.layers, this.layers.length);
@@ -157,7 +157,7 @@ public final class TmxMap {
      *
      * @return the orientation of this map
      *
-     * @since 1.6
+     * @since 2.0
      */
     public TmxMapOrientation getOrientation() {
         return this.orientation;
@@ -168,7 +168,7 @@ public final class TmxMap {
      *
      * @return the properties of this map
      *
-     * @since 1.6
+     * @since 2.0
      */
     public Data getProperties() {
         return this.properties;
@@ -179,7 +179,7 @@ public final class TmxMap {
      *
      * @return the tile height of this map
      *
-     * @since 1.6
+     * @since 2.0
      */
     public int getTileHeight() {
         return this.tileHeight;
@@ -190,7 +190,7 @@ public final class TmxMap {
      *
      * @return the tile width of this map
      *
-     * @since 1.6
+     * @since 2.0
      */
     public int getTileWidth() {
         return this.tileWidth;
@@ -201,7 +201,7 @@ public final class TmxMap {
      *
      * @return the width of this map in tiles
      *
-     * @since 1.6
+     * @since 2.0
      */
     public int getWidth() {
         return this.width;
@@ -213,7 +213,7 @@ public final class TmxMap {
      * @param globalId the global tile id
      * @return the tile matching the id or <tt>null</tt>
      *
-     * @since 1.6
+     * @since 2.0
      */
     public TmxTile lookupTile(final int globalId) {
         return this.tileSets.lookupTile(globalId);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,7 +22,7 @@ import ch.jeda.ui.Canvas;
 /**
  * Base class for TMX map layers.
  *
- * @since 1.6
+ * @since 2.0
  */
 public abstract class TmxLayer {
 
@@ -48,7 +48,7 @@ public abstract class TmxLayer {
      * @param offsetX the horizontal offset for drawing the layer
      * @param offsetY the vertical offset for drawing the layer
      *
-     * @since 1.6
+     * @since 2.0
      */
     public abstract void draw(final Canvas canvas, final double offsetX, final double offsetY);
 
@@ -57,7 +57,7 @@ public abstract class TmxLayer {
      *
      * @return the map this layer belongs to
      *
-     * @since 1.6
+     * @since 2.0
      */
     public final TmxMap getMap() {
         return this.map;
@@ -68,12 +68,19 @@ public abstract class TmxLayer {
      *
      * @return the name of this layer
      *
-     * @since 1.6
+     * @since 2.0
      */
     public final String getName() {
         return this.name;
     }
 
+    /**
+     * Returns the objects contained in this layer.
+     *
+     * @return the objects contained in this layer
+     *
+     * @since 2.0
+     */
     public TmxObject[] getObjects() {
         return new TmxObject[0];
     }
@@ -85,7 +92,7 @@ public abstract class TmxLayer {
      * @return the opacity of this layer
      *
      * @see #setOpacity(double)
-     * @since 1.6
+     * @since 2.0
      */
     public final double getOpacity() {
         return this.opacity;
@@ -96,7 +103,7 @@ public abstract class TmxLayer {
      *
      * @return the properties of this layer
      *
-     * @since 1.6
+     * @since 2.0
      */
     public final Data getProperties() {
         return this.properties;
@@ -110,7 +117,7 @@ public abstract class TmxLayer {
      * @param y the vertical tile coordinate
      * @return the tile at the specified tile coordinates or <tt>null</tt>
      *
-     * @since 1.6
+     * @since 2.0
      */
     public TmxTile getTile(final int x, final int y) {
         return null;
@@ -121,7 +128,7 @@ public abstract class TmxLayer {
      *
      * @return the type of this layer
      *
-     * @since 1.6
+     * @since 2.0
      */
     public abstract TmxLayerType getType();
 
@@ -131,7 +138,7 @@ public abstract class TmxLayer {
      * @return <tt>true</tt> is this layer is visible, otherwise <tt>false</tt>
      *
      * @see #setVisible(boolean)
-     * @since 1.6
+     * @since 2.0
      */
     public final boolean isVisible() {
         return this.visible;
@@ -144,7 +151,7 @@ public abstract class TmxLayer {
      * @param opacity the opacity of this layer
      *
      * @see #getOpacity()
-     * @since 1.6
+     * @since 2.0
      */
     public void setOpacity(double opacity) {
         this.opacity = Math.max(0.0, Math.min(opacity, 1.0));
@@ -156,7 +163,7 @@ public abstract class TmxLayer {
      * @param visible the visibility of this layer
      *
      * @see #isVisible()
-     * @since 1.6
+     * @since 2.0
      */
     public void setVisible(boolean visible) {
         this.visible = visible;

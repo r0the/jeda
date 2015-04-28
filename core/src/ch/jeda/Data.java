@@ -76,7 +76,7 @@ public final class Data {
      *
      * @param map the map of strings
      *
-     * @since 1.6
+     * @since 2.0
      */
     public Data(final Map<String, String> map) {
         this(new DefaultDataImp(map));
@@ -392,9 +392,8 @@ public final class Data {
     }
 
     /**
-     * Reads an {@link ch.jeda.Storable} object with the specified name. Creates a new object and calls the object's
-     * {@link ch.jeda.Storable#readFrom(ch.jeda.Data)} method. Returns <tt>null</tt>, there is no valid object
-     * associated with the name.
+     * Reads an {@link ch.jeda.Storable} object with the specified name. Creates a new object from the information
+     * stored in this data. Returns <tt>null</tt>, there is no valid object associated with the name.
      *
      * @param <T> the class of the object to return
      * @param name the name of the object to retrieve
@@ -407,9 +406,8 @@ public final class Data {
     }
 
     /**
-     * Reads an {@link ch.jeda.Storable} object with the specified name. Creates a new object and calls the object's
-     * {@link ch.jeda.Storable#readFrom(ch.jeda.Data)} method. Returns <tt>defaultValue</tt>, there is no valid object
-     * associated with the name.
+     * Reads an {@link ch.jeda.Storable} object with the specified name. Creates a new object from the information
+     * stored in this data. Returns <tt>defaultValue</tt>, there is no valid object associated with the name.
      *
      * @param <T> the class of the object to return
      * @param name the name of the object to retrieve

@@ -21,7 +21,7 @@ import ch.jeda.Data;
 /**
  * Represents a TMX terrain.
  *
- * @since 1.6
+ * @since 2.0
  */
 public final class TmxTerrain {
 
@@ -38,7 +38,7 @@ public final class TmxTerrain {
      *
      * @return the name of the terrain
      *
-     * @since 1.6
+     * @since 2.0
      */
     public String getName() {
         return name;
@@ -49,7 +49,7 @@ public final class TmxTerrain {
      *
      * @return the properties of the terrain
      *
-     * @since 1.6
+     * @since 2.0
      */
     public Data getProperties() {
         return this.properties;

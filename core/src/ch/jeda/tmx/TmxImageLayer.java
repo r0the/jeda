@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,7 +22,7 @@ import ch.jeda.ui.Image;
 /**
  * Represents a TMX image layer.
  *
- * @since 1.6
+ * @since 2.0
  */
 public final class TmxImageLayer extends TmxLayer {
 
@@ -49,7 +49,7 @@ public final class TmxImageLayer extends TmxLayer {
      *
      * @return the image of this layer
      *
-     * @since 1.6
+     * @since 2.0
      */
     public Image getImage() {
         return this.image;
@@ -66,7 +66,7 @@ public final class TmxImageLayer extends TmxLayer {
      * @return the horizontal offset of the image layer
      *
      * @see #getY()
-     * @since 1.6
+     * @since 2.0
      */
     public int getX() {
         return this.x;
@@ -78,7 +78,7 @@ public final class TmxImageLayer extends TmxLayer {
      * @return the vertical offset of the image layer
      *
      * @see #getX()
-     * @since 1.6
+     * @since 2.0
      */
     public int getY() {
         return this.y;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,26 +20,26 @@ package ch.jeda.tmx;
  * The possible TMX map orientations.
  *
  * @see TmxMap
- * @since 1.6
+ * @since 2.0
  */
 public enum TmxMapOrientation {
 
     /**
      * Isometric TMX map orientation.
      *
-     * @since 1.6
+     * @since 2.0
      */
     ISOMETRIC,
     /**
      * Orthogonal TMX map orientation.
      *
-     * @since 1.6
+     * @since 2.0
      */
     ORTHOGONAL,
     /**
      * Staggered TMX map orientation.
      *
-     * @since 1.6
+     * @since 2.0
      */
     STAGGERED
 }

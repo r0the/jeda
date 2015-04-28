@@ -20,6 +20,11 @@ import ch.jeda.Data;
 import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
 
+/**
+ * Represents a TMX object.
+ *
+ * @since 2.0
+ */
 public final class TmxObject {
 
     private final boolean ellipse;
@@ -53,6 +58,15 @@ public final class TmxObject {
         }
     }
 
+    /**
+     * Draws this tile with the offset. Has no effect if the object is not visible.
+     *
+     * @param canvas the canvas to draw on
+     * @param offsetX the horizontal offset
+     * @param offsetY the vertical offset
+     *
+     * @since 2.0
+     */
     public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
         if (!this.visible) {
             return;
@@ -76,38 +90,101 @@ public final class TmxObject {
         canvas.popTransformations();
     }
 
+    /**
+     * Returns the height of this object.
+     *
+     * @return the height of this object
+     *
+     * @since 2.0
+     */
     public double getHeight() {
         return this.height;
     }
 
+    /**
+     * Returns the name of this object.
+     *
+     * @return the name of this object
+     *
+     * @since 2.0
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Returns the properties of this object.
+     *
+     * @return the properties of this object
+     *
+     * @since 2.0
+     */
     public Data getProperties() {
         return this.properties;
     }
 
+    /**
+     * Returns the rotation of this object.
+     *
+     * @return the rotation of this object
+     *
+     * @since 2.0
+     */
     public double getRotation() {
         return this.rotation;
     }
 
+    /**
+     * Returns the tile representing this object.
+     *
+     * @return the tile representing this object
+     *
+     * @since 2.0
+     */
     public TmxTile getTile() {
         return this.tile;
     }
 
+    /**
+     * Returns the type of this object.
+     *
+     * @return the type of this object
+     *
+     * @since 2.0
+     */
     public String getType() {
         return this.type;
     }
 
+    /**
+     * Returns the width of this object.
+     *
+     * @return the width of this object
+     *
+     * @since 2.0
+     */
     public double getWidth() {
         return this.width;
     }
 
+    /**
+     * Returns the x coordinate of this object.
+     *
+     * @return the x coordinate of this object
+     *
+     * @since 2.0
+     */
     public double getX() {
         return this.x;
     }
 
+    /**
+     * Returns the y coordinate of this object.
+     *
+     * @return the y coordinate of this object
+     *
+     * @since 2.0
+     */
     public double getY() {
         return this.y;
     }

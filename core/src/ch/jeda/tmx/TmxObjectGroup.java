@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Represents a TMX object group.
  *
- * @since 1.6
+ * @since 2.0
  */
 public final class TmxObjectGroup extends TmxLayer {
 
@@ -59,7 +59,7 @@ public final class TmxObjectGroup extends TmxLayer {
      *
      * @return the color of this object group
      *
-     * @since 1.6
+     * @since 2.0
      */
     public Color getColor() {
         return this.color;

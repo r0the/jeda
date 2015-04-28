@@ -33,7 +33,7 @@ import java.util.EnumSet;
  * <li> user input: the view provides means to query keyboard and mouse input.
  * </ul>
  *
- * @since 1.6
+ * @since 2.0
  */
 public class View extends Canvas {
 
@@ -55,7 +55,7 @@ public class View extends Canvas {
      * <p>
      * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.
      *
-     * @since 1.6
+     * @since 2.0
      */
     public View() {
         this(0, 0);
@@ -75,7 +75,7 @@ public class View extends Canvas {
      *
      * @param features the features of the view
      *
-     * @since 1.6
+     * @since 2.0
      */
     public View(final ViewFeature... features) {
         this(0, 0, features);
@@ -98,7 +98,7 @@ public class View extends Canvas {
      * @param features the features of the view
      * @throws IllegalArgumentException if width or height are smaller than 1
      *
-     * @since 1.6
+     * @since 2.0
      */
     public View(final int width, final int height, final ViewFeature... features) {
         this.elements = new Elements(this);
@@ -119,7 +119,7 @@ public class View extends Canvas {
      * @see #remove(ch.jeda.ui.Element)
      * @see #getElements()
      * @see #getElements(java.lang.Class)
-     * @since 1.6
+     * @since 2.0
      */
     public final void add(final Element element) {
         this.elements.add(element);
@@ -131,7 +131,7 @@ public class View extends Canvas {
      *
      * @param listener the event listener
      *
-     * @since 1.6
+     * @since 2.0
      */
     public final void addEventListener(final Object listener) {
         this.eventQueue.addListener(listener);
@@ -140,7 +140,7 @@ public class View extends Canvas {
     /**
      * Closes the view. The view becomes invalid, all subsequent method calls to the view will cause an error.
      *
-     * @since 1.6
+     * @since 2.0
      */
     public final void close() {
         this.imp.close();
@@ -154,7 +154,7 @@ public class View extends Canvas {
      * @see #add(ch.jeda.ui.Element)
      * @see #getElements(java.lang.Class)
      * @see #remove(ch.jeda.ui.Element)
-     * @since 1.6
+     * @since 2.0
      */
     public final Element[] getElements() {
         return this.elements.getAll();
@@ -171,7 +171,7 @@ public class View extends Canvas {
      * @see #add(ch.jeda.ui.Element)
      * @see #getElements()
      * @see #remove(ch.jeda.ui.Element)
-     * @since 1.6
+     * @since 2.0
      */
     public final <T extends Element> T[] getElements(final Class<T> clazz) {
         if (clazz == null) {
@@ -188,7 +188,7 @@ public class View extends Canvas {
      *
      * @see #add(ch.jeda.ui.Element)
      * @see #setPage(java.lang.String)
-     * @since 1.6
+     * @since 2.0
      */
     public final String getPage() {
         return this.elements.getCurrentPage();
@@ -200,7 +200,7 @@ public class View extends Canvas {
      * @return current view title
      *
      * @see #setTitle(java.lang.String)
-     * @since 1.6
+     * @since 2.0
      */
     public final String getTitle() {
         return this.title;
@@ -214,8 +214,8 @@ public class View extends Canvas {
      * <tt>false</tt>
      * @throws NullPointerException if <tt>feature</tt> is <tt>null</tt>
      *
-     * @see #setFeature(WindowFeature, boolean)
-     * @since 1.6
+     * @see #setFeature(ch.jeda.ui.ViewFeature, boolean)
+     * @since 2.0
      */
     public final boolean hasFeature(final ViewFeature feature) {
         if (feature == null) {
@@ -232,7 +232,7 @@ public class View extends Canvas {
      * @param element the element to be removed from the view
      *
      * @see ch.jeda.ui.Element
-     * @since 1.6
+     * @since 2.0
      */
     public final void remove(final Element element) {
         this.elements.remove(element);
@@ -243,7 +243,7 @@ public class View extends Canvas {
      * <tt>listener</tt> is <tt>null</tt> or an element of this view.
      *
      * @param listener the event listener
-     * @since 1.6
+     * @since 2.0
      */
     public final void removeEventListener(final Object listener) {
         this.eventQueue.removeListener(listener);
@@ -257,8 +257,8 @@ public class View extends Canvas {
      * <tt>false</tt> to disable it
      * @throws NullPointerException if <tt>feature</tt> is <tt>null</tt>
      *
-     * @see #hasFeature(WindowFeature)
-     * @since 1.6
+     * @see #hasFeature(ch.jeda.ui.ViewFeature)
+     * @since 2.0
      */
     public final void setFeature(final ViewFeature feature, final boolean enabled) {
         if (feature == null) {
@@ -289,7 +289,7 @@ public class View extends Canvas {
      * <tt>null</tt>
      *
      * @see MouseCursor
-     * @since 1.6
+     * @since 2.0
      */
     public final void setMouseCursor(final MouseCursor mouseCursor) {
         if (mouseCursor == null) {
@@ -307,7 +307,7 @@ public class View extends Canvas {
      *
      * @see #add(ch.jeda.ui.Element)
      * @see #getPage()
-     * @since 1.6
+     * @since 2.0
      */
     public final void setPage(final String page) {
         this.elements.setPage(page);
@@ -320,7 +320,7 @@ public class View extends Canvas {
      * @throws NullPointerException if <tt>title</tt> is <tt>null</tt>
      *
      * @see #getTitle()
-     * @since 1.6
+     * @since 2.0
      */
     public final void setTitle(final String title) {
         if (title == null) {

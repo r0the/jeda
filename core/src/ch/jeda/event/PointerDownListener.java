@@ -19,7 +19,7 @@ package ch.jeda.event;
 /**
  * The listener interface for receiving pointer down events. To have an object receive events of type
  * {@link ch.jeda.event.EventType#POINTER_DOWN}, have the class of the object implement the interface and register the
- * object with {@link ch.jeda.ui.Window#addEventListener(java.lang.Object)}.
+ * object with {@link ch.jeda.ui.View#addEventListener(java.lang.Object)}.
  *
  * @since 1.0
  */

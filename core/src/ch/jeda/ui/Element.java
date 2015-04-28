@@ -25,7 +25,7 @@ import java.util.Comparator;
  *
  * @see ch.jeda.ui.View#add(ch.jeda.ui.Element)
  * @see ch.jeda.ui.View#remove(ch.jeda.ui.Element)
- * @since 1.6
+ * @since 2.0
  */
 public abstract class Element {
 
@@ -36,7 +36,7 @@ public abstract class Element {
     /**
      * Constructs a new element.
      *
-     * @since 1.6
+     * @since 2.0
      */
     protected Element() {
     }
@@ -48,7 +48,7 @@ public abstract class Element {
      * @return the current draw order of this element
      *
      * @see #setDrawOrder(int)
-     * @since 1.6
+     * @since 2.0
      */
     public final int getDrawOrder() {
         return this.drawOrder;
@@ -61,7 +61,7 @@ public abstract class Element {
      * @param drawOrder the new draw order for this element
      *
      * @see #getDrawOrder()
-     * @since 1.6
+     * @since 2.0
      */
     public final void setDrawOrder(final int drawOrder) {
         this.drawOrder = drawOrder;
@@ -76,7 +76,7 @@ public abstract class Element {
      *
      * @param canvas the canvas on which the element should be drawn.
      *
-     * @since 1.6
+     * @since 2.0
      */
     protected abstract void draw(final Canvas canvas);
 
@@ -85,7 +85,7 @@ public abstract class Element {
      *
      * @return the view containing the element
      *
-     * @since 1.6
+     * @since 2.0
      */
     protected final View getView() {
         if (this.page == null) {
@@ -102,7 +102,7 @@ public abstract class Element {
      *
      * @return the window containing the element
      *
-     * @since 1.6
+     * @since 2.0
      */
     protected final Window getWindow() {
         if (this.page == null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,26 +20,26 @@ package ch.jeda.tmx;
  * The TMX layer types.
  *
  * @see TmxLayer
- * @since 1.6
+ * @since 2.0
  */
 public enum TmxLayerType {
 
     /**
      * A TMX image layer. An image layer consists of a single image.
      *
-     * @since 1.6
+     * @since 2.0
      */
     IMAGE,
     /**
      * A TMX object layer. An object layer contains objects.
      *
-     * @since 1.6
+     * @since 2.0
      */
     OBJECT,
     /**
      * A TMX tile layer. A tile layer contains tiles.
      *
-     * @since 1.6
+     * @since 2.0
      */
     TILE
 }

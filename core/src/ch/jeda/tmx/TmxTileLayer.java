@@ -28,7 +28,7 @@ import javax.xml.bind.DatatypeConverter;
 /**
  * Represents a TMX tile layer.
  *
- * @since 1.6
+ * @since 2.0
  */
 public final class TmxTileLayer extends TmxLayer {
 

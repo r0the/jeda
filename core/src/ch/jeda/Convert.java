@@ -202,7 +202,7 @@ public final class Convert {
      *
      * @see #toDouble(java.lang.String, double)
      * @see #toString(double)
-     * @since 1.6
+     * @since 2.0
      */
     public static String toString(final double value, final int decimalPlaces) {
         if (decimalPlaces < 0) {

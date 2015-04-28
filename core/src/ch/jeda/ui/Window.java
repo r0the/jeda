@@ -25,7 +25,7 @@ package ch.jeda.ui;
  * </ul>
  *
  * @since 1.0
- * @version 3
+ * @version 4
  */
 public class Window extends View {
 
