@@ -43,7 +43,7 @@ class JedaEngine implements Platform.Callback, Runnable {
 
     private static final TypefaceImp EMPTY_TYPEFACE_IMP = new EmptyTypefaceImp();
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
-    private static final double DEFAULT_TICK_FREQUENCY = 60.0;
+    private static final double DEFAULT_TICK_FREQUENCY = 30.0;
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = "res/jeda.properties";
     private static final String JEDA_PLATFORM_PROPERTIES_FILE = "res/jeda/platform.properties";
     private static final String JEDA_SYSTEM_PROPERTIES_FILE = "res/jeda/system.properties";
