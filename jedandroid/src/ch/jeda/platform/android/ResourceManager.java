@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,7 +38,6 @@ class ResourceManager {
 
     private static final String HTTP_PREFIX = "http://";
     private static final String NEW_RESOURCE_PREFIX = "res:";
-    private static final String OLD_RESOURCE_PREFIX = ":";
     private final Activity activity;
 
     ResourceManager(final Activity activity) {
@@ -113,9 +112,6 @@ class ResourceManager {
         }
         else if (path.startsWith(NEW_RESOURCE_PREFIX)) {
             return this.openResourceInputStream(path, NEW_RESOURCE_PREFIX.length());
-        }
-        else if (path.startsWith(OLD_RESOURCE_PREFIX)) {
-            return this.openResourceInputStream(path, OLD_RESOURCE_PREFIX.length());
         }
         else if (path.startsWith(HTTP_PREFIX)) {
             return this.openRemoteInputStream(path);
