@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -162,6 +162,7 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
         if (Key.UNDEFINED != this.key && event.getKey() == this.key && event.getSource() != this && !this.keyPressed) {
             this.keyPressed = true;
             this.select();
+            event.consume();
         }
     }
 
@@ -170,6 +171,7 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
         if (Key.UNDEFINED != this.key && event.getKey() == this.key && event.getSource() != this && this.keyPressed) {
             this.keyPressed = false;
             this.clicked();
+            event.consume();
         }
     }
 
@@ -179,13 +181,17 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
             this.pointerId = event.getPointerId();
             this.select();
             this.sendKeyEvent(EventType.KEY_DOWN);
+            event.consume();
         }
     }
 
     @Override
     public void onPointerMoved(final PointerEvent event) {
         if (this.pointerId != null && event.getPointerId() == this.pointerId) {
-            if (!contains(event.getX(), event.getY())) {
+            if (contains(event.getX(), event.getY())) {
+                event.consume();
+            }
+            else {
                 this.pointerId = null;
                 this.sendKeyEvent(EventType.KEY_UP);
             }
@@ -199,6 +205,7 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
             this.sendKeyEvent(EventType.KEY_UP);
             if (this.contains(event.getX(), event.getY())) {
                 this.clicked();
+                event.consume();
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,12 +20,14 @@ package ch.jeda.event;
  * Represents an external input for the application. An event results from an external action such as the user pressing
  * a key or moving the mouse, or a sensor registering a change.
  *
+ * @version 2
  * @since 1.0
  */
 public class Event {
 
     private final Object source;
     private final EventType type;
+    private boolean consumed;
 
     /**
      * Constructs an event.
@@ -46,6 +48,16 @@ public class Event {
 
         this.source = source;
         this.type = type;
+        this.consumed = false;
+    }
+
+    /**
+     * Marks this event as consumed. A consumed event is discarded and will not be dispatched any further.
+     *
+     * @since 2.0
+     */
+    public final void consume() {
+        this.consumed = true;
     }
 
     /**
@@ -68,5 +80,16 @@ public class Event {
      */
     public final EventType getType() {
         return this.type;
+    }
+
+    /**
+     * Checks if this event has been consumed.
+     *
+     * @return <tt>true</tt>, if this event has been consumed, otherwise <tt>false</tt>
+     *
+     * @since 2.0
+     */
+    public final boolean isConsumed() {
+        return this.consumed;
     }
 }

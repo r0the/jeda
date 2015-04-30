@@ -276,6 +276,9 @@ public class View extends Canvas {
 
             this.resetImp(this.getWidth(), this.getHeight(), featureSet);
         }
+        else if (feature == ViewFeature.SCROLLABLE) {
+            this.eventQueue.setDragEnabled(enabled);
+        }
         else {
             this.imp.setFeature(feature, enabled);
         }
@@ -356,6 +359,8 @@ public class View extends Canvas {
             this.imp.setColor(Color.WHITE);
             this.imp.fill();
         }
+
+        this.eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
 
         super.setImp(this.imp);
     }

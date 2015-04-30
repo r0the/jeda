@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -152,9 +152,11 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
         switch (event.getKey()) {
             case BACKSPACE:
                 this.characterDeleted();
+                event.consume();
                 break;
             case UNDEFINED:
                 this.characterTyped(event.getKeyChar());
+                event.consume();
                 break;
         }
     }
@@ -163,6 +165,7 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
     public void onPointerDown(final PointerEvent event) {
         if (this.contains(event.getX(), event.getY())) {
             this.select();
+            event.consume();
         }
     }
 

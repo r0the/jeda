@@ -16,6 +16,11 @@
  */
 package ch.jeda.ui;
 
+/**
+ * Configurable features for a view.
+ *
+ * @since 2.0
+ */
 public enum ViewFeature {
 
     /**
@@ -38,6 +43,10 @@ public enum ViewFeature {
      */
     FULLSCREEN,
     /**
+     * Enable hovering pointer tracking for a view. If this feature is enabled, the view generates pointer events if the
+     * mouse pointer is hovering over the view. Normally, pointer events are only generated when a mouse button is being
+     * pressed.
+     *
      * @since 2.0
      */
     HOVERING_POINTER,
@@ -62,5 +71,12 @@ public enum ViewFeature {
      *
      * @since 2.0
      */
-    ORIENTATION_PORTRAIT
+    ORIENTATION_PORTRAIT,
+    /**
+     * Enable automatic scrolling on drag for a view. If this feature is enabled, the view automatically translates
+     * pointer drag movements to scroll events.
+     *
+     * @since 2.0
+     */
+    SCROLLABLE
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,12 @@
  */
 package ch.jeda.ui;
 
+/**
+ * Configurable features for a window.
+ *
+ * @version 2
+ * @since 1.0
+ */
 public enum WindowFeature {
 
     /**
@@ -38,6 +44,10 @@ public enum WindowFeature {
      */
     FULLSCREEN,
     /**
+     * Enable hovering pointer tracking for a view. If this feature is enabled, the view generates pointer events if the
+     * mouse pointer is hovering over the view. Normally, pointer events are only generated when a mouse button is being
+     * pressed.
+     *
      * @since 1.0
      */
     HOVERING_POINTER,
@@ -62,5 +72,12 @@ public enum WindowFeature {
      *
      * @since 1.0
      */
-    ORIENTATION_PORTRAIT
+    ORIENTATION_PORTRAIT,
+    /**
+     * Enable automatic scrolling on drag for a view. If this feature is enabled, the view automatically translates
+     * pointer drag movements to scroll events.
+     *
+     * @since 2.0
+     */
+    SCROLLABLE
 }
