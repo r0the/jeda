@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -66,6 +66,11 @@ class JavaImageImp implements ImageImp {
     @Override
     public int getHeight() {
         return this.bufferedImage.getHeight();
+    }
+
+    @Override
+    public Color getPixel(int x, int y) {
+        return new Color(this.bufferedImage.getRGB(x, y));
     }
 
     @Override

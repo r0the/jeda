@@ -106,6 +106,26 @@ public final class Image {
     }
 
     /**
+     * Returns the pixel color at the specified coordinates. Returns the color of the pixel at the coordinates
+     * (<tt>x</tt>, <tt>y</tt>). Returns {@link ch.jeda.ui.Color#TRANSPARENT} if the coordinates do not reference a
+     * pixel inside the image.
+     *
+     * @param x the x coordinate of the pixel
+     * @param y the y coordinate of the pixel
+     * @return the pixel color at the specified coordinates
+     *
+     * @since 2.0
+     */
+    public Color getPixel(final int x, final int y) {
+        if (this.contains(x, y)) {
+            return this.imp.getPixel(x, y);
+        }
+        else {
+            return Color.TRANSPARENT;
+        }
+    }
+
+    /**
      * Returns the pixel values of a rectangular part of the image.
      *
      * @param x the x coordinate of the top left corner of the part
@@ -341,6 +361,10 @@ public final class Image {
 
     ImageImp getImp() {
         return this.imp;
+    }
+
+    private boolean contains(final int x, final int y) {
+        return 0 <= x && x < this.getWidth() && 0 <= y && y < this.getHeight();
     }
 
     private static Map<String, ImageImp.Encoding> initFormatMap() {

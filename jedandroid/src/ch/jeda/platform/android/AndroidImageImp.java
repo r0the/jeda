@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -45,6 +45,11 @@ class AndroidImageImp implements ImageImp {
     @Override
     public int getHeight() {
         return this.bitmap.getHeight();
+    }
+
+    @Override
+    public Color getPixel(final int x, final int y) {
+        return new Color(this.bitmap.getPixel(x, y));
     }
 
     @Override
