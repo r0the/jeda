@@ -56,7 +56,7 @@ public class CheckBox extends Widget implements KeyDownListener, KeyUpListener, 
      *
      * @param x the x coordinate of the check box
      * @param y the y coordinate of the check box
-     * @param alignment the alignment of the check box
+     * @param alignment specifies how to align the check box relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.3

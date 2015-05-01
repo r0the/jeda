@@ -47,7 +47,7 @@ public class ProgressBar extends Widget {
      *
      * @param x the x coordinate of the progress bar
      * @param y the y coordinate of the progress bar
-     * @param alignment the alignment of the progress bar
+     * @param alignment specifies how to align the progress bar relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.3

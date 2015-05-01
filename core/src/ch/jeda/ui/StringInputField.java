@@ -44,7 +44,7 @@ public class StringInputField extends InputField {
      *
      * @param x the x coordinate of the input field
      * @param y the y coordinate of the input field
-     * @param alignment the alignment of the input field
+     * @param alignment specifies how to align the input field relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.3

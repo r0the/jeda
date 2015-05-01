@@ -56,7 +56,7 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
      *
      * @param x the x coordinate of the button
      * @param y the y coordinate of the button
-     * @param alignment the alignment of the button
+     * @param alignment specifies how to align the button relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.3
@@ -83,7 +83,7 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
      *
      * @param x the x coordinate of the button
      * @param y the y coordinate of the button
-     * @param alignment the alignment of the button
+     * @param alignment specifies how to align the button relative to (<tt>x</tt>, <tt>y</tt>)
      * @param text the button text
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *

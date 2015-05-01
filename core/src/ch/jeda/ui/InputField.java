@@ -40,7 +40,7 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      *
      * @param x the x coordinate of the text field
      * @param y the y coordinate of the text field
-     * @param alignment the alignment of the text field
+     * @param alignment specifies how to align the input field relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.3
