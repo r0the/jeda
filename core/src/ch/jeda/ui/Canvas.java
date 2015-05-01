@@ -93,14 +93,70 @@ public class Canvas {
     }
 
     /**
-     * @deprecated
+     * Draws the content of another canvas. The content of the specified canvas is drawn at the specified coordinates.
+     * Has no effect if <tt>canvas</tt> is <tt>null</tt>.
+     *
+     * @param x the x coordinate of the area's top left corner
+     * @param y the y coordinate of the area's top left corner
+     * @param canvas the canvas to copy to this canvas
+     *
+     * @since 2.0
      */
-    public void copyFrom(final Canvas canvas) {
-        if (canvas == null) {
-            throw new NullPointerException("canvas");
+    public void drawCanvas(final int x, final int y, final Canvas canvas) {
+        if (canvas != null) {
+            this.imp.copyFrom(x, y, canvas.imp);
+        }
+    }
+
+    /**
+     * Draws the content of another canvas. The content of the specified canvas is drawn at the specified coordinates.
+     * Has no effect if <tt>canvas</tt> is <tt>null</tt>.
+     *
+     * @param x the x coordinate of the area's top left corner
+     * @param y the y coordinate of the area's top left corner
+     * @param canvas the canvas to copy to this canvas
+     *
+     * @since 2.0
+     */
+    public void drawCanvas(final double x, final double y, final Canvas canvas) {
+        this.drawCanvas((int) x, (int) y, canvas);
+    }
+
+    /**
+     * Draws the content of another canvas. The content is aligned relative to the specified coordinates (<tt>x</tt>,
+     * <tt>y</tt>). Has no effect if <tt>canvas</tt> is <tt>null</tt>.
+     *
+     * @param x the x coordinate of the alignment point
+     * @param y the y coordinate of the alignment point
+     * @param canvas the canvas to copy to this canvas
+     * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
+     *
+     * @since 2.0
+     */
+    public void drawCanvas(final int x, final int y, final Canvas canvas, final Alignment alignment) {
+        if (alignment == null) {
+            throw new NullPointerException("alignment");
         }
 
-        this.imp.copyFrom(0, 0, canvas.imp);
+        if (canvas != null) {
+            this.imp.copyFrom(alignment.alignX(x, canvas.getWidth()), alignment.alignY(y, canvas.getHeight()),
+                              canvas.imp);
+        }
+    }
+
+    /**
+     * Draws the content of another canvas. The content is aligned relative to the specified coordinates (<tt>x</tt>,
+     * <tt>y</tt>). Has no effect if <tt>canvas</tt> is <tt>null</tt>.
+     *
+     * @param x the x coordinate of the alignment point
+     * @param y the y coordinate of the alignment point
+     * @param canvas the canvas to copy to this canvas
+     * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
+     *
+     * @since 2.0
+     */
+    public void drawCanvas(final double x, final double y, final Canvas canvas, final Alignment alignment) {
+        this.drawCanvas((int) x, (int) y, canvas, alignment);
     }
 
     /**
@@ -239,8 +295,7 @@ public class Canvas {
 
     /**
      * Draws an image. The image is drawn using the current transformation. The image is aligned relative to the
-     * specified coordinates (<tt>x</tt>,
-     * <tt>y</tt>). Has no effect if <tt>image</tt> is <tt>null</tt>.
+     * specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>image</tt> is <tt>null</tt>.
      *
      * @param x the x coordinate of the alignment point
      * @param y the y coordinate of the alignment point
@@ -263,8 +318,7 @@ public class Canvas {
 
     /**
      * Draws an image. The image is drawn using the current transformation. The image is aligned relative to the
-     * specified coordinates (<tt>x</tt>,
-     * <tt>y</tt>). Has no effect if <tt>image</tt> is <tt>null</tt>.
+     * specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>image</tt> is <tt>null</tt>.
      *
      * @param x the x coordinate of the alignment point
      * @param y the y coordinate of the alignment point
@@ -280,9 +334,9 @@ public class Canvas {
 
     /**
      * Draws an image. The image is drawn using the current transformation. The image is aligned relative to the
-     * specified coordinates (<tt>x</tt>,
-     * <tt>y</tt>). The image is drawn with a translucency effect specified by the alpha value. Specify an alpha value
-     * of 255 for a completely opaque image, and alpha value of 0 for a completely transparent image. Has no effect if
+     * specified coordinates (<tt>x</tt>, <tt>y</tt>). The image is drawn with a translucency effect specified by the
+     * alpha value. Specify an alpha value of 255 for a completely opaque image, and alpha value of 0 for a completely
+     * transparent image. Has no effect if
      * <tt>image</tt> is <tt>null</tt>.
      *
      * @param x the x coordinate of the alignment point
@@ -311,9 +365,9 @@ public class Canvas {
 
     /**
      * Draws an image. The image is drawn using the current transformation. The image is aligned relative to the
-     * specified coordinates (<tt>x</tt>,
-     * <tt>y</tt>). The image is drawn with a translucency effect specified by the alpha value. Specify an alpha value
-     * of 255 for a completely opaque image, and alpha value of 0 for a completely transparent image. Has no effect if
+     * specified coordinates (<tt>x</tt>, <tt>y</tt>). The image is drawn with a translucency effect specified by the
+     * alpha value. Specify an alpha value of 255 for a completely opaque image, and alpha value of 0 for a completely
+     * transparent image. Has no effect if
      * <tt>image</tt> is <tt>null</tt>.
      *
      * @param x the x coordinate of the alignment point
@@ -439,7 +493,7 @@ public class Canvas {
      * @param y the y coordinate of the alignment point
      * @param width the width of the rectangle
      * @param height the height of the rectangle
-     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>).
+     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.0
@@ -464,7 +518,7 @@ public class Canvas {
      * @param y the y coordinate of the alignment point
      * @param width the width of the rectangle
      * @param height the height of the rectangle
-     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>).
+     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.0
@@ -514,8 +568,7 @@ public class Canvas {
      * @param x the x coordinate of the alignment point
      * @param y the y coordinate of the alignment point
      * @param text the text to draw
-     * @param alignment specifies how to align the text relative to (<tt>x</tt>,
-     * <tt>y</tt>)
+     * @param alignment specifies how to align the text relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.0
@@ -538,8 +591,7 @@ public class Canvas {
      * @param x the x coordinate of the alignment point
      * @param y the y coordinate of the alignment point
      * @param text the text to draw
-     * @param alignment specifies how to align the text relative to (<tt>x</tt>,
-     * <tt>y</tt>)
+     * @param alignment specifies how to align the text relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.0
@@ -699,7 +751,7 @@ public class Canvas {
      * @param y the y coordinate of the alignment point
      * @param width the width of the rectangle
      * @param height the height of the rectangle
-     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>).
+     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.0
@@ -724,7 +776,7 @@ public class Canvas {
      * @param y the y coordinate of the alignment point
      * @param width the width of the rectangle
      * @param height the height of the rectangle
-     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>).
+     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.0
