@@ -84,7 +84,7 @@ public class WidgetTest extends Program implements TickListener, ActionListener 
         window.add(cb);
 
         Button startProgress = new Button(35, 280, "Start");
-        startProgress.setKey(Key.SPACE);
+        startProgress.setKey(Key.ENTER);
         window.add(startProgress);
 
         progressBar = new ProgressBar(35, 350);

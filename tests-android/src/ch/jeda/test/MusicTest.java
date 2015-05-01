@@ -4,7 +4,7 @@ import ch.jeda.*;
 import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
-public class MusicTest extends Program implements ActionListener, TickListener {
+public class MusicTest extends Program implements TickListener, ActionListener {
 
     Window window;
     Music mp3Music;
@@ -33,7 +33,7 @@ public class MusicTest extends Program implements ActionListener, TickListener {
     }
 
     private void addButton(String text) {
-        new Button(window, x, y, text);
+        window.add(new Button(x, y, text));
         y = y + 60;
     }
 

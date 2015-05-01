@@ -7,13 +7,13 @@
                       android:xlargeScreens="true"/>
 
     <uses-sdk android:minSdkVersion="10"
-          android:targetSdkVersion="10"/>
+          android:targetSdkVersion="15"/>
     <application android:label="@string/app_name"
                  android:icon="@drawable/icon">
         <activity android:name="ch.jeda.platform.android.Main"
                   android:icon="@drawable/icon"
                   android:label="@string/app_name"
-                  android:configChanges="orientation|screenLayout">
+                  android:configChanges="orientation|screenLayout|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

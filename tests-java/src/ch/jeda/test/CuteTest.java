@@ -5,17 +5,16 @@ import ch.jeda.cute.*;
 import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
-public class CuteTest extends Program implements TickListener {
+public class CuteTest extends Program implements TickListener, ScrollListener {
 
-    Window window;
+    View view;
     CuteWorld world;
-    DragAndZoom dz;
     int x;
     int y;
 
     @Override
     public void run() {
-        window = new Window(WindowFeature.DOUBLE_BUFFERED);
+        view = new View(ViewFeature.DOUBLE_BUFFERED, ViewFeature.SCROLLABLE);
         world = new CuteWorld(40, 40, 4);
         world.fill(0, Block.GRASS);
         world.setBlockAt(0, 0, 1, Block.STONE);
@@ -67,22 +66,24 @@ public class CuteTest extends Program implements TickListener {
         addObject(CuteObjectType.TALL_TREE);
         addObject(CuteObjectType.UGLY_TREE);
         addObject(CuteObjectType.BIG_BUG);
-        dz = new DragAndZoom();
 
-        window.addEventListener(dz);
-        window.addEventListener(this);
+        view.addEventListener(this);
+    }
+
+    @Override
+    public void onScroll(ScrollEvent event) {
+        world.scroll(event.getDx(), event.getDy());
     }
 
     @Override
     public void onTick(TickEvent event) {
-        world.scroll(-dz.getDx(), -dz.getDy());
         // Update world
         world.update(event.getDuration());
         // Draw background
-        window.setColor(Color.BLUE);
-        window.fill();
+        view.setColor(Color.BLUE);
+        view.fill();
         // Draw world
-        world.draw(window);
+        world.draw(view);
     }
 
     private void addBlock(Block block) {

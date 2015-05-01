@@ -25,7 +25,7 @@ public class SoundTest extends Program implements ActionListener {
     }
 
     private void addButton(String text, String sound) {
-        sounds.put(text, new Sound("res/raw/" + sound));
+        sounds.put(text, new Sound(":resraw/" + sound));
         window.add(new Button(x, y, text));
         y = y + 50;
     }

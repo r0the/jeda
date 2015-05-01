@@ -20,18 +20,21 @@ public class SoundTest extends Program implements ActionListener {
         x = 10;
         y = 10;
 
-        addButton("Rooster", "rooster");
+        addButton("Rooster (WAV)", "rooster.wav");
         window.addEventListener(this);
     }
 
     private void addButton(String text, String sound) {
-        sounds.put(text, new Sound("res:raw/" + sound + ".wav"));
-        new Button(window, x, y, text);
-        x = x + 50;
+        sounds.put(text, new Sound("res:raw/" + sound));
+        window.add(new Button(x, y, text));
+        y = y + 50;
     }
 
     @Override
     public void onAction(ActionEvent event) {
-        sounds.get(event.getName()).play();
+        for (int i = 0; i < 10; ++i) {
+            sounds.get(event.getName()).play();
+            sleep(100);
+        }
     }
 }

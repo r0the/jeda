@@ -7,7 +7,7 @@ import ch.jeda.ui.*;
 public class InputEventTest extends Program implements KeyListener,
                                                        KeyTypedListener,
                                                        PointerListener,
-                                                       TurnListener {
+                                                       ScrollListener {
 
     Window window;
     int y;
@@ -66,7 +66,7 @@ public class InputEventTest extends Program implements KeyListener,
     }
 
     @Override
-    public void onTurn(TurnEvent event) {
+    public void onScroll(ScrollEvent event) {
         drawMessage(toMessage(event));
     }
 
@@ -75,9 +75,9 @@ public class InputEventTest extends Program implements KeyListener,
                                 event.getX(), ", y=", event.getY(), ", device=", event.getSource());
     }
 
-    private String toMessage(TurnEvent event) {
-        return Convert.toString("type=", event.getType(), ", amount=", event.getAmount(), ", axis=",
-                                event.getAxis(), ", device=", event.getSource());
+    private String toMessage(ScrollEvent event) {
+        return Convert.toString("type=", event.getType(), ", dx=", event.getDx(), ", dy=",
+                                event.getDy(), ", device=", event.getSource());
     }
 
     private String toMessage(KeyEvent event) {
