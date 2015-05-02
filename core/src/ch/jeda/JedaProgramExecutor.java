@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -93,7 +93,7 @@ class JedaProgramExecutor implements Runnable {
         }
 
         // No program class is specified, try default program
-        final String defaultProgramName = this.engine.getProperties().getString(DEFAULT_PROGRAM_PROPERTY);
+        final String defaultProgramName = this.engine.getProperties().getProperty(DEFAULT_PROGRAM_PROPERTY);
         for (int i = 0; i < candidates.length; ++i) {
             if (candidates[i].getProgramClassName().equals(defaultProgramName)) {
                 return candidates[i];

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -49,18 +49,6 @@ public abstract class Program implements Runnable {
      */
     @Override
     public abstract void run();
-
-    /**
-     * Returns the Jeda system properties.
-     *
-     * @return Jeda system properties.
-     *
-     * @see Properties
-     * @since 1.0
-     */
-    protected final Properties getProperties() {
-        return Jeda.getProperties();
-    }
 
     /**
      * Prompts the user to enter a <tt>double</tt> value. The specified message is presented to the user along with a

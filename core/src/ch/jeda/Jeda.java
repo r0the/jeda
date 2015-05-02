@@ -18,7 +18,6 @@ package ch.jeda;
 
 import ch.jeda.event.Event;
 import ch.jeda.event.SensorType;
-import ch.jeda.event.TickListener;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
@@ -33,6 +32,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Properties;
 import org.xml.sax.XMLReader;
 
 /**
@@ -40,7 +40,7 @@ import org.xml.sax.XMLReader;
  * ist running on.
  *
  * @since 1.0
- * @version 2
+ * @version 3
  */
 public class Jeda {
 
@@ -62,22 +62,6 @@ public class Jeda {
      * @since 1.4
      */
     public static void addEventListener(final Object listener) {
-        ENGINE.addEventListener(listener);
-    }
-
-    /**
-     * Adds a tick listener to the Jeda engine. The listener will receive {@link ch.jeda.event.EventType#TICK} events in
-     * approximately the frequency set with {@link ch.jeda.Jeda#setTickFrequency(double)}. Has no effect if
-     * <tt>listener</tt> is <tt>null</tt>.
-     *
-     * @param listener the listener to add
-     *
-     * @see #removeTickListener(ch.jeda.event.TickListener)
-     * @see #setTickFrequency(double)
-     * @since 1.0
-     * @deprecated Use {@link #addEventListener(java.lang.Object)} instead.
-     */
-    public static void addTickListener(final TickListener listener) {
         ENGINE.addEventListener(listener);
     }
 
@@ -255,21 +239,6 @@ public class Jeda {
      * @since 1.4
      */
     public static void removeEventListener(final Object listener) {
-        ENGINE.removeEventListener(listener);
-    }
-
-    /**
-     * Removes a tick listener from the Jeda engine. The listener will no longer receive
-     * {@link ch.jeda.event.EventType#TICK} events. Has no effect if <tt>listener</tt> is <tt>null</tt>.
-     *
-     * @param listener the listener to remove
-     *
-     * @see #addTickListener(ch.jeda.event.TickListener)
-     * @see #setTickFrequency(double)
-     * @since 1.0
-     * @deprecated Use {@link #removeEventListener(java.lang.Object)} instead.
-     */
-    public static void removeTickListener(final TickListener listener) {
         ENGINE.removeEventListener(listener);
     }
 

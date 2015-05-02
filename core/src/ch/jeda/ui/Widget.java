@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -41,11 +41,16 @@ public abstract class Widget extends Element {
      *
      * @param x the x coordinate of the widget
      * @param y the y coordinate of the widget
-     * @param alignment the alignment of the widget
+     * @param alignment specifies how to align the widget relative to (<tt>x</tt>, <tt>y</tt>)
+     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.3
      */
     protected Widget(final int x, final int y, final Alignment alignment) {
+        if (alignment == null) {
+            throw new NullPointerException("alignment");
+        }
+
         this.alignment = alignment;
         this.x = x;
         this.y = y;
@@ -241,34 +246,11 @@ public abstract class Widget extends Element {
      * @param y the y coordinate of the widget
      *
      * @see #setAlignment(ch.jeda.ui.Alignment)
-     * @see #setPosition(int, int, ch.jeda.ui.Alignment)
      * @since 1.3
      */
     public final void setPosition(final int x, final int y) {
         this.x = x;
         this.y = y;
-    }
-
-    /**
-     * Sets the position of the widget. The widget is aligned relative to the specified coordinates (<tt>x</tt>,
-     * <tt>y</tt>).
-     *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
-     * @param alignment specifies how to align the widget relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
-     *
-     * @see #setAlignment(ch.jeda.ui.Alignment)
-     * @see #setPosition(int, int)
-     * @since 1.3
-     */
-    public final void setPosition(final int x, final int y, final Alignment alignment) {
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        this.x = alignment.alignX(x, this.getWidth());
-        this.y = alignment.alignY(y, this.getHeight());
     }
 
     /**
@@ -280,9 +262,9 @@ public abstract class Widget extends Element {
      * @since 1.4
      */
     protected void action(final String name) {
-        final Window window = this.getWindow();
-        if (window != null) {
-            window.postEvent(new ActionEvent(this, name));
+        final View view = this.getView();
+        if (view != null) {
+            view.postEvent(new ActionEvent(this, name));
         }
     }
 

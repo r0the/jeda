@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,7 @@ package ch.jeda;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.Properties;
 
 abstract class ProgramClassWrapper {
 
@@ -99,7 +100,7 @@ abstract class ProgramClassWrapper {
     }
 
     private static String programName(final Class<?> programClass, final Properties properties) {
-        final String name = properties.getString(programClass.getName());
+        final String name = properties.getProperty(programClass.getName());
         if (name == null) {
             return programClass.getSimpleName();
         }
