@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,7 +23,7 @@ import ch.jeda.ui.Color;
  */
 public interface CanvasImp {
 
-    void copyFrom(int x, int y, CanvasImp source);
+    void drawCanvas(int x, int y, CanvasImp source);
 
     void drawEllipse(int x, int y, int width, int height);
 
@@ -49,7 +49,7 @@ public interface CanvasImp {
 
     double getLineWidth();
 
-    Color getPixelAt(int x, int y);
+    Color getPixel(int x, int y);
 
     int getWidth();
 
@@ -59,7 +59,7 @@ public interface CanvasImp {
 
     void setLineWidth(double lineWidth);
 
-    void setPixelAt(int x, int y, Color color);
+    void setPixel(int x, int y, Color color);
 
     void setTextSize(int textSize);
 

@@ -104,7 +104,7 @@ public class Canvas {
      */
     public void drawCanvas(final int x, final int y, final Canvas canvas) {
         if (canvas != null) {
-            this.imp.copyFrom(x, y, canvas.imp);
+            this.imp.drawCanvas(x, y, canvas.imp);
         }
     }
 
@@ -139,8 +139,8 @@ public class Canvas {
         }
 
         if (canvas != null) {
-            this.imp.copyFrom(alignment.alignX(x, canvas.getWidth()), alignment.alignY(y, canvas.getHeight()),
-                              canvas.imp);
+            this.imp.drawCanvas(alignment.alignX(x, canvas.getWidth()), alignment.alignY(y, canvas.getHeight()),
+                                canvas.imp);
         }
     }
 
@@ -812,8 +812,8 @@ public class Canvas {
         while (!stackX.isEmpty()) {
             x = stackX.pop();
             y = stackY.pop();
-            if (this.getPixelAt(x, y).equals(oldColor)) {
-                this.setPixelAt(x, y, newColor);
+            if (this.getPixel(x, y).equals(oldColor)) {
+                this.setPixel(x, y, newColor);
                 stackX.push(x);
                 stackY.push(y + 1);
                 stackX.push(x);
@@ -877,16 +877,23 @@ public class Canvas {
      * @param y the y coordinate of the pixel
      * @return the color of the pixel at (<tt>x</tt>, <tt>y</tt>)
      *
-     * @see #setPixelAt(int, int, ch.jeda.ui.Color)
-     * @since 1.0
+     * @see #setPixel(int, int, ch.jeda.ui.Color)
+     * @since 2.0
      */
-    public Color getPixelAt(final int x, final int y) {
+    public Color getPixel(final int x, final int y) {
         if (this.contains(x, y)) {
-            return this.imp.getPixelAt(x, y);
+            return this.imp.getPixel(x, y);
         }
         else {
             return Color.TRANSPARENT;
         }
+    }
+
+    /**
+     * @deprecated Use {@link #getPixel(int, int)} instead.
+     */
+    public Color getPixelAt(final int x, final int y) {
+        return this.getPixel(x, y);
     }
 
     /**
@@ -1093,17 +1100,24 @@ public class Canvas {
      * @param color new color of the pixel
      * @throws NullPointerException if <tt>color</tt> is <tt>null</tt>
      *
-     * @see #getPixelAt(int, int)
-     * @since 1.0
+     * @see #getPixel(int, int)
+     * @since 2.0
      */
-    public void setPixelAt(final int x, final int y, final Color color) {
+    public void setPixel(final int x, final int y, final Color color) {
         if (color == null) {
             throw new NullPointerException("color");
         }
 
         if (this.contains(x, y)) {
-            this.imp.setPixelAt(x, y, color);
+            this.imp.setPixel(x, y, color);
         }
+    }
+
+    /**
+     * @deprecated Use {@link #setPixel(int, int, ch.jeda.ui.Color)} instead.
+     */
+    public void setPixelAt(final int x, final int y, final Color color) {
+        this.setPixel(x, y, color);
     }
 
     /**

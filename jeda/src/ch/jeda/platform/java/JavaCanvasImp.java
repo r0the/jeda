@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -62,7 +62,7 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void copyFrom(final int x, final int y, final CanvasImp source) {
+    public void drawCanvas(final int x, final int y, final CanvasImp source) {
         assert source instanceof JavaCanvasImp;
 
         this.graphics.drawImage(((JavaCanvasImp) source).buffer, x, y, null);
@@ -159,7 +159,7 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public Color getPixelAt(final int x, final int y) {
+    public Color getPixel(final int x, final int y) {
         assert this.contains(x, y);
 
         return new Color(this.buffer.getRGB(x, y));
@@ -202,7 +202,7 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setPixelAt(final int x, final int y, final Color color) {
+    public void setPixel(final int x, final int y, final Color color) {
         assert this.contains(x, y);
         assert color != null;
 
