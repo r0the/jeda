@@ -35,9 +35,13 @@ import java.util.EnumSet;
  *
  * @since 2.0
  */
-public class View extends Canvas {
+public class View {
 
+    private static final int DEFAULT_HEIGHT = 600;
+    private static final int DEFAULT_WIDTH = 800;
     private static final EnumSet<ViewFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
+    private final Canvas background;
+    private final Canvas canvas;
     private final Elements elements;
     private final EventQueue eventQueue;
     private ViewImp imp;
@@ -58,7 +62,7 @@ public class View extends Canvas {
      * @since 2.0
      */
     public View() {
-        this(0, 0);
+        this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     /**
@@ -78,7 +82,7 @@ public class View extends Canvas {
      * @since 2.0
      */
     public View(final ViewFeature... features) {
-        this(0, 0, features);
+        this(DEFAULT_WIDTH, DEFAULT_HEIGHT, features);
     }
 
     /**
@@ -88,8 +92,7 @@ public class View extends Canvas {
      * The size of the view's drawing area depends on the platform:
      * </p><p>
      * <img src="../../../windows.png"> <img src="../../../linux.png"> The drawing area of the view has the specified
-     * <tt>width</tt> and
-     * <tt>height</tt>.
+     * <tt>width</tt> and <tt>height</tt>.
      * </p><p>
      * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.</p>
      *
@@ -101,6 +104,11 @@ public class View extends Canvas {
      * @since 2.0
      */
     public View(final int width, final int height, final ViewFeature... features) {
+        this.background = new Canvas(width, height);
+        this.background.setColor(Color.WHITE);
+        this.background.fill();
+        this.background.setColor(Color.BLACK);
+        this.canvas = new Canvas(width, height);
         this.elements = new Elements(this);
         this.eventQueue = new EventQueue();
         this.title = Jeda.getProgramName();
@@ -146,6 +154,14 @@ public class View extends Canvas {
         this.imp.close();
     }
 
+    public final Canvas getBackground() {
+        return this.background;
+    }
+
+    public final Canvas getCanvas() {
+        return this.canvas;
+    }
+
     /**
      * Returns all elements currently managed by the view.
      *
@@ -182,6 +198,17 @@ public class View extends Canvas {
     }
 
     /**
+     * Returns the height of this view in pixels.
+     *
+     * @return the height of this view in pixels
+     *
+     * @since 2.0
+     */
+    public final int getHeight() {
+        return this.imp.getCanvas().getHeight();
+    }
+
+    /**
      * Returns the current page of the view.
      *
      * @return the current page of the view
@@ -204,6 +231,17 @@ public class View extends Canvas {
      */
     public final String getTitle() {
         return this.title;
+    }
+
+    /**
+     * Returns the width of this view in pixels.
+     *
+     * @return the width of this view in pixels
+     *
+     * @since 2.0
+     */
+    public final int getWidth() {
+        return this.imp.getCanvas().getWidth();
     }
 
     /**
@@ -342,7 +380,8 @@ public class View extends Canvas {
         if (this.imp.isVisible()) {
             this.eventQueue.processEvents();
             this.elements.processPending();
-            this.elements.draw(this);
+            this.canvas.drawCanvas(0, 0, this.background);
+            this.elements.draw(this.canvas);
             this.imp.update();
         }
     }
@@ -353,16 +392,10 @@ public class View extends Canvas {
         }
 
         this.imp = JedaInternal.createViewImp(width, height, features);
+        this.canvas.setImp(this.imp.getCanvas());
         this.imp.setEventQueue(this.eventQueue);
         this.imp.setTitle(this.title);
-        if (!this.hasFeature(ViewFeature.DOUBLE_BUFFERED)) {
-            this.imp.setColor(Color.WHITE);
-            this.imp.fill();
-        }
-
         this.eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
-
-        super.setImp(this.imp);
     }
 
     private static EnumSet<ViewFeature> initImpChangingFeatures() {

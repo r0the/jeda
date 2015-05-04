@@ -37,7 +37,7 @@ class WindowManager {
     private final LogWindow logWindow;
     private final SelectionWindow selectionWindow;
     private final Set<BaseWindow> windows;
-    private CanvasWindow fullscreenWindow;
+    private BaseWindow fullscreenWindow;
     private boolean shutdown;
 
     WindowManager(final Platform.Callback callback) {
@@ -67,10 +67,20 @@ class WindowManager {
     }
 
     void showViewRequest(final ViewRequest viewRequest) {
-        final CanvasWindow window = this.createCanvasWindow(viewRequest);
+        int width = viewRequest.getWidth();
+        int height = viewRequest.getHeight();
+        final BaseWindow window = new BaseWindow(this);
+        if (viewRequest.getFeatures().contains(ViewFeature.FULLSCREEN) && this.fullscreenWindow == null) {
+            DisplayMode displayMode = findDisplayMode(width, height);
+            width = displayMode.getWidth();
+            height = displayMode.getHeight();
+            this.fullscreenWindow = window;
+            GRAPHICS_DEVICE.setFullScreenWindow(this.fullscreenWindow);
+            GRAPHICS_DEVICE.setDisplayMode(displayMode);
+        }
+
         this.windows.add(window);
-        window.setVisible(true);
-        viewRequest.setResult(JavaViewImp.create(window));
+        viewRequest.setResult(new JavaViewImp(window, width, height, viewRequest.getFeatures()));
     }
 
     void shutdown() {
@@ -104,31 +114,6 @@ class WindowManager {
         }
         else {
             this.callback.stop();
-        }
-    }
-
-    private CanvasWindow createCanvasWindow(final ViewRequest request) {
-        int width = request.getWidth();
-        int height = request.getHeight();
-        if (width < 1) {
-            width = 800;
-        }
-
-        if (height < 1) {
-            height = 600;
-        }
-
-        if (request.getFeatures().contains(ViewFeature.FULLSCREEN) && this.fullscreenWindow == null) {
-            DisplayMode displayMode = findDisplayMode(width, height);
-            width = displayMode.getWidth();
-            height = displayMode.getHeight();
-            this.fullscreenWindow = new CanvasWindow(this, width, height, request.getFeatures());
-            GRAPHICS_DEVICE.setFullScreenWindow(this.fullscreenWindow);
-            GRAPHICS_DEVICE.setDisplayMode(displayMode);
-            return this.fullscreenWindow;
-        }
-        else {
-            return new CanvasWindow(this, width, height, request.getFeatures());
         }
     }
 

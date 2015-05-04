@@ -53,7 +53,7 @@ class BaseWindow extends JFrame {
     protected void onCancel() {
     }
 
-    protected final void init() {
+    public final void init() {
         final Point center = graphicsEnvironment().getCenterPoint();
         this.setLocation(center.x - this.getWidth() / 2, center.y - this.getHeight() / 2);
         this.setIconImage(loadImage("res/jeda/logo-16x16.png"));

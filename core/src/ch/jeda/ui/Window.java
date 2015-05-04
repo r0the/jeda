@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,15 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.Jeda;
+import ch.jeda.JedaInternal;
+import ch.jeda.event.Event;
+import ch.jeda.event.EventQueue;
+import ch.jeda.event.TickEvent;
+import ch.jeda.event.TickListener;
+import ch.jeda.platform.ViewImp;
+import java.util.EnumSet;
+
 /**
  * Represents a drawing window. The window class has the following functionality:
  * <ul>
@@ -25,9 +34,16 @@ package ch.jeda.ui;
  * </ul>
  *
  * @since 1.0
- * @version 4
+ * @version 3
  */
-public class Window extends View {
+public class Window extends Canvas {
+
+    private static final int DEFAULT_HEIGHT = 600;
+    private static final int DEFAULT_WIDTH = 800;
+    private static final EnumSet<ViewFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
+    private final EventQueue eventQueue;
+    private ViewImp imp;
+    private String title;
 
     /**
      * Constructs a window. The window is shown on the screen. All drawing methods inherited from {@link Canvas} are
@@ -44,7 +60,7 @@ public class Window extends View {
      * @since 1.0
      */
     public Window() {
-        this(0, 0);
+        this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     /**
@@ -64,7 +80,7 @@ public class Window extends View {
      * @since 1.0
      */
     public Window(final WindowFeature... features) {
-        this(0, 0, features);
+        this(DEFAULT_WIDTH, DEFAULT_HEIGHT, features);
     }
 
     /**
@@ -87,7 +103,44 @@ public class Window extends View {
      * @since 1.0
      */
     public Window(final int width, final int height, final WindowFeature... features) {
-        super(width, height, convertFeatures(features));
+        this.eventQueue = new EventQueue();
+        this.title = Jeda.getProgramName();
+        this.resetImp(width, height, convertFeatures(features));
+        Jeda.addEventListener(this.eventQueue);
+        Jeda.addEventListener(new EventLoop(this));
+    }
+
+    /**
+     * Adds an event listener to the window. The specified object will receive events for all events listener interfaces
+     * it implements. Has no effect if <tt>listener</tt> is <tt>null</tt>.
+     *
+     * @param listener the event listener
+     *
+     * @since 1.0
+     */
+    public final void addEventListener(final Object listener) {
+        this.eventQueue.addListener(listener);
+    }
+
+    /**
+     * Closes the window. The window becomes invalid, all subsequent method calls to the window will cause an error.
+     *
+     * @since 1.0
+     */
+    public final void close() {
+        this.imp.close();
+    }
+
+    /**
+     * Returns the current window title.
+     *
+     * @return current window title
+     *
+     * @see #setTitle(java.lang.String)
+     * @since 1.0
+     */
+    public final String getTitle() {
+        return this.title;
     }
 
     /**
@@ -106,7 +159,18 @@ public class Window extends View {
             throw new NullPointerException("feature");
         }
 
-        return this.hasFeature(convertFeature(feature));
+        return this.imp.getFeatures().contains(convertFeature(feature));
+    }
+
+    /**
+     * Removes an event listener from the window. The specified object will not receive events anymore. Has no effect if
+     * <tt>listener</tt> is <tt>null</tt>.
+     *
+     * @param listener the event listener
+     * @since 1.0
+     */
+    public final void removeEventListener(final Object listener) {
+        this.eventQueue.removeListener(listener);
     }
 
     /**
@@ -121,7 +185,95 @@ public class Window extends View {
      * @since 1.0
      */
     public final void setFeature(final WindowFeature feature, final boolean enabled) {
-        this.setFeature(convertFeature(feature), enabled);
+        if (feature == null) {
+            throw new NullPointerException("feature");
+        }
+
+        final ViewFeature viewFeature = convertFeature(feature);
+        if (IMP_CHANGING_FEATURES.contains(viewFeature)) {
+            final EnumSet<ViewFeature> featureSet = EnumSet.copyOf(this.imp.getFeatures());
+            if (enabled) {
+                featureSet.add(viewFeature);
+            }
+            else {
+                featureSet.remove(viewFeature);
+            }
+
+            this.resetImp(this.getWidth(), this.getHeight(), featureSet);
+        }
+        else {
+            this.imp.setFeature(viewFeature, enabled);
+        }
+    }
+
+    /**
+     * Sets the shape of the mouse cursor.
+     *
+     * @param mouseCursor new shape of mouse cursor
+     * @throws NullPointerException if <tt>mouseCursor</tt> is
+     * <tt>null</tt>
+     *
+     * @see MouseCursor
+     * @since 1.0
+     */
+    public final void setMouseCursor(final MouseCursor mouseCursor) {
+        if (mouseCursor == null) {
+            throw new NullPointerException("mouseCursor");
+        }
+
+        this.imp.setMouseCursor(mouseCursor);
+    }
+
+    /**
+     * Sets the window title.
+     *
+     * @param title new title of the window
+     * @throws NullPointerException if <tt>title</tt> is <tt>null</tt>
+     *
+     * @see #getTitle()
+     * @since 1.0
+     */
+    public final void setTitle(final String title) {
+        if (title == null) {
+            throw new NullPointerException("title");
+        }
+
+        this.title = title;
+        this.imp.setTitle(title);
+    }
+
+    void postEvent(final Event event) {
+        this.eventQueue.addEvent(event);
+    }
+
+    private void tick(final TickEvent event) {
+        if (this.imp.isVisible()) {
+            this.eventQueue.processEvents();
+            this.imp.update();
+        }
+    }
+
+    private void resetImp(final int width, final int height, final EnumSet<ViewFeature> features) {
+        if (this.imp != null) {
+            this.imp.close();
+        }
+
+        this.imp = JedaInternal.createViewImp(width, height, features);
+        this.imp.setEventQueue(this.eventQueue);
+        this.imp.setTitle(this.title);
+        if (!this.hasFeature(WindowFeature.DOUBLE_BUFFERED)) {
+            this.imp.getCanvas().setColor(Color.WHITE);
+            this.imp.getCanvas().fill();
+        }
+
+        super.setImp(this.imp.getCanvas());
+    }
+
+    private static EnumSet<ViewFeature> initImpChangingFeatures() {
+        final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class);
+        result.add(ViewFeature.DOUBLE_BUFFERED);
+        result.add(ViewFeature.FULLSCREEN);
+        return result;
     }
 
     private static ViewFeature convertFeature(final WindowFeature windowFeature) {
@@ -136,17 +288,36 @@ public class Window extends View {
                 return ViewFeature.ORIENTATION_LANDSCAPE;
             case ORIENTATION_PORTRAIT:
                 return ViewFeature.ORIENTATION_PORTRAIT;
+            case SCROLLABLE:
+                return ViewFeature.SCROLLABLE;
             default:
                 return null;
         }
     }
 
-    private static ViewFeature[] convertFeatures(final WindowFeature[] windowFeatures) {
-        ViewFeature[] result = new ViewFeature[windowFeatures.length];
-        for (int i = 0; i < windowFeatures.length; ++i) {
-            result[i] = convertFeature(windowFeatures[i]);
+    private static EnumSet<ViewFeature> convertFeatures(final WindowFeature... features) {
+        final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class);
+        for (final WindowFeature feature : features) {
+            final ViewFeature viewFeature = convertFeature(feature);
+            if (viewFeature != null) {
+                result.add(viewFeature);
+            }
         }
 
         return result;
+    }
+
+    private static class EventLoop implements TickListener {
+
+        private final Window window;
+
+        public EventLoop(final Window window) {
+            this.window = window;
+        }
+
+        @Override
+        public void onTick(final TickEvent event) {
+            this.window.tick(event);
+        }
     }
 }

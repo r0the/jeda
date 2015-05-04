@@ -23,7 +23,6 @@ import ch.jeda.platform.TypefaceImp;
 import ch.jeda.ui.Color;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
-import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Polygon;
@@ -43,29 +42,22 @@ class JavaCanvasImp implements CanvasImp {
     private static final Map<?, ?> ANTI_ALIASING_RENDERING_HINTS = initAntiAliasingRenderingHints();
     private static final AffineTransform IDENTITY = new AffineTransform();
     private final AffineTransform affineTransform;
-    private final float[] matrix;
+    private final BufferedImage bitmap;
+    private final Graphics2D graphics;
     private final Map<FontRenderContext, Map<java.awt.Font, Map<String, TextLayout>>> textLayoutCache;
-    private BufferedImage buffer;
-    private Graphics2D graphics;
-    private int height;
-    private int width;
-
-    JavaCanvasImp() {
-        this.affineTransform = new AffineTransform();
-        this.matrix = new float[6];
-        this.textLayoutCache = new HashMap();
-    }
 
     JavaCanvasImp(final int width, final int height) {
-        this();
-        this.setBuffer(createBufferedImage(width, height));
+        this.affineTransform = new AffineTransform();
+        this.textLayoutCache = new HashMap();
+        this.bitmap = createBufferedImage(width, height);
+        this.graphics = bitmap.createGraphics();
     }
 
     @Override
     public void drawCanvas(final int x, final int y, final CanvasImp source) {
         assert source instanceof JavaCanvasImp;
 
-        this.graphics.drawImage(((JavaCanvasImp) source).buffer, x, y, null);
+        this.graphics.drawImage(((JavaCanvasImp) source).bitmap, x, y, null);
     }
 
     @Override
@@ -90,7 +82,7 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void drawLine(final int x1, final int y1, final int x2, final int y2) {
-        this.graphics.drawLine((int) x1, y1, x2, y2);
+        this.graphics.drawLine(x1, y1, x2, y2);
     }
 
     @Override
@@ -119,12 +111,12 @@ class JavaCanvasImp implements CanvasImp {
     @Override
     public void fill() {
         if (this.graphics.getTransform().isIdentity()) {
-            this.graphics.fillRect(0, 0, this.width, this.height);
+            this.graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
         }
         else {
             final AffineTransform oldTransform = this.graphics.getTransform();
             this.graphics.setTransform(IDENTITY);
-            this.graphics.fillRect(0, 0, this.width, this.height);
+            this.graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
             this.graphics.setTransform(oldTransform);
         }
     }
@@ -150,7 +142,7 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public int getHeight() {
-        return this.height;
+        return this.bitmap.getHeight();
     }
 
     @Override
@@ -162,12 +154,12 @@ class JavaCanvasImp implements CanvasImp {
     public Color getPixel(final int x, final int y) {
         assert this.contains(x, y);
 
-        return new Color(this.buffer.getRGB(x, y));
+        return new Color(this.bitmap.getRGB(x, y));
     }
 
     @Override
     public int getWidth() {
-        return this.width;
+        return this.bitmap.getWidth();
     }
 
     @Override
@@ -206,7 +198,7 @@ class JavaCanvasImp implements CanvasImp {
         assert this.contains(x, y);
         assert color != null;
 
-        this.buffer.setRGB(x, y, color.getValue());
+        this.bitmap.setRGB(x, y, color.getValue());
     }
 
     @Override
@@ -227,8 +219,8 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public ImageImp takeSnapshot() {
-        final BufferedImage result = createBufferedImage(this.width, this.height);
-        result.createGraphics().drawImage(this.buffer, 0, 0, this.width, this.height, null);
+        final BufferedImage result = createBufferedImage(this.getWidth(), this.getHeight());
+        result.createGraphics().drawImage(this.bitmap, 0, 0, this.getWidth(), this.getHeight(), null);
         return new JavaImageImp(result);
     }
 
@@ -244,6 +236,10 @@ class JavaCanvasImp implements CanvasImp {
         assert text != null;
 
         return (int) textLayout(text).getAdvance();
+    }
+
+    BufferedImage getBitmap() {
+        return this.bitmap;
     }
 
     private TextLayout textLayout(final String text) {
@@ -266,33 +262,11 @@ class JavaCanvasImp implements CanvasImp {
         return byText.get(text);
     }
 
-    final void setBuffer(final BufferedImage buffer) {
-        java.awt.Color oldColor = null;
-        java.awt.Font oldFont = null;
-        Composite oldComposite = null;
-        if (this.graphics != null) {
-            oldColor = this.graphics.getColor();
-            oldComposite = this.graphics.getComposite();
-            oldFont = this.graphics.getFont();
-        }
-
-        this.buffer = buffer;
-        this.graphics = buffer.createGraphics();
-        if (oldColor != null) {
-            this.graphics.setColor(oldColor);
-            this.graphics.setComposite(oldComposite);
-            this.graphics.setFont(oldFont);
-        }
-
-        this.width = buffer.getWidth();
-        this.height = buffer.getHeight();
-    }
-
     private boolean contains(final int x, final int y) {
-        return 0 <= x && x < this.width && 0 <= y && y < this.height;
+        return 0 <= x && x < this.getWidth() && 0 <= y && y < this.getHeight();
     }
 
-    static BufferedImage createBufferedImage(final int width, final int height) {
+    private static BufferedImage createBufferedImage(final int width, final int height) {
         return GraphicsEnvironment.getLocalGraphicsEnvironment().
             getDefaultScreenDevice().getDefaultConfiguration().
             createCompatibleImage(width, height, Transparency.TRANSLUCENT);

@@ -24,9 +24,11 @@ import java.util.EnumSet;
 /**
  * <b>Internal</b>. Do not use this interface.
  */
-public interface ViewImp extends CanvasImp {
+public interface ViewImp {
 
     void close();
+
+    CanvasImp getCanvas();
 
     EnumSet<ViewFeature> getFeatures();
 
@@ -41,5 +43,4 @@ public interface ViewImp extends CanvasImp {
     void setTitle(String title);
 
     void update();
-
 }

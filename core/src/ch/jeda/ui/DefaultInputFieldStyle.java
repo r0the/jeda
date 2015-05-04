@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -95,10 +95,9 @@ public class DefaultInputFieldStyle extends DefaultTextStyle implements InputFie
     @Override
     public boolean fits(final InputField inputField, final Canvas canvas, final String text) {
         final int maxWidth = this.getWidth(inputField) - 2 * BORDER;
-        final Window window = inputField.getWindow();
-        window.setTypeface(this.getTypeface());
-        window.setTextSize(this.getTextSize());
-        return window.textWidth(text) <= maxWidth;
+        canvas.setTypeface(this.getTypeface());
+        canvas.setTextSize(this.getTextSize());
+        return canvas.textWidth(text) <= maxWidth;
     }
 
     @Override

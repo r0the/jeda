@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,6 +23,8 @@ import android.widget.RelativeLayout;
 
 class JedaView extends RelativeLayout {
 
+    private JedaInputConnection inputConnection;
+
     JedaView(final Context context) {
         super(context);
         this.setFocusableInTouchMode(true);
@@ -30,6 +32,14 @@ class JedaView extends RelativeLayout {
 
     @Override
     public InputConnection onCreateInputConnection(final EditorInfo outAttrs) {
-        return new JedaInputConnection(this, true);
+        if (this.inputConnection == null) {
+            this.inputConnection = new JedaInputConnection(this, true);
+        }
+
+        return this.inputConnection;
+    }
+
+    public void setTopView(final SurfaceFragment topView) {
+        this.inputConnection.setTopView(topView);
     }
 }

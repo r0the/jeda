@@ -17,37 +17,49 @@
 package ch.jeda.platform.android;
 
 import ch.jeda.event.EventQueue;
+import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.ViewFeature;
 import java.util.EnumSet;
 
-class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
+class AndroidViewImp implements ViewImp {
 
-    private final CanvasFragment canvasView;
+    private final SurfaceFragment surfaceFragment;
+    private final AndroidCanvasImp canvasImp;
+
+    AndroidViewImp(final SurfaceFragment canvasView, final int width, final int height) {
+        this.canvasImp = new AndroidCanvasImp();
+        this.canvasImp.init(width, height);
+        this.surfaceFragment = canvasView;
+    }
 
     @Override
     public void close() {
     }
 
+    public CanvasImp getCanvas() {
+        return this.canvasImp;
+    }
+
     @Override
     public EnumSet<ViewFeature> getFeatures() {
-        return this.canvasView.getFeatures();
+        return this.surfaceFragment.getFeatures();
     }
 
     @Override
     public boolean isVisible() {
-        return this.canvasView.isVisible();
+        return this.surfaceFragment.isVisible();
     }
 
     @Override
     public void setEventQueue(final EventQueue eventQueue) {
-        this.canvasView.setEventQueue(eventQueue);
+        this.surfaceFragment.setEventQueue(eventQueue);
     }
 
     @Override
     public void setFeature(final ViewFeature feature, final boolean enabled) {
-        this.canvasView.setFeature(feature, enabled);
+        this.surfaceFragment.setFeature(feature, enabled);
     }
 
     @Override
@@ -57,20 +69,11 @@ class AndroidViewImp extends AndroidCanvasImp implements ViewImp {
 
     @Override
     public void setTitle(final String title) {
-        this.canvasView.setTitle(title);
+        this.surfaceFragment.setTitle(title);
     }
 
     @Override
     public void update() {
-        this.canvasView.setBitmap(this.getBitmap());
-    }
-
-    static AndroidViewImp create(final CanvasFragment canvasView, final int width, final int height) {
-        return new AndroidViewImp(canvasView, width, height);
-    }
-
-    private AndroidViewImp(final CanvasFragment canvasView, final int width, final int height) {
-        this.canvasView = canvasView;
-        this.init(width, height);
+        this.surfaceFragment.setBitmap(this.canvasImp.getBitmap());
     }
 }

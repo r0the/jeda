@@ -96,26 +96,6 @@ public abstract class Element {
         }
     }
 
-    /**
-     * Returns the window containing the element. Returns <tt>null</tt> if the element has not yet been added to a
-     * window.
-     *
-     * @return the window containing the element
-     *
-     * @since 2.0
-     */
-    protected final Window getWindow() {
-        if (this.page == null) {
-            return null;
-        }
-        else if (this.page.view instanceof Window) {
-            return (Window) this.page.view;
-        }
-        else {
-            return null;
-        }
-    }
-
     private static class DrawOrder implements Comparator<Element> {
 
         @Override
