@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,15 +16,16 @@
  */
 package ch.jeda.netbeans.java;
 
+import ch.jeda.netbeans.support.ProjectType;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeList;
 
-@NodeFactory.Registration(projectType = {JedaProject.PROJECT_TYPE})
+@NodeFactory.Registration(projectType = {JedaProjectType.PROJECT_TYPE})
 public class ConfigNodeFactory implements NodeFactory {
 
     @Override
     public NodeList<?> createNodes(final Project project) {
-        return JedaProject.createConfigNode(project);
+        return ProjectType.createJedaConfigurationNode(project);
     }
 }

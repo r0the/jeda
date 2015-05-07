@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2015 by Stefan Rothe
+ * Copyright (C) 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,18 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.netbeans.android;
+package ch.jeda.netbeans.support;
 
-import ch.jeda.netbeans.support.ProjectType;
-import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ui.support.NodeFactory;
-import org.netbeans.spi.project.ui.support.NodeList;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-@NodeFactory.Registration(projectType = {JedandroidProjectType.PROJECT_TYPE})
-public class ConfigNodeFactory implements NodeFactory {
+public interface FileFilter {
 
-    @Override
-    public NodeList<?> createNodes(final Project project) {
-        return ProjectType.createJedaConfigurationNode(project);
-    }
+    void apply(InputStream in, OutputStream out) throws Exception;
 }

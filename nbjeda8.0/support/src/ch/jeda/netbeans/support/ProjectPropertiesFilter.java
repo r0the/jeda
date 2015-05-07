@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2015 by Stefan Rothe
+ * Copyright (C) 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,18 +14,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.netbeans.android;
+package ch.jeda.netbeans.support;
 
-import ch.jeda.netbeans.support.ProjectType;
-import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ui.support.NodeFactory;
-import org.netbeans.spi.project.ui.support.NodeList;
+public final class ProjectPropertiesFilter extends TextFileFilter {
 
-@NodeFactory.Registration(projectType = {JedandroidProjectType.PROJECT_TYPE})
-public class ConfigNodeFactory implements NodeFactory {
+    private final String projectName;
+
+    public ProjectPropertiesFilter(final String projectName) {
+        this.projectName = projectName;
+    }
 
     @Override
-    public NodeList<?> createNodes(final Project project) {
-        return ProjectType.createJedaConfigurationNode(project);
+    protected String filterLine(final String line) {
+        if (line.startsWith("application.title=")) {
+            return "application.title=" + this.projectName;
+        }
+        else if (line.startsWith("dist.jar=")) {
+            return "dist.jar=${dist.dir}/" + this.projectName + ".jar";
+        }
+        else {
+            return line;
+        }
     }
 }

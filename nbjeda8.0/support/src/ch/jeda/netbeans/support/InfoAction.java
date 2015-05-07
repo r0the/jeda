@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2015 by Stefan Rothe
+ * Copyright (C) 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,18 +14,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.netbeans.android;
+package ch.jeda.netbeans.support;
 
-import ch.jeda.netbeans.support.ProjectType;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
 import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ui.support.NodeFactory;
-import org.netbeans.spi.project.ui.support.NodeList;
 
-@NodeFactory.Registration(projectType = {JedandroidProjectType.PROJECT_TYPE})
-public class ConfigNodeFactory implements NodeFactory {
+public class InfoAction extends AbstractAction {
+
+    private final ProjectType projectType;
+    private final Project project;
+
+    public InfoAction(final ProjectType projectType, final Project project) {
+        this.projectType = projectType;
+        this.project = project;
+        this.putValue(NAME, "Project Info");
+    }
 
     @Override
-    public NodeList<?> createNodes(final Project project) {
-        return ProjectType.createJedaConfigurationNode(project);
+    public void actionPerformed(final ActionEvent event) {
+        Dialog.showInfo("Project Jeda Version: " + this.projectType.projectVersion(this.project) + "\n" +
+                        "Jeda Plugin Version: " + this.projectType.pluginVersion());
     }
 }

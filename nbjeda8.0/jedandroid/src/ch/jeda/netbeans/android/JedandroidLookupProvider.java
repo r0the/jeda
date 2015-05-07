@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,16 +16,21 @@
  */
 package ch.jeda.netbeans.android;
 
+import ch.jeda.netbeans.support.ProjectType;
 import org.netbeans.spi.project.LookupProvider;
 import org.openide.util.Lookup;
 
 @LookupProvider.Registration(projectTypes = {
-    @LookupProvider.Registration.ProjectType(id = JedandroidProject.PROJECT_TYPE)
+    @LookupProvider.Registration.ProjectType(id = JedandroidProjectType.PROJECT_TYPE)
 })
 public class JedandroidLookupProvider implements LookupProvider {
 
+    public JedandroidLookupProvider() {
+        ProjectType.register(new JedandroidProjectType());
+    }
+
     @Override
     public Lookup createAdditionalLookup(final Lookup lookup) {
-        return JedandroidProject.fixLookup(lookup);
+        return ProjectType.createAdditionalLookup(lookup);
     }
 }

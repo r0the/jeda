@@ -46,6 +46,9 @@
         <manifest file="${jeda.nbjeda.dir}/jedandroid/manifest.mf" mode="update">
             <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
         </manifest>
+        <manifest file="${jeda.nbjeda.dir}/support/manifest.mf" mode="update">
+            <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
+        </manifest>
         <manifest file="${jeda.nbjeda.dir}/templates/manifest.mf" mode="update">
             <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
         </manifest>

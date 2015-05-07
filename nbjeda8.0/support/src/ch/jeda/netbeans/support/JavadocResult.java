@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,20 +14,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.netbeans.java;
+package ch.jeda.netbeans.support;
 
-import java.awt.Image;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
 import javax.swing.event.ChangeListener;
-import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ProjectIconAnnotator;
-import org.openide.util.lookup.ServiceProvider;
+import org.netbeans.api.java.queries.JavadocForBinaryQuery;
+import org.openide.util.Exceptions;
 
-@ServiceProvider(service = ProjectIconAnnotator.class)
-public class JedaProjectIconAnnotator implements ProjectIconAnnotator {
+public final class JavadocResult implements JavadocForBinaryQuery.Result {
 
-    @Override
-    public Image annotateIcon(final Project project, final Image orig, final boolean openedNode) {
-        return JedaProject.annotateIcon(project, orig, openedNode);
+    private final URL[] roots;
+
+    public JavadocResult(String... urls) {
+        this.roots = new URL[urls.length];
+        for (int i = 0; i < urls.length; ++i) {
+            try {
+                this.roots[0] = new URL(urls[i]);
+            }
+            catch (final MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
     }
 
     @Override
@@ -36,5 +45,10 @@ public class JedaProjectIconAnnotator implements ProjectIconAnnotator {
 
     @Override
     public void removeChangeListener(final ChangeListener listener) {
+    }
+
+    @Override
+    public URL[] getRoots() {
+        return Arrays.copyOf(this.roots, this.roots.length);
     }
 }

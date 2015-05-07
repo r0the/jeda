@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,7 +30,6 @@ import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.NbBundle;
 
 // TODO define position attribute
 @TemplateRegistration(
@@ -88,19 +87,19 @@ public class JedandroidWizardIterator implements WizardDescriptor.InstantiatingI
 
     @Override
     public Set<?> instantiate() throws IOException {
-        Set<FileObject> resultSet = new LinkedHashSet<FileObject>();
-        File dirF = FileUtil.normalizeFile((File) wizard.getProperty(PROJECT_DIR_PROPERTY));
+        final Set<FileObject> resultSet = new LinkedHashSet<FileObject>();
+        final File dirF = FileUtil.normalizeFile((File) wizard.getProperty(PROJECT_DIR_PROPERTY));
         dirF.mkdirs();
 
-        FileObject template = Templates.getTemplate(wizard);
-        FileObject dir = FileUtil.toFileObject(dirF);
+        final FileObject template = Templates.getTemplate(wizard);
+        final FileObject dir = FileUtil.toFileObject(dirF);
 
-        JedandroidProject.init(dir);
+        JedandroidProjectType.init(dir);
 
         // Always open top dir as a project:
         resultSet.add(dir);
 
-        File parent = dirF.getParentFile();
+        final File parent = dirF.getParentFile();
         if (parent != null && parent.exists()) {
             ProjectChooser.setProjectsFolder(parent);
         }

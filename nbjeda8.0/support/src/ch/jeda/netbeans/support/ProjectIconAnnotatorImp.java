@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.netbeans.android;
+package ch.jeda.netbeans.support;
 
 import java.awt.Image;
 import javax.swing.event.ChangeListener;
@@ -23,11 +23,17 @@ import org.netbeans.spi.project.ProjectIconAnnotator;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = ProjectIconAnnotator.class)
-public class JedandroidProjectIconAnnotator implements ProjectIconAnnotator {
+public class ProjectIconAnnotatorImp implements ProjectIconAnnotator {
 
     @Override
     public Image annotateIcon(final Project project, final Image orig, final boolean openedNode) {
-        return JedandroidProject.annotateIcon(project, orig, openedNode);
+        final ProjectType projectType = ProjectType.lookup(project);
+        if (projectType != null) {
+            return projectType.annotateIcon(orig, openedNode);
+        }
+        else {
+            return orig;
+        }
     }
 
     @Override

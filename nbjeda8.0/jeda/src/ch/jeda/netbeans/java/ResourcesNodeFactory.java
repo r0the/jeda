@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,15 +16,28 @@
  */
 package ch.jeda.netbeans.java;
 
+import ch.jeda.netbeans.support.ProjectType;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.NodeFactory;
+import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.netbeans.spi.project.ui.support.NodeList;
+import org.openide.nodes.Node;
 
-@NodeFactory.Registration(projectType = {JedaProject.PROJECT_TYPE}, position = 290)
+@NodeFactory.Registration(projectType = {JedaProjectType.PROJECT_TYPE}, position = 290)
 public class ResourcesNodeFactory implements NodeFactory {
 
     @Override
     public NodeList<?> createNodes(final Project project) {
-        return JedaProject.createResourcesNode(project);
+        final ProjectType projectType = ProjectType.lookup(project);
+        if (projectType == null) {
+            return NodeFactorySupport.fixedNodeList();
+        }
+
+        final Node node = JedaProjectType.getResourceDirectory(project).createNode("Resources");
+        if (node == null) {
+            return NodeFactorySupport.fixedNodeList();
+        }
+
+        return NodeFactorySupport.fixedNodeList(node);
     }
 }

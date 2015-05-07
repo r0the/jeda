@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -88,18 +88,18 @@ public final class JedaWizardIterator implements WizardDescriptor./*Progress*/In
     @Override
     public Set<?> instantiate() throws IOException {
         final Set<FileObject> resultSet = new LinkedHashSet<FileObject>();
-        File dirF = FileUtil.normalizeFile((File) this.wizard.getProperty(PROJECT_DIR_PROPERTY));
+        final File dirF = FileUtil.normalizeFile((File) this.wizard.getProperty(PROJECT_DIR_PROPERTY));
         dirF.mkdirs();
 
-        FileObject template = Templates.getTemplate(this.wizard);
-        FileObject dir = FileUtil.toFileObject(dirF);
+        final FileObject template = Templates.getTemplate(this.wizard);
+        final FileObject dir = FileUtil.toFileObject(dirF);
 
-        JedaProject.init(dir);
+        JedaProjectType.init(dir);
 
         // Always open top dir as a project:
         resultSet.add(dir);
 
-        File parent = dirF.getParentFile();
+        final File parent = dirF.getParentFile();
         if (parent != null && parent.exists()) {
             ProjectChooser.setProjectsFolder(parent);
         }

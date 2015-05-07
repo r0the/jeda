@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,19 +16,19 @@
  */
 package ch.jeda.netbeans.java;
 
-import java.net.MalformedURLException;
+import ch.jeda.netbeans.support.JavadocResult;
 import java.net.URL;
-import java.util.Arrays;
-import javax.swing.event.ChangeListener;
-import org.netbeans.api.java.queries.JavadocForBinaryQuery;
 import org.netbeans.api.java.queries.JavadocForBinaryQuery.Result;
 import org.netbeans.spi.java.queries.JavadocForBinaryQueryImplementation;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = JavadocForBinaryQueryImplementation.class, position = 0)
-public class JedaJavadocForBinaryQuery implements JavadocForBinaryQueryImplementation {
+public class JedaJavadocQuery implements JavadocForBinaryQueryImplementation {
 
-    private static JedaJavadocResult RESULT = new JedaJavadocResult();
+    private static final Result RESULT = new JavadocResult(
+        "http://www.jeda.ch/api/",
+        "http://jeda.ch/api/"
+    );
 
     @Override
     public Result findJavadoc(final URL binaryRoot) {
@@ -37,35 +37,6 @@ public class JedaJavadocForBinaryQuery implements JavadocForBinaryQueryImplement
         }
         else {
             return null;
-        }
-    }
-
-    private static class JedaJavadocResult implements JavadocForBinaryQuery.Result {
-
-        private final URL[] roots;
-
-        public JedaJavadocResult() {
-            this.roots = new URL[2];
-            try {
-                this.roots[0] = new URL("http://www.jeda.ch/api/");
-                this.roots[1] = new URL("http://jeda.ch/api/");
-            }
-            catch (final MalformedURLException ex) {
-                // ignore
-            }
-        }
-
-        @Override
-        public void addChangeListener(final ChangeListener l) {
-        }
-
-        @Override
-        public void removeChangeListener(final ChangeListener l) {
-        }
-
-        @Override
-        public URL[] getRoots() {
-            return Arrays.copyOf(this.roots, this.roots.length);
         }
     }
 }

@@ -29,5 +29,15 @@
         <jar update="true" jarfile="${jeda.nbjeda.jedandroid.jar}">
             <zipfileset src="libs/core.jar"/>
         </jar>
+        <!-- Load jeda version -->
+        <property file="../core/src/res/jeda/system.properties"/>
+        <!-- Add information to library manifest -->
+        <jar update="true" destfile="${jeda.nbjeda.jedandroid.jar}">
+            <manifest>
+                <attribute name="Implementation-Title" value="Jedandroid Library"/>
+                <attribute name="Implementation-URL" value="http://jeda.ch/"/>
+                <attribute name="Implementation-Version" value="${jeda.version}"/>
+            </manifest>
+        </jar>
     </target>
 </project>
