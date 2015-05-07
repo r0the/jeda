@@ -7,14 +7,14 @@ import ch.jeda.ui.*;
 
 public class CuteTest extends Program implements TickListener, ScrollListener {
 
-    View view;
+    Window window;
     CuteWorld world;
     int x;
     int y;
 
     @Override
     public void run() {
-        view = new View(ViewFeature.DOUBLE_BUFFERED, ViewFeature.SCROLLABLE);
+        window = new Window(WindowFeature.DOUBLE_BUFFERED, WindowFeature.SCROLLABLE);
         world = new CuteWorld(40, 40, 4);
         world.fill(0, Block.GRASS);
         world.setBlockAt(0, 0, 1, Block.STONE);
@@ -67,7 +67,7 @@ public class CuteTest extends Program implements TickListener, ScrollListener {
         addObject(CuteObjectType.UGLY_TREE);
         addObject(CuteObjectType.BIG_BUG);
 
-        view.addEventListener(this);
+        window.addEventListener(this);
     }
 
     @Override
@@ -80,10 +80,10 @@ public class CuteTest extends Program implements TickListener, ScrollListener {
         // Update world
         world.update(event.getDuration());
         // Draw background
-        view.setColor(Color.BLUE);
-        view.fill();
+        window.setColor(Color.BLUE);
+        window.fill();
         // Draw world
-        world.draw(view);
+        world.draw(window);
     }
 
     private void addBlock(Block block) {

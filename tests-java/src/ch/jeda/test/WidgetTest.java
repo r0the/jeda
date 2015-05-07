@@ -8,37 +8,27 @@ public class WidgetTest extends Program implements TickListener, ActionListener 
 
     Button buttonAntique;
     Button buttonModern;
-    Window window;
+    View view;
     Image background;
     Theme cortana;
     ProgressBar progressBar;
 
     @Override
     public void run() {
-        window = new Window(WindowFeature.DOUBLE_BUFFERED);
-        buttonAntique = new Button(0, 0, "Antique");
-        buttonAntique.setPosition(window.getWidth() / 2, 100, Alignment.CENTER);
+        view = new View();
+        buttonAntique = new Button(view.getWidth() / 2, 100, Alignment.CENTER, "Antique");
         buttonAntique.setStyle(DefaultButtonStyle.ANTIQUE_BROWN);
 
-        buttonModern = new Button(0, 0, "Modern");
-        buttonModern.setPosition(window.getWidth() / 2, 200, Alignment.CENTER);
+        buttonModern = new Button(view.getWidth() / 2, 200, Alignment.CENTER, "Modern");
         buttonModern.setStyle(DefaultButtonStyle.MODERN_GREEN);
 
-        window.add(buttonAntique);
-        window.add(buttonModern);
-        window.addEventListener(this);
+        view.add(buttonAntique);
+        view.add(buttonModern);
+        view.addEventListener(this);
     }
 
     @Override
     public void onTick(TickEvent event) {
-        if (background != null) {
-            window.drawImage(0, 0, background);
-        }
-        else {
-            window.setColor(Color.WHITE);
-            window.fill();
-        }
-
         if (progressBar != null) {
             progressBar.setValue(progressBar.getValue() + event.getDuration());
         }
@@ -61,34 +51,34 @@ public class WidgetTest extends Program implements TickListener, ActionListener 
 
     private void initAntique() {
         Theme.setDefault(Theme.ANTIQUE);
-        background = new Image("res:drawable/background_antique.png");
+        view.getBackground().drawImage(0, 0, new Image("res:drawable/background_antique.png"));
     }
 
     private void initModern() {
-        background = new Image("res:drawable/background_modern.jpg");
+        view.getBackground().drawImage(0, 0, new Image("res:drawable/background_modern.jpg"));
     }
 
     private void showSamples() {
-        window.remove(buttonAntique);
-        window.remove(buttonModern);
+        view.remove(buttonAntique);
+        view.remove(buttonModern);
         StringInputField textField = new StringInputField(30, 55);
-        window.add(new Label(35, 30, "Name:"));
-        window.add(textField);
+        view.add(new Label(35, 30, "Name:"));
+        view.add(textField);
 
-        window.add(new Label(35, 130, "Age:"));
-        window.add(new IntInputField(30, 155));
+        view.add(new Label(35, 130, "Age:"));
+        view.add(new IntInputField(30, 155));
 
-        window.add(new Label(35, 230, "Toggle with [Ctrl]:"));
+        view.add(new Label(35, 230, "Toggle with [Ctrl]:"));
         CheckBox cb = new CheckBox(270, 215);
         cb.setKey(Key.CTRL_LEFT);
-        window.add(cb);
+        view.add(cb);
 
         Button startProgress = new Button(35, 280, "Start");
         startProgress.setKey(Key.ENTER);
-        window.add(startProgress);
+        view.add(startProgress);
 
         progressBar = new ProgressBar(35, 350);
         progressBar.setRange(0.0, 3.0);
-        window.add(progressBar);
+        view.add(progressBar);
     }
 }

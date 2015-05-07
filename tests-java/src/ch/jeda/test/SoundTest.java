@@ -8,25 +8,25 @@ import java.util.Map;
 
 public class SoundTest extends Program implements ActionListener {
 
-    Window window;
+    View view;
     Map<String, Sound> sounds;
     int x;
     int y;
 
     @Override
     public void run() {
-        window = new Window();
+        view = new View();
         sounds = new HashMap<String, Sound>();
         x = 10;
         y = 10;
 
         addButton("Rooster (WAV)", "rooster.wav");
-        window.addEventListener(this);
+        view.addEventListener(this);
     }
 
     private void addButton(String text, String sound) {
         sounds.put(text, new Sound(":resraw/" + sound));
-        window.add(new Button(x, y, text));
+        view.add(new Button(x, y, text));
         y = y + 50;
     }
 

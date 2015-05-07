@@ -6,38 +6,42 @@ import ch.jeda.ui.*;
 
 public class MusicTest extends Program implements TickListener, ActionListener {
 
-    Window window;
+    View view;
     Music mp3Music;
     Music oggMusic;
+    Text mp3State;
+    Text oggState;
     int x;
     int y;
 
     @Override
     public void run() {
-        window = new Window();
+        view = new View();
         mp3Music = new Music("res:raw/move_forward.mp3");
-        oggMusic = new Music("res:raw/base_under_attack.ogg");
+        oggMusic = new Music("res:raw/evil_laugh.mp3");
         x = 10;
         y = 40;
 
         addButton("Play MP3");
         addButton("Pause MP3");
         addButton("Stop MP3");
-
+        mp3State = new Text(10, 10, null);
+        oggState = new Text(200, 10, null);
+        view.add(mp3State);
+        view.add(oggState);
         x = 200;
         y = 40;
         addButton("Play OGG");
         addButton("Pause OGG");
         addButton("Stop OGG");
-        window.addEventListener(this);
+        view.addEventListener(this);
     }
 
     private void addButton(String text) {
-        window.add(new Button(x, y, text));
+        view.add(new Button(x, y, text));
         y = y + 60;
     }
 
-    @Override
     public void onAction(ActionEvent event) {
         if ("Play MP3".equals(event.getName())) {
             mp3Music.play();
@@ -60,10 +64,7 @@ public class MusicTest extends Program implements TickListener, ActionListener {
     }
 
     public void onTick(TickEvent te) {
-        window.setColor(Color.WHITE);
-        window.fill();
-        window.setColor(Color.BLACK);
-        window.drawText(10, 10, mp3Music.getPlaybackState().toString());
-        window.drawText(200, 10, oggMusic.getPlaybackState().toString());
+        mp3State.setText(mp3Music.getPlaybackState().toString());
+        oggState.setText(oggMusic.getPlaybackState().toString());
     }
 }
