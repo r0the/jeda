@@ -39,11 +39,12 @@ public interface InputFieldStyle {
      * Draws the input field widget on the specified canvas.
      *
      * @param inputField the input field to draw
+     * @param visibleText the visible part of the text to draw
      * @param canvas the canvas to draw on
      *
      * @since 1.3
      */
-    void draw(InputField inputField, Canvas canvas);
+    void draw(InputField inputField, String visibleText, Canvas canvas);
 
     /**
      * Checks if the specified text would fit in the graphical representation of the input widget. This method is used

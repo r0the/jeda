@@ -84,17 +84,6 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
         return this.style;
     }
 
-    /**
-     * Returns the part of the text currently visible in the text field.
-     *
-     * @return the part of the text currently visible in the text field
-     *
-     * @since 1.4
-     */
-    public final String getVisibleText() {
-        return this.visibleText;
-    }
-
     @Override
     public final int getWidth() {
         return this.style.getWidth(this);
@@ -123,7 +112,7 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      */
     public void setInputHidden(final boolean inputHidden) {
         this.inputHidden = inputHidden;
-        this.updateVisibleText();
+        this.visibleText = null;
     }
 
     /**
@@ -187,7 +176,11 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
 
     @Override
     protected void draw(final Canvas canvas) {
-        this.style.draw(this, canvas);
+        if (this.visibleText == null) {
+            this.updateVisibleText(canvas);
+        }
+
+        this.style.draw(this, this.visibleText, canvas);
     }
 
     /**
@@ -199,14 +192,14 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      */
     protected final void setDisplayText(final String displayText) {
         this.displayText = displayText;
-        this.updateVisibleText();
+        this.visibleText = null;
     }
 
-    private void updateVisibleText() {
+    private void updateVisibleText(final Canvas canvas) {
         final View view = this.getView();
         if (view != null) {
             final StringBuilder builder = new StringBuilder(this.displayBaseText());
-            while (!this.style.fits(this, view.getCanvas(), builder.toString())) {
+            while (!this.style.fits(this, canvas, builder.toString())) {
                 builder.deleteCharAt(0);
             }
 
