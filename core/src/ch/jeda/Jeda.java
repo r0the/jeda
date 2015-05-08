@@ -42,7 +42,7 @@ import org.xml.sax.XMLReader;
  * @since 1.0
  * @version 3
  */
-public class Jeda {
+public final class Jeda {
 
     private static final JedaEngine ENGINE = JedaEngine.create();
 
@@ -230,6 +230,17 @@ public class Jeda {
     }
 
     /**
+     * Adds an event to the global Jeda event queue. The event will be processed during the next update cycle.
+     *
+     * @param event the event to add
+     *
+     * @since 2.0
+     */
+    public static void postEvent(final Event event) {
+        ENGINE.postEvent(event);
+    }
+
+    /**
      * Removes an event listener from the Jeda engine. The listener will no longer receive events. Has no effect if
      * <tt>listener</tt> is <tt>null</tt>.
      *
@@ -328,10 +339,6 @@ public class Jeda {
 
     static InputStream openResource(final String path) {
         return ENGINE.openResource(path);
-    }
-
-    static void postEvent(final Event event) {
-        ENGINE.postEvent(event);
     }
 
     static void showInputRequest(final InputRequest inputRequest) {
