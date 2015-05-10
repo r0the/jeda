@@ -354,7 +354,7 @@ public final class EventQueue {
             ++i;
         }
 
-        if (!event.isConsumed() && this.lastDragEvent == null) {
+        if (this.dragEnabled && !event.isConsumed() && this.lastDragEvent == null) {
             this.lastDragEvent = event;
         }
     }
