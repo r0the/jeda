@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,7 +34,7 @@ public class DefaultTextStyle {
      * @since 1.3
      */
     public DefaultTextStyle() {
-        this(Typeface.KENVECTOR_FUTURE_THIN, 20, Color.BLACK);
+        this(Typeface.SANS_SERIF, 20, Color.BLACK);
     }
 
     /**
