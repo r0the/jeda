@@ -16,7 +16,10 @@
  */
 package ch.jeda.ui;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Base class for objects with a graphical representation. Elements can be added to a {@link ch.jeda.ui.View}. The view
@@ -30,15 +33,28 @@ import java.util.Comparator;
 public abstract class Element {
 
     static final Comparator<Element> DRAW_ORDER = new DrawOrder();
-    ElementsPage page;
+    private final SortedSet<String> tagSet;
     private int drawOrder;
+    private String[] tags;
+    private View view;
 
     /**
      * Constructs a new element.
      *
      * @since 2.0
      */
-    protected Element() {
+    protected Element(String... tags) {
+        this.tagSet = new TreeSet<String>(Arrays.asList(tags));
+        this.tags = null;
+    }
+
+    public final void addTag(final String tag) {
+        if (this.tagSet.add(tag)) {
+            this.tags = null;
+            if (this.view != null) {
+                this.view.tagElement(this, tag);
+            }
+        }
     }
 
     /**
@@ -54,6 +70,23 @@ public abstract class Element {
         return this.drawOrder;
     }
 
+    public final String[] getTags() {
+        if (this.tags == null) {
+            this.tags = this.tagSet.toArray(new String[this.tagSet.size()]);
+        }
+
+        return Arrays.copyOf(this.tags, this.tags.length);
+    }
+
+    public final void removeTag(final String tag) {
+        if (this.tagSet.remove(tag)) {
+            this.tags = null;
+            if (this.view != null) {
+                this.view.untagElement(this, tag);
+            }
+        }
+    }
+
     /**
      * Sets the draw order of the element. The draw order determines the order in which the element are drawn on a
      * {@link ch.jeda.ui.Window}. Elements with a smaller draw order are drawn first.
@@ -65,8 +98,8 @@ public abstract class Element {
      */
     public final void setDrawOrder(final int drawOrder) {
         this.drawOrder = drawOrder;
-        if (this.page != null) {
-            this.page.dirty = true;
+        if (this.view != null) {
+            this.view.drawOrderChanged(this);
         }
     }
 
@@ -88,12 +121,12 @@ public abstract class Element {
      * @since 2.0
      */
     protected final View getView() {
-        if (this.page == null) {
-            return null;
-        }
-        else {
-            return this.page.view;
-        }
+        return this.view;
+    }
+
+    void setView(final View view) {
+        this.view = view;
+
     }
 
     private static class DrawOrder implements Comparator<Element> {

@@ -23,15 +23,18 @@ import ch.jeda.event.EventQueue;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
 import ch.jeda.platform.ViewImp;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Represents a graphical view. The view class has the following functionality:
- * <ul>
- * <li> fullscreen: the view can be displayed in framed or fullscreen mode.
- * <li> double buffering: the view supports a double buffering mode for animations.
- * <li> user input: the view provides means to query keyboard and mouse input.
- * </ul>
+ * Represents a graphical view that can contains {@link ch.jeda.ui.Elements}.
  *
  * @since 2.0
  */
@@ -42,8 +45,10 @@ public class View {
     private static final EnumSet<ViewFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
     private final Canvas background;
     private final Canvas canvas;
-    private final Elements elements;
+    private final Set<Element> elementSet;
+    private final Map<String, Set<Element>> elementsByTag;
     private final EventQueue eventQueue;
+    private Element[] elements;
     private ViewImp imp;
     private String title;
 
@@ -109,7 +114,9 @@ public class View {
         this.background.fill();
         this.background.setColor(Color.BLACK);
         this.canvas = new Canvas(width, height);
-        this.elements = new Elements(this);
+        this.elements = new Element[0];
+        this.elementSet = new HashSet<Element>();
+        this.elementsByTag = new HashMap<String, Set<Element>>();
         this.eventQueue = new EventQueue();
         this.title = Jeda.getProgramName();
         this.resetImp(width, height, toSet(features));
@@ -130,7 +137,31 @@ public class View {
      * @since 2.0
      */
     public final void add(final Element element) {
-        this.elements.add(element);
+        if (element == null || this.elementSet.contains(element)) {
+            return;
+        }
+
+        final View oldView = element.getView();
+        if (oldView != null) {
+            oldView.remove(element);
+        }
+
+        this.elementSet.add(element);
+        this.elements = null;
+        this.addEventListener(element);
+        element.setView(this);
+        final String[] tags = element.getTags();
+        for (int i = 0; i < tags.length; ++i) {
+            this.tagElement(element, tags[i]);
+        }
+
+        this.elementAdded(element);
+    }
+
+    public final void add(final Element... elements) {
+        for (int i = 0; i < elements.length; ++i) {
+            this.add(elements[i]);
+        }
     }
 
     /**
@@ -154,12 +185,16 @@ public class View {
         this.imp.close();
     }
 
+    /**
+     * Returns the background canvas of this view. The content of the background canvas is displayed behind all elements
+     * of the view.
+     *
+     * @return the background canvas of this view
+     *
+     * @since 2.0
+     */
     public final Canvas getBackground() {
         return this.background;
-    }
-
-    public final Canvas getCanvas() {
-        return this.canvas;
     }
 
     /**
@@ -173,7 +208,8 @@ public class View {
      * @since 2.0
      */
     public final Element[] getElements() {
-        return this.elements.getAll();
+        this.checkElements();
+        return Arrays.copyOf(this.elements, this.elements.length);
     }
 
     /**
@@ -189,12 +225,29 @@ public class View {
      * @see #remove(ch.jeda.ui.Element)
      * @since 2.0
      */
+    @SuppressWarnings("unchecked")
     public final <T extends Element> T[] getElements(final Class<T> clazz) {
-        if (clazz == null) {
-            throw new NullPointerException("clazz");
+        this.checkElements();
+        final List<T> result = new ArrayList<T>();
+        for (int i = 0; i < this.elements.length; ++i) {
+            if (clazz.isInstance(this.elements[i])) {
+                // Unchecked cast
+                result.add((T) this.elements[i]);
+            }
         }
 
-        return this.elements.get(clazz);
+        // Unchecked cast
+        return result.toArray((T[]) Array.newInstance(clazz, result.size()));
+    }
+
+    public final Element[] getElements(final String tag) {
+        final Set<Element> result = this.elementsByTag.get(tag);
+        if (result == null) {
+            return new Element[0];
+        }
+        else {
+            return result.toArray(new Element[result.size()]);
+        }
     }
 
     /**
@@ -206,19 +259,6 @@ public class View {
      */
     public final int getHeight() {
         return this.imp.getCanvas().getHeight();
-    }
-
-    /**
-     * Returns the current page of the view.
-     *
-     * @return the current page of the view
-     *
-     * @see #add(ch.jeda.ui.Element)
-     * @see #setPage(java.lang.String)
-     * @since 2.0
-     */
-    public final String getPage() {
-        return this.elements.getCurrentPage();
     }
 
     /**
@@ -273,7 +313,26 @@ public class View {
      * @since 2.0
      */
     public final void remove(final Element element) {
-        this.elements.remove(element);
+        if (element == null || !this.elementSet.contains(element)) {
+            return;
+        }
+
+        this.elementSet.remove(element);
+        this.elements = null;
+        this.removeEventListener(element);
+        element.setView(null);
+        final String[] tags = element.getTags();
+        for (int i = 0; i < tags.length; ++i) {
+            this.untagElement(element, tags[i]);
+        }
+
+        this.elementRemoved(element);
+    }
+
+    public final void remove(final Element... elements) {
+        for (int i = 0; i < elements.length; ++i) {
+            this.remove(elements[i]);
+        }
     }
 
     /**
@@ -341,20 +400,6 @@ public class View {
     }
 
     /**
-     * Sets the current page of the view. All {@link ch.jeda.ui.Element}s are added to the current page. They become
-     * inactive (they no longer receive events) and insivible if the current page changes.
-     *
-     * @param page the current page
-     *
-     * @see #add(ch.jeda.ui.Element)
-     * @see #getPage()
-     * @since 2.0
-     */
-    public final void setPage(final String page) {
-        this.elements.setPage(page);
-    }
-
-    /**
      * Sets the view title.
      *
      * @param title new title of the view
@@ -372,16 +417,64 @@ public class View {
         this.imp.setTitle(title);
     }
 
+    /**
+     * This method is invoked after an element has been added to the view.
+     *
+     * @param element the element that has been added
+     *
+     * @since 2.0
+     */
+    protected void elementAdded(final Element element) {
+    }
+
+    /**
+     * This method is invoked after an element has been removed from the view.
+     *
+     * @param element the element that has been removed
+     *
+     * @since 2.0
+     */
+    protected void elementRemoved(final Element element) {
+    }
+
+    void drawOrderChanged(final Element element) {
+        this.elements = null;
+    }
+
+    void tagElement(final Element element, final String tag) {
+        if (!this.elementsByTag.containsKey(tag)) {
+            this.elementsByTag.put(tag, new HashSet<Element>());
+        }
+
+        this.elementsByTag.get(tag).add(element);
+    }
+
+    void untagElement(final Element element, final String tag) {
+        if (this.elementsByTag.containsKey(tag)) {
+            this.elementsByTag.get(tag).remove(element);
+        }
+    }
+
     void postEvent(final Event event) {
         this.eventQueue.addEvent(event);
+    }
+
+    private void checkElements() {
+        if (this.elements == null) {
+            this.elements = this.elementSet.toArray(new Element[this.elementSet.size()]);
+            Arrays.sort(this.elements, Element.DRAW_ORDER);
+        }
     }
 
     private void tick(final TickEvent event) {
         if (this.imp.isVisible()) {
             this.eventQueue.processEvents();
-            this.elements.processPending();
             this.canvas.drawCanvas(0, 0, this.background);
-            this.elements.draw(this.canvas);
+            this.checkElements();
+            for (int i = 0; i < this.elements.length; ++i) {
+                this.elements[i].draw(this.canvas);
+            }
+
             this.imp.update();
         }
     }
@@ -399,15 +492,18 @@ public class View {
     }
 
     private static EnumSet<ViewFeature> initImpChangingFeatures() {
-        final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class);
+        final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class
+        );
         result.add(ViewFeature.DOUBLE_BUFFERED);
+
         result.add(ViewFeature.FULLSCREEN);
         return result;
     }
 
     private static EnumSet<ViewFeature> toSet(final ViewFeature... features) {
-        final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class);
-        for (ViewFeature feature : features) {
+        final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class
+        );
+        for (final ViewFeature feature : features) {
             result.add(feature);
         }
 
