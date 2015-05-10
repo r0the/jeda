@@ -47,6 +47,7 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      */
     protected InputField(final int x, final int y, final Alignment alignment) {
         super(x, y, alignment);
+        this.displayText = "";
         this.inputHidden = false;
         this.style = Theme.getDefault().getDefaultInputFieldStyle();
     }
@@ -191,7 +192,13 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      * @since 1.3
      */
     protected final void setDisplayText(final String displayText) {
-        this.displayText = displayText;
+        if (displayText == null) {
+            this.displayText = "";
+        }
+        else {
+            this.displayText = displayText;
+        }
+
         this.visibleText = null;
     }
 
