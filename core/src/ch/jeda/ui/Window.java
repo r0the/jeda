@@ -201,6 +201,9 @@ public class Window extends Canvas {
 
             this.resetImp(this.getWidth(), this.getHeight(), featureSet);
         }
+        else if (feature == WindowFeature.SCROLLABLE) {
+            this.eventQueue.setDragEnabled(enabled);
+        }
         else {
             this.imp.setFeature(viewFeature, enabled);
         }
@@ -266,6 +269,7 @@ public class Window extends Canvas {
             this.imp.getCanvas().fill();
         }
 
+        this.eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
         super.setImp(this.imp.getCanvas());
     }
 
