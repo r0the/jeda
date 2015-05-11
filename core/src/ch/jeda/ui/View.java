@@ -43,13 +43,13 @@ public class View {
     private static final int DEFAULT_HEIGHT = 600;
     private static final int DEFAULT_WIDTH = 800;
     private static final EnumSet<ViewFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
-    private final Canvas background;
-    private final Canvas canvas;
     private final Map<String, Set<Element>> elementsByName;
     private final Set<Element> elementSet;
     private final EventQueue eventQueue;
     private final Set<Element> pendingInsertions;
     private final Set<Element> pendingRemovals;
+    private Canvas background;
+    private Canvas canvas;
     private Element[] elements;
     private ViewImp imp;
     private String title;
@@ -108,17 +108,11 @@ public class View {
      * @since 2.0
      */
     public View(final int width, final int height, final ViewFeature... features) {
-        this.background = new Canvas(width, height);
-        this.background.setColor(Color.WHITE);
-        this.background.fill();
-        this.background.setColor(Color.BLACK);
-        this.canvas = new Canvas(width, height);
         this.elementsByName = new HashMap<String, Set<Element>>();
         this.elementSet = new HashSet<Element>();
         this.eventQueue = new EventQueue();
         this.pendingInsertions = new HashSet<Element>();
         this.pendingRemovals = new HashSet<Element>();
-
         this.elements = new Element[0];
         this.title = Jeda.getProgramName();
         this.resetImp(width, height, toSet(features));
@@ -469,9 +463,6 @@ public class View {
         }
     }
 
-    void untagElement(final Element element, final String tag) {
-    }
-
     void postEvent(final Event event) {
         this.eventQueue.addEvent(event);
     }
@@ -495,10 +486,18 @@ public class View {
         }
 
         this.imp = JedaInternal.createViewImp(width, height, features);
-        this.canvas.setImp(this.imp.getCanvas());
         this.imp.setEventQueue(this.eventQueue);
         this.imp.setTitle(this.title);
         this.eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
+
+        this.canvas = new Canvas(this.getWidth(), this.getHeight());
+        this.canvas.setImp(this.imp.getCanvas());
+
+        this.background = new Canvas(this.getWidth(), this.getHeight());
+        this.background.setColor(Color.WHITE);
+        this.background.fill();
+        this.background.setColor(Color.BLACK);
+
     }
 
     private void updateElements() {
