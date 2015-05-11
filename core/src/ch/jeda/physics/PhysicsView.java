@@ -94,6 +94,40 @@ public final class PhysicsView extends View implements TickListener {
     }
 
     /**
+     * Adds walls around the visible part of the physics simulation.
+     *
+     * @since 2.0
+     */
+    public void addWalls() {
+        final double WIDTH = 10.0;
+        final Body top = new Body();
+        top.setType(BodyType.STATIC);
+        final double w = this.getWidth();
+        final double h = this.getHeight();
+        top.addShape(new RectangleShape(w + 2 * WIDTH, WIDTH));
+        top.setPosition(w / 2, -WIDTH / 2);
+        this.add(top);
+
+        final Body right = new Body();
+        right.setType(BodyType.STATIC);
+        right.addShape(new RectangleShape(WIDTH, h + 2 * WIDTH));
+        right.setPosition(w + WIDTH / 2, h / 2);
+        this.add(right);
+
+        final Body bottom = new Body();
+        bottom.setType(BodyType.STATIC);
+        bottom.addShape(new RectangleShape(w + 2 * WIDTH, WIDTH));
+        bottom.setPosition(w / 2, h + WIDTH / 2);
+        this.add(bottom);
+
+        final Body left = new Body();
+        left.setType(BodyType.STATIC);
+        left.addShape(new RectangleShape(WIDTH, h + 2 * WIDTH));
+        left.setPosition(-WIDTH / 2, h / 2);
+        this.add(left);
+    }
+
+    /**
      * Returns the current scale of the physics view. The unit of the scale is meter per pixel, meaning that with a
      * scale of 1.0, the simulation assumes that every pixel corresponds to one meter. The default scale is 10.0.
      *
@@ -102,7 +136,7 @@ public final class PhysicsView extends View implements TickListener {
      * @see #setScale(double)
      * @since 2.0
      */
-    public double getScale() {
+    public final double getScale() {
         return this.physics.getScale();
     }
 
@@ -114,7 +148,7 @@ public final class PhysicsView extends View implements TickListener {
      * @see #setDebugging(boolean)
      * @since 2.0
      */
-    public boolean isDebugging() {
+    public final boolean isDebugging() {
         return this.physics.isDebugging();
     }
 
@@ -127,7 +161,7 @@ public final class PhysicsView extends View implements TickListener {
      * @see #isDebugging()
      * @since 2.0
      */
-    public void setDebugging(final boolean debugging) {
+    public final void setDebugging(final boolean debugging) {
         this.physics.setDebugging(debugging);
     }
 
@@ -139,11 +173,11 @@ public final class PhysicsView extends View implements TickListener {
      *
      * @since 2.0
      */
-    public void setGravity(final double ax, final double ay) {
+    public final void setGravity(final double ax, final double ay) {
         this.physics.setGravity(ax, ay);
     }
 
-    public void setPaused(final boolean paused) {
+    public final void setPaused(final boolean paused) {
         this.physics.setPaused(paused);
     }
 
@@ -156,7 +190,7 @@ public final class PhysicsView extends View implements TickListener {
      * @see #getScale()
      * @since 2.0
      */
-    public void setScale(final double scale) {
+    public final void setScale(final double scale) {
         this.physics.setScale(scale);
     }
 
