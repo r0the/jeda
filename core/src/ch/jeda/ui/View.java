@@ -43,6 +43,7 @@ public class View {
     private static final int DEFAULT_HEIGHT = 600;
     private static final int DEFAULT_WIDTH = 800;
     private static final EnumSet<ViewFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
+    private final Object elementLock;
     private final Map<String, Set<Element>> elementsByName;
     private final Set<Element> elementSet;
     private final EventQueue eventQueue;
@@ -108,6 +109,7 @@ public class View {
      * @since 2.0
      */
     public View(final int width, final int height, final ViewFeature... features) {
+        this.elementLock = new Object();
         this.elementsByName = new HashMap<String, Set<Element>>();
         this.elementSet = new HashSet<Element>();
         this.eventQueue = new EventQueue();
@@ -134,11 +136,13 @@ public class View {
      */
     public final void add(final Element element) {
         if (element != null) {
-            if (this.elementSet.contains(element)) {
-                this.pendingRemovals.remove(element);
-            }
-            else {
-                this.pendingInsertions.add(element);
+            synchronized (this.elementLock) {
+                if (this.elementSet.contains(element)) {
+                    this.pendingRemovals.remove(element);
+                }
+                else {
+                    this.pendingInsertions.add(element);
+                }
             }
         }
     }
@@ -328,11 +332,13 @@ public class View {
      */
     public final void remove(final Element element) {
         if (element != null) {
-            if (!this.elementSet.contains(element)) {
-                this.pendingInsertions.remove(element);
-            }
-            else {
-                this.pendingRemovals.add(element);
+            synchronized (this.elementLock) {
+                if (!this.elementSet.contains(element)) {
+                    this.pendingInsertions.remove(element);
+                }
+                else {
+                    this.pendingRemovals.add(element);
+                }
             }
         }
     }
@@ -501,30 +507,32 @@ public class View {
     }
 
     private void updateElements() {
-        if (this.pendingInsertions.isEmpty() && this.pendingRemovals.isEmpty()) {
-            return;
-        }
+        synchronized (this.elementLock) {
+            if (this.pendingInsertions.isEmpty() && this.pendingRemovals.isEmpty()) {
+                return;
+            }
 
-        for (final Element element : this.pendingRemovals) {
-            this.elementSet.remove(element);
-            this.removeEventListener(element);
-            element.removeFromView(this);
-            this.removeName(element, element.getName());
-            this.elementRemoved(element);
-        }
+            for (final Element element : this.pendingRemovals) {
+                this.elementSet.remove(element);
+                this.removeEventListener(element);
+                element.removeFromView(this);
+                this.removeName(element, element.getName());
+                this.elementRemoved(element);
+            }
 
-        for (final Element element : this.pendingInsertions) {
-            this.elementSet.add(element);
-            this.addEventListener(element);
-            element.addToView(this);
-            this.addName(element, element.getName());
-            this.elementAdded(element);
-        }
+            for (final Element element : this.pendingInsertions) {
+                this.elementSet.add(element);
+                this.addEventListener(element);
+                element.addToView(this);
+                this.addName(element, element.getName());
+                this.elementAdded(element);
+            }
 
-        this.pendingInsertions.clear();
-        this.pendingRemovals.clear();
-        this.elements = this.elementSet.toArray(new Element[this.elementSet.size()]);
-        Arrays.sort(this.elements, Element.DRAW_ORDER);
+            this.pendingInsertions.clear();
+            this.pendingRemovals.clear();
+            this.elements = this.elementSet.toArray(new Element[this.elementSet.size()]);
+            Arrays.sort(this.elements, Element.DRAW_ORDER);
+        }
     }
 
     private static EnumSet<ViewFeature> initImpChangingFeatures() {
