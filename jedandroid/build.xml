@@ -5,6 +5,8 @@
     <property environment="env"/>
 
     <!-- Set properties -->
+    <property name="jeda.core.dir" value="../core"/>
+    <property name="jeda.jbox2d.dir" value="../jbox2d"/>
     <property name="jeda.nbjeda.dir" value="../nbjeda8.0"/>
     <property name="jeda.nbjeda.jedandroid.jar" value="${jeda.nbjeda.dir}/jedandroid/src/ch/jeda/netbeans/android/res/jedandroid.jar"/>
 
@@ -28,9 +30,10 @@
         <!-- Add core library to Jedandroid library in nbjeda -->
         <jar update="true" jarfile="${jeda.nbjeda.jedandroid.jar}">
             <zipfileset src="libs/core.jar"/>
+            <zipfileset src="${jeda.jbox2d.dir}/dist/jbox2d.jar"/>
         </jar>
         <!-- Load jeda version -->
-        <property file="../core/src/res/jeda/system.properties"/>
+        <property file="${jeda.core.dir}/src/res/jeda/system.properties"/>
         <!-- Add information to library manifest -->
         <jar update="true" destfile="${jeda.nbjeda.jedandroid.jar}">
             <manifest>
