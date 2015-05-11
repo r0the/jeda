@@ -16,6 +16,7 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.event.ActionEvent;
 import java.util.Comparator;
 
 /**
@@ -129,6 +130,21 @@ public abstract class Element {
      */
     protected final View getView() {
         return this.view;
+    }
+
+    /**
+     * Creates a new action event and posts the event to the current window. The event will be processed during the next
+     * tick. Has no effect if the widget is part of a window.
+     *
+     * @param name the name of the action
+     *
+     * @since 1.4
+     */
+    protected void triggerAction(final String name) {
+        final View view = this.getView();
+        if (view != null) {
+            view.postEvent(new ActionEvent(this, name));
+        }
     }
 
     void addToView(final View view) {

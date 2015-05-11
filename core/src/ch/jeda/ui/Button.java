@@ -263,7 +263,7 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
      * @since 1.3
      */
     protected void clicked() {
-        this.action(this.text);
+        this.triggerAction(this.text);
     }
 
     @Override

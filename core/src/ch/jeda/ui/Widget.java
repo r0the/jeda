@@ -253,21 +253,6 @@ public abstract class Widget extends Element {
         this.y = y;
     }
 
-    /**
-     * Creates a new action event and posts the event to the current window. The event will be processed during the next
-     * tick. Has no effect if the widget is part of a window.
-     *
-     * @param name the name of the action
-     *
-     * @since 1.4
-     */
-    protected void action(final String name) {
-        final View view = this.getView();
-        if (view != null) {
-            view.postEvent(new ActionEvent(this, name));
-        }
-    }
-
     private void checkVirtualKeyboard() {
         final boolean isVisible = Jeda.isVirtualKeyboardVisible();
         final boolean shouldBeVisible = this instanceof InputField;
