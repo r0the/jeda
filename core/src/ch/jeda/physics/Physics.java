@@ -38,6 +38,8 @@ final class Physics {
         this.debugging = false;
         this.imp = new World(new Vec2(0f, 0f));
         this.imp.setContactListener(new PhysicsContactListener());
+        // Set default gravity. If default gravity is zero, it cannot be changed later on.
+        this.imp.setGravity(new Vec2(0f, 9.81f));
         this.paused = false;
         this.scale = 10.0;
     }
