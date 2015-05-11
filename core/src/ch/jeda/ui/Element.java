@@ -16,10 +16,7 @@
  */
 package ch.jeda.ui;
 
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * Base class for objects with a graphical representation. Elements can be added to a {@link ch.jeda.ui.View}. The view
@@ -33,9 +30,8 @@ import java.util.TreeSet;
 public abstract class Element {
 
     static final Comparator<Element> DRAW_ORDER = new DrawOrder();
-    private final SortedSet<String> tagSet;
     private int drawOrder;
-    private String[] tags;
+    private String name;
     private View view;
 
     /**
@@ -43,18 +39,8 @@ public abstract class Element {
      *
      * @since 2.0
      */
-    protected Element(String... tags) {
-        this.tagSet = new TreeSet<String>(Arrays.asList(tags));
-        this.tags = null;
-    }
-
-    public final void addTag(final String tag) {
-        if (this.tagSet.add(tag)) {
-            this.tags = null;
-            if (this.view != null) {
-                this.view.tagElement(this, tag);
-            }
-        }
+    protected Element() {
+        this.name = null;
     }
 
     /**
@@ -70,21 +56,20 @@ public abstract class Element {
         return this.drawOrder;
     }
 
-    public final String[] getTags() {
-        if (this.tags == null) {
-            this.tags = this.tagSet.toArray(new String[this.tagSet.size()]);
+    /**
+     * Returns the name of this element.
+     *
+     * @return the name of this element
+     *
+     * @see #setName(java.lang.String)
+     * @since 2.0
+     */
+    public final String getName() {
+        if (this.name == null) {
+            this.name = this.getClass().getSimpleName();
         }
 
-        return Arrays.copyOf(this.tags, this.tags.length);
-    }
-
-    public final void removeTag(final String tag) {
-        if (this.tagSet.remove(tag)) {
-            this.tags = null;
-            if (this.view != null) {
-                this.view.untagElement(this, tag);
-            }
-        }
+        return this.name;
     }
 
     /**
@@ -101,6 +86,28 @@ public abstract class Element {
         if (this.view != null) {
             this.view.drawOrderChanged(this);
         }
+    }
+
+    /**
+     * Sets the name of this element.
+     *
+     * @param name the name of this element
+     *
+     * @see #getName()
+     * @since 2.0
+     */
+    public final void setName(String name) {
+        if (name == null) {
+            name = "";
+        }
+
+        if (this.view != null) {
+            this.view.removeName(this, this.getName());
+
+            this.view.addName(this, name);
+        }
+
+        this.name = name;
     }
 
     /**
@@ -124,9 +131,18 @@ public abstract class Element {
         return this.view;
     }
 
-    void setView(final View view) {
-        this.view = view;
+    void addToView(final View view) {
+        if (this.view != view && this.view != null) {
+            this.view.remove(this);
+        }
 
+        this.view = view;
+    }
+
+    void removeFromView(final View view) {
+        if (this.view == view) {
+            this.view = null;
+        }
     }
 
     private static class DrawOrder implements Comparator<Element> {

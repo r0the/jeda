@@ -45,16 +45,17 @@ public class View {
     private static final EnumSet<ViewFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
     private final Canvas background;
     private final Canvas canvas;
+    private final Map<String, Set<Element>> elementsByName;
     private final Set<Element> elementSet;
-    private final Map<String, Set<Element>> elementsByTag;
     private final EventQueue eventQueue;
+    private final Set<Element> pendingInsertions;
+    private final Set<Element> pendingRemovals;
     private Element[] elements;
     private ViewImp imp;
     private String title;
 
     /**
-     * Constructs a view. The view is shown on the screen. All drawing methods inherited from {@link Canvas} are
-     * supported.
+     * Constructs a view. The view is shown on the screen.
      * <p>
      * The size of the view's drawing area depends on the platform:
      * <p>
@@ -71,8 +72,7 @@ public class View {
     }
 
     /**
-     * Constructs a view. The view is shown on the screen. All drawing methods inherited from {@link Canvas} are
-     * supported. The specified features will be enabled for the view.
+     * Constructs a view. The view is shown on the screen. The specified features will be enabled for the view.
      * <p>
      * The size of the view's drawing area depends on the platform:
      * <p>
@@ -91,8 +91,7 @@ public class View {
     }
 
     /**
-     * Constructs a view. The view is shown on the screen. All drawing methods inherited from {@link Canvas} are
-     * supported. The specified features will be enabled for the view.
+     * Constructs a view. The view is shown on the screen. The specified features will be enabled for the view.
      * <p>
      * The size of the view's drawing area depends on the platform:
      * </p><p>
@@ -114,10 +113,13 @@ public class View {
         this.background.fill();
         this.background.setColor(Color.BLACK);
         this.canvas = new Canvas(width, height);
-        this.elements = new Element[0];
+        this.elementsByName = new HashMap<String, Set<Element>>();
         this.elementSet = new HashSet<Element>();
-        this.elementsByTag = new HashMap<String, Set<Element>>();
         this.eventQueue = new EventQueue();
+        this.pendingInsertions = new HashSet<Element>();
+        this.pendingRemovals = new HashSet<Element>();
+
+        this.elements = new Element[0];
         this.title = Jeda.getProgramName();
         this.resetImp(width, height, toSet(features));
         Jeda.addEventListener(this.eventQueue);
@@ -137,25 +139,14 @@ public class View {
      * @since 2.0
      */
     public final void add(final Element element) {
-        if (element == null || this.elementSet.contains(element)) {
-            return;
+        if (element != null) {
+            if (this.elementSet.contains(element)) {
+                this.pendingRemovals.remove(element);
+            }
+            else {
+                this.pendingInsertions.add(element);
+            }
         }
-
-        final View oldView = element.getView();
-        if (oldView != null) {
-            oldView.remove(element);
-        }
-
-        this.elementSet.add(element);
-        this.elements = null;
-        this.addEventListener(element);
-        element.setView(this);
-        final String[] tags = element.getTags();
-        for (int i = 0; i < tags.length; ++i) {
-            this.tagElement(element, tags[i]);
-        }
-
-        this.elementAdded(element);
     }
 
     public final void add(final Element... elements) {
@@ -198,6 +189,29 @@ public class View {
     }
 
     /**
+     * Returns an element with the specified name. If more than one element with the specified name are managed by the
+     * view, an arbitrary element with the name is returned.
+     *
+     * @param name the name to look for
+     * @return an element with the specified name
+     *
+     * @since 2.0
+     */
+    public final Element getElement(final String name) {
+        final Set<Element> result = this.elementsByName.get(name);
+        if (result == null) {
+            return null;
+        }
+        else {
+            for (final Element element : result) {
+                return element;
+            }
+
+            return null;
+        }
+    }
+
+    /**
      * Returns all elements currently managed by the view.
      *
      * @return all elements currently managed by the view.
@@ -208,7 +222,6 @@ public class View {
      * @since 2.0
      */
     public final Element[] getElements() {
-        this.checkElements();
         return Arrays.copyOf(this.elements, this.elements.length);
     }
 
@@ -227,7 +240,6 @@ public class View {
      */
     @SuppressWarnings("unchecked")
     public final <T extends Element> T[] getElements(final Class<T> clazz) {
-        this.checkElements();
         final List<T> result = new ArrayList<T>();
         for (int i = 0; i < this.elements.length; ++i) {
             if (clazz.isInstance(this.elements[i])) {
@@ -240,8 +252,16 @@ public class View {
         return result.toArray((T[]) Array.newInstance(clazz, result.size()));
     }
 
-    public final Element[] getElements(final String tag) {
-        final Set<Element> result = this.elementsByTag.get(tag);
+    /**
+     * Returns all elements with the specified name.
+     *
+     * @param name the name to look for
+     * @return all elements with the specified name
+     *
+     * @since 2.0
+     */
+    public final Element[] getElements(final String name) {
+        final Set<Element> result = this.elementsByName.get(name);
         if (result == null) {
             return new Element[0];
         }
@@ -313,20 +333,14 @@ public class View {
      * @since 2.0
      */
     public final void remove(final Element element) {
-        if (element == null || !this.elementSet.contains(element)) {
-            return;
+        if (element != null) {
+            if (!this.elementSet.contains(element)) {
+                this.pendingInsertions.remove(element);
+            }
+            else {
+                this.pendingRemovals.add(element);
+            }
         }
-
-        this.elementSet.remove(element);
-        this.elements = null;
-        this.removeEventListener(element);
-        element.setView(null);
-        final String[] tags = element.getTags();
-        for (int i = 0; i < tags.length; ++i) {
-            this.untagElement(element, tags[i]);
-        }
-
-        this.elementRemoved(element);
     }
 
     public final void remove(final Element... elements) {
@@ -437,40 +451,36 @@ public class View {
     protected void elementRemoved(final Element element) {
     }
 
+    void addName(final Element element, final String name) {
+        if (!this.elementsByName.containsKey(name)) {
+            this.elementsByName.put(name, new HashSet<Element>());
+        }
+
+        this.elementsByName.get(name).add(element);
+    }
+
     void drawOrderChanged(final Element element) {
         this.elements = null;
     }
 
-    void tagElement(final Element element, final String tag) {
-        if (!this.elementsByTag.containsKey(tag)) {
-            this.elementsByTag.put(tag, new HashSet<Element>());
+    void removeName(final Element element, final String name) {
+        if (this.elementsByName.containsKey(name)) {
+            this.elementsByName.get(name).remove(element);
         }
-
-        this.elementsByTag.get(tag).add(element);
     }
 
     void untagElement(final Element element, final String tag) {
-        if (this.elementsByTag.containsKey(tag)) {
-            this.elementsByTag.get(tag).remove(element);
-        }
     }
 
     void postEvent(final Event event) {
         this.eventQueue.addEvent(event);
     }
 
-    private void checkElements() {
-        if (this.elements == null) {
-            this.elements = this.elementSet.toArray(new Element[this.elementSet.size()]);
-            Arrays.sort(this.elements, Element.DRAW_ORDER);
-        }
-    }
-
     private void tick(final TickEvent event) {
         if (this.imp.isVisible()) {
+            this.updateElements();
             this.eventQueue.processEvents();
             this.canvas.drawCanvas(0, 0, this.background);
-            this.checkElements();
             for (int i = 0; i < this.elements.length; ++i) {
                 this.elements[i].draw(this.canvas);
             }
@@ -489,6 +499,33 @@ public class View {
         this.imp.setEventQueue(this.eventQueue);
         this.imp.setTitle(this.title);
         this.eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
+    }
+
+    private void updateElements() {
+        if (this.pendingInsertions.isEmpty() && this.pendingRemovals.isEmpty()) {
+            return;
+        }
+
+        for (final Element element : this.pendingRemovals) {
+            this.elementSet.remove(element);
+            this.removeEventListener(element);
+            element.removeFromView(this);
+            this.removeName(element, element.getName());
+            this.elementRemoved(element);
+        }
+
+        for (final Element element : this.pendingInsertions) {
+            this.elementSet.add(element);
+            this.addEventListener(element);
+            element.addToView(this);
+            this.addName(element, element.getName());
+            this.elementAdded(element);
+        }
+
+        this.pendingInsertions.clear();
+        this.pendingRemovals.clear();
+        this.elements = this.elementSet.toArray(new Element[this.elementSet.size()]);
+        Arrays.sort(this.elements, Element.DRAW_ORDER);
     }
 
     private static EnumSet<ViewFeature> initImpChangingFeatures() {
