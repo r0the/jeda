@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,6 +25,7 @@ import java.io.Serializable;
  * an alpha value defining the color's opacity. Each value can be a number between 0 and 255.
  *
  * @since 1.0
+ * @version 2
  */
 public final class Color implements Serializable, Storable {
 
@@ -166,12 +167,12 @@ public final class Color implements Serializable, Storable {
 
     /**
      * Constructs an RGB color. The values for the red, green, and blue components of the color can be specified. All
-     * values must be in the range from 0 to 255.
+     * values must be in the range from 0 to 255. Values smaller than 0 are interpreted as 0, values greater than 255
+     * are interpreted as 255.
      *
      * @param red color's red component
      * @param green color's green component
      * @param blue color's blue component
-     * @throws IllegalArgumentException if not all component values are valid (in the range from 0 to 255).
      *
      * @since 1.0
      */
@@ -181,34 +182,19 @@ public final class Color implements Serializable, Storable {
 
     /**
      * Constructs an RGBA color. The values for the red, green, blue, and alpha components of the color can be
-     * specified. All values must be in the range from 0 to 255.
+     * specified. All values must be in the range from 0 to 255. Values smaller than 0 are interpreted as 0, values
+     * greater than 255 are interpreted as 255.
      *
      * @param red color's red component
      * @param green color's green component
      * @param blue color's blue component
      * @param alpha color's alpha component (opacity)
-     * @throws IllegalArgumentException if not all component values are valid (in the range of 0 to 255).
      *
      * @since 1.0
      */
     public Color(final int red, final int green, final int blue, final int alpha) {
-        if (red < 0 || 255 < red) {
-            throw new IllegalArgumentException("red");
-        }
 
-        if (green < 0 || 255 < green) {
-            throw new IllegalArgumentException("green");
-        }
-
-        if (blue < 0 || 255 < blue) {
-            throw new IllegalArgumentException("blue");
-        }
-
-        if (alpha < 0 || 255 < alpha) {
-            throw new IllegalArgumentException("alpha");
-        }
-
-        this.value = (alpha << 24) | (red << 16) | (green << 8) | blue;
+        this.value = (toRange(alpha) << 24) | (toRange(red) << 16) | (toRange(green) << 8) | toRange(blue);
     }
 
     /**
@@ -348,5 +334,9 @@ public final class Color implements Serializable, Storable {
         data.writeInt(G, this.getGreen());
         data.writeInt(B, this.getBlue());
         data.writeInt(A, this.getAlpha());
+    }
+
+    private static int toRange(final int value) {
+        return Math.max(0, Math.min(value, 255));
     }
 }
