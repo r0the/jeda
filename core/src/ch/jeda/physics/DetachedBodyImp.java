@@ -39,7 +39,7 @@ class DetachedBodyImp implements BodyImp {
 
     DetachedBodyImp(final BodyImp oldImp) {
         this.shapes = new ArrayList<Shape>(Arrays.asList(oldImp.getShapes()));
-        this.angle = oldImp.getAngle();
+        this.angle = oldImp.getAngleRad();
         this.angularDaming = oldImp.getAngularDamping();
         this.angularVelocity = oldImp.getAngularVelocity();
         this.damping = oldImp.getDamping();
@@ -98,7 +98,7 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
-    public double getAngle() {
+    public double getAngleRad() {
         return this.angle;
     }
 
@@ -173,7 +173,7 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
-    public void setAngle(final double angle) {
+    public void setAngleRad(final double angle) {
         this.angle = angle;
     }
 

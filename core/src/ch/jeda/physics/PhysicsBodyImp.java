@@ -37,7 +37,7 @@ final class PhysicsBodyImp implements BodyImp {
         this.friction = oldImp.getFriction();
         this.shapes = new ArrayList<Shape>();
         final BodyDef bodyDef = new BodyDef();
-        bodyDef.angle = (float) oldImp.getAngle();
+        bodyDef.angle = (float) oldImp.getAngleRad();
         bodyDef.angularDamping = (float) oldImp.getAngularDamping();
         bodyDef.angularVelocity = (float) oldImp.getAngularVelocity();
         bodyDef.position.x = physics.scaleLength(oldImp.getX());
@@ -97,7 +97,7 @@ final class PhysicsBodyImp implements BodyImp {
     }
 
     @Override
-    public double getAngle() {
+    public double getAngleRad() {
         return this.imp.getAngle();
     }
 
@@ -181,7 +181,7 @@ final class PhysicsBodyImp implements BodyImp {
     }
 
     @Override
-    public void setAngle(final double rotation) {
+    public void setAngleRad(final double rotation) {
         // ignore
     }
 

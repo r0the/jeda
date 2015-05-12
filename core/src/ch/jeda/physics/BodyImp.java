@@ -32,7 +32,7 @@ interface BodyImp {
 
     void drawOverlay(Canvas canvas);
 
-    double getAngle();
+    double getAngleRad();
 
     double getAngularDamping();
 
@@ -62,7 +62,7 @@ interface BodyImp {
 
     boolean isRotationFixed();
 
-    void setAngle(double angle);
+    void setAngleRad(double angle);
 
     void setAngularDamping(double angularDamping);
 

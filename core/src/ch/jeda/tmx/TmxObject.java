@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -75,7 +75,7 @@ public final class TmxObject {
         canvas.pushTransformations();
         canvas.resetTransformations();
         canvas.setTranslation(this.x + offsetX, this.y + offsetY);
-        canvas.setRotation(Math.toRadians(this.rotation));
+        canvas.setRotationDeg(this.rotation);
         if (this.tile != null) {
             canvas.drawImage(0, 0, this.tile.getImage(), Alignment.BOTTOM_LEFT);
         }
@@ -124,14 +124,25 @@ public final class TmxObject {
     }
 
     /**
-     * Returns the rotation of this object.
+     * Returns the rotation of this object in degrees.
      *
-     * @return the rotation of this object
+     * @return the rotation of this object in degrees
      *
      * @since 2.0
      */
-    public double getRotation() {
+    public double getRotationDeg() {
         return this.rotation;
+    }
+
+    /**
+     * Returns the rotation of this object in radians.
+     *
+     * @return the rotation of this object in radians
+     *
+     * @since 2.0
+     */
+    public double getRotationRad() {
+        return Math.toRadians(this.rotation);
     }
 
     /**

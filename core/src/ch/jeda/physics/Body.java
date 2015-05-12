@@ -61,8 +61,8 @@ public class Body extends Element {
      * @since 2.0
      */
     public void applyForce(final double f) {
-        final double angle = this.imp.getAngle();
-        this.applyForce(Math.cos(angle) * f, Math.sin(angle) * f);
+        final double angle = this.imp.getAngleRad();
+        this.applyForce(f * Math.cos(angle), f * Math.sin(angle));
     }
 
     /**
@@ -89,15 +89,31 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the current angle of the body in radian.
+     * Returns the current angle of the body in degrees.
      *
-     * @return the current angle of the body in radian
+     * @return the current angle of the body in degrees
      *
-     * @see #setAngle(double)
+     * @see #getAngleRad()
+     * @see #setAngleDeg(double)
+     * @see #setAngleRad(double)
      * @since 2.0
      */
-    public final double getAngle() {
-        return this.imp.getAngle();
+    public final double getAngleDeg() {
+        return Math.toDegrees(this.imp.getAngleRad());
+    }
+
+    /**
+     * Returns the current angle of the body in radians.
+     *
+     * @return the current angle of the body in radians
+     *
+     * @see #getAngleDeg()
+     * @see #setAngleDeg(double)
+     * @see #setAngleRad(double)
+     * @since 2.0
+     */
+    public final double getAngleRad() {
+        return this.imp.getAngleRad();
     }
 
     /**
@@ -113,9 +129,9 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the current angular velocity of the body in radian per second.
+     * Returns the current angular velocity of the body in radians per second.
      *
-     * @return the current angular velocity of the body in radian per second
+     * @return the current angular velocity of the body in radians per second
      *
      * @see #setAngularVelocity(double)
      * @since 2.0
@@ -137,9 +153,9 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the density of the body. The unit of the density is kilogram per square meter
+     * Returns the density of the body. The unit of the density is kilograms per square meter
      *
-     * @return the density of the body in kilogram per square meter
+     * @return the density of the body in kilograms per square meter
      *
      * @see #setDensity(double)
      * @since 2.0
@@ -173,10 +189,10 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the mass of the body in kilogram. The body's mass is determined by it's density and the areas of it's
+     * Returns the mass of the body in kilograms. The body's mass is determined by it's density and the areas of it's
      * shapes.
      *
-     * @return the mass of the body in kilogram.
+     * @return the mass of the body in kilograms
      *
      * @see #addShape(ch.jeda.physics.Shape)
      * @see #getDensity()
@@ -200,11 +216,12 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the horizontal component of the body's current linear velocity in meter per second.
+     * Returns the horizontal component of the body's current linear velocity in meters per second.
      *
-     * @return the horizontal component of the body's current linear velocity in meter per second
+     * @return the horizontal component of the body's current linear velocity in meters per second
      *
      * @see #setVelocity(double, double)
+     * @see #getVy()
      * @since 2.0
      */
     public final double getVx() {
@@ -212,11 +229,12 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the vertical component of the body's current linear velocity in meter per second.
+     * Returns the vertical component of the body's current linear velocity in meters per second.
      *
-     * @return the vertical component of the body's current linear velocity in meter per second
+     * @return the vertical component of the body's current linear velocity in meters per second
      *
      * @see #setVelocity(double, double)
+     * @see #getVx()
      * @since 2.0
      */
     public final double getVy() {
@@ -229,6 +247,7 @@ public class Body extends Element {
      * @return the x coordinate of the shape in pixels
      *
      * @see #setPosition(double, double)
+     * @see #getY()
      * @since 2.0
      */
     public final double getX() {
@@ -241,6 +260,7 @@ public class Body extends Element {
      * @return the y coordinate of the shape in pixels
      *
      * @see #setPosition(double, double)
+     * @see #getX()
      * @since 2.0
      */
     public final double getY() {
@@ -248,15 +268,31 @@ public class Body extends Element {
     }
 
     /**
-     * Sets the rotation angle of the body in radian. Has no effect if the body currenly is in a physics simulation.
+     * Sets the rotation angle of the body in degrees. Has no effect if the body currenly is in a physics simulation.
      *
-     * @param angle the angle of the body in radian
+     * @param angle the angle of the body in degrees
      *
-     * @see #getAngle()
+     * @see #getAngleDeg()
+     * @see #getAngleRad()
+     * @see #setAngleRad(double)
      * @since 2.0
      */
-    public void setAngle(final double angle) {
-        this.imp.setAngle(angle);
+    public void setAngleDeg(final double angle) {
+        this.imp.setAngleRad(Math.toRadians(angle));
+    }
+
+    /**
+     * Sets the rotation angle of the body in radians. Has no effect if the body currenly is in a physics simulation.
+     *
+     * @param angle the angle of the body in radians
+     *
+     * @see #getAngleDeg()
+     * @see #getAngleRad()
+     * @see #setAngleDeg(double)
+     * @since 2.0
+     */
+    public void setAngleRad(final double angle) {
+        this.imp.setAngleRad(angle);
     }
 
     /**
@@ -411,7 +447,7 @@ public class Body extends Element {
 
     @Override
     protected final void draw(final Canvas canvas) {
-        canvas.setRotation(this.getAngle());
+        canvas.setRotationRad(this.getAngleRad());
         canvas.setTranslation(this.getX(), this.getY());
         if (this.image != null) {
             canvas.drawImage(0, 0, this.image, Alignment.CENTER);

@@ -897,14 +897,32 @@ public class Canvas {
     }
 
     /**
-     * Returns the current rotation angle of the canvas.
+     * Returns the current rotation angle of the canvas in radians.
      *
-     * @return the current rotation angle of the canvas
+     * @return the current rotation angle of the canvas in radians
      *
      * @since 2.0
-     * @see #setRotation(double)
+     * @see #getRotationRad()
+     * @see #resetTransformations()
+     * @see #setRotationDeg(double)
+     * @see #setRotationRad(double)
      */
-    public double getRotation() {
+    public double getRotationDeg() {
+        return Math.toDegrees(this.transformation.rotation);
+    }
+
+    /**
+     * Returns the current rotation angle of the canvas in degrees.
+     *
+     * @return the current rotation angle of the canvas in degrees
+     *
+     * @since 2.0
+     * @see #getRotationDeg()
+     * @see #resetTransformations()
+     * @see #setRotationDeg(double)
+     * @see #setRotationRad(double)
+     */
+    public double getRotationRad() {
         return this.transformation.rotation;
     }
 
@@ -1016,9 +1034,10 @@ public class Canvas {
 
     /**
      * Resets all canvas transformations (rotation, translation, and scale). All subsequent drawing operations will
-     * appear untransformed.
+     * appear untransformed. Does not change the transformation stack.
      *
-     * @see #setRotation(double)
+     * @see #setRotationDeg(double)
+     * @see #setRotationRad(double)
      * @see #setScale(double)
      * @see #setTranslation(double, double)
      * @since 2.0
@@ -1145,15 +1164,31 @@ public class Canvas {
      * Rotates the canvas. The rotation centre is the origin of the canvas. Setting a rotation causes all subsequent
      * drawing operations to appear rotated by the specified angle.
      *
-     * @param angle the rotation angle in radians
+     * @param angle the rotation angle in degrees
      *
-     * @see #getRotation()
+     * @see #getRotationDeg()
+     * @see #getRotationRad()
      * @see #resetTransformations()
-     * @see #setTranslation(double, double)
-     * @see #setScale(double)
+     * @see #setRotationRad(double)
      * @since 2.0
      */
-    public void setRotation(final double angle) {
+    public void setRotationDeg(final double angle) {
+        this.setRotationRad(Math.toRadians(angle));
+    }
+
+    /**
+     * Rotates the canvas. The rotation centre is the origin of the canvas. Setting a rotation causes all subsequent
+     * drawing operations to appear rotated by the specified angle.
+     *
+     * @param angle the rotation angle in radians
+     *
+     * @see #getRotationDeg()
+     * @see #getRotationRad()
+     * @see #resetTransformations()
+     * @see #setRotationDeg(double)
+     * @since 2.0
+     */
+    public void setRotationRad(final double angle) {
         this.transformation.rotation = MathUtil.normalizeAngle(angle);
         this.imp.setTransformation(this.transformation);
     }
@@ -1168,8 +1203,6 @@ public class Canvas {
      * @see #getTranslationX()
      * @see #getTranslationY()
      * @see #resetTransformations()
-     * @see #setRotation(double)
-     * @see #setScale(double)
      * @since 2.0
      */
     public void setTranslation(final double dx, final double dy) {
@@ -1187,8 +1220,6 @@ public class Canvas {
      *
      * @see #getScale()
      * @see #resetTransformations()
-     * @see #setRotation(double)
-     * @see #setTranslation(double, double)
      * @since 2.0
      */
     public void setScale(final double scale) {
