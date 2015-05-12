@@ -21,7 +21,6 @@ import ch.jeda.ui.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.geom.AffineTransform;
@@ -69,8 +68,8 @@ class JavaImageImp implements ImageImp {
     }
 
     @Override
-    public Color getPixel(int x, int y) {
-        return new Color(this.bufferedImage.getRGB(x, y));
+    public int getPixel(int x, int y) {
+        return this.bufferedImage.getRGB(x, y);
     }
 
     @Override
@@ -87,18 +86,7 @@ class JavaImageImp implements ImageImp {
     }
 
     @Override
-    public JavaImageImp replacePixels(final Color oldColor, final Color newColor) {
-        assert oldColor != null;
-        assert newColor != null;
-
-        final Image image = ReplaceColorFilter.replaceColor(this.bufferedImage, oldColor, newColor);
-        final BufferedImage result = createImage(this.getWidth(), this.getHeight());
-        result.getGraphics().drawImage(image, 0, 0, null);
-        return new JavaImageImp(result);
-    }
-
-    @Override
-    public ImageImp rotate(final double angle) {
+    public ImageImp rotateRad(final double angle) {
         final int width = this.bufferedImage.getWidth();
         final int height = this.bufferedImage.getHeight();
         final int diameter = (int) Math.ceil(Math.sqrt(width * width + height * height));

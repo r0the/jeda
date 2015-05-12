@@ -20,7 +20,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import ch.jeda.platform.ImageImp;
-import ch.jeda.ui.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -48,8 +47,8 @@ class AndroidImageImp implements ImageImp {
     }
 
     @Override
-    public Color getPixel(final int x, final int y) {
-        return new Color(this.bitmap.getPixel(x, y));
+    public int getPixel(final int x, final int y) {
+        return this.bitmap.getPixel(x, y);
     }
 
     @Override
@@ -65,14 +64,7 @@ class AndroidImageImp implements ImageImp {
     }
 
     @Override
-    public ImageImp replacePixels(final Color oldColor, final Color newColor) {
-        assert oldColor != null;
-        assert newColor != null;
-
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public ImageImp rotate(double angle) {
+    public ImageImp rotateRad(double angle) {
         final int width = this.bitmap.getWidth();
         final int height = this.bitmap.getHeight();
         final int diameter = (int) Math.ceil(Math.sqrt(width * width + height * height));

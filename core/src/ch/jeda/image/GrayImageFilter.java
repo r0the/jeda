@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2015 by Stefan Rothe
+ * Copyright (C) 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,39 +14,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.platform;
+package ch.jeda.image;
 
 import ch.jeda.ui.Color;
-import java.io.IOException;
-import java.io.OutputStream;
+import ch.jeda.ui.Image;
+import ch.jeda.ui.ImageFilter;
 
-/**
- * <b>Internal</b>. Do not use this interface.
- */
-public interface ImageImp {
+public class GrayImageFilter implements ImageFilter {
 
-    enum Encoding {
-
-        JPEG, PNG
+    @Override
+    public Color apply(Image image, int x, int y) {
+        final Color color = image.getPixel(x, y);
+        final int gray = (int) (color.getRed() * 0.299 + color.getGreen() * 0.587 + color.getBlue() * 0.114);
+        return new Color(gray, gray, gray);
     }
-
-    ImageImp flipHorizontally();
-
-    ImageImp flipVertically();
-
-    int getHeight();
-
-    int getPixel(int x, int y);
-
-    int[] getPixels(int x, int y, int width, int height);
-
-    int getWidth();
-
-    ImageImp rotateRad(double angle);
-
-    ImageImp scale(int width, int height);
-
-    ImageImp subImage(int x, int y, int width, int height);
-
-    boolean write(OutputStream out, Encoding encoding) throws IOException;
 }

@@ -18,6 +18,7 @@ package ch.jeda.ui;
 
 import ch.jeda.Log;
 import ch.jeda.JedaInternal;
+import ch.jeda.image.ReplaceColorFilter;
 import ch.jeda.platform.ImageImp;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -70,6 +71,28 @@ public final class Image {
     }
 
     /**
+     * Creates a filtered copy of the image. The new image has the same width and height as this image. The pixel colors
+     * of the new image are determined by calling {@link ch.jeda.ui.ImageFilter#apply(ch.jeda.ui.Image, int, int)} for
+     * each pixel.
+     *
+     * @param filter the image filter
+     * @return the new image
+     * @throws NullPointerException if <tt>filter</tt> is <tt>null</tt>
+     *
+     * @since 2.0
+     */
+    public Image filter(final ImageFilter filter) {
+        final Canvas canvas = new Canvas(this.getWidth(), this.getHeight());
+        for (int x = 0; x < this.getWidth(); ++x) {
+            for (int y = 0; y < this.getHeight(); ++y) {
+                canvas.setPixel(x, y, filter.apply(this, x, y));
+            }
+        }
+
+        return canvas.takeSnapshot();
+    }
+
+    /**
      * Creates a horizontally flipped copy of the image.
      *
      * @return a horizontally flipped copy of the image
@@ -94,6 +117,20 @@ public final class Image {
     }
 
     /**
+     * Returns the pixel color at the specified coordinates. If the specified coordinates lay outside the image, the
+     * color of the pixel closest to the coordinates is returned.
+     *
+     * @param x the x coordinate of the pixel
+     * @param y the y coordinate of the pixel
+     * @return the pixel color
+     *
+     * @since 2.0
+     */
+    public Color getPixel(final int x, final int y) {
+        return new Color(this.imp.getPixel(this.toRangeX(x), this.toRangeY(y)));
+    }
+
+    /**
      * Returns the height of the image in pixels.
      *
      * @return height of the image
@@ -106,36 +143,8 @@ public final class Image {
     }
 
     /**
-     * Returns the pixel color at the specified coordinates. Returns the color of the pixel at the coordinates
-     * (<tt>x</tt>, <tt>y</tt>). Returns {@link ch.jeda.ui.Color#TRANSPARENT} if the coordinates do not reference a
-     * pixel inside the image.
-     *
-     * @param x the x coordinate of the pixel
-     * @param y the y coordinate of the pixel
-     * @return the pixel color at the specified coordinates
-     *
-     * @since 2.0
-     */
-    public Color getPixel(final int x, final int y) {
-        if (this.contains(x, y)) {
-            return this.imp.getPixel(x, y);
-        }
-        else {
-            return Color.TRANSPARENT;
-        }
-    }
-
-    /**
-     * Returns the pixel values of a rectangular part of the image.
-     *
-     * @param x the x coordinate of the top left corner of the part
-     * @param y the y coordinate of the top left corner of the part
-     * @param width the width of the part
-     * @param height the heigh of the part
-     * @return an array containing the pixels of the specified part of the image
-     * @throws IllegalArgumentException if <tt>width</tt> or <tt>height</tt> are smaller than 1
-     *
-     * @since 1.0
+     * @deprecated Use {@link #getAlpha(int, int)}, {@link #getBlue(int, int)}, {@link #getGreen(int, int)}, and
+     * {@link #getRed(int, int)} instead.
      */
     public int[] getPixels(final int x, final int y, final int width, final int height) {
         if (width < 1) {
@@ -178,26 +187,29 @@ public final class Image {
     }
 
     /**
-     * Creates a modified copy of the image in which all pixels of one specific color are replaced with another color.
-     * This can be useful for creating transparent images.
-     *
-     * @param oldColor color to be replaced
-     * @param newColor color to replace <tt>oldColor</tt>
-     * @return the resulting image
-     * @throws NullPointerException if <tt>oldColor</tt> or <tt>newColor</tt> are <tt>null</tt>
-     *
-     * @since 1.0
+     * @deprecated Use {@link #filter(ch.jeda.ui.ImageFilter) with {@link ch.jeda.image.ReplaceColorFilter} instead.
      */
     public Image replacePixels(final Color oldColor, final Color newColor) {
-        if (oldColor == null) {
-            throw new NullPointerException("oldColor");
-        }
+        return this.filter(new ReplaceColorFilter(oldColor, newColor));
+    }
 
-        if (newColor == null) {
-            throw new NullPointerException("newColor");
-        }
+    /**
+     * @deprecated Use {@link #rotateRad(double)} instead.
+     */
+    public Image rotate(final double angle) {
+        return this.rotateDeg(angle);
+    }
 
-        return new Image(this.imp.replacePixels(oldColor, newColor));
+    /**
+     * Creates a rotated copy of the image.
+     *
+     * @param angle the angle in degrees
+     * @return the rotated copy of the image
+     *
+     * @since 2.0
+     */
+    public Image rotateDeg(final double angle) {
+        return this.rotateRad(Math.toRadians(angle));
     }
 
     /**
@@ -206,10 +218,10 @@ public final class Image {
      * @param angle the angle in radians
      * @return the rotated copy of the image
      *
-     * @since 1.1
+     * @since 2.0
      */
-    public Image rotate(final double angle) {
-        return new Image(this.imp.rotate(angle));
+    public Image rotateRad(final double angle) {
+        return new Image(this.imp.rotateRad(angle));
     }
 
     /**
@@ -363,10 +375,6 @@ public final class Image {
         return this.imp;
     }
 
-    private boolean contains(final int x, final int y) {
-        return 0 <= x && x < this.getWidth() && 0 <= y && y < this.getHeight();
-    }
-
     private static Map<String, ImageImp.Encoding> initFormatMap() {
         final Map<String, ImageImp.Encoding> result = new HashMap<String, ImageImp.Encoding>();
         result.put("jpeg", ImageImp.Encoding.JPEG);
@@ -381,5 +389,13 @@ public final class Image {
         }
 
         return CACHE.get(filePath);
+    }
+
+    private int toRangeX(final int x) {
+        return Math.max(0, Math.min(x, this.getWidth() - 1));
+    }
+
+    private int toRangeY(final int y) {
+        return Math.max(0, Math.min(y, this.getHeight() - 1));
     }
 }
