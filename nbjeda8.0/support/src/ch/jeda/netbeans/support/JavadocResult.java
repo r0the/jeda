@@ -31,7 +31,7 @@ public final class JavadocResult implements JavadocForBinaryQuery.Result {
         this.roots = new URL[urls.length];
         for (int i = 0; i < urls.length; ++i) {
             try {
-                this.roots[0] = new URL(urls[i]);
+                this.roots[i] = new URL(urls[i]);
             }
             catch (final MalformedURLException ex) {
                 Exceptions.printStackTrace(ex);
