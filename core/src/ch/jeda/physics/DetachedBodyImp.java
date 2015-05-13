@@ -16,6 +16,7 @@
  */
 package ch.jeda.physics;
 
+import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Canvas;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -16,6 +16,7 @@
  */
 package ch.jeda.physics;
 
+import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Element;

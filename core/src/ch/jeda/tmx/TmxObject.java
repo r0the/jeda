@@ -17,6 +17,13 @@
 package ch.jeda.tmx;
 
 import ch.jeda.Data;
+import ch.jeda.geometry.Ellipse;
+import ch.jeda.geometry.Polygon;
+import ch.jeda.geometry.PolygonalChain;
+import ch.jeda.geometry.Rectangle;
+import ch.jeda.geometry.Shape;
+import ch.jeda.physics.Body;
+import ch.jeda.physics.BodyType;
 import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
 
@@ -27,11 +34,11 @@ import ch.jeda.ui.Canvas;
  */
 public final class TmxObject {
 
-    private final boolean ellipse;
     private final double height;
     private final String name;
     private final Data properties;
     private final double rotation;
+    private final Shape shape;
     private final TmxTile tile;
     private final String type;
     private final boolean visible;
@@ -40,11 +47,11 @@ public final class TmxObject {
     private final double y;
 
     TmxObject(final TmxMap map, final Element element) {
-        this.ellipse = element.hasChild(Const.ELLIPSE);
         this.height = element.getDoubleAttribute(Const.HEIGHT, 0.0);
         this.name = element.getStringAttribute(Const.NAME);
         this.properties = element.parsePropertiesChild();
         this.rotation = element.getDoubleAttribute(Const.ROTATION, 0.0);
+        this.shape = parseShape(element);
         this.type = element.getStringAttribute(Const.TYPE);
         this.visible = element.getBooleanAttribute(Const.VISIBLE, true);
         this.width = element.getDoubleAttribute(Const.WIDTH, 0.0);
@@ -80,11 +87,8 @@ public final class TmxObject {
             canvas.drawImage(0, 0, this.tile.getImage(), Alignment.BOTTOM_LEFT);
         }
 
-        if (this.ellipse) {
-            canvas.drawEllipe(this.width / 2.0, this.height / 2.0, this.width / 2.0, this.height / 2.0);
-        }
-        else {
-            canvas.drawRectangle(0, 0, this.width, this.height);
+        if (this.shape != null) {
+            this.shape.draw(canvas);
         }
 
         canvas.popTransformations();
@@ -146,6 +150,17 @@ public final class TmxObject {
     }
 
     /**
+     * Returns the shape of this object.
+     *
+     * @return the shape of this object
+     *
+     * @since 2.0
+     */
+    public Shape getShape() {
+        return this.shape;
+    }
+
+    /**
      * Returns the tile representing this object.
      *
      * @return the tile representing this object
@@ -200,7 +215,54 @@ public final class TmxObject {
         return this.y;
     }
 
-    public boolean isEllipse() {
-        return this.ellipse;
+    /**
+     * Converts this TMX object to a body.
+     *
+     * @return the body
+     *
+     * @since 2.0
+     */
+    public Body toBody() {
+        final Body result = new Body();
+        result.addShape(this.getShape());
+        result.setName(this.name);
+        result.setPosition(this.x, this.y);
+        result.setType(BodyType.DYNAMIC);
+        if (this.tile != null) {
+            result.setImage(this.tile.getImage());
+        }
+
+        return result;
+    }
+
+    private static Shape parseShape(final Element element) {
+        if (element.hasChild(Const.ELLIPSE)) {
+            final double height = element.getDoubleAttribute(Const.HEIGHT, 0.0);
+            final double width = element.getDoubleAttribute(Const.WIDTH, 0.0);
+            return new Ellipse(width / 2.0, height / 2.0);
+        }
+        else if (element.hasChild(Const.POLYGON)) {
+            final String points = element.getChild(Const.POLYGON).getStringAttribute(Const.POINTS);
+            return new Polygon(parsePoints(points));
+        }
+        else if (element.hasChild(Const.POLYLINE)) {
+            final String points = element.getChild(Const.POLYLINE).getStringAttribute(Const.POINTS);
+            return new PolygonalChain(parsePoints(points));
+        }
+        else {
+            final double height = element.getDoubleAttribute(Const.HEIGHT, 0.0);
+            final double width = element.getDoubleAttribute(Const.WIDTH, 0.0);
+            return new Rectangle(width, height);
+        }
+    }
+
+    private static double[] parsePoints(final String points) {
+        String[] parts = points.split(" |,");
+        final double[] result = new double[parts.length];
+        for (int i = 0; i < parts.length; ++i) {
+            result[i] = Double.parseDouble(parts[i]);
+        }
+
+        return result;
     }
 }

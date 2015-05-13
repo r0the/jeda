@@ -16,6 +16,11 @@
  */
 package ch.jeda.physics;
 
+import ch.jeda.geometry.Circle;
+import ch.jeda.geometry.Polygon;
+import ch.jeda.geometry.PolygonalChain;
+import ch.jeda.geometry.Rectangle;
+import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 import java.util.ArrayList;
@@ -59,7 +64,8 @@ final class PhysicsBodyImp implements BodyImp {
     public void addShape(final Shape shape) {
         this.shapes.add(shape);
         final FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape.createImp(this.physics.getScale());
+
+        fixtureDef.shape = convert(shape, this.physics.getScale());
         fixtureDef.density = (float) this.density;
         fixtureDef.friction = (float) this.friction;
         fixtureDef.userData = this;
@@ -253,5 +259,57 @@ final class PhysicsBodyImp implements BodyImp {
             default:
                 return null;
         }
+    }
+
+    private static org.jbox2d.collision.shapes.Shape convert(final Shape shape, final double scale) {
+        if (shape instanceof Circle) {
+            return convertCircle((Circle) shape, scale);
+        }
+        else if (shape instanceof Rectangle) {
+            return convertRectangle((Rectangle) shape, scale);
+        }
+        else if (shape instanceof Polygon) {
+            return convertPolygon((Polygon) shape, scale);
+        }
+        else if (shape instanceof PolygonalChain) {
+            return convertPolygonalChain((PolygonalChain) shape, scale);
+        }
+        else {
+            return null;
+        }
+    }
+
+    private static org.jbox2d.collision.shapes.Shape convertCircle(final Circle circle, final double scale) {
+        final org.jbox2d.collision.shapes.CircleShape result = new org.jbox2d.collision.shapes.CircleShape();
+        result.m_radius = (float) (circle.getRadius() / scale);
+        return result;
+    }
+
+    private static org.jbox2d.collision.shapes.Shape convertRectangle(final Rectangle rectangle, final double scale) {
+        final org.jbox2d.collision.shapes.PolygonShape result = new org.jbox2d.collision.shapes.PolygonShape();
+        result.setAsBox((float) (rectangle.getWidth() / scale / 2.0), (float) (rectangle.getHeight() / scale / 2.0), new Vec2(0, 0), 0);
+        return result;
+    }
+
+    private static org.jbox2d.collision.shapes.Shape convertPolygon(final Polygon polygon, final double scale) {
+        final org.jbox2d.collision.shapes.PolygonShape result = new org.jbox2d.collision.shapes.PolygonShape();
+        final Vec2[] vertices = new Vec2[polygon.getVertexCount()];
+        for (int i = 0; i < polygon.getVertexCount(); ++i) {
+            vertices[2 * i].set((float) (polygon.getVertexX(i) / scale), (float) (polygon.getVertexY(i) / scale));
+        }
+
+        result.set(vertices, vertices.length);
+        return result;
+    }
+
+    private static org.jbox2d.collision.shapes.Shape convertPolygonalChain(final PolygonalChain chain, final double scale) {
+        final org.jbox2d.collision.shapes.ChainShape result = new org.jbox2d.collision.shapes.ChainShape();
+        final Vec2[] vertices = new Vec2[chain.getVertexCount()];
+        for (int i = 0; i < chain.getVertexCount(); ++i) {
+            vertices[2 * i].set((float) (chain.getVertexX(i) / scale), (float) (chain.getVertexY(i) / scale));
+        }
+
+        result.createChain(vertices, vertices.length);
+        return result;
     }
 }

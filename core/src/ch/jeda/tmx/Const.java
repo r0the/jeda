@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -42,6 +42,9 @@ class Const {
     static final String OBJECTGROUP = "objectgroup";
     static final String OPACITY = "opacity";
     static final String ORIENTATION = "orientation";
+    static final String POINTS = "points";
+    static final String POLYGON = "polygon";
+    static final String POLYLINE = "polyline";
     static final String PROPERTIES = "properties";
     static final String PROPERTY = "property";
     static final String ROTATION = "rotation";

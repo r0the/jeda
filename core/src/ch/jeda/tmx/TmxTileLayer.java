@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,7 @@
  */
 package ch.jeda.tmx;
 
+import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 import java.io.ByteArrayInputStream;
@@ -44,6 +45,11 @@ public final class TmxTileLayer extends TmxLayer {
         for (int i = 0; i < tileIds.length; ++i) {
             this.tiles[i] = map.lookupTile(tileIds[i]);
         }
+    }
+
+    @Override
+    public void addTo(final PhysicsView view) {
+        // TODO
     }
 
     @Override

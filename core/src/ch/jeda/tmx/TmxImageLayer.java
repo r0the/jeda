@@ -16,6 +16,7 @@
  */
 package ch.jeda.tmx;
 
+import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Image;
 
@@ -35,6 +36,11 @@ public final class TmxImageLayer extends TmxLayer {
         this.image = reader.loadImageChild(element);
         this.x = element.getIntAttribute(Const.X);
         this.y = element.getIntAttribute(Const.Y);
+    }
+
+    @Override
+    public void addTo(final PhysicsView view) {
+        // TODO
     }
 
     @Override

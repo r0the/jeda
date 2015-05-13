@@ -17,6 +17,7 @@
 package ch.jeda.tmx;
 
 import ch.jeda.Data;
+import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Canvas;
 
 /**
@@ -39,6 +40,8 @@ public abstract class TmxLayer {
         this.properties = element.parsePropertiesChild();
         this.visible = element.getBooleanAttribute(Const.VISIBLE, true);
     }
+
+    public abstract void addTo(final PhysicsView view);
 
     /**
      * Draws this layer at the specified coordinates. The current opacity and visibility of the layer are taken into

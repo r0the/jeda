@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,7 @@
  */
 package ch.jeda.tmx;
 
+import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 import java.util.Arrays;
@@ -38,6 +39,20 @@ public final class TmxObjectGroup extends TmxLayer {
         this.objects = new TmxObject[objectElements.size()];
         for (int i = 0; i < this.objects.length; ++i) {
             this.objects[i] = new TmxObject(map, objectElements.get(i));
+        }
+    }
+
+    /**
+     * Adds the contents of this object group to a physics view.
+     *
+     * @param view the physics view
+     *
+     * @since 2.0
+     */
+    @Override
+    public void addTo(final PhysicsView view) {
+        for (int i = 0; i < this.objects.length; ++i) {
+            view.add(this.objects[i].toBody());
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 - 2015 by Stefan Rothe
+ * Copyright (C) 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,41 +14,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.physics;
+package ch.jeda.geometry;
 
 import ch.jeda.ui.Canvas;
-import ch.jeda.ui.Color;
 
 /**
- * Represents a circle shape.
+ * Represents a geometric shape.
  *
  * @since 2.0
  */
-public class CircleShape extends Shape {
-
-    private final double radius;
+public abstract class Shape {
 
     /**
-     * Constructs a circle shape.
+     * Draws this shape at the origin on a canvas.
      *
-     * @param radius the circle's radius
+     * @param canvas the canvas to draw on
      *
      * @since 2.0
      */
-    public CircleShape(final double radius) {
-        this.radius = radius;
-    }
-
-    @Override
-    void draw(final Canvas canvas) {
-        canvas.setColor(Color.RED);
-        canvas.drawCircle(0, 0, this.radius);
-    }
-
-    @Override
-    org.jbox2d.collision.shapes.Shape createImp(final double scale) {
-        final org.jbox2d.collision.shapes.CircleShape result = new org.jbox2d.collision.shapes.CircleShape();
-        result.m_radius = (float) (this.radius / scale);
-        return result;
-    }
+    public abstract void draw(Canvas canvas);
 }

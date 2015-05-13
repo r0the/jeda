@@ -18,6 +18,7 @@ package ch.jeda.physics;
 
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
+import ch.jeda.geometry.Rectangle;
 import ch.jeda.ui.Element;
 import ch.jeda.ui.View;
 import ch.jeda.ui.ViewFeature;
@@ -104,25 +105,25 @@ public final class PhysicsView extends View implements TickListener {
         top.setType(BodyType.STATIC);
         final double w = this.getWidth();
         final double h = this.getHeight();
-        top.addShape(new RectangleShape(w + 2 * WIDTH, WIDTH));
+        top.addShape(new Rectangle(w + 2 * WIDTH, WIDTH));
         top.setPosition(w / 2, -WIDTH / 2);
         this.add(top);
 
         final Body right = new Body();
         right.setType(BodyType.STATIC);
-        right.addShape(new RectangleShape(WIDTH, h + 2 * WIDTH));
+        right.addShape(new Rectangle(WIDTH, h + 2 * WIDTH));
         right.setPosition(w + WIDTH / 2, h / 2);
         this.add(right);
 
         final Body bottom = new Body();
         bottom.setType(BodyType.STATIC);
-        bottom.addShape(new RectangleShape(w + 2 * WIDTH, WIDTH));
+        bottom.addShape(new Rectangle(w + 2 * WIDTH, WIDTH));
         bottom.setPosition(w / 2, h + WIDTH / 2);
         this.add(bottom);
 
         final Body left = new Body();
         left.setType(BodyType.STATIC);
-        left.addShape(new RectangleShape(WIDTH, h + 2 * WIDTH));
+        left.addShape(new Rectangle(WIDTH, h + 2 * WIDTH));
         left.setPosition(-WIDTH / 2, h / 2);
         this.add(left);
     }
