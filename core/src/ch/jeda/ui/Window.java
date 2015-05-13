@@ -50,11 +50,10 @@ public class Window extends Canvas {
      * supported.
      * <p>
      * The size of the window's drawing area depends on the platform:
-     * <p>
-     * <p>
+     * </p><p>
      * <img src="../../../windows.png"> <img src="../../../linux.png"> The drawing area of the window has a width of 800
      * pixels and a height of 600 pixels.
-     * <p>
+     * </p><p>
      * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.
      *
      * @since 1.0
@@ -68,12 +67,11 @@ public class Window extends Canvas {
      * supported. The specified features will be enabled for the window.
      * <p>
      * The size of the window's drawing area depends on the platform:
-     * <p>
-     * <p>
+     * </p><p>
      * <img src="../../../windows.png"> <img src="../../../linux.png"> The drawing area of the window has a width of 800
      * pixels and a height of 600 pixels.
-     * <p>
-     * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.
+     * </p><p>
+     * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.</p>
      *
      * @param features the features of the window
      *
@@ -90,8 +88,7 @@ public class Window extends Canvas {
      * The size of the window's drawing area depends on the platform:
      * </p><p>
      * <img src="../../../windows.png"> <img src="../../../linux.png"> The drawing area of the window has the specified
-     * <tt>width</tt> and
-     * <tt>height</tt>.
+     * <tt>width</tt> and <tt>height</tt>.
      * </p><p>
      * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.</p>
      *

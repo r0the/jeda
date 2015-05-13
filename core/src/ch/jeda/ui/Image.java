@@ -143,8 +143,7 @@ public final class Image {
     }
 
     /**
-     * @deprecated Use {@link #getAlpha(int, int)}, {@link #getBlue(int, int)}, {@link #getGreen(int, int)}, and
-     * {@link #getRed(int, int)} instead.
+     * @deprecated Use {@link #getPixel(int, int)} instead.
      */
     public int[] getPixels(final int x, final int y, final int width, final int height) {
         if (width < 1) {
@@ -187,7 +186,7 @@ public final class Image {
     }
 
     /**
-     * @deprecated Use {@link #filter(ch.jeda.ui.ImageFilter) with {@link ch.jeda.image.ReplaceColorFilter} instead.
+     * @deprecated Use {@link #filter(ch.jeda.ui.ImageFilter)} with {@link ch.jeda.image.ReplaceColorFilter} instead.
      */
     public Image replacePixels(final Color oldColor, final Color newColor) {
         return this.filter(new ReplaceColorFilter(oldColor, newColor));

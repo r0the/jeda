@@ -48,7 +48,7 @@ import org.xml.sax.SAXException;
  * a network.
  *
  * @since 1.2
- * @version 2
+ * @version 3
  */
 public class Data {
 
