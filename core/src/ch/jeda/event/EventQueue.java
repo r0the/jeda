@@ -43,8 +43,8 @@ public final class EventQueue {
     private final Object listenerLock;
     private final Set<Object> listeners;
     private final List<MessageReceivedListener> messageReceivedListeners;
-    private final List<Object> pendingDeletions;
-    private final List<Object> pendingInsertions;
+    private final Set<Object> pendingInsertions;
+    private final Set<Object> pendingRemovals;
     private final List<PointerDownListener> pointerDownListeners;
     private final List<PointerMovedListener> pointerMovedListeners;
     private final List<PointerUpListener> pointerUpListeners;
@@ -73,8 +73,8 @@ public final class EventQueue {
         this.listenerLock = new Object();
         this.listeners = new HashSet<Object>();
         this.messageReceivedListeners = new ArrayList<MessageReceivedListener>();
-        this.pendingDeletions = new ArrayList<Object>();
-        this.pendingInsertions = new ArrayList<Object>();
+        this.pendingInsertions = new HashSet<Object>();
+        this.pendingRemovals = new HashSet<Object>();
         this.pointerDownListeners = new ArrayList<PointerDownListener>();
         this.pointerMovedListeners = new ArrayList<PointerMovedListener>();
         this.pointerUpListeners = new ArrayList<PointerUpListener>();
@@ -129,9 +129,9 @@ public final class EventQueue {
         if (listener != null) {
             synchronized (this.listenerLock) {
                 if (this.listeners.contains(listener)) {
-                    this.pendingDeletions.remove(listener);
+                    this.pendingRemovals.remove(listener);
                 }
-                else if (!this.pendingInsertions.contains(listener)) {
+                else {
                     this.pendingInsertions.add(listener);
                 }
             }
@@ -177,8 +177,8 @@ public final class EventQueue {
                 if (!this.listeners.contains(listener)) {
                     this.pendingInsertions.remove(listener);
                 }
-                else if (!this.pendingDeletions.contains(listener)) {
-                    this.pendingDeletions.add(listener);
+                else {
+                    this.pendingRemovals.add(listener);
                 }
             }
         }
@@ -560,15 +560,15 @@ public final class EventQueue {
 
     private void processPendingListeners() {
         synchronized (this.listenerLock) {
-            for (int i = 0; i < this.pendingDeletions.size(); ++i) {
-                this.doRemoveListener(this.pendingDeletions.get(i));
+            for (final Object listener : this.pendingRemovals) {
+                this.doRemoveListener(listener);
             }
 
-            for (int i = 0; i < this.pendingInsertions.size(); ++i) {
-                this.doAddListener(this.pendingInsertions.get(i));
+            for (final Object listener : this.pendingInsertions) {
+                this.doAddListener(listener);
             }
 
-            this.pendingDeletions.clear();
+            this.pendingRemovals.clear();
             this.pendingInsertions.clear();
         }
     }
