@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -52,9 +52,9 @@ public final class Music {
      * @since 1.0
      */
     public Music(final String path) {
-        this.lock = new Object();
+        lock = new Object();
         this.path = path;
-        this.playbackState = PlaybackState.STOPPED;
+        playbackState = PlaybackState.STOPPED;
     }
 
     /**
@@ -65,8 +65,8 @@ public final class Music {
      * @since 1.0
      */
     public PlaybackState getPlaybackState() {
-        synchronized (this.lock) {
-            return this.playbackState;
+        synchronized (lock) {
+            return playbackState;
         }
     }
 
@@ -111,12 +111,12 @@ public final class Music {
     }
 
     void setPlaybackState(final PlaybackState playbackState) {
-        synchronized (this.lock) {
+        synchronized (lock) {
             this.playbackState = playbackState;
         }
     }
 
     String getPath() {
-        return this.path;
+        return path;
     }
 }

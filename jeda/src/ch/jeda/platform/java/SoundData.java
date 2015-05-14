@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,7 +29,7 @@ final class SoundData {
     }
 
     InputStream openStream() {
-        return new BufferedInputStream(new ByteArrayInputStream(this.buffer));
+        return new BufferedInputStream(new ByteArrayInputStream(buffer));
     }
 
 }

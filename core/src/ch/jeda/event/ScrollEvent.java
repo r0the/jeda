@@ -49,7 +49,7 @@ public class ScrollEvent extends Event {
      * @since 2.0
      */
     public final double getDx() {
-        return this.dx;
+        return dx;
     }
 
     /**
@@ -60,6 +60,6 @@ public class ScrollEvent extends Event {
      * @since 2.0
      */
     public final double getDy() {
-        return this.dy;
+        return dy;
     }
 }

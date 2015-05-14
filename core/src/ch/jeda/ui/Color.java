@@ -194,7 +194,7 @@ public final class Color implements Serializable, Storable {
      */
     public Color(final int red, final int green, final int blue, final int alpha) {
 
-        this.value = (toRange(alpha) << 24) | (toRange(red) << 16) | (toRange(green) << 8) | toRange(blue);
+        value = (toRange(alpha) << 24) | (toRange(red) << 16) | (toRange(green) << 8) | toRange(blue);
     }
 
     /**
@@ -230,7 +230,7 @@ public final class Color implements Serializable, Storable {
     public boolean equals(final Object object) {
         if (object instanceof Color) {
             final Color other = (Color) object;
-            return this.value == other.value;
+            return value == other.value;
         }
         else {
             return false;
@@ -245,7 +245,7 @@ public final class Color implements Serializable, Storable {
      * @since 1.0
      */
     public int getAlpha() {
-        return 255 & (this.value >> 24);
+        return 255 & (value >> 24);
     }
 
     /**
@@ -256,7 +256,7 @@ public final class Color implements Serializable, Storable {
      * @since 1.0
      */
     public int getBlue() {
-        return 255 & this.value;
+        return 255 & value;
     }
 
     /**
@@ -267,7 +267,7 @@ public final class Color implements Serializable, Storable {
      * @since 1.0
      */
     public int getGreen() {
-        return 255 & (this.value >> 8);
+        return 255 & (value >> 8);
     }
 
     /**
@@ -278,7 +278,7 @@ public final class Color implements Serializable, Storable {
      * @since 1.0
      */
     public int getRed() {
-        return 255 & (this.value >> 16);
+        return 255 & (value >> 16);
     }
 
     /**
@@ -287,12 +287,12 @@ public final class Color implements Serializable, Storable {
      * @since 1.0
      */
     public int getValue() {
-        return this.value;
+        return value;
     }
 
     @Override
     public int hashCode() {
-        return 23 * this.value;
+        return 23 * value;
     }
 
     /**
@@ -306,7 +306,7 @@ public final class Color implements Serializable, Storable {
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
-        final int alpha = this.getAlpha();
+        final int alpha = getAlpha();
         if (alpha != 255) {
             result.append("rgba(");
         }
@@ -314,11 +314,11 @@ public final class Color implements Serializable, Storable {
             result.append("rgb(");
         }
 
-        result.append(this.getRed());
+        result.append(getRed());
         result.append(", ");
-        result.append(this.getGreen());
+        result.append(getGreen());
         result.append(", ");
-        result.append(this.getBlue());
+        result.append(getBlue());
         if (alpha != 255) {
             result.append(", ");
             result.append(alpha / 255.0);
@@ -330,10 +330,10 @@ public final class Color implements Serializable, Storable {
 
     @Override
     public void writeTo(final Data data) {
-        data.writeInt(R, this.getRed());
-        data.writeInt(G, this.getGreen());
-        data.writeInt(B, this.getBlue());
-        data.writeInt(A, this.getAlpha());
+        data.writeInt(R, getRed());
+        data.writeInt(G, getGreen());
+        data.writeInt(B, getBlue());
+        data.writeInt(A, getAlpha());
     }
 
     private static int toRange(final int value) {

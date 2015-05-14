@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,29 +26,29 @@ class SelectionWindow extends BaseWindow {
 
     SelectionWindow(final WindowManager manager) {
         super(manager);
-        this.initComponents();
-        this.list.addMouseListener(new MouseListenerImp(this));
-        this.setDefaultButton(this.acceptButton);
-        this.init();
+        initComponents();
+        list.addMouseListener(new MouseListenerImp(this));
+        setDefaultButton(acceptButton);
+        init();
     }
 
     void setListInfo(final SelectionRequest listInfo) {
-        this.request = listInfo;
-        this.setTitle(listInfo.getTitle());
-        this.list.setListData(listInfo.getDisplayItems().toArray());
-        if (this.list.getModel().getSize() > 0) {
-            this.list.setSelectedIndex(0);
+        request = listInfo;
+        setTitle(listInfo.getTitle());
+        list.setListData(listInfo.getDisplayItems().toArray());
+        if (list.getModel().getSize() > 0) {
+            list.setSelectedIndex(0);
         }
     }
 
     @Override
     protected void onAccept() {
-        this.request.setResult(this.list.getSelectedIndex());
+        request.setResult(list.getSelectedIndex());
     }
 
     @Override
     protected void onCancel() {
-        this.request.setResult(-1);
+        request.setResult(-1);
     }
 
     private static class MouseListenerImp extends MouseAdapter {
@@ -56,13 +56,13 @@ class SelectionWindow extends BaseWindow {
         private final SelectionWindow window;
 
         public MouseListenerImp(final SelectionWindow dialog) {
-            this.window = dialog;
+            window = dialog;
         }
 
         @Override
         public void mouseClicked(final MouseEvent event) {
             if (event.getClickCount() == 2) {
-                this.window.accept();
+                window.accept();
             }
         }
     }
@@ -128,11 +128,11 @@ class SelectionWindow extends BaseWindow {
     }// </editor-fold>//GEN-END:initComponents
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
-        this.accept();
+        accept();
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        this.cancel();
+        cancel();
     }//GEN-LAST:event_cancelButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;

@@ -41,9 +41,9 @@ public final class TmxTileLayer extends TmxLayer {
         final int width = map.getWidth();
         final int height = map.getHeight();
         final int[] tileIds = parseData(element.getChild(Const.DATA), width, height);
-        this.tiles = new TmxTile[width * height];
+        tiles = new TmxTile[width * height];
         for (int i = 0; i < tileIds.length; ++i) {
-            this.tiles[i] = map.lookupTile(tileIds[i]);
+            tiles[i] = map.lookupTile(tileIds[i]);
         }
     }
 
@@ -54,22 +54,22 @@ public final class TmxTileLayer extends TmxLayer {
 
     @Override
     public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
-        if (!this.isVisible()) {
+        if (!isVisible()) {
             return;
         }
 
-        final int alpha = (int) (this.getOpacity() * 255);
-        final int tileHeight = this.getMap().getTileHeight();
-        final int tileWidth = this.getMap().getTileWidth();
+        final int alpha = (int) (getOpacity() * 255);
+        final int tileHeight = getMap().getTileHeight();
+        final int tileWidth = getMap().getTileWidth();
         int screenX = (int) offsetX;
         int screenY = (int) offsetY + tileHeight;
         int startX = 0;
         int startY = 0;
-        int endX = this.getMap().getWidth();
-        int endY = this.getMap().getHeight();
+        int endX = getMap().getWidth();
+        int endY = getMap().getHeight();
         for (int x = startX; x < endX; ++x) {
             for (int y = startY; y < endY; ++y) {
-                final TmxTile tile = this.getTile(x, y);
+                final TmxTile tile = getTile(x, y);
                 if (tile != null) {
                     tile.draw(canvas, screenX + tile.getOffsetX(),
                               screenY + tile.getOffsetY(), alpha);
@@ -91,9 +91,9 @@ public final class TmxTileLayer extends TmxLayer {
 
     @Override
     public TmxTile getTile(final int x, final int y) {
-        final int index = x + y * this.getMap().getWidth();
-        if (0 <= index && index < this.tiles.length && this.tiles[index] != null) {
-            return this.tiles[index];
+        final int index = x + y * getMap().getWidth();
+        if (0 <= index && index < tiles.length && tiles[index] != null) {
+            return tiles[index];
         }
 
         return null;
@@ -101,17 +101,17 @@ public final class TmxTileLayer extends TmxLayer {
 
     private void drawDebugOverlay(final Canvas canvas, final int offsetX, final int offsetY) {
         canvas.setColor(Color.RED);
-        final int tileHeight = this.getMap().getTileHeight();
-        final int tileWidth = this.getMap().getTileWidth();
+        final int tileHeight = getMap().getTileHeight();
+        final int tileWidth = getMap().getTileWidth();
         int screenX = offsetX;
         int screenY = offsetY;
         int startX = 0;
         int startY = 0;
-        int endX = this.getMap().getWidth();
-        int endY = this.getMap().getHeight();
+        int endX = getMap().getWidth();
+        int endY = getMap().getHeight();
         for (int x = startX; x < endX; ++x) {
             for (int y = startY; y < endY; ++y) {
-                final TmxTile tile = this.getTile(x, y);
+                final TmxTile tile = getTile(x, y);
                 if (tile != null && tile.getTerrainTopLeft() != null) {
                     canvas.fillRectangle(screenX, screenY, 5, 5);
                 }

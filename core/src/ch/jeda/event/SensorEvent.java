@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -72,7 +72,7 @@ public class SensorEvent extends Event {
      * @since 1.0
      */
     public final SensorType getSensorType() {
-        return this.sensorType;
+        return sensorType;
     }
 
     /**
@@ -95,7 +95,7 @@ public class SensorEvent extends Event {
      * @since 1.0
      */
     public final double getValue() {
-        return this.value;
+        return value;
     }
 
     /**
@@ -117,7 +117,7 @@ public class SensorEvent extends Event {
      * @since 1.0
      */
     public final double getX() {
-        return this.x;
+        return x;
     }
 
     /**
@@ -142,7 +142,7 @@ public class SensorEvent extends Event {
      * @since 1.0
      */
     public final double getY() {
-        return this.y;
+        return y;
     }
 
     /**
@@ -164,7 +164,7 @@ public class SensorEvent extends Event {
      * @since 1.0
      */
     public final double getZ() {
-        return this.z;
+        return z;
     }
 
     /**
@@ -176,24 +176,24 @@ public class SensorEvent extends Event {
      * @since 1.0
      */
     public final boolean isMaximum() {
-        return this.maximum;
+        return maximum;
     }
 
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
         result.append("SensorEvent(type=");
-        result.append(this.getType());
+        result.append(getType());
         result.append(", maxiumum=");
-        result.append(this.maximum);
+        result.append(maximum);
         result.append(", sensorType=");
-        result.append(this.sensorType);
+        result.append(sensorType);
         result.append(", x=");
-        result.append(this.x);
+        result.append(x);
         result.append(", y=");
-        result.append(this.y);
+        result.append(y);
         result.append(", z=");
-        result.append(this.z);
+        result.append(z);
         result.append(")");
         return result.toString();
     }
@@ -201,7 +201,7 @@ public class SensorEvent extends Event {
     private SensorEvent(final Object source, final SensorType sensorType, final boolean maxiumum, final double value,
                         final double x, final double y, final double z) {
         super(source, EventType.SENSOR);
-        this.maximum = maxiumum;
+        maximum = maxiumum;
         this.sensorType = sensorType;
         this.value = value;
         this.x = x;

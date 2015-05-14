@@ -1,6 +1,5 @@
-
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -114,26 +113,26 @@ public class DefaultCheckBoxStyle implements CheckBoxStyle {
     public boolean contains(final CheckBox checkBox, final int x, final int y) {
         final int dx = checkBox.getCenterX() - x;
         final int dy = checkBox.getCenterY() - y;
-        return Math.abs(dx) <= this.getWidth(checkBox) / 2 && Math.abs(dy) <= this.getHeight(checkBox) / 2;
+        return Math.abs(dx) <= getWidth(checkBox) / 2 && Math.abs(dy) <= getHeight(checkBox) / 2;
     }
 
     @Override
     public void draw(final CheckBox checkBox, final Canvas canvas) {
         if (checkBox.isChecked()) {
-            canvas.drawImage(checkBox.getLeft(), checkBox.getTop(), this.checked);
+            canvas.drawImage(checkBox.getLeft(), checkBox.getTop(), checked);
         }
         else {
-            canvas.drawImage(checkBox.getLeft(), checkBox.getTop(), this.unchecked);
+            canvas.drawImage(checkBox.getLeft(), checkBox.getTop(), unchecked);
         }
     }
 
     @Override
     public int getHeight(final CheckBox checkBox) {
-        return this.unchecked.getHeight();
+        return unchecked.getHeight();
     }
 
     @Override
     public int getWidth(final CheckBox checkBox) {
-        return this.checked.getWidth();
+        return checked.getWidth();
     }
 }

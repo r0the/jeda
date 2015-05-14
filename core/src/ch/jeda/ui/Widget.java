@@ -17,7 +17,6 @@
 package ch.jeda.ui;
 
 import ch.jeda.Jeda;
-import ch.jeda.event.ActionEvent;
 
 /**
  * Represents an element of a graphical user interface. A widget has a style that determines how to draw the widget.
@@ -54,7 +53,7 @@ public abstract class Widget extends Element {
         this.alignment = alignment;
         this.x = x;
         this.y = y;
-        this.setDrawOrder(DEFAULT_DRAW_ORDER);
+        setDrawOrder(DEFAULT_DRAW_ORDER);
     }
 
     /**
@@ -76,7 +75,7 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final Alignment getAlignment() {
-        return this.alignment;
+        return alignment;
     }
 
     /**
@@ -87,8 +86,8 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final int getBottom() {
-        final int height = this.getHeight();
-        return this.alignment.alignY(this.y, height) + height;
+        final int height = getHeight();
+        return alignment.alignY(y, height) + height;
     }
 
     /**
@@ -99,8 +98,8 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final int getCenterX() {
-        final int width = this.getWidth();
-        return this.alignment.alignX(this.x, width) + width / 2;
+        final int width = getWidth();
+        return alignment.alignX(x, width) + width / 2;
     }
 
     /**
@@ -111,8 +110,8 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final int getCenterY() {
-        final int height = this.getHeight();
-        return this.alignment.alignY(this.y, height) + height / 2;
+        final int height = getHeight();
+        return alignment.alignY(y, height) + height / 2;
     }
 
     /**
@@ -132,7 +131,7 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final int getLeft() {
-        return this.alignment.alignX(this.x, this.getWidth());
+        return alignment.alignX(x, getWidth());
     }
 
     /**
@@ -143,8 +142,8 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final int getRight() {
-        final int width = this.getWidth();
-        return this.alignment.alignX(this.x, width) + width;
+        final int width = getWidth();
+        return alignment.alignX(x, width) + width;
     }
 
     /**
@@ -155,7 +154,7 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final int getTop() {
-        return this.alignment.alignY(this.y, this.getHeight());
+        return alignment.alignY(y, getHeight());
     }
 
     /**
@@ -175,7 +174,7 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final int getX() {
-        return this.x;
+        return x;
     }
 
     /**
@@ -186,7 +185,7 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final int getY() {
-        return this.y;
+        return y;
     }
 
     /**
@@ -196,7 +195,7 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final boolean isSelected() {
-        return this.selected;
+        return selected;
     }
 
     /**
@@ -205,19 +204,19 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public final void select() {
-        if (this.getView() == null) {
+        if (getView() == null) {
             return;
         }
 
-        final Widget[] widgets = this.getView().getElements(Widget.class);
+        final Widget[] widgets = getView().getElements(Widget.class);
         for (int i = 0; i < widgets.length; ++i) {
             if (widgets[i].selected) {
                 widgets[i].selected = false;
             }
         }
 
-        this.selected = true;
-        this.checkVirtualKeyboard();
+        selected = true;
+        checkVirtualKeyboard();
     }
 
     /**

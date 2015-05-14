@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -49,7 +49,7 @@ public final class MessageEvent extends ConnectionEvent {
      * @since 1.4
      */
     public Data getData() {
-        return new Data(this.line);
+        return new Data(line);
     }
 
     /**
@@ -60,6 +60,6 @@ public final class MessageEvent extends ConnectionEvent {
      * @since 1.4
      */
     public String getLine() {
-        return this.line;
+        return line;
     }
 }

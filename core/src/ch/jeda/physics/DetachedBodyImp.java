@@ -26,7 +26,7 @@ class DetachedBodyImp implements BodyImp {
 
     private final List<Shape> shapes;
     private double angle;
-    private double angularDaming;
+    private double angularDamping;
     private double angularVelocity;
     private double damping;
     private double density;
@@ -39,40 +39,40 @@ class DetachedBodyImp implements BodyImp {
     private double y;
 
     DetachedBodyImp(final BodyImp oldImp) {
-        this.shapes = new ArrayList<Shape>(Arrays.asList(oldImp.getShapes()));
-        this.angle = oldImp.getAngleRad();
-        this.angularDaming = oldImp.getAngularDamping();
-        this.angularVelocity = oldImp.getAngularVelocity();
-        this.damping = oldImp.getDamping();
-        this.density = oldImp.getDensity();
-        this.friction = oldImp.getFriction();
-        this.rotationFixed = oldImp.isRotationFixed();
-        this.type = oldImp.getType();
-        this.vx = oldImp.getVx();
-        this.vy = oldImp.getVy();
-        this.x = oldImp.getX();
-        this.y = oldImp.getY();
+        shapes = new ArrayList<Shape>(Arrays.asList(oldImp.getShapes()));
+        angle = oldImp.getAngleRad();
+        angularDamping = oldImp.getAngularDamping();
+        angularVelocity = oldImp.getAngularVelocity();
+        damping = oldImp.getDamping();
+        density = oldImp.getDensity();
+        friction = oldImp.getFriction();
+        rotationFixed = oldImp.isRotationFixed();
+        type = oldImp.getType();
+        vx = oldImp.getVx();
+        vy = oldImp.getVy();
+        x = oldImp.getX();
+        y = oldImp.getY();
     }
 
     DetachedBodyImp() {
-        this.shapes = new ArrayList<Shape>();
-        this.angle = 0.0;
-        this.angularDaming = 0.0;
-        this.angularVelocity = 0.0;
-        this.damping = 0.0;
-        this.density = 1.0;
-        this.friction = 0.0;
-        this.rotationFixed = false;
-        this.type = BodyType.DYNAMIC;
-        this.vx = 0.0;
-        this.vy = 0.0;
-        this.x = 0.0;
-        this.y = 0.0;
+        shapes = new ArrayList<Shape>();
+        angle = 0.0;
+        angularDamping = 0.0;
+        angularVelocity = 0.0;
+        damping = 0.0;
+        density = 1.0;
+        friction = 0.0;
+        rotationFixed = false;
+        type = BodyType.DYNAMIC;
+        vx = 0.0;
+        vy = 0.0;
+        x = 0.0;
+        y = 0.0;
     }
 
     @Override
     public void addShape(final Shape shape) {
-        this.shapes.add(shape);
+        shapes.add(shape);
     }
 
     @Override
@@ -100,32 +100,32 @@ class DetachedBodyImp implements BodyImp {
 
     @Override
     public double getAngleRad() {
-        return this.angle;
+        return angle;
     }
 
     @Override
     public double getAngularDamping() {
-        return this.angularDaming;
+        return angularDamping;
     }
 
     @Override
     public double getAngularVelocity() {
-        return this.angularVelocity;
+        return angularVelocity;
     }
 
     @Override
     public double getDamping() {
-        return this.damping;
+        return damping;
     }
 
     @Override
     public double getDensity() {
-        return this.density;
+        return density;
     }
 
     @Override
     public double getFriction() {
-        return this.friction;
+        return friction;
     }
 
     @Override
@@ -140,37 +140,37 @@ class DetachedBodyImp implements BodyImp {
 
     @Override
     public Shape[] getShapes() {
-        return this.shapes.toArray(new Shape[this.shapes.size()]);
+        return shapes.toArray(new Shape[shapes.size()]);
     }
 
     @Override
     public BodyType getType() {
-        return this.type;
+        return type;
     }
 
     @Override
     public double getVx() {
-        return this.vx;
+        return vx;
     }
 
     @Override
     public double getVy() {
-        return this.vy;
+        return vy;
     }
 
     @Override
     public double getX() {
-        return this.x;
+        return x;
     }
 
     @Override
     public double getY() {
-        return this.y;
+        return y;
     }
 
     @Override
     public boolean isRotationFixed() {
-        return this.rotationFixed;
+        return rotationFixed;
     }
 
     @Override
@@ -180,7 +180,7 @@ class DetachedBodyImp implements BodyImp {
 
     @Override
     public void setAngularDamping(final double angularDamping) {
-        this.angularDaming = angularDamping;
+        this.angularDamping = angularDamping;
     }
 
     @Override

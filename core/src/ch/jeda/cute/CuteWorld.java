@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -35,20 +35,20 @@ public final class CuteWorld {
     private double scrollY;
 
     public CuteWorld(final int sizeX, final int sizeY, final int sizeZ) {
-        this.changes = new ArrayList<Change>();
-        this.objects = new ArrayList<CuteObject>();
+        changes = new ArrayList<Change>();
+        objects = new ArrayList<CuteObject>();
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.sizeZ = sizeZ;
-        this.slices = new Slice[sizeY];
+        slices = new Slice[sizeY];
         for (int y = 0; y < sizeY; y++) {
-            this.slices[y] = new Slice(sizeX, sizeZ);
+            slices[y] = new Slice(sizeX, sizeZ);
         }
     }
 
     public void addObject(final CuteObject object) {
         if (object != null) {
-            this.changes.add(Change.createAddObjectChange(object));
+            changes.add(Change.createAddObjectChange(object));
         }
     }
 
@@ -57,9 +57,9 @@ public final class CuteWorld {
     }
 
     public void fill(final int z, final Block block) {
-        if (0 <= z && z < this.sizeZ) {
-            for (int x = 0; x < this.sizeX; x++) {
-                for (int y = 0; y < this.sizeY; y++) {
+        if (0 <= z && z < sizeZ) {
+            for (int x = 0; x < sizeX; x++) {
+                for (int y = 0; y < sizeY; y++) {
                     setBlockAt(x, y, z, block);
                 }
             }
@@ -67,7 +67,7 @@ public final class CuteWorld {
     }
 
     public Block getBlockAt(final int x, final int y, final int z) {
-        final Box box = this.getBox(x, y, z);
+        final Box box = getBox(x, y, z);
         if (box != null) {
             return box.getBlock();
         }
@@ -77,8 +77,8 @@ public final class CuteWorld {
     }
 
     public int getHeightAt(int x, int y) {
-        int height = this.sizeZ;
-        while (height > 0 && this.getBlockAt(x, y, height - 1).isEmpty()) {
+        int height = sizeZ;
+        while (height > 0 && getBlockAt(x, y, height - 1).isEmpty()) {
             --height;
         }
 
@@ -86,7 +86,7 @@ public final class CuteWorld {
     }
 
     public CuteObject[] getObjectsAt(final int x, final int y, final int z) {
-        final Box box = this.getBox(x, y, z);
+        final Box box = getBox(x, y, z);
         if (box != null) {
             return box.getObjectsArray();
         }
@@ -96,66 +96,66 @@ public final class CuteWorld {
     }
 
     public CuteObject getScrollLock() {
-        return this.scrollLock;
+        return scrollLock;
     }
 
     public double getScrollX() {
-        return this.scrollX;
+        return scrollX;
     }
 
     public double getScrollY() {
-        return this.scrollY;
+        return scrollY;
     }
 
     public int getSizeX() {
-        return this.sizeX;
+        return sizeX;
     }
 
     public int getSizeY() {
-        return this.sizeY;
+        return sizeY;
     }
 
     public int getSizeZ() {
-        return this.sizeZ;
+        return sizeZ;
     }
 
     public boolean isValidCoordinate(final int x, final int y, final int z) {
-        return 0 <= x && x < this.sizeX &&
-               0 <= y && y < this.sizeY &&
-               0 <= z && z < this.sizeZ;
+        return 0 <= x && x < sizeX &&
+               0 <= y && y < sizeY &&
+               0 <= z && z < sizeZ;
     }
 
     public void removeObject(final CuteObject object) {
         if (object != null) {
-            this.changes.add(Change.createRemoveObjectChange(object));
+            changes.add(Change.createRemoveObjectChange(object));
         }
     }
 
     public void draw(final Canvas canvas) {
         checkScrollPos(canvas);
 
-        double top = Block.SIZE_Y + this.sizeZ * Block.SIZE_Z;
-        double screenStartY = top - this.scrollY;
-        int startX = (int) Math.max(0f, this.scrollX / Block.SIZE_X);
-        int endX = (int) Math.min(this.sizeX, startX + canvas.getWidth() / Block.SIZE_X + 1f);
+        double top = Block.SIZE_Y + sizeZ * Block.SIZE_Z;
+        double screenStartY = top - scrollY;
+        int startX = (int) Math.max(0f, scrollX / Block.SIZE_X);
+        int endX = (int) Math.min(sizeX, startX + canvas.getWidth() / Block.SIZE_X + 1f);
         int startY = 0;
-        int endY = this.sizeY - 1;
-        double screenStartX = Block.SIZE_X / 2.0 - this.scrollX % Block.SIZE_X;
+        int endY = sizeY - 1;
+        double screenStartX = Block.SIZE_X / 2.0 - scrollX % Block.SIZE_X;
         for (int y = startY; y <= endY; y++) {
-            final Slice slice = this.slices[y];
+            final Slice slice = slices[y];
             // Draw blocks and objects of this slice
             double screenY = screenStartY;
-            for (int z = 0; z <= this.sizeZ; z++) {
+            for (int z = 0; z <= sizeZ; z++) {
                 double screenX = screenStartX;
                 for (int x = startX; x <= endX; x++) {
                     final Block block = slice.getBlockAt(x, z);
                     if (!block.isEmpty()) {
                         block.draw(canvas, screenX, screenY);
-                        if (this.getBlockAt(x, y, z + 1).isEmpty()) {
-                            boolean east = !this.getBlockAt(x + 1, y, z + 1).isEmpty();
-                            boolean north = !this.getBlockAt(x, y - 1, z + 1).isEmpty();
-                            boolean south = !this.getBlockAt(x, y + 1, z + 1).isEmpty();
-                            boolean west = !this.getBlockAt(x - 1, y, z + 1).isEmpty();
+                        if (getBlockAt(x, y, z + 1).isEmpty()) {
+                            boolean east = !getBlockAt(x + 1, y, z + 1).isEmpty();
+                            boolean north = !getBlockAt(x, y - 1, z + 1).isEmpty();
+                            boolean south = !getBlockAt(x, y + 1, z + 1).isEmpty();
+                            boolean west = !getBlockAt(x - 1, y, z + 1).isEmpty();
                             if (east) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.WEST), Alignment.BOTTOM_CENTER);
                             }
@@ -172,19 +172,19 @@ public final class CuteWorld {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.EAST), Alignment.BOTTOM_CENTER);
                             }
 
-                            if (!north && !east && !this.getBlockAt(x + 1, y - 1, z + 1).isEmpty()) {
+                            if (!north && !east && !getBlockAt(x + 1, y - 1, z + 1).isEmpty()) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH_WEST), Alignment.BOTTOM_CENTER);
                             }
 
-                            if (!north && !west && !this.getBlockAt(x - 1, y - 1, z + 1).isEmpty()) {
+                            if (!north && !west && !getBlockAt(x - 1, y - 1, z + 1).isEmpty()) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH_EAST), Alignment.BOTTOM_CENTER);
                             }
 
-                            if (!south && !east && !this.getBlockAt(x + 1, y + 1, z + 1).isEmpty()) {
+                            if (!south && !east && !getBlockAt(x + 1, y + 1, z + 1).isEmpty()) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.NORTH_WEST), Alignment.BOTTOM_CENTER);
                             }
 
-                            if (!south && !west && !this.getBlockAt(x - 1, y + 1, z + 1).isEmpty()) {
+                            if (!south && !west && !getBlockAt(x - 1, y + 1, z + 1).isEmpty()) {
                                 canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.NORTH_EAST), Alignment.BOTTOM_CENTER);
                             }
                         }
@@ -205,7 +205,7 @@ public final class CuteWorld {
 
             // Draw object messages of this slice
             screenY = screenStartY;
-            for (int z = 0; z <= this.sizeZ; z++) {
+            for (int z = 0; z <= sizeZ; z++) {
                 double screenX = screenStartX;
                 for (int x = startX; x <= endX; x++) {
                     for (final CuteObject object : slice.getObjectsAt(x, z)) {
@@ -228,33 +228,33 @@ public final class CuteWorld {
     }
 
     public void scroll(final double dx, final double dy) {
-        this.scrollX += dx;
-        this.scrollY += dy;
+        scrollX += dx;
+        scrollY += dy;
     }
 
     public void setBlockAt(final int x, final int y, final int z, final Block block) {
-        this.changes.add(Change.createSetBlockChange(x, y, z, block));
+        changes.add(Change.createSetBlockChange(x, y, z, block));
     }
 
     public void setScrollLock(final CuteObject object) {
-        this.scrollLock = object;
+        scrollLock = object;
     }
 
     public void update(final double dt) {
-        Change[] changesToApply = (Change[]) this.changes.toArray(new Change[this.changes.size()]);
-        this.changes.clear();
+        Change[] changesToApply = (Change[]) changes.toArray(new Change[changes.size()]);
+        changes.clear();
         for (int i = 0; i < changesToApply.length; i++) {
             changesToApply[i].apply(this);
         }
 
-        for (int i = 0; i < this.objects.size(); i++) {
-            this.objects.get(i).internalUpdate(dt);
+        for (int i = 0; i < objects.size(); i++) {
+            objects.get(i).internalUpdate(dt);
         }
 
-        for (int i = 0; i < this.objects.size(); ++i) {
-            for (int j = i + 1; j < this.objects.size(); ++j) {
-                final CuteObject a = this.objects.get(i);
-                final CuteObject b = this.objects.get(j);
+        for (int i = 0; i < objects.size(); ++i) {
+            for (int j = i + 1; j < objects.size(); ++j) {
+                final CuteObject a = objects.get(i);
+                final CuteObject b = objects.get(j);
                 if (a.distanceTo(b) <= a.getRadius() + b.getRadius()) {
                     a.collideWith(b);
                     b.collideWith(a);
@@ -264,8 +264,8 @@ public final class CuteWorld {
     }
 
     Box getBox(final int x, final int y, final int z) {
-        if ((0 <= y) && (y < this.sizeY)) {
-            return this.slices[y].getBoxAt(x, z);
+        if ((0 <= y) && (y < sizeY)) {
+            return slices[y].getBoxAt(x, z);
         }
         else {
             return null;
@@ -273,35 +273,35 @@ public final class CuteWorld {
     }
 
     void doAddObject(final CuteObject object) {
-        this.objects.add(object);
+        objects.add(object);
         object.setRenderer(this);
     }
 
     void doRemoveObject(final CuteObject object) {
-        this.objects.remove(object);
+        objects.remove(object);
         object.setRenderer(null);
-        if (object.equals(this.scrollLock)) {
-            this.scrollLock = null;
+        if (object.equals(scrollLock)) {
+            scrollLock = null;
         }
     }
 
     void doSetBlock(final int x, final int y, final int z, final Block block) {
-        Box box = this.getBox(x, y, z);
+        Box box = getBox(x, y, z);
         if (box != null) {
             box.setBlock(block);
         }
     }
 
     private void checkScrollPos(final Canvas canvas) {
-        double maxScrollX = this.sizeX * Block.SIZE_X - canvas.getWidth();
-        double maxScrollY = this.sizeY * Block.SIZE_Y + this.sizeZ * Block.SIZE_Z - canvas.getHeight();
-        if (this.scrollLock != null) {
-            this.scrollX = this.scrollLock.getX() * Block.SIZE_X + Block.SIZE_X / 2.0 - canvas.getWidth() / 2.0;
-            this.scrollY = this.scrollLock.getY() * Block.SIZE_Y - this.scrollLock.getZ() * Block.SIZE_Z -
-                           canvas.getHeight() / 2.0 + this.sizeZ * Block.SIZE_Z;
+        double maxScrollX = sizeX * Block.SIZE_X - canvas.getWidth();
+        double maxScrollY = sizeY * Block.SIZE_Y + sizeZ * Block.SIZE_Z - canvas.getHeight();
+        if (scrollLock != null) {
+            scrollX = scrollLock.getX() * Block.SIZE_X + Block.SIZE_X / 2.0 - canvas.getWidth() / 2.0;
+            scrollY = scrollLock.getY() * Block.SIZE_Y - scrollLock.getZ() * Block.SIZE_Z -
+                      canvas.getHeight() / 2.0 + sizeZ * Block.SIZE_Z;
         }
 
-        this.scrollX = Math.max(0f, Math.min(maxScrollX, this.scrollX));
-        this.scrollY = Math.max(0f, Math.min(maxScrollY, this.scrollY));
+        scrollX = Math.max(0f, Math.min(maxScrollX, scrollX));
+        scrollY = Math.max(0f, Math.min(maxScrollY, scrollY));
     }
 }

@@ -42,78 +42,78 @@ class WindowManager {
 
     WindowManager(final Platform.Callback callback) {
         this.callback = callback;
-        this.inputWindow = new InputWindow(this);
-        this.logWindow = new LogWindow(this);
-        this.selectionWindow = new SelectionWindow(this);
-        this.windows = new HashSet();
+        inputWindow = new InputWindow(this);
+        logWindow = new LogWindow(this);
+        selectionWindow = new SelectionWindow(this);
+        windows = new HashSet();
 
-        this.windows.add(this.inputWindow);
-        this.windows.add(this.logWindow);
-        this.windows.add(this.selectionWindow);
+        windows.add(inputWindow);
+        windows.add(logWindow);
+        windows.add(selectionWindow);
     }
 
     public void log(final LogLevel logLevel, final String message) {
-        this.logWindow.log(logLevel, message);
+        logWindow.log(logLevel, message);
     }
 
     void showInputRequest(final InputRequest inputRequest) {
-        this.inputWindow.setRequest(inputRequest);
-        this.inputWindow.setVisible(true);
+        inputWindow.setRequest(inputRequest);
+        inputWindow.setVisible(true);
     }
 
     void showSelectionRequest(final SelectionRequest selectionRequest) {
-        this.selectionWindow.setListInfo(selectionRequest);
-        this.selectionWindow.setVisible(true);
+        selectionWindow.setListInfo(selectionRequest);
+        selectionWindow.setVisible(true);
     }
 
     void showViewRequest(final ViewRequest viewRequest) {
         int width = viewRequest.getWidth();
         int height = viewRequest.getHeight();
         final BaseWindow window = new BaseWindow(this);
-        if (viewRequest.getFeatures().contains(ViewFeature.FULLSCREEN) && this.fullscreenWindow == null) {
+        if (viewRequest.getFeatures().contains(ViewFeature.FULLSCREEN) && fullscreenWindow == null) {
             DisplayMode displayMode = findDisplayMode(width, height);
             width = displayMode.getWidth();
             height = displayMode.getHeight();
-            this.fullscreenWindow = window;
-            GRAPHICS_DEVICE.setFullScreenWindow(this.fullscreenWindow);
+            fullscreenWindow = window;
+            GRAPHICS_DEVICE.setFullScreenWindow(fullscreenWindow);
             GRAPHICS_DEVICE.setDisplayMode(displayMode);
         }
 
-        this.windows.add(window);
+        windows.add(window);
         viewRequest.setResult(new JavaViewImp(window, width, height, viewRequest.getFeatures()));
     }
 
     void shutdown() {
-        this.shutdown = true;
-        this.checkWindowsClosed();
+        shutdown = true;
+        checkWindowsClosed();
     }
 
     void windowClosed(final BaseWindow window) {
-        if (window.equals(this.fullscreenWindow)) {
-            this.fullscreenWindow = null;
+        if (window.equals(fullscreenWindow)) {
+            fullscreenWindow = null;
             GRAPHICS_DEVICE.setFullScreenWindow(window);
         }
 
-        this.checkWindowsClosed();
+        checkWindowsClosed();
     }
 
     private void checkWindowsClosed() {
         // If no windows are visible, then we request Jeda to stop.
-        for (BaseWindow w : this.windows) {
+        for (BaseWindow w : windows) {
             if (w.isVisible()) {
                 return;
             }
         }
 
-        if (this.shutdown) {
-            for (BaseWindow window : this.windows) {
+        if (shutdown) {
+            for (BaseWindow window : windows) {
                 window.dispose();
             }
 
             System.exit(0);
         }
         else {
-            this.callback.stop();
+            callback.stop();
         }
     }
 

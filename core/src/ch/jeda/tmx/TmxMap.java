@@ -66,21 +66,21 @@ public final class TmxMap {
 
         final XmlReader reader = new XmlReader(prefix.toString());
         final Element element = reader.read(path);
-        this.backgroundColor = element.getColorAttribute(Const.BACKGROUNDCOLOR, Color.WHITE);
-        this.height = element.getIntAttribute(Const.HEIGHT);
-        this.tileHeight = element.getIntAttribute(Const.TILEHEIGHT);
-        this.tileWidth = element.getIntAttribute(Const.TILEWIDTH);
-        this.width = element.getIntAttribute(Const.WIDTH);
-        this.orientation = parseOrientation(element.getStringAttribute(Const.ORIENTATION));
-        this.properties = element.parsePropertiesChild();
+        backgroundColor = element.getColorAttribute(Const.BACKGROUNDCOLOR, Color.WHITE);
+        height = element.getIntAttribute(Const.HEIGHT);
+        tileHeight = element.getIntAttribute(Const.TILEHEIGHT);
+        tileWidth = element.getIntAttribute(Const.TILEWIDTH);
+        width = element.getIntAttribute(Const.WIDTH);
+        orientation = parseOrientation(element.getStringAttribute(Const.ORIENTATION));
+        properties = element.parsePropertiesChild();
         // Read tile sets
-        this.tileSets = new TmxTileSets();
+        tileSets = new TmxTileSets();
         for (final Element tileSetElement : element.getChildren(Const.TILESET)) {
             if (tileSetElement.hasAttribute(Const.SOURCE)) {
-                this.tileSets.add(new TmxTileSet(this, reader.read(tileSetElement.getStringAttribute(Const.SOURCE)), reader));
+                tileSets.add(new TmxTileSet(this, reader.read(tileSetElement.getStringAttribute(Const.SOURCE)), reader));
             }
             else {
-                this.tileSets.add(new TmxTileSet(this, tileSetElement, reader));
+                tileSets.add(new TmxTileSet(this, tileSetElement, reader));
             }
         }
 
@@ -98,7 +98,7 @@ public final class TmxMap {
             }
         }
 
-        this.layers = layerList.toArray(new TmxLayer[layerList.size()]);
+        layers = layerList.toArray(new TmxLayer[layerList.size()]);
     }
 
     /**
@@ -111,10 +111,10 @@ public final class TmxMap {
      * @since 2.0
      */
     public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
-        canvas.setColor(this.backgroundColor);
+        canvas.setColor(backgroundColor);
         canvas.fill();
-        for (int i = 0; i < this.layers.length; ++i) {
-            this.layers[i].draw(canvas, offsetX, offsetY);
+        for (int i = 0; i < layers.length; ++i) {
+            layers[i].draw(canvas, offsetX, offsetY);
         }
     }
 
@@ -127,7 +127,7 @@ public final class TmxMap {
      * @since 2.0
      */
     public Color getBackgroundColor() {
-        return this.backgroundColor;
+        return backgroundColor;
     }
 
     /**
@@ -138,7 +138,7 @@ public final class TmxMap {
      * @since 2.0
      */
     public int getHeight() {
-        return this.height;
+        return height;
     }
 
     /**
@@ -149,7 +149,7 @@ public final class TmxMap {
      * @since 2.0
      */
     public TmxLayer[] getLayers() {
-        return Arrays.copyOf(this.layers, this.layers.length);
+        return Arrays.copyOf(layers, layers.length);
     }
 
     /**
@@ -160,7 +160,7 @@ public final class TmxMap {
      * @since 2.0
      */
     public TmxMapOrientation getOrientation() {
-        return this.orientation;
+        return orientation;
     }
 
     /**
@@ -171,7 +171,7 @@ public final class TmxMap {
      * @since 2.0
      */
     public Data getProperties() {
-        return this.properties;
+        return properties;
     }
 
     /**
@@ -182,7 +182,7 @@ public final class TmxMap {
      * @since 2.0
      */
     public int getTileHeight() {
-        return this.tileHeight;
+        return tileHeight;
     }
 
     /**
@@ -193,7 +193,7 @@ public final class TmxMap {
      * @since 2.0
      */
     public int getTileWidth() {
-        return this.tileWidth;
+        return tileWidth;
     }
 
     /**
@@ -204,7 +204,7 @@ public final class TmxMap {
      * @since 2.0
      */
     public int getWidth() {
-        return this.width;
+        return width;
     }
 
     /**
@@ -216,7 +216,7 @@ public final class TmxMap {
      * @since 2.0
      */
     public TmxTile lookupTile(final int globalId) {
-        return this.tileSets.lookupTile(globalId);
+        return tileSets.lookupTile(globalId);
     }
 
     private static TmxMapOrientation parseOrientation(final String value) {

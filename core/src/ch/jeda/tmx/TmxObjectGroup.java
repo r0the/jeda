@@ -34,11 +34,11 @@ public final class TmxObjectGroup extends TmxLayer {
 
     TmxObjectGroup(final TmxMap map, final Element element) {
         super(map, element);
-        this.color = element.getColorAttribute(Const.COLOR, Color.RED);
+        color = element.getColorAttribute(Const.COLOR, Color.RED);
         final List<Element> objectElements = element.getChildren(Const.OBJECT);
-        this.objects = new TmxObject[objectElements.size()];
-        for (int i = 0; i < this.objects.length; ++i) {
-            this.objects[i] = new TmxObject(map, objectElements.get(i));
+        objects = new TmxObject[objectElements.size()];
+        for (int i = 0; i < objects.length; ++i) {
+            objects[i] = new TmxObject(map, objectElements.get(i));
         }
     }
 
@@ -51,21 +51,21 @@ public final class TmxObjectGroup extends TmxLayer {
      */
     @Override
     public void addTo(final PhysicsView view) {
-        for (int i = 0; i < this.objects.length; ++i) {
-            view.add(this.objects[i].toBody());
+        for (int i = 0; i < objects.length; ++i) {
+            view.add(objects[i].toBody());
         }
     }
 
     @Override
     public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
-        if (!this.isVisible()) {
+        if (!isVisible()) {
             return;
         }
 
         canvas.setLineWidth(3);
-        canvas.setColor(this.color);
-        for (int i = 0; i < this.objects.length; ++i) {
-            this.objects[i].draw(canvas, offsetX, offsetY);
+        canvas.setColor(color);
+        for (int i = 0; i < objects.length; ++i) {
+            objects[i].draw(canvas, offsetX, offsetY);
         }
     }
 
@@ -77,12 +77,12 @@ public final class TmxObjectGroup extends TmxLayer {
      * @since 2.0
      */
     public Color getColor() {
-        return this.color;
+        return color;
     }
 
     @Override
     public TmxObject[] getObjects() {
-        return Arrays.copyOf(this.objects, this.objects.length);
+        return Arrays.copyOf(objects, objects.length);
     }
 
     @Override

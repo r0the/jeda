@@ -48,7 +48,7 @@ public class Event {
 
         this.source = source;
         this.type = type;
-        this.consumed = false;
+        consumed = false;
     }
 
     /**
@@ -57,7 +57,7 @@ public class Event {
      * @since 2.0
      */
     public final void consume() {
-        this.consumed = true;
+        consumed = true;
     }
 
     /**
@@ -68,7 +68,7 @@ public class Event {
      * @since 1.0
      */
     public final Object getSource() {
-        return this.source;
+        return source;
     }
 
     /**
@@ -79,7 +79,7 @@ public class Event {
      * @since 1.0
      */
     public final EventType getType() {
-        return this.type;
+        return type;
     }
 
     /**
@@ -90,6 +90,6 @@ public class Event {
      * @since 2.0
      */
     public final boolean isConsumed() {
-        return this.consumed;
+        return consumed;
     }
 }

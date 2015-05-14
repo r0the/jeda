@@ -48,20 +48,20 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
 
     SurfaceFragment(final ViewRequest request) {
         super();
-        this.features = request.getFeatures();
+        features = request.getFeatures();
         this.request = request;
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        final SurfaceView result = new SurfaceView(this.getActivity());
+        final SurfaceView result = new SurfaceView(getActivity());
         result.setFocusable(true);
         result.setFocusableInTouchMode(true);
         result.setOnKeyListener(this);
         result.setOnTouchListener(this);
-        this.surfaceHolder = result.getHolder();
-        this.surfaceHolder.addCallback(this);
+        surfaceHolder = result.getHolder();
+        surfaceHolder.addCallback(this);
         return result;
     }
 
@@ -69,7 +69,7 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
     public boolean onKey(final View view, final int keyCode, final android.view.KeyEvent event) {
         final KeyEvent jedaEvent = EventMapper.mapEvent(event);
         if (jedaEvent != null) {
-            this.postEvent(jedaEvent);
+            postEvent(jedaEvent);
             return true;
         }
         else {
@@ -84,19 +84,19 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
                 index = event.getActionIndex();
-                this.postEvent(new PointerEvent(EventMapper.mapDevice(event), EventType.POINTER_DOWN, event.getPointerId(index),
-                                                (int) event.getX(index), (int) event.getY(index)));
+                postEvent(new PointerEvent(EventMapper.mapDevice(event), EventType.POINTER_DOWN, event.getPointerId(index),
+                                           (int) event.getX(index), (int) event.getY(index)));
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 index = event.getActionIndex();
-                this.postEvent(new PointerEvent(EventMapper.mapDevice(event), EventType.POINTER_UP, event.getPointerId(index),
-                                                (int) event.getX(index), (int) event.getY(index)));
+                postEvent(new PointerEvent(EventMapper.mapDevice(event), EventType.POINTER_UP, event.getPointerId(index),
+                                           (int) event.getX(index), (int) event.getY(index)));
                 break;
             case MotionEvent.ACTION_MOVE:
                 for (index = 0; index < event.getPointerCount(); ++index) {
-                    this.postEvent(new PointerEvent(EventMapper.mapDevice(event), EventType.POINTER_MOVED, event.getPointerId(index),
-                                                    (int) event.getX(index), (int) event.getY(index)));
+                    postEvent(new PointerEvent(EventMapper.mapDevice(event), EventType.POINTER_MOVED, event.getPointerId(index),
+                                               (int) event.getX(index), (int) event.getY(index)));
                 }
 
                 break;
@@ -107,31 +107,31 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
 
     @Override
     public void surfaceCreated(final SurfaceHolder holder) {
-        this.surfaceAvailable = true;
+        surfaceAvailable = true;
     }
 
     @Override
     public void surfaceChanged(final SurfaceHolder holder, final int format, final int width, final int height) {
-        if (this.request != null) {
-            this.request.setResult(new AndroidViewImp(this, width, height));
-            this.request = null;
+        if (request != null) {
+            request.setResult(new AndroidViewImp(this, width, height));
+            request = null;
         }
     }
 
     @Override
     public void surfaceDestroyed(final SurfaceHolder holder) {
-        this.surfaceAvailable = false;
+        surfaceAvailable = false;
     }
 
     EnumSet<ViewFeature> getFeatures() {
-        return this.features;
+        return features;
     }
 
     int getOrientation(final int currentOrientation) {
-        if (this.features.contains(ViewFeature.ORIENTATION_LANDSCAPE)) {
+        if (features.contains(ViewFeature.ORIENTATION_LANDSCAPE)) {
             return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         }
-        else if (this.features.contains(ViewFeature.ORIENTATION_PORTRAIT)) {
+        else if (features.contains(ViewFeature.ORIENTATION_PORTRAIT)) {
             return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         }
         else {
@@ -140,17 +140,17 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
     }
 
     void postEvent(final Event event) {
-        if (this.eventQueue != null) {
-            this.eventQueue.addEvent(event);
+        if (eventQueue != null) {
+            eventQueue.addEvent(event);
         }
     }
 
     void setBitmap(final Bitmap bitmap) {
-        if (this.surfaceAvailable) {
-            final Canvas canvas = this.surfaceHolder.lockCanvas();
+        if (surfaceAvailable) {
+            final Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
                 canvas.drawBitmap(bitmap, 0f, 0f, null);
-                this.surfaceHolder.unlockCanvasAndPost(canvas);
+                surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
     }
@@ -161,15 +161,15 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
 
     void setFeature(final ViewFeature feature, final boolean enabled) {
         if (enabled) {
-            this.features.add(feature);
+            features.add(feature);
         }
         else {
-            this.features.remove(feature);
+            features.remove(feature);
         }
     }
 
     void setTitle(final String title) {
-        this.getActivity().runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 getActivity().setTitle(title);
             }

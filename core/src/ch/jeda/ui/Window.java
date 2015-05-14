@@ -100,10 +100,10 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public Window(final int width, final int height, final WindowFeature... features) {
-        this.eventQueue = new EventQueue();
-        this.title = Jeda.getProgramName();
-        this.resetImp(width, height, convertFeatures(features));
-        Jeda.addEventListener(this.eventQueue);
+        eventQueue = new EventQueue();
+        title = Jeda.getProgramName();
+        resetImp(width, height, convertFeatures(features));
+        Jeda.addEventListener(eventQueue);
         Jeda.addEventListener(new EventLoop(this));
     }
 
@@ -116,7 +116,7 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public final void addEventListener(final Object listener) {
-        this.eventQueue.addListener(listener);
+        eventQueue.addListener(listener);
     }
 
     /**
@@ -125,7 +125,7 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public final void close() {
-        this.imp.close();
+        imp.close();
     }
 
     /**
@@ -137,7 +137,7 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public final String getTitle() {
-        return this.title;
+        return title;
     }
 
     /**
@@ -156,7 +156,7 @@ public class Window extends Canvas {
             throw new NullPointerException("feature");
         }
 
-        return this.imp.getFeatures().contains(convertFeature(feature));
+        return imp.getFeatures().contains(convertFeature(feature));
     }
 
     /**
@@ -167,7 +167,7 @@ public class Window extends Canvas {
      * @since 1.0
      */
     public final void removeEventListener(final Object listener) {
-        this.eventQueue.removeListener(listener);
+        eventQueue.removeListener(listener);
     }
 
     /**
@@ -188,7 +188,7 @@ public class Window extends Canvas {
 
         final ViewFeature viewFeature = convertFeature(feature);
         if (IMP_CHANGING_FEATURES.contains(viewFeature)) {
-            final EnumSet<ViewFeature> featureSet = EnumSet.copyOf(this.imp.getFeatures());
+            final EnumSet<ViewFeature> featureSet = EnumSet.copyOf(imp.getFeatures());
             if (enabled) {
                 featureSet.add(viewFeature);
             }
@@ -196,13 +196,13 @@ public class Window extends Canvas {
                 featureSet.remove(viewFeature);
             }
 
-            this.resetImp(this.getWidth(), this.getHeight(), featureSet);
+            resetImp(getWidth(), getHeight(), featureSet);
         }
         else if (feature == WindowFeature.SCROLLABLE) {
-            this.eventQueue.setDragEnabled(enabled);
+            eventQueue.setDragEnabled(enabled);
         }
         else {
-            this.imp.setFeature(viewFeature, enabled);
+            imp.setFeature(viewFeature, enabled);
         }
     }
 
@@ -221,7 +221,7 @@ public class Window extends Canvas {
             throw new NullPointerException("mouseCursor");
         }
 
-        this.imp.setMouseCursor(mouseCursor);
+        imp.setMouseCursor(mouseCursor);
     }
 
     /**
@@ -239,35 +239,35 @@ public class Window extends Canvas {
         }
 
         this.title = title;
-        this.imp.setTitle(title);
+        imp.setTitle(title);
     }
 
     void postEvent(final Event event) {
-        this.eventQueue.addEvent(event);
+        eventQueue.addEvent(event);
     }
 
     private void tick(final TickEvent event) {
-        if (this.imp.isVisible()) {
-            this.eventQueue.processEvents();
-            this.imp.update();
+        if (imp.isVisible()) {
+            eventQueue.processEvents();
+            imp.update();
         }
     }
 
     private void resetImp(final int width, final int height, final EnumSet<ViewFeature> features) {
-        if (this.imp != null) {
-            this.imp.close();
+        if (imp != null) {
+            imp.close();
         }
 
-        this.imp = JedaInternal.createViewImp(width, height, features);
-        this.imp.setEventQueue(this.eventQueue);
-        this.imp.setTitle(this.title);
-        if (!this.hasFeature(WindowFeature.DOUBLE_BUFFERED)) {
-            this.imp.getCanvas().setColor(Color.WHITE);
-            this.imp.getCanvas().fill();
+        imp = JedaInternal.createViewImp(width, height, features);
+        imp.setEventQueue(eventQueue);
+        imp.setTitle(title);
+        if (!hasFeature(WindowFeature.DOUBLE_BUFFERED)) {
+            imp.getCanvas().setColor(Color.WHITE);
+            imp.getCanvas().fill();
         }
 
-        this.eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
-        super.setImp(this.imp.getCanvas());
+        eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
+        super.setImp(imp.getCanvas());
     }
 
     private static EnumSet<ViewFeature> initImpChangingFeatures() {
@@ -318,7 +318,7 @@ public class Window extends Canvas {
 
         @Override
         public void onTick(final TickEvent event) {
-            this.window.tick(event);
+            window.tick(event);
         }
     }
 }

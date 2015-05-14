@@ -80,16 +80,16 @@ public class Canvas {
             throw new IllegalArgumentException("height");
         }
 
-        this.setImp(JedaInternal.createCanvasImp(width, height));
+        setImp(JedaInternal.createCanvasImp(width, height));
     }
 
     Canvas() {
-        this.transformationStack = new Stack<CanvasTransformation>();
-        this.antiAliasing = false;
-        this.color = DEFAULT_FOREGROUND;
-        this.textSize = DEFAULT_TEXT_SIZE;
-        this.transformation = new CanvasTransformation();
-        this.typeface = Typeface.SANS_SERIF;
+        transformationStack = new Stack<CanvasTransformation>();
+        antiAliasing = false;
+        color = DEFAULT_FOREGROUND;
+        textSize = DEFAULT_TEXT_SIZE;
+        transformation = new CanvasTransformation();
+        typeface = Typeface.SANS_SERIF;
     }
 
     /**
@@ -104,7 +104,7 @@ public class Canvas {
      */
     public void drawCanvas(final int x, final int y, final Canvas canvas) {
         if (canvas != null) {
-            this.imp.drawCanvas(x, y, canvas.imp);
+            imp.drawCanvas(x, y, canvas.imp);
         }
     }
 
@@ -119,7 +119,7 @@ public class Canvas {
      * @since 2.0
      */
     public void drawCanvas(final double x, final double y, final Canvas canvas) {
-        this.drawCanvas((int) x, (int) y, canvas);
+        drawCanvas((int) x, (int) y, canvas);
     }
 
     /**
@@ -139,8 +139,8 @@ public class Canvas {
         }
 
         if (canvas != null) {
-            this.imp.drawCanvas(alignment.alignX(x, canvas.getWidth()), alignment.alignY(y, canvas.getHeight()),
-                                canvas.imp);
+            imp.drawCanvas(alignment.alignX(x, canvas.getWidth()), alignment.alignY(y, canvas.getHeight()),
+                           canvas.imp);
         }
     }
 
@@ -156,7 +156,7 @@ public class Canvas {
      * @since 2.0
      */
     public void drawCanvas(final double x, final double y, final Canvas canvas, final Alignment alignment) {
-        this.drawCanvas((int) x, (int) y, canvas, alignment);
+        drawCanvas((int) x, (int) y, canvas, alignment);
     }
 
     /**
@@ -171,7 +171,7 @@ public class Canvas {
      */
     public void drawCircle(final int x, final int y, final int radius) {
         if (radius > 0) {
-            this.imp.drawEllipse(x - radius, y - radius, 2 * radius, 2 * radius);
+            imp.drawEllipse(x - radius, y - radius, 2 * radius, 2 * radius);
         }
     }
 
@@ -186,7 +186,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawCircle(final double x, final double y, final double radius) {
-        this.drawCircle((int) x, (int) y, (int) radius);
+        drawCircle((int) x, (int) y, (int) radius);
     }
 
     /**
@@ -202,7 +202,7 @@ public class Canvas {
      */
     public void drawEllipe(final int x, final int y, final int rx, final int ry) {
         if (rx > 0 && ry > 0) {
-            this.imp.drawEllipse(x - rx, y - ry, 2 * rx, 2 * ry);
+            imp.drawEllipse(x - rx, y - ry, 2 * rx, 2 * ry);
         }
     }
 
@@ -218,7 +218,7 @@ public class Canvas {
      * @since 2.0
      */
     public void drawEllipe(final double x, final double y, final double rx, final double ry) {
-        this.drawEllipe((int) x, (int) y, (int) rx, (int) ry);
+        drawEllipe((int) x, (int) y, (int) rx, (int) ry);
     }
 
     /**
@@ -233,7 +233,7 @@ public class Canvas {
      */
     public void drawImage(final int x, final int y, final Image image) {
         if (image != null) {
-            this.imp.drawImage(x, y, image.getImp(), 255);
+            imp.drawImage(x, y, image.getImp(), 255);
         }
     }
 
@@ -248,7 +248,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawImage(final double x, final double y, final Image image) {
-        this.drawImage((int) x, (int) y, image);
+        drawImage((int) x, (int) y, image);
     }
 
     /**
@@ -271,7 +271,7 @@ public class Canvas {
         }
 
         if (image != null && alpha > 0) {
-            this.imp.drawImage(x, y, image.getImp(), alpha);
+            imp.drawImage(x, y, image.getImp(), alpha);
         }
     }
 
@@ -290,7 +290,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawImage(final double x, final double y, final Image image, final int alpha) {
-        this.drawImage((int) x, (int) y, image, alpha);
+        drawImage((int) x, (int) y, image, alpha);
     }
 
     /**
@@ -311,8 +311,8 @@ public class Canvas {
         }
 
         if (image != null) {
-            this.imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()),
-                               image.getImp(), 255);
+            imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()),
+                          image.getImp(), 255);
         }
     }
 
@@ -329,7 +329,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawImage(final double x, final double y, final Image image, final Alignment alignment) {
-        this.drawImage((int) x, (int) y, image, alignment);
+        drawImage((int) x, (int) y, image, alignment);
     }
 
     /**
@@ -358,8 +358,8 @@ public class Canvas {
         }
 
         if (image != null && alpha > 0) {
-            this.imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()),
-                               image.getImp(), alpha);
+            imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()),
+                          image.getImp(), alpha);
         }
     }
 
@@ -381,7 +381,7 @@ public class Canvas {
      */
     public void drawImage(final double x, final double y, final Image image, final int alpha,
                           final Alignment alignment) {
-        this.drawImage((int) x, (int) y, image, alpha, alignment);
+        drawImage((int) x, (int) y, image, alpha, alignment);
     }
 
     /**
@@ -396,7 +396,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawLine(final int x1, final int y1, final int x2, final int y2) {
-        this.imp.drawLine(x1, y1, x2, y2);
+        imp.drawLine(x1, y1, x2, y2);
     }
 
     /**
@@ -411,7 +411,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawLine(final double x1, final double y1, final double x2, final double y2) {
-        this.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+        drawLine((int) x1, (int) y1, (int) x2, (int) y2);
     }
 
     /**
@@ -431,7 +431,7 @@ public class Canvas {
             throw new IllegalArgumentException("points");
         }
 
-        this.imp.drawPolygon(points);
+        imp.drawPolygon(points);
     }
 
     /**
@@ -447,7 +447,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawPolygon(final double... points) {
-        this.imp.drawPolygon(toIntArray(points));
+        imp.drawPolygon(toIntArray(points));
     }
 
     /**
@@ -464,7 +464,7 @@ public class Canvas {
      */
     public void drawRectangle(final int x, final int y, final int width, final int height) {
         if (width > 0 && height > 0) {
-            this.imp.drawRectangle(x, y, width, height);
+            imp.drawRectangle(x, y, width, height);
         }
     }
 
@@ -481,7 +481,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawRectangle(final double x, final double y, final double width, final double height) {
-        this.drawRectangle((int) x, (int) y, (int) width, (int) height);
+        drawRectangle((int) x, (int) y, (int) width, (int) height);
     }
 
     /**
@@ -505,7 +505,7 @@ public class Canvas {
         }
 
         if (width > 0 && height > 0) {
-            this.imp.drawRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
+            imp.drawRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
         }
     }
 
@@ -525,7 +525,7 @@ public class Canvas {
      */
     public void drawRectangle(final double x, final double y, final double width, final double height,
                               final Alignment alignment) {
-        this.drawRectangle((int) x, (int) y, (int) width, (int) height, alignment);
+        drawRectangle((int) x, (int) y, (int) width, (int) height, alignment);
     }
 
     /**
@@ -541,7 +541,7 @@ public class Canvas {
      */
     public void drawText(final int x, final int y, final String text) {
         if (text != null && !text.isEmpty()) {
-            this.imp.drawText(x, y, text);
+            imp.drawText(x, y, text);
         }
     }
 
@@ -557,7 +557,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawText(final double x, final double y, final String text) {
-        this.drawText((int) x, (int) y, text);
+        drawText((int) x, (int) y, text);
     }
 
     /**
@@ -579,7 +579,7 @@ public class Canvas {
         }
 
         if (text != null && !text.isEmpty()) {
-            this.imp.drawText(alignment.alignX(x, this.imp.textWidth(text)), alignment.alignY(y, this.imp.textHeight(text)), text);
+            imp.drawText(alignment.alignX(x, imp.textWidth(text)), alignment.alignY(y, imp.textHeight(text)), text);
         }
     }
 
@@ -597,7 +597,7 @@ public class Canvas {
      * @since 1.0
      */
     public final void drawText(final double x, final double y, final String text, final Alignment alignment) {
-        this.drawText((int) x, (int) y, text, alignment);
+        drawText((int) x, (int) y, text, alignment);
     }
 
     /**
@@ -606,7 +606,7 @@ public class Canvas {
      * @since 1.0
      */
     public void fill() {
-        this.imp.fill();
+        imp.fill();
     }
 
     /**
@@ -621,7 +621,7 @@ public class Canvas {
      */
     public void fillCircle(final int x, final int y, final int radius) {
         if (radius > 0) {
-            this.imp.fillEllipse(x - radius, y - radius, 2 * radius, 2 * radius);
+            imp.fillEllipse(x - radius, y - radius, 2 * radius, 2 * radius);
         }
     }
 
@@ -636,7 +636,7 @@ public class Canvas {
      * @since 1.0
      */
     public void fillCircle(final double x, final double y, final double radius) {
-        this.fillCircle((int) x, (int) y, (int) radius);
+        fillCircle((int) x, (int) y, (int) radius);
     }
 
     /**
@@ -652,7 +652,7 @@ public class Canvas {
      */
     public void fillEllipe(final int x, final int y, final int rx, final int ry) {
         if (rx > 0 && ry > 0) {
-            this.imp.fillEllipse(x - rx, y - ry, 2 * rx, 2 * ry);
+            imp.fillEllipse(x - rx, y - ry, 2 * rx, 2 * ry);
         }
     }
 
@@ -668,7 +668,7 @@ public class Canvas {
      * @since 2.0
      */
     public void fillEllipe(final double x, final double y, final double rx, final double ry) {
-        this.fillEllipe((int) x, (int) y, (int) rx, (int) ry);
+        fillEllipe((int) x, (int) y, (int) rx, (int) ry);
     }
 
     /**
@@ -688,7 +688,7 @@ public class Canvas {
             throw new IllegalArgumentException("points");
         }
 
-        this.imp.fillPolygon(points);
+        imp.fillPolygon(points);
     }
 
     /**
@@ -704,7 +704,7 @@ public class Canvas {
      * @since 1.0
      */
     public void fillPolygon(final double... points) {
-        this.imp.fillPolygon(toIntArray(points));
+        imp.fillPolygon(toIntArray(points));
     }
 
     /**
@@ -721,7 +721,7 @@ public class Canvas {
      */
     public void fillRectangle(final int x, final int y, final int width, final int height) {
         if (width > 0 && height > 0) {
-            this.imp.fillRectangle(x, y, width, height);
+            imp.fillRectangle(x, y, width, height);
         }
     }
 
@@ -738,7 +738,7 @@ public class Canvas {
      * @since 1.0
      */
     public void fillRectangle(final double x, final double y, final double width, final double height) {
-        this.fillRectangle((int) x, (int) y, (int) width, (int) height);
+        fillRectangle((int) x, (int) y, (int) width, (int) height);
     }
 
     /**
@@ -762,7 +762,7 @@ public class Canvas {
         }
 
         if (width > 0 && height > 0) {
-            this.imp.fillRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
+            imp.fillRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
         }
     }
 
@@ -783,7 +783,7 @@ public class Canvas {
      */
     public void fillRectangle(final double x, final double y, final double width, final double height,
                               final Alignment alignment) {
-        this.fillRectangle((int) x, (int) y, (int) width, (int) height, alignment);
+        fillRectangle((int) x, (int) y, (int) width, (int) height, alignment);
     }
 
     /**
@@ -812,8 +812,8 @@ public class Canvas {
         while (!stackX.isEmpty()) {
             x = stackX.pop();
             y = stackY.pop();
-            if (this.getPixel(x, y).equals(oldColor)) {
-                this.setPixel(x, y, newColor);
+            if (getPixel(x, y).equals(oldColor)) {
+                setPixel(x, y, newColor);
                 stackX.push(x);
                 stackY.push(y + 1);
                 stackX.push(x);
@@ -835,14 +835,14 @@ public class Canvas {
      * @since 1.0
      */
     public Color getColor() {
-        return this.color;
+        return color;
     }
 
     /**
      * @deprecated Use {@link #getTextSize()} instead.
      */
     public int getFontSize() {
-        return this.getTextSize();
+        return getTextSize();
     }
 
     /**
@@ -854,7 +854,7 @@ public class Canvas {
      * @since 1.0
      */
     public int getHeight() {
-        return this.imp.getHeight();
+        return imp.getHeight();
     }
 
     /**
@@ -866,7 +866,7 @@ public class Canvas {
      * @since 1.0
      */
     public double getLineWidth() {
-        return this.imp.getLineWidth();
+        return imp.getLineWidth();
     }
 
     /**
@@ -881,8 +881,8 @@ public class Canvas {
      * @since 2.0
      */
     public Color getPixel(final int x, final int y) {
-        if (this.contains(x, y)) {
-            return this.imp.getPixel(x, y);
+        if (contains(x, y)) {
+            return imp.getPixel(x, y);
         }
         else {
             return Color.TRANSPARENT;
@@ -893,7 +893,7 @@ public class Canvas {
      * @deprecated Use {@link #getPixel(int, int)} instead.
      */
     public Color getPixelAt(final int x, final int y) {
-        return this.getPixel(x, y);
+        return getPixel(x, y);
     }
 
     /**
@@ -908,7 +908,7 @@ public class Canvas {
      * @see #setRotationRad(double)
      */
     public double getRotationDeg() {
-        return Math.toDegrees(this.transformation.rotation);
+        return Math.toDegrees(transformation.rotation);
     }
 
     /**
@@ -923,7 +923,7 @@ public class Canvas {
      * @see #setRotationRad(double)
      */
     public double getRotationRad() {
-        return this.transformation.rotation;
+        return transformation.rotation;
     }
 
     /**
@@ -935,7 +935,7 @@ public class Canvas {
      * @see #setScale(double)
      */
     public double getScale() {
-        return this.transformation.scale;
+        return transformation.scale;
     }
 
     /**
@@ -947,7 +947,7 @@ public class Canvas {
      * @since 1.0
      */
     public int getTextSize() {
-        return this.textSize;
+        return textSize;
     }
 
     /**
@@ -959,7 +959,7 @@ public class Canvas {
      * @see #setTranslation(double, double)
      */
     public double getTranslationX() {
-        return this.transformation.translationX;
+        return transformation.translationX;
     }
 
     /**
@@ -971,7 +971,7 @@ public class Canvas {
      * @see #setTranslation(double, double)
      */
     public double getTranslationY() {
-        return this.transformation.translationY;
+        return transformation.translationY;
     }
 
     /**
@@ -983,7 +983,7 @@ public class Canvas {
      * @since 1.3
      */
     public Typeface getTypeface() {
-        return this.typeface;
+        return typeface;
     }
 
     /**
@@ -995,7 +995,7 @@ public class Canvas {
      * @since 1.0
      */
     public int getWidth() {
-        return this.imp.getWidth();
+        return imp.getWidth();
     }
 
     /**
@@ -1007,7 +1007,7 @@ public class Canvas {
      * @since 1.0
      */
     public boolean isAntiAliasing() {
-        return this.antiAliasing;
+        return antiAliasing;
     }
 
     /**
@@ -1016,11 +1016,11 @@ public class Canvas {
      * @since 2.0
      */
     public void popTransformations() {
-        if (!this.transformationStack.isEmpty()) {
-            this.transformation = this.transformationStack.pop();
+        if (!transformationStack.isEmpty()) {
+            transformation = transformationStack.pop();
         }
 
-        this.imp.setTransformation(this.transformation);
+        imp.setTransformation(transformation);
     }
 
     /**
@@ -1029,7 +1029,7 @@ public class Canvas {
      * @since 2.0
      */
     public void pushTransformations() {
-        this.transformationStack.push(new CanvasTransformation(this.transformation));
+        transformationStack.push(new CanvasTransformation(transformation));
     }
 
     /**
@@ -1043,8 +1043,8 @@ public class Canvas {
      * @since 2.0
      */
     public void resetTransformations() {
-        this.transformation.reset();
-        this.imp.setTransformation(this.transformation);
+        transformation.reset();
+        imp.setTransformation(transformation);
     }
 
     /**
@@ -1057,9 +1057,9 @@ public class Canvas {
      * @since 1.0
      */
     public void setAntiAliasing(final boolean antiAliasing) {
-        if (this.antiAliasing != antiAliasing) {
+        if (antiAliasing != this.antiAliasing) {
             this.antiAliasing = antiAliasing;
-            this.imp.setAntiAliasing(this.antiAliasing);
+            imp.setAntiAliasing(antiAliasing);
         }
     }
 
@@ -1078,9 +1078,9 @@ public class Canvas {
             throw new NullPointerException("color");
         }
 
-        if (!this.color.equals(color)) {
+        if (!color.equals(this.color)) {
             this.color = color;
-            this.imp.setColor(this.color);
+            imp.setColor(color);
         }
     }
 
@@ -1088,7 +1088,7 @@ public class Canvas {
      * @deprecated Use {@link #setTextSize(int)} instead.
      */
     public void setFontSize(int size) {
-        this.setTextSize(size);
+        setTextSize(size);
     }
 
     /**
@@ -1107,7 +1107,7 @@ public class Canvas {
         }
 
         this.lineWidth = lineWidth;
-        this.imp.setLineWidth(this.lineWidth);
+        imp.setLineWidth(lineWidth);
     }
 
     /**
@@ -1127,8 +1127,8 @@ public class Canvas {
             throw new NullPointerException("color");
         }
 
-        if (this.contains(x, y)) {
-            this.imp.setPixel(x, y, color);
+        if (contains(x, y)) {
+            imp.setPixel(x, y, color);
         }
     }
 
@@ -1136,7 +1136,7 @@ public class Canvas {
      * @deprecated Use {@link #setPixel(int, int, ch.jeda.ui.Color)} instead.
      */
     public void setPixelAt(final int x, final int y, final Color color) {
-        this.setPixel(x, y, color);
+        setPixel(x, y, color);
     }
 
     /**
@@ -1154,9 +1154,9 @@ public class Canvas {
             throw new IllegalArgumentException("size");
         }
 
-        if (this.textSize != size) {
-            this.textSize = size;
-            this.imp.setTextSize(this.textSize);
+        if (textSize != size) {
+            textSize = size;
+            imp.setTextSize(textSize);
         }
     }
 
@@ -1173,7 +1173,7 @@ public class Canvas {
      * @since 2.0
      */
     public void setRotationDeg(final double angle) {
-        this.setRotationRad(Math.toRadians(angle));
+        setRotationRad(Math.toRadians(angle));
     }
 
     /**
@@ -1189,8 +1189,8 @@ public class Canvas {
      * @since 2.0
      */
     public void setRotationRad(final double angle) {
-        this.transformation.rotation = MathUtil.normalizeAngle(angle);
-        this.imp.setTransformation(this.transformation);
+        transformation.rotation = MathUtil.normalizeAngle(angle);
+        imp.setTransformation(transformation);
     }
 
     /**
@@ -1206,9 +1206,9 @@ public class Canvas {
      * @since 2.0
      */
     public void setTranslation(final double dx, final double dy) {
-        this.transformation.translationX = dx;
-        this.transformation.translationY = dy;
-        this.imp.setTransformation(this.transformation);
+        transformation.translationX = dx;
+        transformation.translationY = dy;
+        imp.setTransformation(transformation);
     }
 
     /**
@@ -1227,8 +1227,8 @@ public class Canvas {
             throw new IllegalArgumentException("scale");
         }
 
-        this.transformation.scale = scale;
-        this.imp.setTransformation(this.transformation);
+        transformation.scale = scale;
+        imp.setTransformation(transformation);
     }
 
     /**
@@ -1249,9 +1249,9 @@ public class Canvas {
             throw new IllegalArgumentException("typeface");
         }
 
-        if (!this.typeface.equals(typeface)) {
+        if (!typeface.equals(this.typeface)) {
             this.typeface = typeface;
-            this.imp.setTypeface(this.typeface.imp);
+            imp.setTypeface(typeface.imp);
         }
     }
 
@@ -1263,7 +1263,7 @@ public class Canvas {
      * @since 1.0
      */
     public Image takeSnapshot() {
-        return new Image(this.imp.takeSnapshot());
+        return new Image(imp.takeSnapshot());
     }
 
     /**
@@ -1281,7 +1281,7 @@ public class Canvas {
             return 0;
         }
         else {
-            return this.imp.textHeight(text);
+            return imp.textHeight(text);
         }
     }
 
@@ -1300,22 +1300,22 @@ public class Canvas {
             return 0;
         }
         else {
-            return this.imp.textWidth(text);
+            return imp.textWidth(text);
         }
     }
 
     final void setImp(final CanvasImp imp) {
         this.imp = imp;
-        this.imp.setAntiAliasing(this.antiAliasing);
-        this.imp.setColor(this.color);
-        this.imp.setTextSize(this.textSize);
-        this.imp.setLineWidth(this.lineWidth);
-        this.imp.setTransformation(this.transformation);
-        this.imp.setTypeface(this.typeface.imp);
+        imp.setAntiAliasing(antiAliasing);
+        imp.setColor(color);
+        imp.setTextSize(textSize);
+        imp.setLineWidth(lineWidth);
+        imp.setTransformation(transformation);
+        imp.setTypeface(typeface.imp);
     }
 
     private boolean contains(final int x, final int y) {
-        return 0 <= x && x < this.getWidth() && 0 <= y && y < this.getHeight();
+        return 0 <= x && x < getWidth() && 0 <= y && y < getHeight();
     }
 
     private static int[] toIntArray(double[] values) {

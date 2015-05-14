@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -90,7 +90,7 @@ public class DefaultButtonStyle extends DefaultTextStyle implements ButtonStyle 
         this(new Image("res:jeda/ui/" + type + "_button_" + color + ".png"),
              new Image("res:jeda/ui/" + type + "_button_" + color + "_pressed.png"), 0, 4);
         if (ANTIQUE.equals(type)) {
-            this.setTypeface(Typeface.SERIF);
+            setTypeface(Typeface.SERIF);
         }
     }
 
@@ -150,20 +150,20 @@ public class DefaultButtonStyle extends DefaultTextStyle implements ButtonStyle 
     public boolean contains(final Button button, final int x, final int y) {
         final int dx = button.getCenterX() - x;
         final int dy = button.getCenterY() - y;
-        return Math.abs(dx) <= this.getWidth(button) / 2 && Math.abs(dy) <= this.getHeight(button) / 2;
+        return Math.abs(dx) <= getWidth(button) / 2 && Math.abs(dy) <= getHeight(button) / 2;
     }
 
     @Override
     public void draw(final Button button, final Canvas canvas) {
-        this.applyTextStyle(canvas);
+        applyTextStyle(canvas);
         int ox = 0;
         int oy = 0;
-        Image image = this.background;
+        Image image = background;
         if (button.isPressed()) {
-            ox = ox + this.pressedOffsetX;
-            oy = oy + this.pressedOffsetY;
-            if (this.backgroundPressed != null) {
-                image = this.backgroundPressed;
+            ox = ox + pressedOffsetX;
+            oy = oy + pressedOffsetY;
+            if (backgroundPressed != null) {
+                image = backgroundPressed;
             }
         }
 
@@ -173,11 +173,11 @@ public class DefaultButtonStyle extends DefaultTextStyle implements ButtonStyle 
 
     @Override
     public int getHeight(final Button button) {
-        return this.background.getHeight();
+        return background.getHeight();
     }
 
     @Override
     public int getWidth(final Button button) {
-        return this.background.getWidth();
+        return background.getWidth();
     }
 }

@@ -70,6 +70,10 @@ public final class Image {
         this(loadImp(filePath));
     }
 
+    Image(final ImageImp imp) {
+        this.imp = imp;
+    }
+
     /**
      * Creates a filtered copy of the image. The new image has the same width and height as this image. The pixel colors
      * of the new image are determined by calling {@link ch.jeda.ui.ImageFilter#apply(ch.jeda.ui.Image, int, int)} for
@@ -82,9 +86,9 @@ public final class Image {
      * @since 2.0
      */
     public Image filter(final ImageFilter filter) {
-        final Canvas canvas = new Canvas(this.getWidth(), this.getHeight());
-        for (int x = 0; x < this.getWidth(); ++x) {
-            for (int y = 0; y < this.getHeight(); ++y) {
+        final Canvas canvas = new Canvas(getWidth(), getHeight());
+        for (int x = 0; x < getWidth(); ++x) {
+            for (int y = 0; y < getHeight(); ++y) {
                 canvas.setPixel(x, y, filter.apply(this, x, y));
             }
         }
@@ -101,7 +105,7 @@ public final class Image {
      * @since 1.1
      */
     public Image flipHorizontally() {
-        return new Image(this.imp.flipHorizontally());
+        return new Image(imp.flipHorizontally());
     }
 
     /**
@@ -113,7 +117,7 @@ public final class Image {
      * @since 1.1
      */
     public Image flipVertically() {
-        return new Image(this.imp.flipVertically());
+        return new Image(imp.flipVertically());
     }
 
     /**
@@ -127,7 +131,7 @@ public final class Image {
      * @since 2.0
      */
     public Color getPixel(final int x, final int y) {
-        return new Color(this.imp.getPixel(this.toRangeX(x), this.toRangeY(y)));
+        return new Color(imp.getPixel(toRangeX(x), toRangeY(y)));
     }
 
     /**
@@ -139,7 +143,7 @@ public final class Image {
      * @since 1.0
      */
     public int getHeight() {
-        return this.imp.getHeight();
+        return imp.getHeight();
     }
 
     /**
@@ -162,15 +166,15 @@ public final class Image {
             throw new IllegalArgumentException("y");
         }
 
-        if (x + width > this.imp.getWidth()) {
+        if (x + width > imp.getWidth()) {
             throw new IllegalArgumentException("x + width");
         }
 
-        if (y + height > this.imp.getHeight()) {
+        if (y + height > imp.getHeight()) {
             throw new IllegalArgumentException("y + height");
         }
 
-        return this.imp.getPixels(x, y, width, height);
+        return imp.getPixels(x, y, width, height);
     }
 
     /**
@@ -182,21 +186,21 @@ public final class Image {
      * @since 1.0
      */
     public int getWidth() {
-        return this.imp.getWidth();
+        return imp.getWidth();
     }
 
     /**
      * @deprecated Use {@link #filter(ch.jeda.ui.ImageFilter)} with {@link ch.jeda.image.ReplaceColorFilter} instead.
      */
     public Image replacePixels(final Color oldColor, final Color newColor) {
-        return this.filter(new ReplaceColorFilter(oldColor, newColor));
+        return filter(new ReplaceColorFilter(oldColor, newColor));
     }
 
     /**
      * @deprecated Use {@link #rotateRad(double)} instead.
      */
     public Image rotate(final double angle) {
-        return this.rotateDeg(angle);
+        return rotateDeg(angle);
     }
 
     /**
@@ -208,7 +212,7 @@ public final class Image {
      * @since 2.0
      */
     public Image rotateDeg(final double angle) {
-        return this.rotateRad(Math.toRadians(angle));
+        return rotateRad(Math.toRadians(angle));
     }
 
     /**
@@ -220,7 +224,7 @@ public final class Image {
      * @since 2.0
      */
     public Image rotateRad(final double angle) {
-        return new Image(this.imp.rotateRad(angle));
+        return new Image(imp.rotateRad(angle));
     }
 
     /**
@@ -258,7 +262,7 @@ public final class Image {
         OutputStream out = null;
         try {
             out = new FileOutputStream(filePath);
-            return this.imp.write(out, FORMAT_MAP.get(extension));
+            return imp.write(out, FORMAT_MAP.get(extension));
         }
         catch (final IOException ex) {
             Log.err(ex, "jeda.image.error.write", filePath);
@@ -291,9 +295,9 @@ public final class Image {
             throw new IllegalArgumentException("factor");
         }
 
-        final int width = Math.max((int) (this.getWidth() * factor), 1);
-        final int height = Math.max((int) (this.getHeight() * factor), 1);
-        return this.scale(width, height);
+        final int width = Math.max((int) (getWidth() * factor), 1);
+        final int height = Math.max((int) (getHeight() * factor), 1);
+        return scale(width, height);
     }
 
     /**
@@ -320,7 +324,7 @@ public final class Image {
             throw new IllegalArgumentException("height");
         }
 
-        return new Image(this.imp.scale(width, height));
+        return new Image(imp.scale(width, height));
     }
 
     /**
@@ -355,23 +359,19 @@ public final class Image {
             throw new IllegalArgumentException("y");
         }
 
-        if (x + width > this.imp.getWidth()) {
+        if (x + width > imp.getWidth()) {
             throw new IllegalArgumentException("x + width");
         }
 
-        if (y + height > this.imp.getHeight()) {
+        if (y + height > imp.getHeight()) {
             throw new IllegalArgumentException("y + height");
         }
 
-        return new Image(this.imp.subImage(x, y, width, height));
-    }
-
-    Image(final ImageImp imp) {
-        this.imp = imp;
+        return new Image(imp.subImage(x, y, width, height));
     }
 
     ImageImp getImp() {
-        return this.imp;
+        return imp;
     }
 
     private static Map<String, ImageImp.Encoding> initFormatMap() {
@@ -391,10 +391,10 @@ public final class Image {
     }
 
     private int toRangeX(final int x) {
-        return Math.max(0, Math.min(x, this.getWidth() - 1));
+        return Math.max(0, Math.min(x, getWidth() - 1));
     }
 
     private int toRangeY(final int y) {
-        return Math.max(0, Math.min(y, this.getHeight() - 1));
+        return Math.max(0, Math.min(y, getHeight() - 1));
     }
 }

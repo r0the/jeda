@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -65,7 +65,7 @@ public abstract class Connection {
      * @since 1.4
      */
     public final void sendData(final Data data) {
-        this.sendLine(data.toLine());
+        sendLine(data.toLine());
     }
 
     /**

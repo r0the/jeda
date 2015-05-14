@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,32 +25,32 @@ class FrequencyMeter {
     private long startTime;
 
     FrequencyMeter() {
-        this.durations = new long[MAX_VALUES];
-        this.frequency = 0f;
-        this.index = 0;
-        this.startTime = System.currentTimeMillis();
+        durations = new long[MAX_VALUES];
+        frequency = 0f;
+        index = 0;
+        startTime = System.currentTimeMillis();
     }
 
     void count() {
         final long now = System.currentTimeMillis();
-        this.durations[this.index] = now - this.startTime;
-        this.startTime = now;
-        if (this.index < MAX_VALUES - 1) {
-            this.index = this.index + 1;
+        durations[index] = now - startTime;
+        startTime = now;
+        if (index < MAX_VALUES - 1) {
+            index = index + 1;
         }
         else {
-            this.index = 0;
+            index = 0;
         }
 
-        this.frequency = 0f;
-        for (int i = 0; i < this.durations.length; ++i) {
-            this.frequency = this.frequency + this.durations[i];
+        frequency = 0f;
+        for (int i = 0; i < durations.length; ++i) {
+            frequency = frequency + durations[i];
         }
 
-        this.frequency = this.frequency / MAX_VALUES;
+        frequency = frequency / MAX_VALUES;
     }
 
     double getFrequency() {
-        return 1000.0 / this.frequency;
+        return 1000.0 / frequency;
     }
 }

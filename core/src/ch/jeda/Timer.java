@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,45 +29,45 @@ class Timer {
     }
 
     double getTargetFrequency() {
-        return this.targetFrequency;
+        return targetFrequency;
     }
 
     double getLastStepDuration() {
-        return this.lastStepDuration / 1000.0;
+        return lastStepDuration / 1000.0;
     }
 
     void setTargetFrequency(final double hertz) {
-        if (this.targetFrequency != hertz) {
-            this.targetFrequency = hertz;
-            this.refresh();
+        if (targetFrequency != hertz) {
+            targetFrequency = hertz;
+            refresh();
         }
     }
 
     void start() {
-        this.refresh();
+        refresh();
     }
 
     void tick() {
         final long end = System.currentTimeMillis();
-        final long sleepTime = this.period - end + this.start - this.adjustment;
+        final long sleepTime = period - end + start - adjustment;
         if (sleepTime > 0) {
-            this.sleep(sleepTime);
-            this.adjustment = (System.currentTimeMillis() - end) - sleepTime;
+            sleep(sleepTime);
+            adjustment = (System.currentTimeMillis() - end) - sleepTime;
         }
         else {
-            this.sleep(1);
-            this.adjustment = 0;
+            sleep(1);
+            adjustment = 0;
         }
 
         final long now = System.currentTimeMillis();
-        this.lastStepDuration = now - this.start;
-        this.start = now;
+        lastStepDuration = now - start;
+        start = now;
     }
 
     void refresh() {
-        this.start = System.currentTimeMillis();
-        this.period = (long) (1000f / this.targetFrequency);
-        this.adjustment = 0;
+        start = System.currentTimeMillis();
+        period = (long) (1000f / targetFrequency);
+        adjustment = 0;
     }
 
     private void sleep(final long milliseconds) {

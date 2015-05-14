@@ -74,9 +74,9 @@ public class Data {
         DocumentBuilder builder;
         try {
             builder = dbf.newDocumentBuilder();
-            this.document = builder.newDocument();
-            this.element = this.document.createElement("data");
-            this.document.appendChild(this.element);
+            document = builder.newDocument();
+            element = document.createElement("data");
+            document.appendChild(element);
         }
         catch (final ParserConfigurationException ex) {
             throw new RuntimeException(ex);
@@ -95,8 +95,8 @@ public class Data {
         DocumentBuilder builder;
         try {
             builder = dbf.newDocumentBuilder();
-            this.document = builder.parse(new InputSource(new StringReader(string)));
-            this.element = this.document.getDocumentElement();
+            document = builder.parse(new InputSource(new StringReader(string)));
+            element = document.getDocumentElement();
         }
 
         catch (SAXException ex) {
@@ -119,7 +119,7 @@ public class Data {
      * @since 1.2
      */
     public void clear() {
-        this.remove("*");
+        remove("*");
     }
 
     /**
@@ -131,7 +131,7 @@ public class Data {
      * @since 1.2
      */
     public boolean hasValue(final String name) {
-        return this.element.getElementsByTagName(name).getLength() > 0;
+        return element.getElementsByTagName(name).getLength() > 0;
     }
 
     /**
@@ -144,7 +144,7 @@ public class Data {
      * @since 1.2
      */
     public final boolean readBoolean(final String name) {
-        return this.readBoolean(name, DEFAULT_BOOLEAN);
+        return readBoolean(name, DEFAULT_BOOLEAN);
     }
 
     /**
@@ -158,7 +158,7 @@ public class Data {
      * @since 1.2
      */
     public final boolean readBoolean(final String name, final boolean defaultValue) {
-        final Node child = this.getFirstElementByTagName(name);
+        final Node child = getFirstElementByTagName(name);
         if (child == null) {
             return defaultValue;
         }
@@ -177,7 +177,7 @@ public class Data {
      * @since 1.2
      */
     public boolean[] readBooleans(final String name) {
-        return this.readBooleans(name, DEFAULT_BOOLEAN);
+        return readBooleans(name, DEFAULT_BOOLEAN);
     }
 
     /**
@@ -191,7 +191,7 @@ public class Data {
      * @since 1.2
      */
     public boolean[] readBooleans(final String name, final boolean defaultValue) {
-        final NodeList nodes = this.element.getElementsByTagName(name);
+        final NodeList nodes = element.getElementsByTagName(name);
         final boolean[] result = new boolean[nodes.getLength()];
         for (int i = 0; i < result.length; ++i) {
             result[i] = Convert.toBoolean(nodes.item(i).getTextContent(), defaultValue);
@@ -210,7 +210,7 @@ public class Data {
      * @since 1.2
      */
     public final double readDouble(final String name) {
-        return this.readDouble(name, DEFAULT_DOUBLE);
+        return readDouble(name, DEFAULT_DOUBLE);
     }
 
     /**
@@ -224,7 +224,7 @@ public class Data {
      * @since 1.2
      */
     public final double readDouble(final String name, final double defaultValue) {
-        final Node child = this.getFirstElementByTagName(name);
+        final Node child = getFirstElementByTagName(name);
         if (child == null) {
             return defaultValue;
         }
@@ -243,7 +243,7 @@ public class Data {
      * @since 1.2
      */
     public double[] readDoubles(final String name) {
-        return this.readDoubles(name, DEFAULT_DOUBLE);
+        return readDoubles(name, DEFAULT_DOUBLE);
     }
 
     /**
@@ -257,7 +257,7 @@ public class Data {
      * @since 1.2
      */
     public double[] readDoubles(final String name, final double defaultValue) {
-        final NodeList nodes = this.element.getElementsByTagName(name);
+        final NodeList nodes = element.getElementsByTagName(name);
         final double[] result = new double[nodes.getLength()];
         for (int i = 0; i < result.length; ++i) {
             result[i] = Convert.toDouble(nodes.item(i).getTextContent(), defaultValue);
@@ -276,7 +276,7 @@ public class Data {
      * @since 1.2
      */
     public final int readInt(final String name) {
-        return this.readInt(name, DEFAULT_INT);
+        return readInt(name, DEFAULT_INT);
     }
 
     /**
@@ -290,7 +290,7 @@ public class Data {
      * @since 1.2
      */
     public final int readInt(final String name, final int defaultValue) {
-        final Node child = this.getFirstElementByTagName(name);
+        final Node child = getFirstElementByTagName(name);
         if (child == null) {
             return defaultValue;
         }
@@ -309,7 +309,7 @@ public class Data {
      * @since 1.2
      */
     public int[] readInts(final String name) {
-        return this.readInts(name, DEFAULT_INT);
+        return readInts(name, DEFAULT_INT);
     }
 
     /**
@@ -323,7 +323,7 @@ public class Data {
      * @since 1.2
      */
     public int[] readInts(final String name, final int defaultValue) {
-        final NodeList nodes = this.element.getElementsByTagName(name);
+        final NodeList nodes = element.getElementsByTagName(name);
         final int[] result = new int[nodes.getLength()];
         for (int i = 0; i < result.length; ++i) {
             result[i] = Convert.toInt(nodes.item(i).getTextContent(), defaultValue);
@@ -343,7 +343,7 @@ public class Data {
      * @since 1.2
      */
     public Key readKey(final String name) {
-        return this.readKey(name, DEFAULT_KEY);
+        return readKey(name, DEFAULT_KEY);
     }
 
     /**
@@ -357,7 +357,7 @@ public class Data {
      * @since 1.2
      */
     public Key readKey(final String name, final Key defaultValue) {
-        final Node child = this.getFirstElementByTagName(name);
+        final Node child = getFirstElementByTagName(name);
         if (child == null) {
             return defaultValue;
         }
@@ -380,7 +380,7 @@ public class Data {
      * @since 1.2
      */
     public Key[] readKeys(final String name) {
-        return this.readKeys(name, DEFAULT_KEY);
+        return readKeys(name, DEFAULT_KEY);
     }
 
     /**
@@ -394,7 +394,7 @@ public class Data {
      * @since 1.2
      */
     public Key[] readKeys(final String name, final Key defaultValue) {
-        final NodeList nodes = this.element.getElementsByTagName(name);
+        final NodeList nodes = element.getElementsByTagName(name);
         final Key[] result = new Key[nodes.getLength()];
         for (int i = 0; i < result.length; ++i) {
             try {
@@ -419,7 +419,7 @@ public class Data {
      * @since 1.2
      */
     public <T extends Storable> T readObject(final String name) {
-        return this.readObject(name, null);
+        return readObject(name, null);
     }
 
     /**
@@ -435,13 +435,13 @@ public class Data {
      */
     @SuppressWarnings("unchecked")
     public <T extends Storable> T readObject(final String name, final T defaultValue) {
-        final Element child = (Element) this.getFirstElementByTagName(name);
+        final Element child = (Element) getFirstElementByTagName(name);
         final String className = child.getAttribute("class");
         try {
             final Class clazz = Class.forName(className);
             final Constructor ctor = clazz.getConstructor(Data.class);
             ctor.setAccessible(true);
-            return (T) ctor.newInstance(new Data(this.document, child));
+            return (T) ctor.newInstance(new Data(document, child));
         }
         catch (final NoSuchMethodException ex) {
             Log.err(Message.DATA_ERROR_CONSTRUCTOR_NOT_FOUND, className);
@@ -475,7 +475,7 @@ public class Data {
      * @since 1.2
      */
     public String readString(final String name) {
-        return this.readString(name, DEFAULT_STRING);
+        return readString(name, DEFAULT_STRING);
     }
 
     /**
@@ -489,7 +489,7 @@ public class Data {
      * @since 1.2
      */
     public String readString(final String name, final String defaultValue) {
-        final Node child = this.getFirstElementByTagName(name);
+        final Node child = getFirstElementByTagName(name);
         if (child == null) {
             return defaultValue;
         }
@@ -507,7 +507,7 @@ public class Data {
      * @since 1.2
      */
     public String[] readStrings(final String name) {
-        return this.readStrings(name, DEFAULT_STRING);
+        return readStrings(name, DEFAULT_STRING);
     }
 
     /**
@@ -521,7 +521,7 @@ public class Data {
      * @since 1.2
      */
     public String[] readStrings(final String name, final String defaultValue) {
-        final NodeList nodes = this.element.getElementsByTagName(name);
+        final NodeList nodes = element.getElementsByTagName(name);
         final String[] result = new String[nodes.getLength()];
         for (int i = 0; i < result.length; ++i) {
             result[i] = unescape(nodes.item(i).getTextContent());
@@ -538,9 +538,9 @@ public class Data {
      * @since 1.2
      */
     public void remove(final String name) {
-        NodeList nodes = this.element.getElementsByTagName(name);
+        final NodeList nodes = element.getElementsByTagName(name);
         for (int i = 0; i < nodes.getLength(); ++i) {
-            this.element.removeChild(nodes.item(i));
+            element.removeChild(nodes.item(i));
         }
     }
 
@@ -555,7 +555,7 @@ public class Data {
         FileWriter writer = null;
         try {
             writer = new FileWriter(path);
-            this.serialize(writer, true);
+            serialize(writer, true);
         }
         catch (final IOException ex) {
             throw new RuntimeException(ex);
@@ -581,13 +581,13 @@ public class Data {
      */
     public String toLine() {
         final StringWriter writer = new StringWriter();
-        this.serialize(writer, false);
+        serialize(writer, false);
         return writer.toString();
     }
 
     @Override
     public String toString() {
-        return this.toLine();
+        return toLine();
     }
 
     /**
@@ -605,8 +605,8 @@ public class Data {
             throw new NullPointerException("name");
         }
 
-        this.remove(name);
-        this.addElement(name, Convert.toString(value));
+        remove(name);
+        addElement(name, Convert.toString(value));
     }
 
     /**
@@ -628,9 +628,9 @@ public class Data {
             throw new NullPointerException("values");
         }
 
-        this.remove(name);
+        remove(name);
         for (int i = 0; i < values.length; ++i) {
-            this.addElement(name, Convert.toString(values[i]));
+            addElement(name, Convert.toString(values[i]));
         }
     }
 
@@ -649,8 +649,8 @@ public class Data {
             throw new NullPointerException("name");
         }
 
-        this.remove(name);
-        this.addElement(name, Convert.toString(value));
+        remove(name);
+        addElement(name, Convert.toString(value));
     }
 
     /**
@@ -672,9 +672,9 @@ public class Data {
             throw new NullPointerException("values");
         }
 
-        this.remove(name);
+        remove(name);
         for (int i = 0; i < values.length; ++i) {
-            this.addElement(name, Convert.toString(values[i]));
+            addElement(name, Convert.toString(values[i]));
         }
     }
 
@@ -693,8 +693,8 @@ public class Data {
             throw new NullPointerException("name");
         }
 
-        this.remove(name);
-        this.addElement(name, Convert.toString(value));
+        remove(name);
+        addElement(name, Convert.toString(value));
     }
 
     /**
@@ -716,9 +716,9 @@ public class Data {
             throw new NullPointerException("values");
         }
 
-        this.remove(name);
+        remove(name);
         for (int i = 0; i < values.length; ++i) {
-            this.addElement(name, Convert.toString(values[i]));
+            addElement(name, Convert.toString(values[i]));
         }
     }
 
@@ -738,8 +738,8 @@ public class Data {
             throw new NullPointerException("name");
         }
 
-        this.remove(name);
-        this.addElement(name, value.toString());
+        remove(name);
+        addElement(name, value.toString());
     }
 
     /**
@@ -761,9 +761,9 @@ public class Data {
             throw new NullPointerException("values");
         }
 
-        this.remove(name);
+        remove(name);
         for (int i = 0; i < values.length; ++i) {
-            this.addElement(name, values[i].toString());
+            addElement(name, values[i].toString());
         }
     }
 
@@ -781,8 +781,8 @@ public class Data {
             throw new NullPointerException("name");
         }
 
-        this.remove(name);
-        this.doWriteObject(name, value);
+        remove(name);
+        doWriteObject(name, value);
     }
 
     /**
@@ -803,9 +803,9 @@ public class Data {
             throw new NullPointerException("values");
         }
 
-        this.remove(name);
+        remove(name);
         for (int i = 0; i < values.length; ++i) {
-            this.doWriteObject(name, values[i]);
+            doWriteObject(name, values[i]);
         }
     }
 
@@ -824,8 +824,8 @@ public class Data {
             throw new NullPointerException("name");
         }
 
-        this.remove(name);
-        this.addElement(name, escape(value));
+        remove(name);
+        addElement(name, escape(value));
     }
 
     /**
@@ -847,14 +847,14 @@ public class Data {
             throw new NullPointerException("values");
         }
 
-        this.remove(name);
+        remove(name);
         for (int i = 0; i < values.length; ++i) {
-            this.addElement(name, escape(values[i]));
+            addElement(name, escape(values[i]));
         }
     }
 
     private Node getFirstElementByTagName(final String name) {
-        NodeList nodes = this.element.getElementsByTagName(name);
+        NodeList nodes = element.getElementsByTagName(name);
         if (nodes.getLength() > 0) {
             return nodes.item(0);
         }
@@ -864,17 +864,17 @@ public class Data {
     }
 
     private void addElement(final String name, final String content) {
-        final Element newElement = this.document.createElement(name);
+        final Element newElement = document.createElement(name);
         newElement.setTextContent(content);
-        this.element.appendChild(newElement);
+        element.appendChild(newElement);
     }
 
     private void doWriteObject(final String name, final Storable value) {
         if (value != null) {
-            final Element newElement = this.document.createElement(name);
+            final Element newElement = document.createElement(name);
             newElement.setAttribute("class", value.getClass().getName());
-            this.element.appendChild(newElement);
-            value.writeTo(new Data(this.document, newElement));
+            element.appendChild(newElement);
+            value.writeTo(new Data(document, newElement));
         }
     }
 
@@ -892,7 +892,7 @@ public class Data {
             }
 
             Result output = new StreamResult(writer);
-            Source input = new DOMSource(this.document);
+            Source input = new DOMSource(document);
             transformer.transform(input, output);
         }
         catch (TransformerException ex) {

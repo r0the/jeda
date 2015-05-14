@@ -37,7 +37,7 @@ import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ViewRequest;
-import ch.jeda.ui.WindowFeature;
+import ch.jeda.ui.ViewFeature;
 import java.io.InputStream;
 
 public final class Main extends Activity {
@@ -49,7 +49,6 @@ public final class Main extends Activity {
     private final SensorManager sensorManager;
     private AndroidAudioManagerImp audioManager;
     private JedaView contentView;
-    private CanvasFragment topWindow;
     private boolean virtualKeyboardVisible;
 
     static Main getInstance() {
@@ -58,9 +57,9 @@ public final class Main extends Activity {
 
     public Main() {
         INSTANCE = this;
-        this.logFragment = new LogFragment();
-        this.resourceManager = new ResourceManager(this);
-        this.sensorManager = new SensorManager();
+        logFragment = new LogFragment();
+        resourceManager = new ResourceManager(this);
+        sensorManager = new SensorManager();
     }
 
     @Override
@@ -72,15 +71,15 @@ public final class Main extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.audioManager = new AndroidAudioManagerImp(this);
-        this.contentView = new JedaView(this);
-        this.contentView.setId(CONTENT_ID);
-        setContentView(this.contentView, new ViewGroup.LayoutParams(
-                       ViewGroup.LayoutParams.FILL_PARENT,
-                       ViewGroup.LayoutParams.FILL_PARENT));
+        audioManager = new AndroidAudioManagerImp(this);
+        contentView = new JedaView(this);
+        contentView.setId(CONTENT_ID);
+        setContentView(contentView, new ViewGroup.LayoutParams(
+                       ViewGroup.LayoutParams.MATCH_PARENT,
+                       ViewGroup.LayoutParams.MATCH_PARENT));
         Log.d("Jeda", "onCreate");
-        this.addManager(this.sensorManager, "SensorManager");
-        Log.i("Jeda", "Starting Jeda " + Jeda.getProperties().getString("jeda.version"));
+        addManager(sensorManager, "SensorManager");
+        Log.i("Jeda", "Starting Jeda " + Jeda.getProperties().getProperty("jeda.version"));
         if (savedInstanceState == null) {
             Jeda.startProgram();
         }
@@ -118,47 +117,36 @@ public final class Main extends Activity {
         Log.d("Jeda", "onSaveInstanceState");
     }
 
-    /**
-     * Adds an event to be dispatched by the top view, if available.
-     *
-     * @param event
-     */
-    void addEvent(final Event event) {
-        if (this.topWindow != null) {
-            this.topWindow.postEvent(event);
-        }
-    }
-
     ImageImp createImageImp(final String path) {
-        return this.resourceManager.openImage(path);
+        return resourceManager.openImage(path);
     }
 
     TypefaceImp createTypefaceImp(final String path) {
-        return this.resourceManager.openTypeface(path);
+        return resourceManager.openTypeface(path);
     }
 
     AudioManagerImp getAudioManagerImp() {
-        return this.audioManager;
+        return audioManager;
     }
 
     boolean isSensorAvailable(final SensorType sensorType) {
-        return this.sensorManager.isAvailable(sensorType);
+        return sensorManager.isAvailable(sensorType);
     }
 
     boolean isSensorEnabled(final SensorType sensorType) {
-        return this.sensorManager.isEnabled(sensorType);
+        return sensorManager.isEnabled(sensorType);
     }
 
     boolean isVirtualKeyboardVisible() {
-        return this.virtualKeyboardVisible;
+        return virtualKeyboardVisible;
     }
 
     Class<?>[] loadClasses() throws Exception {
-        return this.resourceManager.loadClasses();
+        return resourceManager.loadClasses();
     }
 
     void log(final LogLevel logLevel, final String message) {
-        this.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 doLog(logLevel, message);
@@ -167,7 +155,7 @@ public final class Main extends Activity {
     }
 
     InputStream openResource(final String path) {
-        return this.resourceManager.openInputStream(path);
+        return resourceManager.openInputStream(path);
     }
 
     void postEvent(final Event event) {
@@ -175,22 +163,22 @@ public final class Main extends Activity {
     }
 
     void setSensorEnabled(final SensorType sensorType, final boolean enabled) {
-        this.sensorManager.setEnabled(sensorType, enabled);
+        sensorManager.setEnabled(sensorType, enabled);
     }
 
     void setVirtualKeyboardVisible(final boolean visible) {
-        this.virtualKeyboardVisible = visible;
+        virtualKeyboardVisible = visible;
 
         if (visible) {
-            this.getInputMethodManager().showSoftInput(this.contentView, InputMethodManager.SHOW_FORCED);
+            getInputMethodManager().showSoftInput(contentView, InputMethodManager.SHOW_FORCED);
         }
         else {
-            this.getInputMethodManager().hideSoftInputFromWindow(this.contentView.getWindowToken(), 0);
+            getInputMethodManager().hideSoftInputFromWindow(contentView.getWindowToken(), 0);
         }
     }
 
     void showInputRequest(final InputRequest inputRequest) {
-        this.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 doShowInputRequest(inputRequest);
@@ -199,7 +187,7 @@ public final class Main extends Activity {
     }
 
     void showSelectionRequest(final SelectionRequest selectionRequest) {
-        this.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 doShowSelectionRequest(selectionRequest);
@@ -208,7 +196,7 @@ public final class Main extends Activity {
     }
 
     void showViewRequest(final ViewRequest request) {
-        this.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 doShowViewRequest(request);
@@ -220,7 +208,7 @@ public final class Main extends Activity {
     }
 
     private void addManager(final Fragment fragment, final String tag) {
-        final FragmentTransaction ft = this.getFragmentManager().beginTransaction();
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.add(fragment, tag);
         ft.commit();
     }
@@ -232,56 +220,57 @@ public final class Main extends Activity {
                 break;
             case ERROR:
                 Log.e("Jeda", message);
-                this.logFragment.append(message);
-                this.showFragment(this.logFragment);
+                logFragment.append(message);
+                showFragment(logFragment);
                 break;
             case INFO:
                 System.out.println(message);
-                this.logFragment.append(message);
-                this.showFragment(this.logFragment);
+                logFragment.append(message);
+                showFragment(logFragment);
                 break;
         }
     }
 
     void doShowInputRequest(final InputRequest request) {
-        this.setTitle(request.getTitle());
+        setTitle(request.getTitle());
         InputDialogFragment dialog = new InputDialogFragment(request);
-        dialog.show(this.getFragmentManager(), "InputDialog");
+        dialog.show(getFragmentManager(), "InputDialog");
     }
 
     private void doShowSelectionRequest(final SelectionRequest request) {
-        this.setTitle(request.getTitle());
-        this.showFragment(new SelectionDialogFragment(request));
+        setTitle(request.getTitle());
+        showFragment(new SelectionDialogFragment(request));
     }
 
     private void doShowViewRequest(final ViewRequest request) {
-        this.topWindow = new CanvasFragment(request);
-        final int orientation = this.getScreenOrientation(request);
-        Log.d("Jeda", "Setting screen orientation to " + orientation);
-        this.setRequestedOrientation(orientation);
-        this.showFragment(this.topWindow);
+        final SurfaceFragment topView = new SurfaceFragment(request);
+        contentView.setTopView(topView);
+        final int orientation = getScreenOrientation(request);
+        Log.i("Jeda", "Setting screen orientation to " + orientation);
+        setRequestedOrientation(orientation);
+        showFragment(topView);
     }
 
     private InputMethodManager getInputMethodManager() {
-        return (InputMethodManager) this.getSystemService(Service.INPUT_METHOD_SERVICE);
+        return (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
     }
 
     private void showFragment(final Fragment fragment) {
-        final FragmentTransaction ft = this.getFragmentManager().beginTransaction();
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(CONTENT_ID, fragment);
         ft.commit();
     }
 
     private int getScreenOrientation(final ViewRequest request) {
-        if (request.getFeatures().contains(WindowFeature.ORIENTATION_LANDSCAPE)) {
+        if (request.getFeatures().contains(ViewFeature.ORIENTATION_LANDSCAPE)) {
             return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         }
-        else if (request.getFeatures().contains(WindowFeature.ORIENTATION_PORTRAIT)) {
+        else if (request.getFeatures().contains(ViewFeature.ORIENTATION_PORTRAIT)) {
             return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         }
         else {
-            final int rotation = this.getWindowManager().getDefaultDisplay().getRotation();
-            if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            final int rotation = getWindowManager().getDefaultDisplay().getRotation();
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_90) {
                     return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
                 }

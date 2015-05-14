@@ -36,11 +36,11 @@ public class Text extends Widget {
 
     public Text(final int x, final int y, final String text, final Alignment alignment) {
         super(x, y, alignment);
-        this.height = -1;
+        height = -1;
         this.text = text;
-        this.textSize = DEFAULT_TEXT_SIZE;
-        this.typeface = DEFAULT_TYPEFACE;
-        this.width = -1;
+        textSize = DEFAULT_TEXT_SIZE;
+        typeface = DEFAULT_TYPEFACE;
+        width = -1;
     }
 
     @Override
@@ -50,57 +50,57 @@ public class Text extends Widget {
 
     @Override
     public int getHeight() {
-        return this.height;
+        return height;
     }
 
     public int getTextSize() {
-        return this.textSize;
+        return textSize;
     }
 
     public String getText() {
-        return this.text;
+        return text;
     }
 
     public Typeface getTypeface() {
-        return this.typeface;
+        return typeface;
     }
 
     @Override
     public int getWidth() {
-        return this.width;
+        return width;
     }
 
     public void setTextSize(final int textSize) {
-        if (this.textSize != textSize && textSize > 0) {
+        if (textSize != this.textSize && textSize > 0) {
             this.textSize = textSize;
-            this.invalidateSize();
+            invalidateSize();
         }
     }
 
     public void setText(final String text) {
         this.text = text;
-        this.invalidateSize();
+        invalidateSize();
     }
 
     public void setTypeface(final Typeface typeface) {
         this.typeface = typeface;
-        this.invalidateSize();
+        invalidateSize();
     }
 
     @Override
     protected void draw(final Canvas canvas) {
-        canvas.setTypeface(this.typeface);
-        canvas.setTextSize(this.textSize);
-        if (this.width < 0 || this.height < 0) {
-            this.width = canvas.textWidth(text);
-            this.height = canvas.textHeight(text);
+        canvas.setTypeface(typeface);
+        canvas.setTextSize(textSize);
+        if (width < 0 || height < 0) {
+            width = canvas.textWidth(text);
+            height = canvas.textHeight(text);
         }
 
-        canvas.drawText(this.getX(), this.getY(), this.text, this.getAlignment());
+        canvas.drawText(getX(), getY(), text, getAlignment());
     }
 
     private void invalidateSize() {
-        this.height = -1;
-        this.width = -1;
+        height = -1;
+        width = -1;
     }
 }

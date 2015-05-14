@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -54,19 +54,19 @@ public class ProgressBar extends Widget {
      */
     public ProgressBar(final int x, final int y, final Alignment alignment) {
         super(x, y, alignment);
-        this.style = Theme.getDefault().getDefaultProgressBarStyle();
-        this.minimumValue = 0.0;
-        this.maximumValue = 1.0;
+        style = Theme.getDefault().getDefaultProgressBarStyle();
+        minimumValue = 0.0;
+        maximumValue = 1.0;
     }
 
     @Override
     public final boolean contains(final int x, int y) {
-        return this.style.contains(this, x, y);
+        return style.contains(this, x, y);
     }
 
     @Override
     public final int getHeight() {
-        return this.style.getHeight(this);
+        return style.getHeight(this);
     }
 
     /**
@@ -77,7 +77,7 @@ public class ProgressBar extends Widget {
      * @since 1.3
      */
     public final ProgressBarStyle getStyle() {
-        return this.style;
+        return style;
     }
 
     /**
@@ -95,7 +95,7 @@ public class ProgressBar extends Widget {
      * @since 1.3
      */
     public double getMaximumValue() {
-        return this.maximumValue;
+        return maximumValue;
     }
 
     /**
@@ -113,7 +113,7 @@ public class ProgressBar extends Widget {
      * @since 1.3
      */
     public double getMinimumValue() {
-        return this.minimumValue;
+        return minimumValue;
     }
 
     /**
@@ -128,14 +128,14 @@ public class ProgressBar extends Widget {
      * @since 1.3
      */
     public double getProgress() {
-        if (this.value <= this.minimumValue) {
+        if (value <= minimumValue) {
             return 0.0;
         }
-        else if (this.maximumValue <= this.value) {
+        else if (maximumValue <= value) {
             return 1.0;
         }
         else {
-            return (this.value - this.minimumValue) / (this.maximumValue - this.minimumValue);
+            return (value - minimumValue) / (maximumValue - minimumValue);
         }
     }
 
@@ -155,12 +155,12 @@ public class ProgressBar extends Widget {
      * @since 1.3
      */
     public double getValue() {
-        return this.value;
+        return value;
     }
 
     @Override
     public final int getWidth() {
-        return this.style.getWidth(this);
+        return style.getWidth(this);
     }
 
     /**
@@ -178,7 +178,7 @@ public class ProgressBar extends Widget {
      * @since 1.3
      */
     public void setMaximumValue(final double maximumValue) {
-        if (maximumValue <= this.minimumValue) {
+        if (maximumValue <= minimumValue) {
             throw new IllegalArgumentException("maximumValue");
         }
 
@@ -201,7 +201,7 @@ public class ProgressBar extends Widget {
      * @since 1.3
      */
     public void setMinimumValue(final double minimumValue) {
-        if (this.maximumValue <= minimumValue) {
+        if (maximumValue <= minimumValue) {
             throw new IllegalArgumentException("minimumValue");
         }
 
@@ -271,6 +271,6 @@ public class ProgressBar extends Widget {
 
     @Override
     protected void draw(final Canvas canvas) {
-        this.style.draw(this, canvas);
+        style.draw(this, canvas);
     }
 }

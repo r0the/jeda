@@ -90,8 +90,8 @@ public final class PhysicsView extends View implements TickListener {
      */
     public PhysicsView(int width, int height, ViewFeature... features) {
         super(width, height, features);
-        this.physics = new Physics();
-        this.addEventListener(this);
+        physics = new Physics();
+        addEventListener(this);
     }
 
     /**
@@ -103,29 +103,29 @@ public final class PhysicsView extends View implements TickListener {
         final double WIDTH = 10.0;
         final Body top = new Body();
         top.setType(BodyType.STATIC);
-        final double w = this.getWidth();
-        final double h = this.getHeight();
+        final double w = getWidth();
+        final double h = getHeight();
         top.addShape(new Rectangle(w + 2 * WIDTH, WIDTH));
         top.setPosition(w / 2, -WIDTH / 2);
-        this.add(top);
+        add(top);
 
         final Body right = new Body();
         right.setType(BodyType.STATIC);
         right.addShape(new Rectangle(WIDTH, h + 2 * WIDTH));
         right.setPosition(w + WIDTH / 2, h / 2);
-        this.add(right);
+        add(right);
 
         final Body bottom = new Body();
         bottom.setType(BodyType.STATIC);
         bottom.addShape(new Rectangle(w + 2 * WIDTH, WIDTH));
         bottom.setPosition(w / 2, h + WIDTH / 2);
-        this.add(bottom);
+        add(bottom);
 
         final Body left = new Body();
         left.setType(BodyType.STATIC);
         left.addShape(new Rectangle(WIDTH, h + 2 * WIDTH));
         left.setPosition(-WIDTH / 2, h / 2);
-        this.add(left);
+        add(left);
     }
 
     /**
@@ -138,7 +138,7 @@ public final class PhysicsView extends View implements TickListener {
      * @since 2.0
      */
     public final double getScale() {
-        return this.physics.getScale();
+        return physics.getScale();
     }
 
     /**
@@ -150,7 +150,7 @@ public final class PhysicsView extends View implements TickListener {
      * @since 2.0
      */
     public final boolean isDebugging() {
-        return this.physics.isDebugging();
+        return physics.isDebugging();
     }
 
     /**
@@ -163,7 +163,7 @@ public final class PhysicsView extends View implements TickListener {
      * @since 2.0
      */
     public final void setDebugging(final boolean debugging) {
-        this.physics.setDebugging(debugging);
+        physics.setDebugging(debugging);
     }
 
     /**
@@ -175,11 +175,11 @@ public final class PhysicsView extends View implements TickListener {
      * @since 2.0
      */
     public final void setGravity(final double ax, final double ay) {
-        this.physics.setGravity(ax, ay);
+        physics.setGravity(ax, ay);
     }
 
     public final void setPaused(final boolean paused) {
-        this.physics.setPaused(paused);
+        physics.setPaused(paused);
     }
 
     /**
@@ -192,29 +192,29 @@ public final class PhysicsView extends View implements TickListener {
      * @since 2.0
      */
     public final void setScale(final double scale) {
-        this.physics.setScale(scale);
+        physics.setScale(scale);
     }
 
     public void step(final double seconds) {
-        this.physics.step(seconds);
+        physics.step(seconds);
     }
 
     @Override
     protected void elementAdded(final Element element) {
         if (element instanceof Body) {
-            this.physics.add((Body) element);
+            physics.add((Body) element);
         }
     }
 
     @Override
     protected void elementRemoved(final Element element) {
         if (element instanceof Body) {
-            this.physics.remove((Body) element);
+            physics.remove((Body) element);
         }
     }
 
     @Override
     public void onTick(final TickEvent event) {
-        this.step(event.getDuration());
+        step(event.getDuration());
     }
 }

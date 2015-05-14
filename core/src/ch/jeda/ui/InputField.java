@@ -47,14 +47,14 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      */
     protected InputField(final int x, final int y, final Alignment alignment) {
         super(x, y, alignment);
-        this.displayText = "";
-        this.inputHidden = false;
-        this.style = Theme.getDefault().getDefaultInputFieldStyle();
+        displayText = "";
+        inputHidden = false;
+        style = Theme.getDefault().getDefaultInputFieldStyle();
     }
 
     @Override
     public final boolean contains(final int x, final int y) {
-        return this.style.contains(this, x, y);
+        return style.contains(this, x, y);
     }
 
     /**
@@ -65,12 +65,12 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      * @since 1.3
      */
     public final String getDisplayText() {
-        return this.displayText;
+        return displayText;
     }
 
     @Override
     public final int getHeight() {
-        return this.style.getHeight(this);
+        return style.getHeight(this);
     }
 
     /**
@@ -82,12 +82,12 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      * @since 1.3
      */
     public final InputFieldStyle getStyle() {
-        return this.style;
+        return style;
     }
 
     @Override
     public final int getWidth() {
-        return this.style.getWidth(this);
+        return style.getWidth(this);
     }
 
     /**
@@ -99,7 +99,7 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      * @since 1.4
      */
     public final boolean isInputHidden() {
-        return this.inputHidden;
+        return inputHidden;
     }
 
     /**
@@ -113,7 +113,7 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
      */
     public void setInputHidden(final boolean inputHidden) {
         this.inputHidden = inputHidden;
-        this.visibleText = null;
+        visibleText = null;
     }
 
     /**
@@ -135,17 +135,17 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
 
     @Override
     public final void onKeyTyped(final KeyEvent event) {
-        if (!this.isSelected()) {
+        if (!isSelected()) {
             return;
         }
 
         switch (event.getKey()) {
             case BACKSPACE:
-                this.characterDeleted();
+                characterDeleted();
                 event.consume();
                 break;
             case UNDEFINED:
-                this.characterTyped(event.getKeyChar());
+                characterTyped(event.getKeyChar());
                 event.consume();
                 break;
         }
@@ -153,8 +153,8 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
 
     @Override
     public void onPointerDown(final PointerEvent event) {
-        if (this.contains(event.getX(), event.getY())) {
-            this.select();
+        if (contains(event.getX(), event.getY())) {
+            select();
             event.consume();
         }
     }
@@ -177,11 +177,11 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
 
     @Override
     protected void draw(final Canvas canvas) {
-        if (this.visibleText == null) {
-            this.updateVisibleText(canvas);
+        if (visibleText == null) {
+            updateVisibleText(canvas);
         }
 
-        this.style.draw(this, this.visibleText, canvas);
+        style.draw(this, visibleText, canvas);
     }
 
     /**
@@ -199,34 +199,34 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
             this.displayText = displayText;
         }
 
-        this.visibleText = null;
+        visibleText = null;
     }
 
     private void updateVisibleText(final Canvas canvas) {
-        final View view = this.getView();
+        final View view = getView();
         if (view != null) {
-            final StringBuilder builder = new StringBuilder(this.displayBaseText());
-            while (!this.style.fits(this, canvas, builder.toString())) {
+            final StringBuilder builder = new StringBuilder(displayBaseText());
+            while (!style.fits(this, canvas, builder.toString())) {
                 builder.deleteCharAt(0);
             }
 
-            this.visibleText = builder.toString();
+            visibleText = builder.toString();
         }
         else {
-            this.visibleText = this.displayText;
+            visibleText = displayText;
         }
     }
 
     private String displayBaseText() {
-        if (this.inputHidden) {
+        if (inputHidden) {
             final StringBuilder result = new StringBuilder();
-            for (int i = 0; i < this.displayText.length(); ++i) {
+            for (int i = 0; i < displayText.length(); ++i) {
                 result.append(HIDE_CHAR);
             }
             return result.toString();
         }
         else {
-            return this.displayText;
+            return displayText;
         }
     }
 

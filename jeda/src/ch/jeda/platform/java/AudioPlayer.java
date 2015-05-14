@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,51 +26,51 @@ abstract class AudioPlayer implements Runnable {
 
     AudioPlayer(final JavaAudioManagerImp audioManager) {
         this.audioManager = audioManager;
-        this.lock = new Object();
-        this.thread = new Thread(this);
-        this.thread.setPriority(Thread.MAX_PRIORITY);
+        lock = new Object();
+        thread = new Thread(this);
+        thread.setPriority(Thread.MAX_PRIORITY);
 
-        this.paused = false;
-        this.stopRequested = false;
+        paused = false;
+        stopRequested = false;
     }
 
     @Override
     public final void run() {
-        this.playLoop();
-        this.audioManager.playbackStopped();
+        playLoop();
+        audioManager.playbackStopped();
     }
 
     boolean isPaused() {
-        synchronized (this.lock) {
-            return this.paused;
+        synchronized (lock) {
+            return paused;
         }
     }
 
     void pause() {
-        synchronized (this.lock) {
-            this.paused = true;
+        synchronized (lock) {
+            paused = true;
         }
     }
 
     void resume() {
-        synchronized (this.lock) {
-            this.paused = false;
+        synchronized (lock) {
+            paused = false;
         }
     }
 
     final void start() {
-        this.thread.start();
+        thread.start();
     }
 
     void stop() {
-        synchronized (this.lock) {
-            this.stopRequested = true;
+        synchronized (lock) {
+            stopRequested = true;
         }
     }
 
     protected final boolean isStopRequested() {
-        synchronized (this.lock) {
-            return this.stopRequested;
+        synchronized (lock) {
+            return stopRequested;
         }
     }
 

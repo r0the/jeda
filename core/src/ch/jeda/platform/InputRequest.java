@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,43 +28,43 @@ public class InputRequest<T> extends Request {
     private T result;
 
     public InputRequest(final Class<T> clazz) {
-        this.inputType = InputType.forClass(clazz);
-        this.lock = new Object();
+        inputType = InputType.forClass(clazz);
+        lock = new Object();
     }
 
     public void cancelRequest() {
-        synchronized (this.lock) {
-            this.done = true;
-            this.cancelled = true;
-            this.lock.notify();
+        synchronized (lock) {
+            done = true;
+            cancelled = true;
+            lock.notify();
         }
     }
 
     public InputType<T> getInputType() {
-        return this.inputType;
+        return inputType;
     }
 
     public T getResult() {
-        return this.result;
+        return result;
     }
 
     public boolean isCancelled() {
-        return this.cancelled;
+        return cancelled;
     }
 
     public void setResult(final T result) {
-        synchronized (this.lock) {
-            this.done = true;
+        synchronized (lock) {
+            done = true;
             this.result = result;
-            this.lock.notify();
+            lock.notify();
         }
     }
 
     public void waitForResult() {
-        synchronized (this.lock) {
-            while (!this.done) {
+        synchronized (lock) {
+            while (!done) {
                 try {
-                    this.lock.wait();
+                    lock.wait();
                 }
                 catch (InterruptedException ex) {
                     // ignore

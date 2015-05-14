@@ -34,7 +34,7 @@ class LogFragment extends Fragment {
     private TextView textView;
 
     public LogFragment() {
-        this.log = new StringBuilder();
+        log = new StringBuilder();
     }
 
     @Override
@@ -46,14 +46,14 @@ class LogFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        this.textView = new TextView(this.getActivity());
-        this.textView.setLayoutParams(new ViewGroup.LayoutParams(
+        textView = new TextView(getActivity());
+        textView.setLayoutParams(new ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT));
-        this.scrollView = new ScrollView(this.getActivity());
-        this.scrollView.addView(this.textView);
-        this.updateView();
-        return this.scrollView;
+        scrollView = new ScrollView(getActivity());
+        scrollView.addView(textView);
+        updateView();
+        return scrollView;
     }
 
     void log(final LogLevel logLevel, final String message) {
@@ -63,24 +63,24 @@ class LogFragment extends Fragment {
                 break;
             case ERROR:
                 Log.e("Jeda", message);
-                this.append(message);
+                append(message);
                 break;
             case INFO:
                 System.out.println(message);
-                this.append(message);
+                append(message);
                 break;
         }
     }
 
     void append(final String text) {
-        this.log.append(text);
-        if (this.isVisible()) {
-            this.updateView();
+        log.append(text);
+        if (isVisible()) {
+            updateView();
         }
     }
 
     private void updateView() {
-        this.textView.setText(this.log.toString());
-        this.scrollView.fullScroll(View.FOCUS_DOWN);
+        textView.setText(log.toString());
+        scrollView.fullScroll(View.FOCUS_DOWN);
     }
 }

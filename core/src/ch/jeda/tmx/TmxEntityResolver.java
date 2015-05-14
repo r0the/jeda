@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,7 +26,7 @@ class TmxEntityResolver implements EntityResolver {
     @Override
     public InputSource resolveEntity(final String publicId, final String systemId) {
         if (TMX_DTD_URL.equals(systemId)) {
-            return new InputSource(this.getClass().getResourceAsStream("ch/jeda/tiled/map.dtd"));
+            return new InputSource(getClass().getResourceAsStream("ch/jeda/tiled/map.dtd"));
         }
         else {
             return null;

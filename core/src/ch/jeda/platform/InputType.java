@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -60,7 +60,7 @@ public abstract class InputType<T> {
 
         @Override
         public boolean validate(final String text) {
-            return this.parse(text) != null;
+            return parse(text) != null;
         }
     }
 
@@ -78,7 +78,7 @@ public abstract class InputType<T> {
 
         @Override
         public boolean validate(final String text) {
-            return this.parse(text) != null;
+            return parse(text) != null;
         }
     }
 

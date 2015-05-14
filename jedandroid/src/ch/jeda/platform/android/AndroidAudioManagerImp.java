@@ -37,25 +37,25 @@ class AndroidAudioManagerImp implements AudioManagerImp, MediaPlayer.OnCompletio
 
     public AndroidAudioManagerImp(final Main main) {
         this.main = main;
-        this.imp = (android.media.AudioManager) main.getSystemService(Activity.AUDIO_SERVICE);
-        this.soundMap = new HashMap<String, Integer>();
-        this.soundPool = new SoundPool(10, android.media.AudioManager.STREAM_MUSIC, 0);
+        imp = (android.media.AudioManager) main.getSystemService(Activity.AUDIO_SERVICE);
+        soundMap = new HashMap<String, Integer>();
+        soundPool = new SoundPool(10, android.media.AudioManager.STREAM_MUSIC, 0);
     }
 
     public void onCompletion(final MediaPlayer mediaPlayer) {
-        if (this.callback != null) {
-            this.callback.playbackStopped();
+        if (callback != null) {
+            callback.playbackStopped();
         }
     }
 
     @Override
     public boolean isSoundAvailable(final String path) {
-        return this.soundMap.containsKey(path);
+        return soundMap.containsKey(path);
     }
 
     @Override
     public void loadSound(final String path) {
-        this.main.runOnUiThread(new Runnable() {
+        main.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (soundMap.containsKey(path)) {
@@ -77,20 +77,20 @@ class AndroidAudioManagerImp implements AudioManagerImp, MediaPlayer.OnCompletio
 
     @Override
     public void pausePlayback() {
-        this.mediaPlayer.pause();
+        mediaPlayer.pause();
     }
 
     @Override
     public void playSound(final String path) {
-        if (this.soundMap.containsKey(path)) {
-            final float volume = this.getVolume();
-            this.soundPool.play(this.soundMap.get(path), volume, volume, 0, 0, 1.0f);
+        if (soundMap.containsKey(path)) {
+            final float volume = getVolume();
+            soundPool.play(soundMap.get(path), volume, volume, 0, 0, 1.0f);
         }
     }
 
     @Override
     public void resumePlayback() {
-        this.mediaPlayer.start();
+        mediaPlayer.start();
     }
 
     @Override
@@ -100,23 +100,23 @@ class AndroidAudioManagerImp implements AudioManagerImp, MediaPlayer.OnCompletio
 
     @Override
     public boolean startPlayback(final String path) {
-        final int resId = this.getResourceId(path);
+        final int resId = getResourceId(path);
         if (resId == 0) {
             return false;
         }
 
-        this.mediaPlayer = MediaPlayer.create(this.main, resId);
-        this.mediaPlayer.setOnCompletionListener(this);
-        this.mediaPlayer.start();
+        mediaPlayer = MediaPlayer.create(main, resId);
+        mediaPlayer.setOnCompletionListener(this);
+        mediaPlayer.start();
         return true;
     }
 
     @Override
     public void stopPlayback() {
-        this.mediaPlayer.stop();
-        this.mediaPlayer.release();
-        this.mediaPlayer = null;
-        this.callback.playbackStopped();
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        mediaPlayer = null;
+        callback.playbackStopped();
     }
 
     private int getResourceId(final String path) {
@@ -129,12 +129,12 @@ class AndroidAudioManagerImp implements AudioManagerImp, MediaPlayer.OnCompletio
 
         final String type = path.substring(RES_PREFIX.length(), slashPos);
         final String name = path.substring(slashPos + 1, dotPos);
-        return this.main.getResources().getIdentifier(name, type, this.main.getApplicationContext().getPackageName());
+        return main.getResources().getIdentifier(name, type, main.getApplicationContext().getPackageName());
     }
 
     private float getVolume() {
-        return (float) this.imp.getStreamVolume(android.media.AudioManager.STREAM_MUSIC) /
-               (float) this.imp.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC);
+        return (float) imp.getStreamVolume(android.media.AudioManager.STREAM_MUSIC) /
+               (float) imp.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC);
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -107,27 +107,27 @@ public class DefaultProgressBarStyle implements ProgressBarStyle {
     public boolean contains(final ProgressBar progressBar, final int x, final int y) {
         final int dx = progressBar.getCenterX() - x;
         final int dy = progressBar.getCenterY() - y;
-        return Math.abs(dx) <= this.getWidth(progressBar) / 2 && Math.abs(dy) <= this.getHeight(progressBar) / 2;
+        return Math.abs(dx) <= getWidth(progressBar) / 2 && Math.abs(dy) <= getHeight(progressBar) / 2;
     }
 
     @Override
     public void draw(final ProgressBar progressBar, final Canvas canvas) {
-        canvas.drawImage(progressBar.getLeft(), progressBar.getTop(), this.background);
+        canvas.drawImage(progressBar.getLeft(), progressBar.getTop(), background);
         final double percent = progressBar.getProgress();
-        int width = (int) (this.getWidth(progressBar) * percent);
+        int width = (int) (getWidth(progressBar) * percent);
         if (width > 0) {
             canvas.drawImage(progressBar.getLeft(), progressBar.getTop(),
-                             foreground.subImage(0, 0, width, this.getHeight(progressBar)));
+                             foreground.subImage(0, 0, width, getHeight(progressBar)));
         }
     }
 
     @Override
     public int getHeight(final ProgressBar progressBar) {
-        return this.background.getHeight();
+        return background.getHeight();
     }
 
     @Override
     public int getWidth(final ProgressBar progressBar) {
-        return this.background.getWidth();
+        return background.getWidth();
     }
 }

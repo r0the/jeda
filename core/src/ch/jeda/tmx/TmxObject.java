@@ -47,21 +47,21 @@ public final class TmxObject {
     private final double y;
 
     TmxObject(final TmxMap map, final Element element) {
-        this.height = element.getDoubleAttribute(Const.HEIGHT, 0.0);
-        this.name = element.getStringAttribute(Const.NAME);
-        this.properties = element.parsePropertiesChild();
-        this.rotation = element.getDoubleAttribute(Const.ROTATION, 0.0);
-        this.shape = parseShape(element);
-        this.type = element.getStringAttribute(Const.TYPE);
-        this.visible = element.getBooleanAttribute(Const.VISIBLE, true);
-        this.width = element.getDoubleAttribute(Const.WIDTH, 0.0);
-        this.x = element.getDoubleAttribute(Const.X);
-        this.y = element.getDoubleAttribute(Const.Y);
+        height = element.getDoubleAttribute(Const.HEIGHT, 0.0);
+        name = element.getStringAttribute(Const.NAME);
+        properties = element.parsePropertiesChild();
+        rotation = element.getDoubleAttribute(Const.ROTATION, 0.0);
+        shape = parseShape(element);
+        type = element.getStringAttribute(Const.TYPE);
+        visible = element.getBooleanAttribute(Const.VISIBLE, true);
+        width = element.getDoubleAttribute(Const.WIDTH, 0.0);
+        x = element.getDoubleAttribute(Const.X);
+        y = element.getDoubleAttribute(Const.Y);
         if (element.hasAttribute(Const.GID)) {
-            this.tile = map.lookupTile(element.getIntAttribute(Const.GID));
+            tile = map.lookupTile(element.getIntAttribute(Const.GID));
         }
         else {
-            this.tile = null;
+            tile = null;
         }
     }
 
@@ -75,20 +75,20 @@ public final class TmxObject {
      * @since 2.0
      */
     public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
-        if (!this.visible) {
+        if (!visible) {
             return;
         }
 
         canvas.pushTransformations();
         canvas.resetTransformations();
-        canvas.setTranslation(this.x + offsetX, this.y + offsetY);
-        canvas.setRotationDeg(this.rotation);
-        if (this.tile != null) {
-            canvas.drawImage(0, 0, this.tile.getImage(), Alignment.BOTTOM_LEFT);
+        canvas.setTranslation(x + offsetX, y + offsetY);
+        canvas.setRotationDeg(rotation);
+        if (tile != null) {
+            canvas.drawImage(0, 0, tile.getImage(), Alignment.BOTTOM_LEFT);
         }
 
-        if (this.shape != null) {
-            this.shape.draw(canvas);
+        if (shape != null) {
+            shape.draw(canvas);
         }
 
         canvas.popTransformations();
@@ -102,7 +102,7 @@ public final class TmxObject {
      * @since 2.0
      */
     public double getHeight() {
-        return this.height;
+        return height;
     }
 
     /**
@@ -113,7 +113,7 @@ public final class TmxObject {
      * @since 2.0
      */
     public String getName() {
-        return this.name;
+        return name;
     }
 
     /**
@@ -124,7 +124,7 @@ public final class TmxObject {
      * @since 2.0
      */
     public Data getProperties() {
-        return this.properties;
+        return properties;
     }
 
     /**
@@ -135,7 +135,7 @@ public final class TmxObject {
      * @since 2.0
      */
     public double getRotationDeg() {
-        return this.rotation;
+        return rotation;
     }
 
     /**
@@ -146,7 +146,7 @@ public final class TmxObject {
      * @since 2.0
      */
     public double getRotationRad() {
-        return Math.toRadians(this.rotation);
+        return Math.toRadians(rotation);
     }
 
     /**
@@ -157,7 +157,7 @@ public final class TmxObject {
      * @since 2.0
      */
     public Shape getShape() {
-        return this.shape;
+        return shape;
     }
 
     /**
@@ -168,7 +168,7 @@ public final class TmxObject {
      * @since 2.0
      */
     public TmxTile getTile() {
-        return this.tile;
+        return tile;
     }
 
     /**
@@ -179,7 +179,7 @@ public final class TmxObject {
      * @since 2.0
      */
     public String getType() {
-        return this.type;
+        return type;
     }
 
     /**
@@ -190,7 +190,7 @@ public final class TmxObject {
      * @since 2.0
      */
     public double getWidth() {
-        return this.width;
+        return width;
     }
 
     /**
@@ -201,7 +201,7 @@ public final class TmxObject {
      * @since 2.0
      */
     public double getX() {
-        return this.x;
+        return x;
     }
 
     /**
@@ -212,7 +212,7 @@ public final class TmxObject {
      * @since 2.0
      */
     public double getY() {
-        return this.y;
+        return y;
     }
 
     /**
@@ -224,12 +224,12 @@ public final class TmxObject {
      */
     public Body toBody() {
         final Body result = new Body();
-        result.addShape(this.getShape());
-        result.setName(this.name);
-        result.setPosition(this.x, this.y);
+        result.addShape(getShape());
+        result.setName(name);
+        result.setPosition(x, y);
         result.setType(BodyType.DYNAMIC);
-        if (this.tile != null) {
-            result.setImage(this.tile.getImage());
+        if (tile != null) {
+            result.setImage(tile.getImage());
         }
 
         return result;

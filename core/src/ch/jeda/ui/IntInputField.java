@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -54,9 +54,9 @@ public class IntInputField extends InputField {
      */
     public IntInputField(final int x, final int y, final Alignment alignment) {
         super(x, y, alignment);
-        this.minimumValue = Integer.MIN_VALUE;
-        this.maximumValue = Integer.MAX_VALUE;
-        this.setValue(0);
+        minimumValue = Integer.MIN_VALUE;
+        maximumValue = Integer.MAX_VALUE;
+        setValue(0);
     }
 
     /**
@@ -70,7 +70,7 @@ public class IntInputField extends InputField {
      * @since 1.3
      */
     public final int getMaximumValue() {
-        return this.maximumValue;
+        return maximumValue;
     }
 
     /**
@@ -84,7 +84,7 @@ public class IntInputField extends InputField {
      * @since 1.3
      */
     public final int getMinimumValue() {
-        return this.minimumValue;
+        return minimumValue;
     }
 
     /**
@@ -96,7 +96,7 @@ public class IntInputField extends InputField {
      * @since 1.3
      */
     public final int getValue() {
-        return this.value;
+        return value;
     }
 
     /**
@@ -111,7 +111,7 @@ public class IntInputField extends InputField {
      */
     public final void setMaximumValue(final int maximumValue) {
         this.maximumValue = maximumValue;
-        this.checkValue();
+        checkValue();
     }
 
     /**
@@ -126,7 +126,7 @@ public class IntInputField extends InputField {
      */
     public final void setMinimumValue(final int minimumValue) {
         this.minimumValue = minimumValue;
-        this.checkValue();
+        checkValue();
     }
 
     /**
@@ -139,37 +139,37 @@ public class IntInputField extends InputField {
      */
     public final void setValue(final int value) {
         this.value = value;
-        this.checkValue();
+        checkValue();
     }
 
     @Override
     protected void characterDeleted() {
-        this.value = this.value / 10;
-        this.setDisplayText(Convert.toString(this.value));
+        value = value / 10;
+        setDisplayText(Convert.toString(value));
     }
 
     @Override
     protected void characterTyped(final char ch) {
         if (ch == '-') {
-            this.value = -this.value;
+            value = -value;
         }
         else if (Character.isDigit(ch)) {
             final int digit = Character.digit(ch, 10);
             long candidate = digit;
-            if (this.value != 0) {
-                candidate = this.value * 10l + MathUtil.signum(this.value) * digit;
+            if (value != 0) {
+                candidate = value * 10l + MathUtil.signum(value) * digit;
             }
 
-            if (this.minimumValue <= candidate && candidate <= this.maximumValue) {
-                this.value = (int) candidate;
+            if (minimumValue <= candidate && candidate <= maximumValue) {
+                value = (int) candidate;
             }
         }
 
-        this.setDisplayText(Convert.toString(this.value));
+        setDisplayText(Convert.toString(value));
     }
 
     private void checkValue() {
-        this.value = Math.max(this.minimumValue, Math.min(this.value, this.maximumValue));
-        this.setDisplayText(Convert.toString(this.value));
+        value = Math.max(minimumValue, Math.min(value, maximumValue));
+        setDisplayText(Convert.toString(value));
     }
 }

@@ -60,9 +60,9 @@ public class DefaultTextStyle {
      * @since 1.3
      */
     public void applyTextStyle(final Canvas canvas) {
-        canvas.setColor(this.textColor);
-        canvas.setTypeface(this.typeface);
-        canvas.setTextSize(this.textSize);
+        canvas.setColor(textColor);
+        canvas.setTypeface(typeface);
+        canvas.setTextSize(textSize);
     }
 
     /**
@@ -73,7 +73,7 @@ public class DefaultTextStyle {
      * @since 1.3
      */
     public final Color getTextColor() {
-        return this.textColor;
+        return textColor;
     }
 
     /**
@@ -84,7 +84,7 @@ public class DefaultTextStyle {
      * @since 1.3
      */
     public final int getTextSize() {
-        return this.textSize;
+        return textSize;
     }
 
     /**
@@ -95,7 +95,7 @@ public class DefaultTextStyle {
      * @since 1.3
      */
     public final Typeface getTypeface() {
-        return this.typeface;
+        return typeface;
     }
 
     /**

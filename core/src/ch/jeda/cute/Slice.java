@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,16 +30,16 @@ class Slice {
         this.sizeX = sizeX;
         this.sizeZ = sizeZ;
         int size = sizeX * sizeZ;
-        this.boxes = new Box[size];
+        boxes = new Box[size];
         for (int i = 0; i < size; i++) {
-            this.boxes[i] = new Box();
+            boxes[i] = new Box();
         }
     }
 
     void addObject(final int x, final int z, final CuteObject object) {
-        if (0 <= x && x < this.sizeX &&
-            0 <= z && z < this.sizeZ) {
-            this.boxes[(x + z * this.sizeX)].addObject(object);
+        if (0 <= x && x < sizeX &&
+            0 <= z && z < sizeZ) {
+            boxes[(x + z * sizeX)].addObject(object);
         }
     }
 
@@ -54,9 +54,9 @@ class Slice {
     }
 
     Box getBoxAt(int x, int z) {
-        if (0 <= x && x < this.sizeX &&
-            0 <= z && z < this.sizeZ) {
-            return this.boxes[(x + z * this.sizeX)];
+        if (0 <= x && x < sizeX &&
+            0 <= z && z < sizeZ) {
+            return boxes[(x + z * sizeX)];
         }
         else {
             return null;

@@ -29,49 +29,53 @@ class AndroidImageImp implements ImageImp {
     private static final Matrix FLIP_VERTICALLY = initFlipVerticallyMatrix();
     final Bitmap bitmap;
 
+    AndroidImageImp(final Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
+
     @Override
     public ImageImp flipHorizontally() {
         return new AndroidImageImp(Bitmap.createBitmap(
-            this.bitmap, 0, 0, this.getWidth(), this.getHeight(), FLIP_HORIZONTALLY, false));
+            bitmap, 0, 0, getWidth(), getHeight(), FLIP_HORIZONTALLY, false));
     }
 
     @Override
     public ImageImp flipVertically() {
         return new AndroidImageImp(Bitmap.createBitmap(
-            this.bitmap, 0, 0, this.getWidth(), this.getHeight(), FLIP_VERTICALLY, false));
+            bitmap, 0, 0, getWidth(), getHeight(), FLIP_VERTICALLY, false));
     }
 
     @Override
     public int getHeight() {
-        return this.bitmap.getHeight();
+        return bitmap.getHeight();
     }
 
     @Override
     public int getPixel(final int x, final int y) {
-        return this.bitmap.getPixel(x, y);
+        return bitmap.getPixel(x, y);
     }
 
     @Override
     public int[] getPixels(final int x, final int y, final int width, final int height) {
         final int[] result = new int[width * height];
-        this.bitmap.getPixels(result, 0, width, x, y, width, height);
+        bitmap.getPixels(result, 0, width, x, y, width, height);
         return result;
     }
 
     @Override
     public int getWidth() {
-        return this.bitmap.getWidth();
+        return bitmap.getWidth();
     }
 
     @Override
     public ImageImp rotateRad(double angle) {
-        final int width = this.bitmap.getWidth();
-        final int height = this.bitmap.getHeight();
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
         final int diameter = (int) Math.ceil(Math.sqrt(width * width + height * height));
         final Bitmap result = Bitmap.createBitmap(diameter, diameter, Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(result);
         canvas.rotate((float) (angle * 180 / Math.PI), diameter / 2, diameter / 2);
-        canvas.drawBitmap(this.bitmap, (diameter - width) / 2, (diameter - height) / 2, null);
+        canvas.drawBitmap(bitmap, (diameter - width) / 2, (diameter - height) / 2, null);
         return new AndroidImageImp(result);
     }
 
@@ -80,7 +84,7 @@ class AndroidImageImp implements ImageImp {
         assert width > 0;
         assert height > 0;
 
-        return new AndroidImageImp(Bitmap.createScaledBitmap(this.bitmap, width, height, false));
+        return new AndroidImageImp(Bitmap.createScaledBitmap(bitmap, width, height, false));
     }
 
     @Override
@@ -88,17 +92,13 @@ class AndroidImageImp implements ImageImp {
         assert width > 0;
         assert height > 0;
 
-        return new AndroidImageImp(Bitmap.createBitmap(this.bitmap, x, y, width, height));
+        return new AndroidImageImp(Bitmap.createBitmap(bitmap, x, y, width, height));
     }
 
     @Override
     public boolean write(final OutputStream out, final Encoding encoding)
         throws IOException {
-        return this.bitmap.compress(convertEncoding(encoding), 100, out);
-    }
-
-    AndroidImageImp(final Bitmap bitmap) {
-        this.bitmap = bitmap;
+        return bitmap.compress(convertEncoding(encoding), 100, out);
     }
 
     private static Bitmap.CompressFormat convertEncoding(Encoding encoding) {

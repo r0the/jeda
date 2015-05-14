@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,15 +24,15 @@ final class TmxTileSets {
     private final TreeMap<Integer, TmxTileSet> tileSetsByGid;
 
     TmxTileSets() {
-        this.tileSetsByGid = new TreeMap<Integer, TmxTileSet>();
+        tileSetsByGid = new TreeMap<Integer, TmxTileSet>();
     }
 
     void add(final TmxTileSet tileSet) {
-        this.tileSetsByGid.put(tileSet.getFirstGlobalId(), tileSet);
+        tileSetsByGid.put(tileSet.getFirstGlobalId(), tileSet);
     }
 
     TmxTile lookupTile(final int globalId) {
-        Map.Entry<Integer, TmxTileSet> entry = this.tileSetsByGid.floorEntry(globalId);
+        Map.Entry<Integer, TmxTileSet> entry = tileSetsByGid.floorEntry(globalId);
         if (entry == null) {
             return null;
         }

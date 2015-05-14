@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.ui.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 

@@ -35,10 +35,10 @@ public abstract class TmxLayer {
 
     TmxLayer(final TmxMap map, final Element element) {
         this.map = map;
-        this.name = element.getStringAttribute(Const.NAME);
-        this.opacity = Math.max(0.0, Math.min(element.getDoubleAttribute(Const.OPACITY, 1.0), 1.0));
-        this.properties = element.parsePropertiesChild();
-        this.visible = element.getBooleanAttribute(Const.VISIBLE, true);
+        name = element.getStringAttribute(Const.NAME);
+        opacity = Math.max(0.0, Math.min(element.getDoubleAttribute(Const.OPACITY, 1.0), 1.0));
+        properties = element.parsePropertiesChild();
+        visible = element.getBooleanAttribute(Const.VISIBLE, true);
     }
 
     public abstract void addTo(final PhysicsView view);
@@ -63,7 +63,7 @@ public abstract class TmxLayer {
      * @since 2.0
      */
     public final TmxMap getMap() {
-        return this.map;
+        return map;
     }
 
     /**
@@ -74,7 +74,7 @@ public abstract class TmxLayer {
      * @since 2.0
      */
     public final String getName() {
-        return this.name;
+        return name;
     }
 
     /**
@@ -98,7 +98,7 @@ public abstract class TmxLayer {
      * @since 2.0
      */
     public final double getOpacity() {
-        return this.opacity;
+        return opacity;
     }
 
     /**
@@ -109,7 +109,7 @@ public abstract class TmxLayer {
      * @since 2.0
      */
     public final Data getProperties() {
-        return this.properties;
+        return properties;
     }
 
     /**
@@ -144,7 +144,7 @@ public abstract class TmxLayer {
      * @since 2.0
      */
     public final boolean isVisible() {
-        return this.visible;
+        return visible;
     }
 
     /**

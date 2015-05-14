@@ -33,9 +33,9 @@ public final class TmxImageLayer extends TmxLayer {
 
     TmxImageLayer(final TmxMap map, final Element element, final XmlReader reader) {
         super(map, element);
-        this.image = reader.loadImageChild(element);
-        this.x = element.getIntAttribute(Const.X);
-        this.y = element.getIntAttribute(Const.Y);
+        image = reader.loadImageChild(element);
+        x = element.getIntAttribute(Const.X);
+        y = element.getIntAttribute(Const.Y);
     }
 
     @Override
@@ -45,8 +45,8 @@ public final class TmxImageLayer extends TmxLayer {
 
     @Override
     public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
-        if (this.isVisible()) {
-            canvas.drawImage(this.x + offsetX, this.y + offsetY, this.image, (int) (this.getOpacity() * 255));
+        if (isVisible()) {
+            canvas.drawImage(x + offsetX, y + offsetY, image, (int) (getOpacity() * 255));
         }
     }
 
@@ -58,7 +58,7 @@ public final class TmxImageLayer extends TmxLayer {
      * @since 2.0
      */
     public Image getImage() {
-        return this.image;
+        return image;
     }
 
     @Override
@@ -75,7 +75,7 @@ public final class TmxImageLayer extends TmxLayer {
      * @since 2.0
      */
     public int getX() {
-        return this.x;
+        return x;
     }
 
     /**
@@ -87,6 +87,6 @@ public final class TmxImageLayer extends TmxLayer {
      * @since 2.0
      */
     public int getY() {
-        return this.y;
+        return y;
     }
 }

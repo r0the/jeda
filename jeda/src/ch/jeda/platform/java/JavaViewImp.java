@@ -59,50 +59,50 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
     JavaViewImp(final BaseWindow window, final int width, final int height,
                 final EnumSet<ViewFeature> features) {
         this.features = features;
-        this.keyRepeatCount = new EnumMap<Key, Integer>(Key.class);
-        this.keyReleaseTimer = new EnumMap<Key, KeyReleaseTimer>(Key.class);
+        keyRepeatCount = new EnumMap<Key, Integer>(Key.class);
+        keyReleaseTimer = new EnumMap<Key, KeyReleaseTimer>(Key.class);
 
-        this.bitmapCanvas = new BitmapCanvas(width, height);
+        bitmapCanvas = new BitmapCanvas(width, height);
         this.window = window;
-        this.window.getContentPane().add(this.bitmapCanvas);
-        this.window.setResizable(false);
-        this.window.setIgnoreRepaint(true);
-        this.window.setUndecorated(features.contains(ViewFeature.FULLSCREEN));
+        window.getContentPane().add(bitmapCanvas);
+        window.setResizable(false);
+        window.setIgnoreRepaint(true);
+        window.setUndecorated(features.contains(ViewFeature.FULLSCREEN));
 
-        this.window.getContentPane().addKeyListener(this);
-        this.window.addKeyListener(this);
+        window.getContentPane().addKeyListener(this);
+        window.addKeyListener(this);
 
-        this.bitmapCanvas.setFocusable(true);
-        this.bitmapCanvas.requestFocus();
-        this.bitmapCanvas.addFocusListener(this);
-        this.bitmapCanvas.addKeyListener(this);
-        this.bitmapCanvas.addMouseListener(this);
-        this.bitmapCanvas.addMouseMotionListener(this);
-        this.bitmapCanvas.addMouseWheelListener(this);
+        bitmapCanvas.setFocusable(true);
+        bitmapCanvas.requestFocus();
+        bitmapCanvas.addFocusListener(this);
+        bitmapCanvas.addKeyListener(this);
+        bitmapCanvas.addMouseListener(this);
+        bitmapCanvas.addMouseMotionListener(this);
+        bitmapCanvas.addMouseWheelListener(this);
 
-        this.window.pack();
-        this.window.init();
-        this.window.setVisible(true);
+        window.pack();
+        window.init();
+        window.setVisible(true);
     }
 
     @Override
     public void close() {
-        this.window.dispose();
+        window.dispose();
     }
 
     @Override
     public CanvasImp getCanvas() {
-        return this.bitmapCanvas.getCanvasImp();
+        return bitmapCanvas.getCanvasImp();
     }
 
     @Override
     public EnumSet<ViewFeature> getFeatures() {
-        return this.features;
+        return features;
     }
 
     @Override
     public boolean isVisible() {
-        return this.window.isVisible();
+        return window.isVisible();
     }
 
     @Override
@@ -113,10 +113,10 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
     @Override
     public void setFeature(final ViewFeature feature, final boolean enabled) {
         if (enabled) {
-            this.features.add(feature);
+            features.add(feature);
         }
         else {
-            this.features.remove(feature);
+            features.remove(feature);
         }
     }
 
@@ -124,12 +124,12 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
     public void setMouseCursor(final MouseCursor mouseCursor) {
         assert mouseCursor != null;
 
-        this.window.setCursor(Mapper.mapCursor(mouseCursor));
+        window.setCursor(Mapper.mapCursor(mouseCursor));
     }
 
     @Override
     public void setTitle(final String title) {
-        this.window.setTitle(title);
+        window.setTitle(title);
     }
 
     @Override
@@ -155,20 +155,20 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
         final Key key = Mapper.mapKey(event);
         if (key != null) {
             int count = 0;
-            if (this.keyRepeatCount.containsKey(key)) {
-                count = this.keyRepeatCount.get(key);
+            if (keyRepeatCount.containsKey(key)) {
+                count = keyRepeatCount.get(key);
             }
 
             // BEGIN workaround to Java bug on Linux platform
             if (LINUX) {
-                if (this.keyReleaseTimer.containsKey(key)) {
-                    this.keyReleaseTimer.get(key).cancel();
+                if (keyReleaseTimer.containsKey(key)) {
+                    keyReleaseTimer.get(key).cancel();
                 }
             }
             // END workaround to Java bug on Linux platform
 
-            this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_DOWN, key, count));
-            this.keyRepeatCount.put(key, count + 1);
+            postEvent(new KeyEvent(KEYBOARD, EventType.KEY_DOWN, key, count));
+            keyRepeatCount.put(key, count + 1);
         }
     }
 
@@ -179,15 +179,15 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
 
             // BEGIN workaround to Java bug on Linux platform
             if (LINUX) {
-                if (!this.keyReleaseTimer.containsKey(key)) {
-                    this.keyReleaseTimer.put(key, new KeyReleaseTimer(key, this));
+                if (!keyReleaseTimer.containsKey(key)) {
+                    keyReleaseTimer.put(key, new KeyReleaseTimer(key, this));
                 }
 
-                this.keyReleaseTimer.get(key).start();
+                keyReleaseTimer.get(key).start();
             }
             // END workaround to Java bug on Linux platform
             else {
-                this.keyReleased(key);
+                keyReleased(key);
             }
         }
     }
@@ -197,20 +197,20 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
         final char ch = event.getKeyChar();
         switch (ch) {
             case '\b':
-                this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.BACKSPACE));
+                postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.BACKSPACE));
                 break;
             case '\t':
-                this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.TAB));
+                postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.TAB));
                 break;
             case '\n':
-                this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.ENTER));
+                postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.ENTER));
                 break;
             case '\r':
-                this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.ENTER));
+                postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, Key.ENTER));
                 break;
             default:
                 if (!Character.isISOControl(ch)) {
-                    this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, ch));
+                    postEvent(new KeyEvent(KEYBOARD, EventType.KEY_TYPED, ch));
                 }
 
                 break;
@@ -223,27 +223,27 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
 
     @Override
     public void mouseDragged(final MouseEvent event) {
-        this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_MOVED, POINTER_ID, event.getX(), event.getY()));
+        postEvent(new PointerEvent(MOUSE, EventType.POINTER_MOVED, POINTER_ID, event.getX(), event.getY()));
     }
 
     @Override
     public void mouseEntered(final MouseEvent event) {
-        if (this.features.contains(ViewFeature.HOVERING_POINTER)) {
-            this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN, POINTER_ID, event.getX(), event.getY()));
+        if (features.contains(ViewFeature.HOVERING_POINTER)) {
+            postEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN, POINTER_ID, event.getX(), event.getY()));
         }
     }
 
     @Override
     public void mouseExited(final MouseEvent event) {
-        if (this.features.contains(ViewFeature.HOVERING_POINTER)) {
-            this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID, event.getX(), event.getY()));
+        if (features.contains(ViewFeature.HOVERING_POINTER)) {
+            postEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID, event.getX(), event.getY()));
         }
     }
 
     @Override
     public void mouseMoved(final MouseEvent event) {
-        if (this.features.contains(ViewFeature.HOVERING_POINTER)) {
-            this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_MOVED, POINTER_ID, event.getX(), event.getY()));
+        if (features.contains(ViewFeature.HOVERING_POINTER)) {
+            postEvent(new PointerEvent(MOUSE, EventType.POINTER_MOVED, POINTER_ID, event.getX(), event.getY()));
         }
     }
 
@@ -251,11 +251,11 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
     public void mousePressed(final MouseEvent event) {
         final Key key = Mapper.mapButton(event.getButton());
         if (key != null) {
-            this.postEvent(new KeyEvent(MOUSE, EventType.KEY_DOWN, key));
+            postEvent(new KeyEvent(MOUSE, EventType.KEY_DOWN, key));
         }
 
-        if (!this.features.contains(ViewFeature.HOVERING_POINTER)) {
-            this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN, POINTER_ID, event.getX(), event.getY()));
+        if (!features.contains(ViewFeature.HOVERING_POINTER)) {
+            postEvent(new PointerEvent(MOUSE, EventType.POINTER_DOWN, POINTER_ID, event.getX(), event.getY()));
         }
     }
 
@@ -263,27 +263,27 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
     public void mouseReleased(final MouseEvent event) {
         final Key key = Mapper.mapButton(event.getButton());
         if (key != null) {
-            this.postEvent(new KeyEvent(MOUSE, EventType.KEY_UP, key));
+            postEvent(new KeyEvent(MOUSE, EventType.KEY_UP, key));
         }
 
-        if (!this.features.contains(ViewFeature.HOVERING_POINTER)) {
-            this.postEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID, event.getX(), event.getY()));
+        if (!features.contains(ViewFeature.HOVERING_POINTER)) {
+            postEvent(new PointerEvent(MOUSE, EventType.POINTER_UP, POINTER_ID, event.getX(), event.getY()));
         }
     }
 
     @Override
     public void mouseWheelMoved(final MouseWheelEvent event) {
-        this.postEvent(new ScrollEvent(MOUSE, 0.0, event.getWheelRotation()));
+        postEvent(new ScrollEvent(MOUSE, 0.0, event.getWheelRotation()));
     }
 
     void keyReleased(final Key key) {
-        this.postEvent(new KeyEvent(KEYBOARD, EventType.KEY_UP, key));
-        this.keyRepeatCount.remove(key);
+        postEvent(new KeyEvent(KEYBOARD, EventType.KEY_UP, key));
+        keyRepeatCount.remove(key);
     }
 
     private void postEvent(final Event event) {
-        if (this.eventQueue != null) {
-            this.eventQueue.addEvent(event);
+        if (eventQueue != null) {
+            eventQueue.addEvent(event);
         }
     }
 
@@ -297,7 +297,7 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
 
         @Override
         public String toString() {
-            return this.name;
+            return name;
         }
     }
 }

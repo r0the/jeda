@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,34 +25,34 @@ final class AudioManager implements AudioManagerImp.Callback {
     private Music currentMusic;
 
     AudioManager(final AudioManagerImp imp) {
+        lock = new Object();
         this.imp = imp;
-        this.lock = new Object();
         this.imp.setCallback(this);
     }
 
     @Override
     public void playbackStopped() {
-        synchronized (this.lock) {
-            this.currentMusic.setPlaybackState(PlaybackState.STOPPED);
-            this.currentMusic = null;
+        synchronized (lock) {
+            currentMusic.setPlaybackState(PlaybackState.STOPPED);
+            currentMusic = null;
         }
     }
 
     boolean isSoundAvailable(final Sound sound) {
-        return this.imp.isSoundAvailable(sound.getPath());
+        return imp.isSoundAvailable(sound.getPath());
     }
 
     void loadSound(final Sound sound) {
-        this.imp.loadSound(sound.getPath());
+        imp.loadSound(sound.getPath());
     }
 
     void pauseMusic(final Music music) {
         switch (music.getPlaybackState()) {
             case PLAYING:
-                if (this.getCurrentMusic() == music) {
-                    synchronized (this.lock) {
-                        this.imp.pausePlayback();
-                        this.currentMusic.setPlaybackState(PlaybackState.PAUSED);
+                if (getCurrentMusic() == music) {
+                    synchronized (lock) {
+                        imp.pausePlayback();
+                        currentMusic.setPlaybackState(PlaybackState.PAUSED);
                     }
                 }
         }
@@ -61,41 +61,41 @@ final class AudioManager implements AudioManagerImp.Callback {
     void playMusic(final Music music) {
         switch (music.getPlaybackState()) {
             case STOPPED:
-                if (this.getCurrentMusic() == null) {
-                    synchronized (this.lock) {
-                        if (this.imp.startPlayback(music.getPath())) {
-                            this.currentMusic = music;
-                            this.currentMusic.setPlaybackState(PlaybackState.PLAYING);
+                if (getCurrentMusic() == null) {
+                    synchronized (lock) {
+                        if (imp.startPlayback(music.getPath())) {
+                            currentMusic = music;
+                            currentMusic.setPlaybackState(PlaybackState.PLAYING);
                         }
                     }
                 }
             case PAUSED:
-                if (this.getCurrentMusic() == music) {
-                    synchronized (this.lock) {
-                        this.imp.resumePlayback();
-                        this.currentMusic.setPlaybackState(PlaybackState.PLAYING);
+                if (getCurrentMusic() == music) {
+                    synchronized (lock) {
+                        imp.resumePlayback();
+                        currentMusic.setPlaybackState(PlaybackState.PLAYING);
                     }
                 }
         }
     }
 
     void playSound(final Sound sound) {
-        this.imp.playSound(sound.getPath());
+        imp.playSound(sound.getPath());
     }
 
     void stopMusic(final Music music) {
         switch (music.getPlaybackState()) {
             case PLAYING:
             case PAUSED:
-                if (this.getCurrentMusic() == music) {
-                    this.imp.stopPlayback();
+                if (getCurrentMusic() == music) {
+                    imp.stopPlayback();
                 }
         }
     }
 
     private Music getCurrentMusic() {
-        synchronized (this.lock) {
-            return this.currentMusic;
+        synchronized (lock) {
+            return currentMusic;
         }
     }
 }

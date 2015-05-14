@@ -49,14 +49,14 @@ abstract class ProgramClassWrapper {
     abstract Runnable createInstance() throws Throwable;
 
     final String getName() {
-        return this.name;
+        return name;
     }
 
     abstract String getProgramClassName();
 
     @Override
     public String toString() {
-        return this.getProgramClassName();
+        return getProgramClassName();
     }
 
     private static boolean hasInterface(final Class<?> candidateClass, final Class<?> targetInterface) {
@@ -121,7 +121,7 @@ abstract class ProgramClassWrapper {
         @Override
         Runnable createInstance() throws Throwable {
             try {
-                return this.constructor.newInstance();
+                return constructor.newInstance();
             }
             catch (final InvocationTargetException ex) {
                 throw ex.getCause();
@@ -130,7 +130,7 @@ abstract class ProgramClassWrapper {
 
         @Override
         String getProgramClassName() {
-            return this.constructor.getDeclaringClass().getName();
+            return constructor.getDeclaringClass().getName();
         }
     }
 
@@ -146,7 +146,7 @@ abstract class ProgramClassWrapper {
         @Override
         Runnable createInstance() throws Throwable {
             try {
-                return this.constructor.newInstance();
+                return constructor.newInstance();
             }
             catch (final InvocationTargetException ex) {
                 throw ex.getCause();
@@ -155,7 +155,7 @@ abstract class ProgramClassWrapper {
 
         @Override
         String getProgramClassName() {
-            return this.constructor.getDeclaringClass().getName();
+            return constructor.getDeclaringClass().getName();
         }
     }
 }

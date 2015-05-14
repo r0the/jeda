@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -49,18 +49,18 @@ public abstract class Block {
         private final String name;
 
         public DefaultBlock(final String name) {
-            this.image = Cute.loadImage(name.toLowerCase() + "_block");
+            image = Cute.loadImage(name.toLowerCase() + "_block");
             this.name = name;
         }
 
         @Override
         public void draw(final Canvas canvas, final double x, final double y) {
-            canvas.drawImage(x, y, this.image, Alignment.BOTTOM_CENTER);
+            canvas.drawImage(x, y, image, Alignment.BOTTOM_CENTER);
         }
 
         @Override
         public void draw(final Canvas canvas, final double x, final double y, final int alpha) {
-            canvas.drawImage(x, y, this.image, alpha, Alignment.BOTTOM_CENTER);
+            canvas.drawImage(x, y, image, alpha, Alignment.BOTTOM_CENTER);
         }
 
         @Override
@@ -70,7 +70,7 @@ public abstract class Block {
 
         @Override
         public String toString() {
-            return this.name;
+            return name;
         }
     }
 

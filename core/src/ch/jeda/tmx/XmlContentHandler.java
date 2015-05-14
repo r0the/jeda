@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +28,7 @@ final class XmlContentHandler implements ContentHandler {
     private Element rootElement;
 
     XmlContentHandler() {
-        this.elementStack = new Stack<Element>();
+        elementStack = new Stack<Element>();
     }
 
     @Override
@@ -55,23 +55,23 @@ final class XmlContentHandler implements ContentHandler {
     @Override
     public void startElement(final String uri, final String localName, final String qName,
                              final Attributes attributes) throws SAXException {
-        this.elementStack.push(new Element(localName, attributes));
+        elementStack.push(new Element(localName, attributes));
     }
 
     @Override
     public void endElement(final String uri, final String localName, final String qName) throws SAXException {
-        final Element element = this.elementStack.pop();
-        if (this.elementStack.empty()) {
-            this.rootElement = element;
+        final Element element = elementStack.pop();
+        if (elementStack.empty()) {
+            rootElement = element;
         }
         else {
-            this.elementStack.peek().addChild(element);
+            elementStack.peek().addChild(element);
         }
     }
 
     @Override
     public void characters(final char[] ch, final int start, final int length) throws SAXException {
-        this.elementStack.peek().setContent(new String(ch, start, length));
+        elementStack.peek().setContent(new String(ch, start, length));
     }
 
     @Override
@@ -87,6 +87,6 @@ final class XmlContentHandler implements ContentHandler {
     }
 
     public Element getRootElement() {
-        return this.rootElement;
+        return rootElement;
     }
 }

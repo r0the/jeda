@@ -42,16 +42,16 @@ class AndroidCanvasImp implements CanvasImp {
     private Canvas canvas;
 
     AndroidCanvasImp() {
-        this.fillPaint = new Paint();
-        this.fillPaint.setStyle(Paint.Style.FILL);
-        this.fillPaint.setAntiAlias(true);
-        this.imagePaint = new Paint();
-        this.matrix = new Matrix();
-        this.pixelPaint = new Paint();
-        this.strokePaint = new Paint();
-        this.strokePaint.setStyle(Paint.Style.STROKE);
-        this.strokePaint.setAntiAlias(true);
-        this.textPaint = new Paint();
+        fillPaint = new Paint();
+        fillPaint.setStyle(Paint.Style.FILL);
+        fillPaint.setAntiAlias(true);
+        imagePaint = new Paint();
+        matrix = new Matrix();
+        pixelPaint = new Paint();
+        strokePaint = new Paint();
+        strokePaint.setStyle(Paint.Style.STROKE);
+        strokePaint.setAntiAlias(true);
+        textPaint = new Paint();
     }
 
     @Override
@@ -59,12 +59,12 @@ class AndroidCanvasImp implements CanvasImp {
         assert source != null;
         assert source instanceof AndroidCanvasImp;
 
-        this.canvas.drawBitmap(((AndroidCanvasImp) source).bitmap, x, y, this.fillPaint);
+        canvas.drawBitmap(((AndroidCanvasImp) source).bitmap, x, y, fillPaint);
     }
 
     @Override
     public void drawEllipse(final int x, final int y, final int width, final int height) {
-        this.canvas.drawOval(new RectF(x, y, x + width, y + height), this.strokePaint);
+        canvas.drawOval(new RectF(x, y, x + width, y + height), strokePaint);
     }
 
     @Override
@@ -73,13 +73,13 @@ class AndroidCanvasImp implements CanvasImp {
         assert image instanceof AndroidImageImp;
         assert 0 < alpha && alpha <= 255;
 
-        this.imagePaint.setAlpha(alpha);
-        this.canvas.drawBitmap(((AndroidImageImp) image).bitmap, x, y, this.imagePaint);
+        imagePaint.setAlpha(alpha);
+        canvas.drawBitmap(((AndroidImageImp) image).bitmap, x, y, imagePaint);
     }
 
     @Override
     public void drawLine(final int x1, final int y1, final int x2, final int y2) {
-        this.canvas.drawLine(x1, y1, x2, y2, this.strokePaint);
+        canvas.drawLine(x1, y1, x2, y2, strokePaint);
     }
 
     @Override
@@ -88,29 +88,29 @@ class AndroidCanvasImp implements CanvasImp {
         assert points.length >= 6;
         assert points.length % 2 == 0;
 
-        this.canvas.drawPath(createPath(points), this.strokePaint);
+        canvas.drawPath(createPath(points), strokePaint);
     }
 
     @Override
     public void drawRectangle(final int x, final int y, final int width, final int height) {
-        this.canvas.drawRect(x, y, x + width, y + height, this.strokePaint);
+        canvas.drawRect(x, y, x + width, y + height, strokePaint);
     }
 
     @Override
     public void drawText(final int x, final int y, final String text) {
         assert text != null;
 
-        this.canvas.drawText(text, x, y - (int) this.textPaint.ascent(), this.textPaint);
+        canvas.drawText(text, x, y - (int) textPaint.ascent(), textPaint);
     }
 
     @Override
     public void fill() {
-        this.canvas.drawColor(this.fillPaint.getColor());
+        canvas.drawColor(fillPaint.getColor());
     }
 
     @Override
     public void fillEllipse(final int x, final int y, final int width, final int height) {
-        this.canvas.drawOval(new RectF(x, y, x + width, y + height), this.fillPaint);
+        canvas.drawOval(new RectF(x, y, x + width, y + height), fillPaint);
     }
 
     @Override
@@ -119,94 +119,94 @@ class AndroidCanvasImp implements CanvasImp {
         assert points.length >= 6;
         assert points.length % 2 == 0;
 
-        this.canvas.drawPath(createPath(points), this.fillPaint);
+        canvas.drawPath(createPath(points), fillPaint);
     }
 
     @Override
     public void fillRectangle(final int x, final int y, final int width, final int height) {
-        this.canvas.drawRect(x, y, x + width, y + height, this.fillPaint);
+        canvas.drawRect(x, y, x + width, y + height, fillPaint);
     }
 
     @Override
     public int getHeight() {
-        return this.bitmap.getHeight();
+        return bitmap.getHeight();
     }
 
     @Override
     public double getLineWidth() {
-        return this.strokePaint.getStrokeWidth();
+        return strokePaint.getStrokeWidth();
     }
 
     @Override
     public Color getPixel(final int x, final int y) {
-        assert this.contains(x, y);
+        assert contains(x, y);
 
-        return new Color(this.bitmap.getPixel(x, y));
+        return new Color(bitmap.getPixel(x, y));
     }
 
     @Override
     public int getWidth() {
-        return this.bitmap.getWidth();
+        return bitmap.getWidth();
     }
 
     @Override
     public void setAntiAliasing(final boolean antiAliasing) {
-        this.fillPaint.setAntiAlias(antiAliasing);
-        this.strokePaint.setAntiAlias(antiAliasing);
-        this.textPaint.setAntiAlias(antiAliasing);
+        fillPaint.setAntiAlias(antiAliasing);
+        strokePaint.setAntiAlias(antiAliasing);
+        textPaint.setAntiAlias(antiAliasing);
     }
 
     @Override
     public void setColor(final Color color) {
         assert color != null;
 
-        this.fillPaint.setColor(color.getValue());
-        this.strokePaint.setColor(color.getValue());
-        this.textPaint.setColor(color.getValue());
+        fillPaint.setColor(color.getValue());
+        strokePaint.setColor(color.getValue());
+        textPaint.setColor(color.getValue());
     }
 
     @Override
     public void setLineWidth(final double lineWidth) {
         assert lineWidth >= 0.0;
 
-        this.strokePaint.setStrokeWidth((float) lineWidth);
+        strokePaint.setStrokeWidth((float) lineWidth);
     }
 
     @Override
     public void setPixel(final int x, final int y, final Color color) {
-        assert this.contains(x, y);
+        assert contains(x, y);
         assert color != null;
 
-        this.pixelPaint.setColor(color.getValue());
-        this.bitmap.setPixel(x, y, color.getValue());
+        pixelPaint.setColor(color.getValue());
+        bitmap.setPixel(x, y, color.getValue());
     }
 
     @Override
     public void setTextSize(final int textSize) {
-        this.textPaint.setTextSize(textSize);
+        textPaint.setTextSize(textSize);
     }
 
     @Override
     public void setTransformation(final CanvasTransformation transformation) {
         assert transformation != null;
 
-        this.matrix.setTranslate((float) transformation.translationX, (float) transformation.translationY);
-        this.matrix.preRotate((float) Math.toDegrees(transformation.rotation));
+        matrix.setTranslate((float) transformation.translationX, (float) transformation.translationY);
+        matrix.preRotate((float) Math.toDegrees(transformation.rotation));
         float scale = (float) transformation.scale;
-        this.matrix.preScale(scale, scale);
-        this.canvas.setMatrix(this.matrix);
+        matrix.preScale(scale, scale);
+        canvas.setMatrix(matrix);
     }
 
     @Override
     public void setTypeface(final TypefaceImp typeface) {
         assert typeface instanceof AndroidTypefaceImp;
 
-        this.textPaint.setTypeface(((AndroidTypefaceImp) typeface).imp);
+        textPaint.setTypeface(((AndroidTypefaceImp) typeface).imp);
     }
 
     @Override
     public ImageImp takeSnapshot() {
-        return new AndroidImageImp(Bitmap.createBitmap(this.bitmap));
+        return new AndroidImageImp(Bitmap.createBitmap(bitmap));
     }
 
     @Override
@@ -214,7 +214,7 @@ class AndroidCanvasImp implements CanvasImp {
         assert text != null;
 
         Rect bounds = new Rect();
-        this.textPaint.getTextBounds(text, 0, text.length(), bounds);
+        textPaint.getTextBounds(text, 0, text.length(), bounds);
         return bounds.height();
     }
 
@@ -223,25 +223,25 @@ class AndroidCanvasImp implements CanvasImp {
         assert text != null;
 
         Rect bounds = new Rect();
-        this.textPaint.getTextBounds(text, 0, text.length(), bounds);
+        textPaint.getTextBounds(text, 0, text.length(), bounds);
         return bounds.width();
     }
 
     Canvas getCanvas() {
-        return this.canvas;
+        return canvas;
     }
 
     Bitmap getBitmap() {
-        return this.bitmap;
+        return bitmap;
     }
 
     final void init(final int width, final int height) {
-        this.bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-        this.canvas = new Canvas(this.bitmap);
+        bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
     }
 
     private boolean contains(final int x, final int y) {
-        return 0 <= x && x < this.getWidth() && 0 <= y && y < this.getHeight();
+        return 0 <= x && x < getWidth() && 0 <= y && y < getHeight();
     }
 
     private static Path createPath(final int[] points) {

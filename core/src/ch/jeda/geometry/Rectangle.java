@@ -53,7 +53,7 @@ public final class Rectangle extends Shape {
 
     @Override
     public void draw(final Canvas canvas) {
-        canvas.drawRectangle(0, 0, this.width, this.height, Alignment.CENTER);
+        canvas.drawRectangle(0, 0, width, height, Alignment.CENTER);
     }
 
     /**
@@ -64,7 +64,7 @@ public final class Rectangle extends Shape {
      * @since 2.0
      */
     public double getArea() {
-        return this.width * this.height;
+        return width * height;
     }
 
     /**
@@ -75,7 +75,7 @@ public final class Rectangle extends Shape {
      * @since 2.0
      */
     public double getHeight() {
-        return this.height;
+        return height;
     }
 
     /**
@@ -86,6 +86,6 @@ public final class Rectangle extends Shape {
      * @since 2.0
      */
     public double getWidth() {
-        return this.width;
+        return width;
     }
 }

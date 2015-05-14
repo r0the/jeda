@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -35,6 +35,6 @@ public class ActionEvent extends Event {
      * @since 1.0
      */
     public String getName() {
-        return this.name;
+        return name;
     }
 }

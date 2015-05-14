@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -33,27 +33,27 @@ public final class SelectionRequest<T> extends Request {
     private int selectedIndex;
 
     public SelectionRequest() {
-        this.lock = new Object();
-        this.items = new ArrayList<ListItem<T>>();
-        this.selectedIndex = -1;
+        lock = new Object();
+        items = new ArrayList<ListItem<T>>();
+        selectedIndex = -1;
     }
 
     public void addItem(final String name, final T item) {
-        this.items.add(new ListItem<T>(this.items.size(), name, item));
+        items.add(new ListItem<T>(items.size(), name, item));
     }
 
     public T getResult() {
-        if (this.isCancelled()) {
+        if (isCancelled()) {
             return null;
         }
         else {
-            return this.items.get(this.selectedIndex).item;
+            return items.get(selectedIndex).item;
         }
     }
 
     public ArrayList<String> getDisplayItems() {
         final ArrayList<String> result = new ArrayList<String>();
-        for (ListItem item : this.items) {
+        for (ListItem item : items) {
             result.add(item.name);
         }
 
@@ -61,34 +61,34 @@ public final class SelectionRequest<T> extends Request {
     }
 
     public boolean isCancelled() {
-        return this.selectedIndex < 0;
+        return selectedIndex < 0;
     }
 
     public void setResult(final int index) {
-        synchronized (this.lock) {
-            if (!this.done) {
+        synchronized (lock) {
+            if (!done) {
                 if (0 <= index && index < items.size()) {
-                    this.selectedIndex = index;
+                    selectedIndex = index;
                 }
                 else {
-                    this.selectedIndex = -1;
+                    selectedIndex = -1;
                 }
 
-                this.done = true;
-                this.lock.notify();
+                done = true;
+                lock.notify();
             }
         }
     }
 
     public void sortItemsByName() {
-        Collections.sort(this.items, LIST_ITEM_BY_NAME);
+        Collections.sort(items, LIST_ITEM_BY_NAME);
     }
 
     public void waitForResult() {
-        synchronized (this.lock) {
-            while (!this.done) {
+        synchronized (lock) {
+            while (!done) {
                 try {
-                    this.lock.wait();
+                    lock.wait();
                 }
                 catch (InterruptedException ex) {
                     // ignore

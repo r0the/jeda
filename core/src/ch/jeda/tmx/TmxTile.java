@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -42,11 +42,11 @@ public class TmxTile {
     TmxTile(final TmxMap map, final TmxTileSet tileSet, final int id, final Image image, final Element element) {
         this.id = id;
         this.image = image;
-        this.terrain = new TmxTerrain[4];
+        terrain = new TmxTerrain[4];
         this.tileSet = tileSet;
         if (element != null) {
             // Read properties
-            this.properties = element.parsePropertiesChild();
+            properties = element.parsePropertiesChild();
             // Read terrain info
             final String terrainInfo = element.getStringAttribute(Const.TERRAIN);
             if (terrainInfo != null) {
@@ -54,7 +54,7 @@ public class TmxTile {
                 int i = 0;
                 while (i < 4 && i < parts.length) {
                     try {
-                        this.terrain[i] = tileSet.lookupTerrain(Integer.parseInt(parts[i]));
+                        terrain[i] = tileSet.lookupTerrain(Integer.parseInt(parts[i]));
                     }
                     catch (final NumberFormatException ex) {
                         // ignore
@@ -65,7 +65,7 @@ public class TmxTile {
             }
         }
         else {
-            this.properties = new Data();
+            properties = new Data();
         }
 
         // Read object group
@@ -79,7 +79,7 @@ public class TmxTile {
             }
         }
 
-        this.objects = objectList.toArray(new TmxObject[objectList.size()]);
+        objects = objectList.toArray(new TmxObject[objectList.size()]);
 
         // Read animation
         if (element != null) {
@@ -103,11 +103,11 @@ public class TmxTile {
      * @since 2.0
      */
     public final void draw(final Canvas canvas, final int x, final int y, final int alpha) {
-        canvas.drawImage(x, y, this.getImage(), alpha, Alignment.BOTTOM_LEFT);
+        canvas.drawImage(x, y, getImage(), alpha, Alignment.BOTTOM_LEFT);
         canvas.setColor(Color.RED);
         canvas.setLineWidth(3);
-        for (int i = 0; i < this.objects.length; ++i) {
-            this.objects[i].draw(canvas, x, y - this.tileSet.getTileHeight());
+        for (int i = 0; i < objects.length; ++i) {
+            objects[i].draw(canvas, x, y - tileSet.getTileHeight());
         }
     }
 
@@ -119,11 +119,11 @@ public class TmxTile {
      * @since 2.0
      */
     public final int getHeight() {
-        return this.tileSet.getTileHeight();
+        return tileSet.getTileHeight();
     }
 
     public final int getId() {
-        return this.id;
+        return id;
     }
 
     /**
@@ -134,43 +134,43 @@ public class TmxTile {
      * @since 2.0
      */
     public final Image getImage() {
-        return this.image;
+        return image;
     }
 
     public TmxObject[] getObjects() {
-        return Arrays.copyOf(this.objects, this.objects.length);
+        return Arrays.copyOf(objects, objects.length);
     }
 
     public final int getOffsetX() {
-        return this.tileSet.getTileOffsetX();
+        return tileSet.getTileOffsetX();
     }
 
     public final int getOffsetY() {
-        return this.tileSet.getTileOffsetX();
+        return tileSet.getTileOffsetX();
     }
 
     public final Data getProperties() {
-        return this.properties;
+        return properties;
     }
 
     public final TmxTerrain getTerrainBottomLeft() {
-        return this.terrain[2];
+        return terrain[2];
     }
 
     public final TmxTerrain getTerrainBottomRight() {
-        return this.terrain[3];
+        return terrain[3];
     }
 
     public final TmxTerrain getTerrainTopLeft() {
-        return this.terrain[0];
+        return terrain[0];
     }
 
     public final TmxTerrain getTerrainTopRight() {
-        return this.terrain[1];
+        return terrain[1];
     }
 
     public final int getWidth() {
-        return this.tileSet.getTileWidth();
+        return tileSet.getTileWidth();
     }
 
     /**
@@ -180,8 +180,8 @@ public class TmxTile {
      * @return the horizontal screen coordinate of the center of this tile
      */
     public final int screenX(int tileX) {
-        return tileX * this.tileSet.getMap().getTileWidth() + this.tileSet.getTileWidth() / 2 +
-               this.tileSet.getTileOffsetX();
+        return tileX * tileSet.getMap().getTileWidth() + tileSet.getTileWidth() / 2 +
+               tileSet.getTileOffsetX();
     }
 
     /**
@@ -191,7 +191,7 @@ public class TmxTile {
      * @return the vertical screen coordinate of the center of this tile
      */
     public final int screenY(int tileY) {
-        return (tileY + 1) * this.tileSet.getMap().getTileHeight() - this.tileSet.getTileHeight() / 2 +
-               this.tileSet.getTileOffsetY();
+        return (tileY + 1) * tileSet.getMap().getTileHeight() - tileSet.getTileHeight() / 2 +
+               tileSet.getTileOffsetY();
     }
 }

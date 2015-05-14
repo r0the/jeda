@@ -51,8 +51,8 @@ public class StringInputField extends InputField {
      */
     public StringInputField(final int x, final int y, final Alignment alignment) {
         super(x, y, alignment);
-        this.maximumLength = 20;
-        this.value = "";
+        maximumLength = 20;
+        value = "";
     }
 
     /**
@@ -64,7 +64,7 @@ public class StringInputField extends InputField {
      * @since 1.3
      */
     public final int getMaximumLength() {
-        return this.maximumLength;
+        return maximumLength;
     }
 
     /**
@@ -76,7 +76,7 @@ public class StringInputField extends InputField {
      * @since 1.3
      */
     public final String getValue() {
-        return this.value;
+        return value;
     }
 
     /**
@@ -94,7 +94,7 @@ public class StringInputField extends InputField {
         }
 
         this.maximumLength = maximumLength;
-        this.checkValue();
+        checkValue();
     }
 
     /**
@@ -107,33 +107,33 @@ public class StringInputField extends InputField {
      */
     public final void setValue(final String value) {
         this.value = value;
-        this.checkValue();
+        checkValue();
     }
 
     @Override
     protected void characterDeleted() {
-        if (this.value.length() > 0) {
-            this.value = this.value.substring(0, this.value.length() - 1);
-            this.setDisplayText(this.value);
+        if (value.length() > 0) {
+            value = value.substring(0, value.length() - 1);
+            setDisplayText(value);
         }
     }
 
     @Override
     protected void characterTyped(final char ch) {
-        if (this.value.length() < this.maximumLength) {
-            this.value = this.value + ch;
-            this.setDisplayText(this.value);
+        if (value.length() < maximumLength) {
+            value = value + ch;
+            setDisplayText(value);
         }
     }
 
     private void checkValue() {
-        if (this.value == null) {
-            this.value = "";
+        if (value == null) {
+            value = "";
         }
-        else if (this.value.length() > this.maximumLength) {
-            this.value = value.substring(0, this.maximumLength);
+        else if (value.length() > maximumLength) {
+            value = value.substring(0, maximumLength);
         }
 
-        this.setDisplayText(this.value);
+        setDisplayText(value);
     }
 }

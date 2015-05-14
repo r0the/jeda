@@ -41,7 +41,7 @@ class InputDialogFragment extends DialogFragment implements TextWatcher, DialogI
 
     @Override
     public void afterTextChanged(final Editable editable) {
-        this.validateInput();
+        validateInput();
     }
 
     @Override
@@ -52,11 +52,11 @@ class InputDialogFragment extends DialogFragment implements TextWatcher, DialogI
     public void onClick(final DialogInterface dialogInterface, final int which) {
         switch (which) {
             case Dialog.BUTTON_POSITIVE:
-                this.request.setResult(this.request.getInputType().parse(this.input.getText().toString()));
+                request.setResult(request.getInputType().parse(input.getText().toString()));
                 dialogInterface.dismiss();
                 break;
             case Dialog.BUTTON_NEGATIVE:
-                this.request.cancelRequest();
+                request.cancelRequest();
                 dialogInterface.cancel();
                 break;
         }
@@ -64,18 +64,18 @@ class InputDialogFragment extends DialogFragment implements TextWatcher, DialogI
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-        builder.setTitle(this.request.getTitle());
-        builder.setMessage(this.request.getMessage());
-        this.input = new EditText(this.getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(request.getTitle());
+        builder.setMessage(request.getMessage());
+        input = new EditText(getActivity());
         // This is required in order to show soft keyboard when input is focused.
-        this.input.setFocusableInTouchMode(true);
-        this.input.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        this.input.setInputType(EditorInfo.TYPE_CLASS_TEXT);
-        this.input.addTextChangedListener(this);
+        input.setFocusableInTouchMode(true);
+        input.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        input.setInputType(EditorInfo.TYPE_CLASS_TEXT);
+        input.addTextChangedListener(this);
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(this.input, InputMethodManager.SHOW_IMPLICIT);
-        builder.setView(this.input);
+        imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
+        builder.setView(input);
         builder.setPositiveButton("OK", this);
         builder.setNegativeButton("Abbrechen", this);
         return builder.create();
@@ -86,6 +86,6 @@ class InputDialogFragment extends DialogFragment implements TextWatcher, DialogI
     }
 
     private void validateInput() {
-//        this.acceptButton.setEnabled(this.request.getInputType().validate(this.input.getText().toString()));
+//        acceptButton.setEnabled(request.getInputType().validate(input.getText().toString()));
     }
 }

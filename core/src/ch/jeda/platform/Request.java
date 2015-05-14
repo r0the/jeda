@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,7 +32,7 @@ public class Request {
     }
 
     public final String getTitle() {
-        return this.title;
+        return title;
     }
 
     public final void setMessage(final String message) {
@@ -40,6 +40,6 @@ public class Request {
     }
 
     public final void setTitle(final String value) {
-        this.title = value;
+        title = value;
     }
 }

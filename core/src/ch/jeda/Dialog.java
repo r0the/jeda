@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -106,7 +106,7 @@ public class Dialog<T> {
      * @since 1.0
      */
     public Dialog(final Class<T> clazz) {
-        this.inputRequest = new InputRequest<T>(clazz);
+        inputRequest = new InputRequest<T>(clazz);
     }
 
     /**
@@ -114,7 +114,7 @@ public class Dialog<T> {
      * @since 1.0
      */
     public void setMessage(final Object... message) {
-        this.inputRequest.setMessage(Convert.toString(message));
+        inputRequest.setMessage(Convert.toString(message));
     }
 
     /**
@@ -122,7 +122,7 @@ public class Dialog<T> {
      * @since 1.0
      */
     public void setTitle(final Object... title) {
-        this.inputRequest.setTitle(Convert.toString(title));
+        inputRequest.setTitle(Convert.toString(title));
     }
 
     /**
@@ -130,8 +130,8 @@ public class Dialog<T> {
      * @since 1.0
      */
     public void show() {
-        Jeda.showInputRequest(this.inputRequest);
-        this.inputRequest.waitForResult();
+        Jeda.showInputRequest(inputRequest);
+        inputRequest.waitForResult();
     }
 
     /**
@@ -139,6 +139,6 @@ public class Dialog<T> {
      * @since 1.0
      */
     public T getResult() {
-        return this.inputRequest.getResult();
+        return inputRequest.getResult();
     }
 }

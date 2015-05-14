@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,33 +18,74 @@ package ch.jeda.platform.android;
 
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
+import android.view.inputmethod.CompletionInfo;
 import ch.jeda.event.EventType;
 import ch.jeda.event.KeyEvent;
 
 class JedaInputConnection extends BaseInputConnection {
 
-    private final Main main;
     private final SpannableStringBuilder text;
+    private SurfaceFragment topView;
 
     JedaInputConnection(final View targetView, final boolean fullEditor) {
         super(targetView, fullEditor);
-        this.main = (Main) targetView.getContext();
-        this.text = new SpannableStringBuilder();
+        text = new SpannableStringBuilder();
     }
 
     @Override
     public Editable getEditable() {
-        return this.text;
+        return text;
+    }
+
+    @Override
+    public boolean commitCompletion(final CompletionInfo text) {
+        Log.i("Jeda", "Jeda IK: commitCompletion");
+        convertToKeystrokes(text.getText());
+        return super.commitCompletion(text);
+    }
+
+    @Override
+    public boolean deleteSurroundingText(int leftLength, int rightLength) {
+        Log.i("Jeda", "Jeda IK: deleteSurroundingText");
+        return super.deleteSurroundingText(leftLength, rightLength);
+    }
+
+    @Override
+    public boolean sendKeyEvent(android.view.KeyEvent event) {
+        Log.i("Jeda", "Sending key event:" + event.getKeyCode() + ", action=" + event.getAction());
+        postEvent(EventMapper.mapEvent(event));
+        return super.sendKeyEvent(event);
     }
 
     @Override
     public boolean commitText(final CharSequence text, final int newCursorPosition) {
-        for (int i = 0; i < text.length(); ++i) {
-            this.main.addEvent(new KeyEvent(this, EventType.KEY_TYPED, text.charAt(i)));
+        convertToKeystrokes(text);
+        return super.commitText(text, newCursorPosition);
+    }
+
+    public void setTopView(final SurfaceFragment topView) {
+        this.topView = topView;
+        Log.i("Jeda", "Setting top view");
+    }
+
+    private void convertToKeystrokes(final CharSequence text) {
+        if (topView == null) {
+            return;
         }
 
-        return super.commitText(text, newCursorPosition);
+        for (int i = 0; i < text.length(); ++i) {
+            Log.i("Jeda", "Posting event");
+            postEvent(new KeyEvent(this, EventType.KEY_TYPED, text.charAt(i)));
+        }
+    }
+
+    private void postEvent(final KeyEvent event) {
+        if (event != null && topView != null) {
+            Log.i("Jeda", "Event from InputConnection: " + event.getKey());
+            topView.postEvent(event);
+        }
     }
 }

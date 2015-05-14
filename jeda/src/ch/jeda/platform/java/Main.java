@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,14 +22,16 @@ import ch.jeda.Jeda;
  * This class is the main entry point for Jeda applications on the Java platform. Be sure to specify this class as main
  * class.
  *
- * @since 1
+ * @since 1.0
  */
 public class Main {
 
     /**
      * Entry point for Jeda framework.
      *
-     * @since 1
+     * @param args the arguments
+     *
+     * @since 1.0
      */
     public static void main(final String[] args) {
         Jeda.startProgram();

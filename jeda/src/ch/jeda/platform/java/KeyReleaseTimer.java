@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY); without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ch.jeda.platform.java;
 
 import ch.jeda.event.Key;
@@ -15,26 +31,26 @@ class KeyReleaseTimer implements ActionListener {
 
     public KeyReleaseTimer(final Key key, final JavaViewImp view) {
         this.key = key;
-        this.timer = new Timer(KEY_RELEASE_TIMEOUT, this);
+        timer = new Timer(KEY_RELEASE_TIMEOUT, this);
         this.view = view;
-        this.ok = true;
+        ok = true;
     }
 
     @Override
     public void actionPerformed(final ActionEvent event) {
-        if (this.ok) {
-            this.cancel();
-            this.view.keyReleased(this.key);
+        if (ok) {
+            cancel();
+            view.keyReleased(key);
         }
     }
 
     void start() {
-        this.ok = true;
-        this.timer.start();
+        ok = true;
+        timer.start();
     }
 
     void cancel() {
-        this.ok = false;
-        this.timer.stop();
+        ok = false;
+        timer.stop();
     }
 }

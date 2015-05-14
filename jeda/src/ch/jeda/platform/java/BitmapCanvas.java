@@ -26,28 +26,28 @@ class BitmapCanvas extends java.awt.Canvas {
 
     BitmapCanvas(final int width, final int height) {
         final Dimension d = new Dimension(width, height);
-        this.setPreferredSize(d);
-        this.setSize(d);
-        this.canvasImp = new JavaCanvasImp(width, height);
+        setPreferredSize(d);
+        setSize(d);
+        canvasImp = new JavaCanvasImp(width, height);
     }
 
     @Override
     public void paint(final Graphics graphics) {
         if (graphics != null) {
-            graphics.drawImage(this.canvasImp.getBitmap(), 0, 0, null);
+            graphics.drawImage(canvasImp.getBitmap(), 0, 0, null);
         }
     }
 
     @Override
     public void repaint() {
-        this.paint(this.getGraphics());
+        paint(getGraphics());
     }
 
     JavaCanvasImp getCanvasImp() {
-        return this.canvasImp;
+        return canvasImp;
     }
 
     void setImage(final BufferedImage buffer) {
-        buffer.copyData(this.canvasImp.getBitmap().getRaster());
+        buffer.copyData(canvasImp.getBitmap().getRaster());
     }
 }

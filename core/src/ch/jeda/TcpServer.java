@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,7 +38,7 @@ public final class TcpServer {
      * @since 1.4
      */
     public TcpServer() {
-        this.lock = new Object();
+        lock = new Object();
     }
 
     /**
@@ -49,8 +49,8 @@ public final class TcpServer {
      * @since 1.4
      */
     public boolean isRunning() {
-        synchronized (this.lock) {
-            return this.serverSocket != null;
+        synchronized (lock) {
+            return serverSocket != null;
         }
     }
 
@@ -71,13 +71,13 @@ public final class TcpServer {
      * @since 1.4
      */
     public boolean start(int port) {
-        synchronized (this.lock) {
-            if (this.serverSocket != null) {
+        synchronized (lock) {
+            if (serverSocket != null) {
                 throw new IllegalStateException("Server is already running.");
             }
 
             try {
-                this.serverSocket = new ServerSocket(port);
+                serverSocket = new ServerSocket(port);
                 new TcpServerThread(this).start();
                 return true;
             }
@@ -96,28 +96,28 @@ public final class TcpServer {
      * @since 1.4
      */
     public void stop() {
-        synchronized (this.lock) {
-            if (this.serverSocket != null) {
+        synchronized (lock) {
+            if (serverSocket != null) {
                 try {
-                    this.serverSocket.close();
+                    serverSocket.close();
                 }
                 catch (final IOException ex) {
                     // ignore
                 }
 
-                this.serverSocket = null;
+                serverSocket = null;
             }
         }
     }
 
     private Socket accept() {
-        synchronized (this.lock) {
-            if (this.serverSocket == null) {
+        synchronized (lock) {
+            if (serverSocket == null) {
                 return null;
             }
 
             try {
-                return this.serverSocket.accept();
+                return serverSocket.accept();
             }
             catch (final IOException ex) {
                 return null;
@@ -131,13 +131,13 @@ public final class TcpServer {
 
         public TcpServerThread(final TcpServer server) {
             this.server = server;
-            this.setName("Jeda Tcp Server (Port " + server.serverSocket.getLocalPort() + ")");
+            setName("Jeda Tcp Server (Port " + server.serverSocket.getLocalPort() + ")");
         }
 
         @Override
         public void run() {
-            while (this.server.isRunning()) {
-                final Socket socket = this.server.accept();
+            while (server.isRunning()) {
+                final Socket socket = server.accept();
                 if (socket != null) {
                     Jeda.postEvent(new ConnectionEvent(new TcpConnection(socket), EventType.CONNECTION_ACCEPTED));
                 }

@@ -172,20 +172,20 @@ class ResourceManager {
         private Class<?>[] classes;
 
         ResourceFinder() {
-            this.classesSet = new HashSet<Class<?>>();
+            classesSet = new HashSet<Class<?>>();
         }
 
         Class<?>[] loadClasses() throws Exception {
-            if (this.classes == null) {
+            if (classes == null) {
                 findResources();
             }
 
-            return this.classes;
+            return classes;
         }
 
         private void checkDirectory(final File directory, final String directoryName) {
             for (final File file : directory.listFiles()) {
-                this.checkResource(file, directoryName);
+                checkResource(file, directoryName);
             }
         }
 
@@ -200,10 +200,10 @@ class ResourceManager {
             }
 
             if (file.isDirectory()) {
-                this.checkDirectory(file, fullName);
+                checkDirectory(file, fullName);
             }
             else {
-                this.checkResource(fullName);
+                checkResource(fullName);
             }
         }
 
@@ -217,12 +217,12 @@ class ResourceManager {
                 className = className.replace("/", ".");
                 try {
                     // Try to load class with system class loader
-                    this.classesSet.add(ClassLoader.getSystemClassLoader().loadClass(className));
+                    classesSet.add(ClassLoader.getSystemClassLoader().loadClass(className));
                 }
                 catch (ClassNotFoundException ex) {
                     try {
                         // Try to load class with class loader of current context
-                        this.classesSet.add(Thread.currentThread().getContextClassLoader().loadClass(className));
+                        classesSet.add(Thread.currentThread().getContextClassLoader().loadClass(className));
                     }
                     catch (ClassNotFoundException ex2) {
                         // Ignore
@@ -232,33 +232,33 @@ class ResourceManager {
         }
 
         private void findResources() throws Exception {
-            this.findResources(getClass().getProtectionDomain().getCodeSource().getLocation());
+            findResources(getClass().getProtectionDomain().getCodeSource().getLocation());
             final String[] classPaths = System.getProperty("java.class.path").split(File.pathSeparator);
             for (String classPath : classPaths) {
-                this.findResources(classPath);
+                findResources(classPath);
             }
 
-            this.classes = this.classesSet.toArray(new Class<?>[this.classesSet.size()]);
+            classes = classesSet.toArray(new Class<?>[classesSet.size()]);
         }
 
         private void findResources(final String classPath) throws Exception {
             if (classPath.endsWith(".jar")) {
                 try {
-                    this.findJarResources(new URL(classPath).openStream());
+                    findJarResources(new URL(classPath).openStream());
                 }
                 catch (Exception ex) {
                     // No URL, so probably a file name.
-                    this.findJarResources(new FileInputStream(classPath));
+                    findJarResources(new FileInputStream(classPath));
                 }
             }
             else {
-                this.checkDirectory(new File(classPath), "");
+                checkDirectory(new File(classPath), "");
             }
         }
 
         private void findResources(final URL url) throws IOException {
             if (url.getFile().endsWith(".jar")) {
-                this.findJarResources(url.openStream());
+                findJarResources(url.openStream());
             }
         }
 
@@ -266,7 +266,7 @@ class ResourceManager {
             final JarInputStream jarStream = new JarInputStream(in);
             JarEntry element = jarStream.getNextJarEntry();
             while (element != null) {
-                this.checkResource(element.getName());
+                checkResource(element.getName());
                 element = jarStream.getNextJarEntry();
             }
         }

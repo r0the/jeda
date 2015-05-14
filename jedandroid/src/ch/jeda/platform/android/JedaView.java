@@ -27,19 +27,19 @@ class JedaView extends RelativeLayout {
 
     JedaView(final Context context) {
         super(context);
-        this.setFocusableInTouchMode(true);
+        setFocusableInTouchMode(true);
     }
 
     @Override
     public InputConnection onCreateInputConnection(final EditorInfo outAttrs) {
-        if (this.inputConnection == null) {
-            this.inputConnection = new JedaInputConnection(this, true);
+        if (inputConnection == null) {
+            inputConnection = new JedaInputConnection(this, true);
         }
 
-        return this.inputConnection;
+        return inputConnection;
     }
 
     public void setTopView(final SurfaceFragment topView) {
-        this.inputConnection.setTopView(topView);
+        inputConnection.setTopView(topView);
     }
 }

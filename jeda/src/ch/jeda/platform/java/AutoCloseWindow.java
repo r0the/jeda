@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,7 +23,7 @@ class AutoCloseWindow extends BaseWindow {
 
     protected AutoCloseWindow(final WindowManager manager) {
         super(manager);
-        this.addWindowListener(new WindowListener(this));
+        addWindowListener(new WindowListener(this));
     }
 
     private static class WindowListener extends WindowAdapter {
@@ -36,7 +36,7 @@ class AutoCloseWindow extends BaseWindow {
 
         @Override
         public void windowClosing(final WindowEvent event) {
-            this.window.cancel();
+            window.cancel();
         }
     }
 }

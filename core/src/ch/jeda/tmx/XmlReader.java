@@ -38,7 +38,7 @@ class XmlReader {
             final XmlContentHandler contentHandler = new XmlContentHandler();
             xmlReader.setContentHandler(contentHandler);
             xmlReader.setEntityResolver(new TmxEntityResolver());
-            InputSource inputSource = new InputSource(JedaInternal.openResource(this.prefix + path));
+            InputSource inputSource = new InputSource(JedaInternal.openResource(prefix + path));
             xmlReader.parse(inputSource);
             return contentHandler.getRootElement();
         }
@@ -60,7 +60,7 @@ class XmlReader {
 
         final String source = imageElement.getStringAttribute(Const.SOURCE);
         if (source != null) {
-            return new Image(this.prefix + source);
+            return new Image(prefix + source);
         }
         else {
             return null;

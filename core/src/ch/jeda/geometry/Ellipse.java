@@ -85,7 +85,7 @@ public final class Ellipse extends Shape {
      * @since 2.0
      */
     public double getRx() {
-        return this.rx;
+        return rx;
     }
 
     /**
@@ -96,7 +96,7 @@ public final class Ellipse extends Shape {
      * @since 2.0
      */
     public double getRy() {
-        return this.ry;
+        return ry;
     }
 
 }

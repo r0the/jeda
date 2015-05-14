@@ -71,26 +71,26 @@ class JedaEngine implements Platform.Callback, Runnable {
     }
 
     JedaEngine() {
-        this.currentProgramLock = new Object();
-        this.eventQueue = new EventQueue();
-        this.frequencyMeter = new FrequencyMeter();
-        this.pauseLock = new Object();
-        this.timer = new Timer(DEFAULT_TICK_FREQUENCY);
+        currentProgramLock = new Object();
+        eventQueue = new EventQueue();
+        frequencyMeter = new FrequencyMeter();
+        pauseLock = new Object();
+        timer = new Timer(DEFAULT_TICK_FREQUENCY);
         // Load properties
-        this.properties = initProperties();
+        properties = initProperties();
         // Init platform
-        this.platform = initPlatform(this.properties.getProperty("jeda.platform.class"), this);
+        platform = initPlatform(properties.getProperty("jeda.platform.class"), this);
         // Init audio manager
-        this.audioManager = new AudioManager(this.platform.getAudioManagerImp());
+        audioManager = new AudioManager(platform.getAudioManagerImp());
         // Load default image
-        this.defaultImageImp = this.platform.createImageImp(DEFAULT_IMAGE_PATH);
+        defaultImageImp = platform.createImageImp(DEFAULT_IMAGE_PATH);
         // Find Jeda programs and plugins
         final List<ProgramClassWrapper> programClassList = new ArrayList<ProgramClassWrapper>();
         try {
-            final Class[] classes = this.platform.loadClasses();
+            final Class[] classes = platform.loadClasses();
             // Load jeda plugins and jeda programs
             for (int i = 0; i < classes.length; ++i) {
-                final ProgramClassWrapper pcw = ProgramClassWrapper.tryCreate(classes[i], this.properties);
+                final ProgramClassWrapper pcw = ProgramClassWrapper.tryCreate(classes[i], properties);
                 if (pcw != null) {
                     programClassList.add(pcw);
                 }
@@ -100,38 +100,38 @@ class JedaEngine implements Platform.Callback, Runnable {
             Log.err(ex, Message.ENGINE_ERROR_INIT_CLASSES);
         }
 
-        this.programClasses = programClassList.toArray(new ProgramClassWrapper[programClassList.size()]);
-        this.paused = false;
+        programClasses = programClassList.toArray(new ProgramClassWrapper[programClassList.size()]);
+        paused = false;
     }
 
     @Override
     public void pause() {
-        synchronized (this.pauseLock) {
-            this.paused = true;
+        synchronized (pauseLock) {
+            paused = true;
         }
     }
 
     @Override
     public void postEvent(final Event event) {
-        this.eventQueue.addEvent(event);
+        eventQueue.addEvent(event);
     }
 
     @Override
     public void resume() {
-        synchronized (this.pauseLock) {
-            if (this.paused) {
-                this.paused = false;
-                this.timer.start();
+        synchronized (pauseLock) {
+            if (paused) {
+                paused = false;
+                timer.start();
             }
         }
     }
 
     @Override
     public void run() {
-        this.timer.start();
+        timer.start();
         while (true) {
             // Application is paused
-            if (this.isPaused()) {
+            if (isPaused()) {
                 try {
                     Thread.sleep(100);
                 }
@@ -141,34 +141,33 @@ class JedaEngine implements Platform.Callback, Runnable {
             }
             // Application is running
             else {
-                this.frequencyMeter.count();
-                final TickEvent event = new TickEvent(this, this.timer.getLastStepDuration(),
-                                                      this.frequencyMeter.getFrequency());
-                this.eventQueue.addEvent(event);
-                this.eventQueue.processEvents();
-                this.timer.tick();
+                frequencyMeter.count();
+                final TickEvent event = new TickEvent(this, timer.getLastStepDuration(), frequencyMeter.getFrequency());
+                eventQueue.addEvent(event);
+                eventQueue.processEvents();
+                timer.tick();
             }
         }
     }
 
     @Override
     public void stop() {
-        synchronized (this.currentProgramLock) {
-            if (this.currentProgram != null) {
-                this.currentProgram.stop();
+        synchronized (currentProgramLock) {
+            if (currentProgram != null) {
+                currentProgram.stop();
             }
             else {
-                this.platform.shutdown();
+                platform.shutdown();
             }
         }
     }
 
     void addEventListener(final Object listener) {
-        this.eventQueue.addListener(listener);
+        eventQueue.addListener(listener);
     }
 
     CanvasImp createCanvasImp(final int width, final int height) {
-        return this.platform.createCanvasImp(width, height);
+        return platform.createCanvasImp(width, height);
     }
 
     TypefaceImp createTypefaceImp(final String path) {
@@ -176,7 +175,7 @@ class JedaEngine implements Platform.Callback, Runnable {
             return EMPTY_TYPEFACE_IMP;
         }
 
-        final TypefaceImp result = this.platform.createTypefaceImp(path);
+        final TypefaceImp result = platform.createTypefaceImp(path);
         if (result == null) {
             return EMPTY_TYPEFACE_IMP;
         }
@@ -187,12 +186,12 @@ class JedaEngine implements Platform.Callback, Runnable {
 
     ImageImp createImageImp(final String path) {
         if (path == null) {
-            return this.defaultImageImp;
+            return defaultImageImp;
         }
 
-        final ImageImp result = this.platform.createImageImp(path);
+        final ImageImp result = platform.createImageImp(path);
         if (result == null) {
-            return this.defaultImageImp;
+            return defaultImageImp;
         }
         else {
             return result;
@@ -205,23 +204,23 @@ class JedaEngine implements Platform.Callback, Runnable {
         }
 
         final ViewRequest request = new ViewRequest(width, height, features);
-        this.platform.showViewRequest(request);
+        platform.showViewRequest(request);
         request.waitForResult();
         return request.getResult();
     }
 
     XMLReader createXmlReader() {
-        return this.platform.createXmlReader();
+        return platform.createXmlReader();
     }
 
     AudioManager getAudioManager() {
-        return this.audioManager;
+        return audioManager;
     }
 
     String getProgramName() {
-        synchronized (this.currentProgramLock) {
-            if (this.currentProgram != null) {
-                return this.currentProgram.getProgramName();
+        synchronized (currentProgramLock) {
+            if (currentProgram != null) {
+                return currentProgram.getProgramName();
             }
             else {
                 return null;
@@ -230,15 +229,15 @@ class JedaEngine implements Platform.Callback, Runnable {
     }
 
     ProgramClassWrapper[] getProgramClasses() {
-        return this.programClasses;
+        return programClasses;
     }
 
     Properties getProperties() {
-        return this.properties;
+        return properties;
     }
 
     TypefaceImp getStandardTypefaceImp(final Platform.StandardTypeface standardTypeface) {
-        final TypefaceImp result = this.platform.getStandardTypefaceImp(standardTypeface);
+        final TypefaceImp result = platform.getStandardTypefaceImp(standardTypeface);
         if (result == null) {
             return EMPTY_TYPEFACE_IMP;
         }
@@ -248,73 +247,73 @@ class JedaEngine implements Platform.Callback, Runnable {
     }
 
     double getTickFrequency() {
-        return this.timer.getTargetFrequency();
+        return timer.getTargetFrequency();
     }
 
     boolean isSensorAvailable(final SensorType sensorType) {
-        return this.platform.isSensorAvailable(sensorType);
+        return platform.isSensorAvailable(sensorType);
     }
 
     boolean isSensorEnabled(final SensorType sensorType) {
-        return this.platform.isSensorEnabled(sensorType);
+        return platform.isSensorEnabled(sensorType);
     }
 
     boolean isVirtualKeyboardVisible() {
-        return this.platform.isVirtualKeyboardVisible();
+        return platform.isVirtualKeyboardVisible();
     }
 
     void log(final LogLevel logLevel, final String message) {
-        if (this.platform == null) {
+        if (platform == null) {
             System.err.print(message);
         }
         else {
-            this.platform.log(logLevel, message);
+            platform.log(logLevel, message);
         }
     }
 
     InputStream openResource(final String path) {
-        return this.platform.openResource(path);
+        return platform.openResource(path);
     }
 
     void programTerminated() {
-        synchronized (this.currentProgramLock) {
-            this.currentProgram = null;
-            this.platform.shutdown();
+        synchronized (currentProgramLock) {
+            currentProgram = null;
+            platform.shutdown();
         }
     }
 
     void removeEventListener(final Object listener) {
-        this.eventQueue.removeListener(listener);
+        eventQueue.removeListener(listener);
     }
 
     void showInputRequest(final InputRequest request) {
-        this.platform.showInputRequest(request);
+        platform.showInputRequest(request);
     }
 
     void showSelectionRequest(final SelectionRequest request) {
-        this.platform.showSelectionRequest(request);
+        platform.showSelectionRequest(request);
     }
 
     void setSensorEnabled(final SensorType sensorType, final boolean enabled) {
-        this.platform.setSensorEnabled(sensorType, enabled);
+        platform.setSensorEnabled(sensorType, enabled);
     }
 
     void setTickFrequency(final double hertz) {
-        this.timer.setTargetFrequency(hertz);
+        timer.setTargetFrequency(hertz);
     }
 
     void setVirtualKeyboardVisible(final boolean visible) {
-        this.platform.setVirtualKeyboardVisible(visible);
+        platform.setVirtualKeyboardVisible(visible);
     }
 
     void startProgram(final String programClassName) {
-        synchronized (this.currentProgramLock) {
-            if (this.currentProgram != null) {
+        synchronized (currentProgramLock) {
+            if (currentProgram != null) {
                 Log.err(Message.PROGRAM_ERROR_ALREADY_RUNNING);
             }
             else {
-                this.currentProgram = new JedaProgramExecutor(this, programClassName);
-                final Thread programThread = new Thread(this.currentProgram);
+                currentProgram = new JedaProgramExecutor(this, programClassName);
+                final Thread programThread = new Thread(currentProgram);
                 programThread.setName(Message.get(Message.ENGINE_PROGRAM_THREAD_NAME));
                 programThread.start();
             }
@@ -322,8 +321,8 @@ class JedaEngine implements Platform.Callback, Runnable {
     }
 
     private boolean isPaused() {
-        synchronized (this.pauseLock) {
-            return this.paused;
+        synchronized (pauseLock) {
+            return paused;
         }
     }
 

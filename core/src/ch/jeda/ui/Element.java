@@ -41,7 +41,7 @@ public abstract class Element {
      * @since 2.0
      */
     protected Element() {
-        this.name = null;
+        name = null;
     }
 
     /**
@@ -54,7 +54,7 @@ public abstract class Element {
      * @since 2.0
      */
     public final int getDrawOrder() {
-        return this.drawOrder;
+        return drawOrder;
     }
 
     /**
@@ -66,11 +66,11 @@ public abstract class Element {
      * @since 2.0
      */
     public final String getName() {
-        if (this.name == null) {
-            this.name = this.getClass().getSimpleName();
+        if (name == null) {
+            name = getClass().getSimpleName();
         }
 
-        return this.name;
+        return name;
     }
 
     /**
@@ -84,8 +84,8 @@ public abstract class Element {
      */
     public final void setDrawOrder(final int drawOrder) {
         this.drawOrder = drawOrder;
-        if (this.view != null) {
-            this.view.drawOrderChanged(this);
+        if (view != null) {
+            view.drawOrderChanged(this);
         }
     }
 
@@ -102,10 +102,10 @@ public abstract class Element {
             name = "";
         }
 
-        if (this.view != null) {
-            this.view.removeName(this, this.getName());
+        if (view != null) {
+            view.removeName(this, getName());
 
-            this.view.addName(this, name);
+            view.addName(this, name);
         }
 
         this.name = name;
@@ -129,7 +129,7 @@ public abstract class Element {
      * @since 2.0
      */
     protected final View getView() {
-        return this.view;
+        return view;
     }
 
     /**
@@ -141,22 +141,22 @@ public abstract class Element {
      * @since 1.4
      */
     protected void triggerAction(final String name) {
-        final View view = this.getView();
+        final View view = getView();
         if (view != null) {
             view.postEvent(new ActionEvent(this, name));
         }
     }
 
     void addToView(final View view) {
-        if (this.view != view && this.view != null) {
-            this.view.remove(this);
+        if (view != this.view && view != null) {
+            view.remove(this);
         }
 
         this.view = view;
     }
 
     void removeFromView(final View view) {
-        if (this.view == view) {
+        if (view == this.view) {
             this.view = null;
         }
     }

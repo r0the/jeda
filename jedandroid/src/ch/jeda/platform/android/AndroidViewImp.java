@@ -29,9 +29,9 @@ class AndroidViewImp implements ViewImp {
     private final AndroidCanvasImp canvasImp;
 
     AndroidViewImp(final SurfaceFragment canvasView, final int width, final int height) {
-        this.canvasImp = new AndroidCanvasImp();
-        this.canvasImp.init(width, height);
-        this.surfaceFragment = canvasView;
+        canvasImp = new AndroidCanvasImp();
+        canvasImp.init(width, height);
+        surfaceFragment = canvasView;
     }
 
     @Override
@@ -39,27 +39,27 @@ class AndroidViewImp implements ViewImp {
     }
 
     public CanvasImp getCanvas() {
-        return this.canvasImp;
+        return canvasImp;
     }
 
     @Override
     public EnumSet<ViewFeature> getFeatures() {
-        return this.surfaceFragment.getFeatures();
+        return surfaceFragment.getFeatures();
     }
 
     @Override
     public boolean isVisible() {
-        return this.surfaceFragment.isVisible();
+        return surfaceFragment.isVisible();
     }
 
     @Override
     public void setEventQueue(final EventQueue eventQueue) {
-        this.surfaceFragment.setEventQueue(eventQueue);
+        surfaceFragment.setEventQueue(eventQueue);
     }
 
     @Override
     public void setFeature(final ViewFeature feature, final boolean enabled) {
-        this.surfaceFragment.setFeature(feature, enabled);
+        surfaceFragment.setFeature(feature, enabled);
     }
 
     @Override
@@ -69,11 +69,11 @@ class AndroidViewImp implements ViewImp {
 
     @Override
     public void setTitle(final String title) {
-        this.surfaceFragment.setTitle(title);
+        surfaceFragment.setTitle(title);
     }
 
     @Override
     public void update() {
-        this.surfaceFragment.setBitmap(this.canvasImp.getBitmap());
+        surfaceFragment.setBitmap(canvasImp.getBitmap());
     }
 }

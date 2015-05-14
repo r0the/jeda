@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -88,16 +88,16 @@ public enum Alignment {
     private final Align horizontal;
     private final Align vertical;
 
-    int alignX(final int x, final int width) {
-        return this.horizontal.align(x, width);
-    }
-
-    int alignY(final int y, final int height) {
-        return this.vertical.align(y, height);
-    }
-
     private Alignment(final Align horizontal, final Align vertical) {
         this.horizontal = horizontal;
         this.vertical = vertical;
+    }
+
+    int alignX(final int x, final int width) {
+        return horizontal.align(x, width);
+    }
+
+    int alignY(final int y, final int height) {
+        return vertical.align(y, height);
     }
 }

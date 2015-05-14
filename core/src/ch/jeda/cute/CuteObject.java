@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -55,78 +55,78 @@ public class CuteObject {
             throw new NullPointerException("object");
         }
 
-        final double dx = object.x - this.x;
-        final double dy = object.y - this.y;
-        final double dz = object.z - this.z;
+        final double dx = object.x - x;
+        final double dy = object.y - y;
+        final double dz = object.z - z;
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 
     public final int getIntX() {
-        return (int) Math.round(this.x);
+        return (int) Math.round(x);
     }
 
     public final int getIntY() {
-        return (int) Math.round(this.y);
+        return (int) Math.round(y);
     }
 
     public final int getIntZ() {
-        return (int) Math.round(this.z);
+        return (int) Math.round(z);
     }
 
     public final String getMessage() {
-        return this.message;
+        return message;
     }
 
     public final CuteObjectType getObjectType() {
-        return this.objectType;
+        return objectType;
     }
 
     public final double getRadius() {
-        return this.radius;
+        return radius;
     }
 
     public final double getVx() {
-        return this.vx;
+        return vx;
     }
 
     public final double getVy() {
-        return this.vy;
+        return vy;
     }
 
     public final double getVz() {
-        return this.vz;
+        return vz;
     }
 
     public final double getX() {
-        return this.x;
+        return x;
     }
 
     public final double getY() {
-        return this.y;
+        return y;
     }
 
     public final double getZ() {
-        return this.z;
+        return z;
     }
 
     public final void remove() {
-        this.world.removeObject(this);
+        world.removeObject(this);
     }
 
     public final void setMessage(final String message) {
-        this.setMessage(message, -1f);
+        setMessage(message, -1f);
     }
 
     public final void setMessage(final String message, final double seconds) {
         this.message = message;
-        this.messageTimeout = seconds;
+        messageTimeout = seconds;
     }
 
     public final void setPosition(final double x, final double y, final double z) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.changed();
+        changed();
     }
 
     public final void setRadius(final double radius) {
@@ -154,47 +154,47 @@ public class CuteObject {
     }
 
     protected void draw(final Canvas canvas, final double x, final double y) {
-        if (this.objectType != null) {
-            canvas.drawImage(x, y, this.objectType.getImage(), Alignment.BOTTOM_CENTER);
+        if (objectType != null) {
+            canvas.drawImage(x, y, objectType.getImage(), Alignment.BOTTOM_CENTER);
         }
     }
 
     protected void moveTo(final double newX, final double newY, final double newZ) {
-        this.setPosition(newX, newY, newZ);
+        setPosition(newX, newY, newZ);
     }
 
     protected void update(final double dt) {
     }
 
     void internalUpdate(final double dt) {
-        if (this.messageTimeout > 0f) {
-            this.messageTimeout -= dt;
-            if (this.messageTimeout < 0f) {
-                this.message = null;
+        if (messageTimeout > 0f) {
+            messageTimeout -= dt;
+            if (messageTimeout < 0f) {
+                message = null;
             }
         }
 
-        this.update(dt);
-        double newX = getX() + this.vx * dt;
-        double newY = getY() + this.vy * dt;
-        double newZ = getZ() + this.vz * dt;
-        this.moveTo(newX, newY, newZ);
+        update(dt);
+        double newX = getX() + vx * dt;
+        double newY = getY() + vy * dt;
+        double newZ = getZ() + vz * dt;
+        moveTo(newX, newY, newZ);
     }
 
     void setRenderer(final CuteWorld renderer) {
-        this.world = renderer;
-        this.changed();
+        world = renderer;
+        changed();
     }
 
     private void changed() {
-        if (this.box != null) {
-            this.box.removeObject(this);
+        if (box != null) {
+            box.removeObject(this);
         }
 
-        if (this.world != null) {
-            this.box = this.world.getBox(this.getIntX(), this.getIntY(), this.getIntZ());
-            if (this.box != null) {
-                this.box.addObject(this);
+        if (world != null) {
+            box = world.getBox(getIntX(), getIntY(), getIntZ());
+            if (box != null) {
+                box.addObject(this);
             }
         }
     }

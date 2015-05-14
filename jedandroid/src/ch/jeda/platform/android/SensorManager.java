@@ -41,32 +41,32 @@ class SensorManager extends Fragment {
     private android.hardware.SensorManager imp;
 
     SensorManager() {
-        this.enabledSensors = EnumSet.noneOf(SensorType.class);
-        this.sensorMap = new EnumMap<SensorType, Sensor>(SensorType.class);
-        this.sensorListenerMap = new EnumMap<SensorType, SensorEventListener>(SensorType.class);
-        this.sensorInfoMap = new HashMap<Sensor, SensorInfo>();
-        this.setRetainInstance(true);
+        enabledSensors = EnumSet.noneOf(SensorType.class);
+        sensorMap = new EnumMap<SensorType, Sensor>(SensorType.class);
+        sensorListenerMap = new EnumMap<SensorType, SensorEventListener>(SensorType.class);
+        sensorInfoMap = new HashMap<Sensor, SensorInfo>();
+        setRetainInstance(true);
     }
 
     @Override
     public void onAttach(final Activity activity) {
         super.onAttach(activity);
-        this.sensorMap.clear();
-        this.sensorInfoMap.clear();
-        this.sensorListenerMap.clear();
-        this.imp = (android.hardware.SensorManager) activity.getSystemService(Activity.SENSOR_SERVICE);
-        this.checkAdd(SensorType.ACCELERATION, 1f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
-        this.checkAdd(SensorType.GRAVITY, 1f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_GRAVITY));
-        this.checkAdd(SensorType.LIGHT, 1f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_LIGHT));
-        this.checkAdd(SensorType.LINEAR_ACCELERATION, 1f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
+        sensorMap.clear();
+        sensorInfoMap.clear();
+        sensorListenerMap.clear();
+        imp = (android.hardware.SensorManager) activity.getSystemService(Activity.SENSOR_SERVICE);
+        checkAdd(SensorType.ACCELERATION, 1f, 0f, imp.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+        checkAdd(SensorType.GRAVITY, 1f, 0f, imp.getDefaultSensor(Sensor.TYPE_GRAVITY));
+        checkAdd(SensorType.LIGHT, 1f, 0f, imp.getDefaultSensor(Sensor.TYPE_LIGHT));
+        checkAdd(SensorType.LINEAR_ACCELERATION, 1f, 0f, imp.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
         // Android returns values in micro Tesla
-        this.checkAdd(SensorType.MAGNETIC_FIELD, 1e-6f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD));
+        checkAdd(SensorType.MAGNETIC_FIELD, 1e-6f, 0f, imp.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD));
         // Android returns value in hekto Pascal
-        this.checkAdd(SensorType.PRESSURE, 100f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_PRESSURE));
+        checkAdd(SensorType.PRESSURE, 100f, 0f, imp.getDefaultSensor(Sensor.TYPE_PRESSURE));
         // Android returns value in centimeter
-        this.checkAdd(SensorType.PROXIMITY, 0.01f, 0f, this.imp.getDefaultSensor(Sensor.TYPE_PROXIMITY));
+        checkAdd(SensorType.PROXIMITY, 0.01f, 0f, imp.getDefaultSensor(Sensor.TYPE_PROXIMITY));
         // Android returns value in degrees Celcius
-        this.checkAdd(SensorType.TEMPERATURE, 1f, -273.15f, this.imp.getDefaultSensor(Sensor.TYPE_TEMPERATURE));
+        checkAdd(SensorType.TEMPERATURE, 1f, -273.15f, imp.getDefaultSensor(Sensor.TYPE_TEMPERATURE));
     }
 
     @Override
@@ -78,53 +78,53 @@ class SensorManager extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        for (final SensorType sensorType : this.sensorListenerMap.keySet()) {
-            this.deactivateSensor(sensorType);
+        for (final SensorType sensorType : sensorListenerMap.keySet()) {
+            deactivateSensor(sensorType);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        for (final SensorType sensorType : this.enabledSensors) {
-            this.activateSensor(sensorType);
+        for (final SensorType sensorType : enabledSensors) {
+            activateSensor(sensorType);
         }
     }
 
     boolean isAvailable(final SensorType sensorType) {
-        return this.sensorMap.containsKey(sensorType);
+        return sensorMap.containsKey(sensorType);
     }
 
     boolean isEnabled(final SensorType sensorType) {
-        return this.enabledSensors.contains(sensorType);
+        return enabledSensors.contains(sensorType);
     }
 
     void setEnabled(final SensorType sensorType, final boolean enabled) {
         // Enable sensor only if it is available
-        if (enabled && this.sensorMap.containsKey(sensorType)) {
-            this.enabledSensors.add(sensorType);
+        if (enabled && sensorMap.containsKey(sensorType)) {
+            enabledSensors.add(sensorType);
         }
         else {
-            this.enabledSensors.remove(sensorType);
+            enabledSensors.remove(sensorType);
         }
 
-        this.updateListeners();
+        updateListeners();
     }
 
     private void activateSensor(final SensorType sensorType) {
-        final SensorEventListener listener = this.createEventListener(sensorType);
+        final SensorEventListener listener = createEventListener(sensorType);
         if (listener != null) {
-            this.imp.registerListener(listener,
-                                      this.sensorMap.get(sensorType),
-                                      android.hardware.SensorManager.SENSOR_DELAY_UI);
-            this.sensorListenerMap.put(sensorType, listener);
+            imp.registerListener(listener,
+                                 sensorMap.get(sensorType),
+                                 android.hardware.SensorManager.SENSOR_DELAY_UI);
+            sensorListenerMap.put(sensorType, listener);
         }
     }
 
     private void checkAdd(final SensorType sensorType, final float factor, final float shift, final Sensor sensor) {
         if (sensor != null) {
-            this.sensorMap.put(sensorType, sensor);
-            this.sensorInfoMap.put(sensor, new SensorInfo(sensorType, sensor, factor, shift));
+            sensorMap.put(sensorType, sensor);
+            sensorInfoMap.put(sensor, new SensorInfo(sensorType, sensor, factor, shift));
         }
     }
 
@@ -134,35 +134,35 @@ class SensorManager extends Fragment {
             case GRAVITY:
             case LINEAR_ACCELERATION:
             case MAGNETIC_FIELD:
-                return new ThreeDeeSensorHandler((Main) this.getActivity(), this.sensorInfoMap);
+                return new ThreeDeeSensorHandler((Main) getActivity(), sensorInfoMap);
             case LIGHT:
             case PRESSURE:
             case PROXIMITY:
             case TEMPERATURE:
-                return new ValueSensorHandler((Main) this.getActivity(), this.sensorInfoMap);
+                return new ValueSensorHandler((Main) getActivity(), sensorInfoMap);
             default:
                 return null;
         }
     }
 
     private void deactivateSensor(final SensorType sensorType) {
-        final SensorEventListener listener = this.sensorListenerMap.get(sensorType);
+        final SensorEventListener listener = sensorListenerMap.get(sensorType);
         if (listener != null) {
-            this.imp.unregisterListener(listener);
-            this.sensorListenerMap.remove(sensorType);
+            imp.unregisterListener(listener);
+            sensorListenerMap.remove(sensorType);
         }
     }
 
     private void updateListeners() {
-        for (final SensorType sensorType : this.enabledSensors) {
-            if (!this.sensorListenerMap.containsKey(sensorType)) {
-                this.activateSensor(sensorType);
+        for (final SensorType sensorType : enabledSensors) {
+            if (!sensorListenerMap.containsKey(sensorType)) {
+                activateSensor(sensorType);
             }
         }
 
-        for (final SensorType sensorType : this.sensorListenerMap.keySet()) {
-            if (!this.enabledSensors.contains(sensorType)) {
-                this.deactivateSensor(sensorType);
+        for (final SensorType sensorType : sensorListenerMap.keySet()) {
+            if (!enabledSensors.contains(sensorType)) {
+                deactivateSensor(sensorType);
             }
         }
     }
@@ -178,11 +178,11 @@ class SensorManager extends Fragment {
         }
 
         public void onSensorChanged(final android.hardware.SensorEvent event) {
-            final SensorInfo sensorInfo = this.sensorReserveMap.get(event.sensor);
+            final SensorInfo sensorInfo = sensorReserveMap.get(event.sensor);
             float x = 0f;
             float y = 0f;
             final float z = event.values[2] * sensorInfo.factor;
-            switch (this.activity.getWindowManager().getDefaultDisplay().getRotation()) {
+            switch (activity.getWindowManager().getDefaultDisplay().getRotation()) {
                 case Surface.ROTATION_0:
                     x = -event.values[0] * sensorInfo.factor;
                     y = event.values[1] * sensorInfo.factor;
@@ -201,7 +201,7 @@ class SensorManager extends Fragment {
                     break;
             }
 
-            this.activity.postEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, x, y, z));
+            activity.postEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, x, y, z));
         }
 
         public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
@@ -219,11 +219,11 @@ class SensorManager extends Fragment {
         }
 
         public void onSensorChanged(final android.hardware.SensorEvent event) {
-            final SensorInfo sensorInfo = this.sensorReserveMap.get(event.sensor);
+            final SensorInfo sensorInfo = sensorReserveMap.get(event.sensor);
             final boolean maxiumum = event.values[0] >= event.sensor.getMaximumRange() ||
                                      event.values[0] <= -event.sensor.getMaximumRange();
             final float value = event.values[0] * sensorInfo.factor + sensorInfo.shift;
-            this.activity.postEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, maxiumum, value));
+            activity.postEvent(new SensorEvent(sensorInfo, sensorInfo.sensorType, maxiumum, value));
         }
 
         public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
@@ -246,7 +246,7 @@ class SensorManager extends Fragment {
 
         @Override
         public String toString() {
-            return this.sensor.getName();
+            return sensor.getName();
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,19 +32,19 @@ class BaseWindow extends JFrame {
     public BaseWindow(final WindowManager manager) {
         super(graphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration());
         this.manager = manager;
-        this.addWindowListener(new WindowListener(this));
+        addWindowListener(new WindowListener(this));
     }
 
     protected final void accept() {
-        this.setVisible(false);
-        this.manager.windowClosed(this);
-        this.onAccept();
+        setVisible(false);
+        manager.windowClosed(this);
+        onAccept();
     }
 
     protected final void cancel() {
-        this.setVisible(false);
-        this.manager.windowClosed(this);
-        this.onCancel();
+        setVisible(false);
+        manager.windowClosed(this);
+        onCancel();
     }
 
     protected void onAccept() {
@@ -55,12 +55,12 @@ class BaseWindow extends JFrame {
 
     public final void init() {
         final Point center = graphicsEnvironment().getCenterPoint();
-        this.setLocation(center.x - this.getWidth() / 2, center.y - this.getHeight() / 2);
-        this.setIconImage(loadImage("res/jeda/logo-16x16.png"));
+        setLocation(center.x - getWidth() / 2, center.y - getHeight() / 2);
+        setIconImage(loadImage("res/jeda/logo-16x16.png"));
     }
 
     protected final void setDefaultButton(final JButton button) {
-        this.getRootPane().setDefaultButton(button);
+        getRootPane().setDefaultButton(button);
     }
 
     private static GraphicsEnvironment graphicsEnvironment() {
@@ -81,7 +81,7 @@ class BaseWindow extends JFrame {
 
         @Override
         public void windowClosing(final WindowEvent event) {
-            this.window.cancel();
+            window.cancel();
         }
     }
 }

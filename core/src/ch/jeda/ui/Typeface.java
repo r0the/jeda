@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -71,6 +71,10 @@ public final class Typeface {
         this(JedaInternal.createTypefaceImp(path));
     }
 
+    private Typeface(final TypefaceImp imp) {
+        this.imp = imp;
+    }
+
     /**
      * Check if the typeface is available. The typeface may not be available if the specified file or resource is
      * missing, has an invalid format or if another error occured while loading the typeface.
@@ -78,15 +82,11 @@ public final class Typeface {
      * @return <tt>true</tt> if the typeface is available, otherwise <tt>false</tt>.
      */
     public boolean isAvailable() {
-        return this.imp.isAvailable();
+        return imp.isAvailable();
     }
 
     @Override
     public String toString() {
-        return this.imp.getName();
-    }
-
-    private Typeface(final TypefaceImp imp) {
-        this.imp = imp;
+        return imp.getName();
     }
 }

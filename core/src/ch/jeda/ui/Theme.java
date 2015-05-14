@@ -34,20 +34,20 @@ public final class Theme {
      * @since 1.3
      */
     public static final Theme ANTIQUE = new Theme(
-            DefaultButtonStyle.ANTIQUE_BEIGE,
-            DefaultCheckBoxStyle.ANTIQUE_BEIGE,
-            DefaultInputFieldStyle.ANTIQUE_BEIGE,
-            DefaultProgressBarStyle.ANTIQUE_GREEN);
+        DefaultButtonStyle.ANTIQUE_BEIGE,
+        DefaultCheckBoxStyle.ANTIQUE_BEIGE,
+        DefaultInputFieldStyle.ANTIQUE_BEIGE,
+        DefaultProgressBarStyle.ANTIQUE_GREEN);
     /**
      * The Jeda modern widget theme.
      *
      * @since 1.3
      */
     public static final Theme MODERN = new Theme(
-            DefaultButtonStyle.MODERN_GREY,
-            DefaultCheckBoxStyle.MODERN_GREEN,
-            DefaultInputFieldStyle.MODERN_WHITE,
-            DefaultProgressBarStyle.MODERN_GREEN);
+        DefaultButtonStyle.MODERN_GREY,
+        DefaultCheckBoxStyle.MODERN_GREEN,
+        DefaultInputFieldStyle.MODERN_WHITE,
+        DefaultProgressBarStyle.MODERN_GREEN);
     private static Theme defaultTheme = MODERN;
 
     /**
@@ -90,7 +90,7 @@ public final class Theme {
      * @since 1.3
      */
     public ButtonStyle getDefaultButtonStyle() {
-        return this.buttonStyle;
+        return buttonStyle;
     }
 
     /**
@@ -101,7 +101,7 @@ public final class Theme {
      * @since 1.3
      */
     public CheckBoxStyle getDefaultCheckBoxStyle() {
-        return this.checkBoxStyle;
+        return checkBoxStyle;
     }
 
     /**
@@ -112,7 +112,7 @@ public final class Theme {
      * @since 1.3
      */
     public InputFieldStyle getDefaultInputFieldStyle() {
-        return this.inputFieldStyle;
+        return inputFieldStyle;
     }
 
     /**
@@ -123,7 +123,7 @@ public final class Theme {
      * @since 1.3
      */
     public ProgressBarStyle getDefaultProgressBarStyle() {
-        return this.progressBarStyle;
+        return progressBarStyle;
     }
 
     /**

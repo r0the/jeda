@@ -32,16 +32,16 @@ class JedaProgramExecutor implements Runnable {
 
     @Override
     public void run() {
-        this.executeProgram();
-        this.engine.programTerminated();
+        executeProgram();
+        engine.programTerminated();
     }
 
     String getProgramName() {
-        if (this.programClass == null) {
+        if (programClass == null) {
             return "";
         }
         else {
-            return this.programClass.getName();
+            return programClass.getName();
         }
     }
 
@@ -50,12 +50,12 @@ class JedaProgramExecutor implements Runnable {
     }
 
     private void executeProgram() {
-        this.programClass = this.selectProgramClass();
-        if (this.programClass == null) {
+        programClass = selectProgramClass();
+        if (programClass == null) {
             return;
         }
 
-        final Runnable program = this.createProgram(this.programClass);
+        final Runnable program = createProgram(programClass);
         if (program == null) {
             return;
         }
@@ -64,7 +64,7 @@ class JedaProgramExecutor implements Runnable {
             program.run();
         }
         catch (final Throwable ex) {
-            Log.err(ex, Message.PROGRAM_ERROR_RUN, this.programClass);
+            Log.err(ex, Message.PROGRAM_ERROR_RUN, programClass);
         }
     }
 
@@ -79,21 +79,21 @@ class JedaProgramExecutor implements Runnable {
     }
 
     private ProgramClassWrapper selectProgramClass() {
-        final ProgramClassWrapper[] candidates = this.engine.getProgramClasses();
+        final ProgramClassWrapper[] candidates = engine.getProgramClasses();
         // If a program class has been specified...
-        if (this.programClassName != null) {
+        if (programClassName != null) {
             for (int i = 0; i < candidates.length; ++i) {
-                if (candidates[i].getProgramClassName().equals(this.programClassName)) {
+                if (candidates[i].getProgramClassName().equals(programClassName)) {
                     return candidates[i];
                 }
             }
 
-            Log.err(Message.PROGRAM_ERROR_CLASS_NOT_FOUND, this.programClassName);
+            Log.err(Message.PROGRAM_ERROR_CLASS_NOT_FOUND, programClassName);
             return null;
         }
 
         // No program class is specified, try default program
-        final String defaultProgramName = this.engine.getProperties().getProperty(DEFAULT_PROGRAM_PROPERTY);
+        final String defaultProgramName = engine.getProperties().getProperty(DEFAULT_PROGRAM_PROPERTY);
         for (int i = 0; i < candidates.length; ++i) {
             if (candidates[i].getProgramClassName().equals(defaultProgramName)) {
                 return candidates[i];
@@ -118,7 +118,7 @@ class JedaProgramExecutor implements Runnable {
 
             request.sortItemsByName();
             request.setTitle(Message.get(Message.GUI_SELECT_PROGRAM_TITLE));
-            this.engine.showSelectionRequest(request);
+            engine.showSelectionRequest(request);
             request.waitForResult();
             if (request.isCancelled()) {
                 return null;

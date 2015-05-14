@@ -62,29 +62,29 @@ public final class EventQueue {
      * @since 1.4
      */
     public EventQueue() {
-        this.actionListeners = new ArrayList<ActionListener>();
-        this.connectionAcceptedListeners = new ArrayList<ConnectionAcceptedListener>();
-        this.connectionClosedListeners = new ArrayList<ConnectionClosedListener>();
-        this.eventLock = new Object();
-        this.eventQueues = new ArrayList<EventQueue>();
-        this.keyDownListeners = new ArrayList<KeyDownListener>();
-        this.keyTypedListeners = new ArrayList<KeyTypedListener>();
-        this.keyUpListeners = new ArrayList<KeyUpListener>();
-        this.listenerLock = new Object();
-        this.listeners = new HashSet<Object>();
-        this.messageReceivedListeners = new ArrayList<MessageReceivedListener>();
-        this.pendingInsertions = new HashSet<Object>();
-        this.pendingRemovals = new HashSet<Object>();
-        this.pointerDownListeners = new ArrayList<PointerDownListener>();
-        this.pointerMovedListeners = new ArrayList<PointerMovedListener>();
-        this.pointerUpListeners = new ArrayList<PointerUpListener>();
-        this.scrollListeners = new ArrayList<ScrollListener>();
-        this.sensorListeners = new ArrayList<SensorListener>();
-        this.tickListeners = new ArrayList<TickListener>();
-        this.dragEnabled = false;
-        this.eventsIn = new ArrayList<Event>();
-        this.eventsOut = new ArrayList<Event>();
-        this.lastDragEvent = null;
+        actionListeners = new ArrayList<ActionListener>();
+        connectionAcceptedListeners = new ArrayList<ConnectionAcceptedListener>();
+        connectionClosedListeners = new ArrayList<ConnectionClosedListener>();
+        eventLock = new Object();
+        eventQueues = new ArrayList<EventQueue>();
+        keyDownListeners = new ArrayList<KeyDownListener>();
+        keyTypedListeners = new ArrayList<KeyTypedListener>();
+        keyUpListeners = new ArrayList<KeyUpListener>();
+        listenerLock = new Object();
+        listeners = new HashSet<Object>();
+        messageReceivedListeners = new ArrayList<MessageReceivedListener>();
+        pendingInsertions = new HashSet<Object>();
+        pendingRemovals = new HashSet<Object>();
+        pointerDownListeners = new ArrayList<PointerDownListener>();
+        pointerMovedListeners = new ArrayList<PointerMovedListener>();
+        pointerUpListeners = new ArrayList<PointerUpListener>();
+        scrollListeners = new ArrayList<ScrollListener>();
+        sensorListeners = new ArrayList<SensorListener>();
+        tickListeners = new ArrayList<TickListener>();
+        dragEnabled = false;
+        eventsIn = new ArrayList<Event>();
+        eventsOut = new ArrayList<Event>();
+        lastDragEvent = null;
     }
 
     /**
@@ -96,8 +96,8 @@ public final class EventQueue {
      */
     public void addEvent(final Event event) {
         if (event != null) {
-            synchronized (this.eventLock) {
-                this.eventsIn.add(event);
+            synchronized (eventLock) {
+                eventsIn.add(event);
             }
         }
     }
@@ -111,8 +111,8 @@ public final class EventQueue {
      */
     public void addEvents(final Collection<Event> events) {
         if (events != null) {
-            synchronized (this.eventLock) {
-                this.eventsIn.addAll(events);
+            synchronized (eventLock) {
+                eventsIn.addAll(events);
             }
         }
     }
@@ -127,12 +127,12 @@ public final class EventQueue {
      */
     public void addListener(final Object listener) {
         if (listener != null) {
-            synchronized (this.listenerLock) {
-                if (this.listeners.contains(listener)) {
-                    this.pendingRemovals.remove(listener);
+            synchronized (listenerLock) {
+                if (listeners.contains(listener)) {
+                    pendingRemovals.remove(listener);
                 }
                 else {
-                    this.pendingInsertions.add(listener);
+                    pendingInsertions.add(listener);
                 }
             }
         }
@@ -145,21 +145,21 @@ public final class EventQueue {
      */
     public void processEvents() {
         // Switch input and output list
-        synchronized (this.eventLock) {
-            final List<Event> temp = this.eventsOut;
-            this.eventsOut = this.eventsIn;
-            this.eventsIn = temp;
-            this.eventsIn.clear();
+        synchronized (eventLock) {
+            final List<Event> temp = eventsOut;
+            eventsOut = eventsIn;
+            eventsIn = temp;
+            eventsIn.clear();
         }
 
         // Distribute events to child event queues.
-        for (int i = 0; i < this.eventQueues.size(); ++i) {
-            this.eventQueues.get(i).addEvents(this.eventsOut);
+        for (int i = 0; i < eventQueues.size(); ++i) {
+            eventQueues.get(i).addEvents(eventsOut);
         }
 
         // Dispatch events
-        for (int i = 0; i < this.eventsOut.size(); ++i) {
-            this.dispatchEvent(this.eventsOut.get(i));
+        for (int i = 0; i < eventsOut.size(); ++i) {
+            dispatchEvent(eventsOut.get(i));
         }
     }
 
@@ -173,12 +173,12 @@ public final class EventQueue {
      */
     public void removeListener(final Object listener) {
         if (listener != null) {
-            synchronized (this.listenerLock) {
-                if (!this.listeners.contains(listener)) {
-                    this.pendingInsertions.remove(listener);
+            synchronized (listenerLock) {
+                if (!listeners.contains(listener)) {
+                    pendingInsertions.remove(listener);
                 }
                 else {
-                    this.pendingRemovals.add(listener);
+                    pendingRemovals.add(listener);
                 }
             }
         }
@@ -199,55 +199,55 @@ public final class EventQueue {
     private void dispatchEvent(final Event event) {
         // Pending listener operations must be processed before every event dispatch. Otherwise, an event might be
         // delivered to a listener that has been removed during the last event dispatch.
-        this.processPendingListeners();
+        processPendingListeners();
         switch (event.getType()) {
             case ACTION:
-                this.dispatchActionEvent((ActionEvent) event);
+                dispatchActionEvent((ActionEvent) event);
                 break;
             case CONNECTION_ACCEPTED:
-                this.dispatchConnectionAcceptedEvent((ConnectionEvent) event);
+                dispatchConnectionAcceptedEvent((ConnectionEvent) event);
                 break;
             case CONNECTION_CLOSED:
-                this.dispatchConnectionClosedEvent((ConnectionEvent) event);
+                dispatchConnectionClosedEvent((ConnectionEvent) event);
                 break;
             case KEY_DOWN:
-                this.dispatchKeyDownEvent((KeyEvent) event);
+                dispatchKeyDownEvent((KeyEvent) event);
                 break;
             case KEY_TYPED:
-                this.dispatchKeyTypedEvent((KeyEvent) event);
+                dispatchKeyTypedEvent((KeyEvent) event);
                 break;
             case KEY_UP:
-                this.dispatchKeyUpEvent((KeyEvent) event);
+                dispatchKeyUpEvent((KeyEvent) event);
                 break;
             case MESSAGE_RECEIVED:
-                this.dispatchMessageReceivedEvent((MessageEvent) event);
+                dispatchMessageReceivedEvent((MessageEvent) event);
                 break;
             case POINTER_DOWN:
-                this.dispatchPointerDownEvent((PointerEvent) event);
+                dispatchPointerDownEvent((PointerEvent) event);
                 break;
             case POINTER_MOVED:
-                this.dispatchPointerMovedEvent((PointerEvent) event);
+                dispatchPointerMovedEvent((PointerEvent) event);
                 break;
             case POINTER_UP:
-                this.dispatchPointerUpEvent((PointerEvent) event);
+                dispatchPointerUpEvent((PointerEvent) event);
                 break;
             case SCROLL:
-                this.dispatchScrollEvent((ScrollEvent) event);
+                dispatchScrollEvent((ScrollEvent) event);
                 break;
             case SENSOR:
-                this.dispatchSensorEvent((SensorEvent) event);
+                dispatchSensorEvent((SensorEvent) event);
                 break;
             case TICK:
-                this.dispatchTickEvent((TickEvent) event);
+                dispatchTickEvent((TickEvent) event);
                 break;
         }
     }
 
     private void dispatchActionEvent(final ActionEvent event) {
         int i = 0;
-        while (i < this.actionListeners.size() && !event.isConsumed()) {
+        while (i < actionListeners.size() && !event.isConsumed()) {
             try {
-                this.actionListeners.get(i).onAction(event);
+                actionListeners.get(i).onAction(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -259,9 +259,9 @@ public final class EventQueue {
 
     private void dispatchConnectionAcceptedEvent(final ConnectionEvent event) {
         int i = 0;
-        while (i < this.connectionAcceptedListeners.size() && !event.isConsumed()) {
+        while (i < connectionAcceptedListeners.size() && !event.isConsumed()) {
             try {
-                this.connectionAcceptedListeners.get(i).onConnectionAccepted(event);
+                connectionAcceptedListeners.get(i).onConnectionAccepted(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -273,9 +273,9 @@ public final class EventQueue {
 
     private void dispatchConnectionClosedEvent(final ConnectionEvent event) {
         int i = 0;
-        while (i < this.connectionClosedListeners.size() && !event.isConsumed()) {
+        while (i < connectionClosedListeners.size() && !event.isConsumed()) {
             try {
-                this.connectionClosedListeners.get(i).onConnectionClosed(event);
+                connectionClosedListeners.get(i).onConnectionClosed(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -287,9 +287,9 @@ public final class EventQueue {
 
     private void dispatchKeyDownEvent(final KeyEvent event) {
         int i = 0;
-        while (i < this.keyDownListeners.size()) {
+        while (i < keyDownListeners.size()) {
             try {
-                this.keyDownListeners.get(i).onKeyDown(event);
+                keyDownListeners.get(i).onKeyDown(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -301,9 +301,9 @@ public final class EventQueue {
 
     private void dispatchKeyTypedEvent(final KeyEvent event) {
         int i = 0;
-        while (i < this.keyTypedListeners.size()) {
+        while (i < keyTypedListeners.size()) {
             try {
-                this.keyTypedListeners.get(i).onKeyTyped(event);
+                keyTypedListeners.get(i).onKeyTyped(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -315,9 +315,9 @@ public final class EventQueue {
 
     private void dispatchKeyUpEvent(final KeyEvent event) {
         int i = 0;
-        while (i < this.keyUpListeners.size()) {
+        while (i < keyUpListeners.size()) {
             try {
-                this.keyUpListeners.get(i).onKeyUp(event);
+                keyUpListeners.get(i).onKeyUp(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -329,9 +329,9 @@ public final class EventQueue {
 
     private void dispatchMessageReceivedEvent(final MessageEvent event) {
         int i = 0;
-        while (i < this.messageReceivedListeners.size() && !event.isConsumed()) {
+        while (i < messageReceivedListeners.size() && !event.isConsumed()) {
             try {
-                this.messageReceivedListeners.get(i).onMessageReceived(event);
+                messageReceivedListeners.get(i).onMessageReceived(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -343,9 +343,9 @@ public final class EventQueue {
 
     private void dispatchPointerDownEvent(final PointerEvent event) {
         int i = 0;
-        while (i < this.pointerDownListeners.size() && !event.isConsumed()) {
+        while (i < pointerDownListeners.size() && !event.isConsumed()) {
             try {
-                this.pointerDownListeners.get(i).onPointerDown(event);
+                pointerDownListeners.get(i).onPointerDown(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -354,16 +354,16 @@ public final class EventQueue {
             ++i;
         }
 
-        if (this.dragEnabled && !event.isConsumed() && this.lastDragEvent == null) {
-            this.lastDragEvent = event;
+        if (dragEnabled && !event.isConsumed() && lastDragEvent == null) {
+            lastDragEvent = event;
         }
     }
 
     private void dispatchPointerMovedEvent(final PointerEvent event) {
         int i = 0;
-        while (i < this.pointerMovedListeners.size() && !event.isConsumed()) {
+        while (i < pointerMovedListeners.size() && !event.isConsumed()) {
             try {
-                this.pointerMovedListeners.get(i).onPointerMoved(event);
+                pointerMovedListeners.get(i).onPointerMoved(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -372,19 +372,19 @@ public final class EventQueue {
             ++i;
         }
 
-        if ((this.lastDragEvent != null) && (event.getPointerId() == this.lastDragEvent.getPointerId()) && !event.isConsumed()) {
-            double dx = this.lastDragEvent.getX() - event.getX();
-            double dy = this.lastDragEvent.getY() - event.getY();
-            this.dispatchScrollEvent(new ScrollEvent(event.getSource(), dx, dy));
-            this.lastDragEvent = event;
+        if ((lastDragEvent != null) && (event.getPointerId() == lastDragEvent.getPointerId()) && !event.isConsumed()) {
+            double dx = lastDragEvent.getX() - event.getX();
+            double dy = lastDragEvent.getY() - event.getY();
+            dispatchScrollEvent(new ScrollEvent(event.getSource(), dx, dy));
+            lastDragEvent = event;
         }
     }
 
     private void dispatchPointerUpEvent(final PointerEvent event) {
         int i = 0;
-        while (i < this.pointerUpListeners.size() && !event.isConsumed()) {
+        while (i < pointerUpListeners.size() && !event.isConsumed()) {
             try {
-                this.pointerUpListeners.get(i).onPointerUp(event);
+                pointerUpListeners.get(i).onPointerUp(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -393,16 +393,16 @@ public final class EventQueue {
             ++i;
         }
 
-        if (this.lastDragEvent != null && this.lastDragEvent.getPointerId() == event.getPointerId()) {
-            this.lastDragEvent = null;
+        if (lastDragEvent != null && lastDragEvent.getPointerId() == event.getPointerId()) {
+            lastDragEvent = null;
         }
     }
 
     private void dispatchScrollEvent(final ScrollEvent event) {
         int i = 0;
-        while (i < this.scrollListeners.size() && !event.isConsumed()) {
+        while (i < scrollListeners.size() && !event.isConsumed()) {
             try {
-                this.scrollListeners.get(i).onScroll(event);
+                scrollListeners.get(i).onScroll(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -414,9 +414,9 @@ public final class EventQueue {
 
     private void dispatchSensorEvent(final SensorEvent event) {
         int i = 0;
-        while (i < this.sensorListeners.size() && !event.isConsumed()) {
+        while (i < sensorListeners.size() && !event.isConsumed()) {
             try {
-                this.sensorListeners.get(i).onSensorChanged(event);
+                sensorListeners.get(i).onSensorChanged(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -428,9 +428,9 @@ public final class EventQueue {
 
     private void dispatchTickEvent(final TickEvent event) {
         int i = 0;
-        while (i < this.tickListeners.size() && !event.isConsumed()) {
+        while (i < tickListeners.size() && !event.isConsumed()) {
             try {
-                this.tickListeners.get(i).onTick(event);
+                tickListeners.get(i).onTick(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -441,135 +441,135 @@ public final class EventQueue {
     }
 
     private void doAddListener(final Object listener) {
-        this.listeners.add(listener);
+        listeners.add(listener);
         if (listener instanceof ActionListener) {
-            this.actionListeners.add((ActionListener) listener);
+            actionListeners.add((ActionListener) listener);
         }
 
         if (listener instanceof ConnectionAcceptedListener) {
-            this.connectionAcceptedListeners.add((ConnectionAcceptedListener) listener);
+            connectionAcceptedListeners.add((ConnectionAcceptedListener) listener);
         }
 
         if (listener instanceof ConnectionClosedListener) {
-            this.connectionClosedListeners.add((ConnectionClosedListener) listener);
+            connectionClosedListeners.add((ConnectionClosedListener) listener);
         }
 
         if (listener instanceof EventQueue) {
-            this.eventQueues.add((EventQueue) listener);
+            eventQueues.add((EventQueue) listener);
         }
 
         if (listener instanceof KeyDownListener) {
-            this.keyDownListeners.add((KeyDownListener) listener);
+            keyDownListeners.add((KeyDownListener) listener);
         }
 
         if (listener instanceof KeyTypedListener) {
-            this.keyTypedListeners.add((KeyTypedListener) listener);
+            keyTypedListeners.add((KeyTypedListener) listener);
         }
 
         if (listener instanceof KeyUpListener) {
-            this.keyUpListeners.add((KeyUpListener) listener);
+            keyUpListeners.add((KeyUpListener) listener);
         }
 
         if (listener instanceof MessageReceivedListener) {
-            this.messageReceivedListeners.add((MessageReceivedListener) listener);
+            messageReceivedListeners.add((MessageReceivedListener) listener);
         }
 
         if (listener instanceof PointerDownListener) {
-            this.pointerDownListeners.add((PointerDownListener) listener);
+            pointerDownListeners.add((PointerDownListener) listener);
         }
 
         if (listener instanceof PointerMovedListener) {
-            this.pointerMovedListeners.add((PointerMovedListener) listener);
+            pointerMovedListeners.add((PointerMovedListener) listener);
         }
 
         if (listener instanceof PointerUpListener) {
-            this.pointerUpListeners.add((PointerUpListener) listener);
+            pointerUpListeners.add((PointerUpListener) listener);
         }
 
         if (listener instanceof ScrollListener) {
-            this.scrollListeners.add((ScrollListener) listener);
+            scrollListeners.add((ScrollListener) listener);
         }
 
         if (listener instanceof SensorListener) {
-            this.sensorListeners.add((SensorListener) listener);
+            sensorListeners.add((SensorListener) listener);
         }
 
         if (listener instanceof TickListener) {
-            this.tickListeners.add((TickListener) listener);
+            tickListeners.add((TickListener) listener);
         }
     }
 
     private void doRemoveListener(final Object listener) {
-        this.listeners.remove(listener);
+        listeners.remove(listener);
         if (listener instanceof ActionListener) {
-            this.actionListeners.remove((ActionListener) listener);
+            actionListeners.remove((ActionListener) listener);
         }
 
         if (listener instanceof ConnectionAcceptedListener) {
-            this.connectionAcceptedListeners.remove((ConnectionAcceptedListener) listener);
+            connectionAcceptedListeners.remove((ConnectionAcceptedListener) listener);
         }
 
         if (listener instanceof ConnectionClosedListener) {
-            this.connectionClosedListeners.remove((ConnectionClosedListener) listener);
+            connectionClosedListeners.remove((ConnectionClosedListener) listener);
         }
 
         if (listener instanceof EventQueue) {
-            this.eventQueues.remove((EventQueue) listener);
+            eventQueues.remove((EventQueue) listener);
         }
 
         if (listener instanceof KeyDownListener) {
-            this.keyDownListeners.remove((KeyDownListener) listener);
+            keyDownListeners.remove((KeyDownListener) listener);
         }
 
         if (listener instanceof KeyTypedListener) {
-            this.keyTypedListeners.remove((KeyTypedListener) listener);
+            keyTypedListeners.remove((KeyTypedListener) listener);
         }
 
         if (listener instanceof KeyUpListener) {
-            this.keyUpListeners.remove((KeyUpListener) listener);
+            keyUpListeners.remove((KeyUpListener) listener);
         }
 
         if (listener instanceof MessageReceivedListener) {
-            this.messageReceivedListeners.remove((MessageReceivedListener) listener);
+            messageReceivedListeners.remove((MessageReceivedListener) listener);
         }
 
         if (listener instanceof PointerDownListener) {
-            this.pointerDownListeners.remove((PointerDownListener) listener);
+            pointerDownListeners.remove((PointerDownListener) listener);
         }
 
         if (listener instanceof PointerMovedListener) {
-            this.pointerMovedListeners.remove((PointerMovedListener) listener);
+            pointerMovedListeners.remove((PointerMovedListener) listener);
         }
 
         if (listener instanceof PointerUpListener) {
-            this.pointerUpListeners.remove((PointerUpListener) listener);
+            pointerUpListeners.remove((PointerUpListener) listener);
         }
 
         if (listener instanceof ScrollListener) {
-            this.scrollListeners.remove((ScrollListener) listener);
+            scrollListeners.remove((ScrollListener) listener);
         }
 
         if (listener instanceof SensorListener) {
-            this.sensorListeners.remove((SensorListener) listener);
+            sensorListeners.remove((SensorListener) listener);
         }
 
         if (listener instanceof TickListener) {
-            this.tickListeners.remove((TickListener) listener);
+            tickListeners.remove((TickListener) listener);
         }
     }
 
     private void processPendingListeners() {
-        synchronized (this.listenerLock) {
-            for (final Object listener : this.pendingRemovals) {
-                this.doRemoveListener(listener);
+        synchronized (listenerLock) {
+            for (final Object listener : pendingRemovals) {
+                doRemoveListener(listener);
             }
 
-            for (final Object listener : this.pendingInsertions) {
-                this.doAddListener(listener);
+            for (final Object listener : pendingInsertions) {
+                doAddListener(listener);
             }
 
-            this.pendingRemovals.clear();
-            this.pendingInsertions.clear();
+            pendingRemovals.clear();
+            pendingInsertions.clear();
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,26 +28,26 @@ public class CuteSprite extends CuteObject {
 
     public CuteSprite(final CuteObjectType image, final double x, final double y, final double z) {
         super(image, x, y, z);
-        this.state = CuteSprite.ControlState.IDLE;
+        state = CuteSprite.ControlState.IDLE;
     }
 
     public final boolean isMoving() {
-        return this.state != CuteSprite.ControlState.IDLE;
+        return state != CuteSprite.ControlState.IDLE;
     }
 
     public final void move(final Direction direction) {
-        this.move(direction, this.getIntZ());
+        move(direction, getIntZ());
     }
 
     public final void move(final Direction direction, int targetZ) {
-        if (this.state == CuteSprite.ControlState.IDLE) {
-            this.state = new CuteSprite.MoveToState(this.getX() + direction.getDx(),
-                                                    this.getY() + direction.getDy(), targetZ, 5.0);
+        if (state == CuteSprite.ControlState.IDLE) {
+            state = new CuteSprite.MoveToState(getX() + direction.getDx(),
+                                               getY() + direction.getDy(), targetZ, 5.0);
         }
     }
 
     public final void say(final String message) {
-        this.setMessage("says:" + message, 5f);
+        setMessage("says:" + message, 5f);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class CuteSprite extends CuteObject {
 
     @Override
     protected void update(final double dt) {
-        this.state.update(dt, this);
+        state.update(dt, this);
     }
 
     private static abstract class ControlState {
@@ -90,19 +90,19 @@ public class CuteSprite extends CuteObject {
 
         @Override
         void update(final double dt, final CuteSprite object) {
-            double dx = this.targetX - object.getX();
-            double dy = this.targetY - object.getY();
-            double dz = this.targetZ - object.getZ();
+            double dx = targetX - object.getX();
+            double dy = targetY - object.getY();
+            double dz = targetZ - object.getZ();
             double d = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            if (Math.abs(d) < this.speed * dt) {
-                object.setPosition(this.targetX, this.targetY, this.targetZ);
+            if (Math.abs(d) < speed * dt) {
+                object.setPosition(targetX, targetY, targetZ);
                 object.setVx(0.0);
                 object.setVy(0.0);
                 object.setVz(0.0);
                 object.state = ControlState.IDLE;
             }
             else {
-                double f = this.speed / d;
+                double f = speed / d;
                 object.setVx(dx * f);
                 object.setVy(dy * f);
                 object.setVz(dz * f);

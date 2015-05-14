@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -46,21 +46,21 @@ public class CuteObjectType {
     private final String name;
 
     public CuteObjectType(final String name) {
-        this.image = Cute.loadImage(name.toLowerCase());
+        image = Cute.loadImage(name.toLowerCase());
         this.name = name;
     }
 
     private CuteObjectType() {
-        this.image = null;
-        this.name = "EMPTY";
+        image = null;
+        name = "EMPTY";
     }
 
     public final Image getImage() {
-        return this.image;
+        return image;
     }
 
     @Override
     public final String toString() {
-        return this.name;
+        return name;
     }
 }

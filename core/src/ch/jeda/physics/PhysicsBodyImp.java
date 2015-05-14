@@ -38,9 +38,9 @@ final class PhysicsBodyImp implements BodyImp {
     private final List<Shape> shapes;
 
     PhysicsBodyImp(final Physics physics, final Body body, final BodyImp oldImp) {
-        this.density = oldImp.getDensity();
-        this.friction = oldImp.getFriction();
-        this.shapes = new ArrayList<Shape>();
+        density = oldImp.getDensity();
+        friction = oldImp.getFriction();
+        shapes = new ArrayList<Shape>();
         final BodyDef bodyDef = new BodyDef();
         bodyDef.angle = (float) oldImp.getAngleRad();
         bodyDef.angularDamping = (float) oldImp.getAngularDamping();
@@ -52,51 +52,51 @@ final class PhysicsBodyImp implements BodyImp {
         bodyDef.linearVelocity.y = (float) oldImp.getVy();
         bodyDef.type = convert(oldImp.getType());
         bodyDef.fixedRotation = oldImp.isRotationFixed();
-        this.imp = physics.createBodyImp(bodyDef);
-        this.imp.m_userData = body;
+        imp = physics.createBodyImp(bodyDef);
+        imp.m_userData = body;
         this.physics = physics;
         for (final Shape shape : oldImp.getShapes()) {
-            this.addShape(shape);
+            addShape(shape);
         }
     }
 
     @Override
     public void addShape(final Shape shape) {
-        this.shapes.add(shape);
+        shapes.add(shape);
         final FixtureDef fixtureDef = new FixtureDef();
 
-        fixtureDef.shape = convert(shape, this.physics.getScale());
-        fixtureDef.density = (float) this.density;
-        fixtureDef.friction = (float) this.friction;
+        fixtureDef.shape = convert(shape, physics.getScale());
+        fixtureDef.density = (float) density;
+        fixtureDef.friction = (float) friction;
         fixtureDef.userData = this;
-        this.imp.createFixture(fixtureDef);
+        imp.createFixture(fixtureDef);
     }
 
     @Override
     public void applyForce(final double fx, final double fy) {
-        this.imp.applyForce(new Vec2((float) fx, (float) fy), this.imp.getWorldCenter());
+        imp.applyForce(new Vec2((float) fx, (float) fy), imp.getWorldCenter());
     }
 
     @Override
     public void applyTorque(final double torque) {
-        this.imp.applyTorque((float) torque);
+        imp.applyTorque((float) torque);
     }
 
     @Override
     public boolean belongsTo(final Physics physics) {
-        return this.physics == physics;
+        return physics == physics;
     }
 
     @Override
     public void destroy() {
-        this.physics.destroyBodyImp(this.imp);
+        physics.destroyBodyImp(imp);
     }
 
     @Override
     public void drawOverlay(final Canvas canvas) {
         canvas.setColor(Color.RED);
-        if (this.physics.isDebugging()) {
-            for (final Shape shape : this.shapes) {
+        if (physics.isDebugging()) {
+            for (final Shape shape : shapes) {
                 shape.draw(canvas);
             }
         }
@@ -104,52 +104,52 @@ final class PhysicsBodyImp implements BodyImp {
 
     @Override
     public double getAngleRad() {
-        return this.imp.getAngle();
+        return imp.getAngle();
     }
 
     @Override
     public double getAngularDamping() {
-        return this.imp.getAngularDamping();
+        return imp.getAngularDamping();
     }
 
     @Override
     public double getAngularVelocity() {
-        return this.imp.getAngularVelocity();
+        return imp.getAngularVelocity();
     }
 
     @Override
     public double getDamping() {
-        return this.imp.getLinearDamping();
+        return imp.getLinearDamping();
     }
 
     @Override
     public double getDensity() {
-        return this.density;
+        return density;
     }
 
     @Override
     public double getFriction() {
-        return this.friction;
+        return friction;
     }
 
     @Override
     public double getMass() {
-        return this.imp.getMass();
+        return imp.getMass();
     }
 
     @Override
     public Physics getPhysics() {
-        return this.physics;
+        return physics;
     }
 
     @Override
     public Shape[] getShapes() {
-        return this.shapes.toArray(new Shape[this.shapes.size()]);
+        return shapes.toArray(new Shape[shapes.size()]);
     }
 
     @Override
     public BodyType getType() {
-        switch (this.imp.m_type) {
+        switch (imp.m_type) {
             case DYNAMIC:
                 return BodyType.DYNAMIC;
             case KINEMATIC:
@@ -163,27 +163,27 @@ final class PhysicsBodyImp implements BodyImp {
 
     @Override
     public double getVx() {
-        return this.imp.getLinearVelocity().x;
+        return imp.getLinearVelocity().x;
     }
 
     @Override
     public double getVy() {
-        return this.imp.getLinearVelocity().y;
+        return imp.getLinearVelocity().y;
     }
 
     @Override
     public double getX() {
-        return this.imp.getPosition().x * this.physics.getScale();
+        return imp.getPosition().x * physics.getScale();
     }
 
     @Override
     public double getY() {
-        return this.imp.getPosition().y * this.physics.getScale();
+        return imp.getPosition().y * physics.getScale();
     }
 
     @Override
     public boolean isRotationFixed() {
-        return this.imp.isFixedRotation();
+        return imp.isFixedRotation();
     }
 
     @Override
@@ -193,17 +193,17 @@ final class PhysicsBodyImp implements BodyImp {
 
     @Override
     public void setAngularDamping(final double angularDamping) {
-        this.imp.setAngularDamping((float) angularDamping);
+        imp.setAngularDamping((float) angularDamping);
     }
 
     @Override
     public void setAngularVelocity(double angularVelocity) {
-        this.imp.setAngularVelocity((float) angularVelocity);
+        imp.setAngularVelocity((float) angularVelocity);
     }
 
     @Override
     public void setDamping(final double damping) {
-        this.imp.setLinearDamping((float) damping);
+        imp.setLinearDamping((float) damping);
     }
 
     @Override
@@ -223,17 +223,17 @@ final class PhysicsBodyImp implements BodyImp {
 
     @Override
     public void setRotationFixed(final boolean rotationFixed) {
-        this.imp.setFixedRotation(rotationFixed);
+        imp.setFixedRotation(rotationFixed);
     }
 
     @Override
     public void setType(final BodyType type) {
-        this.imp.setType(convert(type));
+        imp.setType(convert(type));
     }
 
     @Override
     public void setVelocity(double vx, double vy) {
-        this.imp.setLinearVelocity(new Vec2((float) vx, (float) vy));
+        imp.setLinearVelocity(new Vec2((float) vx, (float) vy));
     }
 
     @Override
@@ -241,9 +241,9 @@ final class PhysicsBodyImp implements BodyImp {
         final StringBuilder result = new StringBuilder();
         result.append("Body(name=");
         result.append(", x=");
-        result.append(this.getX());
+        result.append(getX());
         result.append(", y=");
-        result.append(this.getY());
+        result.append(getY());
         result.append(")");
         return result.toString();
     }

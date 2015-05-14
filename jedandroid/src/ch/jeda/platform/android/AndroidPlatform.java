@@ -156,15 +156,15 @@ class AndroidPlatform implements Platform {
     }
 
     void onPause() {
-        this.callback.pause();
+        callback.pause();
     }
 
     void postEvent(final Event event) {
-        this.callback.postEvent(event);
+        callback.postEvent(event);
     }
 
     void onResume() {
-        this.callback.resume();
+        callback.resume();
     }
 
     private static Typeface lookupStandardTypeface(final Platform.StandardTypeface standardTypeface) {

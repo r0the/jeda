@@ -34,40 +34,40 @@ public final class ViewRequest {
         this.width = width;
         this.height = height;
         this.features = features;
-        this.lock = new Object();
-        this.result = null;
+        lock = new Object();
+        result = null;
     }
 
     public ViewImp getResult() {
-        return this.result;
+        return result;
     }
 
     public EnumSet<ViewFeature> getFeatures() {
-        return this.features;
+        return features;
     }
 
     public int getWidth() {
-        return this.width;
+        return width;
     }
 
     public int getHeight() {
-        return this.height;
+        return height;
     }
 
     public void setResult(final ViewImp result) {
-        synchronized (this.lock) {
+        synchronized (lock) {
             if (this.result == null) {
                 this.result = result;
-                this.lock.notify();
+                lock.notify();
             }
         }
     }
 
     public void waitForResult() {
-        synchronized (this.lock) {
-            while (this.result == null) {
+        synchronized (lock) {
+            while (result == null) {
                 try {
-                    this.lock.wait();
+                    lock.wait();
                 }
                 catch (InterruptedException ex) {
                     // ignore

@@ -47,7 +47,7 @@ public class DefaultInputFieldStyle extends DefaultTextStyle implements InputFie
         this(new Image("res:jeda/ui/" + type + "_input_field.png"),
              new Image("res:jeda/ui/" + type + "_input_field_cursor.png"));
         if (ANTIQUE.equals(type)) {
-            this.setTypeface(Typeface.SERIF);
+            setTypeface(Typeface.SERIF);
         }
     }
 
@@ -77,36 +77,36 @@ public class DefaultInputFieldStyle extends DefaultTextStyle implements InputFie
     public boolean contains(final InputField inputField, final int x, final int y) {
         final int dx = inputField.getCenterX() - x;
         final int dy = inputField.getCenterY() - y;
-        return Math.abs(dx) <= this.getWidth(inputField) / 2 && Math.abs(dy) <= this.getHeight(inputField) / 2;
+        return Math.abs(dx) <= getWidth(inputField) / 2 && Math.abs(dy) <= getHeight(inputField) / 2;
     }
 
     @Override
     public void draw(final InputField inputField, final String visibleText, final Canvas canvas) {
-        this.applyTextStyle(canvas);
-        canvas.drawImage(inputField.getLeft(), inputField.getTop(), this.background);
+        applyTextStyle(canvas);
+        canvas.drawImage(inputField.getLeft(), inputField.getTop(), background);
         canvas.drawText(inputField.getLeft() + BORDER, inputField.getCenterY(), visibleText, Alignment.LEFT);
         if (inputField.isSelected()) {
             canvas.drawImage(inputField.getLeft() + BORDER + canvas.textWidth(visibleText), inputField.getCenterY(),
-                             this.cursor, Alignment.CENTER);
+                             cursor, Alignment.CENTER);
         }
     }
 
     @Override
     public boolean fits(final InputField inputField, final Canvas canvas, final String text) {
-        final int maxWidth = this.getWidth(inputField) - 2 * BORDER;
-        canvas.setTypeface(this.getTypeface());
-        canvas.setTextSize(this.getTextSize());
+        final int maxWidth = getWidth(inputField) - 2 * BORDER;
+        canvas.setTypeface(getTypeface());
+        canvas.setTextSize(getTextSize());
         return canvas.textWidth(text) <= maxWidth;
     }
 
     @Override
     public int getHeight(final InputField inputField) {
-        return this.background.getHeight();
+        return background.getHeight();
     }
 
     @Override
     public int getWidth(final InputField inputField) {
-        return this.background.getWidth();
+        return background.getWidth();
     }
 
 }

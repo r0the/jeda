@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents a graphical view that can contains {@link ch.jeda.ui.Elements}.
+ * Represents a graphical view that can contains {@link ch.jeda.ui.Element}s.
  *
  * @since 2.0
  */
@@ -59,11 +59,10 @@ public class View {
      * Constructs a view. The view is shown on the screen.
      * <p>
      * The size of the view's drawing area depends on the platform:
-     * <p>
-     * <p>
+     * </p><p>
      * <img src="../../../windows.png"> <img src="../../../linux.png"> The drawing area of the view has a width of 800
      * pixels and a height of 600 pixels.
-     * <p>
+     * </p><p>
      * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.
      *
      * @since 2.0
@@ -76,11 +75,10 @@ public class View {
      * Constructs a view. The view is shown on the screen. The specified features will be enabled for the view.
      * <p>
      * The size of the view's drawing area depends on the platform:
-     * <p>
-     * <p>
+     * </p><p>
      * <img src="../../../windows.png"> <img src="../../../linux.png"> The drawing area of the view has a width of 800
      * pixels and a height of 600 pixels.
-     * <p>
+     * </p><p>
      * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.
      *
      * @param features the features of the view
@@ -109,16 +107,16 @@ public class View {
      * @since 2.0
      */
     public View(final int width, final int height, final ViewFeature... features) {
-        this.elementLock = new Object();
-        this.elementsByName = new HashMap<String, Set<Element>>();
-        this.elementSet = new HashSet<Element>();
-        this.eventQueue = new EventQueue();
-        this.pendingInsertions = new HashSet<Element>();
-        this.pendingRemovals = new HashSet<Element>();
-        this.elements = new Element[0];
-        this.title = Jeda.getProgramName();
-        this.resetImp(width, height, toSet(features));
-        Jeda.addEventListener(this.eventQueue);
+        elementLock = new Object();
+        elementsByName = new HashMap<String, Set<Element>>();
+        elementSet = new HashSet<Element>();
+        eventQueue = new EventQueue();
+        pendingInsertions = new HashSet<Element>();
+        pendingRemovals = new HashSet<Element>();
+        elements = new Element[0];
+        title = Jeda.getProgramName();
+        resetImp(width, height, toSet(features));
+        Jeda.addEventListener(eventQueue);
         Jeda.addEventListener(new EventLoop(this));
     }
 
@@ -136,12 +134,12 @@ public class View {
      */
     public final void add(final Element element) {
         if (element != null) {
-            synchronized (this.elementLock) {
-                if (this.elementSet.contains(element)) {
-                    this.pendingRemovals.remove(element);
+            synchronized (elementLock) {
+                if (elementSet.contains(element)) {
+                    pendingRemovals.remove(element);
                 }
                 else {
-                    this.pendingInsertions.add(element);
+                    pendingInsertions.add(element);
                 }
             }
         }
@@ -149,7 +147,7 @@ public class View {
 
     public final void add(final Element... elements) {
         for (int i = 0; i < elements.length; ++i) {
-            this.add(elements[i]);
+            add(elements[i]);
         }
     }
 
@@ -162,7 +160,7 @@ public class View {
      * @since 2.0
      */
     public final void addEventListener(final Object listener) {
-        this.eventQueue.addListener(listener);
+        eventQueue.addListener(listener);
     }
 
     /**
@@ -171,7 +169,7 @@ public class View {
      * @since 2.0
      */
     public final void close() {
-        this.imp.close();
+        imp.close();
     }
 
     /**
@@ -183,7 +181,7 @@ public class View {
      * @since 2.0
      */
     public final Canvas getBackground() {
-        return this.background;
+        return background;
     }
 
     /**
@@ -196,13 +194,45 @@ public class View {
      * @since 2.0
      */
     public final Element getElement(final String name) {
-        final Set<Element> result = this.elementsByName.get(name);
+        final Set<Element> result = elementsByName.get(name);
         if (result == null) {
             return null;
         }
         else {
             for (final Element element : result) {
                 return element;
+            }
+
+            return null;
+        }
+    }
+
+    /**
+     * Returns an elements of the specified class with the specified name.
+     *
+     * @param <T> the type of the element to return
+     * @param clazz the class of the element to return
+     * @param name the name of the element to return
+     * @return an element of the specified class with the specified name
+     * @throws NullPointerException if <tt>clazz</tt> is <tt>null</tt>
+     *
+     * @see #add(ch.jeda.ui.Element)
+     * @see #getElements()
+     * @see #remove(ch.jeda.ui.Element)
+     * @since 2.0
+     */
+    @SuppressWarnings("unchecked")
+    public final <T extends Element> T getElement(final Class<T> clazz, final String name) {
+        final Set<Element> result = elementsByName.get(name);
+        if (result == null) {
+            return null;
+        }
+        else {
+            for (final Element element : result) {
+                if (clazz.isInstance(element)) {
+                    // Unchecked cast
+                    return (T) element;
+                }
             }
 
             return null;
@@ -220,7 +250,7 @@ public class View {
      * @since 2.0
      */
     public final Element[] getElements() {
-        return Arrays.copyOf(this.elements, this.elements.length);
+        return Arrays.copyOf(elements, elements.length);
     }
 
     /**
@@ -239,10 +269,10 @@ public class View {
     @SuppressWarnings("unchecked")
     public final <T extends Element> T[] getElements(final Class<T> clazz) {
         final List<T> result = new ArrayList<T>();
-        for (int i = 0; i < this.elements.length; ++i) {
-            if (clazz.isInstance(this.elements[i])) {
+        for (int i = 0; i < elements.length; ++i) {
+            if (clazz.isInstance(elements[i])) {
                 // Unchecked cast
-                result.add((T) this.elements[i]);
+                result.add((T) elements[i]);
             }
         }
 
@@ -259,7 +289,7 @@ public class View {
      * @since 2.0
      */
     public final Element[] getElements(final String name) {
-        final Set<Element> result = this.elementsByName.get(name);
+        final Set<Element> result = elementsByName.get(name);
         if (result == null) {
             return new Element[0];
         }
@@ -276,7 +306,7 @@ public class View {
      * @since 2.0
      */
     public final int getHeight() {
-        return this.imp.getCanvas().getHeight();
+        return imp.getCanvas().getHeight();
     }
 
     /**
@@ -288,7 +318,7 @@ public class View {
      * @since 2.0
      */
     public final String getTitle() {
-        return this.title;
+        return title;
     }
 
     /**
@@ -299,7 +329,7 @@ public class View {
      * @since 2.0
      */
     public final int getWidth() {
-        return this.imp.getCanvas().getWidth();
+        return imp.getCanvas().getWidth();
     }
 
     /**
@@ -318,7 +348,7 @@ public class View {
             throw new NullPointerException("feature");
         }
 
-        return this.imp.getFeatures().contains(feature);
+        return imp.getFeatures().contains(feature);
     }
 
     /**
@@ -332,12 +362,12 @@ public class View {
      */
     public final void remove(final Element element) {
         if (element != null) {
-            synchronized (this.elementLock) {
-                if (!this.elementSet.contains(element)) {
-                    this.pendingInsertions.remove(element);
+            synchronized (elementLock) {
+                if (!elementSet.contains(element)) {
+                    pendingInsertions.remove(element);
                 }
                 else {
-                    this.pendingRemovals.add(element);
+                    pendingRemovals.add(element);
                 }
             }
         }
@@ -345,7 +375,7 @@ public class View {
 
     public final void remove(final Element... elements) {
         for (int i = 0; i < elements.length; ++i) {
-            this.remove(elements[i]);
+            remove(elements[i]);
         }
     }
 
@@ -357,7 +387,7 @@ public class View {
      * @since 2.0
      */
     public final void removeEventListener(final Object listener) {
-        this.eventQueue.removeListener(listener);
+        eventQueue.removeListener(listener);
     }
 
     /**
@@ -377,7 +407,7 @@ public class View {
         }
 
         if (IMP_CHANGING_FEATURES.contains(feature)) {
-            final EnumSet<ViewFeature> featureSet = EnumSet.copyOf(this.imp.getFeatures());
+            final EnumSet<ViewFeature> featureSet = EnumSet.copyOf(imp.getFeatures());
             if (enabled) {
                 featureSet.add(feature);
             }
@@ -385,13 +415,13 @@ public class View {
                 featureSet.remove(feature);
             }
 
-            this.resetImp(this.getWidth(), this.getHeight(), featureSet);
+            resetImp(getWidth(), getHeight(), featureSet);
         }
         else if (feature == ViewFeature.SCROLLABLE) {
-            this.eventQueue.setDragEnabled(enabled);
+            eventQueue.setDragEnabled(enabled);
         }
         else {
-            this.imp.setFeature(feature, enabled);
+            imp.setFeature(feature, enabled);
         }
     }
 
@@ -410,7 +440,7 @@ public class View {
             throw new NullPointerException("mouseCursor");
         }
 
-        this.imp.setMouseCursor(mouseCursor);
+        imp.setMouseCursor(mouseCursor);
     }
 
     /**
@@ -428,7 +458,7 @@ public class View {
         }
 
         this.title = title;
-        this.imp.setTitle(title);
+        imp.setTitle(title);
     }
 
     /**
@@ -452,86 +482,86 @@ public class View {
     }
 
     void addName(final Element element, final String name) {
-        if (!this.elementsByName.containsKey(name)) {
-            this.elementsByName.put(name, new HashSet<Element>());
+        if (!elementsByName.containsKey(name)) {
+            elementsByName.put(name, new HashSet<Element>());
         }
 
-        this.elementsByName.get(name).add(element);
+        elementsByName.get(name).add(element);
     }
 
     void drawOrderChanged(final Element element) {
-        this.elements = null;
+        elements = null;
     }
 
     void removeName(final Element element, final String name) {
-        if (this.elementsByName.containsKey(name)) {
-            this.elementsByName.get(name).remove(element);
+        if (elementsByName.containsKey(name)) {
+            elementsByName.get(name).remove(element);
         }
     }
 
     void postEvent(final Event event) {
-        this.eventQueue.addEvent(event);
+        eventQueue.addEvent(event);
     }
 
     private void tick(final TickEvent event) {
-        if (this.imp.isVisible()) {
-            this.updateElements();
-            this.eventQueue.processEvents();
-            this.canvas.drawCanvas(0, 0, this.background);
-            for (int i = 0; i < this.elements.length; ++i) {
-                this.elements[i].draw(this.canvas);
+        if (imp.isVisible()) {
+            updateElements();
+            eventQueue.processEvents();
+            canvas.drawCanvas(0, 0, background);
+            for (int i = 0; i < elements.length; ++i) {
+                elements[i].draw(canvas);
             }
 
-            this.imp.update();
+            imp.update();
         }
     }
 
     private void resetImp(final int width, final int height, final EnumSet<ViewFeature> features) {
-        if (this.imp != null) {
-            this.imp.close();
+        if (imp != null) {
+            imp.close();
         }
 
-        this.imp = JedaInternal.createViewImp(width, height, features);
-        this.imp.setEventQueue(this.eventQueue);
-        this.imp.setTitle(this.title);
-        this.eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
+        imp = JedaInternal.createViewImp(width, height, features);
+        imp.setEventQueue(eventQueue);
+        imp.setTitle(title);
+        eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
 
-        this.canvas = new Canvas(this.getWidth(), this.getHeight());
-        this.canvas.setImp(this.imp.getCanvas());
+        canvas = new Canvas(getWidth(), getHeight());
+        canvas.setImp(imp.getCanvas());
 
-        this.background = new Canvas(this.getWidth(), this.getHeight());
-        this.background.setColor(Color.WHITE);
-        this.background.fill();
-        this.background.setColor(Color.BLACK);
+        background = new Canvas(getWidth(), getHeight());
+        background.setColor(Color.WHITE);
+        background.fill();
+        background.setColor(Color.BLACK);
 
     }
 
     private void updateElements() {
-        synchronized (this.elementLock) {
-            if (this.pendingInsertions.isEmpty() && this.pendingRemovals.isEmpty()) {
+        synchronized (elementLock) {
+            if (pendingInsertions.isEmpty() && pendingRemovals.isEmpty()) {
                 return;
             }
 
-            for (final Element element : this.pendingRemovals) {
-                this.elementSet.remove(element);
-                this.removeEventListener(element);
+            for (final Element element : pendingRemovals) {
+                elementSet.remove(element);
+                removeEventListener(element);
                 element.removeFromView(this);
-                this.removeName(element, element.getName());
-                this.elementRemoved(element);
+                removeName(element, element.getName());
+                elementRemoved(element);
             }
 
-            for (final Element element : this.pendingInsertions) {
-                this.elementSet.add(element);
-                this.addEventListener(element);
+            for (final Element element : pendingInsertions) {
+                elementSet.add(element);
+                addEventListener(element);
                 element.addToView(this);
-                this.addName(element, element.getName());
-                this.elementAdded(element);
+                addName(element, element.getName());
+                elementAdded(element);
             }
 
-            this.pendingInsertions.clear();
-            this.pendingRemovals.clear();
-            this.elements = this.elementSet.toArray(new Element[this.elementSet.size()]);
-            Arrays.sort(this.elements, Element.DRAW_ORDER);
+            pendingInsertions.clear();
+            pendingRemovals.clear();
+            elements = elementSet.toArray(new Element[elementSet.size()]);
+            Arrays.sort(elements, Element.DRAW_ORDER);
         }
     }
 
@@ -564,7 +594,7 @@ public class View {
 
         @Override
         public void onTick(final TickEvent event) {
-            this.view.tick(event);
+            view.tick(event);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,8 +29,8 @@ public final class TmxTerrain {
     private final Data properties;
 
     TmxTerrain(final Element element) {
-        this.name = element.getStringAttribute(Const.NAME);
-        this.properties = element.parsePropertiesChild();
+        name = element.getStringAttribute(Const.NAME);
+        properties = element.parsePropertiesChild();
     }
 
     /**
@@ -52,6 +52,6 @@ public final class TmxTerrain {
      * @since 2.0
      */
     public Data getProperties() {
-        return this.properties;
+        return properties;
     }
 }

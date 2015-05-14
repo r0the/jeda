@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -76,7 +76,7 @@ public final class KeyEvent extends Event {
      * @since 1.0
      */
     public final Key getKey() {
-        return this.key;
+        return key;
     }
 
     /**
@@ -87,7 +87,7 @@ public final class KeyEvent extends Event {
      * @since 1.0
      */
     public final char getKeyChar() {
-        return this.keyChar;
+        return keyChar;
     }
 
     /**
@@ -98,20 +98,20 @@ public final class KeyEvent extends Event {
      * @since 1.0
      */
     public final int getRepeatCount() {
-        return this.repeatCount;
+        return repeatCount;
     }
 
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
         result.append("KeyEvent(type=");
-        result.append(this.getType());
+        result.append(getType());
         result.append(", key=");
-        result.append(this.key);
+        result.append(key);
         result.append(", keyChar=");
-        result.append(this.keyChar);
+        result.append(keyChar);
         result.append(", repeatCount=");
-        result.append(this.repeatCount);
+        result.append(repeatCount);
         result.append(")");
         return result.toString();
     }

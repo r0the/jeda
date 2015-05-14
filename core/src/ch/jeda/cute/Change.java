@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -42,7 +42,7 @@ abstract class Change {
 
         @Override
         void apply(final CuteWorld renderer) {
-            renderer.doAddObject(this.object);
+            renderer.doAddObject(object);
         }
     }
 
@@ -56,7 +56,7 @@ abstract class Change {
 
         @Override
         void apply(final CuteWorld renderer) {
-            renderer.doRemoveObject(this.object);
+            renderer.doRemoveObject(object);
         }
     }
 
@@ -76,7 +76,7 @@ abstract class Change {
 
         @Override
         void apply(CuteWorld renderer) {
-            renderer.doSetBlock(this.x, this.y, this.z, this.block);
+            renderer.doSetBlock(x, y, z, block);
         }
     }
 }

@@ -45,7 +45,7 @@ public final class Circle extends Shape {
 
     @Override
     public void draw(final Canvas canvas) {
-        canvas.drawCircle(0, 0, this.radius);
+        canvas.drawCircle(0, 0, radius);
     }
 
     /**
@@ -56,7 +56,7 @@ public final class Circle extends Shape {
      * @since 2.0
      */
     public double getArea() {
-        return Math.PI * this.radius * this.radius;
+        return Math.PI * radius * radius;
     }
 
     /**
@@ -67,7 +67,7 @@ public final class Circle extends Shape {
      * @since 2.0
      */
     public double getCircumference() {
-        return 2.0 * Math.PI * this.radius;
+        return 2.0 * Math.PI * radius;
     }
 
     /**
@@ -78,7 +78,7 @@ public final class Circle extends Shape {
      * @since 2.0
      */
     public double getDiameter() {
-        return 2.0 * this.radius;
+        return 2.0 * radius;
     }
 
     /**
@@ -89,6 +89,6 @@ public final class Circle extends Shape {
      * @since 2.0
      */
     public double getRadius() {
-        return this.radius;
+        return radius;
     }
 }

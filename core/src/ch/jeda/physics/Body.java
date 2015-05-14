@@ -38,8 +38,8 @@ public class Body extends Element {
      * @since 2.0
      */
     public Body() {
-        this.image = null;
-        this.imp = new DetachedBodyImp();
+        image = null;
+        imp = new DetachedBodyImp();
     }
 
     /**
@@ -50,7 +50,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void addShape(final Shape shape) {
-        this.imp.addShape(shape);
+        imp.addShape(shape);
     }
 
     /**
@@ -62,8 +62,8 @@ public class Body extends Element {
      * @since 2.0
      */
     public void applyForce(final double f) {
-        final double angle = this.imp.getAngleRad();
-        this.applyForce(f * Math.cos(angle), f * Math.sin(angle));
+        final double angle = imp.getAngleRad();
+        applyForce(f * Math.cos(angle), f * Math.sin(angle));
     }
 
     /**
@@ -75,7 +75,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public void applyForce(final double fx, final double fy) {
-        this.imp.applyForce(fx, fy);
+        imp.applyForce(fx, fy);
     }
 
     /**
@@ -86,7 +86,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public void applyTorque(final double torque) {
-        this.imp.applyTorque(torque);
+        imp.applyTorque(torque);
     }
 
     /**
@@ -100,7 +100,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final double getAngleDeg() {
-        return Math.toDegrees(this.imp.getAngleRad());
+        return Math.toDegrees(imp.getAngleRad());
     }
 
     /**
@@ -114,7 +114,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final double getAngleRad() {
-        return this.imp.getAngleRad();
+        return imp.getAngleRad();
     }
 
     /**
@@ -126,7 +126,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final double getAngularDamping() {
-        return this.imp.getAngularDamping();
+        return imp.getAngularDamping();
     }
 
     /**
@@ -138,7 +138,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final double getAngularVelocity() {
-        return this.imp.getAngularVelocity();
+        return imp.getAngularVelocity();
     }
 
     /**
@@ -150,7 +150,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final double getDamping() {
-        return this.imp.getDamping();
+        return imp.getDamping();
     }
 
     /**
@@ -162,7 +162,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final double getDensity() {
-        return this.imp.getDensity();
+        return imp.getDensity();
     }
 
     /**
@@ -174,7 +174,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final double getFriction() {
-        return this.imp.getFriction();
+        return imp.getFriction();
     }
 
     /**
@@ -186,7 +186,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public Image getImage() {
-        return this.image;
+        return image;
     }
 
     /**
@@ -202,7 +202,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public double getMass() {
-        return this.imp.getMass();
+        return imp.getMass();
     }
 
     /**
@@ -213,7 +213,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final Shape[] getShapes() {
-        return this.imp.getShapes();
+        return imp.getShapes();
     }
 
     /**
@@ -226,7 +226,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final double getVx() {
-        return this.imp.getVx();
+        return imp.getVx();
     }
 
     /**
@@ -239,7 +239,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final double getVy() {
-        return this.imp.getVy();
+        return imp.getVy();
     }
 
     /**
@@ -252,7 +252,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final double getX() {
-        return this.imp.getX();
+        return imp.getX();
     }
 
     /**
@@ -265,7 +265,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final double getY() {
-        return this.imp.getY();
+        return imp.getY();
     }
 
     /**
@@ -279,7 +279,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public void setAngleDeg(final double angle) {
-        this.imp.setAngleRad(Math.toRadians(angle));
+        imp.setAngleRad(Math.toRadians(angle));
     }
 
     /**
@@ -293,7 +293,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public void setAngleRad(final double angle) {
-        this.imp.setAngleRad(angle);
+        imp.setAngleRad(angle);
     }
 
     /**
@@ -305,7 +305,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public void setAngularDamping(final double angularDamping) {
-        this.imp.setAngularDamping(angularDamping);
+        imp.setAngularDamping(angularDamping);
     }
 
     /**
@@ -317,7 +317,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public void setAngularVelocity(final double angularVelocity) {
-        this.imp.setAngularVelocity(angularVelocity);
+        imp.setAngularVelocity(angularVelocity);
     }
 
     /**
@@ -329,7 +329,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public void setDamping(final double damping) {
-        this.imp.setDamping(damping);
+        imp.setDamping(damping);
     }
 
     /**
@@ -341,7 +341,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public void setDensity(final double density) {
-        this.imp.setDensity(density);
+        imp.setDensity(density);
     }
 
     /**
@@ -353,7 +353,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public void setFriction(final double friction) {
-        this.imp.setFriction(friction);
+        imp.setFriction(friction);
     }
 
     /**
@@ -380,15 +380,15 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setPosition(final double x, final double y) {
-        final Physics physics = this.imp.getPhysics();
+        final Physics physics = imp.getPhysics();
         if (physics == null) {
-            this.imp.setPosition(x, y);
+            imp.setPosition(x, y);
         }
         else {
-            BodyImp detachedImp = new DetachedBodyImp(this.imp);
+            BodyImp detachedImp = new DetachedBodyImp(imp);
             detachedImp.setPosition(x, y);
-            this.imp.destroy();
-            this.imp = new PhysicsBodyImp(physics, this, detachedImp);
+            imp.destroy();
+            imp = new PhysicsBodyImp(physics, this, detachedImp);
         }
     }
 
@@ -400,7 +400,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setRotationFixed(final boolean fixed) {
-        this.imp.setRotationFixed(fixed);
+        imp.setRotationFixed(fixed);
     }
 
     /**
@@ -411,7 +411,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setType(final BodyType type) {
-        this.imp.setType(type);
+        imp.setType(type);
     }
 
     /**
@@ -423,7 +423,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setVelocity(final double vx, final double vy) {
-        this.imp.setVelocity(vx, vy);
+        imp.setVelocity(vx, vy);
     }
 
     /**
@@ -448,14 +448,14 @@ public class Body extends Element {
 
     @Override
     protected final void draw(final Canvas canvas) {
-        canvas.setRotationRad(this.getAngleRad());
-        canvas.setTranslation(this.getX(), this.getY());
-        if (this.image != null) {
-            canvas.drawImage(0, 0, this.image, Alignment.CENTER);
+        canvas.setRotationRad(getAngleRad());
+        canvas.setTranslation(getX(), getY());
+        if (image != null) {
+            canvas.drawImage(0, 0, image, Alignment.CENTER);
         }
 
-        this.drawDecoration(canvas);
-        this.imp.drawOverlay(canvas);
+        drawDecoration(canvas);
+        imp.drawOverlay(canvas);
         canvas.resetTransformations();
     }
 
@@ -480,16 +480,16 @@ public class Body extends Element {
     }
 
     boolean setPhysics(final Physics physics) {
-        if (this.imp.belongsTo(physics)) {
+        if (imp.belongsTo(physics)) {
             return false;
         }
 
-        final BodyImp oldImp = this.imp;
+        final BodyImp oldImp = imp;
         if (physics == null) {
-            this.imp = new DetachedBodyImp(oldImp);
+            imp = new DetachedBodyImp(oldImp);
         }
         else {
-            this.imp = new PhysicsBodyImp(physics, this, oldImp);
+            imp = new PhysicsBodyImp(physics, this, oldImp);
         }
 
         oldImp.destroy();
@@ -497,22 +497,22 @@ public class Body extends Element {
     }
 
     void internalBeginContact(final Body other) {
-        if (this.imp.getPhysics() != null) {
-            this.beginContact(other);
+        if (imp.getPhysics() != null) {
+            beginContact(other);
         }
     }
 
     void internalEndContact(final Body other) {
-        if (this.imp.getPhysics() != null) {
-            this.endContact(other);
+        if (imp.getPhysics() != null) {
+            endContact(other);
         }
     }
 
     BodyImp getImp() {
-        return this.imp;
+        return imp;
     }
 
     Physics getPhysics() {
-        return this.imp.getPhysics();
+        return imp.getPhysics();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -45,18 +45,18 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
     private final List<Clip> soundStreams;
 
     JavaAudioManagerImp() {
-        this.soundMap = new HashMap<String, SoundData>();
-        this.soundStreams = new ArrayList<Clip>();
+        soundMap = new HashMap<String, SoundData>();
+        soundStreams = new ArrayList<Clip>();
     }
 
     @Override
     public boolean isSoundAvailable(final String path) {
-        return this.soundMap.containsKey(path);
+        return soundMap.containsKey(path);
     }
 
     @Override
     public void loadSound(final String path) {
-        if (this.soundMap.containsKey(path)) {
+        if (soundMap.containsKey(path)) {
             return;
         }
 
@@ -65,7 +65,7 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
             final AudioInputStream in = AudioSystem.getAudioInputStream(
                 new BufferedInputStream(ResourceManager.openInputStream(path)));
             AudioSystem.write(in, AudioFileFormat.Type.WAVE, buffer);
-            this.soundMap.put(path, new SoundData(buffer.toByteArray()));
+            soundMap.put(path, new SoundData(buffer.toByteArray()));
         }
         catch (final UnsupportedAudioFileException ex) {
             Log.err(Message.AUDIO_ERROR_UNSUPPORTED_FILE_FORMAT, path);
@@ -77,7 +77,7 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
 
     @Override
     public void playSound(final String path) {
-        final SoundData soundData = this.soundMap.get(path);
+        final SoundData soundData = soundMap.get(path);
         if (soundData == null) {
             return;
         }
@@ -86,9 +86,9 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
             final AudioInputStream in = AudioSystem.getAudioInputStream(soundData.openStream());
             final AudioFormat format = in.getFormat();
             final DataLine.Info info = new DataLine.Info(Clip.class, format);
-            final Clip clip = this.startClip(info, in);
+            final Clip clip = startClip(info, in);
             if (clip != null) {
-                this.soundStreams.add(clip);
+                soundStreams.add(clip);
             }
         }
         catch (final UnsupportedAudioFileException ex) {
@@ -101,15 +101,15 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
 
     @Override
     public void pausePlayback() {
-        if (this.musicPlayer != null) {
-            this.musicPlayer.pause();
+        if (musicPlayer != null) {
+            musicPlayer.pause();
         }
     }
 
     @Override
     public void resumePlayback() {
-        if (this.musicPlayer != null) {
-            this.musicPlayer.resume();
+        if (musicPlayer != null) {
+            musicPlayer.resume();
         }
     }
 
@@ -120,24 +120,24 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
 
     @Override
     public boolean startPlayback(final String path) {
-        if (this.musicPlayer != null) {
+        if (musicPlayer != null) {
             return false;
         }
 
-        this.musicPlayer = this.createAudioPlayer(path);
-        if (this.musicPlayer == null) {
+        musicPlayer = createAudioPlayer(path);
+        if (musicPlayer == null) {
             return false;
         }
         else {
-            this.musicPlayer.start();
+            musicPlayer.start();
             return true;
         }
     }
 
     @Override
     public void stopPlayback() {
-        this.musicPlayer.stop();
-        this.musicPlayer = null;
+        musicPlayer.stop();
+        musicPlayer = null;
     }
 
     @Override
@@ -150,13 +150,14 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
                     event.getLine().close();
                 }
             }).start();
-            this.soundStreams.remove(event.getLine());
+            // TODO: Fix
+            soundStreams.remove(event.getLine());
         }
     }
 
     void playbackStopped() {
-        this.musicPlayer = null;
-        this.callback.playbackStopped();
+        musicPlayer = null;
+        callback.playbackStopped();
     }
 
     private AudioPlayer createAudioPlayer(final String path) {
@@ -181,9 +182,9 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
             }
             catch (final LineUnavailableException ex) {
                 // close oldest clip
-                if (!this.soundStreams.isEmpty()) {
-                    final Clip clip = this.soundStreams.get(0);
-                    this.soundStreams.remove(0);
+                if (!soundStreams.isEmpty()) {
+                    final Clip clip = soundStreams.get(0);
+                    soundStreams.remove(0);
                     clip.stop();
                     clip.close();
                 }

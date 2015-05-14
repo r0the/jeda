@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,36 +30,36 @@ class Mp3AudioPlayer extends AudioPlayer {
 
     Mp3AudioPlayer(final JavaAudioManagerImp audioManager, final String path) {
         super(audioManager);
-        this.decoder = new Decoder();
+        decoder = new Decoder();
         this.path = path;
     }
 
     @Override
     public void pause() {
         super.pause();
-        this.decoder.setPaused(true);
+        decoder.setPaused(true);
     }
 
     @Override
     public void resume() {
         super.resume();
-        this.decoder.setPaused(false);
+        decoder.setPaused(false);
     }
 
     @Override
     public void stop() {
         super.stop();
-        this.decoder.requestStop();
+        decoder.requestStop();
     }
 
     @Override
     protected void playLoop() {
         try {
-            final BufferedInputStream bin = new BufferedInputStream(ResourceManager.openInputStream(this.path), STREAM_BUFFER_SIZE);
-            this.decoder.play(this.path, bin);
+            final BufferedInputStream bin = new BufferedInputStream(ResourceManager.openInputStream(path), STREAM_BUFFER_SIZE);
+            decoder.play(path, bin);
         }
         catch (final IOException ex) {
-            Log.err(ex, Message.AUDIO_ERROR_READ, this.path);
+            Log.err(ex, Message.AUDIO_ERROR_READ, path);
         }
     }
 }

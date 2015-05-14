@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,13 +23,13 @@ class AndroidTypefaceImp implements TypefaceImp {
 
     final Typeface imp;
 
-    public AndroidTypefaceImp(final Typeface imp) {
+    AndroidTypefaceImp(final Typeface imp) {
         this.imp = imp;
     }
 
     @Override
     public String getName() {
-        return this.imp.toString();
+        return imp.toString();
     }
 
     public boolean isAvailable() {

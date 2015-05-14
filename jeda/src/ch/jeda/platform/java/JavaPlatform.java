@@ -42,8 +42,8 @@ class JavaPlatform implements Platform {
 
     public JavaPlatform(final Platform.Callback callback) {
         setLookAndFeel();
-        this.audioManager = new JavaAudioManagerImp();
-        this.windowManager = new WindowManager(callback);
+        audioManager = new JavaAudioManagerImp();
+        windowManager = new WindowManager(callback);
     }
 
     @Override
@@ -73,7 +73,7 @@ class JavaPlatform implements Platform {
 
     @Override
     public AudioManagerImp getAudioManagerImp() {
-        return this.audioManager;
+        return audioManager;
     }
 
     @Override
@@ -103,7 +103,7 @@ class JavaPlatform implements Platform {
 
     @Override
     public void log(final LogLevel logLevel, final String message) {
-        this.windowManager.log(logLevel, message);
+        windowManager.log(logLevel, message);
     }
 
     @Override
@@ -123,22 +123,22 @@ class JavaPlatform implements Platform {
 
     @Override
     public void showInputRequest(final InputRequest inputRequest) {
-        this.windowManager.showInputRequest(inputRequest);
+        windowManager.showInputRequest(inputRequest);
     }
 
     @Override
     public void showSelectionRequest(final SelectionRequest selectionRequest) {
-        this.windowManager.showSelectionRequest(selectionRequest);
+        windowManager.showSelectionRequest(selectionRequest);
     }
 
     @Override
     public void showViewRequest(final ViewRequest viewRequest) {
-        this.windowManager.showViewRequest(viewRequest);
+        windowManager.showViewRequest(viewRequest);
     }
 
     @Override
     public void shutdown() {
-        this.windowManager.shutdown();
+        windowManager.shutdown();
     }
 
     private static void setLookAndFeel() {

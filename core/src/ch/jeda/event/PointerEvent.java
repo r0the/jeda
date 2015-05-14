@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -68,7 +68,7 @@ public final class PointerEvent extends Event {
      * @since 1.0
      */
     public final int getPointerId() {
-        return this.pointerId;
+        return pointerId;
     }
 
     /**
@@ -79,7 +79,7 @@ public final class PointerEvent extends Event {
      * @since 1.0
      */
     public final int getX() {
-        return this.x;
+        return x;
     }
 
     /**
@@ -90,20 +90,20 @@ public final class PointerEvent extends Event {
      * @since 1.0
      */
     public final int getY() {
-        return this.y;
+        return y;
     }
 
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
         result.append("PointerEvent(type=");
-        result.append(this.getType());
+        result.append(getType());
         result.append(", pointerId=");
-        result.append(this.pointerId);
+        result.append(pointerId);
         result.append(", x=");
-        result.append(this.x);
+        result.append(x);
         result.append(", y=");
-        result.append(this.y);
+        result.append(y);
         result.append(")");
         return result.toString();
     }

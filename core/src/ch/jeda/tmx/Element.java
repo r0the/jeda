@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -39,23 +39,23 @@ final class Element {
             this.attributes.writeString(attributes.getLocalName(i), attributes.getValue(i));
         }
 
-        this.children = new ArrayList<Element>();
-        this.childrenByName = new HashMap<String, List<Element>>();
+        children = new ArrayList<Element>();
+        childrenByName = new HashMap<String, List<Element>>();
         this.localName = localName;
     }
 
     void addChild(final Element element) {
         final String name = element.getLocalName();
-        if (!this.childrenByName.containsKey(name)) {
-            this.childrenByName.put(name, new ArrayList<Element>());
+        if (!childrenByName.containsKey(name)) {
+            childrenByName.put(name, new ArrayList<Element>());
         }
 
-        this.children.add(element);
-        this.childrenByName.get(name).add(element);
+        children.add(element);
+        childrenByName.get(name).add(element);
     }
 
     boolean getBooleanAttribute(final String name, final boolean defaultValue) {
-        final String value = this.attributes.readString(name);
+        final String value = attributes.readString(name);
         if (value == null) {
             return defaultValue;
         }
@@ -65,7 +65,7 @@ final class Element {
     }
 
     Color getColorAttribute(final String name, final Color defaultValue) {
-        final String value = this.attributes.readString(name);
+        final String value = attributes.readString(name);
         if (value == null) {
             return defaultValue;
         }
@@ -79,24 +79,24 @@ final class Element {
     }
 
     double getDoubleAttribute(final String name) {
-        return this.attributes.readDouble(name);
+        return attributes.readDouble(name);
     }
 
     double getDoubleAttribute(final String name, final double defaultValue) {
-        return this.attributes.readDouble(name, defaultValue);
+        return attributes.readDouble(name, defaultValue);
     }
 
     int getIntAttribute(final String name) {
-        return this.attributes.readInt(name);
+        return attributes.readInt(name);
     }
 
     String getStringAttribute(final String name) {
-        return this.attributes.readString(name);
+        return attributes.readString(name);
     }
 
     Element getChild(final String name) {
-        if (this.childrenByName.containsKey(name)) {
-            return Collections.unmodifiableList(this.childrenByName.get(name)).get(0);
+        if (childrenByName.containsKey(name)) {
+            return Collections.unmodifiableList(childrenByName.get(name)).get(0);
         }
         else {
             return null;
@@ -104,12 +104,12 @@ final class Element {
     }
 
     List<Element> getChildren() {
-        return Collections.unmodifiableList(this.children);
+        return Collections.unmodifiableList(children);
     }
 
     List<Element> getChildren(final String name) {
-        if (this.childrenByName.containsKey(name)) {
-            return Collections.unmodifiableList(this.childrenByName.get(name));
+        if (childrenByName.containsKey(name)) {
+            return Collections.unmodifiableList(childrenByName.get(name));
         }
         else {
             // Unchecked conversion
@@ -118,23 +118,23 @@ final class Element {
     }
 
     public String getContent() {
-        return this.content;
+        return content;
     }
 
     String getLocalName() {
-        return this.localName;
+        return localName;
     }
 
     boolean hasAttribute(final String name) {
-        return this.attributes.hasValue(name);
+        return attributes.hasValue(name);
     }
 
     boolean hasChild(final String name) {
-        return this.childrenByName.containsKey(name);
+        return childrenByName.containsKey(name);
     }
 
     boolean is(final String name) {
-        return this.localName.equals(name);
+        return localName.equals(name);
     }
 
     /**
@@ -144,7 +144,7 @@ final class Element {
      */
     Data parsePropertiesChild() {
         final Data result = new Data();
-        final Element propertiesElement = this.getChild(Const.PROPERTIES);
+        final Element propertiesElement = getChild(Const.PROPERTIES);
         if (propertiesElement != null) {
             for (final Element child : propertiesElement.getChildren(Const.PROPERTY)) {
                 result.writeString(child.getStringAttribute(Const.NAME), child.getStringAttribute(Const.VALUE));

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,15 +32,15 @@ class LogWindow extends AutoCloseWindow {
 
     LogWindow(final WindowManager manager) {
         super(manager);
-        this.initComponents();
-        this.setTitle("Jeda Console");
-        this.closeButton.setText("Schliessen");
-        this.setDefaultButton(this.closeButton);
-        this.init();
-        this.errorAttributes = new SimpleAttributeSet();
-        StyleConstants.setForeground(this.errorAttributes, Color.RED);
-        this.infoAttributes = new SimpleAttributeSet();
-        StyleConstants.setForeground(this.infoAttributes, Color.BLACK);
+        initComponents();
+        setTitle("Jeda Console");
+        closeButton.setText("Schliessen");
+        setDefaultButton(closeButton);
+        init();
+        errorAttributes = new SimpleAttributeSet();
+        StyleConstants.setForeground(errorAttributes, Color.RED);
+        infoAttributes = new SimpleAttributeSet();
+        StyleConstants.setForeground(infoAttributes, Color.BLACK);
     }
 
     void log(final LogLevel logLevel, final String message) {
@@ -50,33 +50,33 @@ class LogWindow extends AutoCloseWindow {
                 break;
             case ERROR:
                 System.err.print(message);
-                this.append(message, this.errorAttributes);
+                append(message, errorAttributes);
                 break;
             case INFO:
                 System.out.print(message);
-                this.append(message, this.infoAttributes);
+                append(message, infoAttributes);
                 break;
         }
     }
 
     private void append(final String content, final AttributeSet textAttributes) {
         try {
-            final Document document = this.logTextArea.getDocument();
+            final Document document = logTextArea.getDocument();
             document.insertString(document.getLength(), content, textAttributes);
         }
         catch (final BadLocationException ex) {
             // ignore
         }
 
-        this.logTextArea.setCaretPosition(this.logTextArea.getDocument().getLength());
-        if (!this.isVisible()) {
-            this.setVisible(true);
+        logTextArea.setCaretPosition(logTextArea.getDocument().getLength());
+        if (!isVisible()) {
+            setVisible(true);
         }
     }
 
     private void changeFontSize(float delta) {
-        final Font font = this.logTextArea.getFont();
-        this.logTextArea.setFont(font.deriveFont(font.getSize() + delta));
+        final Font font = logTextArea.getFont();
+        logTextArea.setFont(font.deriveFont(font.getSize() + delta));
     }
 
     @SuppressWarnings("unchecked")
@@ -151,15 +151,15 @@ class LogWindow extends AutoCloseWindow {
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        this.cancel();
+        cancel();
     }//GEN-LAST:event_closeButtonActionPerformed
 
     private void increaseSizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_increaseSizeButtonActionPerformed
-        this.changeFontSize(+3);
+        changeFontSize(+3);
     }//GEN-LAST:event_increaseSizeButtonActionPerformed
 
     private void decreaseSizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decreaseSizeButtonActionPerformed
-        this.changeFontSize(-3);
+        changeFontSize(-3);
     }//GEN-LAST:event_decreaseSizeButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;

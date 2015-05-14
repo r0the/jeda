@@ -46,8 +46,8 @@ class ResourceManager {
 
     Class<?>[] loadClasses() throws Exception {
         final List<Class<?>> result = new ArrayList();
-        String apkName = this.activity.getApplication().getPackageManager().
-            getApplicationInfo(this.activity.getApplication().getPackageName(), 0).sourceDir;
+        String apkName = activity.getApplication().getPackageManager().
+            getApplicationInfo(activity.getApplication().getPackageName(), 0).sourceDir;
 
         final DexFile dx = new DexFile(apkName);
         final Enumeration<String> e = dx.entries();
@@ -70,7 +70,7 @@ class ResourceManager {
     }
 
     ImageImp openImage(final String path) {
-        final InputStream in = this.openInputStream(path);
+        final InputStream in = openInputStream(path);
         if (in == null) {
             return null;
         }
@@ -93,7 +93,7 @@ class ResourceManager {
     TypefaceImp openTypeface(final String path) {
         try {
             if (path.startsWith(NEW_RESOURCE_PREFIX)) {
-                return new AndroidTypefaceImp(Typeface.createFromAsset(this.activity.getResources().getAssets(),
+                return new AndroidTypefaceImp(Typeface.createFromAsset(activity.getResources().getAssets(),
                                                                        path.substring(NEW_RESOURCE_PREFIX.length())));
 
             }
@@ -111,13 +111,13 @@ class ResourceManager {
             throw new NullPointerException("filePath");
         }
         else if (path.startsWith(NEW_RESOURCE_PREFIX)) {
-            return this.openResourceInputStream(path, NEW_RESOURCE_PREFIX.length());
+            return openResourceInputStream(path, NEW_RESOURCE_PREFIX.length());
         }
         else if (path.startsWith(HTTP_PREFIX)) {
-            return this.openRemoteInputStream(path);
+            return openRemoteInputStream(path);
         }
         else {
-            return this.openFileInputStream(path);
+            return openFileInputStream(path);
         }
     }
 

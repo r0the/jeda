@@ -45,25 +45,25 @@ class SelectionDialogFragment extends DialogFragment {
 
     SelectionDialogFragment(final SelectionRequest request) {
         this.request = request;
-        this.setShowsDialog(false);
+        setShowsDialog(false);
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        final ListView result = new ListView(this.getActivity());
-        this.listAdapter = new ListAdapterImp(this.getActivity());
-        this.listAdapter.setItems(this.request.getDisplayItems());
-        result.setAdapter(this.listAdapter);
+        final ListView result = new ListView(getActivity());
+        listAdapter = new ListAdapterImp(getActivity());
+        listAdapter.setItems(request.getDisplayItems());
+        result.setAdapter(listAdapter);
         result.setOnItemClickListener(new OnItemClickListenerImp(this));
-        this.selectedItemPosition = -1;
+        selectedItemPosition = -1;
         return result;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        this.request.setResult(this.selectedItemPosition);
+        request.setResult(selectedItemPosition);
     }
 
     private static class ListAdapterImp implements ListAdapter {
@@ -72,6 +72,12 @@ class SelectionDialogFragment extends DialogFragment {
         private final Context context;
         private final List<String> items;
         private final Set<DataSetObserver> observers;
+
+        ListAdapterImp(final Context context) {
+            this.context = context;
+            observers = new HashSet();
+            items = new ArrayList();
+        }
 
         @Override
         public boolean areAllItemsEnabled() {
@@ -85,22 +91,22 @@ class SelectionDialogFragment extends DialogFragment {
 
         @Override
         public void registerDataSetObserver(final DataSetObserver observer) {
-            this.observers.add(observer);
+            observers.add(observer);
         }
 
         @Override
         public void unregisterDataSetObserver(final DataSetObserver observer) {
-            this.observers.remove(observer);
+            observers.remove(observer);
         }
 
         @Override
         public int getCount() {
-            return this.items.size();
+            return items.size();
         }
 
         @Override
         public Object getItem(final int position) {
-            return this.items.get(position);
+            return items.get(position);
         }
 
         @Override
@@ -117,10 +123,10 @@ class SelectionDialogFragment extends DialogFragment {
         public View getView(final int position, final View convertView, final ViewGroup parent) {
             View result = convertView;
             if (result == null) {
-                result = this.createRowView();
+                result = createRowView();
             }
 
-            ((TextView) result.findViewById(TEXT_VIEW_ID)).setText(this.items.get(position));
+            ((TextView) result.findViewById(TEXT_VIEW_ID)).setText(items.get(position));
             return result;
         }
 
@@ -136,27 +142,21 @@ class SelectionDialogFragment extends DialogFragment {
 
         @Override
         public boolean isEmpty() {
-            return this.items.isEmpty();
-        }
-
-        ListAdapterImp(final Context context) {
-            this.context = context;
-            this.observers = new HashSet();
-            this.items = new ArrayList();
+            return items.isEmpty();
         }
 
         void setItems(final Collection<String> items) {
-            this.items.clear();
-            this.items.addAll(items);
-            for (final DataSetObserver observer : this.observers) {
+            items.clear();
+            items.addAll(items);
+            for (final DataSetObserver observer : observers) {
                 observer.onChanged();
             }
         }
 
         private View createRowView() {
-            final LinearLayout result = new LinearLayout(this.context);
+            final LinearLayout result = new LinearLayout(context);
             result.setOrientation(LinearLayout.HORIZONTAL);
-            final TextView textView = new TextView(this.context);
+            final TextView textView = new TextView(context);
             textView.setId(TEXT_VIEW_ID);
             textView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -179,8 +179,8 @@ class SelectionDialogFragment extends DialogFragment {
 
         @Override
         public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
-            this.selectionView.selectedItemPosition = position;
-            this.selectionView.dismiss();
+            selectionView.selectedItemPosition = position;
+            selectionView.dismiss();
         }
     }
 }

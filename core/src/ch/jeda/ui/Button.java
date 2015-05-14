@@ -91,19 +91,19 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
      */
     public Button(final int x, final int y, final Alignment alignment, final String text) {
         super(x, y, alignment);
-        this.key = Key.UNDEFINED;
-        this.style = Theme.getDefault().getDefaultButtonStyle();
+        key = Key.UNDEFINED;
+        style = Theme.getDefault().getDefaultButtonStyle();
         this.text = text;
     }
 
     @Override
     public final boolean contains(final int x, final int y) {
-        return this.style.contains(this, x, y);
+        return style.contains(this, x, y);
     }
 
     @Override
     public final int getHeight() {
-        return this.style.getHeight(this);
+        return style.getHeight(this);
     }
 
     /**
@@ -115,7 +115,7 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
      * @since 1.3
      */
     public Key getKey() {
-        return this.key;
+        return key;
     }
 
     /**
@@ -127,7 +127,7 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
      * @since 1.3
      */
     public final ButtonStyle getStyle() {
-        return this.style;
+        return style;
     }
 
     /**
@@ -138,12 +138,12 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
      * @since 1.0
      */
     public final String getText() {
-        return this.text;
+        return text;
     }
 
     @Override
     public final int getWidth() {
-        return this.style.getWidth(this);
+        return style.getWidth(this);
     }
 
     /**
@@ -154,57 +154,57 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
      * @since 1.3
      */
     public final boolean isPressed() {
-        return this.keyPressed || this.pointerId != null;
+        return keyPressed || pointerId != null;
     }
 
     @Override
     public void onKeyDown(final KeyEvent event) {
-        if (Key.UNDEFINED != this.key && event.getKey() == this.key && event.getSource() != this && !this.keyPressed) {
-            this.keyPressed = true;
-            this.select();
+        if (Key.UNDEFINED != key && event.getKey() == key && event.getSource() != this && !keyPressed) {
+            keyPressed = true;
+            select();
             event.consume();
         }
     }
 
     @Override
     public void onKeyUp(final KeyEvent event) {
-        if (Key.UNDEFINED != this.key && event.getKey() == this.key && event.getSource() != this && this.keyPressed) {
-            this.keyPressed = false;
-            this.clicked();
+        if (Key.UNDEFINED != key && event.getKey() == key && event.getSource() != this && keyPressed) {
+            keyPressed = false;
+            clicked();
             event.consume();
         }
     }
 
     @Override
     public void onPointerDown(final PointerEvent event) {
-        if (this.pointerId == null && contains(event.getX(), event.getY())) {
-            this.pointerId = event.getPointerId();
-            this.select();
-            this.sendKeyEvent(EventType.KEY_DOWN);
+        if (pointerId == null && contains(event.getX(), event.getY())) {
+            pointerId = event.getPointerId();
+            select();
+            sendKeyEvent(EventType.KEY_DOWN);
             event.consume();
         }
     }
 
     @Override
     public void onPointerMoved(final PointerEvent event) {
-        if (this.pointerId != null && event.getPointerId() == this.pointerId) {
+        if (pointerId != null && event.getPointerId() == pointerId) {
             if (contains(event.getX(), event.getY())) {
                 event.consume();
             }
             else {
-                this.pointerId = null;
-                this.sendKeyEvent(EventType.KEY_UP);
+                pointerId = null;
+                sendKeyEvent(EventType.KEY_UP);
             }
         }
     }
 
     @Override
     public void onPointerUp(final PointerEvent event) {
-        if (this.pointerId != null && event.getPointerId() == this.pointerId) {
-            this.pointerId = null;
-            this.sendKeyEvent(EventType.KEY_UP);
-            if (this.contains(event.getX(), event.getY())) {
-                this.clicked();
+        if (pointerId != null && event.getPointerId() == pointerId) {
+            pointerId = null;
+            sendKeyEvent(EventType.KEY_UP);
+            if (contains(event.getX(), event.getY())) {
+                clicked();
                 event.consume();
             }
         }
@@ -263,18 +263,18 @@ public class Button extends Widget implements KeyDownListener, KeyUpListener, Po
      * @since 1.3
      */
     protected void clicked() {
-        this.triggerAction(this.text);
+        triggerAction(text);
     }
 
     @Override
     protected void draw(final Canvas canvas) {
-        this.style.draw(this, canvas);
+        style.draw(this, canvas);
     }
 
     private void sendKeyEvent(final EventType eventType) {
-        final View view = this.getView();
-        if (this.key != Key.UNDEFINED && view != null) {
-            view.postEvent(new KeyEvent(this, eventType, this.key));
+        final View view = getView();
+        if (key != Key.UNDEFINED && view != null) {
+            view.postEvent(new KeyEvent(this, eventType, key));
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,33 +26,33 @@ class Box {
     private CuteObject[] objectsArray;
 
     Box() {
-        this.block = Block.EMPTY;
-        this.objects = new ArrayList<CuteObject>();
+        block = Block.EMPTY;
+        objects = new ArrayList<CuteObject>();
     }
 
     void addObject(final CuteObject object) {
-        this.objects.add(object);
-        this.objectsArray = null;
+        objects.add(object);
+        objectsArray = null;
     }
 
     Block getBlock() {
-        return this.block;
+        return block;
     }
 
     List<CuteObject> getObjects() {
-        return this.objects;
+        return objects;
     }
 
     CuteObject[] getObjectsArray() {
-        if (this.objectsArray == null) {
-            this.objectsArray = ((CuteObject[]) this.objects.toArray(new CuteObject[this.objects.size()]));
+        if (objectsArray == null) {
+            objectsArray = ((CuteObject[]) objects.toArray(new CuteObject[objects.size()]));
         }
-        return this.objectsArray;
+        return objectsArray;
     }
 
     void removeObject(final CuteObject object) {
-        this.objects.remove(object);
-        this.objectsArray = null;
+        objects.remove(object);
+        objectsArray = null;
     }
 
     void setBlock(final Block block) {

@@ -51,7 +51,7 @@ public final class Polygon extends Shape {
     @Override
     public void draw(final Canvas canvas) {
         canvas.setColor(Color.RED);
-        canvas.drawPolygon(this.vertices);
+        canvas.drawPolygon(vertices);
     }
 
     /**
@@ -62,7 +62,7 @@ public final class Polygon extends Shape {
      * @since 2.0
      */
     public int getVertexCount() {
-        return this.vertices.length / 2;
+        return vertices.length / 2;
     }
 
     /**
@@ -75,7 +75,7 @@ public final class Polygon extends Shape {
      * @since 2.0
      */
     public double getVertexX(int i) {
-        return this.vertices[i / 2];
+        return vertices[i / 2];
     }
 
     /**
@@ -88,6 +88,6 @@ public final class Polygon extends Shape {
      * @since 2.0
      */
     public double getVertexY(int i) {
-        return this.vertices[i / 2 + 1];
+        return vertices[i / 2 + 1];
     }
 }

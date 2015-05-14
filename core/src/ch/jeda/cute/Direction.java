@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -35,11 +35,11 @@ public enum Direction {
     }
 
     public int getDx() {
-        return this.dx;
+        return dx;
     }
 
     public int getDy() {
-        return this.dy;
+        return dy;
     }
 
     public Direction getOpposite() {

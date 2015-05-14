@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -39,27 +39,27 @@ final class TmxTileSet {
     private final int tileWidth;
 
     TmxTileSet(final TmxMap map, final Element element, final XmlReader reader) {
-        this.firstGlobalId = element.getIntAttribute(Const.FIRSTGID);
+        firstGlobalId = element.getIntAttribute(Const.FIRSTGID);
         this.map = map;
-        this.name = element.getStringAttribute(Const.NAME);
-        this.tileHeight = element.getIntAttribute(Const.TILEHEIGHT);
-        this.tileWidth = element.getIntAttribute(Const.TILEWIDTH);
+        name = element.getStringAttribute(Const.NAME);
+        tileHeight = element.getIntAttribute(Const.TILEHEIGHT);
+        tileWidth = element.getIntAttribute(Const.TILEWIDTH);
 
         // Read tile offset
         final Element tileOffsetElement = element.getChild("tileoffset");
         if (tileOffsetElement == null) {
-            this.tileOffsetX = 0;
-            this.tileOffsetY = 0;
+            tileOffsetX = 0;
+            tileOffsetY = 0;
         }
         else {
-            this.tileOffsetX = tileOffsetElement.getIntAttribute(Const.X);
-            this.tileOffsetY = tileOffsetElement.getIntAttribute(Const.Y);
+            tileOffsetX = tileOffsetElement.getIntAttribute(Const.X);
+            tileOffsetY = tileOffsetElement.getIntAttribute(Const.Y);
         }
 
         // Read properties
-        this.properties = element.parsePropertiesChild();
+        properties = element.parsePropertiesChild();
         // Read image
-        this.image = reader.loadImageChild(element);
+        image = reader.loadImageChild(element);
 
         // Read terrain types
         List<TmxTerrain> terrainTypesList = new ArrayList<TmxTerrain>();
@@ -70,7 +70,7 @@ final class TmxTileSet {
             }
         }
 
-        this.terrainTypes = terrainTypesList.toArray(new TmxTerrain[terrainTypesList.size()]);
+        terrainTypes = terrainTypesList.toArray(new TmxTerrain[terrainTypesList.size()]);
         // Read additional tile information
         final Map<Integer, Element> tileElements = new HashMap<Integer, Element>();
         for (final Element tileElement : element.getChildren(Const.TILE)) {
@@ -79,7 +79,7 @@ final class TmxTileSet {
         }
 
         // Create all tiles
-        this.tiles = new ArrayList<TmxTile>();
+        tiles = new ArrayList<TmxTile>();
 
         final int spacing = element.getIntAttribute(Const.SPACING);
         final int margin = element.getIntAttribute(Const.MARGIN);
@@ -87,41 +87,41 @@ final class TmxTileSet {
         int nextX = margin;
         int nextY = margin;
 
-        while (nextY + this.tileHeight + margin <= this.image.getHeight()) {
-            final Image tileImage = this.image.subImage(nextX, nextY, this.tileWidth, this.tileHeight);
+        while (nextY + tileHeight + margin <= image.getHeight()) {
+            final Image tileImage = image.subImage(nextX, nextY, tileWidth, tileHeight);
             final int tileId = tiles.size();
             tiles.add(new TmxTile(map, this, tileId, tileImage, tileElements.get(tileId)));
-            nextX += this.tileWidth + spacing;
-            if (nextX + this.tileWidth + margin > this.image.getWidth()) {
+            nextX += tileWidth + spacing;
+            if (nextX + tileWidth + margin > image.getWidth()) {
                 nextX = margin;
-                nextY += this.tileHeight + spacing;
+                nextY += tileHeight + spacing;
             }
         }
     }
 
     public int getFirstGlobalId() {
-        return this.firstGlobalId;
+        return firstGlobalId;
     }
 
     public TmxMap getMap() {
-        return this.map;
+        return map;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public final Data getProperties() {
-        return this.properties;
+        return properties;
     }
 
     public TmxTerrain[] getTerrains() {
-        return Arrays.copyOf(this.terrainTypes, this.terrainTypes.length);
+        return Arrays.copyOf(terrainTypes, terrainTypes.length);
     }
 
     public TmxTile getTile(final int index) {
-        if (0 <= index && index < this.tiles.size()) {
-            return this.tiles.get(index);
+        if (0 <= index && index < tiles.size()) {
+            return tiles.get(index);
         }
         else {
             return null;
@@ -129,24 +129,24 @@ final class TmxTileSet {
     }
 
     public int getTileHeight() {
-        return this.tileHeight;
+        return tileHeight;
     }
 
     public int getTileOffsetX() {
-        return this.tileOffsetX;
+        return tileOffsetX;
     }
 
     public int getTileOffsetY() {
-        return this.tileOffsetY;
+        return tileOffsetY;
     }
 
     public int getTileWidth() {
-        return this.tileWidth;
+        return tileWidth;
     }
 
     public TmxTerrain lookupTerrain(final int index) {
-        if (0 <= index && index < this.terrainTypes.length) {
-            return this.terrainTypes[index];
+        if (0 <= index && index < terrainTypes.length) {
+            return terrainTypes[index];
         }
         else {
             return null;

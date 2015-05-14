@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -49,7 +49,7 @@ public class TickEvent extends Event {
      * @since 1.0
      */
     public final double getDuration() {
-        return this.duration;
+        return duration;
     }
 
     /**
@@ -60,18 +60,18 @@ public class TickEvent extends Event {
      * @since 1.0
      */
     public final double getFrameRate() {
-        return this.frameRate;
+        return frameRate;
     }
 
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
         result.append("TickEvent(type=");
-        result.append(this.getType());
+        result.append(getType());
         result.append(", duration=");
-        result.append(this.duration);
+        result.append(duration);
         result.append(", frameRate=");
-        result.append(this.frameRate);
+        result.append(frameRate);
         result.append(")");
         return result.toString();
     }

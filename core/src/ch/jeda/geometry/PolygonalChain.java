@@ -46,18 +46,18 @@ public class PolygonalChain extends Shape {
         }
 
         final int count = vertices.length / 2;
-        this.x = new double[count];
-        this.y = new double[count];
+        x = new double[count];
+        y = new double[count];
         for (int i = 0; i < count; ++i) {
-            this.x[i] = vertices[2 * i];
-            this.y[i] = vertices[2 * i + 1];
+            x[i] = vertices[2 * i];
+            y[i] = vertices[2 * i + 1];
         }
     }
 
     @Override
     public void draw(final Canvas canvas) {
-        for (int i = 0; i < this.x.length - 1; ++i) {
-            canvas.drawLine(this.x[i], this.y[i], this.x[i + 1], this.y[i + 1]);
+        for (int i = 0; i < x.length - 1; ++i) {
+            canvas.drawLine(x[i], y[i], x[i + 1], y[i + 1]);
         }
     }
 
@@ -69,7 +69,7 @@ public class PolygonalChain extends Shape {
      * @since 2.0
      */
     public int getVertexCount() {
-        return this.x.length;
+        return x.length;
     }
 
     /**
@@ -82,7 +82,7 @@ public class PolygonalChain extends Shape {
      * @since 2.0
      */
     public double getVertexX(int i) {
-        return this.x[i];
+        return x[i];
     }
 
     /**
@@ -95,6 +95,6 @@ public class PolygonalChain extends Shape {
      * @since 2.0
      */
     public double getVertexY(int i) {
-        return this.y[i];
+        return y[i];
     }
 }

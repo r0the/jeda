@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -36,7 +36,7 @@ public final class PressedKeys implements KeyDownListener, KeyUpListener {
      * @since 1.0
      */
     public PressedKeys() {
-        this.pressedKeys = EnumSet.noneOf(Key.class);
+        pressedKeys = EnumSet.noneOf(Key.class);
     }
 
     /**
@@ -49,17 +49,17 @@ public final class PressedKeys implements KeyDownListener, KeyUpListener {
      * @since 1.0
      */
     public boolean contains(final Key key) {
-        return this.pressedKeys.contains(key);
+        return pressedKeys.contains(key);
     }
 
     @Override
     public void onKeyDown(final KeyEvent event) {
-        this.pressedKeys.add(event.getKey());
+        pressedKeys.add(event.getKey());
     }
 
     @Override
     public void onKeyUp(final KeyEvent event) {
-        this.pressedKeys.remove(event.getKey());
+        pressedKeys.remove(event.getKey());
     }
 
     /**
@@ -70,11 +70,11 @@ public final class PressedKeys implements KeyDownListener, KeyUpListener {
      * @since 1.0
      */
     public Key[] toArray() {
-        return this.pressedKeys.toArray(new Key[this.pressedKeys.size()]);
+        return pressedKeys.toArray(new Key[pressedKeys.size()]);
     }
 
     @Override
     public String toString() {
-        return Convert.toString(this.pressedKeys);
+        return Convert.toString(pressedKeys);
     }
 }

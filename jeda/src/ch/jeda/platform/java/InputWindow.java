@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Stefan Rothe
+ * Copyright (C) 2012 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,35 +26,35 @@ class InputWindow extends BaseWindow {
 
     InputWindow(final WindowManager manager) {
         super(manager);
-        this.initComponents();
-        this.setDefaultButton(this.acceptButton);
-        this.inputTextField.getDocument().addDocumentListener(new DocumentListenerImp(this));
-        this.errorLabel.setVisible(false);
-        this.init();
+        initComponents();
+        setDefaultButton(acceptButton);
+        inputTextField.getDocument().addDocumentListener(new DocumentListenerImp(this));
+        errorLabel.setVisible(false);
+        init();
     }
 
     void setRequest(final InputRequest inputRequest) {
         this.inputRequest = inputRequest;
-        this.setTitle(inputRequest.getTitle());
-        this.messageLabel.setText(inputRequest.getMessage());
-        this.inputTextField.setText("");
-        this.validateInput();
-        this.inputTextField.requestFocus();
+        setTitle(inputRequest.getTitle());
+        messageLabel.setText(inputRequest.getMessage());
+        inputTextField.setText("");
+        validateInput();
+        inputTextField.requestFocus();
     }
 
     @Override
     protected void onAccept() {
-        this.inputRequest.setResult(this.inputRequest.getInputType().parse(this.inputTextField.getText()));
+        inputRequest.setResult(inputRequest.getInputType().parse(inputTextField.getText()));
     }
 
     @Override
     protected void onCancel() {
-        this.inputRequest.cancelRequest();
+        inputRequest.cancelRequest();
     }
 
     private void validateInput() {
-        boolean valid = this.inputRequest.getInputType().validate(this.inputTextField.getText());
-        this.acceptButton.setEnabled(valid);
+        boolean valid = inputRequest.getInputType().validate(inputTextField.getText());
+        acceptButton.setEnabled(valid);
     }
 
     private static final class DocumentListenerImp implements DocumentListener {
@@ -67,17 +67,17 @@ class InputWindow extends BaseWindow {
 
         @Override
         public void changedUpdate(final DocumentEvent event) {
-            this.window.validateInput();
+            window.validateInput();
         }
 
         @Override
         public void insertUpdate(final DocumentEvent event) {
-            this.window.validateInput();
+            window.validateInput();
         }
 
         @Override
         public void removeUpdate(final DocumentEvent event) {
-            this.window.validateInput();
+            window.validateInput();
         }
     }
 
@@ -153,11 +153,11 @@ class InputWindow extends BaseWindow {
     }// </editor-fold>//GEN-END:initComponents
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
-        this.accept();
+        accept();
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        this.cancel();
+        cancel();
     }//GEN-LAST:event_cancelButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;

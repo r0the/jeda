@@ -33,19 +33,19 @@ final class Physics {
     private boolean paused;
 
     public Physics() {
-        this.bodySet = new HashSet<Body>();
-        this.bodies = null;
-        this.debugging = false;
-        this.imp = new World(new Vec2(0f, 0f));
-        this.imp.setContactListener(new PhysicsContactListener());
+        bodySet = new HashSet<Body>();
+        bodies = null;
+        debugging = false;
+        imp = new World(new Vec2(0f, 0f));
+        imp.setContactListener(new PhysicsContactListener());
         // Set default gravity. If default gravity is zero, it cannot be changed later on.
-        this.imp.setGravity(new Vec2(0f, 9.81f));
-        this.paused = false;
-        this.scale = 10.0;
+        imp.setGravity(new Vec2(0f, 9.81f));
+        paused = false;
+        scale = 10.0;
     }
 
     public void add(final Body body) {
-        if (body == null || this.bodySet.contains(body)) {
+        if (body == null || bodySet.contains(body)) {
             return;
         }
 
@@ -54,35 +54,35 @@ final class Physics {
             oldPhysics.remove(body);
         }
 
-        this.bodySet.add(body);
-        this.bodies = null;
+        bodySet.add(body);
+        bodies = null;
         body.setPhysics(this);
     }
 
     public Body[] getBodies() {
-        this.checkBodies();
-        return Arrays.copyOf(this.bodies, this.bodies.length);
+        checkBodies();
+        return Arrays.copyOf(bodies, bodies.length);
     }
 
     public double getScale() {
-        return this.scale;
+        return scale;
     }
 
     public boolean isDebugging() {
-        return this.debugging;
+        return debugging;
     }
 
     public boolean isPaused() {
-        return this.paused;
+        return paused;
     }
 
     public void remove(final Body body) {
-        if (body == null || !this.bodySet.contains(body)) {
+        if (body == null || !bodySet.contains(body)) {
             return;
         }
 
-        this.bodySet.remove(body);
-        this.bodies = null;
+        bodySet.remove(body);
+        bodies = null;
         body.setPhysics(null);
     }
 
@@ -91,7 +91,7 @@ final class Physics {
     }
 
     public void setGravity(final double ax, final double ay) {
-        this.imp.setGravity(new Vec2((float) ax, (float) ay));
+        imp.setGravity(new Vec2((float) ax, (float) ay));
     }
 
     public void setScale(final double scale) {
@@ -103,30 +103,30 @@ final class Physics {
     }
 
     public void step(final double seconds) {
-        if (!this.paused) {
-            this.imp.step((float) seconds, 6, 2);
-            this.checkBodies();
-            for (final Body body : this.bodies) {
+        if (!paused) {
+            imp.step((float) seconds, 6, 2);
+            checkBodies();
+            for (final Body body : bodies) {
                 body.step(seconds);
             }
         }
     }
 
     org.jbox2d.dynamics.Body createBodyImp(final BodyDef bodyDef) {
-        return this.imp.createBody(bodyDef);
+        return imp.createBody(bodyDef);
     }
 
-    void destroyBodyImp(final org.jbox2d.dynamics.Body imp) {
-        this.imp.destroyBody(imp);
+    void destroyBodyImp(final org.jbox2d.dynamics.Body bodyImp) {
+        imp.destroyBody(bodyImp);
     }
 
     float scaleLength(final double length) {
-        return (float) (length / this.scale);
+        return (float) (length / scale);
     }
 
     private void checkBodies() {
-        if (this.bodies == null) {
-            this.bodies = this.bodySet.toArray(new Body[this.bodySet.size()]);
+        if (bodies == null) {
+            bodies = bodySet.toArray(new Body[bodySet.size()]);
         }
     }
 }

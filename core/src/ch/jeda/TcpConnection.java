@@ -1,5 +1,5 @@
  /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -48,13 +48,13 @@ public final class TcpConnection extends Connection {
      * @since 1.4
      */
     public TcpConnection() {
-        this.charset = Charset.forName("UTF-8");
-        this.lock = new Object();
+        charset = Charset.forName("UTF-8");
+        lock = new Object();
     }
 
     TcpConnection(final Socket socket) {
         this();
-        this.init(socket);
+        init(socket);
     }
 
     /**
@@ -64,18 +64,18 @@ public final class TcpConnection extends Connection {
      */
     @Override
     public void close() {
-        synchronized (this.lock) {
-            if (this.socket != null) {
+        synchronized (lock) {
+            if (socket != null) {
                 try {
-                    this.socket.close();
+                    socket.close();
                 }
                 catch (final IOException ex) {
                     // ignore
                 }
 
-                this.socket = null;
-                this.in = null;
-                this.out = null;
+                socket = null;
+                in = null;
+                out = null;
                 Jeda.postEvent(new ConnectionEvent(this, EventType.CONNECTION_CLOSED));
             }
         }
@@ -92,17 +92,17 @@ public final class TcpConnection extends Connection {
      * @since 1.4
      */
     public boolean open(final String hostName, final int port) {
-        this.close();
+        close();
         final Socket newSocket = new Socket();
         try {
             newSocket.connect(new InetSocketAddress(hostName, port));
-            this.init(newSocket);
+            init(newSocket);
         }
         catch (final IOException ex) {
-            this.close();
+            close();
         }
 
-        return this.isOpen();
+        return isOpen();
     }
 
     /**
@@ -115,41 +115,41 @@ public final class TcpConnection extends Connection {
      */
     @Override
     public String getRemoteAddress() {
-        synchronized (this.lock) {
-            return this.remoteAddress;
+        synchronized (lock) {
+            return remoteAddress;
         }
     }
 
     @Override
     public boolean isOpen() {
-        synchronized (this.lock) {
-            return this.socket != null;
+        synchronized (lock) {
+            return socket != null;
         }
     }
 
     @Override
     public void sendLine(final String line) {
-        synchronized (this.lock) {
-            if (this.out != null) {
-                this.out.println(line);
-                this.out.flush();
+        synchronized (lock) {
+            if (out != null) {
+                out.println(line);
+                out.flush();
             }
         }
     }
 
     private void init(final Socket socket) {
         try {
-            synchronized (this.lock) {
+            synchronized (lock) {
                 this.socket = socket;
-                this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream(), this.charset));
-                this.out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream(), this.charset));
-                this.remoteAddress = Convert.toString(this.socket.getInetAddress().getHostAddress(), ':',
-                                                      this.socket.getPort());
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
+                out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
+                remoteAddress = Convert.toString(socket.getInetAddress().getHostAddress(), ':',
+                                                 socket.getPort());
                 new TcpConnectionThread(this).start();
             }
         }
         catch (final IOException ex) {
-            this.close();
+            close();
         }
     }
 
@@ -159,23 +159,23 @@ public final class TcpConnection extends Connection {
 
         public TcpConnectionThread(final TcpConnection connection) {
             this.connection = connection;
-            this.setName("Jeda Tcp Connection Listener (" + connection.remoteAddress + ")");
+            setName("Jeda Tcp Connection Listener (" + connection.remoteAddress + ")");
         }
 
         @Override
         public void run() {
-            while (this.connection.isOpen()) {
+            while (connection.isOpen()) {
                 try {
-                    final String line = this.connection.in.readLine();
+                    final String line = connection.in.readLine();
                     if (line == null) {
-                        this.connection.close();
+                        connection.close();
                     }
                     else {
-                        Jeda.postEvent(new MessageEvent(this.connection, line));
+                        Jeda.postEvent(new MessageEvent(connection, line));
                     }
                 }
                 catch (final IOException ex) {
-                    this.connection.close();
+                    connection.close();
                 }
             }
         }

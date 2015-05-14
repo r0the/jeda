@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 by Stefan Rothe
+ * Copyright (C) 2014 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,20 +27,20 @@ public final class CanvasTransformation {
     public double translationY;
 
     public CanvasTransformation() {
-        this.reset();
+        reset();
     }
 
     public CanvasTransformation(final CanvasTransformation other) {
-        this.rotation = other.rotation;
-        this.scale = other.scale;
-        this.translationX = other.translationX;
-        this.translationY = other.translationY;
+        rotation = other.rotation;
+        scale = other.scale;
+        translationX = other.translationX;
+        translationY = other.translationY;
     }
 
     public void reset() {
-        this.rotation = 0.0;
-        this.scale = 1.0;
-        this.translationX = 0.0;
-        this.translationY = 0.0;
+        rotation = 0.0;
+        scale = 1.0;
+        translationX = 0.0;
+        translationY = 0.0;
     }
 }

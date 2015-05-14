@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,11 +32,11 @@ public abstract class Simulation extends Program implements TickListener {
     }
 
     public final int getCurrentFrequency() {
-        return this.currentFrequency;
+        return currentFrequency;
     }
 
     public final double getLastStepDuration() {
-        return this.lastStepDuration;
+        return lastStepDuration;
     }
 
     public final int getFrequency() {
@@ -45,14 +45,14 @@ public abstract class Simulation extends Program implements TickListener {
 
     @Override
     public void onTick(final TickEvent event) {
-        this.lastStepDuration = event.getDuration();
-        this.currentFrequency = (int) event.getFrameRate();
-        this.step();
+        lastStepDuration = event.getDuration();
+        currentFrequency = (int) event.getFrameRate();
+        step();
     }
 
     @Override
     public final void run() {
-        this.init();
+        init();
     }
 
     public final void setFrequency(final int hertz) {
