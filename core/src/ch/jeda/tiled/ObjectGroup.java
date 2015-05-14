@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
 import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Canvas;
@@ -23,22 +23,22 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a TMX object group.
+ * Represents a Tiled object group.
  *
  * @since 2.0
  */
-public final class TmxObjectGroup extends TmxLayer {
+public final class ObjectGroup extends Layer {
 
     private final Color color;
-    private final TmxObject[] objects;
+    private final TiledObject[] objects;
 
-    TmxObjectGroup(final TmxMap map, final Element element) {
+    ObjectGroup(final TiledMap map, final Element element) {
         super(map, element);
         color = element.getColorAttribute(Const.COLOR, Color.RED);
         final List<Element> objectElements = element.getChildren(Const.OBJECT);
-        objects = new TmxObject[objectElements.size()];
+        objects = new TiledObject[objectElements.size()];
         for (int i = 0; i < objects.length; ++i) {
-            objects[i] = new TmxObject(map, objectElements.get(i));
+            objects[i] = new TiledObject(map, objectElements.get(i));
         }
     }
 
@@ -81,12 +81,7 @@ public final class TmxObjectGroup extends TmxLayer {
     }
 
     @Override
-    public TmxObject[] getObjects() {
+    public TiledObject[] getObjects() {
         return Arrays.copyOf(objects, objects.length);
-    }
-
-    @Override
-    public final TmxLayerType getType() {
-        return TmxLayerType.OBJECT;
     }
 }

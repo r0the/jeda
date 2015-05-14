@@ -14,32 +14,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
 /**
- * The TMX layer types.
+ * The Tiled map orientations.
  *
- * @see TmxLayer
+ * @see TiledMap
  * @since 2.0
  */
-public enum TmxLayerType {
+public enum TiledMapOrientation {
 
     /**
-     * A TMX image layer. An image layer consists of a single image.
+     * Isometric Tiled map orientation.
      *
      * @since 2.0
      */
-    IMAGE,
+    ISOMETRIC,
     /**
-     * A TMX object layer. An object layer contains objects.
+     * Orthogonal Tiled map orientation.
      *
      * @since 2.0
      */
-    OBJECT,
+    ORTHOGONAL,
     /**
-     * A TMX tile layer. A tile layer contains tiles.
+     * Staggered Tiled map orientation.
      *
      * @since 2.0
      */
-    TILE
+    STAGGERED
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
 import ch.jeda.Data;
 import ch.jeda.geometry.Ellipse;
@@ -28,25 +28,25 @@ import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
 
 /**
- * Represents a TMX object.
+ * Represents a Tiled object.
  *
  * @since 2.0
  */
-public final class TmxObject {
+public final class TiledObject {
 
     private final double height;
     private final String name;
     private final Data properties;
     private final double rotation;
     private final Shape shape;
-    private final TmxTile tile;
+    private final Tile tile;
     private final String type;
     private final boolean visible;
     private final double width;
     private final double x;
     private final double y;
 
-    TmxObject(final TmxMap map, final Element element) {
+    TiledObject(final TiledMap map, final Element element) {
         height = element.getDoubleAttribute(Const.HEIGHT, 0.0);
         name = element.getStringAttribute(Const.NAME);
         properties = element.parsePropertiesChild();
@@ -167,7 +167,7 @@ public final class TmxObject {
      *
      * @since 2.0
      */
-    public TmxTile getTile() {
+    public Tile getTile() {
         return tile;
     }
 
@@ -216,7 +216,7 @@ public final class TmxObject {
     }
 
     /**
-     * Converts this TMX object to a body.
+     * Converts this Tiled object to a body.
      *
      * @return the body
      *

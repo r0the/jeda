@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
 import ch.jeda.Data;
 import ch.jeda.ui.Canvas;
@@ -24,30 +24,30 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a TMX map.
+ * Represents a Tiled map.
  *
  * @since 2.0
  */
-public final class TmxMap {
+public final class TiledMap {
 
     private final Color backgroundColor;
     private final int height;
-    private final TmxLayer[] layers;
-    private final TmxMapOrientation orientation;
+    private final Layer[] layers;
+    private final TiledMapOrientation orientation;
     private final Data properties;
     private final int tileHeight;
-    private final TmxTileSets tileSets;
+    private final TileSets tileSets;
     private final int tileWidth;
     private final int width;
 
     /**
-     * Constructs a new TMX map from the specified file.
+     * Constructs a new Tiled map from the specified file.
      *
-     * @param path the path to the TMX map file.
+     * @param path the path to the Tiled map file
      *
      * @since 2.0
      */
-    public TmxMap(String path) {
+    public TiledMap(String path) {
         if (path == null) {
             throw new NullPointerException("path");
         }
@@ -74,31 +74,31 @@ public final class TmxMap {
         orientation = parseOrientation(element.getStringAttribute(Const.ORIENTATION));
         properties = element.parsePropertiesChild();
         // Read tile sets
-        tileSets = new TmxTileSets();
+        tileSets = new TileSets();
         for (final Element tileSetElement : element.getChildren(Const.TILESET)) {
             if (tileSetElement.hasAttribute(Const.SOURCE)) {
-                tileSets.add(new TmxTileSet(this, reader.read(tileSetElement.getStringAttribute(Const.SOURCE)), reader));
+                tileSets.add(new TileSet(this, reader.read(tileSetElement.getStringAttribute(Const.SOURCE)), reader));
             }
             else {
-                tileSets.add(new TmxTileSet(this, tileSetElement, reader));
+                tileSets.add(new TileSet(this, tileSetElement, reader));
             }
         }
 
         // Read layers
-        final List<TmxLayer> layerList = new ArrayList<TmxLayer>();
+        final List<Layer> layerList = new ArrayList<Layer>();
         for (final Element layerElement : element.getChildren()) {
             if (layerElement.is("layer")) {
-                layerList.add(new TmxTileLayer(this, layerElement));
+                layerList.add(new TileLayer(this, layerElement));
             }
             else if (layerElement.is("objectgroup")) {
-                layerList.add(new TmxObjectGroup(this, layerElement));
+                layerList.add(new ObjectGroup(this, layerElement));
             }
             else if (layerElement.is("imagelayer")) {
-                layerList.add(new TmxImageLayer(this, layerElement, reader));
+                layerList.add(new ImageLayer(this, layerElement, reader));
             }
         }
 
-        layers = layerList.toArray(new TmxLayer[layerList.size()]);
+        layers = layerList.toArray(new Layer[layerList.size()]);
     }
 
     /**
@@ -119,8 +119,7 @@ public final class TmxMap {
     }
 
     /**
-     * Returns the background color for the map. Reading the background color from a TMX file is currently not
-     * supported. This method always returns {@link ch.jeda.ui.Color#WHITE}.
+     * Returns the background color for the map.
      *
      * @return the background color for the map
      *
@@ -148,7 +147,7 @@ public final class TmxMap {
      *
      * @since 2.0
      */
-    public TmxLayer[] getLayers() {
+    public Layer[] getLayers() {
         return Arrays.copyOf(layers, layers.length);
     }
 
@@ -159,7 +158,7 @@ public final class TmxMap {
      *
      * @since 2.0
      */
-    public TmxMapOrientation getOrientation() {
+    public TiledMapOrientation getOrientation() {
         return orientation;
     }
 
@@ -215,20 +214,20 @@ public final class TmxMap {
      *
      * @since 2.0
      */
-    public TmxTile lookupTile(final int globalId) {
+    public Tile lookupTile(final int globalId) {
         return tileSets.lookupTile(globalId);
     }
 
-    private static TmxMapOrientation parseOrientation(final String value) {
+    private static TiledMapOrientation parseOrientation(final String value) {
         if (value == null) {
-            return TmxMapOrientation.ORTHOGONAL;
+            return TiledMapOrientation.ORTHOGONAL;
         }
 
         try {
-            return TmxMapOrientation.valueOf(value.toUpperCase());
+            return TiledMapOrientation.valueOf(value.toUpperCase());
         }
         catch (final IllegalArgumentException ex) {
-            return TmxMapOrientation.ORTHOGONAL;
+            return TiledMapOrientation.ORTHOGONAL;
         }
     }
 }

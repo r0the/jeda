@@ -14,22 +14,30 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
+import java.util.Map;
+import java.util.TreeMap;
 
-class TmxEntityResolver implements EntityResolver {
+final class TileSets {
 
-    private static final String TMX_DTD_URL = "http://mapeditor.org/dtd/1.0/map.dtd";
+    private final TreeMap<Integer, TileSet> tileSetsByGid;
 
-    @Override
-    public InputSource resolveEntity(final String publicId, final String systemId) {
-        if (TMX_DTD_URL.equals(systemId)) {
-            return new InputSource(getClass().getResourceAsStream("ch/jeda/tiled/map.dtd"));
+    TileSets() {
+        tileSetsByGid = new TreeMap<Integer, TileSet>();
+    }
+
+    void add(final TileSet tileSet) {
+        tileSetsByGid.put(tileSet.getFirstGlobalId(), tileSet);
+    }
+
+    Tile lookupTile(final int globalId) {
+        Map.Entry<Integer, TileSet> entry = tileSetsByGid.floorEntry(globalId);
+        if (entry == null) {
+            return null;
         }
         else {
-            return null;
+            return entry.getValue().getTile(globalId - entry.getKey());
         }
     }
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
 import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Canvas;
@@ -27,21 +27,21 @@ import java.util.zip.InflaterInputStream;
 import javax.xml.bind.DatatypeConverter;
 
 /**
- * Represents a TMX tile layer.
+ * Represents a Tiled tile layer.
  *
  * @since 2.0
  */
-public final class TmxTileLayer extends TmxLayer {
+public final class TileLayer extends Layer {
 
-    private final TmxTile[] tiles;
+    private final Tile[] tiles;
 
-    TmxTileLayer(final TmxMap map, final Element element) {
+    TileLayer(final TiledMap map, final Element element) {
         super(map, element);
         // Read tile ids
         final int width = map.getWidth();
         final int height = map.getHeight();
         final int[] tileIds = parseData(element.getChild(Const.DATA), width, height);
-        tiles = new TmxTile[width * height];
+        tiles = new Tile[width * height];
         for (int i = 0; i < tileIds.length; ++i) {
             tiles[i] = map.lookupTile(tileIds[i]);
         }
@@ -69,7 +69,7 @@ public final class TmxTileLayer extends TmxLayer {
         int endY = getMap().getHeight();
         for (int x = startX; x < endX; ++x) {
             for (int y = startY; y < endY; ++y) {
-                final TmxTile tile = getTile(x, y);
+                final Tile tile = getTile(x, y);
                 if (tile != null) {
                     tile.draw(canvas, screenX + tile.getOffsetX(),
                               screenY + tile.getOffsetY(), alpha);
@@ -85,12 +85,7 @@ public final class TmxTileLayer extends TmxLayer {
     }
 
     @Override
-    public final TmxLayerType getType() {
-        return TmxLayerType.TILE;
-    }
-
-    @Override
-    public TmxTile getTile(final int x, final int y) {
+    public Tile getTile(final int x, final int y) {
         final int index = x + y * getMap().getWidth();
         if (0 <= index && index < tiles.length && tiles[index] != null) {
             return tiles[index];
@@ -111,7 +106,7 @@ public final class TmxTileLayer extends TmxLayer {
         int endY = getMap().getHeight();
         for (int x = startX; x < endX; ++x) {
             for (int y = startY; y < endY; ++y) {
-                final TmxTile tile = getTile(x, y);
+                final Tile tile = getTile(x, y);
                 if (tile != null && tile.getTerrainTopLeft() != null) {
                     canvas.fillRectangle(screenX, screenY, 5, 5);
                 }

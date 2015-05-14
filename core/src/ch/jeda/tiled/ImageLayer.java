@@ -14,24 +14,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
 import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Image;
 
 /**
- * Represents a TMX image layer.
+ * Represents a Tiled image layer.
  *
  * @since 2.0
  */
-public final class TmxImageLayer extends TmxLayer {
+public final class ImageLayer extends Layer {
 
     private final Image image;
     private final int x;
     private final int y;
 
-    TmxImageLayer(final TmxMap map, final Element element, final XmlReader reader) {
+    ImageLayer(final TiledMap map, final Element element, final XmlReader reader) {
         super(map, element);
         image = reader.loadImageChild(element);
         x = element.getIntAttribute(Const.X);
@@ -59,11 +59,6 @@ public final class TmxImageLayer extends TmxLayer {
      */
     public Image getImage() {
         return image;
-    }
-
-    @Override
-    public final TmxLayerType getType() {
-        return TmxLayerType.IMAGE;
     }
 
     /**

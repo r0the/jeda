@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
 import ch.jeda.Data;
 import ch.jeda.ui.Alignment;
@@ -26,23 +26,23 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a TMX tile.
+ * Represents a Tiled tile.
  *
  * @since 2.0
  */
-public class TmxTile {
+public class Tile {
 
     private final int id;
     private final Image image;
-    private final TmxObject[] objects;
+    private final TiledObject[] objects;
     private final Data properties;
-    private final TmxTerrain[] terrain;
-    private final TmxTileSet tileSet;
+    private final Terrain[] terrain;
+    private final TileSet tileSet;
 
-    TmxTile(final TmxMap map, final TmxTileSet tileSet, final int id, final Image image, final Element element) {
+    Tile(final TiledMap map, final TileSet tileSet, final int id, final Image image, final Element element) {
         this.id = id;
         this.image = image;
-        terrain = new TmxTerrain[4];
+        terrain = new Terrain[4];
         this.tileSet = tileSet;
         if (element != null) {
             // Read properties
@@ -69,17 +69,17 @@ public class TmxTile {
         }
 
         // Read object group
-        final List<TmxObject> objectList = new ArrayList<TmxObject>();
+        final List<TiledObject> objectList = new ArrayList<TiledObject>();
         if (element != null) {
             final Element objectGroupElement = element.getChild(Const.OBJECTGROUP);
             if (objectGroupElement != null) {
                 for (final Element objectElement : objectGroupElement.getChildren(Const.OBJECT)) {
-                    objectList.add(new TmxObject(map, objectElement));
+                    objectList.add(new TiledObject(map, objectElement));
                 }
             }
         }
 
-        objects = objectList.toArray(new TmxObject[objectList.size()]);
+        objects = objectList.toArray(new TiledObject[objectList.size()]);
 
         // Read animation
         if (element != null) {
@@ -137,7 +137,7 @@ public class TmxTile {
         return image;
     }
 
-    public TmxObject[] getObjects() {
+    public TiledObject[] getObjects() {
         return Arrays.copyOf(objects, objects.length);
     }
 
@@ -153,19 +153,19 @@ public class TmxTile {
         return properties;
     }
 
-    public final TmxTerrain getTerrainBottomLeft() {
+    public final Terrain getTerrainBottomLeft() {
         return terrain[2];
     }
 
-    public final TmxTerrain getTerrainBottomRight() {
+    public final Terrain getTerrainBottomRight() {
         return terrain[3];
     }
 
-    public final TmxTerrain getTerrainTopLeft() {
+    public final Terrain getTerrainTopLeft() {
         return terrain[0];
     }
 
-    public final TmxTerrain getTerrainTopRight() {
+    public final Terrain getTerrainTopRight() {
         return terrain[1];
     }
 

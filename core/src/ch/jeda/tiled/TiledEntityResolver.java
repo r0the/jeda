@@ -14,32 +14,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
-/**
- * The possible TMX map orientations.
- *
- * @see TmxMap
- * @since 2.0
- */
-public enum TmxMapOrientation {
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 
-    /**
-     * Isometric TMX map orientation.
-     *
-     * @since 2.0
-     */
-    ISOMETRIC,
-    /**
-     * Orthogonal TMX map orientation.
-     *
-     * @since 2.0
-     */
-    ORTHOGONAL,
-    /**
-     * Staggered TMX map orientation.
-     *
-     * @since 2.0
-     */
-    STAGGERED
+class TiledEntityResolver implements EntityResolver {
+
+    private static final String TILED_DTD_URL = "http://mapeditor.org/dtd/1.0/map.dtd";
+
+    @Override
+    public InputSource resolveEntity(final String publicId, final String systemId) {
+        if (TILED_DTD_URL.equals(systemId)) {
+            return new InputSource(getClass().getResourceAsStream("ch/jeda/tiled/map.dtd"));
+        }
+        else {
+            return null;
+        }
+    }
 }

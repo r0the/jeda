@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
 import ch.jeda.JedaInternal;
 import ch.jeda.Log;
@@ -37,7 +37,7 @@ class XmlReader {
             final XMLReader xmlReader = JedaInternal.createXmlReader();
             final XmlContentHandler contentHandler = new XmlContentHandler();
             xmlReader.setContentHandler(contentHandler);
-            xmlReader.setEntityResolver(new TmxEntityResolver());
+            xmlReader.setEntityResolver(new TiledEntityResolver());
             InputSource inputSource = new InputSource(JedaInternal.openResource(prefix + path));
             xmlReader.parse(inputSource);
             return contentHandler.getRootElement();

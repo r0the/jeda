@@ -14,30 +14,44 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
-import java.util.Map;
-import java.util.TreeMap;
+import ch.jeda.Data;
 
-final class TmxTileSets {
+/**
+ * Represents a Tiled terrain.
+ *
+ * @since 2.0
+ */
+public final class Terrain {
 
-    private final TreeMap<Integer, TmxTileSet> tileSetsByGid;
+    private final String name;
+    private final Data properties;
 
-    TmxTileSets() {
-        tileSetsByGid = new TreeMap<Integer, TmxTileSet>();
+    Terrain(final Element element) {
+        name = element.getStringAttribute(Const.NAME);
+        properties = element.parsePropertiesChild();
     }
 
-    void add(final TmxTileSet tileSet) {
-        tileSetsByGid.put(tileSet.getFirstGlobalId(), tileSet);
+    /**
+     * Returns the name of the terrain.
+     *
+     * @return the name of the terrain
+     *
+     * @since 2.0
+     */
+    public String getName() {
+        return name;
     }
 
-    TmxTile lookupTile(final int globalId) {
-        Map.Entry<Integer, TmxTileSet> entry = tileSetsByGid.floorEntry(globalId);
-        if (entry == null) {
-            return null;
-        }
-        else {
-            return entry.getValue().getTile(globalId - entry.getKey());
-        }
+    /**
+     * Returns the properties of the terrain.
+     *
+     * @return the properties of the terrain
+     *
+     * @since 2.0
+     */
+    public Data getProperties() {
+        return properties;
     }
 }

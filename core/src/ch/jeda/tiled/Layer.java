@@ -14,26 +14,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.tmx;
+package ch.jeda.tiled;
 
 import ch.jeda.Data;
 import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Canvas;
 
 /**
- * Base class for TMX map layers.
+ * Base class for Tiled map layers.
  *
  * @since 2.0
  */
-public abstract class TmxLayer {
+public abstract class Layer {
 
-    private final TmxMap map;
+    private final TiledMap map;
     private final String name;
     private double opacity;
     private final Data properties;
     private boolean visible;
 
-    TmxLayer(final TmxMap map, final Element element) {
+    Layer(final TiledMap map, final Element element) {
         this.map = map;
         name = element.getStringAttribute(Const.NAME);
         opacity = Math.max(0.0, Math.min(element.getDoubleAttribute(Const.OPACITY, 1.0), 1.0));
@@ -62,7 +62,7 @@ public abstract class TmxLayer {
      *
      * @since 2.0
      */
-    public final TmxMap getMap() {
+    public final TiledMap getMap() {
         return map;
     }
 
@@ -84,8 +84,8 @@ public abstract class TmxLayer {
      *
      * @since 2.0
      */
-    public TmxObject[] getObjects() {
-        return new TmxObject[0];
+    public TiledObject[] getObjects() {
+        return new TiledObject[0];
     }
 
     /**
@@ -114,7 +114,7 @@ public abstract class TmxLayer {
 
     /**
      * Returns the tile at the specified tile coordinates. Returns <tt>null</tt> if there is no tile at the specified
-     * coordinates. Always returns <tt>null</tt> if this layer is not of type {@link TmxLayerType#TILE}.
+     * coordinates. Always returns <tt>null</tt> if this layer is not of type {@link TiledLayerType#TILE}.
      *
      * @param x the horizontal tile coordinate
      * @param y the vertical tile coordinate
@@ -122,18 +122,9 @@ public abstract class TmxLayer {
      *
      * @since 2.0
      */
-    public TmxTile getTile(final int x, final int y) {
+    public Tile getTile(final int x, final int y) {
         return null;
     }
-
-    /**
-     * Returns the type of this layer.
-     *
-     * @return the type of this layer
-     *
-     * @since 2.0
-     */
-    public abstract TmxLayerType getType();
 
     /**
      * Checks if this layer is visible.
