@@ -2,17 +2,141 @@
 <map version="1.0" orientation="orthogonal" renderorder="left-up" width="10" height="10" tilewidth="70" tileheight="70">
  <tileset firstgid="1" name="aliens" tilewidth="70" tileheight="70">
   <image source="aliens.png" width="210" height="350"/>
+  <tile id="0">
+   <objectgroup draworder="index">
+    <object x="1.78362" y="-0.788642" width="67.0704" height="67.9992" rotation="1.34443">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
  </tileset>
  <tileset firstgid="16" name="blocks_70x140" tilewidth="70" tileheight="140">
   <image source="blocks_70x140.png" width="350" height="700"/>
  </tileset>
  <tileset firstgid="41" name="blocks_140x70" tilewidth="140" tileheight="70">
   <image source="blocks_140x70.png" width="700" height="700"/>
+  <tile id="30">
+   <objectgroup draworder="index">
+    <object x="3" y="70">
+     <polygon points="-2,-1 68,-69 136,-1"/>
+    </object>
+   </objectgroup>
+  </tile>
  </tileset>
  <imagelayer name="Bildebene 1" x="-101" y="-141">
   <image source="colored_desert.png"/>
  </imagelayer>
- <layer name="Kachelebene 1" width="10" height="10">
+ <layer name="Boden" width="10" height="10">
+  <properties>
+   <property name="type" value="static"/>
+  </properties>
+  <data>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="76"/>
+   <tile gid="0"/>
+   <tile gid="76"/>
+   <tile gid="0"/>
+   <tile gid="76"/>
+   <tile gid="0"/>
+   <tile gid="76"/>
+   <tile gid="0"/>
+   <tile gid="76"/>
+   <tile gid="0"/>
+  </data>
+ </layer>
+ <layer name="Wände" width="10" height="10">
+  <properties>
+   <property name="type" value="dynamic"/>
+  </properties>
   <data>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -104,16 +228,30 @@
    <tile gid="71"/>
    <tile gid="0"/>
    <tile gid="21"/>
-   <tile gid="76"/>
    <tile gid="0"/>
-   <tile gid="76"/>
    <tile gid="0"/>
-   <tile gid="76"/>
    <tile gid="0"/>
-   <tile gid="76"/>
    <tile gid="0"/>
-   <tile gid="76"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="0"/>
   </data>
  </layer>
+ <objectgroup name="Objektebene 1">
+  <object gid="1" x="426" y="211"/>
+  <object name="Rectangle" x="165" y="31" width="118" height="75"/>
+  <object name="Ellipse" x="354" y="49" width="71" height="58">
+   <ellipse/>
+  </object>
+  <object name="Polygon" x="238" y="161">
+   <polygon points="0,0 83,59 -52,100"/>
+  </object>
+  <object name="Chain" x="528" y="96">
+   <polyline points="0,0 47,95 -20,147 -109,132 -61,241"/>
+  </object>
+  <object name="Tile 2" gid="4" x="533" y="90"/>
+ </objectgroup>
 </map>

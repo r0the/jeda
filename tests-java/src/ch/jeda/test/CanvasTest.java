@@ -103,7 +103,7 @@ public class CanvasTest extends Program implements KeyDownListener,
     }
 
     private void transformationTest() {
-        window.setRotation(Math.PI / 4);
+        window.setRotationDeg(45);
         window.setTranslation(w / 2, h / 2);
         window.setTextSize(10);
         window.setScale(5);
@@ -111,6 +111,7 @@ public class CanvasTest extends Program implements KeyDownListener,
         window.fillRectangle(0, 0, 100, 30, Alignment.CENTER);
         window.setColor(Color.BLACK);
         window.drawText(0, 0, "Transformation", Alignment.CENTER);
+        window.drawImage(0, 0, Image.JEDA_LOGO_16x16, Alignment.CENTER);
         window.resetTransformations();
         msg("transformations");
     }

@@ -8,6 +8,16 @@ import ch.jeda.ui.*;
 
 public class ImageTest extends Program {
 
+    public static final ImageFilter SHARPEN = new MaskImageFilter(new double[][]{
+        {0, -1, 0},
+        {-1, 5, -1},
+        {0, -1, 0}});
+
+    public static final ImageFilter EDGE = new MaskImageFilter(new double[][]{
+        {-1, -1, -1},
+        {-1, 8, -1},
+        {-1, -1, -1}}, 1.0);
+
     @Override
     public void run() {
         Window window = new Window();
@@ -20,11 +30,10 @@ public class ImageTest extends Program {
         image.rotateDeg(45).save("rotate.png");
         image.scale(0.5).save("scale.png");
         image.subImage(100, 100, 600, 400).save("subImage.png");
-//        image.filter(MaskImageFilter.BLUR).save("image-blur.png");
-//        image.filter(MaskImageFilter.MOTION_BLUR).save("image-motionblur.png");
+        image.filter(EDGE).save("image-edge.png");
+        image.filter(SHARPEN).save("image-sharpen.png");
         image.filter(new GrayImageFilter()).save("image-gray.png");
         image.filter(new SepiaImageFilter(10)).save("image-sepia.png");
         window.drawText(10, 10, "DONE");
-//        image.filter(new MonochromeFilter()).save("filter-gray.png");
     }
 }

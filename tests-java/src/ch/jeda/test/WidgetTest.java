@@ -18,12 +18,13 @@ public class WidgetTest extends Program implements TickListener, ActionListener 
         view = new View();
         buttonAntique = new Button(view.getWidth() / 2, 100, Alignment.CENTER, "Antique");
         buttonAntique.setStyle(DefaultButtonStyle.ANTIQUE_BROWN);
+        buttonAntique.setName("Init");
 
         buttonModern = new Button(view.getWidth() / 2, 200, Alignment.CENTER, "Modern");
         buttonModern.setStyle(DefaultButtonStyle.MODERN_GREEN);
+        buttonModern.setName("Init");
 
-        view.add(buttonAntique);
-        view.add(buttonModern);
+        view.add(buttonAntique, buttonModern);
         view.addEventListener(this);
     }
 
@@ -59,8 +60,7 @@ public class WidgetTest extends Program implements TickListener, ActionListener 
     }
 
     private void showSamples() {
-        view.remove(buttonAntique);
-        view.remove(buttonModern);
+        view.remove(view.getElements("Init"));
         StringInputField textField = new StringInputField(30, 55);
         view.add(new Label(35, 30, "Name:"));
         view.add(textField);
