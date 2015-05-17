@@ -17,10 +17,7 @@
 package ch.jeda.tiled;
 
 import ch.jeda.Data;
-import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
-import ch.jeda.physics.Body;
-import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Image;
 import java.util.Arrays;
 

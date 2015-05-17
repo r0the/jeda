@@ -113,7 +113,6 @@ public final class Polygon extends Shape {
 
     @Override
     public void draw(final Canvas canvas) {
-        canvas.setColor(Color.RED);
         canvas.drawPolygon(vertexX, vertexY);
     }
 

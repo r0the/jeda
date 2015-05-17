@@ -296,10 +296,7 @@ final class PhysicsBodyImp implements BodyImp {
             return result;
         }
         else {
-            // TODO: convert to polygon
-            final org.jbox2d.collision.shapes.CircleShape result = new org.jbox2d.collision.shapes.CircleShape();
-            result.m_radius = (float) ((ellipse.getRadiusX() + ellipse.getRadiusY()) / (2.0 * scale));
-            return result;
+            return convertPolygon(ellipse.toPolygon(24), scale);
         }
     }
 

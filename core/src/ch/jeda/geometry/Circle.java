@@ -125,8 +125,8 @@ public final class Circle extends Shape implements Storable {
         double[] y = new double[n];
         for (int i = 0; i < n; ++i) {
             double angle = 2.0 * Math.PI * i / n;
-            x[i] = Math.cos(angle);
-            y[i] = Math.sin(angle);
+            x[i] = radius * Math.cos(angle);
+            y[i] = radius * Math.sin(angle);
         }
 
         return new Polygon(x, y);

@@ -125,6 +125,27 @@ public final class Ellipse extends Shape implements Storable {
         return radiusY;
     }
 
+    /**
+     * Creates and returns a polygon that approximates this ellipse. The number <code>n</code> specifies the number of
+     * vertices of the polygon.
+     *
+     * @param n the number of vertices of the polygon
+     * @return a polygon approximating the circle
+     *
+     * @since 2.0
+     */
+    public Polygon toPolygon(int n) {
+        double[] x = new double[n];
+        double[] y = new double[n];
+        for (int i = 0; i < n; ++i) {
+            double angle = 2.0 * Math.PI * i / n;
+            x[i] = radiusX * Math.cos(angle);
+            y[i] = radiusY * Math.sin(angle);
+        }
+
+        return new Polygon(x, y);
+    }
+
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
