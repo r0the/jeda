@@ -21,28 +21,36 @@ import ch.jeda.Storable;
 import ch.jeda.ui.Canvas;
 
 /**
- * Represents a filled circle. The center of the circle is at the origin of the coordinate system.
+ * Represents a circle shape.
  *
  * @since 2.0
  */
 public final class Circle extends Shape implements Storable {
 
+    private static final String CENTER_X = "centerx";
+    private static final String CENTER_Y = "centery";
     private static final String RADIUS = "radius";
+    private final double centerX;
+    private final double centerY;
     private final double radius;
 
     /**
      * Constructs a circle shape. The specified radius must be positive.
      *
+     * @param centerX the horizontal coordinate of the circle's center
+     * @param centerY the vertical coordinate of the circle's center
      * @param radius the radius of the circle
      * @throws IllegalArgumentException if <code>radius</code> is not positive
      *
      * @since 2.0
      */
-    public Circle(final double radius) {
+    public Circle(final double centerX, final double centerY, final double radius) {
         if (radius <= 0.0) {
             throw new IllegalArgumentException("radius");
         }
 
+        this.centerX = centerX;
+        this.centerY = centerY;
         this.radius = radius;
     }
 
@@ -54,17 +62,26 @@ public final class Circle extends Shape implements Storable {
      * @since 2.0
      */
     public Circle(final Data data) {
+        this.centerX = data.readDouble(CENTER_X);
+        this.centerY = data.readDouble(CENTER_Y);
         this.radius = data.readDouble(RADIUS);
     }
 
     @Override
     public boolean contains(final double x, final double y) {
-        return x * x + y * y <= radius * radius;
+        final double dx = centerX - x;
+        final double dy = centerY - y;
+        return dx * dx + dy * dy <= radius * radius;
     }
 
     @Override
     public void draw(final Canvas canvas) {
-        canvas.drawCircle(0, 0, radius);
+        canvas.drawCircle(centerX, centerY, radius);
+    }
+
+    @Override
+    public void fill(final Canvas canvas) {
+        canvas.fillCircle(centerX, centerY, radius);
     }
 
     /**
@@ -76,6 +93,28 @@ public final class Circle extends Shape implements Storable {
      */
     public double getArea() {
         return Math.PI * radius * radius;
+    }
+
+    /**
+     * Returns the horizontal coordinate of the circle's center.
+     *
+     * @return the horizontal coordinate of the circle's center
+     *
+     * @since 2.0
+     */
+    public double getCenterX() {
+        return centerX;
+    }
+
+    /**
+     * Returns the vertical coordinate of the circle's center.
+     *
+     * @return the vertical coordinate of the circle's center
+     *
+     * @since 2.0
+     */
+    public double getCenterY() {
+        return centerY;
     }
 
     /**
@@ -125,8 +164,8 @@ public final class Circle extends Shape implements Storable {
         double[] y = new double[n];
         for (int i = 0; i < n; ++i) {
             double angle = 2.0 * Math.PI * i / n;
-            x[i] = radius * Math.cos(angle);
-            y[i] = radius * Math.sin(angle);
+            x[i] = centerX + radius * Math.cos(angle);
+            y[i] = centerY + radius * Math.sin(angle);
         }
 
         return new Polygon(x, y);
@@ -135,7 +174,11 @@ public final class Circle extends Shape implements Storable {
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
-        result.append("Circle(r=");
+        result.append("Circle(cx=");
+        result.append(centerX);
+        result.append(", cy=");
+        result.append(centerY);
+        result.append(", r=");
         result.append(radius);
         result.append(")");
         return result.toString();
@@ -143,6 +186,8 @@ public final class Circle extends Shape implements Storable {
 
     @Override
     public void writeTo(final Data data) {
+        data.writeDouble(CENTER_X, centerX);
+        data.writeDouble(CENTER_Y, centerY);
         data.writeDouble(RADIUS, radius);
     }
 }

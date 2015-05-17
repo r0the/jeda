@@ -62,6 +62,11 @@ public final class Rectangle extends Shape {
         canvas.drawRectangle(0, 0, width, height, Alignment.CENTER);
     }
 
+    @Override
+    public void fill(final Canvas canvas) {
+        canvas.drawRectangle(0, 0, width, height, Alignment.CENTER);
+    }
+
     /**
      * Returns the area of this rectangle.
      *

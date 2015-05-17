@@ -17,7 +17,6 @@
 package ch.jeda.geometry;
 
 import ch.jeda.ui.Canvas;
-import ch.jeda.ui.Color;
 import java.util.Arrays;
 
 /**
@@ -114,6 +113,11 @@ public final class Polygon extends Shape {
     @Override
     public void draw(final Canvas canvas) {
         canvas.drawPolygon(vertexX, vertexY);
+    }
+
+    @Override
+    public void fill(final Canvas canvas) {
+        canvas.fillPolygon(vertexX, vertexY);
     }
 
     /**

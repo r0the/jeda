@@ -17,6 +17,9 @@
 package ch.jeda.tiled;
 
 import ch.jeda.Data;
+import ch.jeda.geometry.Circle;
+import ch.jeda.geometry.Ellipse;
+import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
 import ch.jeda.physics.Body;
 import ch.jeda.physics.BodyType;
@@ -47,12 +50,19 @@ public final class TiledObject {
         name = element.getStringAttribute(Const.NAME);
         properties = element.parsePropertiesChild();
         rotation = element.getDoubleAttribute(Const.ROTATION, 0.0);
-        shape = Parser.parseShape(element);
+        shape = Parser.parseShape(element, 0.0, 0.0);
         type = element.getStringAttribute(Const.TYPE);
         visible = element.getBooleanAttribute(Const.VISIBLE, true);
         width = element.getDoubleAttribute(Const.WIDTH, 0.0);
-        x = element.getDoubleAttribute(Const.X);
-        y = element.getDoubleAttribute(Const.Y);
+        double cx = element.getDoubleAttribute(Const.X);
+        double cy = element.getDoubleAttribute(Const.Y);
+        if (shape instanceof Circle || shape instanceof Ellipse || shape instanceof Rectangle) {
+            cx = cx + width / 2.0;
+            cy = cy + height / 2.0;
+        }
+
+        x = cx;
+        y = cy;
         if (element.hasAttribute(Const.GID)) {
             tile = map.lookupTile(element.getIntAttribute(Const.GID));
         }

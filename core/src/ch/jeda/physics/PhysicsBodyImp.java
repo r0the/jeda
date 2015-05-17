@@ -97,6 +97,7 @@ final class PhysicsBodyImp implements BodyImp {
     public void drawOverlay(final Canvas canvas) {
         canvas.setColor(Color.RED);
         if (physics.isDebugging()) {
+            canvas.fillCircle(0, 0, 5);
             for (final Shape shape : shapes) {
                 shape.draw(canvas);
             }
@@ -267,7 +268,13 @@ final class PhysicsBodyImp implements BodyImp {
             return convertCircle((Circle) shape, scale);
         }
         else if (shape instanceof Ellipse) {
-            return convertEllipse((Ellipse) shape, scale);
+            final Ellipse ellipse = (Ellipse) shape;
+            if (ellipse.getEccentricity() < 0.1) {
+                return convertCircle(ellipse.toCircle(), scale);
+            }
+            else {
+                return convertPolygon(ellipse.toPolygon(24), scale);
+            }
         }
         else if (shape instanceof Rectangle) {
             return convertRectangle((Rectangle) shape, scale);
@@ -285,19 +292,10 @@ final class PhysicsBodyImp implements BodyImp {
 
     private static org.jbox2d.collision.shapes.Shape convertCircle(final Circle circle, final double scale) {
         final org.jbox2d.collision.shapes.CircleShape result = new org.jbox2d.collision.shapes.CircleShape();
+        result.m_p.x = (float) (circle.getCenterX() / scale);
+        result.m_p.y = (float) (circle.getCenterY() / scale);
         result.m_radius = (float) (circle.getRadius() / scale);
         return result;
-    }
-
-    private static org.jbox2d.collision.shapes.Shape convertEllipse(final Ellipse ellipse, final double scale) {
-        if (ellipse.getEccentricity() < 0.1) {
-            final org.jbox2d.collision.shapes.CircleShape result = new org.jbox2d.collision.shapes.CircleShape();
-            result.m_radius = (float) ((ellipse.getRadiusX() + ellipse.getRadiusY()) / (2.0 * scale));
-            return result;
-        }
-        else {
-            return convertPolygon(ellipse.toPolygon(24), scale);
-        }
     }
 
     private static org.jbox2d.collision.shapes.Shape convertRectangle(final Rectangle rectangle, final double scale) {

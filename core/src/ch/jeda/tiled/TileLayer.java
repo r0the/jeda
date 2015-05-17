@@ -16,11 +16,14 @@
  */
 package ch.jeda.tiled;
 
+import ch.jeda.geometry.Rectangle;
+import ch.jeda.geometry.Shape;
 import ch.jeda.physics.Body;
 import ch.jeda.physics.BodyType;
 import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
+import ch.jeda.ui.Image;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,21 +84,32 @@ public final class TileLayer extends Layer {
             for (int y = 0; y < endY; ++y) {
                 final Tile tile = getTile(x, y);
                 if (tile != null) {
-                    Body body = Body.create(getProperties().readString("class"));
+                    final Body body = Body.create(getProperties().readString("class"));
+                    final Shape[] shapes = tile.getShapes();
+                    final Image image = tile.getImage();
+                    if (shapes.length > 0) {
+                        for (int i = 0; i < shapes.length; ++i) {
+                            body.addShape(shapes[i]);
+                        }
+                    }
+                    else {
+                        body.addShape(new Rectangle(image.getWidth(), image.getHeight()));
+                    }
+
                     body.setType(type);
                     body.setImage(tile.getImage());
                     body.setOpacity(getOpacity());
-                    body.setPosition(viewX + tile.getOffsetX(), viewY + tile.getOffsetY());
+                    body.setPosition(viewX + tile.getOffsetX() + (image.getWidth() - tileWidth) / 2.0,
+                                     viewY + tile.getOffsetY() - (image.getHeight() - tileHeight) / 2.0);
                     view.add(body);
-
                 }
+
                 viewY += tileHeight;
             }
 
             viewY = tileHeight / 2;
             viewX += tileWidth;
         }
-
     }
 
     @Override

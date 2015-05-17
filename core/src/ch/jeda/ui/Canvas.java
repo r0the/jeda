@@ -200,7 +200,7 @@ public class Canvas {
      *
      * @since 2.0
      */
-    public void drawEllipe(final int x, final int y, final int rx, final int ry) {
+    public void drawEllipse(final int x, final int y, final int rx, final int ry) {
         if (rx > 0 && ry > 0) {
             imp.drawEllipse(x - rx, y - ry, 2 * rx, 2 * ry);
         }
@@ -217,8 +217,8 @@ public class Canvas {
      *
      * @since 2.0
      */
-    public void drawEllipe(final double x, final double y, final double rx, final double ry) {
-        drawEllipe((int) x, (int) y, (int) rx, (int) ry);
+    public void drawEllipse(final double x, final double y, final double rx, final double ry) {
+        drawEllipse((int) x, (int) y, (int) rx, (int) ry);
     }
 
     /**
@@ -738,7 +738,7 @@ public class Canvas {
      *
      * @since 2.0
      */
-    public void fillEllipe(final int x, final int y, final int rx, final int ry) {
+    public void fillEllipse(final int x, final int y, final int rx, final int ry) {
         if (rx > 0 && ry > 0) {
             imp.fillEllipse(x - rx, y - ry, 2 * rx, 2 * ry);
         }
@@ -755,8 +755,8 @@ public class Canvas {
      *
      * @since 2.0
      */
-    public void fillEllipe(final double x, final double y, final double rx, final double ry) {
-        fillEllipe((int) x, (int) y, (int) rx, (int) ry);
+    public void fillEllipse(final double x, final double y, final double rx, final double ry) {
+        fillEllipse((int) x, (int) y, (int) rx, (int) ry);
     }
 
     /**
@@ -1185,6 +1185,7 @@ public class Canvas {
     /**
      * Pops canvas transformations from the transformation stack. Has no effect if the transformation stack is empty.
      *
+     * @see #pushTransformations()
      * @since 2.0
      */
     public void popTransformations() {
@@ -1198,6 +1199,7 @@ public class Canvas {
     /**
      * Pushes the current canvas transformations on the transformation stack.
      *
+     * @see #popTransformations()
      * @since 2.0
      */
     public void pushTransformations() {
@@ -1216,6 +1218,15 @@ public class Canvas {
      */
     public void resetTransformations() {
         transformation.reset();
+        imp.setTransformation(transformation);
+    }
+
+    public void rotateDeg(final double angle) {
+        rotateRad(Math.toRadians(angle));
+    }
+
+    public void rotateRad(final double angle) {
+        transformation.rotation = MathUtil.normalizeAngle(transformation.rotation + angle);
         imp.setTransformation(transformation);
     }
 
@@ -1474,6 +1485,12 @@ public class Canvas {
         else {
             return imp.textWidth(text);
         }
+    }
+
+    public void translate(final double dx, final double dy) {
+        transformation.translationX = transformation.translationX + dx;
+        transformation.translationY = transformation.translationY + dy;
+        imp.setTransformation(transformation);
     }
 
     final void setImp(final CanvasImp imp) {

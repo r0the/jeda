@@ -32,13 +32,13 @@ class Parser {
      * @param tileElement the tile element
      * @return the shapes
      */
-    static Shape[] parseShapes(final ElementWrapper tileElement) {
+    static Shape[] parseShapes(final ElementWrapper tileElement, final double offsetX, final double offsetY) {
         final List<Shape> shapeList = new ArrayList<Shape>();
         if (tileElement != null) {
             final ElementWrapper objectGroupElement = tileElement.getChild(Const.OBJECTGROUP);
             if (objectGroupElement != null) {
                 for (final ElementWrapper objectElement : objectGroupElement.getChildren(Const.OBJECT)) {
-                    shapeList.add(parseShape(objectElement));
+                    shapeList.add(parseShape(objectElement, offsetX, offsetY));
                 }
             }
         }
@@ -52,19 +52,19 @@ class Parser {
      * @param objectElement the object element
      * @return the shapes
      */
-    static Shape parseShape(final ElementWrapper objectElement) {
+    static Shape parseShape(final ElementWrapper objectElement, final double offsetX, final double offsetY) {
         final double height = objectElement.getDoubleAttribute(Const.HEIGHT, 0.0);
         final double width = objectElement.getDoubleAttribute(Const.WIDTH, 0.0);
         if (objectElement.hasChild(Const.ELLIPSE)) {
-            return new Ellipse(width / 2.0, height / 2.0);
+            return new Ellipse(width / 2.0, height / 2.0, width / 2.0, height / 2.0);
         }
         else if (objectElement.hasChild(Const.POLYGON)) {
             final String points = objectElement.getChild(Const.POLYGON).getStringAttribute(Const.POINTS);
-            return new Polygon(parsePoints(points));
+            return new Polygon(parsePoints(points, offsetX, offsetY));
         }
         else if (objectElement.hasChild(Const.POLYLINE)) {
             final String points = objectElement.getChild(Const.POLYLINE).getStringAttribute(Const.POINTS);
-            return new PolygonalChain(parsePoints(points));
+            return new PolygonalChain(parsePoints(points, offsetX, offsetY));
         }
         else if (width > 0 && height > 0) {
             return new Rectangle(width, height);
@@ -111,11 +111,17 @@ class Parser {
      * @param points the string
      * @return the list of points
      */
-    private static double[] parsePoints(final String points) {
+    private static double[] parsePoints(final String points, final double offsetX, final double offsetY) {
         String[] parts = points.split(" |,");
         final double[] result = new double[parts.length];
         for (int i = 0; i < parts.length; ++i) {
             result[i] = Double.parseDouble(parts[i]);
+            if (i % 2 == 0) {
+                result[i] = result[i] + offsetX;
+            }
+            else {
+                result[i] = result[i] + offsetY;
+            }
         }
 
         return result;

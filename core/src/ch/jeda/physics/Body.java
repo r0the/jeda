@@ -551,15 +551,16 @@ public class Body extends Element {
 
     @Override
     protected final void draw(final Canvas canvas) {
-        canvas.setRotationRad(getAngleRad());
-        canvas.setTranslation(getX(), getY());
+        canvas.pushTransformations();
+        canvas.rotateRad(getAngleRad());
+        canvas.translate(getX(), getY());
         if (image != null) {
             canvas.drawImage(0, 0, image, Alignment.CENTER);
         }
 
         drawDecoration(canvas);
         imp.drawOverlay(canvas);
-        canvas.resetTransformations();
+        canvas.popTransformations();
     }
 
     /**

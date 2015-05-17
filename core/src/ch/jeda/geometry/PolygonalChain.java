@@ -95,6 +95,11 @@ public class PolygonalChain extends Shape {
         }
     }
 
+    @Override
+    public void fill(final Canvas canvas) {
+        this.draw(canvas);
+    }
+
     /**
      * Returns the number of vertices of this polygonal chain.
      *

@@ -27,21 +27,27 @@ import ch.jeda.ui.Canvas;
  */
 public final class Ellipse extends Shape implements Storable {
 
+    private static final String CENTER_X = "centerx";
+    private static final String CENTER_Y = "centery";
     private static final String RADIUS_X = "radiusx";
     private static final String RADIUS_Y = "radiusy";
+    private final double centerX;
+    private final double centerY;
     private final double radiusX;
     private final double radiusY;
 
     /**
      * Constructs a new ellipse shape. With and height must be positive.
      *
+     * @param centerX the horizontal coordinate of the ellipse's center
+     * @param centerY the vertical coordinate of the ellipse's center
      * @param radiusX the horizontal radius of the ellipse
      * @param radiusY the vertical radius of the ellipse
      * @throws IllegalArgumentException if <code>rx</code> or <code>ry</code> are not positive
      *
      * @since 2.0
      */
-    public Ellipse(final double radiusX, final double radiusY) {
+    public Ellipse(final double centerX, final double centerY, final double radiusX, final double radiusY) {
         if (radiusX <= 0.0) {
             throw new IllegalArgumentException("radiusX");
         }
@@ -50,6 +56,8 @@ public final class Ellipse extends Shape implements Storable {
             throw new IllegalArgumentException("radiusY");
         }
 
+        this.centerX = centerX;
+        this.centerY = centerY;
         this.radiusX = radiusX;
         this.radiusY = radiusY;
     }
@@ -62,6 +70,8 @@ public final class Ellipse extends Shape implements Storable {
      * @since 2.0
      */
     public Ellipse(final Data data) {
+        this.centerX = data.readDouble(CENTER_X);
+        this.centerY = data.readDouble(CENTER_Y);
         this.radiusX = data.readDouble(RADIUS_X);
         this.radiusY = data.readDouble(RADIUS_Y);
     }
@@ -73,7 +83,12 @@ public final class Ellipse extends Shape implements Storable {
 
     @Override
     public void draw(final Canvas canvas) {
-        canvas.drawEllipe(0.0, 0.0, radiusX, radiusY);
+        canvas.drawEllipse(0.0, 0.0, radiusX, radiusY);
+    }
+
+    @Override
+    public void fill(final Canvas canvas) {
+        canvas.fillEllipse(0.0, 0.0, radiusX, radiusY);
     }
 
     /**
@@ -85,6 +100,28 @@ public final class Ellipse extends Shape implements Storable {
      */
     public double getArea() {
         return Math.PI * radiusX * radiusY;
+    }
+
+    /**
+     * Returns the horizontal coordinate of the ellipse's center.
+     *
+     * @return the horizontal coordinate of the ellipse's center
+     *
+     * @since 2.0
+     */
+    public double getCenterX() {
+        return centerX;
+    }
+
+    /**
+     * Returns the vertical coordinate of the ellipse's center.
+     *
+     * @return the vertical coordinate of the ellipse's center
+     *
+     * @since 2.0
+     */
+    public double getCenterY() {
+        return centerY;
     }
 
     /**
@@ -126,11 +163,23 @@ public final class Ellipse extends Shape implements Storable {
     }
 
     /**
+     * Creates and returns a circle that approximates this ellipse. The circle has the same center as the ellipse. The
+     * circle's radius is the geometric mean of the ellipse's radii.
+     *
+     * @return a circle approximating the ellipse
+     *
+     * @since 2.0
+     */
+    public Circle toCircle() {
+        return new Circle(centerX, centerY, Math.sqrt(radiusX * radiusY));
+    }
+
+    /**
      * Creates and returns a polygon that approximates this ellipse. The number <code>n</code> specifies the number of
      * vertices of the polygon.
      *
      * @param n the number of vertices of the polygon
-     * @return a polygon approximating the circle
+     * @return a polygon approximating the ellipse
      *
      * @since 2.0
      */
@@ -139,8 +188,8 @@ public final class Ellipse extends Shape implements Storable {
         double[] y = new double[n];
         for (int i = 0; i < n; ++i) {
             double angle = 2.0 * Math.PI * i / n;
-            x[i] = radiusX * Math.cos(angle);
-            y[i] = radiusY * Math.sin(angle);
+            x[i] = centerX + radiusX * Math.cos(angle);
+            y[i] = centerY + radiusY * Math.sin(angle);
         }
 
         return new Polygon(x, y);
@@ -149,7 +198,11 @@ public final class Ellipse extends Shape implements Storable {
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
-        result.append("Ellipse(rx=");
+        result.append("Ellipse(cx=");
+        result.append(centerX);
+        result.append(", cy=");
+        result.append(centerY);
+        result.append(", rx=");
         result.append(radiusX);
         result.append(", ry=");
         result.append(radiusY);
@@ -159,6 +212,8 @@ public final class Ellipse extends Shape implements Storable {
 
     @Override
     public void writeTo(final Data data) {
+        data.writeDouble(CENTER_X, centerX);
+        data.writeDouble(CENTER_Y, centerY);
         data.writeDouble(RADIUS_X, radiusX);
         data.writeDouble(RADIUS_Y, radiusY);
     }

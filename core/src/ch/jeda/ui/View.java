@@ -54,6 +54,8 @@ public class View {
     private Element[] elements;
     private ViewImp imp;
     private String title;
+    private double translationX;
+    private double translationY;
 
     /**
      * Constructs a view. The view is shown on the screen.
@@ -390,6 +392,11 @@ public class View {
         eventQueue.removeListener(listener);
     }
 
+    public final void scroll(final double dx, final double dy) {
+        translationX = translationX + dx;
+        translationY = translationY + dy;
+    }
+
     /**
      * Enables or disables a view feature.
      *
@@ -508,6 +515,7 @@ public class View {
             updateElements();
             eventQueue.processEvents();
             canvas.drawCanvas(0, 0, background);
+            canvas.setTranslation(translationX, translationY);
             for (int i = 0; i < elements.length; ++i) {
                 elements[i].draw(canvas);
             }

@@ -26,23 +26,31 @@ import ch.jeda.ui.Canvas;
 public abstract class Shape {
 
     /**
-     * Checks if this shape contains the specified point. The coordinates of the point must be specified in local
-     * coordinates.
+     * Checks if this shape contains a point.
      *
      * @param x the x coordinate of the point
      * @param y the y coordinate of the point
-     * @return <code>true</code>, if the shape contains the specified point, otherwise <code>false</code>
+     * @return <code>true</code>, if the shape contains the point, otherwise <code>false</code>
      *
      * @since 2.0
      */
     public abstract boolean contains(double x, double y);
 
     /**
-     * Draws the border of this shape on a canvas. The shape is drawn in local coordinates.
+     * Draws the border of this shape on a canvas.
      *
      * @param canvas the canvas to draw on
      *
      * @since 2.0
      */
     public abstract void draw(Canvas canvas);
+
+    /**
+     * Draws the area of this shape on a canvas.
+     *
+     * @param canvas the canvas to draw on
+     *
+     * @since 2.0
+     */
+    public abstract void fill(Canvas canvas);
 }
