@@ -31,7 +31,7 @@ public interface CanvasImp {
 
     void drawLine(int x1, int y1, int x2, int y2);
 
-    void drawPolygon(int[] points);
+    void drawPolygon(int[] x, int[] y);
 
     void drawRectangle(int x, int y, int width, int height);
 
@@ -41,7 +41,7 @@ public interface CanvasImp {
 
     void fillEllipse(int x, int y, int width, int height);
 
-    void fillPolygon(int[] points);
+    void fillPolygon(int[] x, int[] y);
 
     void fillRectangle(int x, int y, int width, int height);
 

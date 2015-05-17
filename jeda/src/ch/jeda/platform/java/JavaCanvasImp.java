@@ -86,12 +86,13 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawPolygon(final int[] points) {
-        assert points != null;
-        assert points.length >= 6;
-        assert points.length % 2 == 0;
+    public void drawPolygon(final int[] x, final int[] y) {
+        assert x != null;
+        assert y != null;
+        assert x.length >= 3;
+        assert x.length == y.length;
 
-        graphics.drawPolygon(createPolygon(points));
+        graphics.drawPolygon(createPolygon(x, y));
     }
 
     @Override
@@ -127,12 +128,13 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillPolygon(final int[] points) {
-        assert points != null;
-        assert points.length >= 6;
-        assert points.length % 2 == 0;
+    public void fillPolygon(final int[] x, final int[] y) {
+        assert x != null;
+        assert y != null;
+        assert x.length >= 3;
+        assert x.length == y.length;
 
-        graphics.fillPolygon(createPolygon(points));
+        graphics.fillPolygon(createPolygon(x, y));
     }
 
     @Override
@@ -272,10 +274,10 @@ class JavaCanvasImp implements CanvasImp {
             createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
-    private static Polygon createPolygon(final int[] points) {
+    private static Polygon createPolygon(final int[] x, final int[] y) {
         final Polygon result = new Polygon();
-        for (int i = 0; i < points.length; i = i + 2) {
-            result.addPoint(points[i], points[i + 1]);
+        for (int i = 0; i < x.length; ++i) {
+            result.addPoint(x[i], y[i]);
         }
 
         return result;

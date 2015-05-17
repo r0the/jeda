@@ -416,9 +416,43 @@ public class Canvas {
 
     /**
      * Draws a polygon. The polygon is drawn using the current color, line width, and transformation. The polygon is
-     * defined by a sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
-     * <pre><code>drawPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the corners (x1, y2), (x2,
-     * y2), and (x3, y3).
+     * defined by the x and y coordinates of it's vertices. For example, the code
+     * <pre><code>drawPolygon(new double[] {x1, x2, x3}, new double[] {y1, y2, y3});</code></pre> will draw a triangle
+     * with the vertices (x1, y2), (x2, y2), and (x3, y3).
+     *
+     * @param x the x coordinates of the polygon's vertices
+     * @param y the y coordinates of the polygon's vertices
+     * @throws NullPointerException if <code>x</code> or <code>y</code> are <code>null</code>
+     * @throws IllegalArgumentException if less than 6 arguments are passed
+     * @throws IllegalArgumentException if and odd number of arguments are passed
+     *
+     * @since 2.0
+     */
+    public void drawPolygon(final int[] x, final int[] y) {
+        if (x == null) {
+            throw new NullPointerException("x");
+        }
+
+        if (y == null) {
+            throw new NullPointerException("y");
+        }
+
+        if (x.length < 3) {
+            throw new IllegalArgumentException("x");
+        }
+
+        if (x.length != y.length) {
+            throw new IllegalArgumentException("y");
+        }
+
+        imp.drawPolygon(x, y);
+    }
+
+    /**
+     * Draws a polygon. The polygon is drawn using the current color, line width, and transformation. The polygon is
+     * defined by a sequence of coordinate pairs specifiying the vertices of the polygon. For example, the code
+     * <pre><code>drawPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the vertices (x1, y2),
+     * (x2, y2), and (x3, y3).
      *
      * @param points the points of the polygon as sequence of coordinate pairs
      * @throws IllegalArgumentException if less than 6 arguments are passed
@@ -431,7 +465,49 @@ public class Canvas {
             throw new IllegalArgumentException("points");
         }
 
-        imp.drawPolygon(points);
+        final int count = points.length / 2;
+        final int[] x = new int[count];
+        final int[] y = new int[count];
+        for (int i = 0; i < count; ++i) {
+            x[i] = points[2 * i];
+            y[i] = points[2 * i + 1];
+        }
+
+        imp.drawPolygon(x, y);
+    }
+
+    /**
+     * Draws a polygon. The polygon is drawn using the current color, line width, and transformation. The polygon is
+     * defined by the x and y coordinates of it's vertices. For example, the code
+     * <pre><code>drawPolygon(new double[] {x1, x2, x3}, new double[] {y1, y2, y3});</code></pre> will draw a triangle
+     * with the vertices (x1, y2), (x2, y2), and (x3, y3).
+     *
+     * @param x the x coordinates of the polygon's vertices
+     * @param y the y coordinates of the polygon's vertices
+     * @throws NullPointerException if <code>x</code> or <code>y</code> are <code>null</code>
+     * @throws IllegalArgumentException if less than 6 arguments are passed
+     * @throws IllegalArgumentException if and odd number of arguments are passed
+     *
+     * @since 2.0
+     */
+    public void drawPolygon(final double[] x, final double[] y) {
+        if (x == null) {
+            throw new NullPointerException("x");
+        }
+
+        if (y == null) {
+            throw new NullPointerException("y");
+        }
+
+        if (x.length < 3) {
+            throw new IllegalArgumentException("x");
+        }
+
+        if (x.length != y.length) {
+            throw new IllegalArgumentException("y");
+        }
+
+        imp.drawPolygon(toIntArray(x), toIntArray(y));
     }
 
     /**
@@ -447,7 +523,19 @@ public class Canvas {
      * @since 1.0
      */
     public void drawPolygon(final double... points) {
-        imp.drawPolygon(toIntArray(points));
+        if (points.length < 6 || points.length % 2 == 1) {
+            throw new IllegalArgumentException("points");
+        }
+
+        final int count = points.length / 2;
+        final int[] x = new int[count];
+        final int[] y = new int[count];
+        for (int i = 0; i < count; ++i) {
+            x[i] = (int) points[2 * i];
+            y[i] = (int) points[2 * i + 1];
+        }
+
+        imp.drawPolygon(x, y);
     }
 
     /**
@@ -673,6 +761,40 @@ public class Canvas {
 
     /**
      * Draws a filled polygon. The polygon is drawn using the current color, line width, and transformation. The polygon
+     * is defined by the x and y coordinates of it's vertices. For example, the code
+     * <pre><code>drawPolygon(new double[] {x1, x2, x3}, new double[] {y1, y2, y3});</code></pre> will draw a triangle
+     * with the vertices (x1, y2), (x2, y2), and (x3, y3).
+     *
+     * @param x the x coordinates of the polygon's vertices
+     * @param y the y coordinates of the polygon's vertices
+     * @throws NullPointerException if <code>x</code> or <code>y</code> are <code>null</code>
+     * @throws IllegalArgumentException if less than 6 arguments are passed
+     * @throws IllegalArgumentException if and odd number of arguments are passed
+     *
+     * @since 2.0
+     */
+    public void fillPolygon(final int[] x, final int[] y) {
+        if (x == null) {
+            throw new NullPointerException("x");
+        }
+
+        if (y == null) {
+            throw new NullPointerException("y");
+        }
+
+        if (x.length < 3) {
+            throw new IllegalArgumentException("x");
+        }
+
+        if (x.length != y.length) {
+            throw new IllegalArgumentException("y");
+        }
+
+        imp.fillPolygon(x, y);
+    }
+
+    /**
+     * Draws a filled polygon. The polygon is drawn using the current color, line width, and transformation. The polygon
      * is defined by a sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
      * <pre><code>fillPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the corners (x1, y2), (x2,
      * y2), and (x3, y3).
@@ -688,7 +810,49 @@ public class Canvas {
             throw new IllegalArgumentException("points");
         }
 
-        imp.fillPolygon(points);
+        final int count = points.length / 2;
+        final int[] x = new int[count];
+        final int[] y = new int[count];
+        for (int i = 0; i < count; ++i) {
+            x[i] = points[2 * i];
+            y[i] = points[2 * i + 1];
+        }
+
+        imp.fillPolygon(x, y);
+    }
+
+    /**
+     * Draws a filled polygon. The polygon is drawn using the current color, line width, and transformation. The polygon
+     * is defined by the x and y coordinates of it's vertices. For example, the code
+     * <pre><code>drawPolygon(new double[] {x1, x2, x3}, new double[] {y1, y2, y3});</code></pre> will draw a triangle
+     * with the vertices (x1, y2), (x2, y2), and (x3, y3).
+     *
+     * @param x the x coordinates of the polygon's vertices
+     * @param y the y coordinates of the polygon's vertices
+     * @throws NullPointerException if <code>x</code> or <code>y</code> are <code>null</code>
+     * @throws IllegalArgumentException if less than 6 arguments are passed
+     * @throws IllegalArgumentException if and odd number of arguments are passed
+     *
+     * @since 2.0
+     */
+    public void fillPolygon(final double[] x, final double[] y) {
+        if (x == null) {
+            throw new NullPointerException("x");
+        }
+
+        if (y == null) {
+            throw new NullPointerException("y");
+        }
+
+        if (x.length < 3) {
+            throw new IllegalArgumentException("x");
+        }
+
+        if (x.length != y.length) {
+            throw new IllegalArgumentException("y");
+        }
+
+        imp.fillPolygon(toIntArray(x), toIntArray(y));
     }
 
     /**
@@ -704,7 +868,15 @@ public class Canvas {
      * @since 1.0
      */
     public void fillPolygon(final double... points) {
-        imp.fillPolygon(toIntArray(points));
+        final int count = points.length / 2;
+        final int[] x = new int[count];
+        final int[] y = new int[count];
+        for (int i = 0; i < count; ++i) {
+            x[i] = (int) points[2 * i];
+            y[i] = (int) points[2 * i + 1];
+        }
+
+        imp.fillPolygon(x, y);
     }
 
     /**

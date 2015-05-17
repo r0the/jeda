@@ -83,12 +83,13 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawPolygon(final int[] points) {
-        assert points != null;
-        assert points.length >= 6;
-        assert points.length % 2 == 0;
+    public void drawPolygon(final int[] x, final int[] y) {
+        assert x != null;
+        assert y != null;
+        assert x.length >= 3;
+        assert x.length == y.length;
 
-        canvas.drawPath(createPath(points), strokePaint);
+        canvas.drawPath(createPath(x, y), strokePaint);
     }
 
     @Override
@@ -114,12 +115,13 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillPolygon(final int[] points) {
-        assert points != null;
-        assert points.length >= 6;
-        assert points.length % 2 == 0;
+    public void fillPolygon(final int[] x, final int[] y) {
+        assert x != null;
+        assert y != null;
+        assert x.length >= 3;
+        assert x.length == y.length;
 
-        canvas.drawPath(createPath(points), fillPaint);
+        canvas.drawPath(createPath(x, y), fillPaint);
     }
 
     @Override
@@ -244,16 +246,16 @@ class AndroidCanvasImp implements CanvasImp {
         return 0 <= x && x < getWidth() && 0 <= y && y < getHeight();
     }
 
-    private static Path createPath(final int[] points) {
+    private static Path createPath(final int[] x, final int[] y) {
         final Path result = new Path();
         boolean first = true;
-        for (int i = 0; i < points.length; i = i + 2) {
+        for (int i = 0; i < x.length; ++i) {
             if (first) {
-                result.moveTo(points[i], points[i + 1]);
+                result.moveTo(x[i], y[i]);
                 first = false;
             }
             else {
-                result.lineTo(points[i], points[i + 1]);
+                result.lineTo(x[i], y[i]);
             }
         }
 
