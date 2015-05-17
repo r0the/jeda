@@ -22,8 +22,14 @@ package ch.jeda.tiled;
  * @see TiledMap
  * @since 2.0
  */
-public enum TiledMapOrientation {
+public enum Orientation {
 
+    /**
+     * Hexagonal Tiled map orientation.
+     *
+     * @since 2.0
+     */
+    HEXAGONAL,
     /**
      * Isometric Tiled map orientation.
      *

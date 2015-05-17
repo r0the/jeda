@@ -40,5 +40,43 @@ public enum BodyType {
      *
      * @since 2.0
      */
-    STATIC
+    STATIC;
+
+    /**
+     * Parses a body type from a string. Returns the corresponding body type, if <code>value</code> matches a body type
+     * constant in any combination of lower and upper case letters. Returns <code>null</code> if the string does not
+     * matches any body type constant.
+     *
+     * @param value the value to parse
+     * @return the parsed body type
+     *
+     * @since 2.0
+     */
+    public static BodyType parse(final String value) {
+        return parse(value, null);
+    }
+
+    /**
+     * Parses a body type from a string. Returns the corresponding body type, if <code>value</code> matches a body type
+     * constant in any combination of lower and upper case letters. Returns <code>defaultValue</code> if the string does
+     * not matches any body type constant.
+     *
+     * @param value the value to parse
+     * @param defaultValue the default value
+     * @return the parsed body type
+     *
+     * @since 2.0
+     */
+    public static BodyType parse(final String value, final BodyType defaultValue) {
+        if (value == null) {
+            return defaultValue;
+        }
+
+        try {
+            return valueOf(value.toUpperCase());
+        }
+        catch (IllegalArgumentException ex) {
+            return defaultValue;
+        }
+    }
 }

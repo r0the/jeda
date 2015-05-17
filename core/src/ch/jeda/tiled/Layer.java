@@ -18,7 +18,6 @@ package ch.jeda.tiled;
 
 import ch.jeda.Data;
 import ch.jeda.physics.PhysicsView;
-import ch.jeda.ui.Canvas;
 
 /**
  * Base class for Tiled map layers.
@@ -29,31 +28,26 @@ public abstract class Layer {
 
     private final TiledMap map;
     private final String name;
-    private double opacity;
+    private final int opacity;
     private final Data properties;
-    private boolean visible;
+    private final boolean visible;
 
-    Layer(final TiledMap map, final Element element) {
+    Layer(final TiledMap map, final ElementWrapper element) {
         this.map = map;
         name = element.getStringAttribute(Const.NAME);
-        opacity = Math.max(0.0, Math.min(element.getDoubleAttribute(Const.OPACITY, 1.0), 1.0));
+        opacity = (int) Math.max(0.0, Math.min(element.getDoubleAttribute(Const.OPACITY, 1.0) * 255, 255.0));
         properties = element.parsePropertiesChild();
         visible = element.getBooleanAttribute(Const.VISIBLE, true);
     }
 
-    public abstract void addTo(final PhysicsView view);
-
     /**
-     * Draws this layer at the specified coordinates. The current opacity and visibility of the layer are taken into
-     * account when drawing the layer.
+     * Adds the contents of this layer to a physics view. The behavior of this method depends on the layer type.
      *
-     * @param canvas the canvas to draw this layer on
-     * @param offsetX the horizontal offset for drawing the layer
-     * @param offsetY the vertical offset for drawing the layer
+     * @param view the view to add this layer to
      *
      * @since 2.0
      */
-    public abstract void draw(final Canvas canvas, final double offsetX, final double offsetY);
+    public abstract void addTo(final PhysicsView view);
 
     /**
      * Returns the map this layer belongs to.
@@ -89,15 +83,14 @@ public abstract class Layer {
     }
 
     /**
-     * Returns the opacity of this layer. The opacity is a number between 0 and 1 where 0 means totally transparent and
-     * 1 means totally opaque.
+     * Returns the opacity of this layer. The opacity is a number between 0 and 255 where 0 means totally transparent
+     * and 255 means totally opaque.
      *
      * @return the opacity of this layer
      *
-     * @see #setOpacity(double)
      * @since 2.0
      */
-    public final double getOpacity() {
+    public final int getOpacity() {
         return opacity;
     }
 
@@ -113,12 +106,12 @@ public abstract class Layer {
     }
 
     /**
-     * Returns the tile at the specified tile coordinates. Returns <tt>null</tt> if there is no tile at the specified
-     * coordinates. Always returns <tt>null</tt> if this layer is not of type {@link TiledLayerType#TILE}.
+     * Returns the tile at the specified tile coordinates. Returns <code>null</code> if there is no tile at the
+     * specified coordinates. This implementation always returns <code>null</code>.
      *
      * @param x the horizontal tile coordinate
      * @param y the vertical tile coordinate
-     * @return the tile at the specified tile coordinates or <tt>null</tt>
+     * @return the tile at the specified tile coordinates or <code>null</code>
      *
      * @since 2.0
      */
@@ -129,37 +122,11 @@ public abstract class Layer {
     /**
      * Checks if this layer is visible.
      *
-     * @return <tt>true</tt> is this layer is visible, otherwise <tt>false</tt>
+     * @return <code>true</code> is this layer is visible, otherwise <code>false</code>
      *
-     * @see #setVisible(boolean)
      * @since 2.0
      */
     public final boolean isVisible() {
         return visible;
-    }
-
-    /**
-     * Sets the opacity of this layer. The opacity is a number between 0 and 1 where 0 means totally transparent and 1
-     * means totally opaque.
-     *
-     * @param opacity the opacity of this layer
-     *
-     * @see #getOpacity()
-     * @since 2.0
-     */
-    public void setOpacity(double opacity) {
-        this.opacity = Math.max(0.0, Math.min(opacity, 1.0));
-    }
-
-    /**
-     * Sets the visibility of this layer.
-     *
-     * @param visible the visibility of this layer
-     *
-     * @see #isVisible()
-     * @since 2.0
-     */
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 }

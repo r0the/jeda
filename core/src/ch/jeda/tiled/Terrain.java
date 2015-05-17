@@ -28,7 +28,7 @@ public final class Terrain {
     private final String name;
     private final Data properties;
 
-    Terrain(final Element element) {
+    Terrain(final ElementWrapper element) {
         name = element.getStringAttribute(Const.NAME);
         properties = element.parsePropertiesChild();
     }

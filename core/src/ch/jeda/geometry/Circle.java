@@ -16,15 +16,18 @@
  */
 package ch.jeda.geometry;
 
+import ch.jeda.Data;
+import ch.jeda.Storable;
 import ch.jeda.ui.Canvas;
 
 /**
- * Represents a circle shape.
+ * Represents a filled circle. The center of the circle is at the origin of the coordinate system.
  *
  * @since 2.0
  */
-public final class Circle extends Shape {
+public final class Circle extends Shape implements Storable {
 
+    private static final String RADIUS = "radius";
     private final double radius;
 
     /**
@@ -41,6 +44,22 @@ public final class Circle extends Shape {
         }
 
         this.radius = radius;
+    }
+
+    /**
+     * Constructs a circle from serialized data.
+     *
+     * @param data the serialized data
+     *
+     * @since 2.0
+     */
+    public Circle(final Data data) {
+        this.radius = data.readDouble(RADIUS);
+    }
+
+    @Override
+    public boolean contains(final double x, final double y) {
+        return x * x + y * y <= radius * radius;
     }
 
     @Override
@@ -90,5 +109,40 @@ public final class Circle extends Shape {
      */
     public double getRadius() {
         return radius;
+    }
+
+    /**
+     * Creates and returns a polygon that approximates this circle. The number <code>n</code> specifies the number of
+     * vertices of the polygon.
+     *
+     * @param n the number of vertices of the polygon
+     * @return a polygon approximating the circle
+     *
+     * @since 2.0
+     */
+    public Polygon toPolygon(int n) {
+        double[] x = new double[n];
+        double[] y = new double[n];
+        for (int i = 0; i < n; ++i) {
+            double angle = 2.0 * Math.PI * i / n;
+            x[i] = Math.cos(angle);
+            y[i] = Math.sin(angle);
+        }
+
+        return new Polygon(x, y);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("Circle(r=");
+        result.append(radius);
+        result.append(")");
+        return result.toString();
+    }
+
+    @Override
+    public void writeTo(final Data data) {
+        data.writeDouble(RADIUS, radius);
     }
 }

@@ -16,6 +16,8 @@
  */
 package ch.jeda.tiled;
 
+import ch.jeda.physics.Body;
+import ch.jeda.physics.BodyType;
 import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
@@ -35,7 +37,7 @@ public final class TileLayer extends Layer {
 
     private final Tile[] tiles;
 
-    TileLayer(final TiledMap map, final Element element) {
+    TileLayer(final TiledMap map, final ElementWrapper element) {
         super(map, element);
         // Read tile ids
         final int width = map.getWidth();
@@ -47,41 +49,53 @@ public final class TileLayer extends Layer {
         }
     }
 
+    /**
+     * Adds the contents of this layer to a physics view. The behavior of this method depends on the following custom
+     * properties of the layer:
+     * <ul>
+     * <li><b>class</b>: The name of a Java class that will represent the tiles of this layer. The default is
+     * <code>ch.jeda.physics.Body</code>.
+     * <li><b>type</b>: One of the following: <code>background</code>, <code>dynamic</code>, <code>static</code>, or
+     * <code>kinematic</code>. The default is <code>background</code>.
+     * </ul>
+     *
+     * @param view the physics view
+     *
+     * @since 2.0
+     */
     @Override
     public void addTo(final PhysicsView view) {
-        // TODO
-    }
-
-    @Override
-    public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
         if (!isVisible()) {
             return;
         }
 
-        final int alpha = (int) (getOpacity() * 255);
+        final BodyType type = BodyType.parse(getProperties().readString("type"));
+
         final int tileHeight = getMap().getTileHeight();
         final int tileWidth = getMap().getTileWidth();
-        int screenX = (int) offsetX;
-        int screenY = (int) offsetY + tileHeight;
-        int startX = 0;
-        int startY = 0;
+        int viewX = tileWidth / 2;
+        int viewY = tileHeight / 2;
         int endX = getMap().getWidth();
         int endY = getMap().getHeight();
-        for (int x = startX; x < endX; ++x) {
-            for (int y = startY; y < endY; ++y) {
+        for (int x = 0; x < endX; ++x) {
+            for (int y = 0; y < endY; ++y) {
                 final Tile tile = getTile(x, y);
                 if (tile != null) {
-                    tile.draw(canvas, screenX + tile.getOffsetX(),
-                              screenY + tile.getOffsetY(), alpha);
+                    Body body = Body.create(getProperties().readString("class"));
+                    body.setType(type);
+                    body.setImage(tile.getImage());
+                    body.setOpacity(getOpacity());
+                    body.setPosition(viewX + tile.getOffsetX(), viewY + tile.getOffsetY());
+                    view.add(body);
+
                 }
-                screenY += tileHeight;
+                viewY += tileHeight;
             }
 
-            screenY = (int) offsetY + tileHeight;
-            screenX += tileWidth;
+            viewY = tileHeight / 2;
+            viewX += tileWidth;
         }
 
-        drawDebugOverlay(canvas, (int) offsetX, (int) offsetY);
     }
 
     @Override
@@ -131,7 +145,7 @@ public final class TileLayer extends Layer {
         }
     }
 
-    private static int[] parseData(final Element element, final int width, final int height) {
+    private static int[] parseData(final ElementWrapper element, final int width, final int height) {
         final String encoding = element.getStringAttribute(Const.ENCODING);
         if (Const.BASE64.equalsIgnoreCase(encoding)) {
             return parseBase64(element, width, height);
@@ -142,7 +156,7 @@ public final class TileLayer extends Layer {
         else {
             final int[] result = new int[width * height];
             int i = 0;
-            for (final Element tileElement : element.getChildren(Const.TILE)) {
+            for (final ElementWrapper tileElement : element.getChildren(Const.TILE)) {
                 result[i] = tileElement.getIntAttribute(Const.GID);
                 ++i;
             }
@@ -151,7 +165,7 @@ public final class TileLayer extends Layer {
         }
     }
 
-    private static int[] parseBase64(final Element element, final int width, final int height) {
+    private static int[] parseBase64(final ElementWrapper element, final int width, final int height) {
         final String compression = element.getStringAttribute(Const.COMPRESSION);
         try {
             InputStream in = new ByteArrayInputStream(DatatypeConverter.parseBase64Binary(element.getContent()));

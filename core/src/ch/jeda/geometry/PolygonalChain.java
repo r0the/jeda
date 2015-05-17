@@ -17,6 +17,7 @@
 package ch.jeda.geometry;
 
 import ch.jeda.ui.Canvas;
+import java.util.Arrays;
 
 /**
  * Represents an open polygonal chain shape.
@@ -25,14 +26,42 @@ import ch.jeda.ui.Canvas;
  */
 public class PolygonalChain extends Shape {
 
-    private final double[] x;
-    private final double[] y;
+    private final int vertexCount;
+    private final double[] vertexX;
+    private final double[] vertexY;
+
+    /**
+     * Constructs a polygonal chain shape. The polygonal chain is defined by the x and y coordinates of it's vertices.
+     * For example, the code
+     * <pre><code>new PolygonalChain(new double[] {x1, x2, x3}, new double[] {y1, y2, y3});</code></pre> will define a
+     * chain consisting of the two line segments (x1, y2) to (x2, y2) and (x2, y2) to (x3, y3).
+     *
+     * @param vertexX the x coordinates of the polygon's vertices
+     * @param vertexY the y coordinates of the polygon's vertices
+     * @throws IllegalArgumentException if less than 2 x coordinates are passed
+     * @throws IllegalArgumentException if not the same number of x and y coordinates are passed
+     *
+     * @since 2.0
+     */
+    public PolygonalChain(final double[] vertexX, final double[] vertexY) {
+        if (vertexX.length < 2) {
+            throw new IllegalArgumentException("vertexX");
+        }
+
+        if (vertexX.length != vertexY.length) {
+            throw new IllegalArgumentException("vertexY");
+        }
+
+        vertexCount = vertexX.length;
+        this.vertexX = Arrays.copyOf(vertexX, vertexCount);
+        this.vertexY = Arrays.copyOf(vertexY, vertexCount);
+    }
 
     /**
      * Constructs a polygonal chain shape. The polygonal chain is defined by a sequence of coordinate pairs specifiying
      * it's vertices. For example, the code
-     * <pre><code>new Polyline(x1, y1, x2, y2, x3, y3);</code></pre> will define a chain consisting of the two line
-     * segments (x1, y2) to (x2, y2) and (x2, y2) to (x3, y3).
+     * <pre><code>new PolygonalChain(x1, y1, x2, y2, x3, y3);</code></pre> will define a chain consisting of the two
+     * line segments (x1, y2) to (x2, y2) and (x2, y2) to (x3, y3).
      *
      * @param vertices the vertices of the polyline as sequence of coordinate pairs
      * @throws IllegalArgumentException if less than 4 arguments are passed
@@ -45,19 +74,24 @@ public class PolygonalChain extends Shape {
             throw new IllegalArgumentException("vertices");
         }
 
-        final int count = vertices.length / 2;
-        x = new double[count];
-        y = new double[count];
-        for (int i = 0; i < count; ++i) {
-            x[i] = vertices[2 * i];
-            y[i] = vertices[2 * i + 1];
+        vertexCount = vertices.length / 2;
+        vertexX = new double[vertexCount];
+        vertexY = new double[vertexCount];
+        for (int i = 0; i < vertexCount; ++i) {
+            vertexX[i] = vertices[2 * i];
+            vertexY[i] = vertices[2 * i + 1];
         }
     }
 
     @Override
+    public boolean contains(final double x, final double y) {
+        return false;
+    }
+
+    @Override
     public void draw(final Canvas canvas) {
-        for (int i = 0; i < x.length - 1; ++i) {
-            canvas.drawLine(x[i], y[i], x[i + 1], y[i + 1]);
+        for (int i = 0; i < vertexCount - 1; ++i) {
+            canvas.drawLine(vertexX[i], vertexY[i], vertexX[i + 1], vertexY[i + 1]);
         }
     }
 
@@ -69,7 +103,7 @@ public class PolygonalChain extends Shape {
      * @since 2.0
      */
     public int getVertexCount() {
-        return x.length;
+        return vertexCount;
     }
 
     /**
@@ -82,7 +116,7 @@ public class PolygonalChain extends Shape {
      * @since 2.0
      */
     public double getVertexX(int i) {
-        return x[i];
+        return vertexX[i];
     }
 
     /**
@@ -95,6 +129,6 @@ public class PolygonalChain extends Shape {
      * @since 2.0
      */
     public double getVertexY(int i) {
-        return y[i];
+        return vertexY[i];
     }
 }

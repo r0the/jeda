@@ -20,7 +20,7 @@ import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
 
 /**
- * Represents a rectangle shape.
+ * Represents a filled rectangle.
  *
  * @since 2.0
  */
@@ -30,7 +30,8 @@ public final class Rectangle extends Shape {
     private final double width;
 
     /**
-     * Constructs a new rectangle shape. With and height must be positive.
+     * Constructs a new rectangle shape. With and height must be positive. The center of the rectangle is the origin of
+     * the local coordinate system.
      *
      * @param width the width of the rectangle
      * @param height the height of the rectangle
@@ -49,6 +50,11 @@ public final class Rectangle extends Shape {
 
         this.height = height;
         this.width = width;
+    }
+
+    @Override
+    public boolean contains(final double x, final double y) {
+        return Math.abs(x) <= width / 2.0 && Math.abs(y) <= height / 2.0;
     }
 
     @Override

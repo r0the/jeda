@@ -24,11 +24,11 @@ import org.xml.sax.SAXException;
 
 final class XmlContentHandler implements ContentHandler {
 
-    private final Stack<Element> elementStack;
-    private Element rootElement;
+    private final Stack<ElementWrapper> elementStack;
+    private ElementWrapper rootElement;
 
     XmlContentHandler() {
-        elementStack = new Stack<Element>();
+        elementStack = new Stack<ElementWrapper>();
     }
 
     @Override
@@ -55,12 +55,12 @@ final class XmlContentHandler implements ContentHandler {
     @Override
     public void startElement(final String uri, final String localName, final String qName,
                              final Attributes attributes) throws SAXException {
-        elementStack.push(new Element(localName, attributes));
+        elementStack.push(new ElementWrapper(localName, attributes));
     }
 
     @Override
     public void endElement(final String uri, final String localName, final String qName) throws SAXException {
-        final Element element = elementStack.pop();
+        final ElementWrapper element = elementStack.pop();
         if (elementStack.empty()) {
             rootElement = element;
         }
@@ -86,7 +86,7 @@ final class XmlContentHandler implements ContentHandler {
     public void skippedEntity(final String name) throws SAXException {
     }
 
-    public Element getRootElement() {
+    public ElementWrapper getRootElement() {
         return rootElement;
     }
 }

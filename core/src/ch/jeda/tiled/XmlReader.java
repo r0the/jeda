@@ -32,7 +32,7 @@ class XmlReader {
         this.prefix = prefix;
     }
 
-    Element read(final String path) {
+    ElementWrapper read(final String path) {
         try {
             final XMLReader xmlReader = JedaInternal.createXmlReader();
             final XmlContentHandler contentHandler = new XmlContentHandler();
@@ -52,8 +52,8 @@ class XmlReader {
         return null;
     }
 
-    Image loadImageChild(final Element element) {
-        final Element imageElement = element.getChild(Const.IMAGE);
+    Image loadImageChild(final ElementWrapper element) {
+        final ElementWrapper imageElement = element.getChild(Const.IMAGE);
         if (imageElement == null) {
             return null;
         }

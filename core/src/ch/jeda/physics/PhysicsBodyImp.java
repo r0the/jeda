@@ -17,6 +17,7 @@
 package ch.jeda.physics;
 
 import ch.jeda.geometry.Circle;
+import ch.jeda.geometry.Ellipse;
 import ch.jeda.geometry.Polygon;
 import ch.jeda.geometry.PolygonalChain;
 import ch.jeda.geometry.Rectangle;
@@ -265,6 +266,9 @@ final class PhysicsBodyImp implements BodyImp {
         if (shape instanceof Circle) {
             return convertCircle((Circle) shape, scale);
         }
+        else if (shape instanceof Ellipse) {
+            return convertEllipse((Ellipse) shape, scale);
+        }
         else if (shape instanceof Rectangle) {
             return convertRectangle((Rectangle) shape, scale);
         }
@@ -275,7 +279,7 @@ final class PhysicsBodyImp implements BodyImp {
             return convertPolygonalChain((PolygonalChain) shape, scale);
         }
         else {
-            return null;
+            throw new RuntimeException("Invalid shape type.");
         }
     }
 
@@ -283,6 +287,20 @@ final class PhysicsBodyImp implements BodyImp {
         final org.jbox2d.collision.shapes.CircleShape result = new org.jbox2d.collision.shapes.CircleShape();
         result.m_radius = (float) (circle.getRadius() / scale);
         return result;
+    }
+
+    private static org.jbox2d.collision.shapes.Shape convertEllipse(final Ellipse ellipse, final double scale) {
+        if (ellipse.getEccentricity() < 0.1) {
+            final org.jbox2d.collision.shapes.CircleShape result = new org.jbox2d.collision.shapes.CircleShape();
+            result.m_radius = (float) ((ellipse.getRadiusX() + ellipse.getRadiusY()) / (2.0 * scale));
+            return result;
+        }
+        else {
+            // TODO: convert to polygon
+            final org.jbox2d.collision.shapes.CircleShape result = new org.jbox2d.collision.shapes.CircleShape();
+            result.m_radius = (float) ((ellipse.getRadiusX() + ellipse.getRadiusY()) / (2.0 * scale));
+            return result;
+        }
     }
 
     private static org.jbox2d.collision.shapes.Shape convertRectangle(final Rectangle rectangle, final double scale) {
@@ -295,7 +313,7 @@ final class PhysicsBodyImp implements BodyImp {
         final org.jbox2d.collision.shapes.PolygonShape result = new org.jbox2d.collision.shapes.PolygonShape();
         final Vec2[] vertices = new Vec2[polygon.getVertexCount()];
         for (int i = 0; i < polygon.getVertexCount(); ++i) {
-            vertices[2 * i].set((float) (polygon.getVertexX(i) / scale), (float) (polygon.getVertexY(i) / scale));
+            vertices[i] = new Vec2((float) (polygon.getVertexX(i) / scale), (float) (polygon.getVertexY(i) / scale));
         }
 
         result.set(vertices, vertices.length);
@@ -306,7 +324,7 @@ final class PhysicsBodyImp implements BodyImp {
         final org.jbox2d.collision.shapes.ChainShape result = new org.jbox2d.collision.shapes.ChainShape();
         final Vec2[] vertices = new Vec2[chain.getVertexCount()];
         for (int i = 0; i < chain.getVertexCount(); ++i) {
-            vertices[2 * i].set((float) (chain.getVertexX(i) / scale), (float) (chain.getVertexY(i) / scale));
+            vertices[i] = new Vec2((float) (chain.getVertexX(i) / scale), (float) (chain.getVertexY(i) / scale));
         }
 
         result.createChain(vertices, vertices.length);

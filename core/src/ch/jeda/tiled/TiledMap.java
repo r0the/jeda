@@ -17,10 +17,9 @@
 package ch.jeda.tiled;
 
 import ch.jeda.Data;
-import ch.jeda.ui.Canvas;
+import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ public final class TiledMap {
     private final Color backgroundColor;
     private final int height;
     private final Layer[] layers;
-    private final TiledMapOrientation orientation;
+    private final Orientation orientation;
     private final Data properties;
     private final int tileHeight;
     private final TileSets tileSets;
@@ -65,7 +64,7 @@ public final class TiledMap {
         }
 
         final XmlReader reader = new XmlReader(prefix.toString());
-        final Element element = reader.read(path);
+        final ElementWrapper element = reader.read(path);
         backgroundColor = element.getColorAttribute(Const.BACKGROUNDCOLOR, Color.WHITE);
         height = element.getIntAttribute(Const.HEIGHT);
         tileHeight = element.getIntAttribute(Const.TILEHEIGHT);
@@ -75,7 +74,7 @@ public final class TiledMap {
         properties = element.parsePropertiesChild();
         // Read tile sets
         tileSets = new TileSets();
-        for (final Element tileSetElement : element.getChildren(Const.TILESET)) {
+        for (final ElementWrapper tileSetElement : element.getChildren(Const.TILESET)) {
             if (tileSetElement.hasAttribute(Const.SOURCE)) {
                 tileSets.add(new TileSet(this, reader.read(tileSetElement.getStringAttribute(Const.SOURCE)), reader));
             }
@@ -86,12 +85,12 @@ public final class TiledMap {
 
         // Read layers
         final List<Layer> layerList = new ArrayList<Layer>();
-        for (final Element layerElement : element.getChildren()) {
+        for (final ElementWrapper layerElement : element.getChildren()) {
             if (layerElement.is("layer")) {
                 layerList.add(new TileLayer(this, layerElement));
             }
             else if (layerElement.is("objectgroup")) {
-                layerList.add(new ObjectGroup(this, layerElement));
+                layerList.add(new ObjectLayer(this, layerElement));
             }
             else if (layerElement.is("imagelayer")) {
                 layerList.add(new ImageLayer(this, layerElement, reader));
@@ -102,19 +101,19 @@ public final class TiledMap {
     }
 
     /**
-     * Draws this map. The map is drawn on the specified canvas at the specified offset.
+     * Adds this map to a physics view. Fills the background of the view with the background color of this map. Then
+     * adds each layer to the view.
      *
-     * @param canvas the canvas to draw the map on
-     * @param offsetX the horizontal offset
-     * @param offsetY the vertical offset
+     * @param view the view to add this map to
      *
      * @since 2.0
      */
-    public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
-        canvas.setColor(backgroundColor);
-        canvas.fill();
+    public void addTo(final PhysicsView view) {
+        view.getBackground().setColor(getBackgroundColor());
+        view.getBackground().fill();
+
         for (int i = 0; i < layers.length; ++i) {
-            layers[i].draw(canvas, offsetX, offsetY);
+            layers[i].addTo(view);
         }
     }
 
@@ -141,14 +140,32 @@ public final class TiledMap {
     }
 
     /**
-     * Returns all layers of this map.
+     * Returns the layer with the specified index of this map. Valid indices are <code>0</code> to
+     * <code>getLayerCount() - 1</code>. Returns <code>null</code>, if <code>index</code> is not a valid index.
      *
-     * @return all layers of this map
+     * @param index the layer index
+     * @return the layer with the specified index of this map
      *
      * @since 2.0
      */
-    public Layer[] getLayers() {
-        return Arrays.copyOf(layers, layers.length);
+    public Layer getLayer(final int index) {
+        if (0 <= index && index < layers.length) {
+            return layers[index];
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the number of layers of this map.
+     *
+     * @return the number of layers of this map
+     *
+     * @since 2.0
+     */
+    public int getLayerCount() {
+        return this.layers.length;
     }
 
     /**
@@ -158,7 +175,7 @@ public final class TiledMap {
      *
      * @since 2.0
      */
-    public TiledMapOrientation getOrientation() {
+    public Orientation getOrientation() {
         return orientation;
     }
 
@@ -218,16 +235,16 @@ public final class TiledMap {
         return tileSets.lookupTile(globalId);
     }
 
-    private static TiledMapOrientation parseOrientation(final String value) {
+    private static Orientation parseOrientation(final String value) {
         if (value == null) {
-            return TiledMapOrientation.ORTHOGONAL;
+            return Orientation.ORTHOGONAL;
         }
 
         try {
-            return TiledMapOrientation.valueOf(value.toUpperCase());
+            return Orientation.valueOf(value.toUpperCase());
         }
         catch (final IllegalArgumentException ex) {
-            return TiledMapOrientation.ORTHOGONAL;
+            return Orientation.ORTHOGONAL;
         }
     }
 }

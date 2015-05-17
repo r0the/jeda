@@ -16,26 +16,26 @@
  */
 package ch.jeda.tiled;
 
+import ch.jeda.physics.Body;
 import ch.jeda.physics.PhysicsView;
-import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a Tiled object group.
+ * Represents a Tiled object layer.
  *
  * @since 2.0
  */
-public final class ObjectGroup extends Layer {
+public final class ObjectLayer extends Layer {
 
     private final Color color;
     private final TiledObject[] objects;
 
-    ObjectGroup(final TiledMap map, final Element element) {
+    ObjectLayer(final TiledMap map, final ElementWrapper element) {
         super(map, element);
         color = element.getColorAttribute(Const.COLOR, Color.RED);
-        final List<Element> objectElements = element.getChildren(Const.OBJECT);
+        final List<ElementWrapper> objectElements = element.getChildren(Const.OBJECT);
         objects = new TiledObject[objectElements.size()];
         for (int i = 0; i < objects.length; ++i) {
             objects[i] = new TiledObject(map, objectElements.get(i));
@@ -43,7 +43,8 @@ public final class ObjectGroup extends Layer {
     }
 
     /**
-     * Adds the contents of this object group to a physics view.
+     * Adds the contents of this object group to a physics view. The Tiled objects of this layer are added by creating a
+     * {@link ch.jeda.physics.Body} for each Tiled object in this layer.
      *
      * @param view the physics view
      *
@@ -51,26 +52,18 @@ public final class ObjectGroup extends Layer {
      */
     @Override
     public void addTo(final PhysicsView view) {
-        for (int i = 0; i < objects.length; ++i) {
-            view.add(objects[i].toBody());
-        }
-    }
-
-    @Override
-    public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
-        if (!isVisible()) {
-            return;
-        }
-
-        canvas.setLineWidth(3);
-        canvas.setColor(color);
-        for (int i = 0; i < objects.length; ++i) {
-            objects[i].draw(canvas, offsetX, offsetY);
+        if (this.isVisible()) {
+            for (int i = 0; i < objects.length; ++i) {
+                final Body body = objects[i].toBody();
+                body.setDebugColor(color);
+                view.add(body);
+            }
         }
     }
 
     /**
-     * Returns the color of this object group.
+     * Returns the color of this object group. The color is used to draw the debug overlay of bodies created based on
+     * this layer.
      *
      * @return the color of this object group
      *

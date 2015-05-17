@@ -38,7 +38,7 @@ final class TileSet {
     private final List<Tile> tiles;
     private final int tileWidth;
 
-    TileSet(final TiledMap map, final Element element, final XmlReader reader) {
+    TileSet(final TiledMap map, final ElementWrapper element, final XmlReader reader) {
         firstGlobalId = element.getIntAttribute(Const.FIRSTGID);
         this.map = map;
         name = element.getStringAttribute(Const.NAME);
@@ -46,7 +46,7 @@ final class TileSet {
         tileWidth = element.getIntAttribute(Const.TILEWIDTH);
 
         // Read tile offset
-        final Element tileOffsetElement = element.getChild("tileoffset");
+        final ElementWrapper tileOffsetElement = element.getChild("tileoffset");
         if (tileOffsetElement == null) {
             tileOffsetX = 0;
             tileOffsetY = 0;
@@ -63,17 +63,17 @@ final class TileSet {
 
         // Read terrain types
         List<Terrain> terrainTypesList = new ArrayList<Terrain>();
-        final Element terrainTypesElement = element.getChild(Const.TERRAINTYPES);
+        final ElementWrapper terrainTypesElement = element.getChild(Const.TERRAINTYPES);
         if (terrainTypesElement != null) {
-            for (final Element terrainElement : terrainTypesElement.getChildren(Const.TERRAIN)) {
+            for (final ElementWrapper terrainElement : terrainTypesElement.getChildren(Const.TERRAIN)) {
                 terrainTypesList.add(new Terrain(terrainElement));
             }
         }
 
         terrainTypes = terrainTypesList.toArray(new Terrain[terrainTypesList.size()]);
         // Read additional tile information
-        final Map<Integer, Element> tileElements = new HashMap<Integer, Element>();
-        for (final Element tileElement : element.getChildren(Const.TILE)) {
+        final Map<Integer, ElementWrapper> tileElements = new HashMap<Integer, ElementWrapper>();
+        for (final ElementWrapper tileElement : element.getChildren(Const.TILE)) {
             final int id = tileElement.getIntAttribute(Const.ID);
             tileElements.put(id, tileElement);
         }

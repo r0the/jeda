@@ -19,6 +19,7 @@ package ch.jeda.physics;
 import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
+import ch.jeda.ui.Color;
 import ch.jeda.ui.Element;
 import ch.jeda.ui.Image;
 
@@ -29,8 +30,45 @@ import ch.jeda.ui.Image;
  */
 public class Body extends Element {
 
+    private Color debugColor;
     private Image image;
     private BodyImp imp;
+    private int opacity;
+
+    /**
+     * Creates a new object of a subclass of {@link ch.jeda.physics.Body}. If <code>className</code> does not meet all
+     * of the following criteria, a new {@link ch.jeda.physics.Body} object is created and returned.
+     * <ul>
+     * <li><code>className</code> must be a valid class name
+     * <li>The class must be a subclass of {@link ch.jeda.physics.Body}
+     * <li>The class must provide a public default constructor
+     * </ul>
+     *
+     * @param className the name of the class
+     * @return the created object
+     *
+     * @since 2.0
+     */
+    public static Body create(final String className) {
+        if (className == null || className.isEmpty()) {
+            return new Body();
+        }
+
+        try {
+            final Class clazz = Class.forName(className);
+            if (Body.class.isAssignableFrom(clazz)) {
+                return (Body) clazz.newInstance();
+            }
+        }
+        catch (final ClassNotFoundException ex) {
+        }
+        catch (InstantiationException ex) {
+        }
+        catch (IllegalAccessException ex) {
+        }
+
+        return new Body();
+    }
 
     /**
      * Constructs a body.
@@ -43,14 +81,16 @@ public class Body extends Element {
     }
 
     /**
-     * Adds a shape to this body.
+     * Adds a shape to this body. Has no effect if <code>shape</code> is <code>null</code>.
      *
      * @param shape the shape to add
      *
      * @since 2.0
      */
     public final void addShape(final Shape shape) {
-        imp.addShape(shape);
+        if (shape != null) {
+            imp.addShape(shape);
+        }
     }
 
     /**
@@ -61,7 +101,7 @@ public class Body extends Element {
      *
      * @since 2.0
      */
-    public void applyForce(final double f) {
+    public final void applyForce(final double f) {
         final double angle = imp.getAngleRad();
         applyForce(f * Math.cos(angle), f * Math.sin(angle));
     }
@@ -74,25 +114,25 @@ public class Body extends Element {
      *
      * @since 2.0
      */
-    public void applyForce(final double fx, final double fy) {
+    public final void applyForce(final double fx, final double fy) {
         imp.applyForce(fx, fy);
     }
 
     /**
-     * Applies a torque to the body. The unit of the torque is Newton meter.
+     * Applies a torque to this body. The unit of the torque is Newton meter.
      *
      * @param torque the torque in Newton meter
      *
      * @since 2.0
      */
-    public void applyTorque(final double torque) {
+    public final void applyTorque(final double torque) {
         imp.applyTorque(torque);
     }
 
     /**
-     * Returns the current angle of the body in degrees.
+     * Returns the current angle of this body in degrees.
      *
-     * @return the current angle of the body in degrees
+     * @return the current angle of this body in degrees
      *
      * @see #getAngleRad()
      * @see #setAngleDeg(double)
@@ -104,9 +144,9 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the current angle of the body in radians.
+     * Returns the current angle of this body in radians.
      *
-     * @return the current angle of the body in radians
+     * @return the current angle of this body in radians
      *
      * @see #getAngleDeg()
      * @see #setAngleDeg(double)
@@ -118,9 +158,9 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the angular damping of the body.
+     * Returns the angular damping of this body.
      *
-     * @return the angular damping of the body
+     * @return the angular damping of this body
      *
      * @see #setAngularDamping(double)
      * @since 2.0
@@ -130,9 +170,9 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the current angular velocity of the body in radians per second.
+     * Returns the current angular velocity of this body in radians per second.
      *
-     * @return the current angular velocity of the body in radians per second
+     * @return the current angular velocity of this body in radians per second
      *
      * @see #setAngularVelocity(double)
      * @since 2.0
@@ -142,9 +182,9 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the linear damping of the body.
+     * Returns the linear damping of this body.
      *
-     * @return the linear damping of the body
+     * @return the linear damping of this body
      *
      * @see #setDamping(double)
      * @since 2.0
@@ -154,9 +194,20 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the density of the body. The unit of the density is kilograms per square meter
+     * Returns the debug color of this body. The debug color is used for drawing the debug overlay of this body.
      *
-     * @return the density of the body in kilograms per square meter
+     * @return the debug color of this body
+     *
+     * @since 2.0
+     */
+    public Color getDebugColor() {
+        return debugColor;
+    }
+
+    /**
+     * Returns the density of this body. The unit of the density is kilograms per square meter
+     *
+     * @return the density of this body in kilograms per square meter
      *
      * @see #setDensity(double)
      * @since 2.0
@@ -166,9 +217,9 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the friction of the body.
+     * Returns the friction of this body.
      *
-     * @return the friction of the body
+     * @return the friction of this body
      *
      * @see #setFriction(double)
      * @since 2.0
@@ -178,31 +229,44 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the image of the body.
+     * Returns the image of this body.
      *
-     * @return the image of the body
+     * @return the image of this body
      *
      * @see #setImage(ch.jeda.ui.Image)
      * @since 2.0
      */
-    public Image getImage() {
+    public final Image getImage() {
         return image;
     }
 
     /**
-     * Returns the mass of the body in kilograms. The body's mass is determined by it's density and the areas of it's
+     * Returns the mass of this body in kilograms. The body's mass is determined by it's density and the areas of it's
      * shapes.
      *
-     * @return the mass of the body in kilograms
+     * @return the mass of this body in kilograms
      *
-     * @see #addShape(ch.jeda.physics.Shape)
+     * @see #addShape(ch.jeda.geometry.Shape)
      * @see #getDensity()
      * @see #getShapes()
      * @see #setDensity(double)
      * @since 2.0
      */
-    public double getMass() {
+    public final double getMass() {
         return imp.getMass();
+    }
+
+    /**
+     * Returns the opacity of this body. The opacity is a number between 0 and 255 where 0 means totally transparent and
+     * 255 means totally opaque.
+     *
+     * @return the opacity of this body
+     *
+     * @see #setOpacity(int)
+     * @since 2.0
+     */
+    public final int getOpacity() {
+        return opacity;
     }
 
     /**
@@ -217,9 +281,21 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the horizontal component of the body's current linear velocity in meters per second.
+     * Returns the type of this body.
      *
-     * @return the horizontal component of the body's current linear velocity in meters per second
+     * @return the type of this body
+     *
+     * @see #setType(ch.jeda.physics.BodyType)
+     * @since 2.0
+     */
+    public final BodyType getType() {
+        return imp.getType();
+    }
+
+    /**
+     * Returns the horizontal component of this body's current linear velocity in meters per second.
+     *
+     * @return the horizontal component of this body's current linear velocity in meters per second
      *
      * @see #setVelocity(double, double)
      * @see #getVy()
@@ -230,9 +306,9 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the vertical component of the body's current linear velocity in meters per second.
+     * Returns the vertical component of this body's current linear velocity in meters per second.
      *
-     * @return the vertical component of the body's current linear velocity in meters per second
+     * @return the vertical component of this body's current linear velocity in meters per second
      *
      * @see #setVelocity(double, double)
      * @see #getVx()
@@ -243,9 +319,9 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the x coordinate of the shape in pixels.
+     * Returns the x coordinate of this body in pixels.
      *
-     * @return the x coordinate of the shape in pixels
+     * @return the x coordinate of the body in pixels
      *
      * @see #setPosition(double, double)
      * @see #getY()
@@ -256,9 +332,9 @@ public class Body extends Element {
     }
 
     /**
-     * Returns the y coordinate of the shape in pixels.
+     * Returns the y coordinate of this body in pixels.
      *
-     * @return the y coordinate of the shape in pixels
+     * @return the y coordinate of this body in pixels
      *
      * @see #setPosition(double, double)
      * @see #getX()
@@ -269,111 +345,135 @@ public class Body extends Element {
     }
 
     /**
-     * Sets the rotation angle of the body in degrees. Has no effect if the body currenly is in a physics simulation.
+     * Sets the rotation angle of this body in degrees. Has no effect if the body currenly is in a physics simulation.
      *
-     * @param angle the angle of the body in degrees
+     * @param angle the angle of this body in degrees
      *
      * @see #getAngleDeg()
      * @see #getAngleRad()
      * @see #setAngleRad(double)
      * @since 2.0
      */
-    public void setAngleDeg(final double angle) {
+    public final void setAngleDeg(final double angle) {
         imp.setAngleRad(Math.toRadians(angle));
     }
 
     /**
-     * Sets the rotation angle of the body in radians. Has no effect if the body currenly is in a physics simulation.
+     * Sets the rotation angle of this body in radians. Has no effect if the body currenly is in a physics simulation.
      *
-     * @param angle the angle of the body in radians
+     * @param angle the angle of this body in radians
      *
      * @see #getAngleDeg()
      * @see #getAngleRad()
      * @see #setAngleDeg(double)
      * @since 2.0
      */
-    public void setAngleRad(final double angle) {
+    public final void setAngleRad(final double angle) {
         imp.setAngleRad(angle);
     }
 
     /**
-     * Sets the angular damping of the body.
+     * Sets the angular damping of this body.
      *
      * @param angularDamping the angular damping
      *
      * @see #getAngularDamping()
      * @since 2.0
      */
-    public void setAngularDamping(final double angularDamping) {
+    public final void setAngularDamping(final double angularDamping) {
         imp.setAngularDamping(angularDamping);
     }
 
     /**
-     * Sets the angular velocity of the body in radian per second.
+     * Sets the angular velocity of this body in radians per second.
      *
-     * @param angularVelocity the angular velocity in radian per second
+     * @param angularVelocity the angular velocity in radians per second
      *
      * @see #getAngularVelocity()
      * @since 2.0
      */
-    public void setAngularVelocity(final double angularVelocity) {
+    public final void setAngularVelocity(final double angularVelocity) {
         imp.setAngularVelocity(angularVelocity);
     }
 
     /**
-     * Sets the linear damping of the body.
+     * Sets the linear damping of this body.
      *
      * @param damping the linear damping
      *
      * @see #getDamping()
      * @since 2.0
      */
-    public void setDamping(final double damping) {
+    public final void setDamping(final double damping) {
         imp.setDamping(damping);
     }
 
     /**
-     * Sets the density of the body in kilogram per square meter.
+     * Sets the debug color of this body. The debug color is used for drawing the debug overlay of this body.
      *
-     * @param density the density of the body in kilogram per square meter
+     * @param debugColor the debug color of this body.
+     *
+     * @since 2.0
+     */
+    public void setDebugColor(Color debugColor) {
+        this.debugColor = debugColor;
+    }
+
+    /**
+     * Sets the density of this body in kilogram per square meter.
+     *
+     * @param density the density of this body in kilogram per square meter
      *
      * @see #getDensity()
      * @since 2.0
      */
-    public void setDensity(final double density) {
+    public final void setDensity(final double density) {
         imp.setDensity(density);
     }
 
     /**
-     * Sets the friction of the body.
+     * Sets the friction of this body.
      *
-     * @param friction the friction of the body
+     * @param friction the friction of this body
      *
      * @see #getFriction()
      * @since 2.0
      */
-    public void setFriction(final double friction) {
+    public final void setFriction(final double friction) {
         imp.setFriction(friction);
     }
 
     /**
-     * Sets the image for this body.
+     * Sets the image for this body. The image has no impact on the physical simulation.
      *
      * @param image the image
      *
      * @see #getImage()
      * @since 2.0
      */
-    public void setImage(final Image image) {
+    public final void setImage(final Image image) {
         this.image = image;
     }
 
     /**
-     * Sets the position of the body. If the body is in a physics simulation, the body will be removed from the
+     * Sets the opacity of this body. The opacity is a number between 0 and 255 where 0 means totally transparent and
+     * 255 means totally opaque. The opacity has no impact on the physical simulation.
+     *
+     * @param opacity the opacity of this body
+     *
+     * @see #getOpacity()
+     * @since 2.0
+     */
+    public final void setOpacity(final int opacity) {
+        this.opacity = opacity;
+    }
+
+    /**
+     * Sets the position of this body. If the body is in a physics simulation, the body will be removed from the
      * simulation, then added to the simulation at the specified coordinates.
      *
-     * @param x the x coordinate of the body in pixels
-     * @param y the y coordinate of the body in pixels
+     * @param x the x coordinate of this body in pixels
+     * @param y the y coordinate of this body in pixels
      *
      * @see #getX()
      * @see #getY()
@@ -393,7 +493,7 @@ public class Body extends Element {
     }
 
     /**
-     * Disallows or allows the body to rotate.
+     * Disallows or allows this body to rotate.
      *
      * @param fixed
      *
@@ -404,10 +504,11 @@ public class Body extends Element {
     }
 
     /**
-     * Sets the type of the body.
+     * Sets the type of this body.
      *
-     * @param type the type of the body
+     * @param type the type of this body
      *
+     * @see #getType()
      * @since 2.0
      */
     public final void setType(final BodyType type) {
@@ -415,11 +516,13 @@ public class Body extends Element {
     }
 
     /**
-     * Sets the velocity of the body.
+     * Sets the velocity of this body.
      *
      * @param vx the horizontal component of the velocity
      * @param vy the vertical component of the velocity
      *
+     * @see #getVx()
+     * @see #getVy()
      * @since 2.0
      */
     public final void setVelocity(final double vx, final double vy) {
@@ -427,7 +530,7 @@ public class Body extends Element {
     }
 
     /**
-     * Invoked when the body just has made contact with another body. Override this method to add new behavior.
+     * Invoked when this body just has made contact with another body. Override this method to add new behavior.
      *
      * @param other the other body
      *
@@ -437,7 +540,7 @@ public class Body extends Element {
     }
 
     /**
-     * Invoked when the contact with another body end. Override this method to add new behavior.
+     * Invoked when the contact with another body ends. Override this method to add new behavior.
      *
      * @param other the other body
      *
@@ -460,7 +563,7 @@ public class Body extends Element {
     }
 
     /**
-     * Invoked after the image of the body has been drawn. Override this method to add new behaviour.
+     * Invoked after the image of this body has been drawn. Override this method to add new behaviour.
      *
      * @param canvas the canvas to draw on
      *

@@ -17,115 +17,71 @@
 package ch.jeda.tiled;
 
 import ch.jeda.Data;
-import ch.jeda.ui.Alignment;
-import ch.jeda.ui.Canvas;
-import ch.jeda.ui.Color;
+import ch.jeda.geometry.Rectangle;
+import ch.jeda.geometry.Shape;
+import ch.jeda.physics.Body;
+import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Image;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Represents a Tiled tile.
  *
  * @since 2.0
  */
-public class Tile {
+public final class Tile {
 
     private final int id;
     private final Image image;
-    private final TiledObject[] objects;
     private final Data properties;
+    private final Shape[] shapes;
     private final Terrain[] terrain;
     private final TileSet tileSet;
 
-    Tile(final TiledMap map, final TileSet tileSet, final int id, final Image image, final Element element) {
+    Tile(final TiledMap map, final TileSet tileSet, final int id, final Image image, final ElementWrapper element) {
         this.id = id;
         this.image = image;
-        terrain = new Terrain[4];
         this.tileSet = tileSet;
+        terrain = Parser.parseTerrain(tileSet, element);
+        shapes = Parser.parseShapes(element);
         if (element != null) {
             // Read properties
             properties = element.parsePropertiesChild();
-            // Read terrain info
-            final String terrainInfo = element.getStringAttribute(Const.TERRAIN);
-            if (terrainInfo != null) {
-                final String[] parts = terrainInfo.split(",");
-                int i = 0;
-                while (i < 4 && i < parts.length) {
-                    try {
-                        terrain[i] = tileSet.lookupTerrain(Integer.parseInt(parts[i]));
-                    }
-                    catch (final NumberFormatException ex) {
-                        // ignore
-                    }
-
-                    ++i;
-                }
-            }
         }
         else {
             properties = new Data();
         }
 
-        // Read object group
-        final List<TiledObject> objectList = new ArrayList<TiledObject>();
-        if (element != null) {
-            final Element objectGroupElement = element.getChild(Const.OBJECTGROUP);
-            if (objectGroupElement != null) {
-                for (final Element objectElement : objectGroupElement.getChildren(Const.OBJECT)) {
-                    objectList.add(new TiledObject(map, objectElement));
-                }
-            }
-        }
-
-        objects = objectList.toArray(new TiledObject[objectList.size()]);
-
         // Read animation
         if (element != null) {
-            final Element animationElement = element.getChild(Const.ANIMATION);
+            final ElementWrapper animationElement = element.getChild(Const.ANIMATION);
             if (animationElement != null) {
-                for (final Element frameElement : animationElement.getChildren(Const.FRAME)) {
+                for (final ElementWrapper frameElement : animationElement.getChildren(Const.FRAME)) {
 
                 }
             }
         }
     }
 
-    /**
-     * Draws this tile at the specified position.
-     *
-     * @param canvas
-     * @param x
-     * @param y
-     * @param alpha
-     *
-     * @since 2.0
-     */
-    public final void draw(final Canvas canvas, final int x, final int y, final int alpha) {
-        canvas.drawImage(x, y, getImage(), alpha, Alignment.BOTTOM_LEFT);
-        canvas.setColor(Color.RED);
-        canvas.setLineWidth(3);
-        for (int i = 0; i < objects.length; ++i) {
-            objects[i].draw(canvas, x, y - tileSet.getTileHeight());
-        }
-    }
-
-    /**
-     * Returns the height of this tile in pixels.
-     *
-     * @return the height of this tile in pixels
-     *
-     * @since 2.0
-     */
-    public final int getHeight() {
-        return tileSet.getTileHeight();
-    }
-
-    public final int getId() {
-        return id;
-    }
-
+//
+//    /**
+//     * Draws this tile at the specified position.
+//     *
+//     * @param canvas the canvas to draw this tile on
+//     * @param x
+//     * @param y
+//     * @param alpha
+//     *
+//     * @since 2.0
+//     */
+//    public void draw(final Canvas canvas, final int x, final int y, final int alpha) {
+//        canvas.drawImage(x, y, getImage(), alpha, Alignment.BOTTOM_LEFT);
+//        canvas.setColor(Color.RED);
+//        canvas.setLineWidth(3);
+//        for (int i = 0; i < shapes.length; ++i) {
+//            shapes[i].draw(canvas, x, y - tileSet.getTileHeight());
+//        }
+//    }
     /**
      * Returns the image representing this tile.
      *
@@ -133,44 +89,94 @@ public class Tile {
      *
      * @since 2.0
      */
-    public final Image getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public TiledObject[] getObjects() {
-        return Arrays.copyOf(objects, objects.length);
+    /**
+     * Returns the horizontal offset for this tile. The tile offset is defined in the tile set this tile belongs to.
+     *
+     * @return the horizontal offset for this tile
+     *
+     * @since 2.0
+     */
+    public int getOffsetX() {
+        return this.tileSet.getTileOffsetX();
     }
 
-    public final int getOffsetX() {
-        return tileSet.getTileOffsetX();
+    /**
+     * Returns the vertical offset for this tile. The tile offset is defined in the tile set this tile belongs to.
+     *
+     * @return the vertical offset for this tile
+     *
+     * @since 2.0
+     */
+    public int getOffsetY() {
+        return this.tileSet.getTileOffsetY();
     }
 
-    public final int getOffsetY() {
-        return tileSet.getTileOffsetX();
-    }
-
-    public final Data getProperties() {
+    /**
+     * Retursn the properties of this tile.
+     *
+     * @return the properties of this tile
+     *
+     * @since 2.0
+     */
+    public Data getProperties() {
         return properties;
     }
 
-    public final Terrain getTerrainBottomLeft() {
+    /**
+     * Returns the collision shapes of this tile.
+     *
+     * @return the collision shapes of this tile
+     */
+    public Shape[] getShapes() {
+        return Arrays.copyOf(shapes, shapes.length);
+    }
+
+    /**
+     * Returns the terrain at the bottom left corner of this tile.
+     *
+     * @return the terrain at the bottom left corner of this tile
+     *
+     * @since 2.0
+     */
+    public Terrain getTerrainBottomLeft() {
         return terrain[2];
     }
 
-    public final Terrain getTerrainBottomRight() {
+    /**
+     * Returns the terrain at the bottom right corner of this tile.
+     *
+     * @return the terrain at the bottom right corner of this tile
+     *
+     * @since 2.0
+     */
+    public Terrain getTerrainBottomRight() {
         return terrain[3];
     }
 
-    public final Terrain getTerrainTopLeft() {
+    /**
+     * Returns the terrain at the top left corner of this tile.
+     *
+     * @return the terrain at the top left corner of this tile
+     *
+     * @since 2.0
+     */
+    public Terrain getTerrainTopLeft() {
         return terrain[0];
     }
 
-    public final Terrain getTerrainTopRight() {
+    /**
+     * Returns the terrain at the top right corner of this tile.
+     *
+     * @return the terrain at the top right corner of this tile
+     *
+     * @since 2.0
+     */
+    public Terrain getTerrainTopRight() {
         return terrain[1];
-    }
-
-    public final int getWidth() {
-        return tileSet.getTileWidth();
     }
 
     /**
@@ -179,7 +185,7 @@ public class Tile {
      * @param tileX the horizontal tile coordinate of the tile
      * @return the horizontal screen coordinate of the center of this tile
      */
-    public final int screenX(int tileX) {
+    int screenX(int tileX) {
         return tileX * tileSet.getMap().getTileWidth() + tileSet.getTileWidth() / 2 +
                tileSet.getTileOffsetX();
     }
@@ -190,7 +196,7 @@ public class Tile {
      * @param tileY the vertical tile coordinate of the tile
      * @return the vertical screen coordinate of the center of this tile
      */
-    public final int screenY(int tileY) {
+    int screenY(int tileY) {
         return (tileY + 1) * tileSet.getMap().getTileHeight() - tileSet.getTileHeight() / 2 +
                tileSet.getTileOffsetY();
     }

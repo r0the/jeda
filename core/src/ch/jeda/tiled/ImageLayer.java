@@ -17,7 +17,6 @@
 package ch.jeda.tiled;
 
 import ch.jeda.physics.PhysicsView;
-import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Image;
 
 /**
@@ -31,29 +30,32 @@ public final class ImageLayer extends Layer {
     private final int x;
     private final int y;
 
-    ImageLayer(final TiledMap map, final Element element, final XmlReader reader) {
+    ImageLayer(final TiledMap map, final ElementWrapper element, final XmlReader reader) {
         super(map, element);
         image = reader.loadImageChild(element);
         x = element.getIntAttribute(Const.X);
         y = element.getIntAttribute(Const.Y);
     }
 
+    /**
+     * Adds this image layer to a physics view. The image is added by drawing it on the background of the view. This
+     * method has no effect if the layer is not visible.
+     *
+     * @param view the view to add this layer to
+     *
+     * @since 2.0
+     */
     @Override
     public void addTo(final PhysicsView view) {
-        // TODO
-    }
-
-    @Override
-    public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
         if (isVisible()) {
-            canvas.drawImage(x + offsetX, y + offsetY, image, (int) (getOpacity() * 255));
+            view.getBackground().drawImage(x, y, image, getOpacity());
         }
     }
 
     /**
-     * Returns the image of this layer.
+     * Returns the image represented by this layer.
      *
-     * @return the image of this layer
+     * @return the image represented by this layer
      *
      * @since 2.0
      */
@@ -62,9 +64,9 @@ public final class ImageLayer extends Layer {
     }
 
     /**
-     * Returns the horizontal offset of the image layer.
+     * Returns the horizontal coordinate of the top left corner of the image layer.
      *
-     * @return the horizontal offset of the image layer
+     * @return the horizontal coordinate of the top left corner of the image layer
      *
      * @see #getY()
      * @since 2.0
@@ -74,9 +76,9 @@ public final class ImageLayer extends Layer {
     }
 
     /**
-     * Returns the vertical offset of the image layer.
+     * Returns the vertical coordinate of the top left corner of the image.
      *
-     * @return the vertical offset of the image layer
+     * @return the vertical coordinate of the top left corner of the image
      *
      * @see #getX()
      * @since 2.0

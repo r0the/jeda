@@ -16,6 +16,8 @@
  */
 package ch.jeda.geometry;
 
+import ch.jeda.Data;
+import ch.jeda.Storable;
 import ch.jeda.ui.Canvas;
 
 /**
@@ -23,31 +25,55 @@ import ch.jeda.ui.Canvas;
  *
  * @since 2.0
  */
-public final class Ellipse extends Shape {
+public final class Ellipse extends Shape implements Storable {
 
-    private final double rx;
-    private final double ry;
+    private static final String RADIUS_X = "radiusx";
+    private static final String RADIUS_Y = "radiusy";
+    private final double radiusX;
+    private final double radiusY;
 
     /**
      * Constructs a new ellipse shape. With and height must be positive.
      *
-     * @param rx the horizontal radius of the ellipse
-     * @param ry the vertical radius of the ellipse
+     * @param radiusX the horizontal radius of the ellipse
+     * @param radiusY the vertical radius of the ellipse
      * @throws IllegalArgumentException if <code>rx</code> or <code>ry</code> are not positive
      *
      * @since 2.0
      */
-    public Ellipse(final double rx, final double ry) {
-        if (rx <= 0.0) {
-            throw new IllegalArgumentException("rx");
+    public Ellipse(final double radiusX, final double radiusY) {
+        if (radiusX <= 0.0) {
+            throw new IllegalArgumentException("radiusX");
         }
 
-        if (ry <= 0.0) {
-            throw new IllegalArgumentException("ry");
+        if (radiusY <= 0.0) {
+            throw new IllegalArgumentException("radiusY");
         }
 
-        this.rx = rx;
-        this.ry = ry;
+        this.radiusX = radiusX;
+        this.radiusY = radiusY;
+    }
+
+    /**
+     * Constructs an ellipse from serialized data.
+     *
+     * @param data the serialized data
+     *
+     * @since 2.0
+     */
+    public Ellipse(final Data data) {
+        this.radiusX = data.readDouble(RADIUS_X);
+        this.radiusY = data.readDouble(RADIUS_Y);
+    }
+
+    @Override
+    public boolean contains(final double x, final double y) {
+        return false;
+    }
+
+    @Override
+    public void draw(final Canvas canvas) {
+        canvas.drawEllipe(0.0, 0.0, radiusX, radiusY);
     }
 
     /**
@@ -58,7 +84,7 @@ public final class Ellipse extends Shape {
      * @since 2.0
      */
     public double getArea() {
-        return Math.PI * rx * ry;
+        return Math.PI * radiusX * radiusY;
     }
 
     /**
@@ -69,12 +95,12 @@ public final class Ellipse extends Shape {
      * @since 2.0
      */
     public double getEccentricity() {
-        return Math.sqrt(1 - (rx * rx / (ry * ry)));
-    }
-
-    @Override
-    public void draw(final Canvas canvas) {
-        canvas.drawEllipe(0.0, 0.0, rx, ry);
+        if (radiusX > radiusY) {
+            return Math.sqrt(1 - (radiusY * radiusY / (radiusX * radiusX)));
+        }
+        else {
+            return Math.sqrt(1 - (radiusX * radiusX / (radiusY * radiusY)));
+        }
     }
 
     /**
@@ -84,8 +110,8 @@ public final class Ellipse extends Shape {
      *
      * @since 2.0
      */
-    public double getRx() {
-        return rx;
+    public double getRadiusX() {
+        return radiusX;
     }
 
     /**
@@ -95,8 +121,24 @@ public final class Ellipse extends Shape {
      *
      * @since 2.0
      */
-    public double getRy() {
-        return ry;
+    public double getRadiusY() {
+        return radiusY;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("Ellipse(rx=");
+        result.append(radiusX);
+        result.append(", ry=");
+        result.append(radiusY);
+        result.append(")");
+        return result.toString();
+    }
+
+    @Override
+    public void writeTo(final Data data) {
+        data.writeDouble(RADIUS_X, radiusX);
+        data.writeDouble(RADIUS_Y, radiusY);
+    }
 }

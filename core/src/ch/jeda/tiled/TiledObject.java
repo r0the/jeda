@@ -17,10 +17,6 @@
 package ch.jeda.tiled;
 
 import ch.jeda.Data;
-import ch.jeda.geometry.Ellipse;
-import ch.jeda.geometry.Polygon;
-import ch.jeda.geometry.PolygonalChain;
-import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
 import ch.jeda.physics.Body;
 import ch.jeda.physics.BodyType;
@@ -46,12 +42,12 @@ public final class TiledObject {
     private final double x;
     private final double y;
 
-    TiledObject(final TiledMap map, final Element element) {
+    TiledObject(final TiledMap map, final ElementWrapper element) {
         height = element.getDoubleAttribute(Const.HEIGHT, 0.0);
         name = element.getStringAttribute(Const.NAME);
         properties = element.parsePropertiesChild();
         rotation = element.getDoubleAttribute(Const.ROTATION, 0.0);
-        shape = parseShape(element);
+        shape = Parser.parseShape(element);
         type = element.getStringAttribute(Const.TYPE);
         visible = element.getBooleanAttribute(Const.VISIBLE, true);
         width = element.getDoubleAttribute(Const.WIDTH, 0.0);
@@ -223,44 +219,17 @@ public final class TiledObject {
      * @since 2.0
      */
     public Body toBody() {
-        final Body result = new Body();
-        result.addShape(getShape());
+        final Body result = Body.create(getType());
+        result.addShape(shape);
         result.setName(name);
         result.setPosition(x, y);
         result.setType(BodyType.DYNAMIC);
         if (tile != null) {
             result.setImage(tile.getImage());
-        }
-
-        return result;
-    }
-
-    private static Shape parseShape(final Element element) {
-        if (element.hasChild(Const.ELLIPSE)) {
-            final double height = element.getDoubleAttribute(Const.HEIGHT, 0.0);
-            final double width = element.getDoubleAttribute(Const.WIDTH, 0.0);
-            return new Ellipse(width / 2.0, height / 2.0);
-        }
-        else if (element.hasChild(Const.POLYGON)) {
-            final String points = element.getChild(Const.POLYGON).getStringAttribute(Const.POINTS);
-            return new Polygon(parsePoints(points));
-        }
-        else if (element.hasChild(Const.POLYLINE)) {
-            final String points = element.getChild(Const.POLYLINE).getStringAttribute(Const.POINTS);
-            return new PolygonalChain(parsePoints(points));
-        }
-        else {
-            final double height = element.getDoubleAttribute(Const.HEIGHT, 0.0);
-            final double width = element.getDoubleAttribute(Const.WIDTH, 0.0);
-            return new Rectangle(width, height);
-        }
-    }
-
-    private static double[] parsePoints(final String points) {
-        String[] parts = points.split(" |,");
-        final double[] result = new double[parts.length];
-        for (int i = 0; i < parts.length; ++i) {
-            result[i] = Double.parseDouble(parts[i]);
+            Shape[] shapes = tile.getShapes();
+            for (int i = 0; i < shapes.length; ++i) {
+                result.addShape(shapes[i]);
+            }
         }
 
         return result;

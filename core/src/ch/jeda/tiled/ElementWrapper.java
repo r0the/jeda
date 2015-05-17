@@ -25,29 +25,29 @@ import java.util.List;
 import java.util.Map;
 import org.xml.sax.Attributes;
 
-final class Element {
+final class ElementWrapper {
 
     private final Data attributes;
-    private final List<Element> children;
-    private final Map<String, List<Element>> childrenByName;
+    private final List<ElementWrapper> children;
+    private final Map<String, List<ElementWrapper>> childrenByName;
     private final String localName;
     private String content;
 
-    Element(final String localName, final Attributes attributes) {
+    ElementWrapper(final String localName, final Attributes attributes) {
         this.attributes = new Data();
         for (int i = 0; i < attributes.getLength(); ++i) {
             this.attributes.writeString(attributes.getLocalName(i), attributes.getValue(i));
         }
 
-        children = new ArrayList<Element>();
-        childrenByName = new HashMap<String, List<Element>>();
+        children = new ArrayList<ElementWrapper>();
+        childrenByName = new HashMap<String, List<ElementWrapper>>();
         this.localName = localName;
     }
 
-    void addChild(final Element element) {
+    void addChild(final ElementWrapper element) {
         final String name = element.getLocalName();
         if (!childrenByName.containsKey(name)) {
-            childrenByName.put(name, new ArrayList<Element>());
+            childrenByName.put(name, new ArrayList<ElementWrapper>());
         }
 
         children.add(element);
@@ -94,7 +94,7 @@ final class Element {
         return attributes.readString(name);
     }
 
-    Element getChild(final String name) {
+    ElementWrapper getChild(final String name) {
         if (childrenByName.containsKey(name)) {
             return Collections.unmodifiableList(childrenByName.get(name)).get(0);
         }
@@ -103,11 +103,11 @@ final class Element {
         }
     }
 
-    List<Element> getChildren() {
+    List<ElementWrapper> getChildren() {
         return Collections.unmodifiableList(children);
     }
 
-    List<Element> getChildren(final String name) {
+    List<ElementWrapper> getChildren(final String name) {
         if (childrenByName.containsKey(name)) {
             return Collections.unmodifiableList(childrenByName.get(name));
         }
@@ -144,9 +144,9 @@ final class Element {
      */
     Data parsePropertiesChild() {
         final Data result = new Data();
-        final Element propertiesElement = getChild(Const.PROPERTIES);
+        final ElementWrapper propertiesElement = getChild(Const.PROPERTIES);
         if (propertiesElement != null) {
-            for (final Element child : propertiesElement.getChildren(Const.PROPERTY)) {
+            for (final ElementWrapper child : propertiesElement.getChildren(Const.PROPERTY)) {
                 result.writeString(child.getStringAttribute(Const.NAME), child.getStringAttribute(Const.VALUE));
             }
         }
