@@ -18,7 +18,6 @@ package ch.jeda.platform.java;
 
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.CanvasImp;
-import ch.jeda.platform.CanvasTransformation;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.ui.Color;
 import java.awt.AlphaComposite;
@@ -41,32 +40,33 @@ class JavaCanvasImp implements CanvasImp {
     private static final Map<?, ?> ALIASING_RENDERING_HINTS = initAliasingRenderingHints();
     private static final Map<?, ?> ANTI_ALIASING_RENDERING_HINTS = initAntiAliasingRenderingHints();
     private static final AffineTransform IDENTITY = new AffineTransform();
-    private final AffineTransform affineTransform;
     private final BufferedImage bitmap;
     private final Graphics2D graphics;
     private final Map<FontRenderContext, Map<java.awt.Font, Map<String, TextLayout>>> textLayoutCache;
+    private AffineTransform savedTransformation;
 
     JavaCanvasImp(final int width, final int height) {
-        affineTransform = new AffineTransform();
-        textLayoutCache = new HashMap();
         bitmap = createBufferedImage(width, height);
         graphics = bitmap.createGraphics();
+        textLayoutCache = new HashMap();
+        savedTransformation = null;
     }
 
     @Override
     public void drawCanvas(final int x, final int y, final CanvasImp source) {
         assert source instanceof JavaCanvasImp;
-
-        graphics.drawImage(((JavaCanvasImp) source).bitmap, x, y, null);
+        graphics.drawImage(((JavaCanvasImp) source).bitmap, 0, 0, null);
     }
 
     @Override
-    public void drawEllipse(final int x, final int y, final int width, final int height) {
-        graphics.drawOval(x, y, width, height);
+    public void drawEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
+        graphics.drawOval((int) (centerX - radiusX), (int) (centerY - radiusY),
+                          (int) (2.0 * radiusX), (int) (2.0 * radiusY));
     }
 
     @Override
-    public void drawImage(final int x, final int y, final ImageImp image, final int alpha) {
+    public void drawImage(final float x, final float y, final float width, final float height,
+                          final ImageImp image, final int alpha) {
         assert image instanceof JavaImageImp;
         assert 0 < alpha && alpha <= 255;
 
@@ -74,39 +74,45 @@ class JavaCanvasImp implements CanvasImp {
             graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha / 255f));
         }
 
-        graphics.drawImage(((JavaImageImp) image).bufferedImage, x, y, null);
+        graphics.drawImage(((JavaImageImp) image).bufferedImage, (int) x, (int) y, (int) width, (int) height,
+                           null);
         if (alpha != 255) {
             graphics.setPaintMode();
         }
     }
 
     @Override
-    public void drawLine(final int x1, final int y1, final int x2, final int y2) {
-        graphics.drawLine(x1, y1, x2, y2);
+    public void drawPolygon(final float[] points) {
+        assert points != null;
+        assert points.length >= 6;
+        assert points.length % 2 == 0;
+
+        graphics.drawPolygon(createPolygon(points));
     }
 
     @Override
-    public void drawPolygon(final int[] x, final int[] y) {
-        assert x != null;
-        assert y != null;
-        assert x.length >= 3;
-        assert x.length == y.length;
+    public void drawPolyline(final float[] points) {
+        assert points != null;
+        assert points.length >= 4;
+        assert points.length % 2 == 0;
 
-        graphics.drawPolygon(createPolygon(x, y));
+        for (int i = 0; i < points.length - 2; i = i + 2) {
+            graphics.drawLine((int) points[i], (int) points[i + 1], (int) points[i + 2], (int) points[i + 3]);
+        }
     }
 
     @Override
-    public void drawRectangle(final int x, final int y, final int width, final int height) {
-        graphics.drawRect(x, y, width, height);
+    public void drawRectangle(final float x, final float y, final float width, final float height) {
+        graphics.drawRect((int) x, (int) y, (int) width, (int) height);
     }
 
     @Override
-    public void drawText(final int x, final int y, String text) {
+    public void drawText(final float x, final float y, String text) {
         assert text != null;
 
         final TextLayout textLayout = textLayout(text);
         final Rectangle2D bounds = textLayout.getBounds();
-        textLayout.draw(graphics, x, y - (int) bounds.getMinY());
+        textLayout.draw(graphics, x, (int) (y - bounds.getMinY()));
     }
 
     @Override
@@ -123,33 +129,28 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillEllipse(final int x, final int y, final int width, final int height) {
-        graphics.fillOval(x, y, width, height);
+    public void fillEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
+        graphics.fillOval((int) (centerX - radiusX), (int) (centerY - radiusY),
+                          (int) (2f * radiusX), (int) (2f * radiusY));
     }
 
     @Override
-    public void fillPolygon(final int[] x, final int[] y) {
-        assert x != null;
-        assert y != null;
-        assert x.length >= 3;
-        assert x.length == y.length;
+    public void fillPolygon(final float[] points) {
+        assert points != null;
+        assert points.length >= 6;
+        assert points.length % 2 == 0;
 
-        graphics.fillPolygon(createPolygon(x, y));
+        graphics.fillPolygon(createPolygon(points));
     }
 
     @Override
-    public void fillRectangle(final int x, final int y, final int width, final int height) {
-        graphics.fillRect(x, y, width, height);
+    public void fillRectangle(final float x, final float y, final float width, final float height) {
+        graphics.fillRect((int) x, (int) y, (int) width, (int) height);
     }
 
     @Override
     public int getHeight() {
         return bitmap.getHeight();
-    }
-
-    @Override
-    public double getLineWidth() {
-        return ((BasicStroke) graphics.getStroke()).getLineWidth();
     }
 
     @Override
@@ -162,6 +163,33 @@ class JavaCanvasImp implements CanvasImp {
     @Override
     public int getWidth() {
         return bitmap.getWidth();
+    }
+
+    @Override
+    public void resetTransformation() {
+        graphics.setTransform(IDENTITY);
+    }
+
+    @Override
+    public void restoreTransformation() {
+        if (savedTransformation != null) {
+            graphics.setTransform(savedTransformation);
+        }
+    }
+
+    @Override
+    public void rotateRad(final float angle, final float centerX, final float centerY) {
+        graphics.rotate(angle, centerX, centerY);
+    }
+
+    @Override
+    public void saveTransformation() {
+        savedTransformation = graphics.getTransform();
+    }
+
+    @Override
+    public void scale(final float scale) {
+        graphics.scale(scale, scale);
     }
 
     @Override
@@ -189,10 +217,10 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setLineWidth(final double lineWidth) {
-        assert lineWidth >= 0.0;
+    public void setLineWidth(final float lineWidth) {
+        assert lineWidth >= 0f;
 
-        graphics.setStroke(new BasicStroke((float) lineWidth));
+        graphics.setStroke(new BasicStroke(lineWidth));
     }
 
     @Override
@@ -204,19 +232,10 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setTextSize(final int textSize) {
-        assert textSize > 0;
+    public void setTextSize(final float textSize) {
+        assert textSize > 0f;
 
-        graphics.setFont(graphics.getFont().deriveFont((float) textSize));
-    }
-
-    @Override
-    public void setTransformation(final CanvasTransformation transformation) {
-        affineTransform.setToIdentity();
-        affineTransform.translate(transformation.translationX, transformation.translationY);
-        affineTransform.rotate(transformation.rotation);
-        affineTransform.scale(transformation.scale, transformation.scale);
-        graphics.setTransform(affineTransform);
+        graphics.setFont(graphics.getFont().deriveFont(textSize));
     }
 
     @Override
@@ -264,6 +283,11 @@ class JavaCanvasImp implements CanvasImp {
         return byText.get(text);
     }
 
+    @Override
+    public void translate(final float tx, final float ty) {
+        graphics.translate(tx, ty);
+    }
+
     private boolean contains(final int x, final int y) {
         return 0 <= x && x < getWidth() && 0 <= y && y < getHeight();
     }
@@ -274,10 +298,10 @@ class JavaCanvasImp implements CanvasImp {
             createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
-    private static Polygon createPolygon(final int[] x, final int[] y) {
+    private static Polygon createPolygon(final float[] points) {
         final Polygon result = new Polygon();
-        for (int i = 0; i < x.length; ++i) {
-            result.addPoint(x[i], y[i]);
+        for (int i = 0; i < points.length; i = i + 2) {
+            result.addPoint((int) points[i], (int) points[i + 1]);
         }
 
         return result;

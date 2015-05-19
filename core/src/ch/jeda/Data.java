@@ -54,6 +54,7 @@ public class Data {
 
     private static final boolean DEFAULT_BOOLEAN = false;
     private static final double DEFAULT_DOUBLE = 0.0;
+    private static final float DEFAULT_FLOAT = 0f;
     private static final int DEFAULT_INT = 0;
     private static final Key DEFAULT_KEY = Key.UNDEFINED;
     private static final String DEFAULT_STRING = null;
@@ -261,6 +262,72 @@ public class Data {
         final double[] result = new double[nodes.getLength()];
         for (int i = 0; i < result.length; ++i) {
             result[i] = Convert.toDouble(nodes.item(i).getTextContent(), defaultValue);
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns the value associated with the specified name as a <tt>float</tt>. Returns <tt>0.0</tt>, if there is no
+     * valid <tt>float</tt> value associated with the name.
+     *
+     * @param name the name of the value to retrieve
+     * @return the <tt>float</tt> value associated with the name or <tt>defaultValue</tt>
+     *
+     * @since 2.0
+     */
+    public final float readFloat(final String name) {
+        return readFloat(name, DEFAULT_FLOAT);
+    }
+
+    /**
+     * Returns the value associated with the specified name as a <tt>float</tt>. Returns <tt>defaultValue</tt>, if there
+     * is no valid <tt>float</tt> value associated with the name.
+     *
+     * @param name the name of the value to retrieve
+     * @param defaultValue the default value
+     * @return the <tt>float</tt> value associated with the name or <tt>defaultValue</tt>
+     *
+     * @since 2.0
+     */
+    public final float readFloat(final String name, final float defaultValue) {
+        final Node child = getFirstElementByTagName(name);
+        if (child == null) {
+            return defaultValue;
+        }
+        else {
+            return Convert.toFloat(child.getTextContent(), defaultValue);
+        }
+    }
+
+    /**
+     * Returns the array associated with the specified name. Returns an empty array, if there is no valid array
+     * associated with the name.
+     *
+     * @param name the name of the array to retrieve
+     * @return the array associated with the name.
+     *
+     * @since 2.0
+     */
+    public float[] readFloats(final String name) {
+        return readFloats(name, DEFAULT_FLOAT);
+    }
+
+    /**
+     * Returns the array associated with the specified name. Returns an empty array, if there is no valid array
+     * associated with the name.
+     *
+     * @param name the name of the array to retrieve
+     * @param defaultValue the default value
+     * @return the array associated with the name.
+     *
+     * @since 2.0
+     */
+    public float[] readFloats(final String name, final float defaultValue) {
+        final NodeList nodes = element.getElementsByTagName(name);
+        final float[] result = new float[nodes.getLength()];
+        for (int i = 0; i < result.length; ++i) {
+            result[i] = Convert.toFloat(nodes.item(i).getTextContent(), defaultValue);
         }
 
         return result;
@@ -664,6 +731,50 @@ public class Data {
      * @since 1.2
      */
     public void writeDoubles(final String name, final double[] values) {
+        if (name == null) {
+            throw new NullPointerException("name");
+        }
+
+        if (values == null) {
+            throw new NullPointerException("values");
+        }
+
+        remove(name);
+        for (int i = 0; i < values.length; ++i) {
+            addElement(name, Convert.toString(values[i]));
+        }
+    }
+
+    /**
+     * Stores the specified value with the specified name in the data object. Overwrites any previously stored value
+     * with the same name.
+     *
+     * @param name the name of the value
+     * @param value the value to store
+     * @throws NullPointerException if <tt>name</tt> is <tt>null</tt>
+     *
+     * @since 1.2
+     */
+    public void writeFloat(final String name, final float value) {
+        if (name == null) {
+            throw new NullPointerException("name");
+        }
+
+        remove(name);
+        addElement(name, Convert.toString(value));
+    }
+
+    /**
+     * Stores the specified array with the specified name in the data object. Overwrites any previously stored value
+     * with the same name.
+     *
+     * @param name the name of the value
+     * @param values the array of values to store
+     * @throws NullPointerException if <tt>name</tt> or <tt>values</tt> is <tt>null</tt>
+     *
+     * @since 1.2
+     */
+    public void writeFloats(final String name, final float[] values) {
         if (name == null) {
             throw new NullPointerException("name");
         }

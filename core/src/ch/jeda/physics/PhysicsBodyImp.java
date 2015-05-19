@@ -16,6 +16,8 @@
  */
 package ch.jeda.physics;
 
+import ch.jeda.Convert;
+import ch.jeda.MathF;
 import ch.jeda.geometry.Circle;
 import ch.jeda.geometry.Ellipse;
 import ch.jeda.geometry.Polygon;
@@ -32,8 +34,8 @@ import org.jbox2d.dynamics.FixtureDef;
 
 final class PhysicsBodyImp implements BodyImp {
 
-    private final double density;
-    private final double friction;
+    private final float density;
+    private final float friction;
     private final org.jbox2d.dynamics.Body imp;
     private final Physics physics;
     private final List<Shape> shapes;
@@ -43,14 +45,14 @@ final class PhysicsBodyImp implements BodyImp {
         friction = oldImp.getFriction();
         shapes = new ArrayList<Shape>();
         final BodyDef bodyDef = new BodyDef();
-        bodyDef.angle = (float) oldImp.getAngleRad();
-        bodyDef.angularDamping = (float) oldImp.getAngularDamping();
-        bodyDef.angularVelocity = (float) oldImp.getAngularVelocity();
+        bodyDef.angle = oldImp.getAngleRad();
+        bodyDef.angularDamping = oldImp.getAngularDamping();
+        bodyDef.angularVelocity = oldImp.getAngularVelocity();
         bodyDef.position.x = physics.scaleLength(oldImp.getX());
         bodyDef.position.y = physics.scaleLength(oldImp.getY());
-        bodyDef.linearDamping = (float) oldImp.getDamping();
-        bodyDef.linearVelocity.x = (float) oldImp.getVx();
-        bodyDef.linearVelocity.y = (float) oldImp.getVy();
+        bodyDef.linearDamping = oldImp.getDamping();
+        bodyDef.linearVelocity.x = oldImp.getVx();
+        bodyDef.linearVelocity.y = oldImp.getVy();
         bodyDef.type = convert(oldImp.getType());
         bodyDef.fixedRotation = oldImp.isRotationFixed();
         imp = physics.createBodyImp(bodyDef);
@@ -67,20 +69,20 @@ final class PhysicsBodyImp implements BodyImp {
         final FixtureDef fixtureDef = new FixtureDef();
 
         fixtureDef.shape = convert(shape, physics.getScale());
-        fixtureDef.density = (float) density;
-        fixtureDef.friction = (float) friction;
+        fixtureDef.density = density;
+        fixtureDef.friction = friction;
         fixtureDef.userData = this;
         imp.createFixture(fixtureDef);
     }
 
     @Override
-    public void applyForce(final double fx, final double fy) {
-        imp.applyForce(new Vec2((float) fx, (float) fy), imp.getWorldCenter());
+    public void applyForce(final float fx, final float fy) {
+        imp.applyForce(new Vec2(fx, fy), imp.getWorldCenter());
     }
 
     @Override
-    public void applyTorque(final double torque) {
-        imp.applyTorque((float) torque);
+    public void applyTorque(final float torque) {
+        imp.applyTorque(torque);
     }
 
     @Override
@@ -95,47 +97,51 @@ final class PhysicsBodyImp implements BodyImp {
 
     @Override
     public void drawOverlay(final Canvas canvas) {
-        canvas.setColor(Color.RED);
         if (physics.isDebugging()) {
-            canvas.fillCircle(0, 0, 5);
+            canvas.setColor(Color.RED);
+            canvas.setLineWidth(0.01);
+            canvas.fillCircle(0, 0, 0.1);
+            canvas.drawPolyline(0, 0, 1, 0);
             for (final Shape shape : shapes) {
                 shape.draw(canvas);
             }
+
+            canvas.drawText(0.1, -0.5, "angle=" + Convert.toString(Math.toDegrees(getAngleRad()), 0));
         }
     }
 
     @Override
-    public double getAngleRad() {
-        return imp.getAngle();
+    public float getAngleRad() {
+        return MathF.normalizeAngle(imp.getAngle());
     }
 
     @Override
-    public double getAngularDamping() {
+    public float getAngularDamping() {
         return imp.getAngularDamping();
     }
 
     @Override
-    public double getAngularVelocity() {
+    public float getAngularVelocity() {
         return imp.getAngularVelocity();
     }
 
     @Override
-    public double getDamping() {
+    public float getDamping() {
         return imp.getLinearDamping();
     }
 
     @Override
-    public double getDensity() {
+    public float getDensity() {
         return density;
     }
 
     @Override
-    public double getFriction() {
+    public float getFriction() {
         return friction;
     }
 
     @Override
-    public double getMass() {
+    public float getMass() {
         return imp.getMass();
     }
 
@@ -164,22 +170,22 @@ final class PhysicsBodyImp implements BodyImp {
     }
 
     @Override
-    public double getVx() {
+    public float getVx() {
         return imp.getLinearVelocity().x;
     }
 
     @Override
-    public double getVy() {
+    public float getVy() {
         return imp.getLinearVelocity().y;
     }
 
     @Override
-    public double getX() {
+    public float getX() {
         return imp.getPosition().x * physics.getScale();
     }
 
     @Override
-    public double getY() {
+    public float getY() {
         return imp.getPosition().y * physics.getScale();
     }
 
@@ -189,37 +195,37 @@ final class PhysicsBodyImp implements BodyImp {
     }
 
     @Override
-    public void setAngleRad(final double rotation) {
+    public void setAngleRad(final float rotation) {
         // ignore
     }
 
     @Override
-    public void setAngularDamping(final double angularDamping) {
-        imp.setAngularDamping((float) angularDamping);
+    public void setAngularDamping(final float angularDamping) {
+        imp.setAngularDamping(angularDamping);
     }
 
     @Override
-    public void setAngularVelocity(double angularVelocity) {
-        imp.setAngularVelocity((float) angularVelocity);
+    public void setAngularVelocity(final float angularVelocity) {
+        imp.setAngularVelocity(angularVelocity);
     }
 
     @Override
-    public void setDamping(final double damping) {
-        imp.setLinearDamping((float) damping);
+    public void setDamping(final float damping) {
+        imp.setLinearDamping(damping);
     }
 
     @Override
-    public void setDensity(final double density) {
+    public void setDensity(final float density) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void setFriction(final double friction) {
+    public void setFriction(final float friction) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void setPosition(final double x, final double y) {
+    public void setPosition(final float x, final float y) {
         throw new IllegalStateException("Body is in a physics simulation.");
     }
 
@@ -234,8 +240,8 @@ final class PhysicsBodyImp implements BodyImp {
     }
 
     @Override
-    public void setVelocity(double vx, double vy) {
-        imp.setLinearVelocity(new Vec2((float) vx, (float) vy));
+    public void setVelocity(final float vx, final float vy) {
+        imp.setLinearVelocity(new Vec2(vx, vy));
     }
 
     @Override
@@ -263,7 +269,7 @@ final class PhysicsBodyImp implements BodyImp {
         }
     }
 
-    private static org.jbox2d.collision.shapes.Shape convert(final Shape shape, final double scale) {
+    private static org.jbox2d.collision.shapes.Shape convert(final Shape shape, final float scale) {
         if (shape instanceof Circle) {
             return convertCircle((Circle) shape, scale);
         }
@@ -277,7 +283,7 @@ final class PhysicsBodyImp implements BodyImp {
             }
         }
         else if (shape instanceof Rectangle) {
-            return convertRectangle((Rectangle) shape, scale);
+            return convertPolygon(((Rectangle) shape).toPolygon(), scale);
         }
         else if (shape instanceof Polygon) {
             return convertPolygon((Polygon) shape, scale);
@@ -290,36 +296,30 @@ final class PhysicsBodyImp implements BodyImp {
         }
     }
 
-    private static org.jbox2d.collision.shapes.Shape convertCircle(final Circle circle, final double scale) {
+    private static org.jbox2d.collision.shapes.Shape convertCircle(final Circle circle, final float scale) {
         final org.jbox2d.collision.shapes.CircleShape result = new org.jbox2d.collision.shapes.CircleShape();
-        result.m_p.x = (float) (circle.getCenterX() / scale);
-        result.m_p.y = (float) (circle.getCenterY() / scale);
-        result.m_radius = (float) (circle.getRadius() / scale);
+        result.m_p.x = circle.getCenterX() / scale;
+        result.m_p.y = circle.getCenterY() / scale;
+        result.m_radius = circle.getRadius() / scale;
         return result;
     }
 
-    private static org.jbox2d.collision.shapes.Shape convertRectangle(final Rectangle rectangle, final double scale) {
-        final org.jbox2d.collision.shapes.PolygonShape result = new org.jbox2d.collision.shapes.PolygonShape();
-        result.setAsBox((float) (rectangle.getWidth() / scale / 2.0), (float) (rectangle.getHeight() / scale / 2.0), new Vec2(0, 0), 0);
-        return result;
-    }
-
-    private static org.jbox2d.collision.shapes.Shape convertPolygon(final Polygon polygon, final double scale) {
+    private static org.jbox2d.collision.shapes.Shape convertPolygon(final Polygon polygon, final float scale) {
         final org.jbox2d.collision.shapes.PolygonShape result = new org.jbox2d.collision.shapes.PolygonShape();
         final Vec2[] vertices = new Vec2[polygon.getVertexCount()];
         for (int i = 0; i < polygon.getVertexCount(); ++i) {
-            vertices[i] = new Vec2((float) (polygon.getVertexX(i) / scale), (float) (polygon.getVertexY(i) / scale));
+            vertices[i] = new Vec2(polygon.getVertexX(i) / scale, polygon.getVertexY(i) / scale);
         }
 
         result.set(vertices, vertices.length);
         return result;
     }
 
-    private static org.jbox2d.collision.shapes.Shape convertPolygonalChain(final PolygonalChain chain, final double scale) {
+    private static org.jbox2d.collision.shapes.Shape convertPolygonalChain(final PolygonalChain chain, final float scale) {
         final org.jbox2d.collision.shapes.ChainShape result = new org.jbox2d.collision.shapes.ChainShape();
         final Vec2[] vertices = new Vec2[chain.getVertexCount()];
         for (int i = 0; i < chain.getVertexCount(); ++i) {
-            vertices[i] = new Vec2((float) (chain.getVertexX(i) / scale), (float) (chain.getVertexY(i) / scale));
+            vertices[i] = new Vec2(chain.getVertexX(i) / scale, chain.getVertexY(i) / scale);
         }
 
         result.createChain(vertices, vertices.length);

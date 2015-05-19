@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.event.EventQueue;
 import ch.jeda.ui.MouseCursor;
 import ch.jeda.ui.ViewFeature;
 import java.util.EnumSet;
@@ -28,13 +27,19 @@ public interface ViewImp {
 
     void close();
 
-    CanvasImp getCanvas();
+    CanvasImp getBackground();
+
+    int getDpi();
+
+    CanvasImp getForeground();
 
     EnumSet<ViewFeature> getFeatures();
 
-    boolean isVisible();
+    int getHeight();
 
-    void setEventQueue(EventQueue eventQueue);
+    int getWidth();
+
+    boolean isVisible();
 
     void setFeature(ViewFeature feature, boolean enabled);
 

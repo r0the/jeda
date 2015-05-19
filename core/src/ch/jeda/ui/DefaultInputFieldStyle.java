@@ -74,9 +74,9 @@ public class DefaultInputFieldStyle extends DefaultTextStyle implements InputFie
     }
 
     @Override
-    public boolean contains(final InputField inputField, final int x, final int y) {
-        final int dx = inputField.getCenterX() - x;
-        final int dy = inputField.getCenterY() - y;
+    public boolean contains(final InputField inputField, final float x, final float y) {
+        final float dx = inputField.getCenterX() - x;
+        final float dy = inputField.getCenterY() - y;
         return Math.abs(dx) <= getWidth(inputField) / 2 && Math.abs(dy) <= getHeight(inputField) / 2;
     }
 

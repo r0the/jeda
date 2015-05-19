@@ -35,7 +35,7 @@ public abstract class Layer {
     Layer(final TiledMap map, final ElementWrapper element) {
         this.map = map;
         name = element.getStringAttribute(Const.NAME);
-        opacity = (int) Math.max(0.0, Math.min(element.getDoubleAttribute(Const.OPACITY, 1.0) * 255, 255.0));
+        opacity = (int) Math.max(0.0, Math.min(element.getFloatAttribute(Const.OPACITY, 1f) * 255, 255.0));
         properties = element.parsePropertiesChild();
         visible = element.getBooleanAttribute(Const.VISIBLE, true);
     }

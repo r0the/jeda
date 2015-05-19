@@ -19,6 +19,7 @@ package ch.jeda.geometry;
 import ch.jeda.Data;
 import ch.jeda.Storable;
 import ch.jeda.ui.Canvas;
+import static ch.jeda.MathF.*;
 
 /**
  * Represents a circle shape.
@@ -30,9 +31,9 @@ public final class Circle extends Shape implements Storable {
     private static final String CENTER_X = "centerx";
     private static final String CENTER_Y = "centery";
     private static final String RADIUS = "radius";
-    private final double centerX;
-    private final double centerY;
-    private final double radius;
+    private final float centerX;
+    private final float centerY;
+    private final float radius;
 
     /**
      * Constructs a circle shape. The specified radius must be positive.
@@ -45,6 +46,20 @@ public final class Circle extends Shape implements Storable {
      * @since 2.0
      */
     public Circle(final double centerX, final double centerY, final double radius) {
+        this((float) centerX, (float) centerY, (float) radius);
+    }
+
+    /**
+     * Constructs a circle shape. The specified radius must be positive.
+     *
+     * @param centerX the horizontal coordinate of the circle's center
+     * @param centerY the vertical coordinate of the circle's center
+     * @param radius the radius of the circle
+     * @throws IllegalArgumentException if <code>radius</code> is not positive
+     *
+     * @since 2.0
+     */
+    public Circle(final float centerX, final float centerY, final float radius) {
         if (radius <= 0.0) {
             throw new IllegalArgumentException("radius");
         }
@@ -62,13 +77,13 @@ public final class Circle extends Shape implements Storable {
      * @since 2.0
      */
     public Circle(final Data data) {
-        this.centerX = data.readDouble(CENTER_X);
-        this.centerY = data.readDouble(CENTER_Y);
-        this.radius = data.readDouble(RADIUS);
+        this.centerX = data.readFloat(CENTER_X);
+        this.centerY = data.readFloat(CENTER_Y);
+        this.radius = data.readFloat(RADIUS);
     }
 
     @Override
-    public boolean contains(final double x, final double y) {
+    public boolean contains(final float x, final float y) {
         final double dx = centerX - x;
         final double dy = centerY - y;
         return dx * dx + dy * dy <= radius * radius;
@@ -91,8 +106,8 @@ public final class Circle extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getArea() {
-        return Math.PI * radius * radius;
+    public float getArea() {
+        return PI * radius * radius;
     }
 
     /**
@@ -102,7 +117,7 @@ public final class Circle extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getCenterX() {
+    public float getCenterX() {
         return centerX;
     }
 
@@ -113,7 +128,7 @@ public final class Circle extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getCenterY() {
+    public float getCenterY() {
         return centerY;
     }
 
@@ -124,8 +139,8 @@ public final class Circle extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getCircumference() {
-        return 2.0 * Math.PI * radius;
+    public float getCircumference() {
+        return 2f * PI * radius;
     }
 
     /**
@@ -135,8 +150,8 @@ public final class Circle extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getDiameter() {
-        return 2.0 * radius;
+    public float getDiameter() {
+        return 2f * radius;
     }
 
     /**
@@ -146,7 +161,7 @@ public final class Circle extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getRadius() {
+    public float getRadius() {
         return radius;
     }
 
@@ -160,15 +175,14 @@ public final class Circle extends Shape implements Storable {
      * @since 2.0
      */
     public Polygon toPolygon(int n) {
-        double[] x = new double[n];
-        double[] y = new double[n];
-        for (int i = 0; i < n; ++i) {
-            double angle = 2.0 * Math.PI * i / n;
-            x[i] = centerX + radius * Math.cos(angle);
-            y[i] = centerY + radius * Math.sin(angle);
+        final float[] points = new float[2 * n];
+        for (int i = 0; i < n; i = i + 2) {
+            float angle = 2f * PI * i / n;
+            points[i] = centerX + radius * cos(angle);
+            points[i + 1] = centerY + radius * sin(angle);
         }
 
-        return new Polygon(x, y);
+        return new Polygon(points);
     }
 
     @Override
@@ -186,8 +200,8 @@ public final class Circle extends Shape implements Storable {
 
     @Override
     public void writeTo(final Data data) {
-        data.writeDouble(CENTER_X, centerX);
-        data.writeDouble(CENTER_Y, centerY);
-        data.writeDouble(RADIUS, radius);
+        data.writeFloat(CENTER_X, centerX);
+        data.writeFloat(CENTER_Y, centerY);
+        data.writeFloat(RADIUS, radius);
     }
 }

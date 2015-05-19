@@ -36,61 +36,65 @@ public enum Alignment {
      *
      * @since 1.0
      */
-    BOTTOM_CENTER(Align.CENTER, Align.RIGHT_BOTTOM),
+    BOTTOM_CENTER(Align.CENTER, Align.RIGHT_BOTTOM, NewAlign.MIDDLE, NewAlign.MIN),
     /**
      * Align at the bottom vertically and left horizontally.
      *
      * @since 1.0
      */
-    BOTTOM_LEFT(Align.LEFT_TOP, Align.RIGHT_BOTTOM),
+    BOTTOM_LEFT(Align.LEFT_TOP, Align.RIGHT_BOTTOM, NewAlign.MIN, NewAlign.MIN),
     /**
      * Align at the bottom vertically and right horizontally.
      *
      * @since 1.0
      */
-    BOTTOM_RIGHT(Align.RIGHT_BOTTOM, Align.RIGHT_BOTTOM),
+    BOTTOM_RIGHT(Align.RIGHT_BOTTOM, Align.RIGHT_BOTTOM, NewAlign.MAX, NewAlign.MIN),
     /**
      * Center both vertically and horizontally.
      *
      * @since 1.0
      */
-    CENTER(Align.CENTER, Align.CENTER),
+    CENTER(Align.CENTER, Align.CENTER, NewAlign.MIDDLE, NewAlign.MIDDLE),
     /**
      * Center vertically and align left horizontally.
      *
      * @since 1.0
      */
-    LEFT(Align.LEFT_TOP, Align.CENTER),
+    LEFT(Align.LEFT_TOP, Align.CENTER, NewAlign.MIN, NewAlign.MIDDLE),
     /**
      * Center vertically and align right horizontally.
      *
      * @since 1.0
      */
-    RIGHT(Align.RIGHT_BOTTOM, Align.CENTER),
+    RIGHT(Align.RIGHT_BOTTOM, Align.CENTER, NewAlign.MAX, NewAlign.MIDDLE),
     /**
      * Align at the top vertically and center horizontally.
      *
      * @since 1.0
      */
-    TOP_CENTER(Align.CENTER, Align.LEFT_TOP),
+    TOP_CENTER(Align.CENTER, Align.LEFT_TOP, NewAlign.MIDDLE, NewAlign.MAX),
     /**
      * Align at the top vertically and left horizontally.
      *
      * @since 1.0
      */
-    TOP_LEFT(Align.LEFT_TOP, Align.LEFT_TOP),
+    TOP_LEFT(Align.LEFT_TOP, Align.LEFT_TOP, NewAlign.MIN, NewAlign.MAX),
     /**
      * Align at the top vertically and right horizontally.
      *
      * @since 1.0
      */
-    TOP_RIGHT(Align.RIGHT_BOTTOM, Align.LEFT_TOP);
+    TOP_RIGHT(Align.RIGHT_BOTTOM, Align.LEFT_TOP, NewAlign.MAX, NewAlign.MAX);
     private final Align horizontal;
     private final Align vertical;
+    final NewAlign horiz;
+    final NewAlign vert;
 
-    private Alignment(final Align horizontal, final Align vertical) {
+    private Alignment(final Align horizontal, final Align vertical, final NewAlign horiz, final NewAlign vert) {
         this.horizontal = horizontal;
         this.vertical = vertical;
+        this.horiz = horiz;
+        this.vert = vert;
     }
 
     int alignX(final int x, final int width) {

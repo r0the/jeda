@@ -53,7 +53,7 @@ public abstract class InputField extends Widget implements KeyTypedListener, Poi
     }
 
     @Override
-    public final boolean contains(final int x, final int y) {
+    public final boolean contains(final float x, final float y) {
         return style.contains(this, x, y);
     }
 

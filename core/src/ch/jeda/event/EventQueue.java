@@ -373,8 +373,8 @@ public final class EventQueue {
         }
 
         if ((lastDragEvent != null) && (event.getPointerId() == lastDragEvent.getPointerId()) && !event.isConsumed()) {
-            double dx = lastDragEvent.getX() - event.getX();
-            double dy = lastDragEvent.getY() - event.getY();
+            float dx = lastDragEvent.getX() - event.getX();
+            float dy = lastDragEvent.getY() - event.getY();
             dispatchScrollEvent(new ScrollEvent(event.getSource(), dx, dy));
             lastDragEvent = event;
         }

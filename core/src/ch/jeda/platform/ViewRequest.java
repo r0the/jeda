@@ -24,13 +24,16 @@ import java.util.EnumSet;
  */
 public final class ViewRequest {
 
+    private final ViewCallback callback;
     private final EnumSet<ViewFeature> features;
     private final int height;
     private final Object lock;
     private final int width;
     private ViewImp result;
 
-    public ViewRequest(final int width, final int height, final EnumSet<ViewFeature> features) {
+    public ViewRequest(final ViewCallback callback, final int width, final int height,
+                       final EnumSet<ViewFeature> features) {
+        this.callback = callback;
         this.width = width;
         this.height = height;
         this.features = features;
@@ -40,6 +43,10 @@ public final class ViewRequest {
 
     public ViewImp getResult() {
         return result;
+    }
+
+    public ViewCallback getCallback() {
+        return this.callback;
     }
 
     public EnumSet<ViewFeature> getFeatures() {

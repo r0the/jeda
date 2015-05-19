@@ -23,8 +23,8 @@ package ch.jeda.event;
  */
 public class ScrollEvent extends Event {
 
-    private final double dx;
-    private final double dy;
+    private final float dx;
+    private final float dy;
 
     /**
      * Constructs a wheel event.
@@ -35,7 +35,7 @@ public class ScrollEvent extends Event {
      *
      * @since 2.0
      */
-    public ScrollEvent(final Object source, final double dx, final double dy) {
+    public ScrollEvent(final Object source, final float dx, final float dy) {
         super(source, EventType.SCROLL);
         this.dx = dx;
         this.dy = dy;
@@ -48,7 +48,7 @@ public class ScrollEvent extends Event {
      *
      * @since 2.0
      */
-    public final double getDx() {
+    public final float getDx() {
         return dx;
     }
 
@@ -59,7 +59,7 @@ public class ScrollEvent extends Event {
      *
      * @since 2.0
      */
-    public final double getDy() {
+    public final float getDy() {
         return dy;
     }
 }

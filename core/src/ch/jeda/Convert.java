@@ -76,6 +76,26 @@ public final class Convert {
     }
 
     /**
+     * Converts a @{link java.lang.String} to a <tt>float</tt> value. Returns the <tt>float</tt> value represented by
+     * the {@link java.lang.String}. Returns the <tt>defaultValue</tt>, if <tt>value</tt> does not represent a valid
+     * <tt>float</tt>.
+     *
+     * @param value the string to be converted to a <tt>float</tt>
+     * @param defaultValue the default value
+     * @return the <tt>float</tt> value represented by <tt>value</tt> or the <tt>defaultValue</tt>
+     *
+     * @since 2.0
+     */
+    public static float toFloat(final String value, final float defaultValue) {
+        try {
+            return Float.parseFloat(value);
+        }
+        catch (final NumberFormatException ex) {
+            return defaultValue;
+        }
+    }
+
+    /**
      * Converts a @{link java.lang.String} to an <tt>int</tt> value. Returns the <tt>int</tt> value represented by the
      * {@link java.lang.String}. Returns the <tt>defaultValue</tt>, if <tt>value</tt> does not represent a valid
      * <tt>int</tt>.
@@ -205,11 +225,12 @@ public final class Convert {
      * @since 2.0
      */
     public static String toString(final double value, final int decimalPlaces) {
-        if (decimalPlaces < 0) {
-            throw new IllegalArgumentException("decimalPlaces");
+        if (decimalPlaces <= 0) {
+            return String.valueOf((int) value);
         }
-
-        return String.format("%." + decimalPlaces + "g%n", value);
+        else {
+            return String.format("%." + decimalPlaces + "g%n", value);
+        }
     }
 
     /**

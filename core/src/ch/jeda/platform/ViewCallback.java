@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 - 2015 by Stefan Rothe
+ * Copyright (C) 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,31 +16,23 @@
  */
 package ch.jeda.platform;
 
-/**
- * <b>Internal</b>. Do not use this class.
- */
-public final class CanvasTransformation {
+import ch.jeda.event.Key;
 
-    public double rotation;
-    public double scale;
-    public double translationX;
-    public double translationY;
+public interface ViewCallback {
 
-    public CanvasTransformation() {
-        reset();
-    }
+    void postKeyDown(Object source, Key key, int count);
 
-    public CanvasTransformation(final CanvasTransformation other) {
-        rotation = other.rotation;
-        scale = other.scale;
-        translationX = other.translationX;
-        translationY = other.translationY;
-    }
+    void postKeyTyped(Object source, Key key);
 
-    public void reset() {
-        rotation = 0.0;
-        scale = 1.0;
-        translationX = 0.0;
-        translationY = 0.0;
-    }
+    void postKeyTyped(Object source, char ch);
+
+    void postKeyUp(Object source, Key key);
+
+    void postPointerDown(Object source, int pointerId, float x, float y);
+
+    void postPointerMoved(Object source, int pointerId, float x, float y);
+
+    void postPointerUp(Object source, int pointerId, float x, float y);
+
+    void postScroll(Object source, float dx, float dy);
 }

@@ -18,7 +18,6 @@ package ch.jeda.ui;
 
 import ch.jeda.Log;
 import ch.jeda.JedaInternal;
-import ch.jeda.image.ReplaceColorFilter;
 import ch.jeda.platform.ImageImp;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -75,28 +74,6 @@ public final class Image {
     }
 
     /**
-     * Creates a filtered copy of the image. The new image has the same width and height as this image. The pixel colors
-     * of the new image are determined by calling {@link ch.jeda.ui.ImageFilter#apply(ch.jeda.ui.Image, int, int)} for
-     * each pixel.
-     *
-     * @param filter the image filter
-     * @return the new image
-     * @throws NullPointerException if <tt>filter</tt> is <tt>null</tt>
-     *
-     * @since 2.0
-     */
-    public Image filter(final ImageFilter filter) {
-        final Canvas canvas = new Canvas(getWidth(), getHeight());
-        for (int x = 0; x < getWidth(); ++x) {
-            for (int y = 0; y < getHeight(); ++y) {
-                canvas.setPixel(x, y, filter.apply(this, x, y));
-            }
-        }
-
-        return canvas.takeSnapshot();
-    }
-
-    /**
      * Creates a horizontally flipped copy of the image.
      *
      * @return a horizontally flipped copy of the image
@@ -118,20 +95,6 @@ public final class Image {
      */
     public Image flipVertically() {
         return new Image(imp.flipVertically());
-    }
-
-    /**
-     * Returns the pixel color at the specified coordinates. If the specified coordinates lay outside the image, the
-     * color of the pixel closest to the coordinates is returned.
-     *
-     * @param x the x coordinate of the pixel
-     * @param y the y coordinate of the pixel
-     * @return the pixel color
-     *
-     * @since 2.0
-     */
-    public Color getPixel(final int x, final int y) {
-        return new Color(imp.getPixel(toRangeX(x), toRangeY(y)));
     }
 
     /**
@@ -187,13 +150,6 @@ public final class Image {
      */
     public int getWidth() {
         return imp.getWidth();
-    }
-
-    /**
-     * @deprecated Use {@link #filter(ch.jeda.ui.ImageFilter)} with {@link ch.jeda.image.ReplaceColorFilter} instead.
-     */
-    public Image replacePixels(final Color oldColor, final Color newColor) {
-        return filter(new ReplaceColorFilter(oldColor, newColor));
     }
 
     /**
@@ -388,13 +344,5 @@ public final class Image {
         }
 
         return CACHE.get(filePath);
-    }
-
-    private int toRangeX(final int x) {
-        return Math.max(0, Math.min(x, getWidth() - 1));
-    }
-
-    private int toRangeY(final int y) {
-        return Math.max(0, Math.min(y, getHeight() - 1));
     }
 }

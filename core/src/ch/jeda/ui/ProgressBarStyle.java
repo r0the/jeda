@@ -33,7 +33,7 @@ public interface ProgressBarStyle {
      *
      * @since 1.3
      */
-    boolean contains(ProgressBar progressBar, int x, int y);
+    boolean contains(ProgressBar progressBar, float x, float y);
 
     /**
      * Draws the progrss bar widget on the specified canvas.

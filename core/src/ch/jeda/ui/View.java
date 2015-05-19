@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2015 by Stefan Rothe
+ * Copyright (C) 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,8 +20,14 @@ import ch.jeda.Jeda;
 import ch.jeda.JedaInternal;
 import ch.jeda.event.Event;
 import ch.jeda.event.EventQueue;
+import ch.jeda.event.EventType;
+import ch.jeda.event.Key;
+import ch.jeda.event.KeyEvent;
+import ch.jeda.event.PointerEvent;
+import ch.jeda.event.ScrollEvent;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
+import ch.jeda.platform.ViewCallback;
 import ch.jeda.platform.ViewImp;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -34,7 +40,16 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents a graphical view that can contains {@link ch.jeda.ui.Element}s.
+ * Represents the visualization of a virtual world. The view is where the user interacts with the program. On the Java
+ * platform (Window, Mac OS, Linux), a view is contained in the application window. On Android the view is the visible
+ * part of the app.
+ * </p><p>
+ * A Jeda view has a <b>background</b> and contains {@link ch.jeda.ui.Element}s, which are objects that live in the
+ * virtual world and have a graphical representation. The view also receives {@link ch.jeda.event.Event}s from the user
+ * and the operating system.
+ * </p><p>
+ * The virtual world has a mathematical, cartesian coordinate system. That means the the x axis points to the right and
+ * the y axis points upwards.
  *
  * @since 2.0
  */
@@ -43,6 +58,7 @@ public class View {
     private static final int DEFAULT_HEIGHT = 600;
     private static final int DEFAULT_WIDTH = 800;
     private static final EnumSet<ViewFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
+    private final Callback callback;
     private final Object elementLock;
     private final Map<String, Set<Element>> elementsByName;
     private final Set<Element> elementSet;
@@ -50,12 +66,13 @@ public class View {
     private final Set<Element> pendingInsertions;
     private final Set<Element> pendingRemovals;
     private Canvas background;
-    private Canvas canvas;
     private Element[] elements;
+    private Canvas foreground;
     private ViewImp imp;
+    private float scale;
     private String title;
-    private double translationX;
-    private double translationY;
+    private float translationX;
+    private float translationY;
 
     /**
      * Constructs a view. The view is shown on the screen.
@@ -109,6 +126,7 @@ public class View {
      * @since 2.0
      */
     public View(final int width, final int height, final ViewFeature... features) {
+        callback = new Callback(this);
         elementLock = new Object();
         elementsByName = new HashMap<String, Set<Element>>();
         elementSet = new HashSet<Element>();
@@ -116,6 +134,7 @@ public class View {
         pendingInsertions = new HashSet<Element>();
         pendingRemovals = new HashSet<Element>();
         elements = new Element[0];
+        scale = 1f;
         title = Jeda.getProgramName();
         resetImp(width, height, toSet(features));
         Jeda.addEventListener(eventQueue);
@@ -301,14 +320,25 @@ public class View {
     }
 
     /**
-     * Returns the height of this view in pixels.
+     * Returns the height of this view in world coordinates.
      *
-     * @return the height of this view in pixels
+     * @return the height of this view in world coordinates
      *
      * @since 2.0
      */
-    public final int getHeight() {
-        return imp.getCanvas().getHeight();
+    public final float getHeight() {
+        return foreground.getHeight();
+    }
+
+    /**
+     * Returns the current scale of this view.
+     *
+     * @return the current scale of this view
+     *
+     * @since 2.0
+     */
+    public final float getScale() {
+        return scale;
     }
 
     /**
@@ -324,14 +354,14 @@ public class View {
     }
 
     /**
-     * Returns the width of this view in pixels.
+     * Returns the width of this view in world coordinates.
      *
-     * @return the width of this view in pixels
+     * @return the width of this view in world coordinates
      *
      * @since 2.0
      */
-    public final int getWidth() {
-        return imp.getCanvas().getWidth();
+    public final float getWidth() {
+        return foreground.getWidth();
     }
 
     /**
@@ -392,11 +422,6 @@ public class View {
         eventQueue.removeListener(listener);
     }
 
-    public final void scroll(final double dx, final double dy) {
-        translationX = translationX + dx;
-        translationY = translationY + dy;
-    }
-
     /**
      * Enables or disables a view feature.
      *
@@ -422,7 +447,7 @@ public class View {
                 featureSet.remove(feature);
             }
 
-            resetImp(getWidth(), getHeight(), featureSet);
+            resetImp(imp.getWidth(), imp.getHeight(), featureSet);
         }
         else if (feature == ViewFeature.SCROLLABLE) {
             eventQueue.setDragEnabled(enabled);
@@ -451,6 +476,30 @@ public class View {
     }
 
     /**
+     * Sets the scale of this view.
+     *
+     * @param scale the scale
+     *
+     * @since 2.0
+     */
+    public final void setScale(final double scale) {
+        this.scale = (float) scale;
+        updateWorldTransformation();
+    }
+
+    /**
+     * Sets the scale of this view.
+     *
+     * @param scale the scale
+     *
+     * @since 2.0
+     */
+    public final void setScale(final float scale) {
+        this.scale = scale;
+        updateWorldTransformation();
+    }
+
+    /**
      * Sets the view title.
      *
      * @param title new title of the view
@@ -466,6 +515,34 @@ public class View {
 
         this.title = title;
         imp.setTitle(title);
+    }
+
+    /**
+     * Sets the translation of this view in world coordinates.
+     *
+     * @param tx the horizontal translation
+     * @param ty the vertical translation
+     *
+     * @since 2.0
+     */
+    public final void setTranslation(final double tx, final double ty) {
+        translationX = (float) tx;
+        translationY = (float) ty;
+        updateWorldTransformation();
+    }
+
+    /**
+     * Changes the translation of this view in world coordinates.
+     *
+     * @param tx the additional horizontal translation
+     * @param ty the additional vertical translation
+     *
+     * @since 2.0
+     */
+    public final void translate(final double tx, final double ty) {
+        translationX = translationX + (float) tx;
+        translationY = translationY + (float) ty;
+        updateWorldTransformation();
     }
 
     /**
@@ -514,10 +591,9 @@ public class View {
         if (imp.isVisible()) {
             updateElements();
             eventQueue.processEvents();
-            canvas.drawCanvas(0, 0, background);
-            canvas.setTranslation(translationX, translationY);
+            foreground.copyFrom(background);
             for (int i = 0; i < elements.length; ++i) {
-                elements[i].draw(canvas);
+                elements[i].internalDraw(foreground);
             }
 
             imp.update();
@@ -529,19 +605,16 @@ public class View {
             imp.close();
         }
 
-        imp = JedaInternal.createViewImp(width, height, features);
-        imp.setEventQueue(eventQueue);
+        imp = JedaInternal.createViewImp(callback, width, height, features);
         imp.setTitle(title);
         eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
 
-        canvas = new Canvas(getWidth(), getHeight());
-        canvas.setImp(imp.getCanvas());
-
-        background = new Canvas(getWidth(), getHeight());
+        foreground = new Canvas(imp.getForeground());
+        background = new Canvas(imp.getBackground());
         background.setColor(Color.WHITE);
         background.fill();
         background.setColor(Color.BLACK);
-
+        updateWorldTransformation();
     }
 
     private void updateElements() {
@@ -573,6 +646,16 @@ public class View {
         }
     }
 
+    private void updateWorldTransformation() {
+        foreground.resetTransformation();
+        foreground.scale(scale);
+        foreground.translate(translationX, translationY);
+
+//        background.resetTransformation();
+//        background.scale(scale);
+//        background.translate(translationX, translationY);
+    }
+
     private static EnumSet<ViewFeature> initImpChangingFeatures() {
         final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class
         );
@@ -590,6 +673,59 @@ public class View {
         }
 
         return result;
+    }
+
+    private static class Callback implements ViewCallback {
+
+        private final View view;
+
+        public Callback(final View view) {
+            this.view = view;
+        }
+
+        @Override
+        public void postKeyDown(Object source, Key key, int count) {
+            postEvent(new KeyEvent(source, EventType.KEY_DOWN, key));
+        }
+
+        @Override
+        public void postKeyTyped(Object source, Key key) {
+            postEvent(new KeyEvent(source, EventType.KEY_TYPED, key));
+        }
+
+        @Override
+        public void postKeyTyped(Object source, char ch) {
+            postEvent(new KeyEvent(source, EventType.KEY_TYPED, ch));
+        }
+
+        @Override
+        public void postKeyUp(Object source, Key key) {
+            postEvent(new KeyEvent(source, EventType.KEY_UP, key));
+        }
+
+        @Override
+        public void postPointerDown(Object source, int pointerId, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, x, y));
+        }
+
+        @Override
+        public void postPointerMoved(Object source, int pointerId, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, x, y));
+        }
+
+        @Override
+        public void postPointerUp(Object source, int pointerId, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, x, y));
+        }
+
+        @Override
+        public void postScroll(Object source, float dx, float dy) {
+            postEvent(new ScrollEvent(source, dx, dy));
+        }
+
+        private void postEvent(final Event event) {
+            view.eventQueue.addEvent(event);
+        }
     }
 
     private static class EventLoop implements TickListener {

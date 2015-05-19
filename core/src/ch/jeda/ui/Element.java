@@ -73,6 +73,29 @@ public abstract class Element {
         return name;
     }
 
+    public abstract float getX();
+
+    public abstract float getY();
+
+    /**
+     * Returns the current rotation angle of this element in degrees.
+     *
+     * @return the current rotation angle of this element in degrees
+     *
+     * @see #getAngleRad()
+     * @since 2.0
+     */
+    public final float getAngleDeg() {
+        return (float) Math.toDegrees(getAngleRad());
+    }
+
+    /**
+     * Returns the current rotation angle of this element in radians.
+     *
+     * @return the current rotation angle of this element in radians
+     */
+    public abstract float getAngleRad();
+
     /**
      * Sets the draw order of the element. The draw order determines the order in which the element are drawn on a
      * {@link ch.jeda.ui.Window}. Elements with a smaller draw order are drawn first.
@@ -141,7 +164,6 @@ public abstract class Element {
      * @since 1.4
      */
     protected void triggerAction(final String name) {
-        final View view = getView();
         if (view != null) {
             view.postEvent(new ActionEvent(this, name));
         }
@@ -153,6 +175,14 @@ public abstract class Element {
         }
 
         this.view = view;
+    }
+
+    void internalDraw(final Canvas canvas) {
+        canvas.saveTransformation();
+        canvas.translate(getX(), getY());
+        canvas.rotateRad(getAngleRad());
+        draw(canvas);
+        canvas.restoreTransformation();
     }
 
     void removeFromView(final View view) {

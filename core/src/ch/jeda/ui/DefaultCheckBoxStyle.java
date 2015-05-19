@@ -110,9 +110,9 @@ public class DefaultCheckBoxStyle implements CheckBoxStyle {
     }
 
     @Override
-    public boolean contains(final CheckBox checkBox, final int x, final int y) {
-        final int dx = checkBox.getCenterX() - x;
-        final int dy = checkBox.getCenterY() - y;
+    public boolean contains(final CheckBox checkBox, final float x, final float y) {
+        final float dx = checkBox.getCenterX() - x;
+        final float dy = checkBox.getCenterY() - y;
         return Math.abs(dx) <= getWidth(checkBox) / 2 && Math.abs(dy) <= getHeight(checkBox) / 2;
     }
 

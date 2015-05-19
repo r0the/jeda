@@ -68,7 +68,7 @@ public class CheckBox extends Widget implements KeyDownListener, KeyUpListener, 
     }
 
     @Override
-    public final boolean contains(final int x, final int y) {
+    public final boolean contains(final float x, final float y) {
         return style.contains(this, x, y);
     }
 

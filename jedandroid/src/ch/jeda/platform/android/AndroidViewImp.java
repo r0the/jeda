@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.android;
 
-import ch.jeda.event.EventQueue;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.MouseCursor;
@@ -53,11 +52,6 @@ class AndroidViewImp implements ViewImp {
     }
 
     @Override
-    public void setEventQueue(final EventQueue eventQueue) {
-        surfaceFragment.setEventQueue(eventQueue);
-    }
-
-    @Override
     public void setFeature(final ViewFeature feature, final boolean enabled) {
         surfaceFragment.setFeature(feature, enabled);
     }
@@ -75,5 +69,25 @@ class AndroidViewImp implements ViewImp {
     @Override
     public void update() {
         surfaceFragment.setBitmap(canvasImp.getBitmap());
+    }
+
+    public CanvasImp getBackground() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getDpi() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public CanvasImp getForeground() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getHeight() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getWidth() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -25,18 +25,18 @@ import java.util.List;
 class DetachedBodyImp implements BodyImp {
 
     private final List<Shape> shapes;
-    private double angle;
-    private double angularDamping;
-    private double angularVelocity;
-    private double damping;
-    private double density;
-    private double friction;
+    private float angle;
+    private float angularDamping;
+    private float angularVelocity;
+    private float damping;
+    private float density;
+    private float friction;
     private boolean rotationFixed;
     private BodyType type;
-    private double vx;
-    private double vy;
-    private double x;
-    private double y;
+    private float vx;
+    private float vy;
+    private float x;
+    private float y;
 
     DetachedBodyImp(final BodyImp oldImp) {
         shapes = new ArrayList<Shape>(Arrays.asList(oldImp.getShapes()));
@@ -56,18 +56,18 @@ class DetachedBodyImp implements BodyImp {
 
     DetachedBodyImp() {
         shapes = new ArrayList<Shape>();
-        angle = 0.0;
-        angularDamping = 0.0;
-        angularVelocity = 0.0;
-        damping = 0.0;
-        density = 1.0;
-        friction = 0.0;
+        angle = 0f;
+        angularDamping = 0f;
+        angularVelocity = 0f;
+        damping = 0f;
+        density = 1f;
+        friction = 0f;
         rotationFixed = false;
         type = BodyType.DYNAMIC;
-        vx = 0.0;
-        vy = 0.0;
-        x = 0.0;
-        y = 0.0;
+        vx = 0f;
+        vy = 0f;
+        x = 0f;
+        y = 0f;
     }
 
     @Override
@@ -76,12 +76,12 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
-    public void applyForce(final double fx, final double fy) {
+    public void applyForce(final float fx, final float fy) {
         throw new IllegalStateException("Cannot apply force to a body that has not been added to a physics.");
     }
 
     @Override
-    public void applyTorque(final double torque) {
+    public void applyTorque(final float torque) {
         throw new IllegalStateException("Cannot apply torque to a body that has not been added to a physics.");
     }
 
@@ -99,38 +99,38 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
-    public double getAngleRad() {
+    public float getAngleRad() {
         return angle;
     }
 
     @Override
-    public double getAngularDamping() {
+    public float getAngularDamping() {
         return angularDamping;
     }
 
     @Override
-    public double getAngularVelocity() {
+    public float getAngularVelocity() {
         return angularVelocity;
     }
 
     @Override
-    public double getDamping() {
+    public float getDamping() {
         return damping;
     }
 
     @Override
-    public double getDensity() {
+    public float getDensity() {
         return density;
     }
 
     @Override
-    public double getFriction() {
+    public float getFriction() {
         return friction;
     }
 
     @Override
-    public double getMass() {
-        return 0.0;
+    public float getMass() {
+        return 0f;
     }
 
     @Override
@@ -149,22 +149,22 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
-    public double getVx() {
+    public float getVx() {
         return vx;
     }
 
     @Override
-    public double getVy() {
+    public float getVy() {
         return vy;
     }
 
     @Override
-    public double getX() {
+    public float getX() {
         return x;
     }
 
     @Override
-    public double getY() {
+    public float getY() {
         return y;
     }
 
@@ -174,37 +174,37 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
-    public void setAngleRad(final double angle) {
+    public void setAngleRad(final float angle) {
         this.angle = angle;
     }
 
     @Override
-    public void setAngularDamping(final double angularDamping) {
+    public void setAngularDamping(final float angularDamping) {
         this.angularDamping = angularDamping;
     }
 
     @Override
-    public void setAngularVelocity(final double angularVelocity) {
+    public void setAngularVelocity(final float angularVelocity) {
         this.angularVelocity = angularVelocity;
     }
 
     @Override
-    public void setDamping(final double damping) {
+    public void setDamping(final float damping) {
         this.damping = damping;
     }
 
     @Override
-    public void setDensity(final double density) {
+    public void setDensity(final float density) {
         this.density = density;
     }
 
     @Override
-    public void setFriction(final double friction) {
+    public void setFriction(final float friction) {
         this.friction = friction;
     }
 
     @Override
-    public void setPosition(final double x, final double y) {
+    public void setPosition(final float x, final float y) {
         this.x = x;
         this.y = y;
     }
@@ -220,7 +220,7 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
-    public void setVelocity(double vx, double vy) {
+    public void setVelocity(final float vx, final float vy) {
         this.vx = vx;
         this.vy = vy;
     }

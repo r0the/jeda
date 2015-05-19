@@ -16,6 +16,7 @@
  */
 package ch.jeda.tiled;
 
+import ch.jeda.Convert;
 import ch.jeda.geometry.Ellipse;
 import ch.jeda.geometry.Polygon;
 import ch.jeda.geometry.PolygonalChain;
@@ -32,7 +33,7 @@ class Parser {
      * @param tileElement the tile element
      * @return the shapes
      */
-    static Shape[] parseShapes(final ElementWrapper tileElement, final double offsetX, final double offsetY) {
+    static Shape[] parseShapes(final ElementWrapper tileElement, final float offsetX, final float offsetY) {
         final List<Shape> shapeList = new ArrayList<Shape>();
         if (tileElement != null) {
             final ElementWrapper objectGroupElement = tileElement.getChild(Const.OBJECTGROUP);
@@ -52,11 +53,11 @@ class Parser {
      * @param objectElement the object element
      * @return the shapes
      */
-    static Shape parseShape(final ElementWrapper objectElement, final double offsetX, final double offsetY) {
-        final double height = objectElement.getDoubleAttribute(Const.HEIGHT, 0.0);
-        final double width = objectElement.getDoubleAttribute(Const.WIDTH, 0.0);
+    static Shape parseShape(final ElementWrapper objectElement, final float offsetX, final float offsetY) {
+        final float height = objectElement.getFloatAttribute(Const.HEIGHT);
+        final float width = objectElement.getFloatAttribute(Const.WIDTH);
         if (objectElement.hasChild(Const.ELLIPSE)) {
-            return new Ellipse(width / 2.0, height / 2.0, width / 2.0, height / 2.0);
+            return new Ellipse(width / 2f, height / 2f, width / 2f, height / 2f);
         }
         else if (objectElement.hasChild(Const.POLYGON)) {
             final String points = objectElement.getChild(Const.POLYGON).getStringAttribute(Const.POINTS);
@@ -67,7 +68,7 @@ class Parser {
             return new PolygonalChain(parsePoints(points, offsetX, offsetY));
         }
         else if (width > 0 && height > 0) {
-            return new Rectangle(width, height);
+            return new Rectangle(-width / 2f, -height / 2f, width, height);
         }
         else {
             return null;
@@ -111,11 +112,11 @@ class Parser {
      * @param points the string
      * @return the list of points
      */
-    private static double[] parsePoints(final String points, final double offsetX, final double offsetY) {
+    private static float[] parsePoints(final String points, final float offsetX, final float offsetY) {
         String[] parts = points.split(" |,");
-        final double[] result = new double[parts.length];
+        final float[] result = new float[parts.length];
         for (int i = 0; i < parts.length; ++i) {
-            result[i] = Double.parseDouble(parts[i]);
+            result[i] = Convert.toFloat(parts[i], 0f);
             if (i % 2 == 0) {
                 result[i] = result[i] + offsetX;
             }

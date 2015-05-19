@@ -147,9 +147,9 @@ public class DefaultButtonStyle extends DefaultTextStyle implements ButtonStyle 
     }
 
     @Override
-    public boolean contains(final Button button, final int x, final int y) {
-        final int dx = button.getCenterX() - x;
-        final int dy = button.getCenterY() - y;
+    public boolean contains(final Button button, final float x, final float y) {
+        final float dx = button.getCenterX() - x;
+        final float dy = button.getCenterY() - y;
         return Math.abs(dx) <= getWidth(button) / 2 && Math.abs(dy) <= getHeight(button) / 2;
     }
 

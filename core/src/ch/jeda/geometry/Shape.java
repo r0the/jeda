@@ -34,7 +34,20 @@ public abstract class Shape {
      *
      * @since 2.0
      */
-    public abstract boolean contains(double x, double y);
+    public final boolean contains(double x, double y) {
+        return contains((float) x, (float) y);
+    }
+
+    /**
+     * Checks if this shape contains a point.
+     *
+     * @param x the x coordinate of the point
+     * @param y the y coordinate of the point
+     * @return <code>true</code>, if the shape contains the point, otherwise <code>false</code>
+     *
+     * @since 2.0
+     */
+    public abstract boolean contains(float x, float y);
 
     /**
      * Draws the border of this shape on a canvas.

@@ -80,7 +80,8 @@ class WindowManager {
         }
 
         windows.add(window);
-        viewRequest.setResult(new JavaViewImp(window, width, height, viewRequest.getFeatures()));
+        viewRequest.setResult(new JavaViewImp(window, viewRequest.getCallback(), width, height,
+                                              viewRequest.getFeatures()));
     }
 
     void shutdown() {

@@ -14,25 +14,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda.image;
+package ch.jeda.ui;
 
-import ch.jeda.ui.Color;
-import ch.jeda.ui.Image;
-import ch.jeda.ui.ImageFilter;
+/**
+ *
+ */
+public enum Anchor {
 
-public class SepiaImageFilter implements ImageFilter {
-
-    private static final int SEPIA_DEPTH = 20;
-    private final int intensity;
-
-    public SepiaImageFilter(final int intensity) {
-        this.intensity = intensity;
-    }
-
-    @Override
-    public Color apply(Image image, int x, int y) {
-        final Color color = image.getPixel(x, y);
-        final int gray = (int) (color.getRed() * 0.299 + color.getGreen() * 0.587 + color.getBlue() * 0.114);
-        return new Color(gray + 2 * SEPIA_DEPTH, gray + SEPIA_DEPTH, gray - this.intensity);
-    }
+    BOTTOM_CENTER,
+    BOTTOM_LEFT,
+    BOTTOM_RIGHT,
+    CENTER,
+    LEFT,
+    RIGHT,
+    TOP_CENTER,
+    TOP_LEFT,
+    TOP_RIGHT
 }

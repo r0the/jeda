@@ -33,7 +33,7 @@ public interface ButtonStyle {
      *
      * @since 1.3
      */
-    boolean contains(Button button, int x, int y);
+    boolean contains(Button button, float x, float y);
 
     /**
      * Draws the button widget on the specified canvas.

@@ -104,9 +104,9 @@ public class DefaultProgressBarStyle implements ProgressBarStyle {
     }
 
     @Override
-    public boolean contains(final ProgressBar progressBar, final int x, final int y) {
-        final int dx = progressBar.getCenterX() - x;
-        final int dy = progressBar.getCenterY() - y;
+    public boolean contains(final ProgressBar progressBar, final float x, final float y) {
+        final float dx = progressBar.getCenterX() - x;
+        final float dy = progressBar.getCenterY() - y;
         return Math.abs(dx) <= getWidth(progressBar) / 2 && Math.abs(dy) <= getHeight(progressBar) / 2;
     }
 

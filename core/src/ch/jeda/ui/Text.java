@@ -44,7 +44,7 @@ public class Text extends Widget {
     }
 
     @Override
-    public boolean contains(final int x, final int y) {
+    public boolean contains(final float x, final float y) {
         return false;
     }
 
@@ -96,7 +96,7 @@ public class Text extends Widget {
             height = canvas.textHeight(text);
         }
 
-        canvas.drawText(getX(), getY(), text, getAlignment());
+        canvas.drawText((int) getX(), (int) getY(), text, getAlignment());
     }
 
     private void invalidateSize() {

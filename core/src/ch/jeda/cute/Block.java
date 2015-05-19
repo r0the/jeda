@@ -55,12 +55,14 @@ public abstract class Block {
 
         @Override
         public void draw(final Canvas canvas, final double x, final double y) {
-            canvas.drawImage(x, y, image, Alignment.BOTTOM_CENTER);
+            canvas.setAlignment(Alignment.BOTTOM_CENTER);
+            canvas.drawImage(x, y, image);
         }
 
         @Override
         public void draw(final Canvas canvas, final double x, final double y, final int alpha) {
-            canvas.drawImage(x, y, image, alpha, Alignment.BOTTOM_CENTER);
+            canvas.setAlignment(Alignment.BOTTOM_CENTER);
+            canvas.drawImage(x, y, image, alpha);
         }
 
         @Override

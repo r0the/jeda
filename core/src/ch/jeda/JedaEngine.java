@@ -26,6 +26,7 @@ import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
+import ch.jeda.platform.ViewCallback;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewRequest;
 import ch.jeda.ui.ViewFeature;
@@ -170,20 +171,6 @@ class JedaEngine implements Platform.Callback, Runnable {
         return platform.createCanvasImp(width, height);
     }
 
-    TypefaceImp createTypefaceImp(final String path) {
-        if (path == null) {
-            return EMPTY_TYPEFACE_IMP;
-        }
-
-        final TypefaceImp result = platform.createTypefaceImp(path);
-        if (result == null) {
-            return EMPTY_TYPEFACE_IMP;
-        }
-        else {
-            return result;
-        }
-    }
-
     ImageImp createImageImp(final String path) {
         if (path == null) {
             return defaultImageImp;
@@ -198,12 +185,27 @@ class JedaEngine implements Platform.Callback, Runnable {
         }
     }
 
-    ViewImp createViewImp(final int width, final int height, final EnumSet<ViewFeature> features) {
+    TypefaceImp createTypefaceImp(final String path) {
+        if (path == null) {
+            return EMPTY_TYPEFACE_IMP;
+        }
+
+        final TypefaceImp result = platform.createTypefaceImp(path);
+        if (result == null) {
+            return EMPTY_TYPEFACE_IMP;
+        }
+        else {
+            return result;
+        }
+    }
+
+    ViewImp createViewImp(final ViewCallback callback, final int width, final int height,
+                          final EnumSet<ViewFeature> features) {
         if (features == null) {
             throw new NullPointerException("features");
         }
 
-        final ViewRequest request = new ViewRequest(width, height, features);
+        final ViewRequest request = new ViewRequest(callback, width, height, features);
         platform.showViewRequest(request);
         request.waitForResult();
         return request.getResult();

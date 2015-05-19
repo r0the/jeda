@@ -37,8 +37,8 @@ public class WidgetAlignmentTest extends Program {
 
         @Override
         protected void draw(Canvas canvas) {
-            int w = canvas.getWidth();
-            int h = canvas.getHeight();
+            double w = canvas.getWidth();
+            double h = canvas.getHeight();
             canvas.setColor(Color.RED);
             canvas.fillCircle(OFFSET, OFFSET, RADIUS);
             canvas.fillCircle(w / 2, OFFSET, RADIUS);
@@ -49,6 +49,21 @@ public class WidgetAlignmentTest extends Program {
             canvas.fillCircle(OFFSET, h - OFFSET, RADIUS);
             canvas.fillCircle(w / 2, h - OFFSET, RADIUS);
             canvas.fillCircle(w - OFFSET, h - OFFSET, RADIUS);
+        }
+
+        @Override
+        public float getX() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public float getY() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public float getAngleRad() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }
 }

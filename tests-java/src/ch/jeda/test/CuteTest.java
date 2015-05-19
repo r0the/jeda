@@ -83,7 +83,7 @@ public class CuteTest extends Program implements TickListener, ScrollListener {
         window.setColor(Color.BLUE);
         window.fill();
         // Draw world
-        world.draw(window);
+//        world.draw(window);
     }
 
     private void addBlock(Block block) {

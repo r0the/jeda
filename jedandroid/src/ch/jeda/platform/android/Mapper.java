@@ -16,31 +16,17 @@
  */
 package ch.jeda.platform.android;
 
-import ch.jeda.event.EventType;
 import ch.jeda.event.Key;
-import ch.jeda.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-class EventMapper {
+class Mapper {
 
     private static final Map<Integer, EventSource> INPUT_DEVICE_MAP = new HashMap<Integer, EventSource>();
     private static final Map<Integer, Key> KEY_MAP = initKeyMap();
 
-    static KeyEvent mapEvent(final android.view.KeyEvent event) {
-        final Key key = KEY_MAP.get(event.getKeyCode());
-        if (key == null) {
-            return null;
-        }
-
-        switch (event.getAction()) {
-            case android.view.KeyEvent.ACTION_DOWN:
-                return new KeyEvent(mapDevice(event), EventType.KEY_DOWN, key, event.getRepeatCount());
-            case android.view.KeyEvent.ACTION_UP:
-                return new KeyEvent(mapDevice(event), EventType.KEY_UP, key);
-            default:
-                return null;
-        }
+    static Key mapKey(int keyCode) {
+        return KEY_MAP.get(keyCode);
     }
 
     static EventSource mapDevice(final android.view.InputEvent event) {

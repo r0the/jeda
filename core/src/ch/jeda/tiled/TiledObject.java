@@ -33,32 +33,32 @@ import ch.jeda.ui.Canvas;
  */
 public final class TiledObject {
 
-    private final double height;
+    private final float height;
     private final String name;
     private final Data properties;
-    private final double rotation;
+    private final float rotation;
     private final Shape shape;
     private final Tile tile;
     private final String type;
     private final boolean visible;
-    private final double width;
-    private final double x;
-    private final double y;
+    private final float width;
+    private final float x;
+    private final float y;
 
     TiledObject(final TiledMap map, final ElementWrapper element) {
-        height = element.getDoubleAttribute(Const.HEIGHT, 0.0);
+        height = element.getFloatAttribute(Const.HEIGHT);
         name = element.getStringAttribute(Const.NAME);
         properties = element.parsePropertiesChild();
-        rotation = element.getDoubleAttribute(Const.ROTATION, 0.0);
-        shape = Parser.parseShape(element, 0.0, 0.0);
+        rotation = element.getFloatAttribute(Const.ROTATION);
+        shape = Parser.parseShape(element, 0f, 0f);
         type = element.getStringAttribute(Const.TYPE);
         visible = element.getBooleanAttribute(Const.VISIBLE, true);
-        width = element.getDoubleAttribute(Const.WIDTH, 0.0);
-        double cx = element.getDoubleAttribute(Const.X);
-        double cy = element.getDoubleAttribute(Const.Y);
+        width = element.getFloatAttribute(Const.WIDTH);
+        float cx = element.getFloatAttribute(Const.X);
+        float cy = element.getFloatAttribute(Const.Y);
         if (shape instanceof Circle || shape instanceof Ellipse || shape instanceof Rectangle) {
-            cx = cx + width / 2.0;
-            cy = cy + height / 2.0;
+            cx = cx + width / 2f;
+            cy = cy + height / 2f;
         }
 
         x = cx;
@@ -72,42 +72,13 @@ public final class TiledObject {
     }
 
     /**
-     * Draws this tile with the offset. Has no effect if the object is not visible.
-     *
-     * @param canvas the canvas to draw on
-     * @param offsetX the horizontal offset
-     * @param offsetY the vertical offset
-     *
-     * @since 2.0
-     */
-    public void draw(final Canvas canvas, final double offsetX, final double offsetY) {
-        if (!visible) {
-            return;
-        }
-
-        canvas.pushTransformations();
-        canvas.resetTransformations();
-        canvas.setTranslation(x + offsetX, y + offsetY);
-        canvas.setRotationDeg(rotation);
-        if (tile != null) {
-            canvas.drawImage(0, 0, tile.getImage(), Alignment.BOTTOM_LEFT);
-        }
-
-        if (shape != null) {
-            shape.draw(canvas);
-        }
-
-        canvas.popTransformations();
-    }
-
-    /**
      * Returns the height of this object.
      *
      * @return the height of this object
      *
      * @since 2.0
      */
-    public double getHeight() {
+    public float getHeight() {
         return height;
     }
 
@@ -140,7 +111,7 @@ public final class TiledObject {
      *
      * @since 2.0
      */
-    public double getRotationDeg() {
+    public float getRotationDeg() {
         return rotation;
     }
 
@@ -151,8 +122,8 @@ public final class TiledObject {
      *
      * @since 2.0
      */
-    public double getRotationRad() {
-        return Math.toRadians(rotation);
+    public float getRotationRad() {
+        return (float) Math.toRadians(rotation);
     }
 
     /**
@@ -195,7 +166,7 @@ public final class TiledObject {
      *
      * @since 2.0
      */
-    public double getWidth() {
+    public float getWidth() {
         return width;
     }
 
@@ -206,7 +177,7 @@ public final class TiledObject {
      *
      * @since 2.0
      */
-    public double getX() {
+    public float getX() {
         return x;
     }
 
@@ -217,7 +188,7 @@ public final class TiledObject {
      *
      * @since 2.0
      */
-    public double getY() {
+    public float getY() {
         return y;
     }
 

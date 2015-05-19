@@ -18,23 +18,28 @@ package ch.jeda.platform.java;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
 class BitmapCanvas extends java.awt.Canvas {
 
-    private final JavaCanvasImp canvasImp;
+    private final BufferedImage bitmap;
+    private final Graphics2D graphics;
 
     BitmapCanvas(final int width, final int height) {
         final Dimension d = new Dimension(width, height);
         setPreferredSize(d);
         setSize(d);
-        canvasImp = new JavaCanvasImp(width, height);
+        bitmap = createBufferedImage(width, height);
+        graphics = bitmap.createGraphics();
     }
 
     @Override
     public void paint(final Graphics graphics) {
         if (graphics != null) {
-            graphics.drawImage(canvasImp.getBitmap(), 0, 0, null);
+            graphics.drawImage(bitmap, 0, 0, this);
         }
     }
 
@@ -43,11 +48,13 @@ class BitmapCanvas extends java.awt.Canvas {
         paint(getGraphics());
     }
 
-    JavaCanvasImp getCanvasImp() {
-        return canvasImp;
+    void putImage(final BufferedImage image) {
+        graphics.drawImage(image, 0, 0, this);
     }
 
-    void setImage(final BufferedImage buffer) {
-        buffer.copyData(canvasImp.getBitmap().getRaster());
+    private static BufferedImage createBufferedImage(final int width, final int height) {
+        return GraphicsEnvironment.getLocalGraphicsEnvironment().
+            getDefaultScreenDevice().getDefaultConfiguration().
+            createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 }

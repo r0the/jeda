@@ -91,6 +91,7 @@ public final class PhysicsView extends View implements TickListener {
     public PhysicsView(int width, int height, ViewFeature... features) {
         super(width, height, features);
         physics = new Physics();
+        physics.setScale(1);
         addEventListener(this);
     }
 
@@ -99,46 +100,39 @@ public final class PhysicsView extends View implements TickListener {
      *
      * @since 2.0
      */
-    public void addWalls() {
-        final double WIDTH = 10.0;
+    public void createWalls() {
+        createBox(0f, 0f, getWidth(), getHeight(), 0.5f);
+    }
+
+    /**
+     * Adds walls around the visible part of the physics simulation.
+     *
+     * @since 2.0
+     */
+    public void createBox(final float x, final float y, final float width, final float height, final float thickness) {
         final Body top = new Body();
         top.setType(BodyType.STATIC);
-        final double w = getWidth();
-        final double h = getHeight();
-        top.addShape(new Rectangle(w + 2 * WIDTH, WIDTH));
-        top.setPosition(w / 2, -WIDTH / 2);
+        top.addShape(new Rectangle(0, 0, width + thickness, thickness));
+        top.setPosition(x - thickness, y - thickness);
         add(top);
 
         final Body right = new Body();
         right.setType(BodyType.STATIC);
-        right.addShape(new Rectangle(WIDTH, h + 2 * WIDTH));
-        right.setPosition(w + WIDTH / 2, h / 2);
+        right.addShape(new Rectangle(0, 0, thickness, height + thickness));
+        right.setPosition(x + width, y - thickness);
         add(right);
 
         final Body bottom = new Body();
         bottom.setType(BodyType.STATIC);
-        bottom.addShape(new Rectangle(w + 2 * WIDTH, WIDTH));
-        bottom.setPosition(w / 2, h + WIDTH / 2);
+        bottom.addShape(new Rectangle(0, 0, width + thickness, thickness));
+        bottom.setPosition(x, y + height);
         add(bottom);
 
         final Body left = new Body();
         left.setType(BodyType.STATIC);
-        left.addShape(new Rectangle(WIDTH, h + 2 * WIDTH));
-        left.setPosition(-WIDTH / 2, h / 2);
+        left.addShape(new Rectangle(0, 0, thickness, height + thickness));
+        left.setPosition(x - thickness, y);
         add(left);
-    }
-
-    /**
-     * Returns the current scale of the physics view. The unit of the scale is meter per pixel, meaning that with a
-     * scale of 1.0, the simulation assumes that every pixel corresponds to one meter. The default scale is 10.0.
-     *
-     * @return the current scale of the physics view in meter per pixel
-     *
-     * @see #setScale(double)
-     * @since 2.0
-     */
-    public final double getScale() {
-        return physics.getScale();
     }
 
     /**
@@ -180,19 +174,6 @@ public final class PhysicsView extends View implements TickListener {
 
     public final void setPaused(final boolean paused) {
         physics.setPaused(paused);
-    }
-
-    /**
-     * Sets the scale for the physics simulation. The unit of the scale is meter per pixel, meaning that with a scale of
-     * 1.0, the simulation assumes that every pixel corresponds to one meter. The default scale is 10.0.
-     *
-     * @param scale the scale in meter per pixel
-     *
-     * @see #getScale()
-     * @since 2.0
-     */
-    public final void setScale(final double scale) {
-        physics.setScale(scale);
     }
 
     public void step(final double seconds) {

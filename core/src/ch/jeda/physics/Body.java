@@ -115,7 +115,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void applyForce(final double fx, final double fy) {
-        imp.applyForce(fx, fy);
+        imp.applyForce((float) fx, (float) fy);
     }
 
     /**
@@ -126,21 +126,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void applyTorque(final double torque) {
-        imp.applyTorque(torque);
-    }
-
-    /**
-     * Returns the current angle of this body in degrees.
-     *
-     * @return the current angle of this body in degrees
-     *
-     * @see #getAngleRad()
-     * @see #setAngleDeg(double)
-     * @see #setAngleRad(double)
-     * @since 2.0
-     */
-    public final double getAngleDeg() {
-        return Math.toDegrees(imp.getAngleRad());
+        imp.applyTorque((float) torque);
     }
 
     /**
@@ -153,7 +139,8 @@ public class Body extends Element {
      * @see #setAngleRad(double)
      * @since 2.0
      */
-    public final double getAngleRad() {
+    @Override
+    public final float getAngleRad() {
         return imp.getAngleRad();
     }
 
@@ -165,7 +152,7 @@ public class Body extends Element {
      * @see #setAngularDamping(double)
      * @since 2.0
      */
-    public final double getAngularDamping() {
+    public final float getAngularDamping() {
         return imp.getAngularDamping();
     }
 
@@ -177,7 +164,7 @@ public class Body extends Element {
      * @see #setAngularVelocity(double)
      * @since 2.0
      */
-    public final double getAngularVelocity() {
+    public final float getAngularVelocity() {
         return imp.getAngularVelocity();
     }
 
@@ -189,7 +176,7 @@ public class Body extends Element {
      * @see #setDamping(double)
      * @since 2.0
      */
-    public final double getDamping() {
+    public final float getDamping() {
         return imp.getDamping();
     }
 
@@ -212,7 +199,7 @@ public class Body extends Element {
      * @see #setDensity(double)
      * @since 2.0
      */
-    public final double getDensity() {
+    public final float getDensity() {
         return imp.getDensity();
     }
 
@@ -224,7 +211,7 @@ public class Body extends Element {
      * @see #setFriction(double)
      * @since 2.0
      */
-    public final double getFriction() {
+    public final float getFriction() {
         return imp.getFriction();
     }
 
@@ -252,7 +239,7 @@ public class Body extends Element {
      * @see #setDensity(double)
      * @since 2.0
      */
-    public final double getMass() {
+    public final float getMass() {
         return imp.getMass();
     }
 
@@ -301,7 +288,7 @@ public class Body extends Element {
      * @see #getVy()
      * @since 2.0
      */
-    public final double getVx() {
+    public final float getVx() {
         return imp.getVx();
     }
 
@@ -314,7 +301,7 @@ public class Body extends Element {
      * @see #getVx()
      * @since 2.0
      */
-    public final double getVy() {
+    public final float getVy() {
         return imp.getVy();
     }
 
@@ -327,7 +314,8 @@ public class Body extends Element {
      * @see #getY()
      * @since 2.0
      */
-    public final double getX() {
+    @Override
+    public final float getX() {
         return imp.getX();
     }
 
@@ -340,7 +328,8 @@ public class Body extends Element {
      * @see #getX()
      * @since 2.0
      */
-    public final double getY() {
+    @Override
+    public final float getY() {
         return imp.getY();
     }
 
@@ -355,7 +344,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setAngleDeg(final double angle) {
-        imp.setAngleRad(Math.toRadians(angle));
+        imp.setAngleRad((float) Math.toRadians(angle));
     }
 
     /**
@@ -369,7 +358,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setAngleRad(final double angle) {
-        imp.setAngleRad(angle);
+        imp.setAngleRad((float) angle);
     }
 
     /**
@@ -381,7 +370,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setAngularDamping(final double angularDamping) {
-        imp.setAngularDamping(angularDamping);
+        imp.setAngularDamping((float) angularDamping);
     }
 
     /**
@@ -393,7 +382,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setAngularVelocity(final double angularVelocity) {
-        imp.setAngularVelocity(angularVelocity);
+        imp.setAngularVelocity((float) angularVelocity);
     }
 
     /**
@@ -405,7 +394,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setDamping(final double damping) {
-        imp.setDamping(damping);
+        imp.setDamping((float) damping);
     }
 
     /**
@@ -428,7 +417,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setDensity(final double density) {
-        imp.setDensity(density);
+        imp.setDensity((float) density);
     }
 
     /**
@@ -440,7 +429,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setFriction(final double friction) {
-        imp.setFriction(friction);
+        imp.setFriction((float) friction);
     }
 
     /**
@@ -482,11 +471,11 @@ public class Body extends Element {
     public final void setPosition(final double x, final double y) {
         final Physics physics = imp.getPhysics();
         if (physics == null) {
-            imp.setPosition(x, y);
+            imp.setPosition((float) x, (float) y);
         }
         else {
             BodyImp detachedImp = new DetachedBodyImp(imp);
-            detachedImp.setPosition(x, y);
+            detachedImp.setPosition((float) x, (float) y);
             imp.destroy();
             imp = new PhysicsBodyImp(physics, this, detachedImp);
         }
@@ -526,7 +515,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setVelocity(final double vx, final double vy) {
-        imp.setVelocity(vx, vy);
+        imp.setVelocity((float) vx, (float) vy);
     }
 
     /**
@@ -551,16 +540,13 @@ public class Body extends Element {
 
     @Override
     protected final void draw(final Canvas canvas) {
-        canvas.pushTransformations();
-        canvas.rotateRad(getAngleRad());
-        canvas.translate(getX(), getY());
         if (image != null) {
-            canvas.drawImage(0, 0, image, Alignment.CENTER);
+            canvas.setAlignment(Alignment.CENTER);
+            canvas.drawImage(0f, 0f, image);
         }
 
         drawDecoration(canvas);
         imp.drawOverlay(canvas);
-        canvas.popTransformations();
     }
 
     /**

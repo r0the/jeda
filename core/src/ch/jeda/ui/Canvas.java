@@ -16,10 +16,7 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.JedaInternal;
 import ch.jeda.platform.CanvasImp;
-import ch.jeda.platform.CanvasTransformation;
-import java.util.Stack;
 
 /**
  * Represents a drawing surface. It provides methods to draw geometric primitives and images.
@@ -28,181 +25,82 @@ import java.util.Stack;
  * A canvas has some attributes that influence the drawing operations:
  * <ul>
  * <li> <b>anti-aliasing</b>:
- * <li> <b>color</b>: The color used to draw geometric primitives. Initially, the color is black. The color can be
+ * <li> <b>color</b>: The color used to draw geometric shapes and text. Initially, the color is black. The color can be
  * changed with {@link #setColor(ch.jeda.ui.Color)}.
- * <li> <b>line width</b>: the line width used to draw geometric shapes. The line width can be changed with
- * {@link #setLineWidth(double)}.
- * <li> <b>text size</b>: the size of the text. Initially, the text size is 16. The text size can be changed with
- * {@link #setTextSize(int)}.
+ * <li> <b>line width</b>: the line width used to draw geometric shapes in centimeters. Initially, the line width is 1.
+ * The line width can be changed with {@link #setLineWidth(double)}.
+ * <li> <b>text size</b>: the size of the text in centimeters. Initially, the text size is 16. The text size can be
+ * changed with {@link #setTextSize(int)}.
  * <li> <b>typeface</b>: The typeface (font family) used to render text.
  * </ul>
  * <strong>Example:</strong>
  * <pre><code> Canvas canvas = new Canvas(100, 100);
  * canvas.setColor(Color.RED);
- * canvas.fillCircle(50, 50, 20);</code></pre>
+ * canvas.fillCircle(2, 2, 1);</code></pre>
  *
  * @since 1.0
  * @version 4
  */
 public class Canvas {
 
-    private static final double MINIMUM_SCALE = 1.0E-10;
-    private static final int DEFAULT_TEXT_SIZE = 16;
+    private static final float DEFAULT_LINE_WIDTH = 1f;
+    private static final float DEFAULT_TEXT_SIZE = 16f;
     private static final Color DEFAULT_FOREGROUND = Color.BLACK;
-    private final Stack<CanvasTransformation> transformationStack;
+    private CanvasImp imp;
+    private Alignment alignment;
     private boolean antiAliasing;
     private Color color;
-    private CanvasImp imp;
-    private double lineWidth;
-    private int textSize;
-    private CanvasTransformation transformation;
+    private float lineWidth;
+    private float textSize;
+    private float scale;
+    private float translateY;
     private Typeface typeface;
 
-    /**
-     * Constructs a drawing surface. The drawing surface has the specified width and height. A drawing surface
-     * constructed in this way is <b>invisible</b>
-     * and can be used to draw images for later use. Use {@link Window#Window(int, int, ch.jeda.ui.WindowFeature[])} to
-     * create a visible drawing surface.
-     *
-     * @param width the width of the canvas in pixels
-     * @param height the height of the canvas in pixels
-     * @throws IllegalArgumentException if width or height are smaller than 1
-     *
-     * @since 1.0
-     */
-    public Canvas(final int width, final int height) {
-        this();
-        if (width < 1) {
-            throw new IllegalArgumentException("width");
-        }
-
-        if (height < 1) {
-            throw new IllegalArgumentException("height");
-        }
-
-        setImp(JedaInternal.createCanvasImp(width, height));
-    }
-
-    Canvas() {
-        transformationStack = new Stack<CanvasTransformation>();
+    Canvas(final CanvasImp imp) {
+        alignment = Alignment.BOTTOM_LEFT;
         antiAliasing = false;
         color = DEFAULT_FOREGROUND;
+        lineWidth = DEFAULT_LINE_WIDTH;
         textSize = DEFAULT_TEXT_SIZE;
-        transformation = new CanvasTransformation();
         typeface = Typeface.SANS_SERIF;
-    }
-
-    /**
-     * Draws the content of another canvas. The content of the specified canvas is drawn at the specified coordinates.
-     * Has no effect if <tt>canvas</tt> is <tt>null</tt>.
-     *
-     * @param x the x coordinate of the area's top left corner
-     * @param y the y coordinate of the area's top left corner
-     * @param canvas the canvas to copy to this canvas
-     *
-     * @since 2.0
-     */
-    public void drawCanvas(final int x, final int y, final Canvas canvas) {
-        if (canvas != null) {
-            imp.drawCanvas(x, y, canvas.imp);
-        }
-    }
-
-    /**
-     * Draws the content of another canvas. The content of the specified canvas is drawn at the specified coordinates.
-     * Has no effect if <tt>canvas</tt> is <tt>null</tt>.
-     *
-     * @param x the x coordinate of the area's top left corner
-     * @param y the y coordinate of the area's top left corner
-     * @param canvas the canvas to copy to this canvas
-     *
-     * @since 2.0
-     */
-    public void drawCanvas(final double x, final double y, final Canvas canvas) {
-        drawCanvas((int) x, (int) y, canvas);
-    }
-
-    /**
-     * Draws the content of another canvas. The content is aligned relative to the specified coordinates (<tt>x</tt>,
-     * <tt>y</tt>). Has no effect if <tt>canvas</tt> is <tt>null</tt>.
-     *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
-     * @param canvas the canvas to copy to this canvas
-     * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
-     *
-     * @since 2.0
-     */
-    public void drawCanvas(final int x, final int y, final Canvas canvas, final Alignment alignment) {
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (canvas != null) {
-            imp.drawCanvas(alignment.alignX(x, canvas.getWidth()), alignment.alignY(y, canvas.getHeight()),
-                           canvas.imp);
-        }
-    }
-
-    /**
-     * Draws the content of another canvas. The content is aligned relative to the specified coordinates (<tt>x</tt>,
-     * <tt>y</tt>). Has no effect if <tt>canvas</tt> is <tt>null</tt>.
-     *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
-     * @param canvas the canvas to copy to this canvas
-     * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
-     *
-     * @since 2.0
-     */
-    public void drawCanvas(final double x, final double y, final Canvas canvas, final Alignment alignment) {
-        drawCanvas((int) x, (int) y, canvas, alignment);
+        this.imp = imp;
+        // TODO
+        scale = 96 / 2.54f;
+        translateY = imp.getHeight();
+        imp.setAntiAliasing(antiAliasing);
+        imp.setColor(color);
+        imp.setLineWidth(lineWidth);
+        imp.setTextSize(textSize);
+        imp.setTypeface(typeface.imp);
     }
 
     /**
      * Draws a circle. The circle is drawn using the current color, line width, and transformation. Has no effect if the
      * specified radius is not positive.
      *
-     * @param x the x coordinate of the circle's centre
-     * @param y the y coordinate of the circle's centre
+     * @param centerX the x coordinate of the circle's center
+     * @param centerY the y coordinate of the circle's center
      * @param radius the circle's radius
      *
      * @since 1.0
      */
-    public void drawCircle(final int x, final int y, final int radius) {
-        if (radius > 0) {
-            imp.drawEllipse(x - radius, y - radius, 2 * radius, 2 * radius);
-        }
+    public void drawCircle(final double centerX, final double centerY, final double radius) {
+        drawCircle((float) centerX, (float) centerY, (float) radius);
     }
 
     /**
      * Draws a circle. The circle is drawn using the current color, line width, and transformation. Has no effect if the
      * specified radius is not positive.
      *
-     * @param x the x coordinate of the circle's centre
-     * @param y the y coordinate of the circle's centre
+     * @param centerX the x coordinate of the circle's center
+     * @param centerY the y coordinate of the circle's center
      * @param radius the circle's radius
-     *
-     * @since 1.0
-     */
-    public void drawCircle(final double x, final double y, final double radius) {
-        drawCircle((int) x, (int) y, (int) radius);
-    }
-
-    /**
-     * Draws an ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no effect if
-     * the specified radii are not positive.
-     *
-     * @param x the x coordinate of the ellipse's centre
-     * @param y the y coordinate of the ellipse's centre
-     * @param rx the horizontal radius of the ellipse
-     * @param ry the vertical radius of the ellipse
      *
      * @since 2.0
      */
-    public void drawEllipse(final int x, final int y, final int rx, final int ry) {
-        if (rx > 0 && ry > 0) {
-            imp.drawEllipse(x - rx, y - ry, 2 * rx, 2 * ry);
+    public void drawCircle(final float centerX, final float centerY, final float radius) {
+        if (radius > 0f) {
+            imp.drawEllipse(posX(centerX), posY(centerY), len(radius), len(radius));
         }
     }
 
@@ -210,198 +108,121 @@ public class Canvas {
      * Draws an ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no effect if
      * the specified radii are not positive.
      *
-     * @param x the x coordinate of the ellipse's centre
-     * @param y the y coordinate of the ellipse's centre
-     * @param rx the horizontal radius of the ellipse
-     * @param ry the vertical radius of the ellipse
+     * @param centerX the x coordinate of the ellipse's center
+     * @param centerY the y coordinate of the ellipse's center
+     * @param radiusX the horizontal radius of the ellipse
+     * @param radiusY the vertical radius of the ellipse
      *
      * @since 2.0
      */
-    public void drawEllipse(final double x, final double y, final double rx, final double ry) {
-        drawEllipse((int) x, (int) y, (int) rx, (int) ry);
+    public void drawEllipse(final double centerX, final double centerY, final double radiusX, final double radiusY) {
+        drawEllipse((float) centerX, (float) centerY, (float) radiusX, (float) radiusY);
     }
 
     /**
-     * Draws an image. The image is drawn using the current transformation. The top left corner of the image is
-     * positioned at the specified coordinates. Has no effect if <tt>image</tt> is <tt>null</tt>.
+     * Draws an ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no effect if
+     * the specified radii are not positive.
      *
-     * @param x the x coordinate of the image's top left corner
-     * @param y the y coordinate of the image's top left corner
-     * @param image the image to draw
+     * @param centerX the x coordinate of the ellipse's center
+     * @param centerY the y coordinate of the ellipse's center
+     * @param radiusX the horizontal radius of the ellipse
+     * @param radiusY the vertical radius of the ellipse
      *
-     * @since 1.0
+     * @since 2.0
      */
-    public void drawImage(final int x, final int y, final Image image) {
-        if (image != null) {
-            imp.drawImage(x, y, image.getImp(), 255);
+    public void drawEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
+        if (radiusX > 0f && radiusY > 0f) {
+            imp.drawEllipse(posX(centerX), posY(centerY), len(radiusX), len(radiusY));
         }
     }
 
     /**
-     * Draws an image. The image is drawn using the current transformation. The top left corner of the image is
-     * positioned at the specified coordinates. Has no effect if <tt>image</tt> is <tt>null</tt>.
+     * Draws an image. The image is drawn using the current transformation. The bottom left corner of the image is
+     * positioned at the specified coordinates. Has no effect if <code>image</code> is <code>null</code>.
      *
-     * @param x the x coordinate of the image's top left corner
-     * @param y the y coordinate of the image's top left corner
+     * @param x the x coordinate of the image's bottom left corner
+     * @param y the y coordinate of the image's bottom left corner
      * @param image the image to draw
      *
      * @since 1.0
      */
     public void drawImage(final double x, final double y, final Image image) {
-        drawImage((int) x, (int) y, image);
+        drawImage((float) x, (float) y, image, 255);
     }
 
     /**
-     * Draws an image. The image is drawn using the current transformation. The top left corner of the image is
-     * positioned at the specified coordinates. The image is drawn with a translucency effect specified by the alpha
-     * value. Specify an alpha value of 255 for a completely opaque image, and alpha value of 0 for a completely
-     * transparent image. Has no effect if
-     * <tt>image</tt> is <tt>null</tt>.
+     * Draws an image. The image is drawn using the current transformation. The bottom left corner of the image is
+     * positioned at the specified coordinates. Has no effect if <code>image</code> is <code>null</code>.
      *
-     * @param x the x coordinate of the image's top left corner
-     * @param y the y coordinate of the image's top left corner
+     * @param x the x coordinate of the image's bottom left corner
+     * @param y the y coordinate of the image's bottom left corner
      * @param image the image to draw
-     * @param alpha the alpha value
      *
-     * @since 1.0
+     * @since 2.0
      */
-    public void drawImage(final int x, final int y, final Image image, final int alpha) {
-        if (alpha < 0 || 255 < alpha) {
-            throw new IllegalArgumentException("alpha");
-        }
-
-        if (image != null && alpha > 0) {
-            imp.drawImage(x, y, image.getImp(), alpha);
-        }
+    public void drawImage(final float x, final float y, final Image image) {
+        drawImage(x, y, image, 255);
     }
 
     /**
-     * Draws an image. The image is drawn using the current transformation. The top left corner of the image is
+     * Draws an image. The image is drawn using the current transformation. The bottom left corner of the image is
      * positioned at the specified coordinates. The image is drawn with a translucency effect specified by the alpha
      * value. Specify an alpha value of 255 for a completely opaque image, and alpha value of 0 for a completely
-     * transparent image. Has no effect if
-     * <tt>image</tt> is <tt>null</tt>.
+     * transparent image. Has no effect if <code>image</code> is <code>null</code>.
      *
-     * @param x the x coordinate of the image's top left corner
-     * @param y the y coordinate of the image's top left corner
+     * @param x the x coordinate of the image's bottom left corner
+     * @param y the y coordinate of the image's bottom left corner
      * @param image the image to draw
      * @param alpha the alpha value
      *
      * @since 1.0
      */
     public void drawImage(final double x, final double y, final Image image, final int alpha) {
-        drawImage((int) x, (int) y, image, alpha);
+        drawImage((float) x, (float) y, image, alpha);
+    }
+
+    /**
+     * Draws an image. The image is drawn using the current transformation. The bottom left corner of the image is
+     * positioned at the specified coordinates. The image is drawn with a translucency effect specified by the alpha
+     * value. Specify an alpha value of 255 for a completely opaque image, and alpha value of 0 for a completely
+     * transparent image. Has no effect if <code>image</code> is <code>null</code>.
+     *
+     * @param x the x coordinate of the image's bottom left corner
+     * @param y the y coordinate of the image's bottom left corner
+     * @param image the image to draw
+     * @param alpha the alpha value
+     *
+     * @since 2.0
+     */
+    public void drawImage(float x, float y, final Image image, final int alpha) {
+        x = posX(x);
+        y = posY(y);
+        final int width = image.getWidth();
+        final int height = image.getHeight();
+        imp.drawImage(alignX(x, width), alignY(y, height), width, height, image.getImp(), alpha);
     }
 
     /**
      * Draws an image. The image is drawn using the current transformation. The image is aligned relative to the
-     * specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>image</tt> is <tt>null</tt>.
+     * specified coordinates (<code>x</code>, <code>y</code>). Has no effect if <code>image</code> is <code>null</code>.
      *
      * @param x the x coordinate of the alignment point
      * @param y the y coordinate of the alignment point
      * @param image the image to draw
-     * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     * @param alignment specifies how to align the image relative to (<code>x</code>, <code>y</code>)
+     * @throws NullPointerException if <code>alignment</code> is <code>null</code>
      *
      * @since 1.0
      */
-    public void drawImage(final int x, final int y, final Image image, final Alignment alignment) {
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (image != null) {
-            imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()),
-                          image.getImp(), 255);
-        }
-    }
-
-    /**
-     * Draws an image. The image is drawn using the current transformation. The image is aligned relative to the
-     * specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>image</tt> is <tt>null</tt>.
-     *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
-     * @param image the image to draw
-     * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
-     *
-     * @since 1.0
-     */
+    @Deprecated
     public void drawImage(final double x, final double y, final Image image, final Alignment alignment) {
-        drawImage((int) x, (int) y, image, alignment);
+        drawImage(alignment.alignX((int) x, image.getWidth()),
+                  alignment.alignY((int) y, image.getHeight()), image);
     }
 
     /**
-     * Draws an image. The image is drawn using the current transformation. The image is aligned relative to the
-     * specified coordinates (<tt>x</tt>, <tt>y</tt>). The image is drawn with a translucency effect specified by the
-     * alpha value. Specify an alpha value of 255 for a completely opaque image, and alpha value of 0 for a completely
-     * transparent image. Has no effect if
-     * <tt>image</tt> is <tt>null</tt>.
-     *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
-     * @param image the image to draw
-     * @param alpha the alpha value
-     * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
-     *
-     * @since 1.0
-     */
-    public void drawImage(final int x, final int y, final Image image, final int alpha, final Alignment alignment) {
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (alpha < 0 || 255 < alpha) {
-            throw new IllegalArgumentException("alpha");
-        }
-
-        if (image != null && alpha > 0) {
-            imp.drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()),
-                          image.getImp(), alpha);
-        }
-    }
-
-    /**
-     * Draws an image. The image is drawn using the current transformation. The image is aligned relative to the
-     * specified coordinates (<tt>x</tt>, <tt>y</tt>). The image is drawn with a translucency effect specified by the
-     * alpha value. Specify an alpha value of 255 for a completely opaque image, and alpha value of 0 for a completely
-     * transparent image. Has no effect if
-     * <tt>image</tt> is <tt>null</tt>.
-     *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
-     * @param image the image to draw
-     * @param alpha the alpha value
-     * @param alignment specifies how to align the image relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
-     *
-     * @since 1.0
-     */
-    public void drawImage(final double x, final double y, final Image image, final int alpha,
-                          final Alignment alignment) {
-        drawImage((int) x, (int) y, image, alpha, alignment);
-    }
-
-    /**
-     * Draws a straight line. The line is drawn from the coordinates (<tt>x1</tt>, <tt>y1</tt>) to the coordinates
-     * (<tt>x2</tt>, <tt>y2</tt>) with the current color, line width, and transformation.
-     *
-     * @param x1 the x coordinate of the line's start point
-     * @param y1 the y coordinate of the lines' start point
-     * @param x2 the x coordinate of the line's end point
-     * @param y2 the y coordinate of the line's end point
-     *
-     * @since 1.0
-     */
-    public void drawLine(final int x1, final int y1, final int x2, final int y2) {
-        imp.drawLine(x1, y1, x2, y2);
-    }
-
-    /**
-     * Draws a straight line. The line is drawn from the coordinates (<tt>x1</tt>, <tt>y1</tt>) to the coordinates
-     * (<tt>x2</tt>, <tt>y2</tt>) with the current color, line width, and transformation.
+     * Draws a straight line. The line is drawn from the coordinates (<code>x1</code>, <code>y1</code>) to the
+     * coordinates (<code>x2</code>, <code>y2</code>) with the current color, line width, and transformation.
      *
      * @param x1 the x coordinate of the line's start point
      * @param y1 the y coordinate of the lines' start point
@@ -411,103 +232,7 @@ public class Canvas {
      * @since 1.0
      */
     public void drawLine(final double x1, final double y1, final double x2, final double y2) {
-        drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-    }
-
-    /**
-     * Draws a polygon. The polygon is drawn using the current color, line width, and transformation. The polygon is
-     * defined by the x and y coordinates of it's vertices. For example, the code
-     * <pre><code>drawPolygon(new double[] {x1, x2, x3}, new double[] {y1, y2, y3});</code></pre> will draw a triangle
-     * with the vertices (x1, y2), (x2, y2), and (x3, y3).
-     *
-     * @param x the x coordinates of the polygon's vertices
-     * @param y the y coordinates of the polygon's vertices
-     * @throws NullPointerException if <code>x</code> or <code>y</code> are <code>null</code>
-     * @throws IllegalArgumentException if less than 6 arguments are passed
-     * @throws IllegalArgumentException if and odd number of arguments are passed
-     *
-     * @since 2.0
-     */
-    public void drawPolygon(final int[] x, final int[] y) {
-        if (x == null) {
-            throw new NullPointerException("x");
-        }
-
-        if (y == null) {
-            throw new NullPointerException("y");
-        }
-
-        if (x.length < 3) {
-            throw new IllegalArgumentException("x");
-        }
-
-        if (x.length != y.length) {
-            throw new IllegalArgumentException("y");
-        }
-
-        imp.drawPolygon(x, y);
-    }
-
-    /**
-     * Draws a polygon. The polygon is drawn using the current color, line width, and transformation. The polygon is
-     * defined by a sequence of coordinate pairs specifiying the vertices of the polygon. For example, the code
-     * <pre><code>drawPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the vertices (x1, y2),
-     * (x2, y2), and (x3, y3).
-     *
-     * @param points the points of the polygon as sequence of coordinate pairs
-     * @throws IllegalArgumentException if less than 6 arguments are passed
-     * @throws IllegalArgumentException if and odd number of arguments are passed
-     *
-     * @since 1.0
-     */
-    public void drawPolygon(final int... points) {
-        if (points.length < 6 || points.length % 2 == 1) {
-            throw new IllegalArgumentException("points");
-        }
-
-        final int count = points.length / 2;
-        final int[] x = new int[count];
-        final int[] y = new int[count];
-        for (int i = 0; i < count; ++i) {
-            x[i] = points[2 * i];
-            y[i] = points[2 * i + 1];
-        }
-
-        imp.drawPolygon(x, y);
-    }
-
-    /**
-     * Draws a polygon. The polygon is drawn using the current color, line width, and transformation. The polygon is
-     * defined by the x and y coordinates of it's vertices. For example, the code
-     * <pre><code>drawPolygon(new double[] {x1, x2, x3}, new double[] {y1, y2, y3});</code></pre> will draw a triangle
-     * with the vertices (x1, y2), (x2, y2), and (x3, y3).
-     *
-     * @param x the x coordinates of the polygon's vertices
-     * @param y the y coordinates of the polygon's vertices
-     * @throws NullPointerException if <code>x</code> or <code>y</code> are <code>null</code>
-     * @throws IllegalArgumentException if less than 6 arguments are passed
-     * @throws IllegalArgumentException if and odd number of arguments are passed
-     *
-     * @since 2.0
-     */
-    public void drawPolygon(final double[] x, final double[] y) {
-        if (x == null) {
-            throw new NullPointerException("x");
-        }
-
-        if (y == null) {
-            throw new NullPointerException("y");
-        }
-
-        if (x.length < 3) {
-            throw new IllegalArgumentException("x");
-        }
-
-        if (x.length != y.length) {
-            throw new IllegalArgumentException("y");
-        }
-
-        imp.drawPolygon(toIntArray(x), toIntArray(y));
+        drawPolyline(x1, y1, x2, y2);
     }
 
     /**
@@ -527,169 +252,139 @@ public class Canvas {
             throw new IllegalArgumentException("points");
         }
 
-        final int count = points.length / 2;
-        final int[] x = new int[count];
-        final int[] y = new int[count];
-        for (int i = 0; i < count; ++i) {
-            x[i] = (int) points[2 * i];
-            y[i] = (int) points[2 * i + 1];
-        }
-
-        imp.drawPolygon(x, y);
+        imp.drawPolygon(convertPoints(points));
     }
 
     /**
-     * Draws a rectangle. The rectangle is drawn using the current color, line width, and transformation. The top left
-     * corner of the rectangle is positioned at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
-     * <tt>width</tt> or <tt>height</tt> are not positive.
+     * Draws a polygon. The polygon is drawn using the current color, line width, and transformation. The polygon is
+     * defined by a sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
+     * <pre><code>drawPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the corners (x1, y2), (x2,
+     * y2), and (x3, y3).
      *
-     * @param x the x coordinate of the rectangle's top left corner
-     * @param y the y coordinate of the rectangle's top left corner
-     * @param width the width of the rectangle
-     * @param height the height of the rectangle
+     * @param points the points of the polygon as sequence of coordinate pairs
+     * @throws IllegalArgumentException if less than 6 arguments are passed
+     * @throws IllegalArgumentException if and odd number of arguments are passed
      *
-     * @since 1.0
+     * @since 2.0
      */
-    public void drawRectangle(final int x, final int y, final int width, final int height) {
-        if (width > 0 && height > 0) {
-            imp.drawRectangle(x, y, width, height);
+    public void drawPolygon(final float... points) {
+        if (points.length < 6 || points.length % 2 == 1) {
+            throw new IllegalArgumentException("points");
         }
+
+        imp.drawPolygon(convertPoints(points));
     }
 
     /**
-     * Draws a rectangle. The rectangle is drawn using the current color, line width, and transformation. The top left
-     * corner of the rectangle is positioned at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
-     * <tt>width</tt> or <tt>height</tt> are not positive.
+     * Draws a a connected series of line segments. The polyline is drawn from the coordinates with the current color,
+     * line width, and transformation. The polyline is defined by a sequence of coordinate pairs specifiying the
+     * endpoints of the line segments. For example, the code
+     * <pre><code>drawPolyline(x1, y1, x2, y2, x3, y3);</code></pre> will draw two line segments: (x1, y1) to (x2, y2)
+     * and (x2, y2) to (x3, y3).
      *
-     * @param x the x coordinate of the rectangle's top left corner
-     * @param y the y coordinate of the rectangle's top left corner
+     * @param points the points of the polyline as sequence of coordinate pairs
+     *
+     * @since 2.0
+     */
+    public void drawPolyline(final double... points) {
+        imp.drawPolyline(convertPoints(points));
+    }
+
+    /**
+     * Draws a a connected series of line segments. The polyline is drawn from the coordinates with the current color,
+     * line width, and transformation. The polyline is defined by a sequence of coordinate pairs specifiying the
+     * endpoints of the line segments. For example, the code
+     * <pre><code>drawPolyline(x1, y1, x2, y2, x3, y3);</code></pre> will draw two line segments: (x1, y1) to (x2, y2)
+     * and (x2, y2) to (x3, y3).
+     *
+     * @param points the points of the polyline as sequence of coordinate pairs
+     *
+     * @since 2.0
+     */
+    public void drawPolyline(final float... points) {
+        imp.drawPolyline(convertPoints(points));
+    }
+
+    /**
+     * Draws a rectangle. The rectangle is drawn using the current color, line width, and transformation. The bottom
+     * left corner of the rectangle is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if
+     * <code>width</code> or <code>height</code> are not positive.
+     *
+     * @param x the x coordinate of the rectangle's bottom left corner
+     * @param y the y coordinate of the rectangle's bottom left corner
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      *
      * @since 1.0
      */
     public void drawRectangle(final double x, final double y, final double width, final double height) {
-        drawRectangle((int) x, (int) y, (int) width, (int) height);
+        drawRectangle((float) x, (float) y, (float) width, (float) height);
     }
 
     /**
-     * Draws a rectangle. The rectangle is drawn using the current color, line width, and transformation. The rectangle
-     * is aligned relative to the specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
-     * <tt>width</tt> or <tt>height</tt> are not positive.
+     * Draws a rectangle. The rectangle is drawn using the current color, line width, and transformation. The bottom
+     * left corner of the rectangle is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if
+     * <code>width</code> or <code>height</code> are not positive.
      *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
+     * @param x the x coordinate of the rectangle's bottom left corner
+     * @param y the y coordinate of the rectangle's bottom left corner
      * @param width the width of the rectangle
      * @param height the height of the rectangle
-     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1.0
+     * @since 2.0
      */
-    public void drawRectangle(final int x, final int y, final int width, final int height,
-                              final Alignment alignment) {
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (width > 0 && height > 0) {
-            imp.drawRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
-        }
+    public void drawRectangle(float x, float y, float width, float height) {
+        x = posX(x);
+        y = posY(y);
+        width = len(width);
+        height = len(height);
+        imp.drawRectangle(alignX(x, width), alignY(y, height), width, height);
     }
 
     /**
-     * Draws a rectangle. The rectangle is drawn using the current color, line width, and transformation. The rectangle
-     * is aligned relative to the specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
-     * <tt>width</tt> or <tt>height</tt> are not positive.
+     * Draws a text. The text is drawn using the current color, transformation, and font size. The bottom left corner of
+     * the text is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if <code>text</code> is
+     * <code>null</code> or empty.
      *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
-     * @param width the width of the rectangle
-     * @param height the height of the rectangle
-     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
-     *
-     * @since 1.0
-     */
-    public void drawRectangle(final double x, final double y, final double width, final double height,
-                              final Alignment alignment) {
-        drawRectangle((int) x, (int) y, (int) width, (int) height, alignment);
-    }
-
-    /**
-     * Draws a text. The text is drawn using the current color, transformation, and font size. The top left corner of
-     * the text is positioned at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>text</tt>
-     * is <tt>null</tt> or empty.
-     *
-     * @param x the x coordinate of the top left corner
-     * @param y the y coordinate of the top left corner
-     * @param text the text to draw
-     *
-     * @since 1.0
-     */
-    public void drawText(final int x, final int y, final String text) {
-        if (text != null && !text.isEmpty()) {
-            imp.drawText(x, y, text);
-        }
-    }
-
-    /**
-     * Draws a text. The text is drawn using the current color, transformation, and font size. The top left corner of
-     * the text is positioned at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>text</tt>
-     * is <tt>null</tt> or empty.
-     *
-     * @param x the x coordinate of the top left corner
-     * @param y the y coordinate of the top left corner
+     * @param x the x coordinate of the bottom left corner
+     * @param y the y coordinate of the bottom left corner
      * @param text the text to draw
      *
      * @since 1.0
      */
     public void drawText(final double x, final double y, final String text) {
-        drawText((int) x, (int) y, text);
+        drawText((float) x, (float) y, text);
     }
 
     /**
-     * Draws a text. The text is drawn using the current color, transformation, and font size. The text is aligned
-     * relative to the specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>text</tt> is <tt>null</tt>
-     * or empty.
+     * Draws a text. The text is drawn using the current color, transformation, and font size. The bottom left corner of
+     * the text is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if <code>text</code> is
+     * <code>null</code> or empty.
      *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
+     * @param x the x coordinate of the bottom left corner
+     * @param y the y coordinate of the bottom left corner
      * @param text the text to draw
-     * @param alignment specifies how to align the text relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1.0
+     * @since 2.0
      */
-    public final void drawText(final int x, final int y, final String text, final Alignment alignment) {
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (text != null && !text.isEmpty()) {
-            imp.drawText(alignment.alignX(x, imp.textWidth(text)), alignment.alignY(y, imp.textHeight(text)), text);
-        }
+    public void drawText(float x, float y, final String text) {
+        x = posX(x);
+        y = posY(y);
+        final float width = imp.textWidth(text);
+        final float height = imp.textHeight(text);
+        imp.drawText(alignX(x, width), alignY(y, height), text);
     }
 
     /**
-     * Draws a text. The text is drawn using the current color, transformation, and font size. The text is aligned
-     * relative to the specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if <tt>text</tt> is <tt>null</tt>
-     * or empty.
-     *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
-     * @param text the text to draw
-     * @param alignment specifies how to align the text relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
-     *
-     * @since 1.0
+     * @deprecated
      */
-    public final void drawText(final double x, final double y, final String text, final Alignment alignment) {
-        drawText((int) x, (int) y, text, alignment);
+    public void drawText(final int x, final int y, final String text, final Alignment alignment) {
+        setAlignment(alignment);
+        drawText(x, y, text);
     }
 
     /**
-     * Fills the entire canvas. The canvas is filled using the current color.
+     * Fills the entire canvas with the current color.
      *
      * @since 1.0
      */
@@ -701,158 +396,58 @@ public class Canvas {
      * Draws a filled a circle. The circle is drawn using the current color and transformation. Has no effect if the
      * specified radius is not positive.
      *
-     * @param x the x coordinate of the circle's centre
-     * @param y the y coordinate of the circle's centre
+     * @param centerX the x coordinate of the circle's center
+     * @param centerY the y coordinate of the circle's center
      * @param radius the circle's radius
      *
      * @since 1.0
      */
-    public void fillCircle(final int x, final int y, final int radius) {
-        if (radius > 0) {
-            imp.fillEllipse(x - radius, y - radius, 2 * radius, 2 * radius);
-        }
+    public void fillCircle(final double centerX, final double centerY, final double radius) {
+        fillCircle((float) centerX, (float) centerY, (float) radius);
     }
 
     /**
      * Draws a filled a circle. The circle is drawn using the current color and transformation. Has no effect if the
      * specified radius is not positive.
      *
-     * @param x the x coordinate of the circle's centre
-     * @param y the y coordinate of the circle's centre
+     * @param centerX the x coordinate of the circle's center
+     * @param centerY the y coordinate of the circle's center
      * @param radius the circle's radius
      *
-     * @since 1.0
+     * @since 2.0
      */
-    public void fillCircle(final double x, final double y, final double radius) {
-        fillCircle((int) x, (int) y, (int) radius);
+    public void fillCircle(final float centerX, final float centerY, final float radius) {
+        imp.fillEllipse(posX(centerX), posY(centerY), len(radius), len(radius));
     }
 
     /**
      * Draws a filled ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no
      * effect if the specified radii are not positive.
      *
-     * @param x the x coordinate of the ellipse's centre
-     * @param y the y coordinate of the ellipse's centre
-     * @param rx the horizontal radius of the ellipse
-     * @param ry the vertical radius of the ellipse
+     * @param centerX the x coordinate of the ellipse's center
+     * @param centerY the y coordinate of the ellipse's center
+     * @param radiusX the horizontal radius of the ellipse
+     * @param radiusY the vertical radius of the ellipse
      *
      * @since 2.0
      */
-    public void fillEllipse(final int x, final int y, final int rx, final int ry) {
-        if (rx > 0 && ry > 0) {
-            imp.fillEllipse(x - rx, y - ry, 2 * rx, 2 * ry);
-        }
+    public void fillEllipse(final double centerX, final double centerY, final double radiusX, final double radiusY) {
+        fillEllipse((float) centerX, (float) centerY, (float) radiusX, (float) radiusY);
     }
 
     /**
      * Draws a filled ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no
      * effect if the specified radii are not positive.
      *
-     * @param x the x coordinate of the ellipse's centre
-     * @param y the y coordinate of the ellipse's centre
-     * @param rx the horizontal radius of the ellipse
-     * @param ry the vertical radius of the ellipse
+     * @param centerX the x coordinate of the ellipse's center
+     * @param centerY the y coordinate of the ellipse's center
+     * @param radiusX the horizontal radius of the ellipse
+     * @param radiusY the vertical radius of the ellipse
      *
      * @since 2.0
      */
-    public void fillEllipse(final double x, final double y, final double rx, final double ry) {
-        fillEllipse((int) x, (int) y, (int) rx, (int) ry);
-    }
-
-    /**
-     * Draws a filled polygon. The polygon is drawn using the current color, line width, and transformation. The polygon
-     * is defined by the x and y coordinates of it's vertices. For example, the code
-     * <pre><code>drawPolygon(new double[] {x1, x2, x3}, new double[] {y1, y2, y3});</code></pre> will draw a triangle
-     * with the vertices (x1, y2), (x2, y2), and (x3, y3).
-     *
-     * @param x the x coordinates of the polygon's vertices
-     * @param y the y coordinates of the polygon's vertices
-     * @throws NullPointerException if <code>x</code> or <code>y</code> are <code>null</code>
-     * @throws IllegalArgumentException if less than 6 arguments are passed
-     * @throws IllegalArgumentException if and odd number of arguments are passed
-     *
-     * @since 2.0
-     */
-    public void fillPolygon(final int[] x, final int[] y) {
-        if (x == null) {
-            throw new NullPointerException("x");
-        }
-
-        if (y == null) {
-            throw new NullPointerException("y");
-        }
-
-        if (x.length < 3) {
-            throw new IllegalArgumentException("x");
-        }
-
-        if (x.length != y.length) {
-            throw new IllegalArgumentException("y");
-        }
-
-        imp.fillPolygon(x, y);
-    }
-
-    /**
-     * Draws a filled polygon. The polygon is drawn using the current color, line width, and transformation. The polygon
-     * is defined by a sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
-     * <pre><code>fillPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the corners (x1, y2), (x2,
-     * y2), and (x3, y3).
-     *
-     * @param points the points of the polygon as sequence of coordinate pairs
-     * @throws IllegalArgumentException if less than 6 arguments are passed
-     * @throws IllegalArgumentException if and odd number of arguments are passed
-     *
-     * @since 1.0
-     */
-    public void fillPolygon(final int... points) {
-        if (points.length < 6 || points.length % 2 == 1) {
-            throw new IllegalArgumentException("points");
-        }
-
-        final int count = points.length / 2;
-        final int[] x = new int[count];
-        final int[] y = new int[count];
-        for (int i = 0; i < count; ++i) {
-            x[i] = points[2 * i];
-            y[i] = points[2 * i + 1];
-        }
-
-        imp.fillPolygon(x, y);
-    }
-
-    /**
-     * Draws a filled polygon. The polygon is drawn using the current color, line width, and transformation. The polygon
-     * is defined by the x and y coordinates of it's vertices. For example, the code
-     * <pre><code>drawPolygon(new double[] {x1, x2, x3}, new double[] {y1, y2, y3});</code></pre> will draw a triangle
-     * with the vertices (x1, y2), (x2, y2), and (x3, y3).
-     *
-     * @param x the x coordinates of the polygon's vertices
-     * @param y the y coordinates of the polygon's vertices
-     * @throws NullPointerException if <code>x</code> or <code>y</code> are <code>null</code>
-     * @throws IllegalArgumentException if less than 6 arguments are passed
-     * @throws IllegalArgumentException if and odd number of arguments are passed
-     *
-     * @since 2.0
-     */
-    public void fillPolygon(final double[] x, final double[] y) {
-        if (x == null) {
-            throw new NullPointerException("x");
-        }
-
-        if (y == null) {
-            throw new NullPointerException("y");
-        }
-
-        if (x.length < 3) {
-            throw new IllegalArgumentException("x");
-        }
-
-        if (x.length != y.length) {
-            throw new IllegalArgumentException("y");
-        }
-
-        imp.fillPolygon(toIntArray(x), toIntArray(y));
+    public void fillEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
+        imp.fillEllipse(posX(centerX), posY(centerY), len(radiusX), len(radiusY));
     }
 
     /**
@@ -868,134 +463,67 @@ public class Canvas {
      * @since 1.0
      */
     public void fillPolygon(final double... points) {
-        final int count = points.length / 2;
-        final int[] x = new int[count];
-        final int[] y = new int[count];
-        for (int i = 0; i < count; ++i) {
-            x[i] = (int) points[2 * i];
-            y[i] = (int) points[2 * i + 1];
+        if (points.length < 6 || points.length % 2 == 1) {
+            throw new IllegalArgumentException("points");
         }
 
-        imp.fillPolygon(x, y);
+        this.imp.fillPolygon(convertPoints(points));
     }
 
     /**
-     * Draws a filled rectangle. The rectangle is drawn using the current color and transformation. The top left corner
-     * of the rectangle is positioned at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
-     * <tt>width</tt> or <tt>height</tt> are not positive.
+     * Draws a filled polygon. The polygon is drawn using the current color, line width, and transformation. The polygon
+     * is defined by a sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
+     * <pre><code>fillPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the corners (x1, y2), (x2,
+     * y2), and (x3, y3).
      *
-     * @param x the x coordinate of the rectangle's top left corner
-     * @param y the y coordinate of the rectangle's top left corner
-     * @param width the width of the rectangle
-     * @param height the height of the rectangle
+     * @param points the points of the polygon as sequence of coordinate pairs
+     * @throws IllegalArgumentException if less than 6 arguments are passed
+     * @throws IllegalArgumentException if and odd number of arguments are passed
      *
-     * @since 1.0
+     * @since 2.0
      */
-    public void fillRectangle(final int x, final int y, final int width, final int height) {
-        if (width > 0 && height > 0) {
-            imp.fillRectangle(x, y, width, height);
+    public void fillPolygon(final float... points) {
+        if (points.length < 6 || points.length % 2 == 1) {
+            throw new IllegalArgumentException("points");
         }
+
+        this.imp.fillPolygon(convertPoints(points));
     }
 
     /**
-     * Draws a filled rectangle. The rectangle is drawn using the current color and transformation. The top left corner
-     * of the rectangle is positioned at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
-     * <tt>width</tt> or <tt>height</tt> are not positive.
+     * Draws a filled rectangle. The rectangle is drawn using the current color and transformation. The bottom left
+     * corner of the rectangle is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if
+     * <code>width</code> or <code>height</code> are not positive.
      *
-     * @param x the x coordinate of the rectangle's top left corner
-     * @param y the y coordinate of the rectangle's top left corner
+     * @param x the x coordinate of the rectangle's bottom left corner
+     * @param y the y coordinate of the rectangle's bottom left corner
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      *
      * @since 1.0
      */
     public void fillRectangle(final double x, final double y, final double width, final double height) {
-        fillRectangle((int) x, (int) y, (int) width, (int) height);
+        fillRectangle((float) x, (float) y, (float) width, (float) height);
     }
 
     /**
-     * Draws a filled rectangle. The rectangle is drawn using the current color and transformation. The rectangle is
-     * aligned relative to the specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
-     * <tt>width</tt> or
-     * <tt>height</tt> are not positive.
+     * Draws a filled rectangle. The rectangle is drawn using the current color and transformation. The bottom left
+     * corner of the rectangle is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if
+     * <code>width</code> or <code>height</code> are not positive.
      *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
+     * @param x the x coordinate of the rectangle's bottom left corner
+     * @param y the y coordinate of the rectangle's bottom left corner
      * @param width the width of the rectangle
      * @param height the height of the rectangle
-     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1.0
+     * @since 2.0
      */
-    public void fillRectangle(final int x, final int y, final int width, final int height, final Alignment alignment) {
-        if (alignment == null) {
-            throw new NullPointerException("alignment");
-        }
-
-        if (width > 0 && height > 0) {
-            imp.fillRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
-        }
-    }
-
-    /**
-     * Draws a filled rectangle. The rectangle is drawn using the current color and transformation. The rectangle is
-     * aligned relative to the specified coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect if
-     * <tt>width</tt> or
-     * <tt>height</tt> are not positive.
-     *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
-     * @param width the width of the rectangle
-     * @param height the height of the rectangle
-     * @param alignment specifies how to align the rectangle relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
-     *
-     * @since 1.0
-     */
-    public void fillRectangle(final double x, final double y, final double width, final double height,
-                              final Alignment alignment) {
-        fillRectangle((int) x, (int) y, (int) width, (int) height, alignment);
-    }
-
-    /**
-     * Fills an area of a specified color with another color.
-     *
-     * @param x the x coordinate of the starting point
-     * @param y the y coordinate of the starting point
-     * @param oldColor the color to look for
-     * @param newColor the color to replace it with
-     *
-     * @since 1.0
-     */
-    public void floodFill(int x, int y, final Color oldColor, final Color newColor) {
-        if (oldColor == null) {
-            throw new NullPointerException("oldColor");
-        }
-
-        if (newColor == null) {
-            throw new NullPointerException("newColor");
-        }
-
-        final Stack<Integer> stackX = new Stack<Integer>();
-        final Stack<Integer> stackY = new Stack<Integer>();
-        stackX.push(x);
-        stackY.push(y);
-        while (!stackX.isEmpty()) {
-            x = stackX.pop();
-            y = stackY.pop();
-            if (getPixel(x, y).equals(oldColor)) {
-                setPixel(x, y, newColor);
-                stackX.push(x);
-                stackY.push(y + 1);
-                stackX.push(x);
-                stackY.push(y - 1);
-                stackX.push(x + 1);
-                stackY.push(y);
-                stackX.push(x - 1);
-                stackY.push(y);
-            }
-        }
+    public void fillRectangle(float x, float y, float width, float height) {
+        x = posX(x);
+        y = posY(y);
+        width = len(width);
+        height = len(height);
+        imp.fillRectangle(alignX(x, width), alignY(y, height), width, height);
     }
 
     /**
@@ -1011,22 +539,14 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use {@link #getTextSize()} instead.
-     */
-    public int getFontSize() {
-        return getTextSize();
-    }
-
-    /**
-     * Returns the height of the canvas in pixels.
+     * Returns the height of this canvas in centimeters.
      *
-     * @return height of canvas
+     * @return the height of this canvas in centimeters
      *
-     * @see #getWidth()
      * @since 1.0
      */
-    public int getHeight() {
-        return imp.getHeight();
+    public float getHeight() {
+        return imp.getHeight() / scale;
     }
 
     /**
@@ -1037,77 +557,8 @@ public class Canvas {
      * @see #setLineWidth(double)
      * @since 1.0
      */
-    public double getLineWidth() {
-        return imp.getLineWidth();
-    }
-
-    /**
-     * Returns the color of a pixel. Returns the color of the pixel at the coordinates (<tt>x</tt>, <tt>y</tt>). Returns
-     * {@link ch.jeda.ui.Color#TRANSPARENT} if the coordinates do not reference a pixel inside the canvas.
-     *
-     * @param x the x coordinate of the pixel
-     * @param y the y coordinate of the pixel
-     * @return the color of the pixel at (<tt>x</tt>, <tt>y</tt>)
-     *
-     * @see #setPixel(int, int, ch.jeda.ui.Color)
-     * @since 2.0
-     */
-    public Color getPixel(final int x, final int y) {
-        if (contains(x, y)) {
-            return imp.getPixel(x, y);
-        }
-        else {
-            return Color.TRANSPARENT;
-        }
-    }
-
-    /**
-     * @deprecated Use {@link #getPixel(int, int)} instead.
-     */
-    public Color getPixelAt(final int x, final int y) {
-        return getPixel(x, y);
-    }
-
-    /**
-     * Returns the current rotation angle of the canvas in radians.
-     *
-     * @return the current rotation angle of the canvas in radians
-     *
-     * @since 2.0
-     * @see #getRotationRad()
-     * @see #resetTransformations()
-     * @see #setRotationDeg(double)
-     * @see #setRotationRad(double)
-     */
-    public double getRotationDeg() {
-        return Math.toDegrees(transformation.rotation);
-    }
-
-    /**
-     * Returns the current rotation angle of the canvas in degrees.
-     *
-     * @return the current rotation angle of the canvas in degrees
-     *
-     * @since 2.0
-     * @see #getRotationDeg()
-     * @see #resetTransformations()
-     * @see #setRotationDeg(double)
-     * @see #setRotationRad(double)
-     */
-    public double getRotationRad() {
-        return transformation.rotation;
-    }
-
-    /**
-     * Returns the current scale of the canvas.
-     *
-     * @return the current scale of the canvas
-     *
-     * @since 2.0
-     * @see #setScale(double)
-     */
-    public double getScale() {
-        return transformation.scale;
+    public float getLineWidth() {
+        return lineWidth;
     }
 
     /**
@@ -1115,35 +566,11 @@ public class Canvas {
      *
      * @return current text size
      *
-     * @see #setTextSize(int)
+     * @see #setTextSize(double)
      * @since 1.0
      */
-    public int getTextSize() {
+    public float getTextSize() {
         return textSize;
-    }
-
-    /**
-     * Returns the current horizontal translation of the canvas.
-     *
-     * @return the current horizontal translation of the canvas
-     *
-     * @since 2.0
-     * @see #setTranslation(double, double)
-     */
-    public double getTranslationX() {
-        return transformation.translationX;
-    }
-
-    /**
-     * Returns the current vertical translation of the canvas.
-     *
-     * @return the current vertical translation of the canvas
-     *
-     * @since 2.0
-     * @see #setTranslation(double, double)
-     */
-    public double getTranslationY() {
-        return transformation.translationY;
     }
 
     /**
@@ -1159,21 +586,20 @@ public class Canvas {
     }
 
     /**
-     * Returns the width of the canvas in pixels.
+     * Returns the width of this canvas in centimeters.
      *
-     * @return width of canvas
+     * @return the width of this canvas in centimeters
      *
-     * @see #getHeight()
      * @since 1.0
      */
-    public int getWidth() {
-        return imp.getWidth();
+    public float getWidth() {
+        return imp.getWidth() / scale;
     }
 
     /**
      * Checks is anti-aliasing is enabled.
      *
-     * @return <tt>true</tt> if anti-aliasing is enabled, otherwise <tt>false</tt>
+     * @return <code>true</code> if anti-aliasing is enabled, otherwise <code>false</code>
      *
      * @see #setAntiAliasing(boolean)
      * @since 1.0
@@ -1182,52 +608,10 @@ public class Canvas {
         return antiAliasing;
     }
 
-    /**
-     * Pops canvas transformations from the transformation stack. Has no effect if the transformation stack is empty.
-     *
-     * @see #pushTransformations()
-     * @since 2.0
-     */
-    public void popTransformations() {
-        if (!transformationStack.isEmpty()) {
-            transformation = transformationStack.pop();
+    public void setAlignment(Alignment alignment) {
+        if (alignment != null) {
+            this.alignment = alignment;
         }
-
-        imp.setTransformation(transformation);
-    }
-
-    /**
-     * Pushes the current canvas transformations on the transformation stack.
-     *
-     * @see #popTransformations()
-     * @since 2.0
-     */
-    public void pushTransformations() {
-        transformationStack.push(new CanvasTransformation(transformation));
-    }
-
-    /**
-     * Resets all canvas transformations (rotation, translation, and scale). All subsequent drawing operations will
-     * appear untransformed. Does not change the transformation stack.
-     *
-     * @see #setRotationDeg(double)
-     * @see #setRotationRad(double)
-     * @see #setScale(double)
-     * @see #setTranslation(double, double)
-     * @since 2.0
-     */
-    public void resetTransformations() {
-        transformation.reset();
-        imp.setTransformation(transformation);
-    }
-
-    public void rotateDeg(final double angle) {
-        rotateRad(Math.toRadians(angle));
-    }
-
-    public void rotateRad(final double angle) {
-        transformation.rotation = MathUtil.normalizeAngle(transformation.rotation + angle);
-        imp.setTransformation(transformation);
     }
 
     /**
@@ -1236,7 +620,7 @@ public class Canvas {
      * effect, an <a href=http://en.wikipedia.org/wiki/Anti-aliasing_filter" target="_blank">anti-aliasing filter</a> is
      * used when rendering the text or shapes.
      *
-     * @param antiAliasing <tt>true</tt> to enable the anti-aliasing filter, <tt>false</tt> to disable it.
+     * @param antiAliasing <code>true</code> to enable the anti-aliasing filter, <code>false</code> to disable it.
      * @since 1.0
      */
     public void setAntiAliasing(final boolean antiAliasing) {
@@ -1247,11 +631,11 @@ public class Canvas {
     }
 
     /**
-     * Sets the drawing color. The value set by this method is applied to all subsequent <tt>draw...</tt> and
-     * <tt>fill...</tt> operations.
+     * Sets the drawing color. The value set by this method is applied to all subsequent <code>draw...</code> and
+     * <code>fill...</code> operations.
      *
      * @param color new drawing color.
-     * @throws NullPointerException if <tt>color</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>color</code> is <code>null</code>
      *
      * @see #getColor()
      * @since 1.0
@@ -1268,18 +652,11 @@ public class Canvas {
     }
 
     /**
-     * @deprecated Use {@link #setTextSize(int)} instead.
-     */
-    public void setFontSize(int size) {
-        setTextSize(size);
-    }
-
-    /**
-     * Sets the line width. The line width set by this method is applied to all subsequent <tt>draw...</tt> operations.
-     * Set 0 for drawing hairlines independent of the transformation.
+     * Sets the line width. The line width set by this method is applied to all subsequent <code>draw...</code>
+     * operations. Set 0 for drawing hairlines independent of the transformation.
      *
      * @param lineWidth the new line width
-     * @throws IllegalArgumentException if <tt>lineWidth</tt> is negative
+     * @throws IllegalArgumentException if <code>lineWidth</code> is negative
      *
      * @see #getLineWidth()
      * @since 1.0
@@ -1289,50 +666,35 @@ public class Canvas {
             throw new IllegalArgumentException("lineWidth");
         }
 
-        this.lineWidth = lineWidth;
-        imp.setLineWidth(lineWidth);
+        this.lineWidth = (float) lineWidth;
+        imp.setLineWidth(this.lineWidth);
     }
 
     /**
-     * Sets the color of a pixel. Sets the color of the pixel at the coordinates (<tt>x</tt>, <tt>y</tt>). Has no effect
-     * if the coordinates do not reference a pixel inside the canvas.
-     *
-     * @param x the x coordinate of the pixel
-     * @param y the y coordinate of the pixel
-     * @param color new color of the pixel
-     * @throws NullPointerException if <tt>color</tt> is <tt>null</tt>
-     *
-     * @see #getPixel(int, int)
-     * @since 2.0
-     */
-    public void setPixel(final int x, final int y, final Color color) {
-        if (color == null) {
-            throw new NullPointerException("color");
-        }
-
-        if (contains(x, y)) {
-            imp.setPixel(x, y, color);
-        }
-    }
-
-    /**
-     * @deprecated Use {@link #setPixel(int, int, ch.jeda.ui.Color)} instead.
-     */
-    public void setPixelAt(final int x, final int y, final Color color) {
-        setPixel(x, y, color);
-    }
-
-    /**
-     * Sets the text size. The text size set by this method is applied to all subsequent <tt>drawText(...)</tt>
+     * Sets the text size. The text size set by this method is applied to all subsequent <code>drawText(...)</code>
      * operations.
      *
      * @param size the new text size
-     * @throws IllegalArgumentException if <tt>size</tt> is not positive
+     * @throws IllegalArgumentException if <code>size</code> is not positive
      *
      * @see #getTextSize()
-     * @since 1.0
+     * @since 2.0
      */
-    public void setTextSize(final int size) {
+    public void setTextSize(final double size) {
+        setTextSize((float) size);
+    }
+
+    /**
+     * Sets the text size. The text size set by this method is applied to all subsequent <code>drawText(...)</code>
+     * operations.
+     *
+     * @param size the new text size
+     * @throws IllegalArgumentException if <code>size</code> is not positive
+     *
+     * @see #getTextSize()
+     * @since 2.0
+     */
+    public void setTextSize(final float size) {
         if (size <= 0) {
             throw new IllegalArgumentException("size");
         }
@@ -1344,82 +706,11 @@ public class Canvas {
     }
 
     /**
-     * Rotates the canvas. The rotation centre is the origin of the canvas. Setting a rotation causes all subsequent
-     * drawing operations to appear rotated by the specified angle.
-     *
-     * @param angle the rotation angle in degrees
-     *
-     * @see #getRotationDeg()
-     * @see #getRotationRad()
-     * @see #resetTransformations()
-     * @see #setRotationRad(double)
-     * @since 2.0
-     */
-    public void setRotationDeg(final double angle) {
-        setRotationRad(Math.toRadians(angle));
-    }
-
-    /**
-     * Rotates the canvas. The rotation centre is the origin of the canvas. Setting a rotation causes all subsequent
-     * drawing operations to appear rotated by the specified angle.
-     *
-     * @param angle the rotation angle in radians
-     *
-     * @see #getRotationDeg()
-     * @see #getRotationRad()
-     * @see #resetTransformations()
-     * @see #setRotationDeg(double)
-     * @since 2.0
-     */
-    public void setRotationRad(final double angle) {
-        transformation.rotation = MathUtil.normalizeAngle(angle);
-        imp.setTransformation(transformation);
-    }
-
-    /**
-     * Translates the origin of the canvas. Setting a translation causes all subsequent drawing operations to appear
-     * translated by the specified <tt>dx</tt> and <tt>dy</tt>.
-     *
-     * @param dx the horizontal translation in pixels
-     * @param dy the vertical translation in pixels
-     *
-     * @see #getTranslationX()
-     * @see #getTranslationY()
-     * @see #resetTransformations()
-     * @since 2.0
-     */
-    public void setTranslation(final double dx, final double dy) {
-        transformation.translationX = dx;
-        transformation.translationY = dy;
-        imp.setTransformation(transformation);
-    }
-
-    /**
-     * Scales the canvas. The scaling centre is the origin of the canvas. Setting a scale causes all subsequent drawing
-     * operations to appear scaled by the specified factor.
-     *
-     * @param scale the scaling factor
-     * @throws IllegalArgumentException if <tt>scale</tt> is too close to zero
-     *
-     * @see #getScale()
-     * @see #resetTransformations()
-     * @since 2.0
-     */
-    public void setScale(final double scale) {
-        if (MathUtil.isZero(scale, MINIMUM_SCALE)) {
-            throw new IllegalArgumentException("scale");
-        }
-
-        transformation.scale = scale;
-        imp.setTransformation(transformation);
-    }
-
-    /**
      * Sets the typeface to be used to draw text.
      *
      * @param typeface the typeface to be used to draw text
-     * @throws NullPointerException if <tt>typeface</tt> is <tt>null</tt>
-     * @throws IllegalArgumentException if <tt>typeface.isAvailable()</tt> is <tt>false</tt>
+     * @throws NullPointerException if <code>typeface</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>typeface.isAvailable()</code> is <code>false</code>
      *
      * @since 1.3
      */
@@ -1451,8 +742,7 @@ public class Canvas {
 
     /**
      * Returns the height of a text in pixels. Returns the height in pixels of the specified text given the current font
-     * size. Returns zero if
-     * <tt>text</tt> is <tt>null</tt> or empty.
+     * size. Returns zero if <code>text</code> is <code>null</code> or empty.
      *
      * @param text
      * @return height of text in pixels
@@ -1470,8 +760,7 @@ public class Canvas {
 
     /**
      * Returns the width of a text in pixels. Returns the width in pixels of the specified text given the current font
-     * size. Returns zero if <tt>text</tt>
-     * is <tt>null</tt> or empty.
+     * size. Returns zero if <code>text</code> is <code>null</code> or empty.
      *
      * @param text
      * @return width of text in pixels
@@ -1487,32 +776,90 @@ public class Canvas {
         }
     }
 
-    public void translate(final double dx, final double dy) {
-        transformation.translationX = transformation.translationX + dx;
-        transformation.translationY = transformation.translationY + dy;
-        imp.setTransformation(transformation);
+    void copyFrom(final Canvas canvas) {
+        imp.saveTransformation();
+        imp.resetTransformation();
+        imp.drawCanvas(0, 0, canvas.imp);
+        imp.restoreTransformation();
     }
 
-    final void setImp(final CanvasImp imp) {
-        this.imp = imp;
-        imp.setAntiAliasing(antiAliasing);
-        imp.setColor(color);
-        imp.setTextSize(textSize);
-        imp.setLineWidth(lineWidth);
-        imp.setTransformation(transformation);
-        imp.setTypeface(typeface.imp);
+    void resetTransformation() {
+        imp.resetTransformation();
     }
 
-    private boolean contains(final int x, final int y) {
-        return 0 <= x && x < getWidth() && 0 <= y && y < getHeight();
+    void restoreTransformation() {
+        imp.restoreTransformation();
     }
 
-    private static int[] toIntArray(double[] values) {
-        final int[] result = new int[values.length];
-        for (int i = 0; i < values.length; ++i) {
-            result[i] = (int) values[i];
+    public void rotateRad(final float angle) {
+        imp.rotateRad(-angle, posX(0), posY(0));
+    }
+
+    void scale(final float scale) {
+        imp.scale(scale);
+    }
+
+    void saveTransformation() {
+        imp.saveTransformation();
+    }
+
+    public void translate(final float tx, final float ty) {
+        imp.translate(len(tx), -len(ty));
+    }
+
+    private float[] convertPoints(double[] values) {
+        final float[] result = new float[values.length];
+        for (int i = 0; i < values.length; i = i + 2) {
+            result[i] = posX((float) values[i]);
+            result[i + 1] = posY((float) values[i + 1]);
         }
 
         return result;
+    }
+
+    private float[] convertPoints(float[] values) {
+        final float[] result = new float[values.length];
+        for (int i = 0; i < values.length; i = i + 2) {
+            result[i] = posX(values[i]);
+            result[i + 1] = posY(values[i + 1]);
+        }
+
+        return result;
+    }
+
+    private float alignX(final float x, final float w) {
+        switch (alignment.horiz) {
+            case MAX:
+                return x - w;
+            case MIDDLE:
+                return x - w / 2f;
+            case MIN:
+            default:
+                return x;
+        }
+    }
+
+    private float alignY(final float y, final float h) {
+        switch (alignment.vert) {
+            case MAX:
+                return y;
+            case MIDDLE:
+                return y - h / 2f;
+            case MIN:
+            default:
+                return y - h;
+        }
+    }
+
+    private float posX(final float x) {
+        return x * scale;
+    }
+
+    private float posY(final float y) {
+        return translateY - y * scale;
+    }
+
+    private float len(final float len) {
+        return len * scale;
     }
 }

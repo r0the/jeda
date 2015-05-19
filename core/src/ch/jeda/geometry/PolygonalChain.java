@@ -26,36 +26,10 @@ import java.util.Arrays;
  */
 public class PolygonalChain extends Shape {
 
+    // TODO: Implementation with one array
     private final int vertexCount;
-    private final double[] vertexX;
-    private final double[] vertexY;
-
-    /**
-     * Constructs a polygonal chain shape. The polygonal chain is defined by the x and y coordinates of it's vertices.
-     * For example, the code
-     * <pre><code>new PolygonalChain(new double[] {x1, x2, x3}, new double[] {y1, y2, y3});</code></pre> will define a
-     * chain consisting of the two line segments (x1, y2) to (x2, y2) and (x2, y2) to (x3, y3).
-     *
-     * @param vertexX the x coordinates of the polygon's vertices
-     * @param vertexY the y coordinates of the polygon's vertices
-     * @throws IllegalArgumentException if less than 2 x coordinates are passed
-     * @throws IllegalArgumentException if not the same number of x and y coordinates are passed
-     *
-     * @since 2.0
-     */
-    public PolygonalChain(final double[] vertexX, final double[] vertexY) {
-        if (vertexX.length < 2) {
-            throw new IllegalArgumentException("vertexX");
-        }
-
-        if (vertexX.length != vertexY.length) {
-            throw new IllegalArgumentException("vertexY");
-        }
-
-        vertexCount = vertexX.length;
-        this.vertexX = Arrays.copyOf(vertexX, vertexCount);
-        this.vertexY = Arrays.copyOf(vertexY, vertexCount);
-    }
+    private final float[] vertexX;
+    private final float[] vertexY;
 
     /**
      * Constructs a polygonal chain shape. The polygonal chain is defined by a sequence of coordinate pairs specifiying
@@ -69,14 +43,14 @@ public class PolygonalChain extends Shape {
      *
      * @since 2.0
      */
-    public PolygonalChain(final double... vertices) {
+    public PolygonalChain(final float... vertices) {
         if (vertices.length < 4 || vertices.length % 2 == 1) {
             throw new IllegalArgumentException("vertices");
         }
 
         vertexCount = vertices.length / 2;
-        vertexX = new double[vertexCount];
-        vertexY = new double[vertexCount];
+        vertexX = new float[vertexCount];
+        vertexY = new float[vertexCount];
         for (int i = 0; i < vertexCount; ++i) {
             vertexX[i] = vertices[2 * i];
             vertexY[i] = vertices[2 * i + 1];
@@ -84,7 +58,7 @@ public class PolygonalChain extends Shape {
     }
 
     @Override
-    public boolean contains(final double x, final double y) {
+    public boolean contains(final float x, final float y) {
         return false;
     }
 
@@ -120,7 +94,7 @@ public class PolygonalChain extends Shape {
      *
      * @since 2.0
      */
-    public double getVertexX(int i) {
+    public float getVertexX(int i) {
         return vertexX[i];
     }
 
@@ -133,7 +107,7 @@ public class PolygonalChain extends Shape {
      *
      * @since 2.0
      */
-    public double getVertexY(int i) {
+    public float getVertexY(int i) {
         return vertexY[i];
     }
 }

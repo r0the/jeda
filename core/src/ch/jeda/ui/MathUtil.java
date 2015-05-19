@@ -18,8 +18,6 @@ package ch.jeda.ui;
 
 class MathUtil {
 
-    static final double TWO_PI = 2 * Math.PI;
-
     static int signum(final int value) {
         if (value > 0) {
             return 1;
@@ -36,12 +34,4 @@ class MathUtil {
         return Math.abs(value) < threshold;
     }
 
-    static double normalizeAngle(double angle) {
-        angle = angle % TWO_PI;
-        if (angle < 0) {
-            angle = angle + TWO_PI;
-        }
-
-        return angle;
-    }
 }

@@ -29,7 +29,7 @@ final class Physics {
     private Body[] bodies;
     private boolean debugging;
     private final org.jbox2d.dynamics.World imp;
-    private double scale;
+    private float scale;
     private boolean paused;
 
     public Physics() {
@@ -39,9 +39,9 @@ final class Physics {
         imp = new World(new Vec2(0f, 0f));
         imp.setContactListener(new PhysicsContactListener());
         // Set default gravity. If default gravity is zero, it cannot be changed later on.
-        imp.setGravity(new Vec2(0f, 9.81f));
+        imp.setGravity(new Vec2(0f, -9.81f));
         paused = false;
-        scale = 10.0;
+        scale = 100f;
     }
 
     public void add(final Body body) {
@@ -64,7 +64,7 @@ final class Physics {
         return Arrays.copyOf(bodies, bodies.length);
     }
 
-    public double getScale() {
+    public float getScale() {
         return scale;
     }
 
@@ -94,7 +94,7 @@ final class Physics {
         imp.setGravity(new Vec2((float) ax, (float) ay));
     }
 
-    public void setScale(final double scale) {
+    public void setScale(final float scale) {
         this.scale = scale;
     }
 
@@ -120,7 +120,7 @@ final class Physics {
         imp.destroyBody(bodyImp);
     }
 
-    float scaleLength(final double length) {
+    float scaleLength(final float length) {
         return (float) (length / scale);
     }
 

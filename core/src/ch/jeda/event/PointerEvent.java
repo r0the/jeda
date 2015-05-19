@@ -25,8 +25,8 @@ package ch.jeda.event;
 public final class PointerEvent extends Event {
 
     private final int pointerId;
-    private final int x;
-    private final int y;
+    private final float x;
+    private final float y;
 
     /**
      * Constructs a pointer event.
@@ -53,7 +53,7 @@ public final class PointerEvent extends Event {
      * @since 1.0
      */
     public PointerEvent(final Object source, final EventType type, final int pointerId,
-                        final int x, final int y) {
+                        final float x, final float y) {
         super(source, type);
         this.pointerId = pointerId;
         this.x = x;
@@ -78,7 +78,7 @@ public final class PointerEvent extends Event {
      *
      * @since 1.0
      */
-    public final int getX() {
+    public final float getX() {
         return x;
     }
 
@@ -89,7 +89,7 @@ public final class PointerEvent extends Event {
      *
      * @since 1.0
      */
-    public final int getY() {
+    public final float getY() {
         return y;
     }
 

@@ -25,45 +25,51 @@ public interface CanvasImp {
 
     void drawCanvas(int x, int y, CanvasImp source);
 
-    void drawEllipse(int x, int y, int width, int height);
+    void drawEllipse(float centerX, float centerY, float radiusX, float radiusY);
 
-    void drawImage(int x, int y, ImageImp image, int alpha);
+    void drawImage(float x, float y, float width, float height, ImageImp image, int alpha);
 
-    void drawLine(int x1, int y1, int x2, int y2);
+    void drawPolygon(float[] points);
 
-    void drawPolygon(int[] x, int[] y);
+    void drawPolyline(float[] points);
 
-    void drawRectangle(int x, int y, int width, int height);
+    void drawRectangle(float x, float y, float width, float height);
 
-    void drawText(int x, int y, String text);
+    void drawText(float x, float y, String text);
 
     void fill();
 
-    void fillEllipse(int x, int y, int width, int height);
+    void fillEllipse(float centerX, float centerY, float radiusX, float radiusY);
 
-    void fillPolygon(int[] x, int[] y);
+    void fillPolygon(float[] points);
 
-    void fillRectangle(int x, int y, int width, int height);
+    void fillRectangle(float x, float y, float width, float height);
 
     int getHeight();
-
-    double getLineWidth();
 
     Color getPixel(int x, int y);
 
     int getWidth();
 
+    void resetTransformation();
+
+    void restoreTransformation();
+
+    void rotateRad(float angle, float centerX, float centerY);
+
+    void saveTransformation();
+
+    void scale(float scale);
+
     void setAntiAliasing(boolean antiAliasing);
 
     void setColor(Color color);
 
-    void setLineWidth(double lineWidth);
+    void setLineWidth(float lineWidth);
 
     void setPixel(int x, int y, Color color);
 
-    void setTextSize(int textSize);
-
-    void setTransformation(CanvasTransformation transformation);
+    void setTextSize(float textSize);
 
     void setTypeface(TypefaceImp typeface);
 
@@ -72,4 +78,6 @@ public interface CanvasImp {
     int textHeight(String text);
 
     int textWidth(String text);
+
+    void translate(float tx, float ty);
 }

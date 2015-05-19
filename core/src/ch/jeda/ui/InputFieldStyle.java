@@ -33,7 +33,7 @@ public interface InputFieldStyle {
      *
      * @since 1.3
      */
-    boolean contains(InputField inputField, int x, int y);
+    boolean contains(InputField inputField, float x, float y);
 
     /**
      * Draws the input field widget on the specified canvas.

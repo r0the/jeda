@@ -98,21 +98,21 @@ public class CanvasTest extends Program implements KeyDownListener,
         window.setColor(new Color(200, 200, 200, 200));
         window.fillRectangle(5, h, w - 10, 25);
         window.setColor(Color.BLACK);
-        window.setTextSize(20);
+        window.setFontSize(20);
         window.drawText(10, h + 5, message);
     }
 
     private void transformationTest() {
-        window.setRotationDeg(45);
-        window.setTranslation(w / 2, h / 2);
-        window.setTextSize(10);
-        window.setScale(5);
+//        window.setRotationDeg(45);
+//        window.setTranslation(w / 2, h / 2);
+//        window.setTextSize(10);
+//        window.setScale(5);
         window.setColor(Color.RED);
         window.fillRectangle(0, 0, 100, 30, Alignment.CENTER);
         window.setColor(Color.BLACK);
         window.drawText(0, 0, "Transformation", Alignment.CENTER);
         window.drawImage(0, 0, Image.JEDA_LOGO_16x16, Alignment.CENTER);
-        window.resetTransformations();
+//        window.resetTransformations();
         msg("transformations");
     }
 
@@ -216,17 +216,17 @@ public class CanvasTest extends Program implements KeyDownListener,
 
     private void setFontSizeTest() {
         window.drawText(5, 5, "default font size");
-        window.setTextSize(10);
+        window.setFontSize(10);
         window.drawText(5, 25, "font size 10");
-        window.setTextSize(15);
+        window.setFontSize(15);
         window.drawText(5, 45, "font size 15");
-        window.setTextSize(20);
+        window.setFontSize(20);
         window.drawText(5, 65, "font size 20");
         msg("drawText() with different font sizes");
     }
 
     private void antiAliasingTest() {
-        window.setTextSize(50);
+        window.setFontSize(50);
         window.fillCircle(100, 100, 50);
         window.drawText(170, 100, "Here be 'Jaggies'", Alignment.LEFT);
         window.setAntiAliasing(true);

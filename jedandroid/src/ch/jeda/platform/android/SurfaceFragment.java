@@ -27,11 +27,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import ch.jeda.event.Event;
-import ch.jeda.event.EventQueue;
-import ch.jeda.event.EventType;
-import ch.jeda.event.KeyEvent;
-import ch.jeda.event.PointerEvent;
+import ch.jeda.event.Key;
+import ch.jeda.platform.ViewCallback;
 import ch.jeda.platform.ViewRequest;
 import ch.jeda.ui.ViewFeature;
 import java.util.EnumSet;
@@ -40,14 +37,15 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
                                                   View.OnKeyListener,
                                                   View.OnTouchListener {
 
+    private final ViewCallback callback;
     private final EnumSet<ViewFeature> features;
-    private EventQueue eventQueue;
     private ViewRequest request;
     private boolean surfaceAvailable;
     private SurfaceHolder surfaceHolder;
 
     SurfaceFragment(final ViewRequest request) {
         super();
+        callback = request.getCallback();
         features = request.getFeatures();
         this.request = request;
     }
@@ -67,13 +65,21 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
 
     @Override
     public boolean onKey(final View view, final int keyCode, final android.view.KeyEvent event) {
-        final KeyEvent jedaEvent = EventMapper.mapEvent(event);
-        if (jedaEvent != null) {
-            postEvent(jedaEvent);
-            return true;
-        }
-        else {
+        final Object device = Mapper.mapDevice(event);
+        final Key key = Mapper.mapKey(event.getKeyCode());
+        if (key == null) {
             return false;
+        }
+
+        switch (event.getAction()) {
+            case android.view.KeyEvent.ACTION_DOWN:
+                callback.postKeyDown(device, key, event.getRepeatCount());
+                return true;
+            case android.view.KeyEvent.ACTION_UP:
+                callback.postKeyUp(device, key);
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -84,19 +90,19 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
                 index = event.getActionIndex();
-                postEvent(new PointerEvent(EventMapper.mapDevice(event), EventType.POINTER_DOWN, event.getPointerId(index),
-                                           (int) event.getX(index), (int) event.getY(index)));
+                callback.postPointerDown(Mapper.mapDevice(event), event.getPointerId(index),
+                                         event.getX(index), event.getY(index));
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 index = event.getActionIndex();
-                postEvent(new PointerEvent(EventMapper.mapDevice(event), EventType.POINTER_UP, event.getPointerId(index),
-                                           (int) event.getX(index), (int) event.getY(index)));
+                callback.postPointerUp(Mapper.mapDevice(event), event.getPointerId(index),
+                                       event.getX(index), event.getY(index));
                 break;
             case MotionEvent.ACTION_MOVE:
                 for (index = 0; index < event.getPointerCount(); ++index) {
-                    postEvent(new PointerEvent(EventMapper.mapDevice(event), EventType.POINTER_MOVED, event.getPointerId(index),
-                                               (int) event.getX(index), (int) event.getY(index)));
+                    callback.postPointerMoved(Mapper.mapDevice(event), event.getPointerId(index),
+                                              event.getX(index), event.getY(index));
                 }
 
                 break;
@@ -139,12 +145,6 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
         }
     }
 
-    void postEvent(final Event event) {
-        if (eventQueue != null) {
-            eventQueue.addEvent(event);
-        }
-    }
-
     void setBitmap(final Bitmap bitmap) {
         if (surfaceAvailable) {
             final Canvas canvas = surfaceHolder.lockCanvas();
@@ -153,10 +153,6 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
-    }
-
-    void setEventQueue(final EventQueue eventQueue) {
-        this.eventQueue = eventQueue;
     }
 
     void setFeature(final ViewFeature feature, final boolean enabled) {

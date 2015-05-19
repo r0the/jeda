@@ -23,6 +23,7 @@ import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
+import ch.jeda.platform.ViewCallback;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.ViewFeature;
 import java.io.BufferedReader;
@@ -230,17 +231,6 @@ public final class Jeda {
     }
 
     /**
-     * Adds an event to the global Jeda event queue. The event will be processed during the next update cycle.
-     *
-     * @param event the event to add
-     *
-     * @since 2.0
-     */
-    public static void postEvent(final Event event) {
-        ENGINE.postEvent(event);
-    }
-
-    /**
      * Removes an event listener from the Jeda engine. The listener will no longer receive events. Has no effect if
      * <tt>listener</tt> is <tt>null</tt>.
      *
@@ -309,16 +299,17 @@ public final class Jeda {
         return ENGINE.createCanvasImp(width, height);
     }
 
-    static TypefaceImp createTypefaceImp(final String path) {
-        return ENGINE.createTypefaceImp(path);
-    }
-
     static ImageImp createImageImp(final String path) {
         return ENGINE.createImageImp(path);
     }
 
-    static ViewImp createViewImp(final int width, final int height, final EnumSet<ViewFeature> features) {
-        return ENGINE.createViewImp(width, height, features);
+    static TypefaceImp createTypefaceImp(final String path) {
+        return ENGINE.createTypefaceImp(path);
+    }
+
+    static ViewImp createViewImp(final ViewCallback callback, final int width, final int height,
+                                 final EnumSet<ViewFeature> features) {
+        return ENGINE.createViewImp(callback, width, height, features);
     }
 
     static XMLReader createXmlReader() {
@@ -339,6 +330,10 @@ public final class Jeda {
 
     static InputStream openResource(final String path) {
         return ENGINE.openResource(path);
+    }
+
+    static void postEvent(final Event event) {
+        ENGINE.postEvent(event);
     }
 
     static void showInputRequest(final InputRequest inputRequest) {

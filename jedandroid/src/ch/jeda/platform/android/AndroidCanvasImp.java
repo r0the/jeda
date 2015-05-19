@@ -24,29 +24,29 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import ch.jeda.MathF;
 import ch.jeda.platform.CanvasImp;
-import ch.jeda.platform.CanvasTransformation;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.ui.Color;
 
 class AndroidCanvasImp implements CanvasImp {
 
+    private static final Matrix IDENTITY = new Matrix();
     private final Paint fillPaint;
     private final Paint imagePaint;
-    private final Matrix matrix;
     private final Paint pixelPaint;
     private final Paint strokePaint;
     private final Paint textPaint;
     private Bitmap bitmap;
     private Canvas canvas;
+    private Matrix savedTransformation;
 
     AndroidCanvasImp() {
         fillPaint = new Paint();
         fillPaint.setStyle(Paint.Style.FILL);
         fillPaint.setAntiAlias(true);
         imagePaint = new Paint();
-        matrix = new Matrix();
         pixelPaint = new Paint();
         strokePaint = new Paint();
         strokePaint.setStyle(Paint.Style.STROKE);
@@ -63,45 +63,47 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawEllipse(final int x, final int y, final int width, final int height) {
-        canvas.drawOval(new RectF(x, y, x + width, y + height), strokePaint);
+    public void drawEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
+        canvas.drawOval(new RectF(centerX - radiusX, centerY - radiusY, 2 * radiusX, 2 * radiusY), strokePaint);
     }
 
     @Override
-    public void drawImage(final int x, final int y, final ImageImp image, final int alpha) {
-        assert image != null;
+    public void drawImage(final float x, final float y, final float width, final float height, final ImageImp image,
+                          final int alpha) {
         assert image instanceof AndroidImageImp;
         assert 0 < alpha && alpha <= 255;
 
         imagePaint.setAlpha(alpha);
-        canvas.drawBitmap(((AndroidImageImp) image).bitmap, x, y, imagePaint);
+        RectF dest = new RectF(x, y, x + width, y + height);
+        canvas.drawBitmap(((AndroidImageImp) image).bitmap, null, dest, imagePaint);
     }
 
     @Override
-    public void drawLine(final int x1, final int y1, final int x2, final int y2) {
-        canvas.drawLine(x1, y1, x2, y2, strokePaint);
+    public void drawPolyline(final float[] points) {
+        for (int i = 0; i < points.length - 2; i = i + 2) {
+            canvas.drawLine(points[i], points[i + 1], points[i + 2], points[i + 3], strokePaint);
+        }
     }
 
     @Override
-    public void drawPolygon(final int[] x, final int[] y) {
-        assert x != null;
-        assert y != null;
-        assert x.length >= 3;
-        assert x.length == y.length;
+    public void drawPolygon(final float[] points) {
+        assert points != null;
+        assert points.length >= 6;
+        assert points.length % 2 == 0;
 
-        canvas.drawPath(createPath(x, y), strokePaint);
+        this.canvas.drawPath(createPath(points), this.strokePaint);
     }
 
     @Override
-    public void drawRectangle(final int x, final int y, final int width, final int height) {
+    public void drawRectangle(final float x, final float y, final float width, final float height) {
         canvas.drawRect(x, y, x + width, y + height, strokePaint);
     }
 
     @Override
-    public void drawText(final int x, final int y, final String text) {
+    public void drawText(final float x, final float y, final String text) {
         assert text != null;
 
-        canvas.drawText(text, x, y - (int) textPaint.ascent(), textPaint);
+        canvas.drawText(text, x, y - textPaint.ascent(), textPaint);
     }
 
     @Override
@@ -110,33 +112,27 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void fillEllipse(final int x, final int y, final int width, final int height) {
-        canvas.drawOval(new RectF(x, y, x + width, y + height), fillPaint);
+    public void fillEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
+        canvas.drawOval(new RectF(centerX - radiusX, centerY - radiusY, 2f * radiusX, 2f * radiusY), fillPaint);
     }
 
     @Override
-    public void fillPolygon(final int[] x, final int[] y) {
-        assert x != null;
-        assert y != null;
-        assert x.length >= 3;
-        assert x.length == y.length;
+    public void fillPolygon(final float[] points) {
+        assert points != null;
+        assert points.length >= 6;
+        assert points.length % 2 == 0;
 
-        canvas.drawPath(createPath(x, y), fillPaint);
+        this.canvas.drawPath(createPath(points), this.fillPaint);
     }
 
     @Override
-    public void fillRectangle(final int x, final int y, final int width, final int height) {
+    public void fillRectangle(final float x, final float y, final float width, final float height) {
         canvas.drawRect(x, y, x + width, y + height, fillPaint);
     }
 
     @Override
     public int getHeight() {
         return bitmap.getHeight();
-    }
-
-    @Override
-    public double getLineWidth() {
-        return strokePaint.getStrokeWidth();
     }
 
     @Override
@@ -149,6 +145,33 @@ class AndroidCanvasImp implements CanvasImp {
     @Override
     public int getWidth() {
         return bitmap.getWidth();
+    }
+
+    @Override
+    public void resetTransformation() {
+        canvas.getMatrix(IDENTITY);
+    }
+
+    @Override
+    public void restoreTransformation() {
+        if (savedTransformation != null) {
+            canvas.setMatrix(savedTransformation);
+        }
+    }
+
+    @Override
+    public void rotateRad(final float angle, final float centerX, final float centerY) {
+        canvas.rotate(MathF.toDegrees(angle), centerX, centerY);
+    }
+
+    @Override
+    public void saveTransformation() {
+        savedTransformation = canvas.getMatrix();
+    }
+
+    @Override
+    public void scale(final float scale) {
+        canvas.scale(scale, scale);
     }
 
     @Override
@@ -168,10 +191,10 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setLineWidth(final double lineWidth) {
+    public void setLineWidth(final float lineWidth) {
         assert lineWidth >= 0.0;
 
-        strokePaint.setStrokeWidth((float) lineWidth);
+        strokePaint.setStrokeWidth(lineWidth);
     }
 
     @Override
@@ -184,19 +207,8 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void setTextSize(final int textSize) {
+    public void setTextSize(final float textSize) {
         textPaint.setTextSize(textSize);
-    }
-
-    @Override
-    public void setTransformation(final CanvasTransformation transformation) {
-        assert transformation != null;
-
-        matrix.setTranslate((float) transformation.translationX, (float) transformation.translationY);
-        matrix.preRotate((float) Math.toDegrees(transformation.rotation));
-        float scale = (float) transformation.scale;
-        matrix.preScale(scale, scale);
-        canvas.setMatrix(matrix);
     }
 
     @Override
@@ -229,6 +241,11 @@ class AndroidCanvasImp implements CanvasImp {
         return bounds.width();
     }
 
+    @Override
+    public void translate(final float tx, final float ty) {
+        canvas.translate(tx, ty);
+    }
+
     Canvas getCanvas() {
         return canvas;
     }
@@ -246,16 +263,16 @@ class AndroidCanvasImp implements CanvasImp {
         return 0 <= x && x < getWidth() && 0 <= y && y < getHeight();
     }
 
-    private static Path createPath(final int[] x, final int[] y) {
+    private static Path createPath(final float[] points) {
         final Path result = new Path();
         boolean first = true;
-        for (int i = 0; i < x.length; ++i) {
+        for (int i = 0; i < points.length; i = i + 2) {
             if (first) {
-                result.moveTo(x[i], y[i]);
+                result.moveTo(points[i], points[i + 1]);
                 first = false;
             }
             else {
-                result.lineTo(x[i], y[i]);
+                result.lineTo(points[i], points[i + 1]);
             }
         }
 

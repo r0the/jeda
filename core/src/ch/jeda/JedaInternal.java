@@ -20,6 +20,7 @@ import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.Platform;
+import ch.jeda.platform.ViewCallback;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.ui.ViewFeature;
 import java.io.InputStream;
@@ -41,13 +42,6 @@ public class JedaInternal {
     /**
      * <b>Internal</b>. Do not use this method.
      */
-    public static TypefaceImp createTypefaceImp(final String path) {
-        return Jeda.createTypefaceImp(path);
-    }
-
-    /**
-     * <b>Internal</b>. Do not use this method.
-     */
     public static ImageImp createImageImp(final String path) {
         return Jeda.createImageImp(path);
     }
@@ -55,8 +49,16 @@ public class JedaInternal {
     /**
      * <b>Internal</b>. Do not use this method.
      */
-    public static ViewImp createViewImp(final int width, final int height, final EnumSet<ViewFeature> features) {
-        return Jeda.createViewImp(width, height, features);
+    public static TypefaceImp createTypefaceImp(final String path) {
+        return Jeda.createTypefaceImp(path);
+    }
+
+    /**
+     * <b>Internal</b>. Do not use this method.
+     */
+    public static ViewImp createViewImp(final ViewCallback callback, final int width, final int height,
+                                        final EnumSet<ViewFeature> features) {
+        return Jeda.createViewImp(callback, width, height, features);
     }
 
     /**

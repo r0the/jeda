@@ -60,7 +60,7 @@ public class ProgressBar extends Widget {
     }
 
     @Override
-    public final boolean contains(final int x, int y) {
+    public final boolean contains(final float x, float y) {
         return style.contains(this, x, y);
     }
 

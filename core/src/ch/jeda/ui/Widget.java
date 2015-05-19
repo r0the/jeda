@@ -63,7 +63,7 @@ public abstract class Widget extends Element {
      * @param y the y coordinate
      * @return <tt>true</tt> if the point (<tt>x</tt>, <tt>y</tt>) lies inside the widget, otherwise <tt>false</tt>
      */
-    public abstract boolean contains(final int x, final int y);
+    public abstract boolean contains(final float x, final float y);
 
     /**
      * Returns the current alignment of the widget. The alignment determines how the widget is positioned relative to
@@ -76,6 +76,11 @@ public abstract class Widget extends Element {
      */
     public final Alignment getAlignment() {
         return alignment;
+    }
+
+    @Override
+    public float getAngleRad() {
+        return 0f;
     }
 
     /**
@@ -173,7 +178,7 @@ public abstract class Widget extends Element {
      *
      * @since 1.3
      */
-    public final int getX() {
+    public final float getX() {
         return x;
     }
 
@@ -184,7 +189,7 @@ public abstract class Widget extends Element {
      *
      * @since 1.3
      */
-    public final int getY() {
+    public final float getY() {
         return y;
     }
 

@@ -19,6 +19,7 @@ package ch.jeda.geometry;
 import ch.jeda.Data;
 import ch.jeda.Storable;
 import ch.jeda.ui.Canvas;
+import static ch.jeda.MathF.*;
 
 /**
  * Represents an ellipse shape.
@@ -31,10 +32,10 @@ public final class Ellipse extends Shape implements Storable {
     private static final String CENTER_Y = "centery";
     private static final String RADIUS_X = "radiusx";
     private static final String RADIUS_Y = "radiusy";
-    private final double centerX;
-    private final double centerY;
-    private final double radiusX;
-    private final double radiusY;
+    private final float centerX;
+    private final float centerY;
+    private final float radiusX;
+    private final float radiusY;
 
     /**
      * Constructs a new ellipse shape. With and height must be positive.
@@ -48,6 +49,21 @@ public final class Ellipse extends Shape implements Storable {
      * @since 2.0
      */
     public Ellipse(final double centerX, final double centerY, final double radiusX, final double radiusY) {
+        this((float) centerX, (float) centerY, (float) radiusX, (float) radiusY);
+    }
+
+    /**
+     * Constructs a new ellipse shape. With and height must be positive.
+     *
+     * @param centerX the horizontal coordinate of the ellipse's center
+     * @param centerY the vertical coordinate of the ellipse's center
+     * @param radiusX the horizontal radius of the ellipse
+     * @param radiusY the vertical radius of the ellipse
+     * @throws IllegalArgumentException if <code>rx</code> or <code>ry</code> are not positive
+     *
+     * @since 2.0
+     */
+    public Ellipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
         if (radiusX <= 0.0) {
             throw new IllegalArgumentException("radiusX");
         }
@@ -70,25 +86,26 @@ public final class Ellipse extends Shape implements Storable {
      * @since 2.0
      */
     public Ellipse(final Data data) {
-        this.centerX = data.readDouble(CENTER_X);
-        this.centerY = data.readDouble(CENTER_Y);
-        this.radiusX = data.readDouble(RADIUS_X);
-        this.radiusY = data.readDouble(RADIUS_Y);
+        this.centerX = data.readFloat(CENTER_X);
+        this.centerY = data.readFloat(CENTER_Y);
+        this.radiusX = data.readFloat(RADIUS_X);
+        this.radiusY = data.readFloat(RADIUS_Y);
     }
 
     @Override
-    public boolean contains(final double x, final double y) {
+    public boolean contains(final float x, final float y) {
+        //TODO
         return false;
     }
 
     @Override
     public void draw(final Canvas canvas) {
-        canvas.drawEllipse(0.0, 0.0, radiusX, radiusY);
+        canvas.drawEllipse(centerX, centerY, radiusX, radiusY);
     }
 
     @Override
     public void fill(final Canvas canvas) {
-        canvas.fillEllipse(0.0, 0.0, radiusX, radiusY);
+        canvas.fillEllipse(centerX, centerY, radiusX, radiusY);
     }
 
     /**
@@ -98,8 +115,8 @@ public final class Ellipse extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getArea() {
-        return Math.PI * radiusX * radiusY;
+    public float getArea() {
+        return PI * radiusX * radiusY;
     }
 
     /**
@@ -109,7 +126,7 @@ public final class Ellipse extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getCenterX() {
+    public float getCenterX() {
         return centerX;
     }
 
@@ -120,7 +137,7 @@ public final class Ellipse extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getCenterY() {
+    public float getCenterY() {
         return centerY;
     }
 
@@ -131,12 +148,12 @@ public final class Ellipse extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getEccentricity() {
+    public float getEccentricity() {
         if (radiusX > radiusY) {
-            return Math.sqrt(1 - (radiusY * radiusY / (radiusX * radiusX)));
+            return sqrt(1 - (radiusY * radiusY / (radiusX * radiusX)));
         }
         else {
-            return Math.sqrt(1 - (radiusX * radiusX / (radiusY * radiusY)));
+            return sqrt(1 - (radiusX * radiusX / (radiusY * radiusY)));
         }
     }
 
@@ -147,7 +164,7 @@ public final class Ellipse extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getRadiusX() {
+    public float getRadiusX() {
         return radiusX;
     }
 
@@ -158,7 +175,7 @@ public final class Ellipse extends Shape implements Storable {
      *
      * @since 2.0
      */
-    public double getRadiusY() {
+    public float getRadiusY() {
         return radiusY;
     }
 
@@ -171,7 +188,7 @@ public final class Ellipse extends Shape implements Storable {
      * @since 2.0
      */
     public Circle toCircle() {
-        return new Circle(centerX, centerY, Math.sqrt(radiusX * radiusY));
+        return new Circle(centerX, centerY, sqrt(radiusX * radiusY));
     }
 
     /**
@@ -184,15 +201,14 @@ public final class Ellipse extends Shape implements Storable {
      * @since 2.0
      */
     public Polygon toPolygon(int n) {
-        double[] x = new double[n];
-        double[] y = new double[n];
-        for (int i = 0; i < n; ++i) {
-            double angle = 2.0 * Math.PI * i / n;
-            x[i] = centerX + radiusX * Math.cos(angle);
-            y[i] = centerY + radiusY * Math.sin(angle);
+        final float[] points = new float[2 * n];
+        for (int i = 0; i < n; i = i + 2) {
+            float angle = 2f * PI * i / n;
+            points[i] = centerX + radiusX * cos(angle);
+            points[i + 1] = centerY + radiusY * sin(angle);
         }
 
-        return new Polygon(x, y);
+        return new Polygon(points);
     }
 
     @Override
@@ -212,9 +228,9 @@ public final class Ellipse extends Shape implements Storable {
 
     @Override
     public void writeTo(final Data data) {
-        data.writeDouble(CENTER_X, centerX);
-        data.writeDouble(CENTER_Y, centerY);
-        data.writeDouble(RADIUS_X, radiusX);
-        data.writeDouble(RADIUS_Y, radiusY);
+        data.writeFloat(CENTER_X, centerX);
+        data.writeFloat(CENTER_Y, centerY);
+        data.writeFloat(RADIUS_X, radiusX);
+        data.writeFloat(RADIUS_Y, radiusY);
     }
 }

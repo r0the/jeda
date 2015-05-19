@@ -56,7 +56,8 @@ class JedaInputConnection extends BaseInputConnection {
     @Override
     public boolean sendKeyEvent(android.view.KeyEvent event) {
         Log.i("Jeda", "Sending key event:" + event.getKeyCode() + ", action=" + event.getAction());
-        postEvent(EventMapper.mapEvent(event));
+
+        postEvent(Mapper.mapEvent(event.getKeyCode()));
         return super.sendKeyEvent(event);
     }
 

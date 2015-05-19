@@ -21,11 +21,11 @@ import ch.jeda.LogLevel;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.CanvasImp;
-import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
+import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ViewRequest;
 import java.awt.Font;
 import java.io.InputStream;
@@ -53,7 +53,7 @@ class JavaPlatform implements Platform {
 
     @Override
     public ImageImp createImageImp(final String path) {
-        return ResourceManager.loadImage(path);
+        return new JavaImageImp(ResourceManager.loadImage(path));
     }
 
     @Override

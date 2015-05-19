@@ -33,7 +33,7 @@ public interface CheckBoxStyle {
      *
      * @since 1.3
      */
-    boolean contains(CheckBox checkBox, int x, int y);
+    boolean contains(CheckBox checkBox, float x, float y);
 
     /**
      * Draws the check box widget on the specified canvas.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,22 +16,7 @@
  */
 package ch.jeda.ui;
 
-/**
- * Defines the interface for an image filter.
- *
- * @since 2.0
- */
-public interface ImageFilter {
+enum NewAlign {
 
-    /**
-     * Determines the new color of a pixel. This method is called by the
-     * {@link ch.jeda.ui.Image#filter(ch.jeda.ui.ImageFilter)} method to determine the color of the pixel at the
-     * coordinates (<tt>x</tt>, <tt>y</tt>) of the new image.
-     *
-     * @param image the source image
-     * @param x the x coordinate of the pixel
-     * @param y the y coordinate of the pixel
-     * @return the color of the pixel
-     */
-    Color apply(Image image, int x, int y);
+    MAX, MIDDLE, MIN
 }

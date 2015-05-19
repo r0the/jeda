@@ -16,7 +16,6 @@
  */
 package ch.jeda.geometry;
 
-import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
 
 /**
@@ -26,8 +25,10 @@ import ch.jeda.ui.Canvas;
  */
 public final class Rectangle extends Shape {
 
-    private final double height;
-    private final double width;
+    private final float x;
+    private final float y;
+    private final float height;
+    private final float width;
 
     /**
      * Constructs a new rectangle shape. With and height must be positive. The center of the rectangle is the origin of
@@ -39,7 +40,21 @@ public final class Rectangle extends Shape {
      *
      * @since 2.0
      */
-    public Rectangle(final double width, final double height) {
+    public Rectangle(final double x, final double y, final double width, final double height) {
+        this((float) x, (float) y, (float) width, (float) height);
+    }
+
+    /**
+     * Constructs a new rectangle shape. With and height must be positive. The center of the rectangle is the origin of
+     * the local coordinate system.
+     *
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     * @throws IllegalArgumentException if <code>width</code> or <code>height</code> are not positive
+     *
+     * @since 2.0
+     */
+    public Rectangle(final float x, final float y, final float width, final float height) {
         if (width <= 0.0) {
             throw new IllegalArgumentException("width");
         }
@@ -48,23 +63,25 @@ public final class Rectangle extends Shape {
             throw new IllegalArgumentException("height");
         }
 
+        this.x = x;
+        this.y = y;
         this.height = height;
         this.width = width;
     }
 
     @Override
-    public boolean contains(final double x, final double y) {
+    public boolean contains(final float x, final float y) {
         return Math.abs(x) <= width / 2.0 && Math.abs(y) <= height / 2.0;
     }
 
     @Override
     public void draw(final Canvas canvas) {
-        canvas.drawRectangle(0, 0, width, height, Alignment.CENTER);
+        canvas.drawRectangle(x, y, width, height);
     }
 
     @Override
     public void fill(final Canvas canvas) {
-        canvas.drawRectangle(0, 0, width, height, Alignment.CENTER);
+        canvas.fillRectangle(x, y, width, height);
     }
 
     /**
@@ -74,7 +91,7 @@ public final class Rectangle extends Shape {
      *
      * @since 2.0
      */
-    public double getArea() {
+    public float getArea() {
         return width * height;
     }
 
@@ -85,7 +102,7 @@ public final class Rectangle extends Shape {
      *
      * @since 2.0
      */
-    public double getHeight() {
+    public float getHeight() {
         return height;
     }
 
@@ -96,7 +113,18 @@ public final class Rectangle extends Shape {
      *
      * @since 2.0
      */
-    public double getWidth() {
+    public float getWidth() {
         return width;
+    }
+
+    /**
+     * Creates and returns a polygon with the same shape as this rectangle.
+     *
+     * @return a polygon with the same shape as this rectangle
+     *
+     * @since 2.0
+     */
+    public Polygon toPolygon() {
+        return new Polygon(x, y, x + width, y, x + width, y + height, x, y + height);
     }
 }

@@ -19,9 +19,9 @@ package ch.jeda.platform.java;
 import ch.jeda.Log;
 import ch.jeda.Message;
 import ch.jeda.platform.TypefaceImp;
-import ch.jeda.platform.ImageImp;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -72,14 +72,14 @@ class ResourceManager {
         }
     }
 
-    static ImageImp loadImage(final String path) {
+    static BufferedImage loadImage(final String path) {
         final InputStream in = openInputStream(path);
         if (in == null) {
             return null;
         }
 
         try {
-            return new JavaImageImp(ImageIO.read(in));
+            return ImageIO.read(in);
         }
         catch (Exception ex) {
             Log.err(ex, Message.IMAGE_ERROR_READ, path);

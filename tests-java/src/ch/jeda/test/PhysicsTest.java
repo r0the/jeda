@@ -19,20 +19,19 @@ public class PhysicsTest extends Program implements TickListener {
     public void run() {
         Jeda.setTickFrequency(60);
         view = new PhysicsView(1400, 700, ViewFeature.DOUBLE_BUFFERED);
-        view.setScale(10);
-        view.setGravity(0, 10);
+        view.setGravity(0, -9);
         view.setDebugging(true);
         view.addWalls();
 
         player = new Player();
-        player.setPosition(50, 50);
+        player.setPosition(10, 10);
 
         view.add(player);
 
         Body ground = new Body();
         ground.setType(BodyType.STATIC);
-        ground.setPosition(0, view.getHeight() - 20);
-        ground.addShape(new Rectangle(view.getWidth(), 10));
+        ground.setPosition(0, 1);
+        ground.addShape(new Rectangle(0, 0, 20, 0.2));
         view.add(ground);
 //        physics.loadMap("res:level-1.tmx");
         view.addEventListener(this);
@@ -60,7 +59,7 @@ class Player extends Body implements KeyDownListener, KeyUpListener, TickListene
     private boolean springen;
 
     public Player() {
-        addShape(new Circle(10, 10, 30));
+        addShape(new Circle(0, 0, 1));
     }
 
     @Override
@@ -75,8 +74,9 @@ class Player extends Body implements KeyDownListener, KeyUpListener, TickListene
 
     @Override
     protected void drawDecoration(Canvas canvas) {
+        canvas.setLineWidth(0.01);
         canvas.setColor(Color.AQUA);
-        canvas.fillCircle(0, 0, 30);
+        canvas.fillCircle(0, 0, 1);
     }
 
     void updateKey(Key key, boolean pressed) {
@@ -94,16 +94,15 @@ class Player extends Body implements KeyDownListener, KeyUpListener, TickListene
     @Override
     public void onTick(TickEvent te) {
         if (links) {
-            applyForce(-500, 0);
+            applyForce(-5, 0);
         }
 
         if (rechts) {
-            applyForce(500, 0);
+            applyForce(5, 0);
         }
 
         if (springen) {
-            applyForce(0, -2000);
+            applyForce(0, 100);
         }
     }
-
 }

@@ -23,9 +23,9 @@ interface BodyImp {
 
     void addShape(Shape shape);
 
-    void applyForce(double fx, double fy);
+    void applyForce(float fx, float fy);
 
-    void applyTorque(double torque);
+    void applyTorque(float torque);
 
     boolean belongsTo(Physics physics);
 
@@ -33,19 +33,19 @@ interface BodyImp {
 
     void drawOverlay(Canvas canvas);
 
-    double getAngleRad();
+    float getAngleRad();
 
-    double getAngularDamping();
+    float getAngularDamping();
 
-    double getAngularVelocity();
+    float getAngularVelocity();
 
-    double getDamping();
+    float getDamping();
 
-    double getDensity();
+    float getDensity();
 
-    double getFriction();
+    float getFriction();
 
-    double getMass();
+    float getMass();
 
     Physics getPhysics();
 
@@ -53,33 +53,33 @@ interface BodyImp {
 
     BodyType getType();
 
-    double getVx();
+    float getVx();
 
-    double getVy();
+    float getVy();
 
-    double getX();
+    float getX();
 
-    double getY();
+    float getY();
 
     boolean isRotationFixed();
 
-    void setAngleRad(double angle);
+    void setAngleRad(float angle);
 
-    void setAngularDamping(double angularDamping);
+    void setAngularDamping(float angularDamping);
 
-    void setAngularVelocity(double angularVelocity);
+    void setAngularVelocity(float angularVelocity);
 
-    void setDamping(double damping);
+    void setDamping(float damping);
 
-    void setDensity(double density);
+    void setDensity(float density);
 
-    void setFriction(double friction);
+    void setFriction(float friction);
 
-    void setPosition(double x, double y);
+    void setPosition(float x, float y);
 
     void setRotationFixed(boolean rotationFixed);
 
     void setType(BodyType type);
 
-    void setVelocity(double vx, double vy);
+    void setVelocity(float vx, float vy);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 - 2014 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -45,7 +45,7 @@ class SpeechBubble {
         y -= 204;
         x = x - image.getWidth() / 2 + BORDER;
         for (int i = 0; i < lines.size(); ++i) {
-            canvas.drawText(x, y, lines.get(i), Alignment.TOP_LEFT);
+            canvas.drawText(x, y, lines.get(i));
             y += LINE_HEIGHT;
         }
     }

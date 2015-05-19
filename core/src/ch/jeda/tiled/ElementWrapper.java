@@ -78,12 +78,19 @@ final class ElementWrapper {
         }
     }
 
-    double getDoubleAttribute(final String name) {
-        return attributes.readDouble(name);
+//    double getDoubleAttribute(final String name) {
+//        return attributes.readDouble(name);
+//    }
+//
+//    double getDoubleAttribute(final String name, final double defaultValue) {
+//        return attributes.readDouble(name, defaultValue);
+//    }
+    float getFloatAttribute(final String name) {
+        return attributes.readFloat(name);
     }
 
-    double getDoubleAttribute(final String name, final double defaultValue) {
-        return attributes.readDouble(name, defaultValue);
+    float getFloatAttribute(final String name, final float defaultValue) {
+        return attributes.readFloat(name, defaultValue);
     }
 
     int getIntAttribute(final String name) {

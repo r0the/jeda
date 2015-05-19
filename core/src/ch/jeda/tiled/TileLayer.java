@@ -93,7 +93,8 @@ public final class TileLayer extends Layer {
                         }
                     }
                     else {
-                        body.addShape(new Rectangle(image.getWidth(), image.getHeight()));
+                        body.addShape(new Rectangle(-image.getWidth() / 2, -image.getHeight() / 2,
+                                                    image.getWidth(), image.getHeight()));
                     }
 
                     body.setType(type);
