@@ -5,7 +5,7 @@ import ch.jeda.cute.*;
 import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
-public class CuteTest extends Program implements TickListener, ScrollListener {
+public class CuteTest extends Program implements TickListener, WheelListener {
 
     Window window;
     CuteWorld world;
@@ -14,7 +14,7 @@ public class CuteTest extends Program implements TickListener, ScrollListener {
 
     @Override
     public void run() {
-        window = new Window(WindowFeature.DOUBLE_BUFFERED, WindowFeature.SCROLLABLE);
+        window = new Window(WindowFeature.DOUBLE_BUFFERED);
         world = new CuteWorld(40, 40, 4);
         world.fill(0, Block.GRASS);
         world.setBlockAt(0, 0, 1, Block.STONE);
@@ -71,8 +71,8 @@ public class CuteTest extends Program implements TickListener, ScrollListener {
     }
 
     @Override
-    public void onScroll(ScrollEvent event) {
-        world.scroll(event.getDx(), event.getDy());
+    public void onWheel(WheelEvent event) {
+        //world.scroll(event.getDx(), event.getDy());
     }
 
     @Override

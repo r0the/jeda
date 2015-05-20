@@ -17,20 +17,20 @@
 package ch.jeda.event;
 
 /**
- * Listener interface for receiving scroll events. To have an object receive events of type
- * {@link ch.jeda.event.EventType#SCROLL}, have the class of the object implement the interface and register the object
+ * Listener interface for receiving wheel events. To have an object receive events of type
+ * {@link ch.jeda.event.EventType#WHEEL}, have the class of the object implement the interface and register the object
  * with {@link ch.jeda.ui.View#addEventListener(java.lang.Object)}.
  *
  * @since 2.0
  */
-public interface ScrollListener {
+public interface WheelListener {
 
     /**
-     * Invoked when a scroll event occurs.
+     * Invoked when a wheel event occurs.
      *
      * @param event the event
      *
      * @since 2.0
      */
-    void onScroll(ScrollEvent event);
+    void onWheel(WheelEvent event);
 }

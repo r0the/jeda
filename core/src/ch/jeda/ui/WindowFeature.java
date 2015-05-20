@@ -19,7 +19,6 @@ package ch.jeda.ui;
 /**
  * Configurable features for a window.
  *
- * @version 2
  * @since 1.0
  */
 public enum WindowFeature {
@@ -72,12 +71,5 @@ public enum WindowFeature {
      *
      * @since 1.0
      */
-    ORIENTATION_PORTRAIT,
-    /**
-     * Enable automatic scrolling on drag for a view. If this feature is enabled, the view automatically translates
-     * pointer drag movements to scroll events.
-     *
-     * @since 2.0
-     */
-    SCROLLABLE
+    ORIENTATION_PORTRAIT
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2013 by Stefan Rothe
+ * Copyright (C) 2011 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -497,18 +497,21 @@ public enum Key {
      * The middle mouse button.
      *
      * @since 1.0
+     * @deprecated Use {@link PointerEvent#isPressed(ch.jeda.event.PushButton)} instead.
      */
     MOUSE_MIDDLE,
     /**
      * The primary mouse button (usually left).
      *
      * @since 1.0
+     * @deprecated Use {@link PointerEvent#isPressed(ch.jeda.event.PushButton)} instead.
      */
     MOUSE_PRIMARY,
     /**
      * The seconary mouse button (usually right).
      *
      * @since 1.0
+     * @deprecated Use {@link PointerEvent#isPressed(ch.jeda.event.PushButton)} instead.
      */
     MOUSE_SECONDARY,
     /**

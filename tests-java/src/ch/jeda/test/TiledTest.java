@@ -6,7 +6,7 @@ import ch.jeda.physics.PhysicsView;
 import ch.jeda.tiled.TiledMap;
 import ch.jeda.ui.*;
 
-public class TiledTest extends Program implements TickListener, ScrollListener {
+public class TiledTest extends Program implements TickListener {
 
     private PhysicsView view;
     private TiledMap map;
@@ -17,7 +17,7 @@ public class TiledTest extends Program implements TickListener, ScrollListener {
 
     @Override
     public void run() {
-        view = new PhysicsView(700, 700, ViewFeature.SCROLLABLE);
+        view = new PhysicsView(700, 700, ViewFeature.USER_SCROLL);
         view.createWalls();
         view.setGravity(0, 0);
         view.setDebugging(true);
@@ -32,9 +32,4 @@ public class TiledTest extends Program implements TickListener, ScrollListener {
     public void onTick(TickEvent event) {
     }
 
-    @Override
-    public void onScroll(ScrollEvent event) {
-        offsetX = Math.max(0.0, Math.min(offsetX + event.getDx(), maxOffsetX));
-        offsetY = Math.max(0.0, Math.min(offsetY + event.getDy(), maxOffsetY));
-    }
 }

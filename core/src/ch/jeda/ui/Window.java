@@ -18,13 +18,14 @@ package ch.jeda.ui;
 
 import ch.jeda.Jeda;
 import ch.jeda.JedaInternal;
+import ch.jeda.event.PushButton;
 import ch.jeda.event.Event;
 import ch.jeda.event.EventQueue;
 import ch.jeda.event.EventType;
 import ch.jeda.event.Key;
 import ch.jeda.event.KeyEvent;
 import ch.jeda.event.PointerEvent;
-import ch.jeda.event.ScrollEvent;
+import ch.jeda.event.WheelEvent;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
 import ch.jeda.platform.ViewCallback;
@@ -969,9 +970,6 @@ public class Window {
 
             resetImp(getWidth(), getHeight(), featureSet);
         }
-        else if (feature == WindowFeature.SCROLLABLE) {
-            eventQueue.setDragEnabled(enabled);
-        }
         else {
             imp.setFeature(viewFeature, enabled);
         }
@@ -1175,8 +1173,6 @@ public class Window {
             imp.getForeground().setColor(Color.WHITE);
             imp.getForeground().fill();
         }
-
-        eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
     }
 
     private boolean contains(final int x, final int y) {
@@ -1202,8 +1198,6 @@ public class Window {
                 return ViewFeature.ORIENTATION_LANDSCAPE;
             case ORIENTATION_PORTRAIT:
                 return ViewFeature.ORIENTATION_PORTRAIT;
-            case SCROLLABLE:
-                return ViewFeature.SCROLLABLE;
             default:
                 return null;
         }
@@ -1268,23 +1262,23 @@ public class Window {
         }
 
         @Override
-        public void postPointerDown(Object source, int pointerId, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, x, y));
+        public void postPointerDown(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, pressedButtons, x, y));
         }
 
         @Override
-        public void postPointerMoved(Object source, int pointerId, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, x, y));
+        public void postPointerMoved(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, pressedButtons, x, y));
         }
 
         @Override
-        public void postPointerUp(Object source, int pointerId, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, x, y));
+        public void postPointerUp(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, pressedButtons, x, y));
         }
 
         @Override
-        public void postScroll(Object source, float dx, float dy) {
-            postEvent(new ScrollEvent(source, dx, dy));
+        public void postWheel(Object source, float rotation) {
+            postEvent(new WheelEvent(source, rotation));
         }
 
         private void postEvent(final Event event) {

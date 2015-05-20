@@ -20,7 +20,7 @@ package ch.jeda.event;
  * The types of events supported by Jeda.
  *
  * @since 1.0
- * @version 2
+ * @version 3
  */
 public enum EventType {
 
@@ -86,17 +86,17 @@ public enum EventType {
      */
     POINTER_UP,
     /**
-     * A scroll event.
-     *
-     * @since 2.0
-     */
-    SCROLL,
-    /**
      * @since 1.0
      */
     SENSOR,
     /**
      * @since 1.0
      */
-    TICK
+    TICK,
+    /**
+     * A mouse wheel event.
+     *
+     * @since 2.0
+     */
+    WHEEL
 }

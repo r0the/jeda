@@ -68,7 +68,7 @@ class Parser {
             return new PolygonalChain(parsePoints(points, offsetX, offsetY));
         }
         else if (width > 0 && height > 0) {
-            return new Rectangle(-width / 2f, -height / 2f, width, height);
+            return new Rectangle(0f, 0f, width, height);
         }
         else {
             return null;

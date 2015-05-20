@@ -7,7 +7,7 @@ import ch.jeda.ui.*;
 public class InputEventTest extends Program implements KeyListener,
                                                        KeyTypedListener,
                                                        PointerListener,
-                                                       ScrollListener {
+                                                       WheelListener {
 
     Window window;
     int y;
@@ -66,18 +66,29 @@ public class InputEventTest extends Program implements KeyListener,
     }
 
     @Override
-    public void onScroll(ScrollEvent event) {
+    public void onWheel(WheelEvent event) {
         drawMessage(toMessage(event));
     }
 
     private String toMessage(PointerEvent event) {
-        return Convert.toString("type=", event.getType(), ", id=", event.getPointerId(), ", x=",
-                                event.getX(), ", y=", event.getY(), ", device=", event.getSource());
+        String result = Convert.toString("type=", event.getType(), ", id=", event.getPointerId(), ", x=",
+                                         event.getX(), ", y=", event.getY(), ", device=", event.getSource());
+        if (event.isPressed(PushButton.PRIMARY)) {
+            result += ", PRIMARY";
+        }
+        if (event.isPressed(PushButton.MIDDLE)) {
+            result += ", MIDDLE";
+        }
+        if (event.isPressed(PushButton.SECONDARY)) {
+            result += ", SECONDARY";
+        }
+
+        return result;
     }
 
-    private String toMessage(ScrollEvent event) {
-        return Convert.toString("type=", event.getType(), ", dx=", event.getDx(), ", dy=",
-                                event.getDy(), ", device=", event.getSource());
+    private String toMessage(WheelEvent event) {
+        return Convert.toString("type=", event.getType(), ", rotation=", event.getRotation(),
+                                ", device=", event.getSource());
     }
 
     private String toMessage(KeyEvent event) {

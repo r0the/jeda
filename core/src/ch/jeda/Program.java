@@ -51,6 +51,17 @@ public abstract class Program implements Runnable {
     public abstract void run();
 
     /**
+     * Returns the Jeda system properties.
+     *
+     * @return the Jeda system properties
+     *
+     * @since 1.0
+     */
+    protected final Properties getProperties() {
+        return Jeda.getProperties();
+    }
+
+    /**
      * Prompts the user to enter a <tt>double</tt> value. The specified message is presented to the user along with a
      * field to enter the <tt>double</tt>
      * value. The message may be formatted using simple HTML. Returns

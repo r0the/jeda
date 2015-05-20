@@ -30,7 +30,7 @@ public class Label extends Widget {
     }
 
     @Override
-    public boolean contains(int x, int y) {
+    public boolean contains(float x, float y) {
         return false;
     }
 

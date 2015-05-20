@@ -38,7 +38,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Properties;
 import org.xml.sax.XMLReader;
 
 class JedaEngine implements Platform.Callback, Runnable {
@@ -80,7 +79,7 @@ class JedaEngine implements Platform.Callback, Runnable {
         // Load properties
         properties = initProperties();
         // Init platform
-        platform = initPlatform(properties.getProperty("jeda.platform.class"), this);
+        platform = initPlatform(properties.getString("jeda.platform.class"), this);
         // Init audio manager
         audioManager = new AudioManager(platform.getAudioManagerImp());
         // Load default image
@@ -370,7 +369,7 @@ class JedaEngine implements Platform.Callback, Runnable {
     }
 
     private static Properties initProperties() {
-        java.util.Properties result = new java.util.Properties();
+        final java.util.Properties result = new java.util.Properties();
         loadProperties(result, JEDA_SYSTEM_PROPERTIES_FILE);
         loadProperties(result, JEDA_PLATFORM_PROPERTIES_FILE);
         loadProperties(result, JEDA_APPLICATION_PROPERTIES_FILE);

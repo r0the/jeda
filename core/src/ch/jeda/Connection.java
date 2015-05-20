@@ -40,7 +40,7 @@ public abstract class Connection {
 
     /**
      * Returns a unique address of the remote endpoint of the connection. The form of the address depends of the type of
-     * connection. Returns <tt>null</tt> if no connection has yet been established.
+     * connection. Returns <code>null</code> if no connection has yet been established.
      *
      * @return a unique address of the remote endpoint of the connection
      *
@@ -51,7 +51,7 @@ public abstract class Connection {
     /**
      * Checks if the connection is currently open.
      *
-     * @return <tt>true</tt> if the connection is currently open, otherwise <tt>false</tt>
+     * @return <code>true</code> if the connection is currently open, otherwise <code>false</code>
      *
      * @since 1.4
      */

@@ -24,6 +24,7 @@ import java.util.Map;
 /**
  * Provides conversion methods.
  *
+ * @version 3
  * @since 1.0
  */
 public final class Convert {
@@ -32,13 +33,13 @@ public final class Convert {
     private static final String TRUE_VALUE = "true";
 
     /**
-     * Converts a @{link java.lang.String} to a <tt>boolean</tt> value. Returns the <tt>boolean</tt> value represented
-     * by the {@link java.lang.String}. Returns the <tt>defaultValue</tt>, if <tt>value</tt> does not represent a valid
-     * <tt>boolean</tt>.
+     * Converts a @{link java.lang.String} to a <code>boolean</code> value. Returns the <code>boolean</code> value
+     * represented by the {@link java.lang.String}. Returns the <code>defaultValue</code>, if <code>value</code> does
+     * not represent a valid <code>boolean</code>.
      *
-     * @param value the string to be converted to a <tt>boolean</tt>
+     * @param value the string to be converted to a <code>boolean</code>
      * @param defaultValue the default value
-     * @return the <tt>boolean</tt> value represented by <tt>value</tt> or the <tt>defaultValue</tt>
+     * @return the <code>boolean</code> value represented by <code>value</code> or the <code>defaultValue</code>
      *
      * @see #toString(boolean)
      * @since 1.2
@@ -56,13 +57,13 @@ public final class Convert {
     }
 
     /**
-     * Converts a @{link java.lang.String} to a <tt>double</tt> value. Returns the <tt>double</tt> value represented by
-     * the {@link java.lang.String}. Returns the <tt>defaultValue</tt>, if <tt>value</tt> does not represent a valid
-     * <tt>double</tt>.
+     * Converts a @{link java.lang.String} to a <code>double</code> value. Returns the <code>double</code> value
+     * represented by the {@link java.lang.String}. Returns the <code>defaultValue</code>, if <code>value</code> does
+     * not represent a valid <code>double</code>.
      *
-     * @param value the string to be converted to a <tt>double</tt>
+     * @param value the string to be converted to a <code>double</code>
      * @param defaultValue the default value
-     * @return the <tt>double</tt> value represented by <tt>value</tt> or the <tt>defaultValue</tt>
+     * @return the <code>double</code> value represented by <code>value</code> or the <code>defaultValue</code>
      *
      * @since 1.2
      */
@@ -76,13 +77,13 @@ public final class Convert {
     }
 
     /**
-     * Converts a @{link java.lang.String} to a <tt>float</tt> value. Returns the <tt>float</tt> value represented by
-     * the {@link java.lang.String}. Returns the <tt>defaultValue</tt>, if <tt>value</tt> does not represent a valid
-     * <tt>float</tt>.
+     * Converts a @{link java.lang.String} to a <code>float</code> value. Returns the <code>float</code> value
+     * represented by the {@link java.lang.String}. Returns the <code>defaultValue</code>, if <code>value</code> does
+     * not represent a valid <code>float</code>.
      *
-     * @param value the string to be converted to a <tt>float</tt>
+     * @param value the string to be converted to a <code>float</code>
      * @param defaultValue the default value
-     * @return the <tt>float</tt> value represented by <tt>value</tt> or the <tt>defaultValue</tt>
+     * @return the <code>float</code> value represented by <code>value</code> or the <code>defaultValue</code>
      *
      * @since 2.0
      */
@@ -96,13 +97,13 @@ public final class Convert {
     }
 
     /**
-     * Converts a @{link java.lang.String} to an <tt>int</tt> value. Returns the <tt>int</tt> value represented by the
-     * {@link java.lang.String}. Returns the <tt>defaultValue</tt>, if <tt>value</tt> does not represent a valid
-     * <tt>int</tt>.
+     * Converts a @{link java.lang.String} to an <code>int</code> value. Returns the <code>int</code> value represented
+     * by the {@link java.lang.String}. Returns the <code>defaultValue</code>, if <code>value</code> does not represent
+     * a valid <code>int</code>.
      *
-     * @param value the string to be converted to a <tt>int</tt>
+     * @param value the string to be converted to a <code>int</code>
      * @param defaultValue the default value
-     * @return the <tt>int</tt> value represented by <tt>value</tt> or the <tt>defaultValue</tt>
+     * @return the <code>int</code> value represented by <code>value</code> or the <code>defaultValue</code>
      *
      * @since 1.2
      */
@@ -116,10 +117,10 @@ public final class Convert {
     }
 
     /**
-     * Creates and returns a list of <tt>double</tt> values.
+     * Creates and returns a list of <code>double</code> values.
      *
-     * @param values comma-separated <tt>double</tt> values
-     * @return a list of <tt>double</tt> values
+     * @param values comma-separated <code>double</code> values
+     * @return a list of <code>double</code> values
      *
      * @since 1.0
      */
@@ -133,10 +134,10 @@ public final class Convert {
     }
 
     /**
-     * Creates and returns a list of <tt>float</tt> values.
+     * Creates and returns a list of <code>float</code> values.
      *
-     * @param values comma-separated <tt>float</tt> values
-     * @return a list of <tt>float</tt> values
+     * @param values comma-separated <code>float</code> values
+     * @return a list of <code>float</code> values
      *
      * @since 1.0
      */
@@ -150,10 +151,10 @@ public final class Convert {
     }
 
     /**
-     * Creates and returns a list of <tt>int</tt> values.
+     * Creates and returns a list of <code>int</code> values.
      *
-     * @param values comma-separated <tt>int</tt> values
-     * @return a list of <tt>int</tt> values
+     * @param values comma-separated <code>int</code> values
+     * @return a list of <code>int</code> values
      *
      * @since 1.0
      */
@@ -179,11 +180,11 @@ public final class Convert {
     }
 
     /**
-     * Converts a <tt>boolean</tt> value to a {@link java.lang.String}. Converts <tt>true</tt> to the string
-     * <tt>"true"</tt> and <tt>false</tt> to the string <tt>"false"</tt>.
+     * Converts a <code>boolean</code> value to a {@link java.lang.String}. Converts <code>true</code> to the string
+     * <code>"true"</code> and <code>false</code> to the string <code>"false"</code>.
      *
-     * @param value the <tt>boolean</tt> value to be converted
-     * @return the {@link java.lang.String} representing the <tt>value</tt>
+     * @param value the <code>boolean</code> value to be converted
+     * @return the {@link java.lang.String} representing the <code>value</code>
      *
      * @see #toBoolean(java.lang.String, boolean)
      * @since 1.2
@@ -198,10 +199,10 @@ public final class Convert {
     }
 
     /**
-     * Converts a <tt>double</tt> value to a {@link java.lang.String}.
+     * Converts a <code>double</code> value to a {@link java.lang.String}.
      *
-     * @param value the <tt>double</tt> value to be converted
-     * @return the {@link java.lang.String} representing the <tt>value</tt>
+     * @param value the <code>double</code> value to be converted
+     * @return the {@link java.lang.String} representing the <code>value</code>
      *
      * @see #toDouble(java.lang.String, double)
      * @see #toString(double, int)
@@ -212,13 +213,13 @@ public final class Convert {
     }
 
     /**
-     * Converts a <tt>double</tt> value to a {@link java.lang.String}, rounding to the specified number of decimal
+     * Converts a <code>double</code> value to a {@link java.lang.String}, rounding to the specified number of decimal
      * places.
      *
-     * @param value the <tt>double</tt> value to be converted
+     * @param value the <code>double</code> value to be converted
      * @param decimalPlaces the number of decimal places to round to
-     * @return the {@link java.lang.String} representing the <tt>value</tt>
-     * @throws IllegalArgumentException if <tt>decimalPlaces</tt> is negative
+     * @return the {@link java.lang.String} representing the <code>value</code>
+     * @throws IllegalArgumentException if <code>decimalPlaces</code> is negative
      *
      * @see #toDouble(java.lang.String, double)
      * @see #toString(double)
@@ -234,10 +235,10 @@ public final class Convert {
     }
 
     /**
-     * Converts an <tt>int</tt> value to a {@link java.lang.String}.
+     * Converts an <code>int</code> value to a {@link java.lang.String}.
      *
-     * @param value the <tt>int</tt> value to be converted
-     * @return the {@link java.lang.String} representing the <tt>value</tt>
+     * @param value the <code>int</code> value to be converted
+     * @return the {@link java.lang.String} representing the <code>value</code>
      *
      * @see #toInt(java.lang.String, int)
      * @since 1.2

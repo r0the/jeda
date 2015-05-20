@@ -18,13 +18,15 @@ package ch.jeda.ui;
 
 import ch.jeda.Jeda;
 import ch.jeda.JedaInternal;
+import ch.jeda.event.PushButton;
 import ch.jeda.event.Event;
 import ch.jeda.event.EventQueue;
 import ch.jeda.event.EventType;
 import ch.jeda.event.Key;
 import ch.jeda.event.KeyEvent;
 import ch.jeda.event.PointerEvent;
-import ch.jeda.event.ScrollEvent;
+import ch.jeda.event.PointerListener;
+import ch.jeda.event.WheelEvent;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
 import ch.jeda.platform.ViewCallback;
@@ -65,6 +67,7 @@ public class View {
     private final EventQueue eventQueue;
     private final Set<Element> pendingInsertions;
     private final Set<Element> pendingRemovals;
+    private final UserScroll userScroll;
     private Canvas background;
     private Element[] elements;
     private Canvas foreground;
@@ -134,11 +137,13 @@ public class View {
         pendingInsertions = new HashSet<Element>();
         pendingRemovals = new HashSet<Element>();
         elements = new Element[0];
-        scale = 1f;
+        scale = 100f;
         title = Jeda.getProgramName();
+        userScroll = new UserScroll(this);
         resetImp(width, height, toSet(features));
         Jeda.addEventListener(eventQueue);
         Jeda.addEventListener(new EventLoop(this));
+        eventQueue.addListener(userScroll);
     }
 
     /**
@@ -449,8 +454,8 @@ public class View {
 
             resetImp(imp.getWidth(), imp.getHeight(), featureSet);
         }
-        else if (feature == ViewFeature.SCROLLABLE) {
-            eventQueue.setDragEnabled(enabled);
+        else if (feature == ViewFeature.USER_SCROLL) {
+            userScroll.setEnabled(enabled);
         }
         else {
             imp.setFeature(feature, enabled);
@@ -483,8 +488,7 @@ public class View {
      * @since 2.0
      */
     public final void setScale(final double scale) {
-        this.scale = (float) scale;
-        updateWorldTransformation();
+        setScale((float) scale);
     }
 
     /**
@@ -496,7 +500,8 @@ public class View {
      */
     public final void setScale(final float scale) {
         this.scale = scale;
-        updateWorldTransformation();
+        foreground.setScale(scale);
+        background.setScale(scale);
     }
 
     /**
@@ -607,7 +612,7 @@ public class View {
 
         imp = JedaInternal.createViewImp(callback, width, height, features);
         imp.setTitle(title);
-        eventQueue.setDragEnabled(features.contains(ViewFeature.SCROLLABLE));
+        userScroll.setEnabled(features.contains(ViewFeature.USER_SCROLL));
 
         foreground = new Canvas(imp.getForeground());
         background = new Canvas(imp.getBackground());
@@ -648,7 +653,7 @@ public class View {
 
     private void updateWorldTransformation() {
         foreground.resetTransformation();
-        foreground.scale(scale);
+//        foreground.scale(scale);
         foreground.translate(translationX, translationY);
 
 //        background.resetTransformation();
@@ -704,27 +709,72 @@ public class View {
         }
 
         @Override
-        public void postPointerDown(Object source, int pointerId, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, x, y));
+        public void postPointerDown(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, pressedButtons, x, y));
         }
 
         @Override
-        public void postPointerMoved(Object source, int pointerId, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, x, y));
+        public void postPointerMoved(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, pressedButtons, x, y));
         }
 
         @Override
-        public void postPointerUp(Object source, int pointerId, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, x, y));
+        public void postPointerUp(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, pressedButtons, x, y));
         }
 
         @Override
-        public void postScroll(Object source, float dx, float dy) {
-            postEvent(new ScrollEvent(source, dx, dy));
+        public void postWheel(Object source, float rotation) {
+            postEvent(new WheelEvent(source, rotation));
         }
 
         private void postEvent(final Event event) {
             view.eventQueue.addEvent(event);
+        }
+    }
+
+    private static class UserScroll implements PointerListener {
+
+        private final View view;
+        private PointerEvent lastDragEvent;
+        private boolean enabled;
+
+        public UserScroll(final View view) {
+            this.view = view;
+            enabled = false;
+            lastDragEvent = null;
+        }
+
+        public void setEnabled(final boolean enabled) {
+            this.enabled = enabled;
+            if (!this.enabled) {
+                lastDragEvent = null;
+            }
+        }
+
+        @Override
+        public void onPointerDown(PointerEvent event) {
+
+            if (enabled && lastDragEvent == null) {
+                lastDragEvent = event;
+            }
+        }
+
+        @Override
+        public void onPointerMoved(PointerEvent event) {
+            if ((lastDragEvent != null) && (event.getPointerId() == lastDragEvent.getPointerId())) {
+                float dx = lastDragEvent.getX() - event.getX();
+                float dy = lastDragEvent.getY() - event.getY();
+                view.translate(dx, dy);
+                lastDragEvent = event;
+            }
+        }
+
+        @Override
+        public void onPointerUp(PointerEvent event) {
+            if (lastDragEvent != null && lastDragEvent.getPointerId() == event.getPointerId()) {
+                lastDragEvent = null;
+            }
         }
     }
 

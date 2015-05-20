@@ -47,6 +47,8 @@ public interface CanvasImp {
 
     int getHeight();
 
+    int getDpi();
+
     Color getPixel(int x, int y);
 
     int getWidth();

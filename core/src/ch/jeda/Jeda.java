@@ -33,7 +33,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Properties;
 import org.xml.sax.XMLReader;
 
 /**
@@ -41,7 +40,7 @@ import org.xml.sax.XMLReader;
  * ist running on.
  *
  * @since 1.0
- * @version 3
+ * @version 2
  */
 public final class Jeda {
 
@@ -54,7 +53,7 @@ public final class Jeda {
      * <li>{@link ch.jeda.event.EventType#TICK} events from the Jeda engine
      * <li>{@link ch.jeda.event.EventType#SENSOR} events from the system
      * </ul>
-     * Has no effect if <tt>listener</tt> is <tt>null</tt>.
+     * Has no effect if <code>listener</code> is <code>null</code>.
      *
      * @param listener the listener to add
      *
@@ -144,7 +143,7 @@ public final class Jeda {
      * <img src="../../android.png"> All available sensor types are supported.
      *
      * @param sensorType the type of sensor to check for
-     * @return <tt>true</tt> if the specified sensor type is available on the device, otherwise <tt>false</tt>
+     * @return <code>true</code> if the specified sensor type is available on the device, otherwise <code>false</code>
      *
      * @see #disableSensor(ch.jeda.event.SensorType)
      * @see #enableSensor(ch.jeda.event.SensorType)
@@ -163,8 +162,8 @@ public final class Jeda {
      * <img src="../../android.png"> All available sensor types are supported.
      *
      * @param sensorType the type of sensor to check for
-     * @return <tt>true</tt> if the sensor of the specified type is currently enabled on the device, otherwise
-     * <tt>false</tt>
+     * @return <code>true</code> if the sensor of the specified type is currently enabled on the device, otherwise
+     * <code>false</code>
      *
      * @see #disableSensor(ch.jeda.event.SensorType)
      * @see #enableSensor(ch.jeda.event.SensorType)
@@ -182,7 +181,7 @@ public final class Jeda {
      * <p>
      * <img src="../../android.png"> Virtual keyboard is supported.
      *
-     * @return <tt>true</tt> if the virtual keyboard is visible, otherwise <tt>false</tt>
+     * @return <code>true</code> if the virtual keyboard is visible, otherwise <code>false</code>
      *
      * @see #setVirtualKeyboardVisible(boolean)
      * @since 1.3
@@ -193,12 +192,13 @@ public final class Jeda {
 
     /**
      * Loads a text file and returns the content as a list of Strings. Each line of the text file will be represented by
-     * a <tt>String</tt> in the returned array. Returns <tt>null</tt> if the file is not present or cannot be read.
+     * a <code>String</code> in the returned array. Returns <code>null</code> if the file is not present or cannot be
+     * read.
      *
      * To read a resource file, put 'res:' in front of the file path.
      *
      * @param path path to the file
-     * @return lines of the file as an array of <tt>String</tt>
+     * @return lines of the file as an array of <code>String</code>
      * @since 1.0
      */
     public static String[] loadTextFile(final String path) {
@@ -232,7 +232,7 @@ public final class Jeda {
 
     /**
      * Removes an event listener from the Jeda engine. The listener will no longer receive events. Has no effect if
-     * <tt>listener</tt> is <tt>null</tt>.
+     * <code>listener</code> is <code>null</code>.
      *
      * @param listener the listener to remove
      *

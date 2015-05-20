@@ -100,11 +100,6 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
     }
 
     @Override
-    public int getDpi() {
-        return 96;
-    }
-
-    @Override
     public EnumSet<ViewFeature> getFeatures() {
         return features;
     }
@@ -243,27 +238,31 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
 
     @Override
     public void mouseDragged(final MouseEvent event) {
-        callback.postPointerMoved(MOUSE, POINTER_ID, event.getX(), event.getY());
+        callback.postPointerMoved(MOUSE, POINTER_ID, Mapper.mapButtons(event.getModifiers()),
+                                  event.getX(), event.getY());
     }
 
     @Override
     public void mouseEntered(final MouseEvent event) {
         if (features.contains(ViewFeature.HOVERING_POINTER)) {
-            callback.postPointerDown(MOUSE, POINTER_ID, event.getX(), event.getY());
+            callback.postPointerDown(MOUSE, POINTER_ID, Mapper.mapButtons(event.getModifiers()),
+                                     event.getX(), event.getY());
         }
     }
 
     @Override
     public void mouseExited(final MouseEvent event) {
         if (features.contains(ViewFeature.HOVERING_POINTER)) {
-            callback.postPointerUp(MOUSE, POINTER_ID, event.getX(), event.getY());
+            callback.postPointerUp(MOUSE, POINTER_ID, Mapper.mapButtons(event.getModifiers()),
+                                   event.getX(), event.getY());
         }
     }
 
     @Override
     public void mouseMoved(final MouseEvent event) {
         if (features.contains(ViewFeature.HOVERING_POINTER)) {
-            callback.postPointerMoved(MOUSE, POINTER_ID, event.getX(), event.getY());
+            callback.postPointerMoved(MOUSE, POINTER_ID, Mapper.mapButtons(event.getModifiers()),
+                                      event.getX(), event.getY());
         }
     }
 
@@ -275,7 +274,8 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
         }
 
         if (!features.contains(ViewFeature.HOVERING_POINTER)) {
-            callback.postPointerDown(MOUSE, POINTER_ID, event.getX(), event.getY());
+            callback.postPointerDown(MOUSE, POINTER_ID, Mapper.mapButtons(event.getModifiers()),
+                                     event.getX(), event.getY());
         }
     }
 
@@ -287,13 +287,14 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
         }
 
         if (!features.contains(ViewFeature.HOVERING_POINTER)) {
-            callback.postPointerUp(MOUSE, POINTER_ID, event.getX(), event.getY());
+            callback.postPointerUp(MOUSE, POINTER_ID, Mapper.mapButtons(event.getModifiers()),
+                                   event.getX(), event.getY());
         }
     }
 
     @Override
     public void mouseWheelMoved(final MouseWheelEvent event) {
-        callback.postScroll(MOUSE, 0f, event.getWheelRotation());
+        callback.postWheel(MOUSE, (float) event.getPreciseWheelRotation());
     }
 
     void keyReleased(final Key key) {

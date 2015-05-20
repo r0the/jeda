@@ -65,7 +65,7 @@ public class Canvas {
         typeface = Typeface.SANS_SERIF;
         this.imp = imp;
         // TODO
-        scale = 96 / 2.54f;
+        scale = imp.getDpi() / 2.54f;
         translateY = imp.getHeight();
         imp.setAntiAliasing(antiAliasing);
         imp.setColor(color);
@@ -795,8 +795,8 @@ public class Canvas {
         imp.rotateRad(-angle, posX(0), posY(0));
     }
 
-    void scale(final float scale) {
-        imp.scale(scale);
+    void setScale(final float scale) {
+        this.scale = 100 * imp.getDpi() / 2.54f / scale;
     }
 
     void saveTransformation() {

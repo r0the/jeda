@@ -29,8 +29,6 @@ public interface ViewImp {
 
     CanvasImp getBackground();
 
-    int getDpi();
-
     CanvasImp getForeground();
 
     EnumSet<ViewFeature> getFeatures();

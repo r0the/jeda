@@ -17,8 +17,8 @@
 package ch.jeda.geometry;
 
 import ch.jeda.Data;
-import ch.jeda.Storable;
 import ch.jeda.ui.Canvas;
+import ch.jeda.Storable;
 import static ch.jeda.MathF.*;
 
 /**
@@ -36,12 +36,11 @@ public final class Circle extends Shape implements Storable {
     private final float radius;
 
     /**
-     * Constructs a circle shape. The specified radius must be positive.
+     * Constructs a circle shape. A negative radius is changed to its absolute value.
      *
      * @param centerX the horizontal coordinate of the circle's center
      * @param centerY the vertical coordinate of the circle's center
      * @param radius the radius of the circle
-     * @throws IllegalArgumentException if <code>radius</code> is not positive
      *
      * @since 2.0
      */
@@ -50,23 +49,18 @@ public final class Circle extends Shape implements Storable {
     }
 
     /**
-     * Constructs a circle shape. The specified radius must be positive.
+     * Constructs a circle shape. A negative radius is changed to it's absolute value.
      *
      * @param centerX the horizontal coordinate of the circle's center
      * @param centerY the vertical coordinate of the circle's center
      * @param radius the radius of the circle
-     * @throws IllegalArgumentException if <code>radius</code> is not positive
      *
      * @since 2.0
      */
     public Circle(final float centerX, final float centerY, final float radius) {
-        if (radius <= 0.0) {
-            throw new IllegalArgumentException("radius");
-        }
-
         this.centerX = centerX;
         this.centerY = centerY;
-        this.radius = radius;
+        this.radius = Math.abs(radius);
     }
 
     /**
@@ -79,7 +73,7 @@ public final class Circle extends Shape implements Storable {
     public Circle(final Data data) {
         this.centerX = data.readFloat(CENTER_X);
         this.centerY = data.readFloat(CENTER_Y);
-        this.radius = data.readFloat(RADIUS);
+        this.radius = Math.abs(data.readFloat(RADIUS));
     }
 
     @Override

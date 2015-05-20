@@ -74,9 +74,9 @@ public enum ViewFeature {
     ORIENTATION_PORTRAIT,
     /**
      * Enable automatic scrolling on drag for a view. If this feature is enabled, the view automatically translates
-     * pointer drag movements to scroll events.
+     * pointer drag movements to a translation of the view.
      *
      * @since 2.0
      */
-    SCROLLABLE
+    USER_SCROLL
 }

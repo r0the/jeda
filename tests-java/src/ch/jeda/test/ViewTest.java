@@ -4,14 +4,14 @@ import ch.jeda.*;
 import ch.jeda.event.*;
 import ch.jeda.ui.*;
 
-public class ViewTest extends Program implements KeyDownListener, ScrollListener {
+public class ViewTest extends Program implements KeyDownListener, WheelListener {
 
     View view;
     double angle;
 
     @Override
     public void run() {
-        view = new View(ViewFeature.SCROLLABLE);
+        view = new View(ViewFeature.USER_SCROLL);
         view.add(new TestElement());
         draw();
         view.addEventListener(this);
@@ -47,9 +47,9 @@ public class ViewTest extends Program implements KeyDownListener, ScrollListener
     }
 
     @Override
-    public void onScroll(ScrollEvent event) {
-        view.translate(-event.getDx(), -event.getDy());
-//        angle = angle + event.getDy() * 0.1;
+    public void onWheel(WheelEvent event) {
+//        view.translate(-event.getDx(), -event.getDy());
+        angle = angle + event.getRotation() * 0.1;
     }
 
     class TestElement extends Element {

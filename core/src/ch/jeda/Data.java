@@ -24,6 +24,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -124,10 +126,29 @@ public class Data {
     }
 
     /**
+     * Returns all names of values stores in this data object.
+     *
+     * @return all names of values stores in this data object
+     *
+     * @since 1.2
+     */
+    public String[] getNames() {
+        final SortedSet<String> names = new TreeSet<String>();
+        final Node child = this.element.getFirstChild();
+        while (child != null) {
+            if (child.getNodeType() == Node.ELEMENT_NODE) {
+                names.add(child.getLocalName());
+            }
+        }
+
+        return names.toArray(new String[names.size()]);
+    }
+
+    /**
      * Checks if there is a value stored for the specified name.
      *
      * @param name the name to check
-     * @return <tt>true</tt> if there is a value stored for the specified name, otherwise <tt>false</tt>
+     * @return <code>true</code> if there is a value stored for the specified name, otherwise <code>false</code>
      *
      * @since 1.2
      */
@@ -136,11 +157,29 @@ public class Data {
     }
 
     /**
-     * Returns the value associated with the specified name as a <tt>boolean</tt>. Returns the <tt>false</tt>, if there
-     * is no valid <tt>boolean</tt> value associated with the name.
+     * Checks if the data object is empty.
+     *
+     * @return <code>true</code> if the data object is empty, otherwise <code>false</code>
+     *
+     * @since 1.2
+     */
+    public boolean isEmpty() {
+        final Node child = this.element.getFirstChild();
+        while (child != null) {
+            if (child.getNodeType() == Node.ELEMENT_NODE) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns the value associated with the specified name as a <code>boolean</code>. Returns the <code>false</code>,
+     * if there is no valid <code>boolean</code> value associated with the name.
      *
      * @param name the name of the value to retrieve
-     * @return the <tt>boolean</tt> value associated with the name or <tt>false</tt>
+     * @return the <code>boolean</code> value associated with the name or <code>false</code>
      *
      * @since 1.2
      */
@@ -149,12 +188,12 @@ public class Data {
     }
 
     /**
-     * Returns the value associated with the specified name as a <tt>boolean</tt>. Returns <tt>defaultValue</tt>, if
-     * there is no valid <tt>boolean</tt> value associated with the name.
+     * Returns the value associated with the specified name as a <code>boolean</code>. Returns
+     * <code>defaultValue</code>, if there is no valid <code>boolean</code> value associated with the name.
      *
      * @param name the name of the value to retrieve
      * @param defaultValue the default value
-     * @return the <tt>boolean</tt> value associated with the name or <tt>defaultValue</tt>
+     * @return the <code>boolean</code> value associated with the name or <code>defaultValue</code>
      *
      * @since 1.2
      */
@@ -202,11 +241,11 @@ public class Data {
     }
 
     /**
-     * Returns the value associated with the specified name as a <tt>double</tt>. Returns <tt>0.0</tt>, if there is no
-     * valid <tt>double</tt> value associated with the name.
+     * Returns the value associated with the specified name as a <code>double</code>. Returns <code>0.0</code>, if there
+     * is no valid <code>double</code> value associated with the name.
      *
      * @param name the name of the value to retrieve
-     * @return the <tt>double</tt> value associated with the name or <tt>defaultValue</tt>
+     * @return the <code>double</code> value associated with the name or <code>defaultValue</code>
      *
      * @since 1.2
      */
@@ -215,12 +254,12 @@ public class Data {
     }
 
     /**
-     * Returns the value associated with the specified name as a <tt>double</tt>. Returns <tt>defaultValue</tt>, if
-     * there is no valid <tt>double</tt> value associated with the name.
+     * Returns the value associated with the specified name as a <code>double</code>. Returns <code>defaultValue</code>,
+     * if there is no valid <code>double</code> value associated with the name.
      *
      * @param name the name of the value to retrieve
      * @param defaultValue the default value
-     * @return the <tt>double</tt> value associated with the name or <tt>defaultValue</tt>
+     * @return the <code>double</code> value associated with the name or <code>defaultValue</code>
      *
      * @since 1.2
      */
@@ -268,11 +307,11 @@ public class Data {
     }
 
     /**
-     * Returns the value associated with the specified name as a <tt>float</tt>. Returns <tt>0.0</tt>, if there is no
-     * valid <tt>float</tt> value associated with the name.
+     * Returns the value associated with the specified name as a <code>float</code>. Returns <code>0.0</code>, if there
+     * is no valid <code>float</code> value associated with the name.
      *
      * @param name the name of the value to retrieve
-     * @return the <tt>float</tt> value associated with the name or <tt>defaultValue</tt>
+     * @return the <code>float</code> value associated with the name or <code>defaultValue</code>
      *
      * @since 2.0
      */
@@ -281,12 +320,12 @@ public class Data {
     }
 
     /**
-     * Returns the value associated with the specified name as a <tt>float</tt>. Returns <tt>defaultValue</tt>, if there
-     * is no valid <tt>float</tt> value associated with the name.
+     * Returns the value associated with the specified name as a <code>float</code>. Returns <code>defaultValue</code>,
+     * if there is no valid <code>float</code> value associated with the name.
      *
      * @param name the name of the value to retrieve
      * @param defaultValue the default value
-     * @return the <tt>float</tt> value associated with the name or <tt>defaultValue</tt>
+     * @return the <code>float</code> value associated with the name or <code>defaultValue</code>
      *
      * @since 2.0
      */
@@ -334,11 +373,11 @@ public class Data {
     }
 
     /**
-     * Returns the value associated with the specified name as an <tt>int</tt>. Returns <tt>0</tt>, if there is no valid
-     * <tt>int</tt> value associated with the name.
+     * Returns the value associated with the specified name as an <code>int</code>. Returns <code>0</code>, if there is
+     * no valid <code>int</code> value associated with the name.
      *
      * @param name the name of the value to retrieve
-     * @return the <tt>int</tt> value associated with the name or <tt>0</tt>
+     * @return the <code>int</code> value associated with the name or <code>0</code>
      *
      * @since 1.2
      */
@@ -347,12 +386,12 @@ public class Data {
     }
 
     /**
-     * Returns the value associated with the specified name as an <tt>int</tt>. Returns <tt>defaultValue</tt>, if there
-     * is no valid <tt>int</tt> value associated with the name.
+     * Returns the value associated with the specified name as an <code>int</code>. Returns <code>defaultValue</code>,
+     * if there is no valid <code>int</code> value associated with the name.
      *
      * @param name the name of the value to retrieve
      * @param defaultValue the default value
-     * @return the <tt>int</tt> value associated with the name or <tt>defaultValue</tt>
+     * @return the <code>int</code> value associated with the name or <code>defaultValue</code>
      *
      * @since 1.2
      */
@@ -415,11 +454,11 @@ public class Data {
 
     /**
      * Returns the value associated with the specified name as a {@link ch.jeda.event.Key}. Returns
-     * <tt>defaultValue</tt>, if there is no valid {@link ch.jeda.event.Key} value associated with the name.
+     * <code>defaultValue</code>, if there is no valid {@link ch.jeda.event.Key} value associated with the name.
      *
      * @param name the name of the value to retrieve
      * @param defaultValue the default value
-     * @return the {@link ch.jeda.event.Key} value associated with the name or <tt>defaultValue</tt>
+     * @return the {@link ch.jeda.event.Key} value associated with the name or <code>defaultValue</code>
      *
      * @since 1.2
      */
@@ -477,11 +516,11 @@ public class Data {
 
     /**
      * Reads an {@link ch.jeda.Storable} object with the specified name. Creates a new object from the information
-     * stored in this data. Returns <tt>null</tt>, there is no valid object associated with the name.
+     * stored in this data. Returns <code>null</code>, there is no valid object associated with the name.
      *
      * @param <T> the class of the object to return
      * @param name the name of the object to retrieve
-     * @return the {@link ch.jeda.Storable} object associated with the name or <tt>null</tt>
+     * @return the {@link ch.jeda.Storable} object associated with the name or <code>null</code>
      *
      * @since 1.2
      */
@@ -491,12 +530,12 @@ public class Data {
 
     /**
      * Reads an {@link ch.jeda.Storable} object with the specified name. Creates a new object from the information
-     * stored in this data. Returns <tt>defaultValue</tt>, there is no valid object associated with the name.
+     * stored in this data. Returns <code>defaultValue</code>, there is no valid object associated with the name.
      *
      * @param <T> the class of the object to return
      * @param name the name of the object to retrieve
      * @param defaultValue the default value
-     * @return the {@link ch.jeda.Storable} object associated with the name or <tt>defaultValue</tt>
+     * @return the {@link ch.jeda.Storable} object associated with the name or <code>defaultValue</code>
      *
      * @since 1.2
      */
@@ -533,11 +572,11 @@ public class Data {
     }
 
     /**
-     * Returns the value associated with the specified name as a {@link java.lang.String}. Returns <tt>null</tt>, if
+     * Returns the value associated with the specified name as a {@link java.lang.String}. Returns <code>null</code>, if
      * there is no valid {@link java.lang.String} value associated with the name.
      *
      * @param name the name of the value to retrieve
-     * @return the {@link java.lang.String} value associated with the name or <tt>null</tt>
+     * @return the {@link java.lang.String} value associated with the name or <code>null</code>
      *
      * @since 1.2
      */
@@ -547,11 +586,11 @@ public class Data {
 
     /**
      * Returns the value associated with the specified name as a {@link java.lang.String}. Returns
-     * <tt>defaultValue</tt>, if there is no valid {@link java.lang.String} value associated with the name.
+     * <code>defaultValue</code>, if there is no valid {@link java.lang.String} value associated with the name.
      *
      * @param name the name of the value to retrieve
      * @param defaultValue the default value
-     * @return the {@link java.lang.String} value associated with the name or <tt>defaultValue</tt>
+     * @return the {@link java.lang.String} value associated with the name or <code>defaultValue</code>
      *
      * @since 1.2
      */
@@ -663,7 +702,7 @@ public class Data {
      *
      * @param name the name of the value
      * @param value the value to store
-     * @throws NullPointerException if <tt>name</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -682,7 +721,7 @@ public class Data {
      *
      * @param name the name of the value
      * @param values the array of values to store
-     * @throws NullPointerException if <tt>name</tt> or <tt>values</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -707,7 +746,7 @@ public class Data {
      *
      * @param name the name of the value
      * @param value the value to store
-     * @throws NullPointerException if <tt>name</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -726,7 +765,7 @@ public class Data {
      *
      * @param name the name of the value
      * @param values the array of values to store
-     * @throws NullPointerException if <tt>name</tt> or <tt>values</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -751,7 +790,7 @@ public class Data {
      *
      * @param name the name of the value
      * @param value the value to store
-     * @throws NullPointerException if <tt>name</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -770,7 +809,7 @@ public class Data {
      *
      * @param name the name of the value
      * @param values the array of values to store
-     * @throws NullPointerException if <tt>name</tt> or <tt>values</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -795,7 +834,7 @@ public class Data {
      *
      * @param name the name of the value
      * @param value the value to store
-     * @throws NullPointerException if <tt>name</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -814,7 +853,7 @@ public class Data {
      *
      * @param name the name of the value
      * @param values the array of values to store
-     * @throws NullPointerException if <tt>name</tt> or <tt>values</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -835,12 +874,12 @@ public class Data {
 
     /**
      * Stores the specified value with the specified name in the data object. Overwrites any previously stored value
-     * with the same name. A <tt>null</tt> value is not added to the data. Instead, a previously stored value with the
-     * same name is removed.
+     * with the same name. A <code>null</code> value is not added to the data. Instead, a previously stored value with
+     * the same name is removed.
      *
      * @param name the name of the value
      * @param value the value to store
-     * @throws NullPointerException if <tt>name</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -859,7 +898,7 @@ public class Data {
      *
      * @param name the name of the value
      * @param values the array of values to store
-     * @throws NullPointerException if <tt>name</tt> or <tt>values</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -883,7 +922,7 @@ public class Data {
      *
      * @param name the name of the object
      * @param value the {@link ch.jeda.Storable} object to store
-     * @throws NullPointerException if <tt>name</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -901,7 +940,7 @@ public class Data {
      *
      * @param name the name of the array
      * @param values the array of {@link ch.jeda.Storable} objects to store
-     * @throws NullPointerException if <tt>name</tt> or <tt>values</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -926,7 +965,7 @@ public class Data {
      *
      * @param name the name of the value
      * @param value the value to store
-     * @throws NullPointerException if <tt>name</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> is <code>null</code>
      *
      * @since 1.2
      */
@@ -945,7 +984,7 @@ public class Data {
      *
      * @param name the name of the value
      * @param values the array of values to store
-     * @throws NullPointerException if <tt>name</tt> or <tt>values</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
      *
      * @since 1.2
      */

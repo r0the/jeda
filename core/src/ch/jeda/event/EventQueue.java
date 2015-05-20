@@ -48,13 +48,11 @@ public final class EventQueue {
     private final List<PointerDownListener> pointerDownListeners;
     private final List<PointerMovedListener> pointerMovedListeners;
     private final List<PointerUpListener> pointerUpListeners;
-    private final List<ScrollListener> scrollListeners;
     private final List<SensorListener> sensorListeners;
     private final List<TickListener> tickListeners;
-    private boolean dragEnabled;
+    private final List<WheelListener> wheelListeners;
     private List<Event> eventsIn;
     private List<Event> eventsOut;
-    private PointerEvent lastDragEvent;
 
     /**
      * Constructs a new event queue.
@@ -78,13 +76,11 @@ public final class EventQueue {
         pointerDownListeners = new ArrayList<PointerDownListener>();
         pointerMovedListeners = new ArrayList<PointerMovedListener>();
         pointerUpListeners = new ArrayList<PointerUpListener>();
-        scrollListeners = new ArrayList<ScrollListener>();
+        wheelListeners = new ArrayList<WheelListener>();
         sensorListeners = new ArrayList<SensorListener>();
         tickListeners = new ArrayList<TickListener>();
-        dragEnabled = false;
         eventsIn = new ArrayList<Event>();
         eventsOut = new ArrayList<Event>();
-        lastDragEvent = null;
     }
 
     /**
@@ -184,18 +180,6 @@ public final class EventQueue {
         }
     }
 
-    /**
-     * Enables or disables drag mode for this event queue. When the drag mode is enabled, unhandled pointer events are
-     * automatically converted to scroll events.
-     *
-     * @param dragEnabled is the drag mode enabled
-     *
-     * @since 2.0
-     */
-    public void setDragEnabled(final boolean dragEnabled) {
-        this.dragEnabled = dragEnabled;
-    }
-
     private void dispatchEvent(final Event event) {
         // Pending listener operations must be processed before every event dispatch. Otherwise, an event might be
         // delivered to a listener that has been removed during the last event dispatch.
@@ -231,14 +215,14 @@ public final class EventQueue {
             case POINTER_UP:
                 dispatchPointerUpEvent((PointerEvent) event);
                 break;
-            case SCROLL:
-                dispatchScrollEvent((ScrollEvent) event);
-                break;
             case SENSOR:
                 dispatchSensorEvent((SensorEvent) event);
                 break;
             case TICK:
                 dispatchTickEvent((TickEvent) event);
+                break;
+            case WHEEL:
+                dispatchWheelEvent((WheelEvent) event);
                 break;
         }
     }
@@ -353,10 +337,6 @@ public final class EventQueue {
 
             ++i;
         }
-
-        if (dragEnabled && !event.isConsumed() && lastDragEvent == null) {
-            lastDragEvent = event;
-        }
     }
 
     private void dispatchPointerMovedEvent(final PointerEvent event) {
@@ -372,12 +352,6 @@ public final class EventQueue {
             ++i;
         }
 
-        if ((lastDragEvent != null) && (event.getPointerId() == lastDragEvent.getPointerId()) && !event.isConsumed()) {
-            float dx = lastDragEvent.getX() - event.getX();
-            float dy = lastDragEvent.getY() - event.getY();
-            dispatchScrollEvent(new ScrollEvent(event.getSource(), dx, dy));
-            lastDragEvent = event;
-        }
     }
 
     private void dispatchPointerUpEvent(final PointerEvent event) {
@@ -385,24 +359,6 @@ public final class EventQueue {
         while (i < pointerUpListeners.size() && !event.isConsumed()) {
             try {
                 pointerUpListeners.get(i).onPointerUp(event);
-            }
-            catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
-            }
-
-            ++i;
-        }
-
-        if (lastDragEvent != null && lastDragEvent.getPointerId() == event.getPointerId()) {
-            lastDragEvent = null;
-        }
-    }
-
-    private void dispatchScrollEvent(final ScrollEvent event) {
-        int i = 0;
-        while (i < scrollListeners.size() && !event.isConsumed()) {
-            try {
-                scrollListeners.get(i).onScroll(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -431,6 +387,20 @@ public final class EventQueue {
         while (i < tickListeners.size() && !event.isConsumed()) {
             try {
                 tickListeners.get(i).onTick(event);
+            }
+            catch (final Throwable ex) {
+                Log.err(ex, Message.EVENT_ERROR);
+            }
+
+            ++i;
+        }
+    }
+
+    private void dispatchWheelEvent(final WheelEvent event) {
+        int i = 0;
+        while (i < wheelListeners.size() && !event.isConsumed()) {
+            try {
+                wheelListeners.get(i).onWheel(event);
             }
             catch (final Throwable ex) {
                 Log.err(ex, Message.EVENT_ERROR);
@@ -486,16 +456,16 @@ public final class EventQueue {
             pointerUpListeners.add((PointerUpListener) listener);
         }
 
-        if (listener instanceof ScrollListener) {
-            scrollListeners.add((ScrollListener) listener);
-        }
-
         if (listener instanceof SensorListener) {
             sensorListeners.add((SensorListener) listener);
         }
 
         if (listener instanceof TickListener) {
             tickListeners.add((TickListener) listener);
+        }
+
+        if (listener instanceof WheelListener) {
+            wheelListeners.add((WheelListener) listener);
         }
     }
 
@@ -545,16 +515,16 @@ public final class EventQueue {
             pointerUpListeners.remove((PointerUpListener) listener);
         }
 
-        if (listener instanceof ScrollListener) {
-            scrollListeners.remove((ScrollListener) listener);
-        }
-
         if (listener instanceof SensorListener) {
             sensorListeners.remove((SensorListener) listener);
         }
 
         if (listener instanceof TickListener) {
             tickListeners.remove((TickListener) listener);
+        }
+
+        if (listener instanceof WheelListener) {
+            wheelListeners.remove((WheelListener) listener);
         }
     }
 

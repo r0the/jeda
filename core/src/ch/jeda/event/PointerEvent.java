@@ -16,15 +16,19 @@
  */
 package ch.jeda.event;
 
+import java.util.EnumSet;
+
 /**
  * Represents an event of the type {@link EventType#POINTER_DOWN}, {@link EventType#POINTER_MOVED}, or
  * {@link EventType#POINTER_UP}.
  *
+ * @version 2
  * @since 1.0
  */
 public final class PointerEvent extends Event {
 
     private final int pointerId;
+    private final EnumSet<PushButton> pressedButtons;
     private final float x;
     private final float y;
 
@@ -34,28 +38,17 @@ public final class PointerEvent extends Event {
      * @param source the event source that generates the event
      * @param type the event type
      * @param pointerId the id of the pointer
-     *
-     * @since 1.0
-     */
-    public PointerEvent(final Object source, final EventType type, final int pointerId) {
-        this(source, type, pointerId, -1, -1);
-    }
-
-    /**
-     * Constructs a pointer event.
-     *
-     * @param source the event source that generates the event
-     * @param type the event type
-     * @param pointerId the id of the pointer
+     * @param pressedButtons the currently pressed buttons
      * @param x the x coordinate of the pointer
      * @param y the y coordinate of the pointer
      *
      * @since 1.0
      */
     public PointerEvent(final Object source, final EventType type, final int pointerId,
-                        final float x, final float y) {
+                        final EnumSet<PushButton> pressedButtons, final float x, final float y) {
         super(source, type);
         this.pointerId = pointerId;
+        this.pressedButtons = pressedButtons;
         this.x = x;
         this.y = y;
     }
@@ -78,8 +71,8 @@ public final class PointerEvent extends Event {
      *
      * @since 1.0
      */
-    public final float getX() {
-        return x;
+    public final int getX() {
+        return (int) x;
     }
 
     /**
@@ -89,8 +82,20 @@ public final class PointerEvent extends Event {
      *
      * @since 1.0
      */
-    public final float getY() {
-        return y;
+    public final int getY() {
+        return (int) y;
+    }
+
+    /**
+     * Checks if a button is currently pressed.
+     *
+     * @param button the button to check
+     * @return <code>true</code> if the specified button is pressed, otherwise <code>false</code>
+     *
+     * @since 2.0
+     */
+    public final boolean isPressed(final PushButton button) {
+        return pressedButtons.contains(button);
     }
 
     @Override

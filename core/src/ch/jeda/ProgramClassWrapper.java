@@ -19,7 +19,6 @@ package ch.jeda;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.util.Properties;
 
 abstract class ProgramClassWrapper {
 
@@ -100,7 +99,7 @@ abstract class ProgramClassWrapper {
     }
 
     private static String programName(final Class<?> programClass, final Properties properties) {
-        final String name = properties.getProperty(programClass.getName());
+        final String name = properties.getString(programClass.getName());
         if (name == null) {
             return programClass.getSimpleName();
         }

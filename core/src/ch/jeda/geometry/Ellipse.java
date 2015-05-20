@@ -17,8 +17,8 @@
 package ch.jeda.geometry;
 
 import ch.jeda.Data;
-import ch.jeda.Storable;
 import ch.jeda.ui.Canvas;
+import ch.jeda.Storable;
 import static ch.jeda.MathF.*;
 
 /**
@@ -38,13 +38,12 @@ public final class Ellipse extends Shape implements Storable {
     private final float radiusY;
 
     /**
-     * Constructs a new ellipse shape. With and height must be positive.
+     * Constructs a new ellipse shape. A negative radius is changed to its absolute value.
      *
      * @param centerX the horizontal coordinate of the ellipse's center
      * @param centerY the vertical coordinate of the ellipse's center
      * @param radiusX the horizontal radius of the ellipse
      * @param radiusY the vertical radius of the ellipse
-     * @throws IllegalArgumentException if <code>rx</code> or <code>ry</code> are not positive
      *
      * @since 2.0
      */
@@ -53,29 +52,20 @@ public final class Ellipse extends Shape implements Storable {
     }
 
     /**
-     * Constructs a new ellipse shape. With and height must be positive.
+     * Constructs a new ellipse shape. A negative radius is changed to its absolute value.
      *
      * @param centerX the horizontal coordinate of the ellipse's center
      * @param centerY the vertical coordinate of the ellipse's center
      * @param radiusX the horizontal radius of the ellipse
      * @param radiusY the vertical radius of the ellipse
-     * @throws IllegalArgumentException if <code>rx</code> or <code>ry</code> are not positive
      *
      * @since 2.0
      */
     public Ellipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
-        if (radiusX <= 0.0) {
-            throw new IllegalArgumentException("radiusX");
-        }
-
-        if (radiusY <= 0.0) {
-            throw new IllegalArgumentException("radiusY");
-        }
-
         this.centerX = centerX;
         this.centerY = centerY;
-        this.radiusX = radiusX;
-        this.radiusY = radiusY;
+        this.radiusX = Math.abs(radiusX);
+        this.radiusY = Math.abs(radiusY);
     }
 
     /**
@@ -88,8 +78,8 @@ public final class Ellipse extends Shape implements Storable {
     public Ellipse(final Data data) {
         this.centerX = data.readFloat(CENTER_X);
         this.centerY = data.readFloat(CENTER_Y);
-        this.radiusX = data.readFloat(RADIUS_X);
-        this.radiusY = data.readFloat(RADIUS_Y);
+        this.radiusX = Math.abs(data.readFloat(RADIUS_X));
+        this.radiusY = Math.abs(data.readFloat(RADIUS_Y));
     }
 
     @Override

@@ -17,49 +17,28 @@
 package ch.jeda.event;
 
 /**
- * Represents an event of the type {@link ch.jeda.event.EventType#SCROLL}.
+ * Represents a button on an input device.
  *
  * @since 2.0
  */
-public class ScrollEvent extends Event {
-
-    private final float dx;
-    private final float dy;
+public enum PushButton {
 
     /**
-     * Constructs a wheel event.
-     *
-     * @param source the event source
-     * @param dx the horizontal scroll distance
-     * @param dy the vertical scroll distance
+     * Represents the middle mouse button.
      *
      * @since 2.0
      */
-    public ScrollEvent(final Object source, final float dx, final float dy) {
-        super(source, EventType.SCROLL);
-        this.dx = dx;
-        this.dy = dy;
-    }
-
+    MIDDLE,
     /**
-     * Returns the horizontal scroll distance.
-     *
-     * @return the horizontal scroll distance
+     * Represents the primary mouse button (usually left).
      *
      * @since 2.0
      */
-    public final float getDx() {
-        return dx;
-    }
-
+    PRIMARY,
     /**
-     * Returns the vertical scroll distance.
-     *
-     * @return the vertical scroll distance
+     * Represents the secondary mouse button (usually right).
      *
      * @since 2.0
      */
-    public final float getDy() {
-        return dy;
-    }
+    SECONDARY
 }
