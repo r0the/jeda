@@ -12,14 +12,14 @@ public class TextTest extends Program implements ActionListener {
     @Override
     public void run() {
         view = new View();
-        text = new Text(view.getWidth() / 2, view.getHeight() / 2, "Sample Text");
+        text = new Text((int) view.getWidth() / 2, (int) view.getHeight() / 2, "Sample Text");
         view.add(text);
-        view.add(new Button(10, 10, "A-"));
-        view.add(new Button(10, 70, "A+"));
-        view.add(new Button(10, 130, "Sans"));
-        view.add(new Button(10, 190, "Serif"));
-        view.add(new Button(10, 250, "Top Left"));
-        view.add(new Button(10, 310, "Bottom Right"));
+        view.add(new Button(1, 1, "A-"));
+        view.add(new Button(1, 2, "A+"));
+        view.add(new Button(1, 3, "Sans"));
+        view.add(new Button(1, 4, "Serif"));
+        view.add(new Button(1, 5, "Top Left"));
+        view.add(new Button(1, 6, "Bottom Right"));
 
         view.addEventListener(this);
     }

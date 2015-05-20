@@ -9,7 +9,7 @@ import ch.jeda.physics.BodyType;
 import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.*;
 
-public class PhysicsTest extends Program implements TickListener {
+public class PhysicsTest extends Program implements TickListener, ScrollListener {
 
     PhysicsView view;
     // Daten der Spielfigur
@@ -18,10 +18,15 @@ public class PhysicsTest extends Program implements TickListener {
     @Override
     public void run() {
         Jeda.setTickFrequency(60);
-        view = new PhysicsView(1400, 700, ViewFeature.DOUBLE_BUFFERED);
+        view = new PhysicsView(1400, 700, ViewFeature.SCROLLABLE);
+        view.getBackground().setColor(Color.AQUA);
+        view.getBackground().fill();
         view.setGravity(0, -9);
         view.setDebugging(true);
-        view.addWalls();
+        view.createWalls();
+        System.out.println("width=" + view.getWidth());
+        view.setScale(1);
+        view.createBox(1, 1, 2, 2, 0.5f);
 
         player = new Player();
         player.setPosition(10, 10);
@@ -48,6 +53,11 @@ public class PhysicsTest extends Program implements TickListener {
 //            fenster.drawText(10, 10, "contact!");
 //            this.contact = null;
 //        }
+    }
+
+    @Override
+    public void onScroll(ScrollEvent event) {
+        view.translate(event.getDx(), -event.getDy());
     }
 
 }

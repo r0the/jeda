@@ -16,11 +16,11 @@ public class WidgetTest extends Program implements TickListener, ActionListener 
     @Override
     public void run() {
         view = new View();
-        buttonAntique = new Button(view.getWidth() / 2, 100, Alignment.CENTER, "Antique");
+        buttonAntique = new Button(1, 3, Alignment.CENTER, "Antique");
         buttonAntique.setStyle(DefaultButtonStyle.ANTIQUE_BROWN);
         buttonAntique.setName("Init");
 
-        buttonModern = new Button(view.getWidth() / 2, 200, Alignment.CENTER, "Modern");
+        buttonModern = new Button(1, 4, Alignment.CENTER, "Modern");
         buttonModern.setStyle(DefaultButtonStyle.MODERN_GREEN);
         buttonModern.setName("Init");
 

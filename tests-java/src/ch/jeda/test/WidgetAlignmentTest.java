@@ -14,8 +14,8 @@ public class WidgetAlignmentTest extends Program {
     public void run() {
         Theme.getDefault().setButtonStyle(DefaultButtonStyle.MODERN_GREEN);
         view = new View(700, 230);
-        int w = view.getWidth();
-        int h = view.getHeight();
+        int w = (int) view.getWidth();
+        int h = (int) view.getHeight();
         view.addEventListener(this);
         view.add(new Button(OFFSET, OFFSET, Alignment.TOP_LEFT, "Top Left"));
         view.add(new Button(w / 2, OFFSET, Alignment.TOP_CENTER, "Top"));

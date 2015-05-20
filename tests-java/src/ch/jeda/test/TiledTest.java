@@ -18,7 +18,7 @@ public class TiledTest extends Program implements TickListener, ScrollListener {
     @Override
     public void run() {
         view = new PhysicsView(700, 700, ViewFeature.SCROLLABLE);
-        view.addWalls();
+        view.createWalls();
         view.setGravity(0, 0);
         view.setDebugging(true);
         map = new TiledMap("res:raw/test_xml.tmx");
