@@ -81,6 +81,11 @@ class JavaImageImp implements ImageImp {
     }
 
     @Override
+    public boolean isAvailable() {
+        return true;
+    }
+
+    @Override
     public ImageImp rotateRad(final double angle) {
         final int width = bufferedImage.getWidth();
         final int height = bufferedImage.getHeight();

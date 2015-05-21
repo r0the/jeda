@@ -17,12 +17,12 @@
 package ch.jeda.ui;
 
 /**
- * Represents a progress bar. A progress bar is a {@link ch.jeda.ui.Widget} that displays a progress percentage
+ * Represents a progress bar. A progress bar is a {@link ch.jeda.ui.OldWidget} that displays a progress percentage
  * graphically.
  *
  * @since 1.3
  */
-public class ProgressBar extends Widget {
+public class ProgressBar extends OldWidget {
 
     private ProgressBarStyle style;
     private double maximumValue;

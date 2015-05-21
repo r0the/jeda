@@ -18,7 +18,7 @@ package ch.jeda.ui;
 
 import ch.jeda.Jeda;
 import ch.jeda.JedaInternal;
-import ch.jeda.event.PushButton;
+import ch.jeda.event.Button;
 import ch.jeda.event.Event;
 import ch.jeda.event.EventQueue;
 import ch.jeda.event.EventType;
@@ -434,7 +434,7 @@ public class Window {
      */
     public void drawRectangle(final int x, final int y, final int width, final int height) {
         if (width > 0 && height > 0) {
-            imp.getForeground().drawRectangle(x, y + height, width, height);
+            imp.getForeground().drawRectangle(x, y, width, height);
         }
     }
 
@@ -1262,18 +1262,18 @@ public class Window {
         }
 
         @Override
-        public void postPointerDown(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, pressedButtons, x, y));
+        public void postPointerDown(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, pressedButtons, x, y, x, y));
         }
 
         @Override
-        public void postPointerMoved(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, pressedButtons, x, y));
+        public void postPointerMoved(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, pressedButtons, x, y, x, y));
         }
 
         @Override
-        public void postPointerUp(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, pressedButtons, x, y));
+        public void postPointerUp(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
+            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, pressedButtons, x, y, x, y));
         }
 
         @Override

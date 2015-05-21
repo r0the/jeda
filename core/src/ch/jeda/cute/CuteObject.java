@@ -155,7 +155,8 @@ public class CuteObject {
 
     protected void draw(final Canvas canvas, final double x, final double y) {
         if (objectType != null) {
-            canvas.drawImage(x, y, objectType.getImage(), Alignment.BOTTOM_CENTER);
+            canvas.setAlignment(Alignment.BOTTOM_CENTER);
+            canvas.drawImage(x, y, objectType.getImage());
         }
     }
 

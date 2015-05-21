@@ -6,26 +6,25 @@ import ch.jeda.ui.*;
 
 public class WidgetAlignmentTest extends Program {
 
-    private static final int OFFSET = 10;
-    private static final int RADIUS = 5;
+    private static final float OFFSET = 0.5f;
+    private static final double RADIUS = 0.2;
     private View view;
 
     @Override
     public void run() {
-        Theme.getDefault().setButtonStyle(DefaultButtonStyle.MODERN_GREEN);
         view = new View(700, 230);
-        int w = (int) view.getWidth();
-        int h = (int) view.getHeight();
+        float w = view.getWidth();
+        float h = view.getHeight();
         view.addEventListener(this);
-        view.add(new Button(OFFSET, OFFSET, Alignment.TOP_LEFT, "Top Left"));
-        view.add(new Button(w / 2, OFFSET, Alignment.TOP_CENTER, "Top"));
-        view.add(new Button(w - OFFSET, OFFSET, Alignment.TOP_RIGHT, "Top Right"));
-        view.add(new Button(OFFSET, h / 2, Alignment.LEFT, "Left"));
-        view.add(new Button(w / 2, h / 2, Alignment.CENTER, "Center"));
-        view.add(new Button(w - OFFSET, h / 2, Alignment.RIGHT, "Right"));
-        view.add(new Button(OFFSET, h - OFFSET, Alignment.BOTTOM_LEFT, "Bottom Left"));
-        view.add(new Button(w / 2, h - OFFSET, Alignment.BOTTOM_CENTER, "Bottom Center"));
-        view.add(new Button(w - OFFSET, h - OFFSET, Alignment.BOTTOM_RIGHT, "Bottom Right"));
+        view.add(new TextButton(OFFSET, OFFSET, Alignment.BOTTOM_LEFT, "Bottom Left"));
+        view.add(new TextButton(w / 2, OFFSET, Alignment.BOTTOM_CENTER, "Bottom Center"));
+        view.add(new TextButton(w - OFFSET, OFFSET, Alignment.BOTTOM_RIGHT, "Bottom Right"));
+        view.add(new TextButton(OFFSET, h / 2, Alignment.LEFT, "Left"));
+        view.add(new TextButton(w / 2, h / 2, Alignment.CENTER, "Center"));
+        view.add(new TextButton(w - OFFSET, h / 2, Alignment.RIGHT, "Right"));
+        view.add(new TextButton(OFFSET, h - OFFSET, Alignment.TOP_LEFT, "Top Left"));
+        view.add(new TextButton(w / 2, h - OFFSET, Alignment.TOP_CENTER, "Top Center"));
+        view.add(new TextButton(w - OFFSET, h - OFFSET, Alignment.TOP_RIGHT, "Top Right"));
         view.add(new Overlay());
     }
 
@@ -53,17 +52,17 @@ public class WidgetAlignmentTest extends Program {
 
         @Override
         public float getX() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return 0;
         }
 
         @Override
         public float getY() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return 0;
         }
 
         @Override
         public float getAngleRad() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return 0;
         }
     }
 }

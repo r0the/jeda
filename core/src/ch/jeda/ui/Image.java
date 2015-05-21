@@ -110,6 +110,19 @@ public final class Image {
     }
 
     /**
+     *
+     * @param canvas
+     * @return
+     */
+    public float getHeightOn(final Canvas canvas) {
+        return canvas.lengthToWorld(imp.getHeight());
+    }
+
+    public float getWidthOn(final Canvas canvas) {
+        return canvas.lengthToWorld(imp.getHeight());
+    }
+
+    /**
      * @deprecated Use {@link #getPixel(int, int)} instead.
      */
     public int[] getPixels(final int x, final int y, final int width, final int height) {
@@ -150,6 +163,17 @@ public final class Image {
      */
     public int getWidth() {
         return imp.getWidth();
+    }
+
+    /**
+     * Checks if the image is available.
+     *
+     * @return <code>true</code> if the image is available, otherwise <code>false</code>
+     *
+     * @since 2.0
+     */
+    public boolean isAvailable() {
+        return imp != null;
     }
 
     /**

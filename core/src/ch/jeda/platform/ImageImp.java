@@ -41,6 +41,8 @@ public interface ImageImp {
 
     int getWidth();
 
+    boolean isAvailable();
+
     ImageImp rotateRad(double angle);
 
     ImageImp scale(int width, int height);

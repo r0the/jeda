@@ -11,16 +11,16 @@ public class MusicTest extends Program implements TickListener, ActionListener {
     Music oggMusic;
     Text mp3State;
     Text oggState;
-    int x;
-    int y;
+    double x;
+    double y;
 
     @Override
     public void run() {
         view = new View();
         mp3Music = new Music("res:raw/move_forward.mp3");
         oggMusic = new Music("res:raw/evil_laugh.mp3");
-        x = 10;
-        y = 40;
+        x = 0.5;
+        y = view.getHeight() - 1.5;
 
         addButton("Play MP3");
         addButton("Pause MP3");
@@ -29,8 +29,8 @@ public class MusicTest extends Program implements TickListener, ActionListener {
         oggState = new Text(200, 10, null);
         view.add(mp3State);
         view.add(oggState);
-        x = 200;
-        y = 40;
+        x = 4.5;
+        y = view.getHeight() - 1.5;
         addButton("Play OGG");
         addButton("Pause OGG");
         addButton("Stop OGG");
@@ -38,8 +38,8 @@ public class MusicTest extends Program implements TickListener, ActionListener {
     }
 
     private void addButton(String text) {
-        view.add(new Button(x, y, text));
-        y = y + 60;
+        view.add(new TextButton(x, y, text));
+        y = y - 1.5;
     }
 
     public void onAction(ActionEvent event) {

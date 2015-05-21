@@ -16,7 +16,7 @@
  */
 package ch.jeda.ui;
 
-public class Text extends Widget {
+public class Text extends OldWidget {
 
     private static final int DEFAULT_TEXT_SIZE = 18;
     private static final Typeface DEFAULT_TYPEFACE = Typeface.SANS_SERIF;

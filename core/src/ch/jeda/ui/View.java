@@ -18,7 +18,7 @@ package ch.jeda.ui;
 
 import ch.jeda.Jeda;
 import ch.jeda.JedaInternal;
-import ch.jeda.event.PushButton;
+import ch.jeda.event.Button;
 import ch.jeda.event.Event;
 import ch.jeda.event.EventQueue;
 import ch.jeda.event.EventType;
@@ -29,6 +29,7 @@ import ch.jeda.event.PointerListener;
 import ch.jeda.event.WheelEvent;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
+import ch.jeda.event.WheelListener;
 import ch.jeda.platform.ViewCallback;
 import ch.jeda.platform.ViewImp;
 import java.lang.reflect.Array;
@@ -67,7 +68,7 @@ public class View {
     private final EventQueue eventQueue;
     private final Set<Element> pendingInsertions;
     private final Set<Element> pendingRemovals;
-    private final UserScroll userScroll;
+    private final UserControl userControl;
     private Canvas background;
     private Element[] elements;
     private Canvas foreground;
@@ -139,11 +140,11 @@ public class View {
         elements = new Element[0];
         scale = 100f;
         title = Jeda.getProgramName();
-        userScroll = new UserScroll(this);
+        userControl = new UserControl(this);
         resetImp(width, height, toSet(features));
         Jeda.addEventListener(eventQueue);
         Jeda.addEventListener(new EventLoop(this));
-        eventQueue.addListener(userScroll);
+        eventQueue.addListener(userControl);
     }
 
     /**
@@ -454,8 +455,11 @@ public class View {
 
             resetImp(imp.getWidth(), imp.getHeight(), featureSet);
         }
+        else if (feature == ViewFeature.USER_SCALE) {
+            userControl.setScalingEnabled(enabled);
+        }
         else if (feature == ViewFeature.USER_SCROLL) {
-            userScroll.setEnabled(enabled);
+            userControl.setScrollingEnabled(enabled);
         }
         else {
             imp.setFeature(feature, enabled);
@@ -500,8 +504,6 @@ public class View {
      */
     public final void setScale(final float scale) {
         this.scale = scale;
-        foreground.setScale(scale);
-        background.setScale(scale);
     }
 
     /**
@@ -533,7 +535,6 @@ public class View {
     public final void setTranslation(final double tx, final double ty) {
         translationX = (float) tx;
         translationY = (float) ty;
-        updateWorldTransformation();
     }
 
     /**
@@ -547,7 +548,6 @@ public class View {
     public final void translate(final double tx, final double ty) {
         translationX = translationX + (float) tx;
         translationY = translationY + (float) ty;
-        updateWorldTransformation();
     }
 
     /**
@@ -592,12 +592,31 @@ public class View {
         eventQueue.addEvent(event);
     }
 
+    private float toWorld(final float length) {
+        return length * scale / 100;
+    }
+
+    private float toWorldX(final float x) {
+        return x;
+    }
+
+    private float toWorldY(final float y) {
+        return y;
+    }
+
     private void tick(final TickEvent event) {
         if (imp.isVisible()) {
             updateElements();
             eventQueue.processEvents();
             foreground.copyFrom(background);
             for (int i = 0; i < elements.length; ++i) {
+                if (elements[i].isPinned()) {
+                    foreground.setWorldTransformation(100f, 0f, 0f);
+                }
+                else {
+                    foreground.setWorldTransformation(scale, translationX, translationY);
+                }
+
                 elements[i].internalDraw(foreground);
             }
 
@@ -612,14 +631,15 @@ public class View {
 
         imp = JedaInternal.createViewImp(callback, width, height, features);
         imp.setTitle(title);
-        userScroll.setEnabled(features.contains(ViewFeature.USER_SCROLL));
+        userControl.setScalingEnabled(features.contains(ViewFeature.USER_SCALE));
+        userControl.setScrollingEnabled(features.contains(ViewFeature.USER_SCROLL));
 
         foreground = new Canvas(imp.getForeground());
         background = new Canvas(imp.getBackground());
         background.setColor(Color.WHITE);
         background.fill();
         background.setColor(Color.BLACK);
-        updateWorldTransformation();
+//        updateWorldTransformation();
     }
 
     private void updateElements() {
@@ -651,16 +671,15 @@ public class View {
         }
     }
 
-    private void updateWorldTransformation() {
-        foreground.resetTransformation();
-//        foreground.scale(scale);
-        foreground.translate(translationX, translationY);
-
-//        background.resetTransformation();
-//        background.scale(scale);
-//        background.translate(translationX, translationY);
-    }
-
+//    private void updateWorldTransformation() {
+//        foreground.resetTransformation();
+////        foreground.scale(scale);
+//        foreground.translate(translationX, translationY);
+//
+////        background.resetTransformation();
+////        background.scale(scale);
+////        background.translate(translationX, translationY);
+//    }
     private static EnumSet<ViewFeature> initImpChangingFeatures() {
         final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class
         );
@@ -709,18 +728,27 @@ public class View {
         }
 
         @Override
-        public void postPointerDown(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, pressedButtons, x, y));
+        public void postPointerDown(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
+            x = view.foreground.toCanvasX(x);
+            y = view.foreground.toCanvasY(y);
+            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, pressedButtons, x, y,
+                                       view.toWorldX(x), view.toWorldY(y)));
         }
 
         @Override
-        public void postPointerMoved(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, pressedButtons, x, y));
+        public void postPointerMoved(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
+            x = view.foreground.toCanvasX(x);
+            y = view.foreground.toCanvasY(y);
+            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, pressedButtons, x, y,
+                                       view.toWorldX(x), view.toWorldY(y)));
         }
 
         @Override
-        public void postPointerUp(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, pressedButtons, x, y));
+        public void postPointerUp(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
+            x = view.foreground.toCanvasX(x);
+            y = view.foreground.toCanvasY(y);
+            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, pressedButtons, x, y,
+                                       view.toWorldX(x), view.toWorldY(y)));
         }
 
         @Override
@@ -733,47 +761,65 @@ public class View {
         }
     }
 
-    private static class UserScroll implements PointerListener {
+    private static class UserControl implements PointerListener, WheelListener {
 
         private final View view;
         private PointerEvent lastDragEvent;
-        private boolean enabled;
+        private boolean scalingEnabled;
+        private boolean scrollingEnabled;
 
-        public UserScroll(final View view) {
+        public UserControl(final View view) {
             this.view = view;
-            enabled = false;
+            scalingEnabled = false;
+            scrollingEnabled = false;
             lastDragEvent = null;
         }
 
-        public void setEnabled(final boolean enabled) {
-            this.enabled = enabled;
-            if (!this.enabled) {
+        public void setScalingEnabled(final boolean enabled) {
+            this.scalingEnabled = enabled;
+        }
+
+        public void setScrollingEnabled(final boolean enabled) {
+            this.scrollingEnabled = enabled;
+            if (!this.scrollingEnabled) {
                 lastDragEvent = null;
             }
         }
 
         @Override
-        public void onPointerDown(PointerEvent event) {
+        public void onPointerDown(final PointerEvent event) {
 
-            if (enabled && lastDragEvent == null) {
+            if (scrollingEnabled && lastDragEvent == null) {
                 lastDragEvent = event;
             }
         }
 
         @Override
-        public void onPointerMoved(PointerEvent event) {
+        public void onPointerMoved(final PointerEvent event) {
             if ((lastDragEvent != null) && (event.getPointerId() == lastDragEvent.getPointerId())) {
-                float dx = lastDragEvent.getX() - event.getX();
-                float dy = lastDragEvent.getY() - event.getY();
+                float dx = view.toWorld(lastDragEvent.getCanvasX() - event.getCanvasX());
+                float dy = view.toWorld(lastDragEvent.getCanvasY() - event.getCanvasY());
                 view.translate(dx, dy);
                 lastDragEvent = event;
             }
         }
 
         @Override
-        public void onPointerUp(PointerEvent event) {
+        public void onPointerUp(final PointerEvent event) {
             if (lastDragEvent != null && lastDragEvent.getPointerId() == event.getPointerId()) {
                 lastDragEvent = null;
+            }
+        }
+
+        @Override
+        public void onWheel(final WheelEvent event) {
+            if (scalingEnabled) {
+                if (event.getRotation() > 0f) {
+                    view.setScale(view.getScale() * 1.1);
+                }
+                else {
+                    view.setScale(view.getScale() / 1.1);
+                }
             }
         }
     }

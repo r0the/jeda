@@ -73,13 +73,13 @@ public class InputEventTest extends Program implements KeyListener,
     private String toMessage(PointerEvent event) {
         String result = Convert.toString("type=", event.getType(), ", id=", event.getPointerId(), ", x=",
                                          event.getX(), ", y=", event.getY(), ", device=", event.getSource());
-        if (event.isPressed(PushButton.PRIMARY)) {
+        if (event.isPressed(Button.PRIMARY)) {
             result += ", PRIMARY";
         }
-        if (event.isPressed(PushButton.MIDDLE)) {
-            result += ", MIDDLE";
+        if (event.isPressed(Button.TERTIARY)) {
+            result += ", TERTIARY";
         }
-        if (event.isPressed(PushButton.SECONDARY)) {
+        if (event.isPressed(Button.SECONDARY)) {
             result += ", SECONDARY";
         }
 

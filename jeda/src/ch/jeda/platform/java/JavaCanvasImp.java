@@ -43,13 +43,11 @@ class JavaCanvasImp implements CanvasImp {
     private final BufferedImage bitmap;
     private final Graphics2D graphics;
     private final Map<FontRenderContext, Map<java.awt.Font, Map<String, TextLayout>>> textLayoutCache;
-    private AffineTransform savedTransformation;
 
     JavaCanvasImp(final int width, final int height) {
         bitmap = createBufferedImage(width, height);
         graphics = bitmap.createGraphics();
         textLayoutCache = new HashMap();
-        savedTransformation = null;
     }
 
     @Override
@@ -176,25 +174,8 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void restoreTransformation() {
-        if (savedTransformation != null) {
-            graphics.setTransform(savedTransformation);
-        }
-    }
-
-    @Override
     public void rotateRad(final float angle, final float centerX, final float centerY) {
         graphics.rotate(angle, centerX, centerY);
-    }
-
-    @Override
-    public void saveTransformation() {
-        savedTransformation = graphics.getTransform();
-    }
-
-    @Override
-    public void scale(final float scale) {
-        graphics.scale(scale, scale);
     }
 
     @Override

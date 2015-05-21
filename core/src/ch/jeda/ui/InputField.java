@@ -22,12 +22,12 @@ import ch.jeda.event.PointerDownListener;
 import ch.jeda.event.PointerEvent;
 
 /**
- * Represents a text field. A text field is a {@link ch.jeda.ui.Widget} that allows the user to enter text.
+ * Represents a text field. A text field is a {@link ch.jeda.ui.OldWidget} that allows the user to enter text.
  *
  * @since 1.3
  * @version 2
  */
-public abstract class InputField extends Widget implements KeyTypedListener, PointerDownListener {
+public abstract class InputField extends OldWidget implements KeyTypedListener, PointerDownListener {
 
     private static final char HIDE_CHAR = '*';
     private String displayText;

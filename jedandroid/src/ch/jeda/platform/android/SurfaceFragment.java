@@ -91,17 +91,20 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
             case MotionEvent.ACTION_POINTER_DOWN:
                 index = event.getActionIndex();
                 callback.postPointerDown(Mapper.mapDevice(event), event.getPointerId(index),
+                                         Mapper.mapButtons(event.getButtonState()),
                                          event.getX(index), event.getY(index));
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 index = event.getActionIndex();
                 callback.postPointerUp(Mapper.mapDevice(event), event.getPointerId(index),
+                                       Mapper.mapButtons(event.getButtonState()),
                                        event.getX(index), event.getY(index));
                 break;
             case MotionEvent.ACTION_MOVE:
                 for (index = 0; index < event.getPointerCount(); ++index) {
                     callback.postPointerMoved(Mapper.mapDevice(event), event.getPointerId(index),
+                                              Mapper.mapButtons(event.getButtonState()),
                                               event.getX(index), event.getY(index));
                 }
 
@@ -143,6 +146,17 @@ class SurfaceFragment extends Fragment implements SurfaceHolder.Callback,
         else {
             return currentOrientation;
         }
+    }
+
+    void sendKeyEvent(final int keyCode) {
+        final Key key = Mapper.mapKey(keyCode);
+        if (key != null) {
+            callback.postKeyTyped(Mapper.VIRTUAL_KEYBOARD_DEVICE, key);
+        }
+    }
+
+    void sendKeyTypedEvent(final char ch) {
+        callback.postKeyTyped(Mapper.VIRTUAL_KEYBOARD_DEVICE, ch);
     }
 
     void setBitmap(final Bitmap bitmap) {

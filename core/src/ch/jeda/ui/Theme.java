@@ -24,7 +24,6 @@ package ch.jeda.ui;
  */
 public final class Theme {
 
-    private ButtonStyle buttonStyle;
     private CheckBoxStyle checkBoxStyle;
     private InputFieldStyle inputFieldStyle;
     private ProgressBarStyle progressBarStyle;
@@ -34,7 +33,6 @@ public final class Theme {
      * @since 1.3
      */
     public static final Theme ANTIQUE = new Theme(
-        DefaultButtonStyle.ANTIQUE_BEIGE,
         DefaultCheckBoxStyle.ANTIQUE_BEIGE,
         DefaultInputFieldStyle.ANTIQUE_BEIGE,
         DefaultProgressBarStyle.ANTIQUE_GREEN);
@@ -44,7 +42,6 @@ public final class Theme {
      * @since 1.3
      */
     public static final Theme MODERN = new Theme(
-        DefaultButtonStyle.MODERN_GREY,
         DefaultCheckBoxStyle.MODERN_GREEN,
         DefaultInputFieldStyle.MODERN_WHITE,
         DefaultProgressBarStyle.MODERN_GREEN);
@@ -74,23 +71,11 @@ public final class Theme {
         defaultTheme = theme;
     }
 
-    private Theme(final ButtonStyle buttonStyle, final CheckBoxStyle checkBoxStyle,
+    private Theme(final CheckBoxStyle checkBoxStyle,
                   final InputFieldStyle inputFieldStyle, final ProgressBarStyle progressBarStyle) {
-        this.buttonStyle = buttonStyle;
         this.checkBoxStyle = checkBoxStyle;
         this.inputFieldStyle = inputFieldStyle;
         this.progressBarStyle = progressBarStyle;
-    }
-
-    /**
-     * Returns the default button style of the theme.
-     *
-     * @return the default button style
-     *
-     * @since 1.3
-     */
-    public ButtonStyle getDefaultButtonStyle() {
-        return buttonStyle;
     }
 
     /**
@@ -124,17 +109,6 @@ public final class Theme {
      */
     public ProgressBarStyle getDefaultProgressBarStyle() {
         return progressBarStyle;
-    }
-
-    /**
-     * Sets the default button style of the theme.
-     *
-     * @param buttonStyle the default button style
-     *
-     * @since 1.3
-     */
-    public void setButtonStyle(final ButtonStyle buttonStyle) {
-        this.buttonStyle = buttonStyle;
     }
 
     /**

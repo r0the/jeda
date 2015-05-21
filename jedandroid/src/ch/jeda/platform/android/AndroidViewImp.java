@@ -24,12 +24,19 @@ import java.util.EnumSet;
 
 class AndroidViewImp implements ViewImp {
 
+    private final AndroidCanvasImp background;
+    private final AndroidCanvasImp foreground;
+    private final int height;
+    private final int width;
     private final SurfaceFragment surfaceFragment;
-    private final AndroidCanvasImp canvasImp;
 
     AndroidViewImp(final SurfaceFragment canvasView, final int width, final int height) {
-        canvasImp = new AndroidCanvasImp();
-        canvasImp.init(width, height);
+        this.height = height;
+        this.width = width;
+        background = new AndroidCanvasImp();
+        background.init(width, height);
+        foreground = new AndroidCanvasImp();
+        foreground.init(width, height);
         surfaceFragment = canvasView;
     }
 
@@ -37,13 +44,29 @@ class AndroidViewImp implements ViewImp {
     public void close() {
     }
 
-    public CanvasImp getCanvas() {
-        return canvasImp;
+    @Override
+    public CanvasImp getBackground() {
+        return background;
     }
 
     @Override
     public EnumSet<ViewFeature> getFeatures() {
         return surfaceFragment.getFeatures();
+    }
+
+    @Override
+    public CanvasImp getForeground() {
+        return foreground;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
     }
 
     @Override
@@ -68,26 +91,6 @@ class AndroidViewImp implements ViewImp {
 
     @Override
     public void update() {
-        surfaceFragment.setBitmap(canvasImp.getBitmap());
-    }
-
-    public CanvasImp getBackground() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public int getDpi() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public CanvasImp getForeground() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public int getHeight() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public int getWidth() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        surfaceFragment.setBitmap(foreground.getBitmap());
     }
 }

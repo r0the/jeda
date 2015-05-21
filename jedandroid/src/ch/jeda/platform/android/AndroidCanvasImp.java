@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.android;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -32,7 +33,6 @@ import ch.jeda.ui.Color;
 
 class AndroidCanvasImp implements CanvasImp {
 
-    private static final Matrix IDENTITY = new Matrix();
     private final Paint fillPaint;
     private final Paint imagePaint;
     private final Paint pixelPaint;
@@ -40,7 +40,6 @@ class AndroidCanvasImp implements CanvasImp {
     private final Paint textPaint;
     private Bitmap bitmap;
     private Canvas canvas;
-    private Matrix savedTransformation;
 
     AndroidCanvasImp() {
         fillPaint = new Paint();
@@ -64,7 +63,8 @@ class AndroidCanvasImp implements CanvasImp {
 
     @Override
     public void drawEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
-        canvas.drawOval(new RectF(centerX - radiusX, centerY - radiusY, 2 * radiusX, 2 * radiusY), strokePaint);
+        canvas.drawOval(new RectF(centerX - radiusX, centerY - radiusY, centerX + radiusX, centerY + radiusY),
+                        strokePaint);
     }
 
     @Override
@@ -113,7 +113,8 @@ class AndroidCanvasImp implements CanvasImp {
 
     @Override
     public void fillEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
-        canvas.drawOval(new RectF(centerX - radiusX, centerY - radiusY, 2f * radiusX, 2f * radiusY), fillPaint);
+        canvas.drawOval(new RectF(centerX - radiusX, centerY - radiusY, centerX + radiusX, centerY + radiusY),
+                        fillPaint);
     }
 
     @Override
@@ -128,6 +129,11 @@ class AndroidCanvasImp implements CanvasImp {
     @Override
     public void fillRectangle(final float x, final float y, final float width, final float height) {
         canvas.drawRect(x, y, x + width, y + height, fillPaint);
+    }
+
+    @Override
+    public int getDpi() {
+        return Resources.getSystem().getDisplayMetrics().densityDpi;
     }
 
     @Override
@@ -149,29 +155,14 @@ class AndroidCanvasImp implements CanvasImp {
 
     @Override
     public void resetTransformation() {
-        canvas.getMatrix(IDENTITY);
-    }
-
-    @Override
-    public void restoreTransformation() {
-        if (savedTransformation != null) {
-            canvas.setMatrix(savedTransformation);
-        }
+        Matrix matrix = new Matrix();
+        matrix.reset();
+        canvas.setMatrix(matrix);
     }
 
     @Override
     public void rotateRad(final float angle, final float centerX, final float centerY) {
         canvas.rotate(MathF.toDegrees(angle), centerX, centerY);
-    }
-
-    @Override
-    public void saveTransformation() {
-        savedTransformation = canvas.getMatrix();
-    }
-
-    @Override
-    public void scale(final float scale) {
-        canvas.scale(scale, scale);
     }
 
     @Override

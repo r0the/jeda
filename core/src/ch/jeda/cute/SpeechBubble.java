@@ -38,7 +38,8 @@ class SpeechBubble {
             message = message.substring(SPEECH_PREFIX.length());
         }
 
-        canvas.drawImage(x, y, image, Alignment.BOTTOM_CENTER);
+        canvas.setAlignment(Alignment.BOTTOM_CENTER);
+        canvas.drawImage(x, y, image);
         canvas.setColor(Color.BLACK);
         canvas.setTextSize(TEXT_SIZE);
         final List<String> lines = lineBreak(canvas, message, image.getWidth() - 2 * BORDER);

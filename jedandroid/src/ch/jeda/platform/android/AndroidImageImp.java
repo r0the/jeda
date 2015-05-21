@@ -68,6 +68,11 @@ class AndroidImageImp implements ImageImp {
     }
 
     @Override
+    public boolean isAvailable() {
+        return true;
+    }
+
+    @Override
     public ImageImp rotateRad(double angle) {
         final int width = bitmap.getWidth();
         final int height = bitmap.getHeight();

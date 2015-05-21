@@ -28,6 +28,11 @@ public class ViewTest extends Program implements KeyDownListener, WheelListener 
             view.setScale(view.getScale() / 1.1);
             draw();
         }
+
+        if (event.getKey() == Key.LEFT) {
+            view.translate(-0.01, 0);
+            draw();
+        }
     }
 
     private void draw() {

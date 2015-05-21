@@ -25,13 +25,13 @@ import ch.jeda.event.PointerEvent;
 import ch.jeda.event.PointerListener;
 
 /**
- * Represents a check box. A check box is a {@link ch.jeda.ui.Widget} that allows the user to control a dual state, e.g.
+ * Represents a check box. A check box is a {@link ch.jeda.ui.OldWidget} that allows the user to control a dual state, e.g.
  * to turn on or off an option. The state of the check box can be changed by clicking on it or by typing the specified
  * hot key.
  *
  * @since 1.3
  */
-public class CheckBox extends Widget implements KeyDownListener, KeyUpListener, PointerListener {
+public class CheckBox extends OldWidget implements KeyDownListener, KeyUpListener, PointerListener {
 
     private boolean checked;
     private Key key;

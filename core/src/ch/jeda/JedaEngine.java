@@ -32,6 +32,7 @@ import ch.jeda.platform.ViewRequest;
 import ch.jeda.ui.ViewFeature;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -43,6 +44,7 @@ import org.xml.sax.XMLReader;
 class JedaEngine implements Platform.Callback, Runnable {
 
     private static final TypefaceImp EMPTY_TYPEFACE_IMP = new EmptyTypefaceImp();
+    private static final ImageImp EMPTY_IMAGE_IMP = new EmptyImageImp();
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
     private static final double DEFAULT_TICK_FREQUENCY = 30.0;
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = "res/jeda.properties";
@@ -432,5 +434,64 @@ class JedaEngine implements Platform.Callback, Runnable {
         public String getName() {
             return "";
         }
+    }
+
+    private static class EmptyImageImp implements ImageImp {
+
+        @Override
+        public ImageImp flipHorizontally() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public ImageImp flipVertically() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public int getHeight() {
+            return 0;
+        }
+
+        @Override
+        public int getPixel(int x, int y) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public int[] getPixels(int x, int y, int width, int height) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public int getWidth() {
+            return 0;
+        }
+
+        @Override
+        public boolean isAvailable() {
+            return false;
+        }
+
+        @Override
+        public ImageImp rotateRad(double angle) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public ImageImp scale(int width, int height) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public ImageImp subImage(int x, int y, int width, int height) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public boolean write(OutputStream out, Encoding encoding) throws IOException {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
     }
 }

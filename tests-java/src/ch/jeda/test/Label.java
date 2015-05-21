@@ -18,9 +18,9 @@ package ch.jeda.test;
 
 import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
-import ch.jeda.ui.Widget;
+import ch.jeda.ui.OldWidget;
 
-public class Label extends Widget {
+public class Label extends OldWidget {
 
     private String text;
 

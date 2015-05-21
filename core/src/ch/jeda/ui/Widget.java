@@ -31,9 +31,10 @@ public abstract class Widget extends Element {
 
     private static final int DEFAULT_DRAW_ORDER = 1000;
     private Alignment alignment;
+    private Color background;
     private boolean selected;
-    private int x;
-    private int y;
+    private float x;
+    private float y;
 
     /**
      * Constructs a widget at the specified position with the specified alignment.
@@ -45,15 +46,17 @@ public abstract class Widget extends Element {
      *
      * @since 1.3
      */
-    protected Widget(final int x, final int y, final Alignment alignment) {
+    protected Widget(final double x, final double y, final Alignment alignment) {
         if (alignment == null) {
             throw new NullPointerException("alignment");
         }
 
         this.alignment = alignment;
-        this.x = x;
-        this.y = y;
+        this.x = (float) x;
+        this.y = (float) y;
+        background = Color.LIGHT_GREEN_900;
         setDrawOrder(DEFAULT_DRAW_ORDER);
+        setPinned(true);
     }
 
     /**
@@ -83,40 +86,8 @@ public abstract class Widget extends Element {
         return 0f;
     }
 
-    /**
-     * Returns the y coordinate of the bottom border of the widget.
-     *
-     * @return the y coordinate of the bottom border of the widget
-     *
-     * @since 1.3
-     */
-    public final int getBottom() {
-        final int height = getHeight();
-        return alignment.alignY(y, height) + height;
-    }
-
-    /**
-     * Returns the x coordinate of the widget's centre.
-     *
-     * @return the x coordinate of the widget's centre
-     *
-     * @since 1.3
-     */
-    public final int getCenterX() {
-        final int width = getWidth();
-        return alignment.alignX(x, width) + width / 2;
-    }
-
-    /**
-     * Returns the y coordinate of the widget's centre.
-     *
-     * @return the y coordinate of the widget's centre
-     *
-     * @since 1.3
-     */
-    public final int getCenterY() {
-        final int height = getHeight();
-        return alignment.alignY(y, height) + height / 2;
+    public Color getBackground() {
+        return background;
     }
 
     /**
@@ -126,41 +97,7 @@ public abstract class Widget extends Element {
      *
      * @since 1.3
      */
-    public abstract int getHeight();
-
-    /**
-     * Returns the x coordinate of the left border of the widget.
-     *
-     * @return the x coordinate of the left border of the widget
-     *
-     * @since 1.3
-     */
-    public final int getLeft() {
-        return alignment.alignX(x, getWidth());
-    }
-
-    /**
-     * Returns the x coordinate of the right border of the widget.
-     *
-     * @return the x coordinate of the right border of the widget
-     *
-     * @since 1.3
-     */
-    public final int getRight() {
-        final int width = getWidth();
-        return alignment.alignX(x, width) + width;
-    }
-
-    /**
-     * Returns the y coordinate of the top border of the widget.
-     *
-     * @return the y coordinate of the top border of the widget
-     *
-     * @since 1.3
-     */
-    public final int getTop() {
-        return alignment.alignY(y, getHeight());
-    }
+    public abstract float getHeight();
 
     /**
      * Returns the width of the widget. The widget's width is given by it's background image.
@@ -169,7 +106,7 @@ public abstract class Widget extends Element {
      *
      * @since 1.3
      */
-    public abstract int getWidth();
+    public abstract float getWidth();
 
     /**
      * Returns the x coordinate of the widget.
@@ -178,8 +115,18 @@ public abstract class Widget extends Element {
      *
      * @since 1.3
      */
+    @Override
     public final float getX() {
-        return x;
+        final float width = getWidth();
+        switch (alignment.horiz) {
+            case MAX:
+                return x - width / 2f;
+            case MIDDLE:
+                return x;
+            case MIN:
+            default:
+                return x + width / 2f;
+        }
     }
 
     /**
@@ -189,8 +136,18 @@ public abstract class Widget extends Element {
      *
      * @since 1.3
      */
+    @Override
     public final float getY() {
-        return y;
+        final float height = getHeight();
+        switch (alignment.vert) {
+            case MAX:
+                return y - height / 2f;
+            case MIDDLE:
+                return y;
+            case MIN:
+            default:
+                return y + height / 2f;
+        }
     }
 
     /**
@@ -242,6 +199,10 @@ public abstract class Widget extends Element {
         this.alignment = alignment;
     }
 
+    public void setBackground(final Color background) {
+        this.background = background;
+    }
+
     /**
      * Sets the position of the widget. The widget is positioned relative to the specified coordinates (<tt>x</tt>,
      * <tt>y</tt>) depending on the current alignment.
@@ -258,10 +219,10 @@ public abstract class Widget extends Element {
     }
 
     private void checkVirtualKeyboard() {
-        final boolean isVisible = Jeda.isVirtualKeyboardVisible();
-        final boolean shouldBeVisible = this instanceof InputField;
-        if (isVisible != shouldBeVisible) {
-            Jeda.setVirtualKeyboardVisible(shouldBeVisible);
-        }
+//        final boolean isVisible = Jeda.isVirtualKeyboardVisible();
+//        final boolean shouldBeVisible = this instanceof NewInputField;
+//        if (isVisible != shouldBeVisible) {
+//            Jeda.setVirtualKeyboardVisible(shouldBeVisible);
+//        }
     }
 }

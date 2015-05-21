@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.event.PushButton;
+import ch.jeda.event.Button;
 import ch.jeda.event.Key;
 import ch.jeda.ui.MouseCursor;
 import java.awt.Cursor;
@@ -34,18 +34,18 @@ class Mapper {
     private static final Map<Integer, Map<Integer, Key>> KEY_MAP = initKeyMap();
     private static final EnumMap<MouseCursor, Cursor> MOUSE_CURSOR_MAP = initCursorMap();
 
-    static EnumSet<PushButton> mapButtons(int modifiers) {
-        final EnumSet<PushButton> result = EnumSet.noneOf(PushButton.class);
+    static EnumSet<Button> mapButtons(int modifiers) {
+        final EnumSet<Button> result = EnumSet.noneOf(Button.class);
         if ((modifiers & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-            result.add(PushButton.PRIMARY);
+            result.add(Button.PRIMARY);
         }
 
         if ((modifiers & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) {
-            result.add(PushButton.MIDDLE);
+            result.add(Button.TERTIARY);
         }
 
         if ((modifiers & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
-            result.add(PushButton.SECONDARY);
+            result.add(Button.SECONDARY);
         }
 
         return result;

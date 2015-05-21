@@ -17,6 +17,7 @@
 package ch.jeda.ui;
 
 import ch.jeda.platform.CanvasImp;
+import java.util.EnumMap;
 
 /**
  * Represents a drawing surface. It provides methods to draw geometric primitives and images.
@@ -30,7 +31,7 @@ import ch.jeda.platform.CanvasImp;
  * <li> <b>line width</b>: the line width used to draw geometric shapes in centimeters. Initially, the line width is 1.
  * The line width can be changed with {@link #setLineWidth(double)}.
  * <li> <b>text size</b>: the size of the text in centimeters. Initially, the text size is 16. The text size can be
- * changed with {@link #setTextSize(int)}.
+ * changed with {@link #setTextSize(float)}.
  * <li> <b>typeface</b>: The typeface (font family) used to render text.
  * </ul>
  * <strong>Example:</strong>
@@ -46,17 +47,21 @@ public class Canvas {
     private static final float DEFAULT_LINE_WIDTH = 1f;
     private static final float DEFAULT_TEXT_SIZE = 16f;
     private static final Color DEFAULT_FOREGROUND = Color.BLACK;
+    private final EnumMap<Icon, Image> icons;
     private CanvasImp imp;
     private Alignment alignment;
     private boolean antiAliasing;
     private Color color;
+    private DisplayAdaption displayAdaption;
     private float lineWidth;
     private float textSize;
-    private float scale;
-    private float translateY;
     private Typeface typeface;
+    private float scale;
+    private float tx;
+    private float ty;
 
     Canvas(final CanvasImp imp) {
+        icons = new EnumMap<Icon, Image>(Icon.class);
         alignment = Alignment.BOTTOM_LEFT;
         antiAliasing = false;
         color = DEFAULT_FOREGROUND;
@@ -64,19 +69,20 @@ public class Canvas {
         textSize = DEFAULT_TEXT_SIZE;
         typeface = Typeface.SANS_SERIF;
         this.imp = imp;
+        displayAdaption = new DisplayAdaption(imp.getDpi(), imp.getHeight());
         // TODO
-        scale = imp.getDpi() / 2.54f;
-        translateY = imp.getHeight();
         imp.setAntiAliasing(antiAliasing);
         imp.setColor(color);
         imp.setLineWidth(lineWidth);
-        imp.setTextSize(textSize);
+        imp.setTextSize(textSize * displayAdaption.textSizeFactor);
         imp.setTypeface(typeface.imp);
+        System.out.println("Jeda DPI: " + imp.getDpi());
+        setWorldTransformation(100f, 0f, 0f);
     }
 
     /**
-     * Draws a circle. The circle is drawn using the current color, line width, and transformation. Has no effect if the
-     * specified radius is not positive.
+     * Draws a circle. The circle is drawn using the current color and line width. Has no effect if the specified radius
+     * is not positive.
      *
      * @param centerX the x coordinate of the circle's center
      * @param centerY the y coordinate of the circle's center
@@ -89,8 +95,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a circle. The circle is drawn using the current color, line width, and transformation. Has no effect if the
-     * specified radius is not positive.
+     * Draws a circle. The circle is drawn using the current color and line width. Has no effect if the specified radius
+     * is not positive.
      *
      * @param centerX the x coordinate of the circle's center
      * @param centerY the y coordinate of the circle's center
@@ -100,13 +106,13 @@ public class Canvas {
      */
     public void drawCircle(final float centerX, final float centerY, final float radius) {
         if (radius > 0f) {
-            imp.drawEllipse(posX(centerX), posY(centerY), len(radius), len(radius));
+            imp.drawEllipse(toPixelX(centerX), toPixelY(centerY), toPixel(radius), toPixel(radius));
         }
     }
 
     /**
-     * Draws an ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no effect if
-     * the specified radii are not positive.
+     * Draws an ellipse. The ellipse is drawn using the current color and line width. Has no effect if the specified
+     * radii are not positive.
      *
      * @param centerX the x coordinate of the ellipse's center
      * @param centerY the y coordinate of the ellipse's center
@@ -120,8 +126,8 @@ public class Canvas {
     }
 
     /**
-     * Draws an ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no effect if
-     * the specified radii are not positive.
+     * Draws an ellipse. The ellipse is drawn using the current color and line width. Has no effect if the specified
+     * radii are not positive.
      *
      * @param centerX the x coordinate of the ellipse's center
      * @param centerY the y coordinate of the ellipse's center
@@ -132,16 +138,24 @@ public class Canvas {
      */
     public void drawEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
         if (radiusX > 0f && radiusY > 0f) {
-            imp.drawEllipse(posX(centerX), posY(centerY), len(radiusX), len(radiusY));
+            imp.drawEllipse(toPixelX(centerX), toPixelY(centerY), toPixel(radiusX), toPixel(radiusY));
         }
     }
 
+    void drawIcon(final double x, final double y, final Icon icon) {
+        if (!icons.containsKey(icon)) {
+            icons.put(icon, new Image("res:jeda/icon/" + icon.name().toLowerCase() + "_" + displayAdaption.iconSize + ".png"));
+        }
+
+        drawImage((float) x, (float) y, icons.get(icon), 255);
+    }
+
     /**
-     * Draws an image. The image is drawn using the current transformation. The bottom left corner of the image is
-     * positioned at the specified coordinates. Has no effect if <code>image</code> is <code>null</code>.
+     * Draws an image. The image is positioned relative to (x, y) according to the current alignment. Has no effect if
+     * <code>image</code> is <code>null</code>.
      *
-     * @param x the x coordinate of the image's bottom left corner
-     * @param y the y coordinate of the image's bottom left corner
+     * @param x the x coordinate of the image
+     * @param y the y coordinate of the image
      * @param image the image to draw
      *
      * @since 1.0
@@ -151,11 +165,11 @@ public class Canvas {
     }
 
     /**
-     * Draws an image. The image is drawn using the current transformation. The bottom left corner of the image is
-     * positioned at the specified coordinates. Has no effect if <code>image</code> is <code>null</code>.
+     * Draws an image. The image is positioned relative to (x, y) according to the current alignment. Has no effect if
+     * <code>image</code> is <code>null</code>.
      *
-     * @param x the x coordinate of the image's bottom left corner
-     * @param y the y coordinate of the image's bottom left corner
+     * @param x the x coordinate of the image
+     * @param y the y coordinate of the image
      * @param image the image to draw
      *
      * @since 2.0
@@ -165,13 +179,13 @@ public class Canvas {
     }
 
     /**
-     * Draws an image. The image is drawn using the current transformation. The bottom left corner of the image is
-     * positioned at the specified coordinates. The image is drawn with a translucency effect specified by the alpha
-     * value. Specify an alpha value of 255 for a completely opaque image, and alpha value of 0 for a completely
-     * transparent image. Has no effect if <code>image</code> is <code>null</code>.
+     * Draws an image with translucency. The image is positioned relative to (x, y) according to the current alignment.
+     * The image is drawn with a translucency effect specified by the alpha value. Specify an alpha value of 255 for a
+     * completely opaque image, and alpha value of 0 for a completely transparent image. Has no effect if
+     * <code>image</code> is <code>null</code>.
      *
-     * @param x the x coordinate of the image's bottom left corner
-     * @param y the y coordinate of the image's bottom left corner
+     * @param x the x coordinate of the image
+     * @param y the y coordinate of the image
      * @param image the image to draw
      * @param alpha the alpha value
      *
@@ -182,24 +196,26 @@ public class Canvas {
     }
 
     /**
-     * Draws an image. The image is drawn using the current transformation. The bottom left corner of the image is
-     * positioned at the specified coordinates. The image is drawn with a translucency effect specified by the alpha
-     * value. Specify an alpha value of 255 for a completely opaque image, and alpha value of 0 for a completely
-     * transparent image. Has no effect if <code>image</code> is <code>null</code>.
+     * Draws an image with translucency. The image is positioned relative to (x, y) according to the current alignment.
+     * The image is drawn with a translucency effect specified by the alpha value. Specify an alpha value of 255 for a
+     * completely opaque image, and alpha value of 0 for a completely transparent image. Has no effect if
+     * <code>image</code> is <code>null</code>.
      *
-     * @param x the x coordinate of the image's bottom left corner
-     * @param y the y coordinate of the image's bottom left corner
+     * @param x the x coordinate of the image
+     * @param y the y coordinate of the image
      * @param image the image to draw
      * @param alpha the alpha value
      *
      * @since 2.0
      */
     public void drawImage(float x, float y, final Image image, final int alpha) {
-        x = posX(x);
-        y = posY(y);
-        final int width = image.getWidth();
-        final int height = image.getHeight();
-        imp.drawImage(alignX(x, width), alignY(y, height), width, height, image.getImp(), alpha);
+        if (image != null && image.isAvailable()) {
+            x = toPixelX(x);
+            y = toPixelY(y);
+            final int width = image.getWidth();
+            final int height = image.getHeight();
+            imp.drawImage(alignX(x, width), alignY(y, height), width, height, image.getImp(), alpha);
+        }
     }
 
     /**
@@ -334,15 +350,67 @@ public class Canvas {
      * @since 2.0
      */
     public void drawRectangle(float x, float y, float width, float height) {
-        x = posX(x);
-        y = posY(y);
-        width = len(width);
-        height = len(height);
+        x = toPixelX(x);
+        y = toPixelY(y);
+        width = toPixel(width);
+        height = toPixel(height);
         imp.drawRectangle(alignX(x, width), alignY(y, height), width, height);
     }
 
     /**
-     * Draws a text. The text is drawn using the current color, transformation, and font size. The bottom left corner of
+     * Draws a shadow around a circle.
+     *
+     * @param x the horizontal coordinate of the circle's center
+     * @param y the vertical coordinate of the circle's center
+     * @param radius the radius of the circle
+     *
+     * @since 2.0
+     */
+    public void drawShadowCircle(float x, float y, float radius) {
+        x = toPixelX(x);
+        y = toPixelY(y);
+        radius = toPixel(radius);
+        final int SHADOW_MAX_OPACITY = 80;
+        final int opacityStep = SHADOW_MAX_OPACITY / displayAdaption.shadowThickness;
+        int opacity = SHADOW_MAX_OPACITY;
+        for (int i = 0; i < displayAdaption.shadowThickness; i++) {
+            imp.setColor(new Color(0, 0, 0, opacity));
+            imp.drawEllipse(x, y, radius + i, radius + i);
+            opacity = opacity - opacityStep;
+        }
+
+        imp.setColor(color);
+    }
+
+    /**
+     * Draws a shadow around a rectangle.
+     *
+     * @param x the horizontal coordinate of the rectangle
+     * @param y the vertical coordinate of the rectangle
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     *
+     * @since 2.0
+     */
+    public void drawShadowRectangle(float x, float y, float width, float height) {
+        width = toPixel(width);
+        height = toPixel(height);
+        x = alignX(toPixelX(x), width);
+        y = alignY(toPixelY(y), height);
+        final int SHADOW_MAX_OPACITY = 80;
+        final int opacityStep = SHADOW_MAX_OPACITY / displayAdaption.shadowThickness;
+        int opacity = SHADOW_MAX_OPACITY;
+        for (int i = 0; i < displayAdaption.shadowThickness; i++) {
+            imp.setColor(new Color(0, 0, 0, opacity));
+            imp.drawRectangle(x - i, y - i, width + 2 * i, height + 2 * i);
+            opacity = opacity - opacityStep;
+        }
+
+        imp.setColor(color);
+    }
+
+    /**
+     * Draws a text. The text is drawn using the current color, transformation, and text size. The bottom left corner of
      * the text is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if <code>text</code> is
      * <code>null</code> or empty.
      *
@@ -368,17 +436,19 @@ public class Canvas {
      * @since 2.0
      */
     public void drawText(float x, float y, final String text) {
-        x = posX(x);
-        y = posY(y);
-        final float width = imp.textWidth(text);
-        final float height = imp.textHeight(text);
-        imp.drawText(alignX(x, width), alignY(y, height), text);
+        if (text != null && !text.isEmpty()) {
+            x = toPixelX(x);
+            y = toPixelY(y);
+            final float width = imp.textWidth(text);
+            final float height = imp.textHeight(text);
+            imp.drawText(alignX(x, width), alignY(y, height), text);
+        }
     }
 
     /**
      * @deprecated
      */
-    public void drawText(final int x, final int y, final String text, final Alignment alignment) {
+    public void drawText(final double x, final double y, final String text, final Alignment alignment) {
         setAlignment(alignment);
         drawText(x, y, text);
     }
@@ -417,7 +487,7 @@ public class Canvas {
      * @since 2.0
      */
     public void fillCircle(final float centerX, final float centerY, final float radius) {
-        imp.fillEllipse(posX(centerX), posY(centerY), len(radius), len(radius));
+        imp.fillEllipse(toPixelX(centerX), toPixelY(centerY), toPixel(radius), toPixel(radius));
     }
 
     /**
@@ -447,7 +517,7 @@ public class Canvas {
      * @since 2.0
      */
     public void fillEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
-        imp.fillEllipse(posX(centerX), posY(centerY), len(radiusX), len(radiusY));
+        imp.fillEllipse(toPixelX(centerX), toPixelY(centerY), toPixel(radiusX), toPixel(radiusY));
     }
 
     /**
@@ -519,10 +589,10 @@ public class Canvas {
      * @since 2.0
      */
     public void fillRectangle(float x, float y, float width, float height) {
-        x = posX(x);
-        y = posY(y);
-        width = len(width);
-        height = len(height);
+        x = toPixelX(x);
+        y = toPixelY(y);
+        width = toPixel(width);
+        height = toPixel(height);
         imp.fillRectangle(alignX(x, width), alignY(y, height), width, height);
     }
 
@@ -701,7 +771,7 @@ public class Canvas {
 
         if (textSize != size) {
             textSize = size;
-            imp.setTextSize(textSize);
+            imp.setTextSize(textSize * displayAdaption.textSizeFactor);
         }
     }
 
@@ -777,41 +847,31 @@ public class Canvas {
     }
 
     void copyFrom(final Canvas canvas) {
-        imp.saveTransformation();
         imp.resetTransformation();
         imp.drawCanvas(0, 0, canvas.imp);
-        imp.restoreTransformation();
     }
 
-    void resetTransformation() {
+    final void setWorldTransformation(final float scale, final float tx, final float ty) {
+        this.scale = displayAdaption.screenScale * 100 / scale;
+        this.tx = -tx * this.scale;
+        this.ty = ty * this.scale;
+    }
+
+    void worldBegin(final boolean pinned, final float tx, final float ty, final float angleRad) {
+        imp.translate(toPixel(tx), -toPixel(ty));
+        imp.rotateRad(-angleRad, toPixelX(0), toPixelY(0));
+
+    }
+
+    void worldEnd() {
         imp.resetTransformation();
-    }
-
-    void restoreTransformation() {
-        imp.restoreTransformation();
-    }
-
-    public void rotateRad(final float angle) {
-        imp.rotateRad(-angle, posX(0), posY(0));
-    }
-
-    void setScale(final float scale) {
-        this.scale = 100 * imp.getDpi() / 2.54f / scale;
-    }
-
-    void saveTransformation() {
-        imp.saveTransformation();
-    }
-
-    public void translate(final float tx, final float ty) {
-        imp.translate(len(tx), -len(ty));
     }
 
     private float[] convertPoints(double[] values) {
         final float[] result = new float[values.length];
         for (int i = 0; i < values.length; i = i + 2) {
-            result[i] = posX((float) values[i]);
-            result[i + 1] = posY((float) values[i + 1]);
+            result[i] = toPixelX((float) values[i]);
+            result[i + 1] = toPixelY((float) values[i + 1]);
         }
 
         return result;
@@ -820,11 +880,23 @@ public class Canvas {
     private float[] convertPoints(float[] values) {
         final float[] result = new float[values.length];
         for (int i = 0; i < values.length; i = i + 2) {
-            result[i] = posX(values[i]);
-            result[i + 1] = posY(values[i + 1]);
+            result[i] = toPixelX(values[i]);
+            result[i + 1] = toPixelY(values[i + 1]);
         }
 
         return result;
+    }
+
+    float lengthToWorld(final int pixels) {
+        return pixels / scale;
+    }
+
+    float toCanvasX(final float x) {
+        return x / displayAdaption.screenScale;
+    }
+
+    float toCanvasY(final float y) {
+        return (displayAdaption.pixelsY - y) / displayAdaption.screenScale;
     }
 
     private float alignX(final float x, final float w) {
@@ -851,15 +923,15 @@ public class Canvas {
         }
     }
 
-    private float posX(final float x) {
-        return x * scale;
-    }
-
-    private float posY(final float y) {
-        return translateY - y * scale;
-    }
-
-    private float len(final float len) {
+    private float toPixel(final float len) {
         return len * scale;
+    }
+
+    private float toPixelX(final float x) {
+        return x * scale + tx;
+    }
+
+    private float toPixelY(final float y) {
+        return displayAdaption.pixelsY - y * scale + ty;
     }
 }

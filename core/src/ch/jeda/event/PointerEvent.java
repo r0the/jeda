@@ -28,9 +28,11 @@ import java.util.EnumSet;
 public final class PointerEvent extends Event {
 
     private final int pointerId;
-    private final EnumSet<PushButton> pressedButtons;
-    private final float x;
-    private final float y;
+    private final EnumSet<Button> pressedButtons;
+    private final float canvasX;
+    private final float canvasY;
+    private final float worldX;
+    private final float worldY;
 
     /**
      * Constructs a pointer event.
@@ -39,18 +41,21 @@ public final class PointerEvent extends Event {
      * @param type the event type
      * @param pointerId the id of the pointer
      * @param pressedButtons the currently pressed buttons
-     * @param x the x coordinate of the pointer
-     * @param y the y coordinate of the pointer
+     * @param canvasX the x coordinate of the pointer
+     * @param canvasY the y coordinate of the pointer
      *
-     * @since 1.0
+     * @since 2.0
      */
     public PointerEvent(final Object source, final EventType type, final int pointerId,
-                        final EnumSet<PushButton> pressedButtons, final float x, final float y) {
+                        final EnumSet<Button> pressedButtons, final float canvasX, final float canvasY,
+                        final float worldX, final float worldY) {
         super(source, type);
         this.pointerId = pointerId;
         this.pressedButtons = pressedButtons;
-        this.x = x;
-        this.y = y;
+        this.canvasX = canvasX;
+        this.canvasY = canvasY;
+        this.worldX = worldX;
+        this.worldY = worldY;
     }
 
     /**
@@ -65,6 +70,50 @@ public final class PointerEvent extends Event {
     }
 
     /**
+     * Returns the horizontal canvas coordinate of the pointer.
+     *
+     * @return horizontal canvas coordinate of the pointer
+     *
+     * @since 2.0
+     */
+    public final float getCanvasX() {
+        return canvasX;
+    }
+
+    /**
+     * Returns the vertical canvas coordinate of the pointer.
+     *
+     * @return vertical canvas coordinate of the pointer
+     *
+     * @since 2.0
+     */
+    public final float getCanvasY() {
+        return canvasY;
+    }
+
+    /**
+     * Returns the horizontal world coordinate of the pointer.
+     *
+     * @return horizontal world coordinate of the pointer
+     *
+     * @since 2.0
+     */
+    public final float getWorldX() {
+        return worldX;
+    }
+
+    /**
+     * Returns the vertical world coordinate of the pointer.
+     *
+     * @return vertical world coordinate of the pointer
+     *
+     * @since 2.0
+     */
+    public final float getWorldY() {
+        return worldY;
+    }
+
+    /**
      * Returns the x coordinate of the pointer.
      *
      * @return x coordinate of the pointer
@@ -72,7 +121,7 @@ public final class PointerEvent extends Event {
      * @since 1.0
      */
     public final int getX() {
-        return (int) x;
+        return (int) canvasX;
     }
 
     /**
@@ -83,7 +132,7 @@ public final class PointerEvent extends Event {
      * @since 1.0
      */
     public final int getY() {
-        return (int) y;
+        return (int) canvasY;
     }
 
     /**
@@ -94,7 +143,7 @@ public final class PointerEvent extends Event {
      *
      * @since 2.0
      */
-    public final boolean isPressed(final PushButton button) {
+    public final boolean isPressed(final Button button) {
         return pressedButtons.contains(button);
     }
 
@@ -106,9 +155,9 @@ public final class PointerEvent extends Event {
         result.append(", pointerId=");
         result.append(pointerId);
         result.append(", x=");
-        result.append(x);
+        result.append(canvasX);
         result.append(", y=");
-        result.append(y);
+        result.append(canvasY);
         result.append(")");
         return result.toString();
     }

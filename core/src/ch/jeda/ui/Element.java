@@ -33,6 +33,7 @@ public abstract class Element {
     static final Comparator<Element> DRAW_ORDER = new DrawOrder();
     private int drawOrder;
     private String name;
+    private boolean pinned;
     private View view;
 
     /**
@@ -42,6 +43,7 @@ public abstract class Element {
      */
     protected Element() {
         name = null;
+        pinned = false;
     }
 
     /**
@@ -93,8 +95,14 @@ public abstract class Element {
      * Returns the current rotation angle of this element in radians.
      *
      * @return the current rotation angle of this element in radians
+     *
+     * @since 2.0
      */
     public abstract float getAngleRad();
+
+    public boolean isPinned() {
+        return pinned;
+    }
 
     /**
      * Sets the draw order of the element. The draw order determines the order in which the element are drawn on a
@@ -132,6 +140,10 @@ public abstract class Element {
         }
 
         this.name = name;
+    }
+
+    public void setPinned(final boolean pinned) {
+        this.pinned = pinned;
     }
 
     /**
@@ -178,11 +190,9 @@ public abstract class Element {
     }
 
     void internalDraw(final Canvas canvas) {
-        canvas.saveTransformation();
-        canvas.translate(getX(), getY());
-        canvas.rotateRad(getAngleRad());
+        canvas.worldBegin(pinned, getX(), getY(), getAngleRad());
         draw(canvas);
-        canvas.restoreTransformation();
+        canvas.worldEnd();
     }
 
     void removeFromView(final View view) {

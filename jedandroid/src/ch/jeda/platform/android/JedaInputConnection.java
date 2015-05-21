@@ -22,8 +22,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.CompletionInfo;
-import ch.jeda.event.EventType;
-import ch.jeda.event.KeyEvent;
 
 class JedaInputConnection extends BaseInputConnection {
 
@@ -57,7 +55,7 @@ class JedaInputConnection extends BaseInputConnection {
     public boolean sendKeyEvent(android.view.KeyEvent event) {
         Log.i("Jeda", "Sending key event:" + event.getKeyCode() + ", action=" + event.getAction());
 
-        postEvent(Mapper.mapEvent(event.getKeyCode()));
+        topView.sendKeyEvent(event.getKeyCode());
         return super.sendKeyEvent(event);
     }
 
@@ -79,14 +77,7 @@ class JedaInputConnection extends BaseInputConnection {
 
         for (int i = 0; i < text.length(); ++i) {
             Log.i("Jeda", "Posting event");
-            postEvent(new KeyEvent(this, EventType.KEY_TYPED, text.charAt(i)));
-        }
-    }
-
-    private void postEvent(final KeyEvent event) {
-        if (event != null && topView != null) {
-            Log.i("Jeda", "Event from InputConnection: " + event.getKey());
-            topView.postEvent(event);
+            topView.sendKeyTypedEvent(text.charAt(i));
         }
     }
 }

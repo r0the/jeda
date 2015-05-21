@@ -16,7 +16,7 @@
  */
 package ch.jeda.platform;
 
-import ch.jeda.event.PushButton;
+import ch.jeda.event.Button;
 import ch.jeda.event.Key;
 import java.util.EnumSet;
 
@@ -30,11 +30,11 @@ public interface ViewCallback {
 
     void postKeyUp(Object source, Key key);
 
-    void postPointerDown(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y);
+    void postPointerDown(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y);
 
-    void postPointerMoved(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y);
+    void postPointerMoved(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y);
 
-    void postPointerUp(Object source, int pointerId, EnumSet<PushButton> pressedButtons, float x, float y);
+    void postPointerUp(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y);
 
     void postWheel(Object source, float rotation);
 }

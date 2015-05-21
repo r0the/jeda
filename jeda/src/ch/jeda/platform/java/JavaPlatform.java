@@ -28,6 +28,7 @@ import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ViewRequest;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -53,7 +54,13 @@ class JavaPlatform implements Platform {
 
     @Override
     public ImageImp createImageImp(final String path) {
-        return new JavaImageImp(ResourceManager.loadImage(path));
+        final BufferedImage image = ResourceManager.loadImage(path);
+        if (image == null) {
+            return null;
+        }
+        else {
+            return new JavaImageImp(image);
+        }
     }
 
     @Override
@@ -78,7 +85,12 @@ class JavaPlatform implements Platform {
 
     @Override
     public TypefaceImp getStandardTypefaceImp(final Platform.StandardTypeface standardFont) {
-        return new JavaTypefaceImp(new Font(lookupStandardTypeface(standardFont), 20, 0));
+        if (standardFont == StandardTypeface.SANS_SERIF) {
+            return ResourceManager.loadTypeface("res:jeda/fonts/roboto_regular.ttf");
+        }
+        else {
+            return new JavaTypefaceImp(new Font(lookupStandardTypeface(standardFont), 20, 0));
+        }
     }
 
     @Override

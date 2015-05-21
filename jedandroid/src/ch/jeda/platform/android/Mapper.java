@@ -16,17 +16,38 @@
  */
 package ch.jeda.platform.android;
 
+import android.view.MotionEvent;
+import ch.jeda.event.Button;
 import ch.jeda.event.Key;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
 class Mapper {
 
+    static final EventSource VIRTUAL_KEYBOARD_DEVICE = new EventSource("Virtual Keyboard");
     private static final Map<Integer, EventSource> INPUT_DEVICE_MAP = new HashMap<Integer, EventSource>();
     private static final Map<Integer, Key> KEY_MAP = initKeyMap();
 
     static Key mapKey(int keyCode) {
         return KEY_MAP.get(keyCode);
+    }
+
+    static EnumSet<Button> mapButtons(int buttonState) {
+        EnumSet<Button> result = EnumSet.noneOf(Button.class);
+        if ((buttonState & MotionEvent.BUTTON_PRIMARY) == MotionEvent.BUTTON_PRIMARY) {
+            result.add(Button.PRIMARY);
+        }
+
+        if ((buttonState & MotionEvent.BUTTON_SECONDARY) == MotionEvent.BUTTON_SECONDARY) {
+            result.add(Button.SECONDARY);
+        }
+
+        if ((buttonState & MotionEvent.BUTTON_TERTIARY) == MotionEvent.BUTTON_TERTIARY) {
+            result.add(Button.TERTIARY);
+        }
+
+        return result;
     }
 
     static EventSource mapDevice(final android.view.InputEvent event) {

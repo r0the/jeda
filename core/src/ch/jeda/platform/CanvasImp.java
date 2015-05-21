@@ -55,13 +55,7 @@ public interface CanvasImp {
 
     void resetTransformation();
 
-    void restoreTransformation();
-
     void rotateRad(float angle, float centerX, float centerY);
-
-    void saveTransformation();
-
-    void scale(float scale);
 
     void setAntiAliasing(boolean antiAliasing);
 

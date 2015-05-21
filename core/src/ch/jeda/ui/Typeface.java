@@ -28,13 +28,13 @@ import ch.jeda.platform.Platform;
 public final class Typeface {
 
     /**
-     * The default Jeda typeface.
+     * The Kenvector future typeface.
      *
      * @since 1.3
      */
     public static Typeface KENVECTOR_FUTURE = new Typeface("res:jeda/fonts/kenvector_future.ttf");
     /**
-     * The thin variant of the default Jeda typeface.
+     * The thin variant of the Kenvector future typeface.
      *
      * @since 1.3
      */

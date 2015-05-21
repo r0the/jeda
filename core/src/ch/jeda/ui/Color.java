@@ -39,102 +39,315 @@ public final class Color implements Serializable, Storable {
      * @since 1.0
      */
     public static final Color AQUA = new Color(0, 255, 255);
+
     /**
      * The VGA color <i>black</i>. Same as <tt>new Color(0, 0, 0)</tt>.
      *
      * @since 1.0
      */
     public static final Color BLACK = new Color(0, 0, 0);
+
     /**
      * The VGA color <i>blue</i>. Same as <tt>new Color(0, 0, 255)</tt>.
      *
      * @since 1.0
      */
     public static final Color BLUE = new Color(0, 0, 255);
+
     /**
      * The VGA color <i>fuchsia</i>. Same as <tt>new Color(255, 0, 255)</tt>.
      *
      * @since 1.0
      */
     public static final Color FUCHSIA = new Color(255, 0, 255);
+
     /**
      * The VGA color <i>gray</i>. Same as <tt>new Color(128, 128, 128)</tt>.
      *
      * @since 1.0
      */
     public static final Color GRAY = new Color(128, 128, 128);
+
     /**
      * The VGA color <i>green</i>. Same as <tt>new Color(0, 128, 0)</tt>.
      *
      * @since 1.0
      */
     public static final Color GREEN = new Color(0, 128, 0);
+
     /**
      * The Jeda color. Same as <tt>new Color(126, 218, 66)</tt>.
      *
      * @since 1.0
      */
     public static final Color JEDA = new Color(126, 218, 66);
+
+    /**
+     * The Google material design color <i>Light Green 50</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_50 = new Color("#f1f8e9");
+
+    /**
+     * The Google material design color <i>Light Green 100</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_100 = new Color("#dcedc8");
+
+    /**
+     * The Google material design color <i>Light Green 200</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_200 = new Color("#c5e1a5");
+
+    /**
+     * The Google material design color <i>Light Green 300</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_300 = new Color("#aed581");
+
+    /**
+     * The Google material design color <i>Light Green 400</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_400 = new Color("#9ccc65");
+
+    /**
+     * The Google material design color <i>Light Green 500</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_500 = new Color("#8bc34a");
+
+    /**
+     * The Google material design color <i>Light Green 600</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_600 = new Color("#7cb342");
+
+    /**
+     * The Google material design color <i>Light Green 700</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_700 = new Color("#689f38");
+
+    /**
+     * The Google material design color <i>Light Green 800</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_800 = new Color("#558b2f");
+
+    /**
+     * The Google material design color <i>Light Green 900</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_900 = new Color("#33691e");
+
+    /**
+     * The Google material design color <i>Light Green A100</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_A100 = new Color("#ccff90");
+
+    /**
+     * The Google material design color <i>Light Green A200</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_A200 = new Color("#b2ff59");
+
+    /**
+     * The Google material design color <i>Light Green A400</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_A400 = new Color("#76ff03");
+
+    /**
+     * The Google material design color <i>Light Green A700</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color LIGHT_GREEN_A700 = new Color("#64dd17");
+
     /**
      * The VGA color <i>lime</i>. Same as <tt>new Color(0, 255, 0)</tt>.
      *
      * @since 1.0
      */
     public static final Color LIME = new Color(0, 255, 0);
+
     /**
      * The VGA color <i>maroon</i>. Same as <tt>new Color(128, 0, 0)</tt>.
      *
      * @since 1.0
      */
     public static final Color MAROON = new Color(128, 0, 0);
+
     /**
      * The VGA color <i>navy</i>. Same as <tt>new Color(0, 0, 128)</tt>.
      *
      * @since 1.0
      */
     public static final Color NAVY = new Color(0, 0, 128);
+
     /**
      * The VGA color <i>olive</i>. Same as <tt>new Color(128, 128, 0)</tt>.
      *
      * @since 1.0
      */
     public static final Color OLIVE = new Color(128, 128, 0);
+
     /**
      * The VGA color <i>purple</i>. Same as <tt>new Color(128, 0, 128)</tt>.
      *
      * @since 1.0
      */
     public static final Color PURPLE = new Color(128, 0, 128);
+
     /**
      * The VGA color <i>red</i>. Same as <tt>new Color(255, 0, 0)</tt>.
      *
      * @since 1.0
      */
     public static final Color RED = new Color(255, 0, 0);
+
+    /**
+     * The Google material design color <i>Red 50</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_50 = new Color("#ffebee");
+
+    /**
+     * The Google material design color <i>Red 100</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_100 = new Color("#ffcdd2");
+
+    /**
+     * The Google material design color <i>Red 200</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_200 = new Color("#ef9a9a");
+
+    /**
+     * The Google material design color <i>Red 300</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_300 = new Color("#e57373");
+
+    /**
+     * The Google material design color <i>Red 400</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_400 = new Color("#ef5350");
+
+    /**
+     * The Google material design color <i>Red 500</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_500 = new Color("#f44336");
+
+    /**
+     * The Google material design color <i>Red 600</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_600 = new Color("#e53935");
+
+    /**
+     * The Google material design color <i>Red 700</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_700 = new Color("#d32f2f");
+
+    /**
+     * The Google material design color <i>Red 800</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_800 = new Color("#c62828");
+
+    /**
+     * The Google material design color <i>Red 900</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_900 = new Color("#b71c1c");
+
+    /**
+     * The Google material design color <i>Red A100</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_A100 = new Color("#ff8a80");
+
+    /**
+     * The Google material design color <i>Red A200</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_A200 = new Color("#ff5252");
+
+    /**
+     * The Google material design color <i>Red A400</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_A400 = new Color("#ff1744");
+
+    /**
+     * The Google material design color <i>Red A700</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color RED_A700 = new Color("#d50000");
+
     /**
      * The VGA color <i>silver</i>. Same as <tt>new Color(192, 192, 192)</tt>.
      *
      * @since 1.0
      */
     public static final Color SILVER = new Color(192, 192, 192);
+
     /**
      * The VGA color <i>teal</i>. Same as <tt>new Color(0, 128, 128)</tt>.
      *
      * @since 1.0
      */
     public static final Color TEAL = new Color(0, 128, 128);
+
     /**
      * The fully transparent color.
      *
      * @since 1.0
      */
     public static final Color TRANSPARENT = new Color(255, 255, 255, 0);
+
     /**
      * The VGA color <i>white</i>. Same as <tt>new Color(255, 255, 255)</tt>.
      *
      * @since 1.0
      */
     public static final Color WHITE = new Color(255, 255, 255);
+
     /**
      * The VGA color <i>yellow</i>. Same as <tt>new Color(255, 255, 0)</tt>.
      *
