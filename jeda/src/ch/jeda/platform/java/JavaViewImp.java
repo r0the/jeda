@@ -294,7 +294,8 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
 
     @Override
     public void mouseWheelMoved(final MouseWheelEvent event) {
-        callback.postWheel(MOUSE, (float) event.getPreciseWheelRotation());
+        callback.postWheel(MOUSE, POINTER_ID, Mapper.mapButtons(event.getModifiers()), event.getX(), event.getY(),
+                           (float) event.getPreciseWheelRotation());
     }
 
     void keyReleased(final Key key) {

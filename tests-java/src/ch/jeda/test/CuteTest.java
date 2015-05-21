@@ -71,7 +71,7 @@ public class CuteTest extends Program implements TickListener, WheelListener {
     }
 
     @Override
-    public void onWheel(WheelEvent event) {
+    public void onWheel(PointerEvent event) {
         //world.scroll(event.getDx(), event.getDy());
     }
 

@@ -52,9 +52,9 @@ public class ViewTest extends Program implements KeyDownListener, WheelListener 
     }
 
     @Override
-    public void onWheel(WheelEvent event) {
+    public void onWheel(PointerEvent event) {
 //        view.translate(-event.getDx(), -event.getDy());
-        angle = angle + event.getRotation() * 0.1;
+        angle = angle + event.getWheel() * 0.1;
     }
 
     class TestElement extends Element {

@@ -66,7 +66,7 @@ public class InputEventTest extends Program implements KeyListener,
     }
 
     @Override
-    public void onWheel(WheelEvent event) {
+    public void onWheel(PointerEvent event) {
         drawMessage(toMessage(event));
     }
 
@@ -84,11 +84,6 @@ public class InputEventTest extends Program implements KeyListener,
         }
 
         return result;
-    }
-
-    private String toMessage(WheelEvent event) {
-        return Convert.toString("type=", event.getType(), ", rotation=", event.getRotation(),
-                                ", device=", event.getSource());
     }
 
     private String toMessage(KeyEvent event) {

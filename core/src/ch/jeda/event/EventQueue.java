@@ -222,7 +222,7 @@ public final class EventQueue {
                 dispatchTickEvent((TickEvent) event);
                 break;
             case WHEEL:
-                dispatchWheelEvent((WheelEvent) event);
+                dispatchWheelEvent((PointerEvent) event);
                 break;
         }
     }
@@ -396,7 +396,7 @@ public final class EventQueue {
         }
     }
 
-    private void dispatchWheelEvent(final WheelEvent event) {
+    private void dispatchWheelEvent(final PointerEvent event) {
         int i = 0;
         while (i < wheelListeners.size() && !event.isConsumed()) {
             try {

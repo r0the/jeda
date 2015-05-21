@@ -19,8 +19,8 @@ package ch.jeda.event;
 import java.util.EnumSet;
 
 /**
- * Represents an event of the type {@link EventType#POINTER_DOWN}, {@link EventType#POINTER_MOVED}, or
- * {@link EventType#POINTER_UP}.
+ * Represents an event of the type {@link EventType#POINTER_DOWN}, {@link EventType#POINTER_MOVED},
+ * {@link EventType#POINTER_UP}, or {@link EventType#WHEEL}.
  *
  * @version 2
  * @since 1.0
@@ -31,6 +31,7 @@ public final class PointerEvent extends Event {
     private final EnumSet<Button> pressedButtons;
     private final float canvasX;
     private final float canvasY;
+    private final float wheel;
     private final float worldX;
     private final float worldY;
 
@@ -41,19 +42,23 @@ public final class PointerEvent extends Event {
      * @param type the event type
      * @param pointerId the id of the pointer
      * @param pressedButtons the currently pressed buttons
-     * @param canvasX the x coordinate of the pointer
-     * @param canvasY the y coordinate of the pointer
+     * @param wheel the movement of the wheel
+     * @param canvasX the horizontal canvas coordinate of the pointer
+     * @param canvasY the vertical canvas coordinate of the pointer
+     * @param worldX the horizontal world coordinate of the pointer
+     * @param worldY the vertical world coordinate of the pointer
      *
      * @since 2.0
      */
     public PointerEvent(final Object source, final EventType type, final int pointerId,
-                        final EnumSet<Button> pressedButtons, final float canvasX, final float canvasY,
-                        final float worldX, final float worldY) {
+                        final EnumSet<Button> pressedButtons, final float wheel, final float canvasX,
+                        final float canvasY, final float worldX, final float worldY) {
         super(source, type);
         this.pointerId = pointerId;
         this.pressedButtons = pressedButtons;
         this.canvasX = canvasX;
         this.canvasY = canvasY;
+        this.wheel = wheel;
         this.worldX = worldX;
         this.worldY = worldY;
     }
@@ -89,6 +94,17 @@ public final class PointerEvent extends Event {
      */
     public final float getCanvasY() {
         return canvasY;
+    }
+
+    /**
+     * Returns the wheel rotation of the pointing device.
+     *
+     * @return the wheel rotation of the pointing device
+     *
+     * @since 2.0
+     */
+    public float getWheel() {
+        return wheel;
     }
 
     /**

@@ -36,5 +36,5 @@ public interface ViewCallback {
 
     void postPointerUp(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y);
 
-    void postWheel(Object source, float rotation);
+    void postWheel(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y, float rotation);
 }
