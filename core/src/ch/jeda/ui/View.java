@@ -26,7 +26,6 @@ import ch.jeda.event.Key;
 import ch.jeda.event.KeyEvent;
 import ch.jeda.event.PointerEvent;
 import ch.jeda.event.PointerListener;
-import ch.jeda.event.WheelEvent;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
 import ch.jeda.event.WheelListener;
@@ -118,7 +117,7 @@ public class View {
      * The size of the view's drawing area depends on the platform:
      * </p><p>
      * <img src="../../../windows.png"> <img src="../../../linux.png"> The drawing area of the view has the specified
-     * <tt>width</tt> and <tt>height</tt>.
+     * <code>width</code> and <code>height</code>.
      * </p><p>
      * <img src="../../../android.png"> The size drawing area depends on the screen size of the device.</p>
      *
@@ -148,15 +147,10 @@ public class View {
     }
 
     /**
-     * Adds a {@link ch.jeda.ui.Element} to the currnt page of the view. Has no effect if <tt>element</tt>
-     * is <tt>null</tt>. The {@link ch.jeda.ui.Element} becomes inactive (it no longer receives events) and insivible if
-     * the current page changes.
+     * Adds a {@link ch.jeda.ui.Element} to this view. Has no effect if <code>element</code> is <code>null</code>.
      *
-     * @param element the element to be added to the view
+     * @param element the element to be added to this view
      *
-     * @see #remove(ch.jeda.ui.Element)
-     * @see #getElements()
-     * @see #getElements(java.lang.Class)
      * @since 2.0
      */
     public final void add(final Element element) {
@@ -172,6 +166,13 @@ public class View {
         }
     }
 
+    /**
+     * Adds multiple elements to this view.
+     *
+     * @param elements the elements to be added to this view
+     *
+     * @since 2.0
+     */
     public final void add(final Element... elements) {
         for (int i = 0; i < elements.length; ++i) {
             add(elements[i]);
@@ -180,7 +181,7 @@ public class View {
 
     /**
      * Adds an event listener to the view. The specified object will receive events for all events listener interfaces
-     * it implements. Has no effect if <tt>listener</tt> is <tt>null</tt> or an element of this view.
+     * it implements. Has no effect if <code>listener</code> is <code>null</code> or an element of this view.
      *
      * @param listener the event listener
      *
@@ -241,7 +242,7 @@ public class View {
      * @param clazz the class of the element to return
      * @param name the name of the element to return
      * @return an element of the specified class with the specified name
-     * @throws NullPointerException if <tt>clazz</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>clazz</code> is <code>null</code>
      *
      * @see #add(ch.jeda.ui.Element)
      * @see #getElements()
@@ -286,7 +287,7 @@ public class View {
      * @param <T> the type of elements to return
      * @param clazz the class of elements to return
      * @return all elements currently managed by the view.
-     * @throws NullPointerException if <tt>clazz</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>clazz</code> is <code>null</code>
      *
      * @see #add(ch.jeda.ui.Element)
      * @see #getElements()
@@ -371,12 +372,11 @@ public class View {
     }
 
     /**
-     * Checks for a view feature. Returns <tt>true</tt> if the specified feature is currently enabled for the view.
+     * Checks for a view feature. Returns <code>true</code> if the specified feature is currently enabled for the view.
      *
      * @param feature the feature to check for
-     * @return <tt>true</tt> if the feature is enabled, otherwise returns
-     * <tt>false</tt>
-     * @throws NullPointerException if <tt>feature</tt> is <tt>null</tt>
+     * @return <code>true</code> if the feature is enabled, otherwise returns <code>false</code>
+     * @throws NullPointerException if <code>feature</code> is <code>null</code>
      *
      * @see #setFeature(ch.jeda.ui.ViewFeature, boolean)
      * @since 2.0
@@ -390,10 +390,9 @@ public class View {
     }
 
     /**
-     * Removes a {@link ch.jeda.ui.Element} from the view. Has no effect if <tt>element</tt> is
-     * <tt>null</tt>.
+     * Removes an {@link ch.jeda.ui.Element} from this view. Has no effect if <code>element</code> is <code>null</code>.
      *
-     * @param element the element to be removed from the view
+     * @param element the element to be removed from this view
      *
      * @see ch.jeda.ui.Element
      * @since 2.0
@@ -411,6 +410,13 @@ public class View {
         }
     }
 
+    /**
+     * Remove multiple elements from this view.
+     *
+     * @param elements the elements to be removed from this view
+     *
+     * @since 2.0
+     */
     public final void remove(final Element... elements) {
         for (int i = 0; i < elements.length; ++i) {
             remove(elements[i]);
@@ -419,7 +425,7 @@ public class View {
 
     /**
      * Removes an event listener from the view. The specified object will not receive events anymore. Has no effect if
-     * <tt>listener</tt> is <tt>null</tt> or an element of this view.
+     * <code>listener</code> is <code>null</code> or an element of this view.
      *
      * @param listener the event listener
      * @since 2.0
@@ -432,9 +438,8 @@ public class View {
      * Enables or disables a view feature.
      *
      * @param feature the feature to be enabled or disabled
-     * @param enabled <tt>true</tt> to enable the feature,
-     * <tt>false</tt> to disable it
-     * @throws NullPointerException if <tt>feature</tt> is <tt>null</tt>
+     * @param enabled <code>true</code> to enable the feature, <code>false</code> to disable it
+     * @throws NullPointerException if <code>feature</code> is <code>null</code>
      *
      * @see #hasFeature(ch.jeda.ui.ViewFeature)
      * @since 2.0
@@ -470,8 +475,7 @@ public class View {
      * Sets the shape of the mouse cursor.
      *
      * @param mouseCursor new shape of mouse cursor
-     * @throws NullPointerException if <tt>mouseCursor</tt> is
-     * <tt>null</tt>
+     * @throws NullPointerException if <code>mouseCursor</code> is <code>null</code>
      *
      * @see MouseCursor
      * @since 2.0
@@ -510,7 +514,7 @@ public class View {
      * Sets the view title.
      *
      * @param title new title of the view
-     * @throws NullPointerException if <tt>title</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>title</code> is <code>null</code>
      *
      * @see #getTitle()
      * @since 2.0
@@ -639,7 +643,6 @@ public class View {
         background.setColor(Color.WHITE);
         background.fill();
         background.setColor(Color.BLACK);
-//        updateWorldTransformation();
     }
 
     private void updateElements() {
@@ -671,15 +674,6 @@ public class View {
         }
     }
 
-//    private void updateWorldTransformation() {
-//        foreground.resetTransformation();
-////        foreground.scale(scale);
-//        foreground.translate(translationX, translationY);
-//
-////        background.resetTransformation();
-////        background.scale(scale);
-////        background.translate(translationX, translationY);
-//    }
     private static EnumSet<ViewFeature> initImpChangingFeatures() {
         final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class
         );
@@ -708,52 +702,55 @@ public class View {
         }
 
         @Override
-        public void postKeyDown(Object source, Key key, int count) {
+        public void postKeyDown(final Object source, final Key key, final int count) {
             postEvent(new KeyEvent(source, EventType.KEY_DOWN, key));
         }
 
         @Override
-        public void postKeyTyped(Object source, Key key) {
+        public void postKeyTyped(final Object source, final Key key) {
             postEvent(new KeyEvent(source, EventType.KEY_TYPED, key));
         }
 
         @Override
-        public void postKeyTyped(Object source, char ch) {
+        public void postKeyTyped(final Object source, final char ch) {
             postEvent(new KeyEvent(source, EventType.KEY_TYPED, ch));
         }
 
         @Override
-        public void postKeyUp(Object source, Key key) {
+        public void postKeyUp(final Object source, final Key key) {
             postEvent(new KeyEvent(source, EventType.KEY_UP, key));
         }
 
         @Override
-        public void postPointerDown(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
+        public void postPointerDown(final Object source, final int pointerId, final EnumSet<Button> pressedButtons, float x, float y) {
             x = view.foreground.toCanvasX(x);
             y = view.foreground.toCanvasY(y);
-            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, pressedButtons, x, y,
+            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, pressedButtons, 0f, x, y,
                                        view.toWorldX(x), view.toWorldY(y)));
         }
 
         @Override
-        public void postPointerMoved(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
+        public void postPointerMoved(final Object source, final int pointerId, final EnumSet<Button> pressedButtons, float x, float y) {
             x = view.foreground.toCanvasX(x);
             y = view.foreground.toCanvasY(y);
-            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, pressedButtons, x, y,
+            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, pressedButtons, 0f, x, y,
                                        view.toWorldX(x), view.toWorldY(y)));
         }
 
         @Override
-        public void postPointerUp(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
+        public void postPointerUp(final Object source, final int pointerId, final EnumSet<Button> pressedButtons, float x, float y) {
             x = view.foreground.toCanvasX(x);
             y = view.foreground.toCanvasY(y);
-            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, pressedButtons, x, y,
+            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, pressedButtons, 0f, x, y,
                                        view.toWorldX(x), view.toWorldY(y)));
         }
 
         @Override
-        public void postWheel(Object source, float rotation) {
-            postEvent(new WheelEvent(source, rotation));
+        public void postWheel(final Object source, final int pointerId, final EnumSet<Button> pressedButtons, float x, float y, final float rotation) {
+            x = view.foreground.toCanvasX(x);
+            y = view.foreground.toCanvasY(y);
+            postEvent(new PointerEvent(source, EventType.WHEEL, pointerId, pressedButtons, rotation, x, y,
+                                       view.toWorldX(x), view.toWorldY(y)));
         }
 
         private void postEvent(final Event event) {
@@ -812,9 +809,9 @@ public class View {
         }
 
         @Override
-        public void onWheel(final WheelEvent event) {
+        public void onWheel(final PointerEvent event) {
             if (scalingEnabled) {
-                if (event.getRotation() > 0f) {
+                if (event.getWheel() > 0f) {
                     view.setScale(view.getScale() * 1.1);
                 }
                 else {

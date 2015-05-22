@@ -100,12 +100,12 @@ public final class Polygon extends Shape {
 
     @Override
     public void draw(final Canvas canvas) {
-        //canvas.drawPolygon(vertexX, vertexY);
+        canvas.drawPolygon(points);
     }
 
     @Override
     public void fill(final Canvas canvas) {
-        //canvas.fillPolygon(vertexX, vertexY);
+        canvas.fillPolygon(points);
     }
 
     /**
@@ -115,7 +115,7 @@ public final class Polygon extends Shape {
      *
      * @since 2.0
      */
-    public int getVertexCount() {
+    public int getPointCount() {
         return points.length / 2;
     }
 
@@ -128,7 +128,7 @@ public final class Polygon extends Shape {
      *
      * @since 2.0
      */
-    public float getVertexX(int i) {
+    public float getPointX(int i) {
         return points[2 * i];
     }
 
@@ -141,7 +141,7 @@ public final class Polygon extends Shape {
      *
      * @since 2.0
      */
-    public float getVertexY(int i) {
+    public float getPointY(int i) {
         return points[2 * i + 1];
     }
 }

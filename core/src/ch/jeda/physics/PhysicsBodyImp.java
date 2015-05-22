@@ -21,7 +21,7 @@ import ch.jeda.MathF;
 import ch.jeda.geometry.Circle;
 import ch.jeda.geometry.Ellipse;
 import ch.jeda.geometry.Polygon;
-import ch.jeda.geometry.PolygonalChain;
+import ch.jeda.geometry.Polyline;
 import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Canvas;
@@ -288,8 +288,8 @@ final class PhysicsBodyImp implements BodyImp {
         else if (shape instanceof Polygon) {
             return convertPolygon((Polygon) shape, scale);
         }
-        else if (shape instanceof PolygonalChain) {
-            return convertPolygonalChain((PolygonalChain) shape, scale);
+        else if (shape instanceof Polyline) {
+            return convertPolygonalChain((Polyline) shape, scale);
         }
         else {
             throw new RuntimeException("Invalid shape type.");
@@ -306,20 +306,20 @@ final class PhysicsBodyImp implements BodyImp {
 
     private static org.jbox2d.collision.shapes.Shape convertPolygon(final Polygon polygon, final float scale) {
         final org.jbox2d.collision.shapes.PolygonShape result = new org.jbox2d.collision.shapes.PolygonShape();
-        final Vec2[] vertices = new Vec2[polygon.getVertexCount()];
-        for (int i = 0; i < polygon.getVertexCount(); ++i) {
-            vertices[i] = new Vec2(polygon.getVertexX(i) / scale, polygon.getVertexY(i) / scale);
+        final Vec2[] vertices = new Vec2[polygon.getPointCount()];
+        for (int i = 0; i < polygon.getPointCount(); ++i) {
+            vertices[i] = new Vec2(polygon.getPointX(i) / scale, polygon.getPointY(i) / scale);
         }
 
         result.set(vertices, vertices.length);
         return result;
     }
 
-    private static org.jbox2d.collision.shapes.Shape convertPolygonalChain(final PolygonalChain chain, final float scale) {
+    private static org.jbox2d.collision.shapes.Shape convertPolygonalChain(final Polyline chain, final float scale) {
         final org.jbox2d.collision.shapes.ChainShape result = new org.jbox2d.collision.shapes.ChainShape();
-        final Vec2[] vertices = new Vec2[chain.getVertexCount()];
-        for (int i = 0; i < chain.getVertexCount(); ++i) {
-            vertices[i] = new Vec2(chain.getVertexX(i) / scale, chain.getVertexY(i) / scale);
+        final Vec2[] vertices = new Vec2[chain.getPointCount()];
+        for (int i = 0; i < chain.getPointCount(); ++i) {
+            vertices[i] = new Vec2(chain.getPointX(i) / scale, chain.getPointY(i) / scale);
         }
 
         result.createChain(vertices, vertices.length);

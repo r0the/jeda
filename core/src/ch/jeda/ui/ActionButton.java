@@ -28,10 +28,9 @@ import ch.jeda.event.PointerListener;
  * Represents a button. A button is a {@link ch.jeda.ui.Widget} that allows the user to trigger an action by clicking on
  * it.
  *
- * @since 1.0
- * @version 2
+ * @since 2.0
  */
-public class IconButton extends Widget implements KeyDownListener, KeyUpListener, PointerListener {
+public class ActionButton extends Widget implements KeyDownListener, KeyUpListener, PointerListener {
 
     private Icon icon;
     private String name;
@@ -40,23 +39,35 @@ public class IconButton extends Widget implements KeyDownListener, KeyUpListener
     private Integer pointerId;
     private float radius;
 
-    public IconButton(final double x, final double y, final Icon icon) {
+    /**
+     * Constructs a new action button with center alignment.
+     *
+     * @param x the horizontal canvas coordinate of this button's center
+     * @param y the vertical canvas coordinate of this button's center
+     * @param icon the icon
+     *
+     * @since 2.0
+     */
+    public ActionButton(final double x, final double y, final Icon icon) {
         this(x, y, icon, Alignment.CENTER);
     }
 
-    public IconButton(final double x, final double y, final Icon icon, final Alignment alignment) {
+    /**
+     * Constructs a new action button.
+     *
+     * @param x the horizontal canvas coordinate of this button's alignment point
+     * @param y the vertical canvas coordinate of this button's alignment point
+     * @param icon the icon
+     * @param alignment the alignment of this button
+     *
+     * @since 2.0
+     */
+    public ActionButton(final double x, final double y, final Icon icon, final Alignment alignment) {
         super((float) x, (float) y, alignment);
         this.icon = icon;
         name = icon.name();
         key = Key.UNDEFINED;
         radius = 0.5f;
-    }
-
-    @Override
-    public boolean contains(float x, float y) {
-        final float dx = getX() - x;
-        final float dy = getY() - y;
-        return dx * dx + dy * dy <= radius * radius;
     }
 
     @Override
@@ -70,7 +81,7 @@ public class IconButton extends Widget implements KeyDownListener, KeyUpListener
      * @return the key associated with the button
      *
      * @see #setKey(ch.jeda.event.Key)
-     * @since 1.3
+     * @since 2.0
      */
     public Key getKey() {
         return key;
@@ -86,7 +97,7 @@ public class IconButton extends Widget implements KeyDownListener, KeyUpListener
      *
      * @return <tt>true</tt> if the widget is currently pressed, otherwise <tt>false</tt>
      *
-     * @since 1.3
+     * @since 2.0
      */
     public final boolean isPressed() {
         return keyPressed || pointerId != null;
@@ -154,7 +165,7 @@ public class IconButton extends Widget implements KeyDownListener, KeyUpListener
      * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>
      *
      * @see #getKey()
-     * @since 1.3
+     * @since 2.0
      */
     public void setKey(final Key key) {
         if (key == null) {
@@ -167,23 +178,32 @@ public class IconButton extends Widget implements KeyDownListener, KeyUpListener
     /**
      * This method is called when the user has clicked the button. Override this method to add behaviour.
      *
-     * @since 1.3
+     * @since 2.0
      */
     protected void clicked() {
         triggerAction(name);
     }
 
     @Override
+    protected boolean containsLocal(final float x, final float y) {
+        final float dx = getCenterX() - x;
+        final float dy = getCenterY() - y;
+        return dx * dx + dy * dy <= radius * radius;
+    }
+
+    @Override
     protected void draw(final Canvas canvas) {
+        final float cx = getCenterX();
+        final float cy = getCenterY();
         canvas.setAntiAliasing(true);
         canvas.setColor(getBackground());
-        canvas.setAlignment(Alignment.CENTER);
-        canvas.fillCircle(0, 0, radius);
+        canvas.fillCircle(cx, cy, radius);
         if (!isPressed()) {
-            canvas.drawShadowCircle(0, 0, radius);
+            canvas.drawShadowCircle(cx, cy, radius);
         }
 
-        canvas.drawIcon(0, 0, icon);
+        canvas.setAlignment(Alignment.CENTER);
+        canvas.drawIcon(cx, cy, icon);
     }
 
     private void sendKeyEvent(final EventType eventType) {

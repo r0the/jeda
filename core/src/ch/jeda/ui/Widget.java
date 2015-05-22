@@ -19,13 +19,13 @@ package ch.jeda.ui;
 import ch.jeda.Jeda;
 
 /**
- * Represents an element of a graphical user interface. A widget has a style that determines how to draw the widget.
- * <p>
+ * Represents an element of a graphical user interface.
+ * </p><p>
  * A widget can be <b>selected</b> by clicking on it or by calling the method {@link #select()}}. Only one widget can be
  * selected at a time.
  *
  * @since 1.3
- * @version 2
+ * @version 3
  */
 public abstract class Widget extends Element {
 
@@ -37,21 +37,22 @@ public abstract class Widget extends Element {
     private float y;
 
     /**
-     * Constructs a widget at the specified position with the specified alignment.
+     * Constructs a widget at the specified position.
      *
-     * @param x the x coordinate of the widget
-     * @param y the y coordinate of the widget
+     * @param x the horizontal canvas coordinate of this widget
+     * @param y the vertical canvas coordinate of this widget
      * @param alignment specifies how to align the widget relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
      * @since 1.3
      */
     protected Widget(final double x, final double y, final Alignment alignment) {
         if (alignment == null) {
-            throw new NullPointerException("alignment");
+            this.alignment = Alignment.BOTTOM_LEFT;
+        }
+        else {
+            this.alignment = alignment;
         }
 
-        this.alignment = alignment;
         this.x = (float) x;
         this.y = (float) y;
         background = Color.LIGHT_GREEN_900;
@@ -60,13 +61,18 @@ public abstract class Widget extends Element {
     }
 
     /**
-     * Checks if if the point (<tt>x</tt>, <tt>y</tt>) lies inside the widget.
+     * Checks if this widget contains a point. The point is specified in canvas coordinates.
      *
-     * @param x the x coordinate
-     * @param y the y coordinate
-     * @return <tt>true</tt> if the point (<tt>x</tt>, <tt>y</tt>) lies inside the widget, otherwise <tt>false</tt>
+     * @param x the horizontal coordinate
+     * @param y the vertical coordinate
+     * @return <code>true</code> if the point (<code>x</code>, <code>y</code>) lies inside this widget, otherwise
+     * <code>false</code>
+     *
+     * @since 2.0
      */
-    public abstract boolean contains(final float x, final float y);
+    public final boolean contains(final float x, final float y) {
+        return containsLocal(x - this.x, y - this.y);
+    }
 
     /**
      * Returns the current alignment of the widget. The alignment determines how the widget is positioned relative to
@@ -86,6 +92,13 @@ public abstract class Widget extends Element {
         return 0f;
     }
 
+    /**
+     * Returns the background color of this widget.
+     *
+     * @return the background color of this widget
+     *
+     * @since 2.0
+     */
     public Color getBackground() {
         return background;
     }
@@ -100,7 +113,7 @@ public abstract class Widget extends Element {
     public abstract float getHeight();
 
     /**
-     * Returns the width of the widget. The widget's width is given by it's background image.
+     * Returns the width of the widget.
      *
      * @return the width of the widget
      *
@@ -109,51 +122,33 @@ public abstract class Widget extends Element {
     public abstract float getWidth();
 
     /**
-     * Returns the x coordinate of the widget.
+     * Returns the horizontal coordinate of the widget.
      *
-     * @return the x coordinate of the widget
+     * @return the horizontal coordinate of the widget
      *
      * @since 1.3
      */
     @Override
     public final float getX() {
-        final float width = getWidth();
-        switch (alignment.horiz) {
-            case MAX:
-                return x - width / 2f;
-            case MIDDLE:
-                return x;
-            case MIN:
-            default:
-                return x + width / 2f;
-        }
+        return x;
     }
 
     /**
-     * Returns the y coordinate of the widget.
+     * Returns the vertical alignment coordinate of this widget.
      *
-     * @return the y coordinate of the widget
+     * @return the vertical alignment coordinate of this widget
      *
      * @since 1.3
      */
     @Override
     public final float getY() {
-        final float height = getHeight();
-        switch (alignment.vert) {
-            case MAX:
-                return y - height / 2f;
-            case MIDDLE:
-                return y;
-            case MIN:
-            default:
-                return y + height / 2f;
-        }
+        return y;
     }
 
     /**
-     * Checks if the widget is selected.
+     * Checks if this widget is selected.
      *
-     * @return <tt>true</tt> if the widget is selected, otherwise <tt>false</tt>
+     * @return <code>true</code> if this widget is selected, otherwise <code>false</code>
      * @since 1.3
      */
     public final boolean isSelected() {
@@ -161,7 +156,7 @@ public abstract class Widget extends Element {
     }
 
     /**
-     * Selects the widget. Deselects all other widget in the window.
+     * Selects this widget. Deselects all other widget in the view.
      *
      * @since 1.3
      */
@@ -199,13 +194,20 @@ public abstract class Widget extends Element {
         this.alignment = alignment;
     }
 
+    /**
+     * Sets the background color of this widget. Has no effect if <code>color</code> is <code>null</code>.
+     *
+     * @param background the background color
+     *
+     * @since 2.0
+     */
     public void setBackground(final Color background) {
         this.background = background;
     }
 
     /**
-     * Sets the position of the widget. The widget is positioned relative to the specified coordinates (<tt>x</tt>,
-     * <tt>y</tt>) depending on the current alignment.
+     * Sets the position of the widget. The widget is positioned relative to the specified coordinates (<code>x</code>,
+     * <code>y</code>) depending on the current alignment.
      *
      * @param x the x coordinate of the widget
      * @param y the y coordinate of the widget
@@ -216,6 +218,56 @@ public abstract class Widget extends Element {
     public final void setPosition(final int x, final int y) {
         this.x = x;
         this.y = y;
+    }
+
+    /**
+     * Checks if this widget contains a point in local coordinates.
+     *
+     * @param x the horizontal coordinate
+     * @param y the vertical coordinate
+     * @return <code>true</code> if the point (<code>x</code>, <code>y</code>) lies inside this widget, otherwise
+     * <code>false</code>
+     *
+     * @since 2.0
+     */
+    protected abstract boolean containsLocal(final float x, final float y);
+
+    /**
+     * Returns the horizontal local coordinate of the center of this widget.
+     *
+     * @return the horizontal local coordinate of the center of this widget
+     *
+     * @since 2.0
+     */
+    protected final float getCenterX() {
+        switch (alignment.horiz) {
+            case MAX:
+                return -getWidth();
+            case MIDDLE:
+                return -getWidth() / 2f;
+            case MIN:
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * Returns the vertical local coordinate of the center of this widget.
+     *
+     * @return the vertical local coordinate of the center of this widget
+     *
+     * @since 2.0
+     */
+    protected final float getCenterY() {
+        switch (alignment.horiz) {
+            case MAX:
+                return -getHeight();
+            case MIDDLE:
+                return -getHeight() / 2f;
+            case MIN:
+            default:
+                return 0;
+        }
     }
 
     private void checkVirtualKeyboard() {

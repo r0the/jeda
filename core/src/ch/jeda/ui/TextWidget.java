@@ -16,6 +16,11 @@
  */
 package ch.jeda.ui;
 
+/**
+ * Represents a widget displaying a text.
+ *
+ * @since 2.0
+ */
 public abstract class TextWidget extends Widget {
 
     private float height;
@@ -24,7 +29,16 @@ public abstract class TextWidget extends Widget {
     private float textSize;
     private float width;
 
-    public TextWidget(final double x, final double y, final Alignment alignment) {
+    /**
+     * Constructs a new text widget.
+     *
+     * @param x the horizontal alignment coordinate of this widget
+     * @param y the vertical alignment coordinate of this widget
+     * @param alignment the alignment of this widget
+     *
+     * @since 2.0
+     */
+    protected TextWidget(final double x, final double y, final Alignment alignment) {
         super(x, y, alignment);
         textColor = Color.BLACK;
         width = 3;
@@ -33,10 +47,6 @@ public abstract class TextWidget extends Widget {
     }
 
     @Override
-    public boolean contains(float x, float y) {
-        return Math.abs(getX() - x) <= width / 2 && Math.abs(getY() - y) <= height / 2;
-    }
-
     public float getHeight() {
         return height;
     }
@@ -52,18 +62,41 @@ public abstract class TextWidget extends Widget {
         return text;
     }
 
+    /**
+     * Returns the text color.
+     *
+     * @return the text color
+     *
+     * @since 2.0
+     */
     public Color getTextColor() {
         return textColor;
     }
 
+    /**
+     * Returns the text size.
+     *
+     * @return the text size
+     *
+     * @since 2.0
+     */
     public float getTextSize() {
         return textSize;
     }
 
+    @Override
     public float getWidth() {
         return width;
     }
 
+    /**
+     * Sets a new size for this widget.
+     *
+     * @param width the new width of this widget
+     * @param height the new height of this widget
+     *
+     * @since 2.0
+     */
     public final void resize(final double width, final double height) {
         this.width = (float) width;
         this.height = (float) height;
@@ -81,11 +114,32 @@ public abstract class TextWidget extends Widget {
         this.text = text;
     }
 
-    public void setTextColor(Color textColor) {
+    /**
+     * Sets the text color for this widget.
+     *
+     * @param textColor the text color for this widget
+     *
+     * @see #getTextColor()
+     * @since 2.0
+     */
+    public void setTextColor(final Color textColor) {
         this.textColor = textColor;
     }
 
-    public void setTextSize(double textSize) {
+    /**
+     * Sets the text size for this widget.
+     *
+     * @param textSize the text size for this widget
+     *
+     * @see #getTextSize()
+     * @since 2.0
+     */
+    public void setTextSize(final double textSize) {
         this.textSize = (float) textSize;
+    }
+
+    @Override
+    public boolean containsLocal(final float x, final float y) {
+        return Math.abs(getCenterX() - x) <= width / 2 && Math.abs(getCenterY() - y) <= height / 2;
     }
 }

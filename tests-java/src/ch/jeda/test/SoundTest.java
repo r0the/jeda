@@ -13,7 +13,7 @@ public class SoundTest extends Program implements ActionListener {
     @Override
     public void run() {
         view = new View();
-        view.add(new IconButton(2, 2, Icon.PLAY));
+        view.add(new ActionButton(2, 2, Icon.PLAY));
         view.addEventListener(this);
     }
 

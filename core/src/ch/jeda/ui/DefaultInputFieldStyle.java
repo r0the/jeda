@@ -86,8 +86,9 @@ public class DefaultInputFieldStyle extends DefaultTextStyle implements InputFie
         canvas.drawImage(inputField.getLeft(), inputField.getTop(), background);
         canvas.drawText(inputField.getLeft() + BORDER, inputField.getCenterY(), visibleText, Alignment.LEFT);
         if (inputField.isSelected()) {
+            canvas.setAlignment(Alignment.CENTER);
             canvas.drawImage(inputField.getLeft() + BORDER + canvas.textWidth(visibleText), inputField.getCenterY(),
-                             cursor, Alignment.CENTER);
+                             cursor);
         }
     }
 

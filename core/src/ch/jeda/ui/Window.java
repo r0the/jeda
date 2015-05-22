@@ -25,7 +25,6 @@ import ch.jeda.event.EventType;
 import ch.jeda.event.Key;
 import ch.jeda.event.KeyEvent;
 import ch.jeda.event.PointerEvent;
-import ch.jeda.event.WheelEvent;
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
 import ch.jeda.platform.ViewCallback;
@@ -271,7 +270,7 @@ public class Window {
         }
 
         if (image != null) {
-            imp.getForeground().drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()),
+            imp.getForeground().drawImage(alignment.oldAlignX(x, image.getWidth()), alignment.oldAlignY(y, image.getHeight()),
                                           image.getWidth(), image.getHeight(), image.getImp(), 255);
         }
     }
@@ -318,7 +317,7 @@ public class Window {
         }
 
         if (image != null && alpha > 0) {
-            imp.getForeground().drawImage(alignment.alignX(x, image.getWidth()), alignment.alignY(y, image.getHeight()),
+            imp.getForeground().drawImage(alignment.oldAlignX(x, image.getWidth()), alignment.oldAlignY(y, image.getHeight()),
                                           image.getWidth(), image.getHeight(),
                                           image.getImp(), alpha);
         }
@@ -475,7 +474,7 @@ public class Window {
         }
 
         if (width > 0 && height > 0) {
-            imp.getForeground().drawRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
+            imp.getForeground().drawRectangle(alignment.oldAlignX(x, width), alignment.oldAlignY(y, height), width, height);
         }
     }
 
@@ -549,8 +548,8 @@ public class Window {
         }
 
         if (text != null && !text.isEmpty()) {
-            imp.getForeground().drawText(alignment.alignX(x, imp.getForeground().textWidth(text)),
-                                         alignment.alignY(y, imp.getForeground().textHeight(text)), text);
+            imp.getForeground().drawText(alignment.oldAlignX(x, imp.getForeground().textWidth(text)),
+                                         alignment.oldAlignY(y, imp.getForeground().textHeight(text)), text);
         }
     }
 
@@ -707,7 +706,7 @@ public class Window {
         }
 
         if (width > 0 && height > 0) {
-            imp.getForeground().fillRectangle(alignment.alignX(x, width), alignment.alignY(y, height), width, height);
+            imp.getForeground().fillRectangle(alignment.oldAlignX(x, width), alignment.oldAlignY(y, height), width, height);
         }
     }
 
@@ -1263,22 +1262,22 @@ public class Window {
 
         @Override
         public void postPointerDown(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, pressedButtons, x, y, x, y));
+            postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, pressedButtons, 0f, x, y, x, y));
         }
 
         @Override
         public void postPointerMoved(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, pressedButtons, x, y, x, y));
+            postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, pressedButtons, 0f, x, y, x, y));
         }
 
         @Override
         public void postPointerUp(Object source, int pointerId, EnumSet<Button> pressedButtons, float x, float y) {
-            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, pressedButtons, x, y, x, y));
+            postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, pressedButtons, 0f, x, y, x, y));
         }
 
         @Override
-        public void postWheel(Object source, float rotation) {
-            postEvent(new WheelEvent(source, rotation));
+        public void postWheel(final Object source, final int pointerId, final EnumSet<Button> pressedButtons, float x, float y, final float rotation) {
+            postEvent(new PointerEvent(source, EventType.WHEEL, pointerId, pressedButtons, rotation, x, y, x, y));
         }
 
         private void postEvent(final Event event) {

@@ -25,9 +25,9 @@ import ch.jeda.event.PointerEvent;
 import ch.jeda.event.PointerListener;
 
 /**
- * Represents a check box. A check box is a {@link ch.jeda.ui.OldWidget} that allows the user to control a dual state, e.g.
- * to turn on or off an option. The state of the check box can be changed by clicking on it or by typing the specified
- * hot key.
+ * Represents a check box. A check box is a {@link ch.jeda.ui.OldWidget} that allows the user to control a dual state,
+ * e.g. to turn on or off an option. The state of the check box can be changed by clicking on it or by typing the
+ * specified hot key.
  *
  * @since 1.3
  */

@@ -19,7 +19,7 @@ package ch.jeda.tiled;
 import ch.jeda.Convert;
 import ch.jeda.geometry.Ellipse;
 import ch.jeda.geometry.Polygon;
-import ch.jeda.geometry.PolygonalChain;
+import ch.jeda.geometry.Polyline;
 import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ class Parser {
         }
         else if (objectElement.hasChild(Const.POLYLINE)) {
             final String points = objectElement.getChild(Const.POLYLINE).getStringAttribute(Const.POINTS);
-            return new PolygonalChain(parsePoints(points, offsetX, offsetY));
+            return new Polyline(parsePoints(points, offsetX, offsetY));
         }
         else if (width > 0 && height > 0) {
             return new Rectangle(0f, 0f, width, height);

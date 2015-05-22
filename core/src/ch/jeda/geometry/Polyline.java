@@ -24,37 +24,51 @@ import java.util.Arrays;
  *
  * @since 2.0
  */
-public class PolygonalChain extends Shape {
+public class Polyline extends Shape {
 
-    // TODO: Implementation with one array
-    private final int vertexCount;
-    private final float[] vertexX;
-    private final float[] vertexY;
+    private final float[] points;
 
     /**
-     * Constructs a polygonal chain shape. The polygonal chain is defined by a sequence of coordinate pairs specifiying
-     * it's vertices. For example, the code
-     * <pre><code>new PolygonalChain(x1, y1, x2, y2, x3, y3);</code></pre> will define a chain consisting of the two
-     * line segments (x1, y2) to (x2, y2) and (x2, y2) to (x3, y3).
+     * Constructs a polyline shape. The polyline is defined by a sequence of coordinate pairs specifiying it's vertices.
+     * For example, the code
+     * <pre><code>new Polyline(x1, y1, x2, y2, x3, y3);</code></pre> will define a polyline consisting of the two line
+     * segments (x1, y2) to (x2, y2) and (x2, y2) to (x3, y3).
      *
-     * @param vertices the vertices of the polyline as sequence of coordinate pairs
+     * @param points the points of the polyline as sequence of coordinate pairs
      * @throws IllegalArgumentException if less than 4 arguments are passed
      * @throws IllegalArgumentException if and odd number of arguments are passed
      *
      * @since 2.0
      */
-    public PolygonalChain(final float... vertices) {
-        if (vertices.length < 4 || vertices.length % 2 == 1) {
-            throw new IllegalArgumentException("vertices");
+    public Polyline(final double... points) {
+        if (points.length < 4 || points.length % 2 == 1) {
+            throw new IllegalArgumentException("points");
         }
 
-        vertexCount = vertices.length / 2;
-        vertexX = new float[vertexCount];
-        vertexY = new float[vertexCount];
-        for (int i = 0; i < vertexCount; ++i) {
-            vertexX[i] = vertices[2 * i];
-            vertexY[i] = vertices[2 * i + 1];
+        this.points = new float[points.length];
+        for (int i = 0; i < points.length; ++i) {
+            this.points[i] = (float) points[i];
         }
+    }
+
+    /**
+     * Constructs a polyline shape. The polyline is defined by a sequence of coordinate pairs specifiying it's vertices.
+     * For example, the code
+     * <pre><code>new Polyline(x1, y1, x2, y2, x3, y3);</code></pre> will define a polyline consisting of the two line
+     * segments (x1, y2) to (x2, y2) and (x2, y2) to (x3, y3).
+     *
+     * @param points the points of the polyline as sequence of coordinate pairs
+     * @throws IllegalArgumentException if less than 4 arguments are passed
+     * @throws IllegalArgumentException if and odd number of arguments are passed
+     *
+     * @since 2.0
+     */
+    public Polyline(final float... points) {
+        if (points.length < 4 || points.length % 2 == 1) {
+            throw new IllegalArgumentException("points");
+        }
+
+        this.points = Arrays.copyOf(points, points.length);
     }
 
     @Override
@@ -64,14 +78,12 @@ public class PolygonalChain extends Shape {
 
     @Override
     public void draw(final Canvas canvas) {
-        for (int i = 0; i < vertexCount - 1; ++i) {
-            canvas.drawLine(vertexX[i], vertexY[i], vertexX[i + 1], vertexY[i + 1]);
-        }
+        canvas.drawPolyline(points);
     }
 
     @Override
     public void fill(final Canvas canvas) {
-        this.draw(canvas);
+        canvas.drawPolyline(points);
     }
 
     /**
@@ -81,8 +93,8 @@ public class PolygonalChain extends Shape {
      *
      * @since 2.0
      */
-    public int getVertexCount() {
-        return vertexCount;
+    public int getPointCount() {
+        return points.length / 2;
     }
 
     /**
@@ -94,8 +106,8 @@ public class PolygonalChain extends Shape {
      *
      * @since 2.0
      */
-    public float getVertexX(int i) {
-        return vertexX[i];
+    public float getPointX(int i) {
+        return points[2 * i];
     }
 
     /**
@@ -107,7 +119,7 @@ public class PolygonalChain extends Shape {
      *
      * @since 2.0
      */
-    public float getVertexY(int i) {
-        return vertexY[i];
+    public float getPointY(int i) {
+        return points[2 * i + 1];
     }
 }

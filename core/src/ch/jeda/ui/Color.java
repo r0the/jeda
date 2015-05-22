@@ -209,6 +209,104 @@ public final class Color implements Serializable, Storable {
     public static final Color OLIVE = new Color(128, 128, 0);
 
     /**
+     * The Google material design color <i>Pink 50</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_50 = new Color("#fce4ec");
+
+    /**
+     * The Google material design color <i>Pink 100</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_100 = new Color("#f8bbd0");
+
+    /**
+     * The Google material design color <i>Pink 200</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_200 = new Color("#f48fb1");
+
+    /**
+     * The Google material design color <i>Pink 300</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_300 = new Color("#f06292");
+
+    /**
+     * The Google material design color <i>Pink 400</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_400 = new Color("#ec407a");
+
+    /**
+     * The Google material design color <i>Pink 500</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_500 = new Color("#e91e63");
+
+    /**
+     * The Google material design color <i>Pink 600</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_600 = new Color("#d81b60");
+
+    /**
+     * The Google material design color <i>Pink 700</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_700 = new Color("#c2185b");
+
+    /**
+     * The Google material design color <i>Pink 800</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_800 = new Color("#ad1457");
+
+    /**
+     * The Google material design color <i>Pink 900</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_900 = new Color("#880e4f");
+
+    /**
+     * The Google material design color <i>Pink A100</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_A100 = new Color("#ff80ab");
+
+    /**
+     * The Google material design color <i>Pink A200</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_A200 = new Color("#ff4081");
+
+    /**
+     * The Google material design color <i>Pink A400</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_A400 = new Color("#f50057");
+
+    /**
+     * The Google material design color <i>Pink A700</i>.
+     *
+     * @since 2.0
+     */
+    public static final Color PINK_A700 = new Color("#c51162");
+
+    /**
      * The VGA color <i>purple</i>. Same as <tt>new Color(128, 0, 128)</tt>.
      *
      * @since 1.0

@@ -92,7 +92,7 @@ public abstract class OldWidget extends Element {
      */
     public final int getBottom() {
         final int height = getHeight();
-        return alignment.alignY(y, height) + height;
+        return alignment.oldAlignY(y, height) + height;
     }
 
     /**
@@ -104,7 +104,7 @@ public abstract class OldWidget extends Element {
      */
     public final int getCenterX() {
         final int width = getWidth();
-        return alignment.alignX(x, width) + width / 2;
+        return alignment.oldAlignX(x, width) + width / 2;
     }
 
     /**
@@ -116,7 +116,7 @@ public abstract class OldWidget extends Element {
      */
     public final int getCenterY() {
         final int height = getHeight();
-        return alignment.alignY(y, height) + height / 2;
+        return alignment.oldAlignY(y, height) + height / 2;
     }
 
     /**
@@ -136,7 +136,7 @@ public abstract class OldWidget extends Element {
      * @since 1.3
      */
     public final int getLeft() {
-        return alignment.alignX(x, getWidth());
+        return alignment.oldAlignX(x, getWidth());
     }
 
     /**
@@ -148,7 +148,7 @@ public abstract class OldWidget extends Element {
      */
     public final int getRight() {
         final int width = getWidth();
-        return alignment.alignX(x, width) + width;
+        return alignment.oldAlignX(x, width) + width;
     }
 
     /**
@@ -159,7 +159,7 @@ public abstract class OldWidget extends Element {
      * @since 1.3
      */
     public final int getTop() {
-        return alignment.alignY(y, getHeight());
+        return alignment.oldAlignY(y, getHeight());
     }
 
     /**

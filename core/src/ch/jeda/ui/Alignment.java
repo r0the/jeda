@@ -97,11 +97,11 @@ public enum Alignment {
         this.vert = vert;
     }
 
-    int alignX(final int x, final int width) {
+    int oldAlignX(final int x, final int width) {
         return horizontal.align(x, width);
     }
 
-    int alignY(final int y, final int height) {
+    int oldAlignY(final int y, final int height) {
         return vertical.align(y, height);
     }
 }

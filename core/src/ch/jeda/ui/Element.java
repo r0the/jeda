@@ -75,8 +75,22 @@ public abstract class Element {
         return name;
     }
 
+    /**
+     * Returns the horizontal world coordinate of this element.
+     *
+     * @return the horizontal world coordinate of this element
+     *
+     * @since 2.0
+     */
     public abstract float getX();
 
+    /**
+     * Returns the vertical world coordinate of this element.
+     *
+     * @return the vertical world coordinate of this element
+     *
+     * @since 2.0
+     */
     public abstract float getY();
 
     /**
@@ -100,6 +114,12 @@ public abstract class Element {
      */
     public abstract float getAngleRad();
 
+    /**
+     * Checks if this element is currently pinned to the canvas. Pinned elements are positioned in the canvas coordinate
+     * system rather than the world coordinate system.
+     *
+     * @return <code>true</code>, if this element is currently pinned to the canvas, otherwise <code>false</code>
+     */
     public boolean isPinned() {
         return pinned;
     }
@@ -142,6 +162,14 @@ public abstract class Element {
         this.name = name;
     }
 
+    /**
+     * Pins or unpins this element. Pinned elements are positioned in the canvas coordinate system rather than the world
+     * coordinate system.
+     *
+     * @param pinned <code>true</code> to pin the element, <code>false</code> to unpin it
+     *
+     * @since 2.0
+     */
     public void setPinned(final boolean pinned) {
         this.pinned = pinned;
     }

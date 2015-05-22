@@ -24,6 +24,8 @@ public class PhysicsTest extends Program implements TickListener {
         view.setGravity(0, -9);
         view.setDebugging(true);
         view.createWalls();
+        view.add(new ActionButton(1.5, 1.5, Icon.CHEVRON_DOWN));
+        view.add(new ActionButton(1.5, 3, Icon.CHEVRON_UP));
         System.out.println("width=" + view.getWidth());
         view.createBox(1, 1, 2, 2, 0.5f);
 

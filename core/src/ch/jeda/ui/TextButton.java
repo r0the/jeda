@@ -28,8 +28,7 @@ import ch.jeda.event.PointerListener;
  * Represents a button. A button is a {@link ch.jeda.ui.Widget} that allows the user to trigger an action by clicking on
  * it.
  *
- * @since 1.0
- * @version 2
+ * @since 2.0
  */
 public class TextButton extends TextWidget implements KeyDownListener, KeyUpListener, PointerListener {
 
@@ -38,56 +37,29 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
     private Integer pointerId;
 
     /**
-     * Constructs a button at the specified position.
-     *
-     * @param x the x coordinate of the button
-     * @param y the y coordinate of the button
-     *
-     * @since 1.3
-     */
-    public TextButton(final double x, final double y) {
-        this(x, y, Alignment.BOTTOM_LEFT, null);
-    }
-
-    /**
-     * Constructs a button at the specified position with the specified alignment.
-     *
-     * @param x the x coordinate of the button
-     * @param y the y coordinate of the button
-     * @param alignment specifies how to align the button relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
-     *
-     * @since 1.3
-     */
-    public TextButton(final double x, final double y, final Alignment alignment) {
-        this(x, y, alignment, null);
-    }
-
-    /**
-     * Constructs a button at the specified position with the specified text.
+     * Constructs a button with bottom left alignment.
      *
      * @param x the x coordinate of the button
      * @param y the y coordinate of the button
      * @param text the button text
      *
-     * @since 1.3
+     * @since 2.0
      */
     public TextButton(final double x, final double y, final String text) {
-        this(x, y, Alignment.BOTTOM_LEFT, text);
+        this(x, y, text, Alignment.BOTTOM_LEFT);
     }
 
     /**
-     * Constructs a button at the specified position with the specified alignment and text.
+     * Constructs a button.
      *
      * @param x the x coordinate of the button
      * @param y the y coordinate of the button
-     * @param alignment specifies how to align the button relative to (<tt>x</tt>, <tt>y</tt>)
      * @param text the button text
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     * @param alignment the button's alignment
      *
-     * @since 1.3
+     * @since 2.0
      */
-    public TextButton(final double x, final double y, final Alignment alignment, final String text) {
+    public TextButton(final double x, final double y, final String text, final Alignment alignment) {
         super((float) x, (float) y, alignment);
         key = Key.UNDEFINED;
         setText(text);
@@ -202,7 +174,7 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
     protected void draw(final Canvas canvas) {
         canvas.setAntiAliasing(true);
         canvas.setColor(getBackground());
-        canvas.setAlignment(Alignment.CENTER);
+        canvas.setAlignment(getAlignment());
         canvas.fillRectangle(0, 0, getWidth(), getHeight());
         if (isPressed()) {
             canvas.setTextSize(getTextSize() - 1);
@@ -213,7 +185,8 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
         }
 
         canvas.setColor(getTextColor());
-        canvas.drawText(0, 0, getText());
+        canvas.setAlignment(Alignment.CENTER);
+        canvas.drawText(getCenterX(), getCenterY(), getText());
     }
 
     private void sendKeyEvent(final EventType eventType) {

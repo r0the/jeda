@@ -81,6 +81,18 @@ public class Canvas {
     }
 
     /**
+     * Copies the contents of another canvas to this canvas.
+     *
+     * @param canvas the other canvas
+     *
+     * @since 1.0
+     */
+    public void copyFrom(final Canvas canvas) {
+        imp.resetTransformation();
+        imp.drawCanvas(0, 0, canvas.imp);
+    }
+
+    /**
      * Draws a circle. The circle is drawn using the current color and line width. Has no effect if the specified radius
      * is not positive.
      *
@@ -208,7 +220,7 @@ public class Canvas {
      *
      * @since 2.0
      */
-    public void drawImage(float x, float y, final Image image, final int alpha) {
+    void drawImage(float x, float y, final Image image, final int alpha) {
         if (image != null && image.isAvailable()) {
             x = toPixelX(x);
             y = toPixelY(y);
@@ -219,24 +231,6 @@ public class Canvas {
     }
 
     /**
-     * Draws an image. The image is drawn using the current transformation. The image is aligned relative to the
-     * specified coordinates (<code>x</code>, <code>y</code>). Has no effect if <code>image</code> is <code>null</code>.
-     *
-     * @param x the x coordinate of the alignment point
-     * @param y the y coordinate of the alignment point
-     * @param image the image to draw
-     * @param alignment specifies how to align the image relative to (<code>x</code>, <code>y</code>)
-     * @throws NullPointerException if <code>alignment</code> is <code>null</code>
-     *
-     * @since 1.0
-     */
-    @Deprecated
-    public void drawImage(final double x, final double y, final Image image, final Alignment alignment) {
-        drawImage(alignment.alignX((int) x, image.getWidth()),
-                  alignment.alignY((int) y, image.getHeight()), image);
-    }
-
-    /**
      * Draws a straight line. The line is drawn from the coordinates (<code>x1</code>, <code>y1</code>) to the
      * coordinates (<code>x2</code>, <code>y2</code>) with the current color, line width, and transformation.
      *
@@ -244,6 +238,7 @@ public class Canvas {
      * @param y1 the y coordinate of the lines' start point
      * @param x2 the x coordinate of the line's end point
      * @param y2 the y coordinate of the line's end point
+     * @deprecated Use {@link #drawPolyline(double...)} instead.
      *
      * @since 1.0
      */
@@ -448,7 +443,7 @@ public class Canvas {
     /**
      * @deprecated
      */
-    public void drawText(final double x, final double y, final String text, final Alignment alignment) {
+    void drawText(final double x, final double y, final String text, final Alignment alignment) {
         setAlignment(alignment);
         drawText(x, y, text);
     }
@@ -609,6 +604,13 @@ public class Canvas {
     }
 
     /**
+     * @deprecated Use {@link #getTextSize()} instead.
+     */
+    public int getFontSize() {
+        return (int) textSize;
+    }
+
+    /**
      * Returns the height of this canvas in centimeters.
      *
      * @return the height of this canvas in centimeters
@@ -719,6 +721,13 @@ public class Canvas {
             this.color = color;
             imp.setColor(color);
         }
+    }
+
+    /**
+     * @deprecated Use {@link #setTextSize(double)} instead.
+     */
+    public void setFontSize(final int size) {
+        setTextSize(size);
     }
 
     /**
@@ -846,11 +855,6 @@ public class Canvas {
         }
     }
 
-    void copyFrom(final Canvas canvas) {
-        imp.resetTransformation();
-        imp.drawCanvas(0, 0, canvas.imp);
-    }
-
     final void setWorldTransformation(final float scale, final float tx, final float ty) {
         this.scale = displayAdaption.screenScale * 100 / scale;
         this.tx = -tx * this.scale;
@@ -887,19 +891,7 @@ public class Canvas {
         return result;
     }
 
-    float lengthToWorld(final int pixels) {
-        return pixels / scale;
-    }
-
-    float toCanvasX(final float x) {
-        return x / displayAdaption.screenScale;
-    }
-
-    float toCanvasY(final float y) {
-        return (displayAdaption.pixelsY - y) / displayAdaption.screenScale;
-    }
-
-    private float alignX(final float x, final float w) {
+    float alignX(final float x, final float w) {
         switch (alignment.horiz) {
             case MAX:
                 return x - w;
@@ -911,7 +903,7 @@ public class Canvas {
         }
     }
 
-    private float alignY(final float y, final float h) {
+    float alignY(final float y, final float h) {
         switch (alignment.vert) {
             case MAX:
                 return y;
@@ -921,6 +913,18 @@ public class Canvas {
             default:
                 return y - h;
         }
+    }
+
+    float lengthToWorld(final int pixels) {
+        return pixels / scale;
+    }
+
+    float toCanvasX(final float x) {
+        return x / displayAdaption.screenScale;
+    }
+
+    float toCanvasY(final float y) {
+        return (displayAdaption.pixelsY - y) / displayAdaption.screenScale;
     }
 
     private float toPixel(final float len) {

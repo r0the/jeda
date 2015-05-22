@@ -16,6 +16,7 @@
  */
 package ch.jeda.geometry;
 
+import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
 
 /**
@@ -31,8 +32,7 @@ public final class Rectangle extends Shape {
     private final float width;
 
     /**
-     * Constructs a new rectangle shape. With and height must be positive. The center of the rectangle is the origin of
-     * the local coordinate system.
+     * Constructs a new rectangle shape. With and height must be positive.
      *
      * @param width the width of the rectangle
      * @param height the height of the rectangle
@@ -71,16 +71,18 @@ public final class Rectangle extends Shape {
 
     @Override
     public boolean contains(final float x, final float y) {
-        return Math.abs(x) <= width / 2.0 && Math.abs(y) <= height / 2.0;
+        return Math.abs(this.x - x) <= width / 2.0 && Math.abs(this.y - y) <= height / 2.0;
     }
 
     @Override
     public void draw(final Canvas canvas) {
+        canvas.setAlignment(Alignment.BOTTOM_LEFT);
         canvas.drawRectangle(x, y, width, height);
     }
 
     @Override
     public void fill(final Canvas canvas) {
+        canvas.setAlignment(Alignment.BOTTOM_LEFT);
         canvas.fillRectangle(x, y, width, height);
     }
 
