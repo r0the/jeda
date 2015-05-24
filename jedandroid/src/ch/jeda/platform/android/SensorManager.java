@@ -185,19 +185,19 @@ class SensorManager extends Fragment {
             switch (activity.getWindowManager().getDefaultDisplay().getRotation()) {
                 case Surface.ROTATION_0:
                     x = -event.values[0] * sensorInfo.factor;
-                    y = event.values[1] * sensorInfo.factor;
+                    y = -event.values[1] * sensorInfo.factor;
                     break;
                 case Surface.ROTATION_90:
                     x = event.values[1] * sensorInfo.factor;
-                    y = event.values[0] * sensorInfo.factor;
+                    y = -event.values[0] * sensorInfo.factor;
                     break;
                 case Surface.ROTATION_180:
                     x = event.values[0] * sensorInfo.factor;
-                    y = -event.values[1] * sensorInfo.factor;
+                    y = event.values[1] * sensorInfo.factor;
                     break;
                 case Surface.ROTATION_270:
                     x = -event.values[1] * sensorInfo.factor;
-                    y = -event.values[0] * sensorInfo.factor;
+                    y = event.values[0] * sensorInfo.factor;
                     break;
             }
 
