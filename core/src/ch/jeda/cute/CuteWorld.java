@@ -17,7 +17,7 @@
 package ch.jeda.cute;
 
 import ch.jeda.ui.Alignment;
-import ch.jeda.ui.Canvas;
+import ch.jeda.ui.Window;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,7 +131,7 @@ public final class CuteWorld {
         }
     }
 
-    public void draw(final Canvas canvas) {
+    public void draw(final Window canvas) {
         checkScrollPos(canvas);
 
         double top = Block.SIZE_Y + sizeZ * Block.SIZE_Z;
@@ -156,37 +156,36 @@ public final class CuteWorld {
                             boolean north = !getBlockAt(x, y - 1, z + 1).isEmpty();
                             boolean south = !getBlockAt(x, y + 1, z + 1).isEmpty();
                             boolean west = !getBlockAt(x - 1, y, z + 1).isEmpty();
-                            canvas.setAlignment(Alignment.BOTTOM_CENTER);
                             if (east) {
-                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.WEST));
+                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.WEST), Alignment.BOTTOM_CENTER);
                             }
 
                             if (north) {
-                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH));
+                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH), Alignment.BOTTOM_CENTER);
                             }
 
                             if (south) {
-                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.NORTH));
+                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.NORTH), Alignment.BOTTOM_CENTER);
                             }
 
                             if (west) {
-                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.EAST));
+                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.EAST), Alignment.BOTTOM_CENTER);
                             }
 
                             if (!north && !east && !getBlockAt(x + 1, y - 1, z + 1).isEmpty()) {
-                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH_WEST));
+                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH_WEST), Alignment.BOTTOM_CENTER);
                             }
 
                             if (!north && !west && !getBlockAt(x - 1, y - 1, z + 1).isEmpty()) {
-                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH_EAST));
+                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.SOUTH_EAST), Alignment.BOTTOM_CENTER);
                             }
 
                             if (!south && !east && !getBlockAt(x + 1, y + 1, z + 1).isEmpty()) {
-                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.NORTH_WEST));
+                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.NORTH_WEST), Alignment.BOTTOM_CENTER);
                             }
 
                             if (!south && !west && !getBlockAt(x - 1, y + 1, z + 1).isEmpty()) {
-                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.NORTH_EAST));
+                                canvas.drawImage(screenX, screenY, Cute.getShadow(Direction.NORTH_EAST), Alignment.BOTTOM_CENTER);
                             }
                         }
                     }
@@ -293,7 +292,7 @@ public final class CuteWorld {
         }
     }
 
-    private void checkScrollPos(final Canvas canvas) {
+    private void checkScrollPos(final Window canvas) {
         double maxScrollX = sizeX * Block.SIZE_X - canvas.getWidth();
         double maxScrollY = sizeY * Block.SIZE_Y + sizeZ * Block.SIZE_Z - canvas.getHeight();
         if (scrollLock != null) {

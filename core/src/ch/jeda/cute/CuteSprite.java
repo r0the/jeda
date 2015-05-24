@@ -16,7 +16,7 @@
  */
 package ch.jeda.cute;
 
-import ch.jeda.ui.Canvas;
+import ch.jeda.ui.Window;
 
 public class CuteSprite extends CuteObject {
 
@@ -51,7 +51,7 @@ public class CuteSprite extends CuteObject {
     }
 
     @Override
-    protected void draw(final Canvas canvas, final double x, final double y) {
+    protected void draw(final Window canvas, final double x, final double y) {
         super.draw(canvas, x, y);
     }
 

@@ -18,6 +18,7 @@ package ch.jeda.cute;
 
 import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
+import ch.jeda.ui.Window;
 
 public class CuteObject {
 
@@ -153,10 +154,9 @@ public class CuteObject {
     protected void collideWith(final CuteObject other) {
     }
 
-    protected void draw(final Canvas canvas, final double x, final double y) {
+    protected void draw(final Window canvas, final double x, final double y) {
         if (objectType != null) {
-            canvas.setAlignment(Alignment.BOTTOM_CENTER);
-            canvas.drawImage(x, y, objectType.getImage());
+            canvas.drawImage(x, y, objectType.getImage(), Alignment.BOTTOM_CENTER);
         }
     }
 

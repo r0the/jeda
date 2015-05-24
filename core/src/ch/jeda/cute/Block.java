@@ -17,8 +17,8 @@
 package ch.jeda.cute;
 
 import ch.jeda.ui.Alignment;
-import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Image;
+import ch.jeda.ui.Window;
 
 public abstract class Block {
 
@@ -37,9 +37,9 @@ public abstract class Block {
     public static final int SIZE_Z = 40;
     public static final int TOP_OFFSET = 120;
 
-    public abstract void draw(Canvas canvas, double x, double y);
+    public abstract void draw(Window canvas, double x, double y);
 
-    public abstract void draw(Canvas canvas, double x, double y, int alpha);
+    public abstract void draw(Window canvas, double x, double y, int alpha);
 
     public abstract boolean isEmpty();
 
@@ -54,15 +54,13 @@ public abstract class Block {
         }
 
         @Override
-        public void draw(final Canvas canvas, final double x, final double y) {
-            canvas.setAlignment(Alignment.BOTTOM_CENTER);
-            canvas.drawImage(x, y, image);
+        public void draw(final Window canvas, final double x, final double y) {
+            canvas.drawImage(x, y, image, Alignment.BOTTOM_CENTER);
         }
 
         @Override
-        public void draw(final Canvas canvas, final double x, final double y, final int alpha) {
-            canvas.setAlignment(Alignment.BOTTOM_CENTER);
-            canvas.drawImage(x, y, image, alpha);
+        public void draw(final Window canvas, final double x, final double y, final int alpha) {
+            canvas.drawImage(x, y, image, alpha, Alignment.BOTTOM_CENTER);
         }
 
         @Override
@@ -79,11 +77,11 @@ public abstract class Block {
     private static class EmptyBlock extends Block {
 
         @Override
-        public void draw(final Canvas canvas, final double x, final double y) {
+        public void draw(final Window canvas, final double x, final double y) {
         }
 
         @Override
-        public void draw(final Canvas canvas, final double x, final double y, final int alpha) {
+        public void draw(final Window canvas, final double x, final double y, final int alpha) {
         }
 
         @Override

@@ -17,9 +17,9 @@
 package ch.jeda.cute;
 
 import ch.jeda.ui.Alignment;
-import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 import ch.jeda.ui.Image;
+import ch.jeda.ui.Window;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,16 +32,15 @@ class SpeechBubble {
     private static final int LINE_HEIGHT = 20;
     private static final int TEXT_SIZE = 20;
 
-    static void draw(final Canvas canvas, double x, double y, String message) {
+    static void draw(final Window canvas, double x, double y, String message) {
         final Image image = imageFor(message);
         if (message.startsWith(SPEECH_PREFIX)) {
             message = message.substring(SPEECH_PREFIX.length());
         }
 
-        canvas.setAlignment(Alignment.BOTTOM_CENTER);
-        canvas.drawImage(x, y, image);
+        canvas.drawImage(x, y, image, Alignment.BOTTOM_CENTER);
         canvas.setColor(Color.BLACK);
-        canvas.setTextSize(TEXT_SIZE);
+        canvas.setFontSize(TEXT_SIZE);
         final List<String> lines = lineBreak(canvas, message, image.getWidth() - 2 * BORDER);
         y -= 204;
         x = x - image.getWidth() / 2 + BORDER;
@@ -60,7 +59,7 @@ class SpeechBubble {
         }
     }
 
-    private static List<String> lineBreak(final Canvas canvas, final String message, final int maxWidth) {
+    private static List<String> lineBreak(final Window canvas, final String message, final int maxWidth) {
         final String[] words = message.split(" ");
         final List<String> result = new ArrayList<String>();
 
