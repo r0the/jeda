@@ -56,7 +56,7 @@ class BaseWindow extends JFrame {
     public final void init() {
         final Point center = graphicsEnvironment().getCenterPoint();
         setLocation(center.x - getWidth() / 2, center.y - getHeight() / 2);
-        setIconImage(loadImage("res/jeda/logo-16x16.png"));
+        setIconImage(loadImage("res/jeda/logo.png"));
     }
 
     protected final void setDefaultButton(final JButton button) {
