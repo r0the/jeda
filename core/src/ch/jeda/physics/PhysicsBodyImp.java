@@ -99,7 +99,7 @@ final class PhysicsBodyImp implements BodyImp {
     public void drawOverlay(final Canvas canvas) {
         if (physics.isDebugging()) {
             canvas.setColor(Color.RED);
-            canvas.setLineWidth(0.01);
+            canvas.setLineWidth(1);
             canvas.fillCircle(0, 0, 0.1);
             canvas.drawPolyline(0, 0, 1, 0);
             for (final Shape shape : shapes) {
