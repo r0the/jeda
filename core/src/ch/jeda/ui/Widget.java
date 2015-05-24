@@ -17,6 +17,7 @@
 package ch.jeda.ui;
 
 import ch.jeda.Jeda;
+import ch.jeda.event.ActionEvent;
 
 /**
  * Represents an element of a graphical user interface.
@@ -267,6 +268,18 @@ public abstract class Widget extends Element {
             case MIN:
             default:
                 return 0;
+        }
+    }
+
+    /**
+     * Creates a new action event and posts the event to the current view. The event will be processed during the next
+     * tick. Has no effect if this widget is not part of a view.
+     *
+     * @since 2.0
+     */
+    protected void triggerAction() {
+        if (getView() != null) {
+            getView().postEvent(new ActionEvent(this));
         }
     }
 

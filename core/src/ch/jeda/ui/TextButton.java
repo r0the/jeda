@@ -167,7 +167,7 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
      * @since 1.3
      */
     protected void clicked() {
-        triggerAction(getText());
+        triggerAction();
     }
 
     @Override

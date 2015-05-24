@@ -16,25 +16,43 @@
  */
 package ch.jeda.event;
 
+import ch.jeda.ui.Widget;
+
 /**
+ * @version 2
  * @since 1.0
  */
-public class ActionEvent extends Event {
+public final class ActionEvent extends Event {
 
-    private final String name;
+    private final Widget widget;
 
     /**
      * @since 1.0
      */
-    public ActionEvent(final Object source, final String name) {
-        super(source, EventType.ACTION);
-        this.name = name;
+    public ActionEvent(final Widget widget) {
+        super(widget, EventType.ACTION);
+        this.widget = widget;
     }
 
     /**
+     * Returns the name of the widget that caused this action.
+     *
+     * @return the name of the widget that caused this action
+     *
      * @since 1.0
      */
     public String getName() {
-        return name;
+        return widget.getName();
+    }
+
+    /**
+     * Returns the widget that caused this action.
+     *
+     * @return the widget that caused this action
+     *
+     * @since 2.0
+     */
+    public Widget getWidget() {
+        return widget;
     }
 }

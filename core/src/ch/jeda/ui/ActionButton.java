@@ -180,7 +180,7 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
      * @since 2.0
      */
     protected void clicked() {
-        triggerAction(getName());
+        triggerAction();
     }
 
     @Override
