@@ -45,7 +45,7 @@ import java.util.Set;
  * Represents the visualization of a virtual world. The view is where the user interacts with the program. On the Java
  * platform (Window, Mac OS, Linux), a view is contained in the application window. On Android the view is the visible
  * part of the app.
- * </p><p>
+ * <p>
  * A Jeda view has a <b>background</b> and contains {@link ch.jeda.ui.Element}s, which are objects that live in the
  * virtual world and have a graphical representation. The view also receives {@link ch.jeda.event.Event}s from the user
  * and the operating system.
@@ -334,7 +334,7 @@ public class View {
      * @since 2.0
      */
     public final float getHeight() {
-        return foreground.getHeight();
+        return toWorld(foreground.getHeight());
     }
 
     /**
@@ -368,7 +368,7 @@ public class View {
      * @since 2.0
      */
     public final float getWidth() {
-        return foreground.getWidth();
+        return toWorld(foreground.getWidth());
     }
 
     /**
@@ -376,17 +376,17 @@ public class View {
      *
      * @param feature the feature to check for
      * @return <code>true</code> if the feature is enabled, otherwise returns <code>false</code>
-     * @throws NullPointerException if <code>feature</code> is <code>null</code>
      *
      * @see #setFeature(ch.jeda.ui.ViewFeature, boolean)
      * @since 2.0
      */
     public final boolean hasFeature(final ViewFeature feature) {
         if (feature == null) {
-            throw new NullPointerException("feature");
+            return false;
         }
-
-        return imp.getFeatures().contains(feature);
+        else {
+            return imp.getFeatures().contains(feature);
+        }
     }
 
     /**
@@ -435,7 +435,36 @@ public class View {
     }
 
     /**
-     * Enables or disables a view feature.
+     * Changes the scale of this view. Multiplies the current scale of this view with the specified factor. Adjusts the
+     * translation of this view in order to keep the specified point fixed.
+     *
+     * @param factor the factor
+     *
+     * @since 2.0
+     */
+    public final void scale(final double factor, final double centerX, final double centerY) {
+        scale((float) factor, (float) centerX, (float) centerY);
+    }
+
+    /**
+     * Changes the scale of this view. Multiplies the current scale of this view with the specified factor. Adjusts the
+     * translation of this view in order to keep the specified point fixed.
+     *
+     * @param factor the factor
+     *
+     * @since 2.0
+     */
+    public final void scale(final float factor, final float centerX, final float centerY) {
+        final float relX = centerX - translationX;
+        final float relY = centerY - translationY;
+        final float oldScale = scale;
+        scale = scale * factor;
+        translationX = centerX - relX * scale / oldScale;
+        translationY = centerY - relY * scale / oldScale;
+    }
+
+    /**
+     * Enables or disables a feature of this view.
      *
      * @param feature the feature to be enabled or disabled
      * @param enabled <code>true</code> to enable the feature, <code>false</code> to disable it
@@ -511,21 +540,22 @@ public class View {
     }
 
     /**
-     * Sets the view title.
+     * Sets the title of this view.
      *
-     * @param title new title of the view
-     * @throws NullPointerException if <code>title</code> is <code>null</code>
+     * @param title new title of this view
      *
      * @see #getTitle()
      * @since 2.0
      */
     public final void setTitle(final String title) {
         if (title == null) {
-            throw new NullPointerException("title");
+            this.title = "";
+        }
+        else {
+            this.title = title;
         }
 
-        this.title = title;
-        imp.setTitle(title);
+        imp.setTitle(this.title);
     }
 
     /**
@@ -596,16 +626,28 @@ public class View {
         eventQueue.addEvent(event);
     }
 
+    private float toCanvas(final float length) {
+        return length * 100f / scale;
+    }
+
+    private float toCanvasX(final float x) {
+        return toWorld(x - translationX);
+    }
+
+    private float toCanvasY(final float y) {
+        return toWorld(y - translationY);
+    }
+
     private float toWorld(final float length) {
-        return length * scale / 100;
+        return length * scale / 100f;
     }
 
     private float toWorldX(final float x) {
-        return x;
+        return toWorld(x) + translationX;
     }
 
     private float toWorldY(final float y) {
-        return y;
+        return toWorld(y) + translationY;
     }
 
     private void tick(final TickEvent event) {
@@ -684,8 +726,7 @@ public class View {
     }
 
     private static EnumSet<ViewFeature> toSet(final ViewFeature... features) {
-        final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class
-        );
+        final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class);
         for (final ViewFeature feature : features) {
             result.add(feature);
         }
@@ -812,10 +853,10 @@ public class View {
         public void onWheel(final PointerEvent event) {
             if (scalingEnabled) {
                 if (event.getWheel() > 0f) {
-                    view.setScale(view.getScale() * 1.1);
+                    view.scale(1.1, event.getWorldX(), event.getWorldY());
                 }
                 else {
-                    view.setScale(view.getScale() / 1.1);
+                    view.scale(1 / 1.1, event.getWorldX(), event.getWorldY());
                 }
             }
         }
