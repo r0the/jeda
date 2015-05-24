@@ -611,14 +611,14 @@ public class Canvas {
     }
 
     /**
-     * Returns the height of this canvas in centimeters.
+     * Returns the height of this canvas in canvas coordinates.
      *
-     * @return the height of this canvas in centimeters
+     * @return the height of this canvas in canvas coordinates
      *
      * @since 1.0
      */
     public float getHeight() {
-        return imp.getHeight() / scale;
+        return imp.getHeight() / displayAdaption.screenScale;
     }
 
     /**
@@ -658,14 +658,14 @@ public class Canvas {
     }
 
     /**
-     * Returns the width of this canvas in centimeters.
+     * Returns the width of this canvas in canvas coordinates.
      *
-     * @return the width of this canvas in centimeters
+     * @return the width of this canvas in canvas coordinates
      *
      * @since 1.0
      */
     public float getWidth() {
-        return imp.getWidth() / scale;
+        return imp.getWidth() / displayAdaption.screenScale;
     }
 
     /**
@@ -856,7 +856,7 @@ public class Canvas {
     }
 
     final void setWorldTransformation(final float scale, final float tx, final float ty) {
-        this.scale = displayAdaption.screenScale * 100 / scale;
+        this.scale = displayAdaption.screenScale * 100f / scale;
         this.tx = -tx * this.scale;
         this.ty = ty * this.scale;
     }
