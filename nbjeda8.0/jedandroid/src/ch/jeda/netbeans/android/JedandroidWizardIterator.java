@@ -26,7 +26,6 @@ import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
-import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -57,7 +56,7 @@ public class JedandroidWizardIterator implements WizardDescriptor.InstantiatingI
 
     @Override
     public WizardDescriptor.Panel<WizardDescriptor> current() {
-        return this.panel;
+        return panel;
     }
 
     @Override
@@ -73,8 +72,8 @@ public class JedandroidWizardIterator implements WizardDescriptor.InstantiatingI
     @Override
     public void initialize(WizardDescriptor wizard) {
         this.wizard = wizard;
-        this.panel = new JedandroidWizardPanel();
-        final Component component = this.panel.getComponent();
+        panel = new JedandroidWizardPanel();
+        final Component component = panel.getComponent();
         if (component instanceof JComponent) {
             final JComponent jc = (JComponent) component;
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
@@ -90,15 +89,10 @@ public class JedandroidWizardIterator implements WizardDescriptor.InstantiatingI
         final Set<FileObject> resultSet = new LinkedHashSet<FileObject>();
         final File dirF = FileUtil.normalizeFile((File) wizard.getProperty(PROJECT_DIR_PROPERTY));
         dirF.mkdirs();
-
-        final FileObject template = Templates.getTemplate(wizard);
         final FileObject dir = FileUtil.toFileObject(dirF);
-
         JedandroidProjectType.init(dir);
-
         // Always open top dir as a project:
         resultSet.add(dir);
-
         final File parent = dirF.getParentFile();
         if (parent != null && parent.exists()) {
             ProjectChooser.setProjectsFolder(parent);
@@ -131,7 +125,7 @@ public class JedandroidWizardIterator implements WizardDescriptor.InstantiatingI
         this.wizard.putProperty(NAME_PROPERTY, null);
         this.wizard.putProperty(PROJECT_DIR_PROPERTY, null);
         this.wizard = null;
-        this.panel = null;
+        panel = null;
     }
 
     private String stepName() {

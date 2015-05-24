@@ -22,7 +22,6 @@ import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
-import org.openide.util.NbBundle;
 
 public final class JedandroidWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>,
                                                     WizardDescriptor.ValidatingPanel<WizardDescriptor>,

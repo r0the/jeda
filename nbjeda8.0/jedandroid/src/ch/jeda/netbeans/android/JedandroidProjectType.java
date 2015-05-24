@@ -32,8 +32,8 @@ public class JedandroidProjectType extends ProjectType {
     private static final Image ICON = ImageUtilities.loadImage("ch/jeda/netbeans/android/res/icon.png");
     private static final String ANDROID_MANIFEST_XML = "AndroidManifest.xml";
     private static final String ANDROID_MANIFEST_XML_RES = "ch/jeda/netbeans/android/res/android_manifest.xml";
-    private static final String ANDROID_SUPPORT_V4_JAR = "libs/android-support-v4.jar";
-    private static final String ANDROID_SUPPORT_V4_JAR_RES = "ch/jeda/netbeans/android/res/android-support-v4.jar";
+    private static final String ANDROID_SUPPORT_V13_JAR = "libs/android-support-v13.jar";
+    private static final String ANDROID_SUPPORT_V13_JAR_RES = "ch/jeda/netbeans/android/res/android-support-v13.jar";
     private static final String APP_ICON = "res/drawable/icon.png";
     private static final String APP_ICON_RES = "ch/jeda/netbeans/android/res/app_icon.png";
     private static final String BUILD_XML = "build.xml";
@@ -56,7 +56,7 @@ public class JedandroidProjectType extends ProjectType {
         ProjectFile.get(projectDir, BUILD_XML).createFrom(BUILD_XML_RES, new BuildXmlFilter(projectDir.getName()));
         ProjectFile.get(projectDir, PROJECT_PROPERTIES).createFrom(PROJECT_PROPERTIES_RES, new ProjectPropertiesFilter(projectDir.getName()));
         ProjectFile.get(projectDir, JEDANDROID_JAR).createFrom(JEDANDROID_JAR_RES);
-        ProjectFile.get(projectDir, ANDROID_SUPPORT_V4_JAR).createFrom(ANDROID_SUPPORT_V4_JAR_RES);
+        ProjectFile.get(projectDir, ANDROID_SUPPORT_V13_JAR).createFrom(ANDROID_SUPPORT_V13_JAR_RES);
         ProjectFile.get(projectDir, APP_ICON).createFrom(APP_ICON_RES);
         if (!AndroidCommand.updateProject(projectDir.getPath())) {
             Dialog.showError("Counldn't find android command. Please check your PATH variable.");

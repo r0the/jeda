@@ -22,12 +22,12 @@ import org.openide.util.NbBundle.Messages;
 
 @TemplateRegistration(
     folder = "Jeda",
-    content = "JedaAnimation",
-    displayName = "#JedaAnimationWizardIterator_displayName",
+    content = "JedaView",
+    displayName = "#JedaViewWizardIterator_displayName",
     iconBase = "ch/jeda/netbeans/template/icon.png",
-    description = "JedaAnimationDescription.html",
+    description = "JedaViewDescription.html",
     scriptEngine = "freemarker")
-@Messages(value = {"JedaAnimationWizardIterator_displayName=Jeda Animation"})
-public final class JedaAnimationWizardIterator extends CreateJavaClassWizardIterator
+@Messages(value = {"JedaViewWizardIterator_displayName=Jeda View"})
+public final class JedaViewWizardIterator extends CreateJavaClassWizardIterator
     implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 }

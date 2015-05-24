@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2013 - 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,7 +23,7 @@ class AndroidCommand {
 
     private static final File WIN_64_PATH = new File("c:/program files (x86)/Android/android-sdk/tools/android.bat");
     private static final File WIN_32_PATH = new File("c:/program files/Android/android-sdk/tools/android.bat");
-    private static final String DEFAULT_PATH = "android";
+    private static final String LINUX_OPT_PATH = "/opt/android-sdk/tools/android";
 
     static boolean updateProject(final String projectDir) {
         try {
@@ -42,9 +42,11 @@ class AndroidCommand {
         if (WIN_32_PATH.exists()) {
             return WIN_32_PATH.getAbsolutePath();
         }
-        if (WIN_64_PATH.exists()) {
+        else if (WIN_64_PATH.exists()) {
             return WIN_64_PATH.getAbsolutePath();
         }
-        return DEFAULT_PATH;
+        else {
+            return LINUX_OPT_PATH;
+        }
     }
 }
