@@ -24,13 +24,6 @@ package ch.jeda.ui;
 public enum ViewFeature {
 
     /**
-     * Enables double buffering in a view. A double-buffered view performs drawing operations in an off-screen buffer.
-     * This prevents flickering in animations.
-     *
-     * @since 2.0
-     */
-    DOUBLE_BUFFERED,
-    /**
      * Sets fullscreen mode for a view. The behaviour of this feature depends on the platform:
      * <p>
      * <img src="../../../windows.png"> <img src="../../../linux.png">

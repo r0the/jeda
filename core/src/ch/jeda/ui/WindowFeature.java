@@ -20,14 +20,12 @@ package ch.jeda.ui;
  * Configurable features for a window.
  *
  * @since 1.0
+ * @version 2
  */
 public enum WindowFeature {
 
     /**
-     * Enables double buffering in a window. A double-buffered window performs drawing operations in an off-screen
-     * buffer. This prevents flickering in animations.
-     *
-     * @since 1.0
+     * @deprecated Has no effect as of Jeda 2.0. Double-Buffering is now always enabled.
      */
     DOUBLE_BUFFERED,
     /**

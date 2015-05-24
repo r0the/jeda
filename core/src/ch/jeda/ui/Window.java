@@ -1180,15 +1180,12 @@ public class Window {
 
     private static EnumSet<ViewFeature> initImpChangingFeatures() {
         final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class);
-        result.add(ViewFeature.DOUBLE_BUFFERED);
         result.add(ViewFeature.FULLSCREEN);
         return result;
     }
 
     private static ViewFeature convertFeature(final WindowFeature windowFeature) {
         switch (windowFeature) {
-            case DOUBLE_BUFFERED:
-                return ViewFeature.DOUBLE_BUFFERED;
             case FULLSCREEN:
                 return ViewFeature.FULLSCREEN;
             case HOVERING_POINTER:
