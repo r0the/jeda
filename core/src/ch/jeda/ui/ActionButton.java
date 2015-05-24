@@ -33,7 +33,6 @@ import ch.jeda.event.PointerListener;
 public class ActionButton extends Widget implements KeyDownListener, KeyUpListener, PointerListener {
 
     private Icon icon;
-    private String name;
     private Key key;
     private boolean keyPressed;
     private Integer pointerId;
@@ -65,7 +64,7 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
     public ActionButton(final double x, final double y, final Icon icon, final Alignment alignment) {
         super((float) x, (float) y, alignment);
         this.icon = icon;
-        name = icon.name();
+        setName(icon.name());
         key = Key.UNDEFINED;
         radius = 0.5f;
     }
@@ -181,7 +180,7 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
      * @since 2.0
      */
     protected void clicked() {
-        triggerAction(name);
+        triggerAction(getName());
     }
 
     @Override

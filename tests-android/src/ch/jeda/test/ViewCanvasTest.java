@@ -31,7 +31,7 @@ public class ViewCanvasTest extends Program implements KeyDownListener,
 
     @Override
     public void onPointerDown(PointerEvent event) {
-        nextStep();
+//        nextStep();
     }
 
     @Override
@@ -186,7 +186,7 @@ public class ViewCanvasTest extends Program implements KeyDownListener,
     }
 
     private void drawPolygonTest() {
-        double INSET = 2 * BORDER;
+        double INSET = 6 * BORDER;
         background.drawPolygon(BORDER, BORDER, cx, INSET, w - BORDER, BORDER, w - INSET, cy, w - BORDER, h - BORDER,
                                cx, h - INSET, BORDER, h - BORDER, INSET, cy);
         msg("drawPolygonTest()");
@@ -231,7 +231,7 @@ public class ViewCanvasTest extends Program implements KeyDownListener,
     }
 
     private void fillPolygonTest() {
-        double INSET = 2 * BORDER;
+        double INSET = 6 * BORDER;
         background.fillPolygon(BORDER, BORDER, cx, INSET, w - BORDER, BORDER, w - INSET, cy, w - BORDER, h - BORDER,
                                cx, h - INSET, BORDER, h - BORDER, INSET, cy);
         msg("fillPolygonTest()");
@@ -240,7 +240,8 @@ public class ViewCanvasTest extends Program implements KeyDownListener,
     private void jedaColorTest() {
         background.setColor(new Color(126, 218, 66));
         background.fill();
-        background.drawImage(w / 2, h / 2, Image.JEDA_LOGO_64x64, Alignment.CENTER);
+        background.setAlignment(Alignment.CENTER);
+        background.drawImage(w / 2, h / 2, Image.JEDA_LOGO_64x64);
         msg("Jeda color and Jeda logo");
     }
 
@@ -258,10 +259,11 @@ public class ViewCanvasTest extends Program implements KeyDownListener,
     private void antiAliasingTest() {
         background.setTextSize(50);
         background.fillCircle(100, 100, 50);
-        background.drawText(170, 100, "Here be 'Jaggies'", Alignment.LEFT);
+        background.setAlignment(Alignment.LEFT);
+        background.drawText(170, 100, "Here be 'Jaggies'");
         background.setAntiAliasing(true);
         background.fillCircle(100, 400, 50);
-        background.drawText(170, 400, "Anti-Aliasing Enabled", Alignment.LEFT);
+        background.drawText(170, 400, "Anti-Aliasing Enabled");
         msg("Effect of setAntiAliasing()");
     }
 }

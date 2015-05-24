@@ -717,10 +717,7 @@ public class View {
     }
 
     private static EnumSet<ViewFeature> initImpChangingFeatures() {
-        final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class
-        );
-        result.add(ViewFeature.DOUBLE_BUFFERED);
-
+        final EnumSet<ViewFeature> result = EnumSet.noneOf(ViewFeature.class);
         result.add(ViewFeature.FULLSCREEN);
         return result;
     }

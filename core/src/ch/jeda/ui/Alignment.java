@@ -85,6 +85,11 @@ public enum Alignment {
      * @since 1.0
      */
     TOP_RIGHT(Align.RIGHT_BOTTOM, Align.LEFT_TOP, NewAlign.MAX, NewAlign.MAX);
+
+    enum NewAlign {
+
+        MAX, MIDDLE, MIN
+    };
     private final Align horizontal;
     private final Align vertical;
     final NewAlign horiz;

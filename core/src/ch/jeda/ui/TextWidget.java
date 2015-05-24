@@ -21,12 +21,15 @@ package ch.jeda.ui;
  *
  * @since 2.0
  */
-public abstract class TextWidget extends Widget {
+public class TextWidget extends Widget {
 
+    private static final int DEFAULT_TEXT_SIZE = 16;
+    private static final Typeface DEFAULT_TYPEFACE = Typeface.SANS_SERIF;
     private float height;
     private String text;
     private Color textColor;
     private float textSize;
+    private Typeface typeface;
     private float width;
 
     /**
@@ -43,11 +46,12 @@ public abstract class TextWidget extends Widget {
         textColor = Color.BLACK;
         width = 3;
         height = 1;
-        textSize = 16;
+        textSize = DEFAULT_TEXT_SIZE;
+        typeface = DEFAULT_TYPEFACE;
     }
 
     @Override
-    public float getHeight() {
+    public final float getHeight() {
         return height;
     }
 
@@ -69,7 +73,7 @@ public abstract class TextWidget extends Widget {
      *
      * @since 2.0
      */
-    public Color getTextColor() {
+    public final Color getTextColor() {
         return textColor;
     }
 
@@ -80,12 +84,23 @@ public abstract class TextWidget extends Widget {
      *
      * @since 2.0
      */
-    public float getTextSize() {
+    public final float getTextSize() {
         return textSize;
     }
 
+    /**
+     * Returns the typeface of this widget.
+     *
+     * @return the typeface of this widget
+     *
+     * @since 2.0
+     */
+    public final Typeface getTypeface() {
+        return typeface;
+    }
+
     @Override
-    public float getWidth() {
+    public final float getWidth() {
         return width;
     }
 
@@ -122,7 +137,7 @@ public abstract class TextWidget extends Widget {
      * @see #getTextColor()
      * @since 2.0
      */
-    public void setTextColor(final Color textColor) {
+    public final void setTextColor(final Color textColor) {
         this.textColor = textColor;
     }
 
@@ -134,12 +149,32 @@ public abstract class TextWidget extends Widget {
      * @see #getTextSize()
      * @since 2.0
      */
-    public void setTextSize(final double textSize) {
+    public final void setTextSize(final double textSize) {
         this.textSize = (float) textSize;
     }
 
+    /**
+     * Sets the typeface for this widget.
+     *
+     * @param typeface the typeface for this widget
+     *
+     * @since 2.0
+     */
+    public final void setTypeface(final Typeface typeface) {
+        this.typeface = typeface;
+    }
+
     @Override
-    public boolean containsLocal(final float x, final float y) {
+    public final boolean containsLocal(final float x, final float y) {
         return Math.abs(getCenterX() - x) <= width / 2 && Math.abs(getCenterY() - y) <= height / 2;
+    }
+
+    @Override
+    protected void draw(Canvas canvas) {
+        canvas.setColor(textColor);
+        canvas.setAlignment(Alignment.CENTER);
+        canvas.setTextSize(textSize);
+        canvas.setTypeface(typeface);
+        canvas.drawText(getCenterX(), getCenterY(), text);
     }
 }
