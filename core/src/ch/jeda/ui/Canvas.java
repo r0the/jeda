@@ -478,8 +478,8 @@ public class Canvas {
         if (text != null && !text.isEmpty()) {
             x = toPixelX(x);
             y = toPixelY(y);
-            final float width = imp.textWidth(text);
-            final float height = imp.textHeight(text);
+            final float width = imp.measureLength(text, typeface.imp, textSize);
+            final float height = imp.getTextHeight();
             imp.drawText(alignX(x, width), alignY(y, height), text);
         }
     }
@@ -724,6 +724,31 @@ public class Canvas {
         return antiAliasing;
     }
 
+    /**
+     * Returns the length of the text in world coordinates.
+     *
+     * @param text the text
+     * @param typeface the typeface
+     * @param textSize the text size
+     *
+     * @return the length of the text
+     */
+    public float measureLength(final String text, final Typeface typeface, final float textSize) {
+        if (text == null || text.isEmpty()) {
+            return 0f;
+        }
+        else {
+            return lengthToWorld(imp.measureLength(text, typeface.imp, textSize));
+        }
+    }
+
+    /**
+     * Sets the alignment for this canvas.
+     *
+     * @param alignment the new alignment
+     *
+     * @since 2.0
+     */
     public void setAlignment(Alignment alignment) {
         if (alignment != null) {
             this.alignment = alignment;
@@ -877,7 +902,7 @@ public class Canvas {
             return 0;
         }
         else {
-            return imp.textHeight(text);
+            return imp.getTextHeight();
         }
     }
 
@@ -895,7 +920,7 @@ public class Canvas {
             return 0;
         }
         else {
-            return imp.textWidth(text);
+            return imp.measureLength(text, typeface.imp, textSize);
         }
     }
 

@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.android;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -37,6 +36,7 @@ class AndroidCanvasImp implements CanvasImp {
     private final Paint imagePaint;
     private final Paint pixelPaint;
     private final Paint strokePaint;
+    private final Paint textMeasurePaint;
     private final Paint textPaint;
     private Bitmap bitmap;
     private Canvas canvas;
@@ -50,6 +50,7 @@ class AndroidCanvasImp implements CanvasImp {
         strokePaint = new Paint();
         strokePaint.setStyle(Paint.Style.STROKE);
         strokePaint.setAntiAlias(true);
+        textMeasurePaint = new Paint();
         textPaint = new Paint();
     }
 
@@ -144,8 +145,26 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
+    public int getTextHeight() {
+        Paint.FontMetricsInt fm = textPaint.getFontMetricsInt();
+        return fm.bottom - fm.top;
+    }
+
+    @Override
     public int getWidth() {
         return bitmap.getWidth();
+    }
+
+    @Override
+    public int measureLength(String text, TypefaceImp typeface, float textSize) {
+        assert text != null;
+        assert typeface instanceof AndroidTypefaceImp;
+
+        textMeasurePaint.setTypeface(((AndroidTypefaceImp) typeface).imp);
+        textMeasurePaint.setTextSize(textSize);
+        Rect bounds = new Rect();
+        textMeasurePaint.getTextBounds(text, 0, text.length(), bounds);
+        return bounds.width();
     }
 
     @Override
@@ -207,24 +226,6 @@ class AndroidCanvasImp implements CanvasImp {
     @Override
     public ImageImp takeSnapshot() {
         return new AndroidImageImp(Bitmap.createBitmap(bitmap));
-    }
-
-    @Override
-    public int textHeight(final String text) {
-        assert text != null;
-
-        Rect bounds = new Rect();
-        textPaint.getTextBounds(text, 0, text.length(), bounds);
-        return bounds.height();
-    }
-
-    @Override
-    public int textWidth(final String text) {
-        assert text != null;
-
-        Rect bounds = new Rect();
-        textPaint.getTextBounds(text, 0, text.length(), bounds);
-        return bounds.width();
     }
 
     @Override

@@ -548,8 +548,8 @@ public class Window {
         }
 
         if (text != null && !text.isEmpty()) {
-            imp.getForeground().drawText(alignment.oldAlignX(x, imp.getForeground().textWidth(text)),
-                                         alignment.oldAlignY(y, imp.getForeground().textHeight(text)), text);
+            imp.getForeground().drawText(alignment.oldAlignX(x, imp.getForeground().measureLength(text, typeface.imp, textSize)),
+                                         alignment.oldAlignY(y, imp.getForeground().getTextHeight()), text);
         }
     }
 
@@ -1122,7 +1122,7 @@ public class Window {
             return 0;
         }
         else {
-            return imp.getForeground().textHeight(text);
+            return imp.getForeground().getTextHeight();
         }
     }
 
@@ -1141,7 +1141,7 @@ public class Window {
             return 0;
         }
         else {
-            return imp.getForeground().textWidth(text);
+            return imp.getForeground().measureLength(text, typeface.imp, textSize);
         }
     }
 

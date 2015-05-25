@@ -47,9 +47,13 @@ public interface CanvasImp {
 
     int getHeight();
 
+    int getTextHeight();
+
     Color getPixel(int x, int y);
 
     int getWidth();
+
+    int measureLength(String text, TypefaceImp typeface, float textSize);
 
     void resetTransformation();
 
@@ -68,10 +72,6 @@ public interface CanvasImp {
     void setTypeface(TypefaceImp typeface);
 
     ImageImp takeSnapshot();
-
-    int textHeight(String text);
-
-    int textWidth(String text);
 
     void translate(float tx, float ty);
 }

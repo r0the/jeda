@@ -22,6 +22,8 @@ import ch.jeda.platform.TypefaceImp;
 import ch.jeda.ui.Color;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Polygon;
@@ -108,7 +110,7 @@ class JavaCanvasImp implements CanvasImp {
     public void drawText(final float x, final float y, String text) {
         assert text != null;
 
-        final TextLayout textLayout = textLayout(text);
+        final TextLayout textLayout = textLayout(text, graphics.getFont());
         final Rectangle2D bounds = textLayout.getBounds();
         textLayout.draw(graphics, x, (int) (y - bounds.getMinY()));
     }
@@ -152,6 +154,12 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
+    public int getTextHeight() {
+        FontMetrics fm = graphics.getFontMetrics();
+        return fm.getMaxAscent() + fm.getMaxDescent();
+    }
+
+    @Override
     public Color getPixel(final int x, final int y) {
         assert contains(x, y);
 
@@ -161,6 +169,15 @@ class JavaCanvasImp implements CanvasImp {
     @Override
     public int getWidth() {
         return bitmap.getWidth();
+    }
+
+    @Override
+    public int measureLength(final String text, final TypefaceImp typeface, final float textSize) {
+        assert text != null;
+        assert typeface instanceof JavaTypefaceImp;
+
+        Font font = ((JavaTypefaceImp) typeface).font;
+        return (int) textLayout(text, font.deriveFont(textSize)).getAdvance();
     }
 
     @Override
@@ -226,27 +243,12 @@ class JavaCanvasImp implements CanvasImp {
         return new JavaImageImp(result);
     }
 
-    @Override
-    public int textHeight(final String text) {
-        assert text != null;
-
-        return (int) textLayout(text).getBounds().getHeight();
-    }
-
-    @Override
-    public int textWidth(final String text) {
-        assert text != null;
-
-        return (int) textLayout(text).getAdvance();
-    }
-
     BufferedImage getBitmap() {
         return bitmap;
     }
 
-    private TextLayout textLayout(final String text) {
+    private TextLayout textLayout(final String text, final Font font) {
         final FontRenderContext frc = graphics.getFontRenderContext();
-        final java.awt.Font font = graphics.getFont();
         if (!textLayoutCache.containsKey(frc)) {
             textLayoutCache.put(frc, new HashMap());
         }
