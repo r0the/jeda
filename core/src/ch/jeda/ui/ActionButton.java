@@ -194,14 +194,12 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
     protected void draw(final Canvas canvas) {
         final float cx = getCenterX();
         final float cy = getCenterY();
-        canvas.setAntiAliasing(true);
-        canvas.setColor(getBackground());
+        applyStyle(canvas);
         canvas.fillCircle(cx, cy, radius);
         if (!isPressed()) {
             canvas.drawShadowCircle(cx, cy, radius);
         }
 
-        canvas.setAlignment(Alignment.CENTER);
         canvas.drawIcon(cx, cy, icon);
     }
 

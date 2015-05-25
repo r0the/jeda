@@ -21,12 +21,11 @@ package ch.jeda.ui;
  *
  * @since 2.0
  */
-public class TextWidget extends Widget {
+public abstract class TextWidget extends Widget {
 
     private static final int DEFAULT_TEXT_SIZE = 16;
     private static final Typeface DEFAULT_TYPEFACE = Typeface.SANS_SERIF;
     private float height;
-    private String text;
     private Color textColor;
     private float textSize;
     private Typeface typeface;
@@ -53,17 +52,6 @@ public class TextWidget extends Widget {
     @Override
     public final float getHeight() {
         return height;
-    }
-
-    /**
-     * Returns the text.
-     *
-     * @return the text
-     *
-     * @since 2.0
-     */
-    public final String getText() {
-        return text;
     }
 
     /**
@@ -118,18 +106,6 @@ public class TextWidget extends Widget {
     }
 
     /**
-     * Sets the display text of this widget
-     *
-     * @param text the display text of this widget
-     *
-     * @see #getText()
-     * @since 2.0
-     */
-    public final void setText(final String text) {
-        this.text = text;
-    }
-
-    /**
      * Sets the text color for this widget.
      *
      * @param textColor the text color for this widget
@@ -165,16 +141,15 @@ public class TextWidget extends Widget {
     }
 
     @Override
-    public final boolean containsLocal(final float x, final float y) {
-        return Math.abs(getCenterX() - x) <= width / 2 && Math.abs(getCenterY() - y) <= height / 2;
+    protected void applyStyle(final Canvas canvas) {
+        super.applyStyle(canvas);
+        canvas.setTextSize(textSize);
+        canvas.setTypeface(typeface);
     }
 
     @Override
-    protected void draw(Canvas canvas) {
-        canvas.setColor(textColor);
-        canvas.setAlignment(Alignment.CENTER);
-        canvas.setTextSize(textSize);
-        canvas.setTypeface(typeface);
-        canvas.drawText(getCenterX(), getCenterY(), text);
+    protected final boolean containsLocal(final float x, final float y) {
+        return Math.abs(getCenterX() - x) <= width / 2 && Math.abs(getCenterY() - y) <= height / 2;
     }
+
 }

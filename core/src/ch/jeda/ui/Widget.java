@@ -32,7 +32,7 @@ public abstract class Widget extends Element {
 
     private static final int DEFAULT_DRAW_ORDER = 1000;
     private Alignment alignment;
-    private Color background;
+    private Color backgroundColor;
     private boolean selected;
     private float x;
     private float y;
@@ -56,7 +56,7 @@ public abstract class Widget extends Element {
 
         this.x = (float) x;
         this.y = (float) y;
-        background = Color.LIGHT_GREEN_900;
+        backgroundColor = Color.LIGHT_GREEN_900;
         setDrawOrder(DEFAULT_DRAW_ORDER);
         setPinned(true);
     }
@@ -100,8 +100,8 @@ public abstract class Widget extends Element {
      *
      * @since 2.0
      */
-    public Color getBackground() {
-        return background;
+    public Color getBackgroundColor() {
+        return backgroundColor;
     }
 
     /**
@@ -198,12 +198,12 @@ public abstract class Widget extends Element {
     /**
      * Sets the background color of this widget. Has no effect if <code>color</code> is <code>null</code>.
      *
-     * @param background the background color
+     * @param backgroundColor the background color
      *
      * @since 2.0
      */
-    public void setBackground(final Color background) {
-        this.background = background;
+    public void setBackgroundColor(final Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 
     /**
@@ -222,6 +222,19 @@ public abstract class Widget extends Element {
     }
 
     /**
+     * Applies the style of this widget to the canvas to prepare drawing. This implementation sets the alignment and
+     * backround color.
+     *
+     * @param canvas the canvas
+     *
+     * @since 2.0
+     */
+    protected void applyStyle(final Canvas canvas) {
+        canvas.setAlignment(alignment);
+        canvas.setColor(backgroundColor);
+    }
+
+    /**
      * Checks if this widget contains a point in local coordinates.
      *
      * @param x the horizontal coordinate
@@ -234,6 +247,25 @@ public abstract class Widget extends Element {
     protected abstract boolean containsLocal(final float x, final float y);
 
     /**
+     * Returns the vertical local coordinate of the bottom border of this widget.
+     *
+     * @return the vertical local coordinate of the bottom border of this widget
+     *
+     * @since 2.0
+     */
+    protected final float getBottom() {
+        switch (alignment.vert) {
+            case MAX:
+                return -getHeight();
+            case MIDDLE:
+                return -getHeight() / 2f;
+            case MIN:
+            default:
+                return 0f;
+        }
+    }
+
+    /**
      * Returns the horizontal local coordinate of the center of this widget.
      *
      * @return the horizontal local coordinate of the center of this widget
@@ -243,12 +275,12 @@ public abstract class Widget extends Element {
     protected final float getCenterX() {
         switch (alignment.horiz) {
             case MAX:
-                return -getWidth();
-            case MIDDLE:
                 return -getWidth() / 2f;
+            case MIDDLE:
+                return 0f;
             case MIN:
             default:
-                return 0;
+                return getWidth() / 2f;
         }
     }
 
@@ -260,14 +292,71 @@ public abstract class Widget extends Element {
      * @since 2.0
      */
     protected final float getCenterY() {
-        switch (alignment.horiz) {
+        switch (alignment.vert) {
             case MAX:
-                return -getHeight();
-            case MIDDLE:
                 return -getHeight() / 2f;
+            case MIDDLE:
+                return 0f;
             case MIN:
             default:
-                return 0;
+                return getHeight() / 2f;
+        }
+    }
+
+    /**
+     * Returns the horizontal local coordinate of the left border of this widget.
+     *
+     * @return the horizontal local coordinate of the left border of this widget
+     *
+     * @since 2.0
+     */
+    protected final float getLeft() {
+        switch (alignment.horiz) {
+            case MAX:
+                return -getWidth();
+            case MIDDLE:
+                return -getWidth() / 2f;
+            case MIN:
+            default:
+                return 0f;
+        }
+    }
+
+    /**
+     * Returns the horizontal local coordinate of the right border of this widget.
+     *
+     * @return the horizontal local coordinate of the right border of this widget
+     *
+     * @since 2.0
+     */
+    protected final float getRight() {
+        switch (alignment.horiz) {
+            case MAX:
+                return 0f;
+            case MIDDLE:
+                return getWidth() / 2f;
+            case MIN:
+            default:
+                return getWidth();
+        }
+    }
+
+    /**
+     * Returns the vertical local coordinate of the top border of this widget.
+     *
+     * @return the vertical local coordinate of the top border of this widget
+     *
+     * @since 2.0
+     */
+    protected final float getTop() {
+        switch (alignment.vert) {
+            case MAX:
+                return 0f;
+            case MIDDLE:
+                return getHeight() / 2f;
+            case MIN:
+            default:
+                return getHeight();
         }
     }
 
@@ -284,10 +373,10 @@ public abstract class Widget extends Element {
     }
 
     private void checkVirtualKeyboard() {
-//        final boolean isVisible = Jeda.isVirtualKeyboardVisible();
-//        final boolean shouldBeVisible = this instanceof NewInputField;
-//        if (isVisible != shouldBeVisible) {
-//            Jeda.setVirtualKeyboardVisible(shouldBeVisible);
-//        }
+        final boolean isVisible = Jeda.isVirtualKeyboardVisible();
+        final boolean shouldBeVisible = this instanceof InputField;
+        if (isVisible != shouldBeVisible) {
+            Jeda.setVirtualKeyboardVisible(shouldBeVisible);
+        }
     }
 }

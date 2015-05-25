@@ -18,6 +18,8 @@ package ch.jeda.ui;
 
 public class Text extends TextWidget {
 
+    private String text;
+
     public Text(final double x, final double y) {
         this(x, y, null, Alignment.BOTTOM_LEFT);
     }
@@ -29,5 +31,34 @@ public class Text extends TextWidget {
     public Text(final double x, final double y, final String text, final Alignment alignment) {
         super(x, y, alignment);
         setText(text);
+    }
+
+    /**
+     * Returns the text.
+     *
+     * @return the text
+     *
+     * @since 2.0
+     */
+    public final String getText() {
+        return text;
+    }
+
+    /**
+     * Sets the display text of this widget
+     *
+     * @param text the display text of this widget
+     *
+     * @see #getText()
+     * @since 2.0
+     */
+    public final void setText(final String text) {
+        this.text = text;
+    }
+
+    @Override
+    protected void draw(final Canvas canvas) {
+        applyStyle(canvas);
+        canvas.drawText(0f, 0f, text);
     }
 }

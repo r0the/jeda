@@ -11,7 +11,14 @@ public class WidgetTest extends Program {
     @Override
     public void run() {
         view = new View();
-        view.add(new StringInputField(1, 1));
+        StringInputField input = new StringInputField(2, 2);
+        input.setValue("Greetings, programs!");
+        input.setTextColor(Color.BLACK);
+        input.setTextSize(20);
+
+        IntInputField bla = new IntInputField(2, 4);
+        bla.setHintText("Age");
+        view.add(input, bla);
         // Write initialization code here.
         view.addEventListener(this);
     }

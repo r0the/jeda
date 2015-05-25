@@ -111,8 +111,8 @@ class JavaCanvasImp implements CanvasImp {
         assert text != null;
 
         final TextLayout textLayout = textLayout(text, graphics.getFont());
-        final Rectangle2D bounds = textLayout.getBounds();
-        textLayout.draw(graphics, x, (int) (y - bounds.getMinY()));
+        FontMetrics fm = graphics.getFontMetrics();
+        textLayout.draw(graphics, x, (int) (y + fm.getMaxAscent()));
     }
 
     @Override

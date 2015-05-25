@@ -35,6 +35,7 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
     private Key key;
     private boolean keyPressed;
     private Integer pointerId;
+    private String text;
 
     /**
      * Constructs a button with bottom left alignment.
@@ -79,6 +80,17 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
     }
 
     /**
+     * Returns the text.
+     *
+     * @return the text
+     *
+     * @since 2.0
+     */
+    public final String getText() {
+        return text;
+    }
+
+    /**
      * Checks if the widget is currently pressed.
      *
      * @return <tt>true</tt> if the widget is currently pressed, otherwise <tt>false</tt>
@@ -87,6 +99,18 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
      */
     public final boolean isPressed() {
         return keyPressed || pointerId != null;
+    }
+
+    /**
+     * Sets the display text of this widget
+     *
+     * @param text the display text of this widget
+     *
+     * @see #getText()
+     * @since 2.0
+     */
+    public final void setText(final String text) {
+        this.text = text;
     }
 
     @Override
@@ -172,9 +196,7 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
 
     @Override
     protected void draw(final Canvas canvas) {
-        canvas.setAntiAliasing(true);
-        canvas.setColor(getBackground());
-        canvas.setAlignment(getAlignment());
+        applyStyle(canvas);
         canvas.fillRectangle(0, 0, getWidth(), getHeight());
         if (isPressed()) {
             canvas.setTextSize(getTextSize() - 1);
@@ -186,7 +208,7 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
 
         canvas.setColor(getTextColor());
         canvas.setAlignment(Alignment.CENTER);
-        canvas.drawText(getCenterX(), getCenterY(), getText());
+        canvas.drawText(getCenterX(), getCenterY(), text);
     }
 
     private void sendKeyEvent(final EventType eventType) {
