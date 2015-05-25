@@ -20,12 +20,12 @@
     <supports-screens android:largeScreens="true"
                       android:xlargeScreens="true"/>
     <uses-sdk android:minSdkVersion="15"
-              android:targetSdkVersion="21"/>]
+              android:targetSdkVersion="21"/>
 ]]></property>
     <property name="jeda.android-manifest.permission.internet.true"><![CDATA[    <uses-permission android:name="android.permission.INTERNET"/>
 ]]></property>
     <property name="jeda.android-manifest.end"><![CDATA[
-[    <application android:label="@string/app_name"
+    <application android:label="@string/app_name"
                  android:icon="@drawable/icon">
         <activity android:name="ch.jeda.platform.android.Main"
                   android:icon="@drawable/icon"

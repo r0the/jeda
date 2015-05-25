@@ -36,7 +36,7 @@ public class UpdateLibraryAction extends AbstractAction {
         if (Dialog.askQuestion("You are about to update the project " + this.project.getProjectDirectory().getName() +
                                " from Jeda version " + this.projectType.projectVersion(this.project) +
                                " to " + this.projectType.pluginVersion() + ". Are you sure?")) {
-            this.projectType.updateJedaLibrary(this.project);
+            this.projectType.updateProject(this.project);
         }
     }
 }

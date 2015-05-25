@@ -28,7 +28,6 @@ import org.openide.util.ImageUtilities;
 public final class JedaProjectType extends ProjectType {
 
     public static final String PROJECT_TYPE = "org-netbeans-modules-java-j2seproject";
-    private static final String BUILD_XML = "build.xml";
     private static final String BUILD_XML_RES = "ch/jeda/netbeans/java/res/build.xml";
     private static final Image ICON = ImageUtilities.loadImage("ch/jeda/netbeans/java/res/icon.png");
     private static final String JEDA_JAR = "libs/jeda.jar";
@@ -67,6 +66,11 @@ public final class JedaProjectType extends ProjectType {
     @Override
     public Image annotateIcon(final Image orig, final boolean openedNode) {
         return ICON;
+    }
+
+    @Override
+    protected String buildXmlResourcePath() {
+        return BUILD_XML_RES;
     }
 
     @Override

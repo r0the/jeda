@@ -32,6 +32,7 @@ import org.openide.util.lookup.Lookups;
 
 public abstract class ProjectType {
 
+    public static final String BUILD_XML = "build.xml";
     public static final String JEDA_PROPERTIES = "jeda.properties";
     private static final Set<ProjectType> projectTypes = new HashSet<ProjectType>();
 
@@ -110,13 +111,18 @@ public abstract class ProjectType {
         return ProjectFile.get(project, jedaLibraryPath()).readJarImplementationVersion();
     }
 
-    public final void updateJedaLibrary(final Project project) {
+    public final void updateProject(final Project project) {
         final ProjectFile library = ProjectFile.get(project, this.jedaLibraryPath());
         library.delete();
         library.createFrom(jedaLibraryResourcePath());
+        final ProjectFile buildXml = ProjectFile.get(project, BUILD_XML);
+        buildXml.delete();
+        buildXml.createFrom(buildXmlResourcePath(), new BuildXmlFilter(project.getProjectDirectory().getName()));
     }
 
     public abstract Image annotateIcon(final Image orig, final boolean openedNode);
+
+    protected abstract String buildXmlResourcePath();
 
     protected abstract String codeNameBase();
 
@@ -138,7 +144,7 @@ public abstract class ProjectType {
         final Version pluginVersion = this.pluginVersion();
         if (pluginVersion != null && projectVersion != null &&
             pluginVersion.compareTo(projectVersion) > 0 && pluginVersion.major == projectVersion.major) {
-            this.updateJedaLibrary(project);
+            this.updateProject(project);
         }
     }
 

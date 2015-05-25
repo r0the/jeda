@@ -32,11 +32,8 @@ public class JedandroidProjectType extends ProjectType {
     private static final Image ICON = ImageUtilities.loadImage("ch/jeda/netbeans/android/res/icon.png");
     private static final String ANDROID_MANIFEST_XML = "AndroidManifest.xml";
     private static final String ANDROID_MANIFEST_XML_RES = "ch/jeda/netbeans/android/res/android_manifest.xml";
-    private static final String ANDROID_SUPPORT_V13_JAR = "libs/android-support-v13.jar";
-    private static final String ANDROID_SUPPORT_V13_JAR_RES = "ch/jeda/netbeans/android/res/android-support-v13.jar";
     private static final String APP_ICON = "res/drawable/icon.png";
     private static final String APP_ICON_RES = "ch/jeda/netbeans/android/res/app_icon.png";
-    private static final String BUILD_XML = "build.xml";
     private static final String BUILD_XML_RES = "ch/jeda/netbeans/android/res/build.xml";
     private static final String JEDA_PROPERTIES_RES = "ch/jeda/netbeans/android/res/jeda.properties";
     private static final String JEDANDROID_JAR = "libs/jedandroid.jar";
@@ -56,7 +53,6 @@ public class JedandroidProjectType extends ProjectType {
         ProjectFile.get(projectDir, BUILD_XML).createFrom(BUILD_XML_RES, new BuildXmlFilter(projectDir.getName()));
         ProjectFile.get(projectDir, PROJECT_PROPERTIES).createFrom(PROJECT_PROPERTIES_RES, new ProjectPropertiesFilter(projectDir.getName()));
         ProjectFile.get(projectDir, JEDANDROID_JAR).createFrom(JEDANDROID_JAR_RES);
-        ProjectFile.get(projectDir, ANDROID_SUPPORT_V13_JAR).createFrom(ANDROID_SUPPORT_V13_JAR_RES);
         ProjectFile.get(projectDir, APP_ICON).createFrom(APP_ICON_RES);
         if (!AndroidCommand.updateProject(projectDir.getPath())) {
             Dialog.showError("Counldn't find android command. Please check your PATH variable.");
@@ -66,6 +62,11 @@ public class JedandroidProjectType extends ProjectType {
     @Override
     public Image annotateIcon(final Image orig, final boolean openedNode) {
         return ICON;
+    }
+
+    @Override
+    protected String buildXmlResourcePath() {
+        return BUILD_XML_RES;
     }
 
     @Override
@@ -85,7 +86,8 @@ public class JedandroidProjectType extends ProjectType {
 
     @Override
     protected boolean matches(final Project project) {
-        return ProjectFile.get(project, JEDA_PROPERTIES).exists() && ProjectFile.get(project, ANDROID_MANIFEST_XML).exists();
+        return ProjectFile.get(project, JEDA_PROPERTIES).exists() &&
+               ProjectFile.get(project, ANDROID_MANIFEST_XML).exists();
     }
 
     @Override
