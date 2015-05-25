@@ -63,7 +63,7 @@ public class Canvas {
     Canvas(final CanvasImp imp) {
         icons = new EnumMap<Icon, Image>(Icon.class);
         alignment = Alignment.BOTTOM_LEFT;
-        antiAliasing = false;
+        antiAliasing = true;
         color = DEFAULT_FOREGROUND;
         lineWidth = DEFAULT_LINE_WIDTH;
         textSize = DEFAULT_TEXT_SIZE;
@@ -227,6 +227,44 @@ public class Canvas {
             final int width = image.getWidth();
             final int height = image.getHeight();
             imp.drawImage(alignX(x, width), alignY(y, height), width, height, image.getImp(), alpha);
+        }
+    }
+
+    /**
+     * Draws an image. The image is positioned relative to (x, y) according to the current alignment. Has no effect if
+     * <code>image</code> is <code>null</code>.
+     *
+     * @param x the x coordinate of the image
+     * @param y the y coordinate of the image
+     * @param width the width of the image
+     * @param height the height of the image
+     * @param image the image to draw
+     *
+     * @since 2.0
+     */
+    public void drawImage(double x, double y, double width, double height, final Image image) {
+        drawImage((float) x, (float) y, (float) width, (float) height, image);
+    }
+
+    /**
+     * Draws an image. The image is positioned relative to (x, y) according to the current alignment. Has no effect if
+     * <code>image</code> is <code>null</code>.
+     *
+     * @param x the x coordinate of the image
+     * @param y the y coordinate of the image
+     * @param width the width of the image
+     * @param height the height of the image
+     * @param image the image to draw
+     *
+     * @since 2.0
+     */
+    public void drawImage(float x, float y, float width, float height, final Image image) {
+        if (image != null && image.isAvailable()) {
+            x = toPixelX(x);
+            y = toPixelY(y);
+            width = toPixel(width);
+            height = toPixel(height);
+            imp.drawImage(alignX(x, width), alignY(y, height), width, height, image.getImp(), 255);
         }
     }
 
