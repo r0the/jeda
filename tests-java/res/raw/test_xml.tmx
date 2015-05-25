@@ -242,18 +242,18 @@
  </layer>
  <objectgroup name="Objektebene 1">
   <object gid="1" x="426" y="211"/>
-  <object name="Rectangle" x="105" y="38" width="118" height="75"/>
-  <object name="Ellipse" x="192" y="43" width="413" height="165">
+  <object name="Rectangle" x="271" y="115" width="118" height="75"/>
+  <object name="Ellipse" x="115" y="422" width="200" height="68">
    <ellipse/>
   </object>
   <object name="Polygon" x="151" y="137">
    <polygon points="0,0 83,59 -52,100"/>
   </object>
-  <object name="Chain" x="528" y="96">
+  <object name="Chain" x="537" y="116">
    <polyline points="0,0 47,95 -20,147 -109,132 -61,241"/>
   </object>
   <object name="Tile 2" gid="4" x="533" y="90"/>
-  <object name="Circle" x="282" y="227" width="345" height="330">
+  <object name="Circle" x="357.094" y="421.938" width="133.624" height="136.332" rotation="-0.0882783">
    <ellipse/>
   </object>
  </objectgroup>

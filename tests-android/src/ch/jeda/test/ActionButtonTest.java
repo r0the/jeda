@@ -11,7 +11,7 @@ public class ActionButtonTest extends Program {
 
     @Override
     public void run() {
-        view = new View();
+        view = new View(1024, 900);
         double x = 1.5;
         double y = 1.5;
         for (Icon icon : Icon.values()) {

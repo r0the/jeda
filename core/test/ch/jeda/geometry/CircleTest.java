@@ -72,18 +72,18 @@ public class CircleTest {
     @Test
     public void testToPolygon() {
         Polygon polygon = unit.toPolygon(4);
-        assertEquals(polygon.getVertexCount(), 4);
-        assertEquals(1, polygon.getVertexX(0), DELTA);
-        assertEquals(0, polygon.getVertexY(0), DELTA);
+        assertEquals(polygon.getPointCount(), 4);
+        assertEquals(1, polygon.getPointX(0), DELTA);
+        assertEquals(0, polygon.getPointY(0), DELTA);
 
-        assertEquals(0, polygon.getVertexX(1), DELTA);
-        assertEquals(1, polygon.getVertexY(1), DELTA);
+        assertEquals(0, polygon.getPointX(1), DELTA);
+        assertEquals(1, polygon.getPointY(1), DELTA);
 
-        assertEquals(-1, polygon.getVertexX(2), DELTA);
-        assertEquals(0, polygon.getVertexY(2), DELTA);
+        assertEquals(-1, polygon.getPointX(2), DELTA);
+        assertEquals(0, polygon.getPointY(2), DELTA);
 
-        assertEquals(0, polygon.getVertexX(3), DELTA);
-        assertEquals(-1, polygon.getVertexY(3), DELTA);
+        assertEquals(0, polygon.getPointX(3), DELTA);
+        assertEquals(-1, polygon.getPointY(3), DELTA);
     }
 
     @Test

@@ -8,16 +8,21 @@ import java.util.Map;
 
 public class SensorTest extends Program implements SensorListener {
 
-    Window fenster;
-    Map<Object, Float> yPos;
-    float nextY = 10;
-    float height = 77;
+    Canvas canvas;
+    Map<Object, Double> yPos;
+    double x = 0.5;
+    double nextY = 0.5;
+    double height = 3.5;
+    double dy = 0.5;
 
     @Override
+
     public void run() {
-        fenster = new Window();
-        fenster.setFontSize(12);
-        yPos = new HashMap<Object, Float>();
+        View view = new View();
+        canvas = view.getBackground();
+        canvas.setAlignment(Alignment.TOP_LEFT);
+        yPos = new HashMap<Object, Double>();
+        nextY = canvas.getHeight() - dy;
         Jeda.enableSensor(SensorType.GRAVITY);
         Jeda.enableSensor(SensorType.ACCELERATION);
         Jeda.enableSensor(SensorType.LINEAR_ACCELERATION);
@@ -26,27 +31,27 @@ public class SensorTest extends Program implements SensorListener {
         Jeda.enableSensor(SensorType.PRESSURE);
         Jeda.enableSensor(SensorType.PROXIMITY);
         Jeda.enableSensor(SensorType.TEMPERATURE);
-        fenster.addEventListener(this);
+        view.addEventListener(this);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (!yPos.containsKey(event.getSource())) {
             yPos.put(event.getSource(), nextY);
-            nextY = nextY + height;
+            nextY = nextY - height;
         }
 
-        float y = yPos.get(event.getSource());
-        fenster.setColor(Color.WHITE);
-        fenster.fillRectangle(0, y, fenster.getWidth(), height);
-        fenster.setColor(Color.BLACK);
-        fenster.drawText(10, y, "type=" + event.getSensorType());
-        fenster.drawText(10, y + 12, "source=" + event.getSource());
+        double y = yPos.get(event.getSource());
+        canvas.setColor(Color.WHITE);
+        canvas.fillRectangle(0, y, canvas.getWidth(), height);
+        canvas.setColor(Color.BLACK);
+        canvas.drawText(x, y, "type=" + event.getSensorType());
+        canvas.drawText(x, y - dy, "source=" + event.getSource());
 
-        fenster.drawText(10, y + 24, valueString(event));
-        fenster.drawText(10, y + 36, "x = " + event.getX());
-        fenster.drawText(10, y + 48, "y = " + event.getY());
-        fenster.drawText(10, y + 60, "z = " + event.getZ());
+        canvas.drawText(x, y - 2 * dy, valueString(event));
+        canvas.drawText(x, y - 3 * dy, "x = " + event.getX());
+        canvas.drawText(x, y - 4 * dy, "y = " + event.getY());
+        canvas.drawText(x, y - 5 * dy, "z = " + event.getZ());
     }
 
     private String valueString(SensorEvent event) {

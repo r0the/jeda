@@ -9,23 +9,32 @@ import ch.jeda.physics.BodyType;
 import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.*;
 
-public class PhysicsTest extends Program implements TickListener {
+public class PhysicsTest extends Program implements TickListener, PointerMovedListener, ActionListener {
 
     PhysicsView view;
     // Daten der Spielfigur
     Player player;
+    TextWidget info;
+    PointerEvent pe;
 
     @Override
     public void run() {
         Jeda.setTickFrequency(60);
         view = new PhysicsView(1400, 700, ViewFeature.USER_SCROLL, ViewFeature.USER_SCALE);
-        view.getBackground().setColor(Color.AQUA);
+        view.getBackground().setColor(Color.LIGHT_GREEN_50);
         view.getBackground().fill();
         view.setGravity(0, -9);
         view.setDebugging(true);
         view.createWalls();
-        view.add(new ActionButton(1.5, 1.5, Icon.CHEVRON_DOWN));
-        view.add(new ActionButton(1.5, 3, Icon.CHEVRON_UP));
+        ActionButton button = new ActionButton(1.5, 1.5, Icon.CHEVRON_DOWN);
+        button.setKey(Key.DOWN);
+        view.add(button);
+        button = new ActionButton(1.5, 3, Icon.CHEVRON_UP);
+        button.setKey(Key.UP);
+        view.add(button);
+        info = new TextButton(10, 1, "");
+        view.add(info);
+        info.setTextColor(Color.BLACK);
         System.out.println("width=" + view.getWidth());
         view.createBox(1, 1, 2, 2, 0.5f);
 
@@ -56,6 +65,21 @@ public class PhysicsTest extends Program implements TickListener {
 //        }
     }
 
+    @Override
+    public void onPointerMoved(PointerEvent pe) {
+        info.setText("x=" + pe.getWorldX() + " y=" + pe.getWorldY());
+        this.pe = pe;
+    }
+
+    @Override
+    public void onAction(ActionEvent event) {
+        if (event.getName().equals("CHEVRON_DOWN")) {
+            view.scale(1.1, 0, 0);
+        }
+        else if (event.getName().equals("CHEVRON_UP")) {
+            view.scale(1 / 1.1, 0, 0);
+        }
+    }
 }
 
 class Player extends Body implements KeyDownListener, KeyUpListener, TickListener {
