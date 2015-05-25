@@ -24,6 +24,12 @@ package ch.jeda.ui;
 public enum Icon {
 
     /**
+     * An icon for the accept action.
+     *
+     * @since 2.0
+     */
+    ACCEPT,
+    /**
      * An alarm clock.
      *
      * @since 2.0
@@ -47,6 +53,12 @@ public enum Icon {
      * @since 2.0
      */
     ARROW_RIGHT,
+    /**
+     * A band-aid.
+     *
+     * @since 2.0
+     */
+    BAND_AID,
     /**
      * A bell.
      *
@@ -89,12 +101,6 @@ public enum Icon {
      * @since 2.0
      */
     CAMERA,
-    /**
-     * A check mark.
-     *
-     * @since 2.0
-     */
-    CHECK,
     /**
      * A chevron pointing down.
      *
@@ -185,6 +191,11 @@ public enum Icon {
      * @since 2.0
      */
     DELETE,
+    /**
+     * An icon symbolizing education.
+     *
+     * @since 2.0
+     */
     EDUCATION,
     /**
      * An eye.
@@ -211,7 +222,6 @@ public enum Icon {
      */
     FLAG, FLARE, FLASH, FLOWER, FOLDER,
     GAMEPAD, GESTURE, GLASS, GPS_OFF, GPS_FIXED, GPS_NOT_FIXED, GRID,
-    HEAL,
     /**
      * An ear hearing sound.
      *
@@ -236,9 +246,90 @@ public enum Icon {
      * @since 2.0
      */
     KEY,
-    LANDSCAPE, LETTER, LINK, LOCATION, LOCK,
-    MEASURE, MENU, MESSAGE_LEFT, MESSAGE_RIGHT, MINUS, MONEY, MOON, MUG, MUSIC_NOTE,
-    PALETTE, PASTE, PAUSE, PEN, PEOPLE, PERSON, PERSON_ADD, PLAY, PLUGS,
+    /**
+     * @since 2.0
+     */
+    LETTER,
+    /**
+     * @since 2.0
+     */
+    LINK,
+    /**
+     * @since 2.0
+     */
+    LOCATION,
+    /**
+     * @since 2.0
+     */
+    LOCK,
+    /**
+     * @since 2.0
+     */
+    MENU,
+    /**
+     * @since 2.0
+     */
+    MESSAGE_LEFT,
+    /**
+     * @since 2.0
+     */
+    MESSAGE_RIGHT,
+    /**
+     * @since 2.0
+     */
+    MINUS,
+    /**
+     * @since 2.0
+     */
+    MOON,
+    /**
+     * @since 2.0
+     */
+    MOUNTAINS,
+    /**
+     * @since 2.0
+     */
+    MUG,
+    /**
+     * @since 2.0
+     */
+    MUSIC_NOTE,
+    /**
+     * @since 2.0
+     */
+    PALETTE,
+    /**
+     * @since 2.0
+     */
+    PASTE,
+    /**
+     * @since 2.0
+     */
+    PAUSE,
+    /**
+     * @since 2.0
+     */
+    PEN,
+    /**
+     * @since 2.0
+     */
+    PEOPLE,
+    /**
+     * @since 2.0
+     */
+    PERSON,
+    /**
+     * @since 2.0
+     */
+    PERSON_ADD,
+    /**
+     * @since 2.0
+     */
+    PLAY,
+    /**
+     * @since 2.0
+     */
+    PLUGS,
     /**
      * A plus sign.
      *
@@ -256,20 +347,45 @@ public enum Icon {
      *
      * @since 2.0
      */
-    RAINBOW, RECTANGLE, REDO, REFRESH,
-    SAVE, SEARCH, SETTINGS, SHIELD, SHUTTER,
+    RAINBOW,
+    /**
+     * @since 2.0
+     */
+    REDO,
+    /**
+     * @since 2.0
+     */
+    REFRESH,
+    /**
+     * @since 2.0
+     */
+    RULER,
+    /**
+     * @since 2.0
+     */
+    SAVE,
+    /**
+     * @since 2.0
+     */
+    SEARCH,
+    /**
+     * @since 2.0
+     */
+    SETTINGS,
+    /**
+     * @since 2.0
+     */
+    SHIELD,
+    /**
+     * @since 2.0
+     */
+    SHUTTER,
     /**
      * A person sleeping in a bed.
      *
      * @since 2.0
      */
     SLEEP,
-    /**
-     * A square.
-     *
-     * @since 2.0
-     */
-    SQUARE,
     /**
      * A star.
      *
@@ -299,9 +415,35 @@ public enum Icon {
      *
      * @since 2.0
      */
-    THUMB_UP, TIME, TRIANGLE, TRIANGLE_FILLED,
+    THUMB_UP,
+    /**
+     * @since 2.0
+     */
+    TIME,
+    /**
+     * @since 2.0
+     */
+    TRIANGLE,
+    /**
+     * @since 2.0
+     */
+    TRIANGLE_FILLED,
+    /**
+     * @since 2.0
+     */
     UNDO,
-    VOLUME_DOWN, VOLUME_OFF, VOLUME_UP,
+    /**
+     * @since 2.0
+     */
+    VOLUME_DOWN,
+    /**
+     * @since 2.0
+     */
+    VOLUME_OFF,
+    /**
+     * @since 2.0
+     */
+    VOLUME_UP,
     /**
      * The world.
      *
