@@ -147,11 +147,6 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public int getDpi() {
-        return 96;
-    }
-
-    @Override
     public int getHeight() {
         return bitmap.getHeight();
     }

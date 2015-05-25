@@ -40,7 +40,7 @@ import org.xml.sax.XMLReader;
  * ist running on.
  *
  * @since 1.0
- * @version 2
+ * @version 3
  */
 public final class Jeda {
 
@@ -99,6 +99,17 @@ public final class Jeda {
      */
     public static void enableSensor(final SensorType sensorType) {
         ENGINE.setSensorEnabled(sensorType, true);
+    }
+
+    /**
+     * Returns information about the size and resolution of the display.
+     *
+     * @return information about the size and resolution of the display
+     *
+     * @since 2.0
+     */
+    public static DisplayMetrics getDisplayMetrics() {
+        return ENGINE.getDisplayMetrics();
     }
 
     /**

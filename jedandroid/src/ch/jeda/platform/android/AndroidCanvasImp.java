@@ -132,11 +132,6 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public int getDpi() {
-        return Resources.getSystem().getDisplayMetrics().densityDpi;
-    }
-
-    @Override
     public int getHeight() {
         return bitmap.getHeight();
     }

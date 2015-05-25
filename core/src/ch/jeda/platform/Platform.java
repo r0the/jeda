@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform;
 
+import ch.jeda.DisplayMetrics;
 import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
 import ch.jeda.event.SensorType;
@@ -41,6 +42,8 @@ public interface Platform {
     XMLReader createXmlReader();
 
     AudioManagerImp getAudioManagerImp();
+
+    DisplayMetrics getDisplayMetrics();
 
     TypefaceImp getStandardTypefaceImp(final StandardTypeface standardTypeface);
 

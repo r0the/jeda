@@ -16,6 +16,8 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.Jeda;
+import ch.jeda.JedaInternal;
 import ch.jeda.platform.CanvasImp;
 import java.util.EnumMap;
 
@@ -60,6 +62,11 @@ public class Canvas {
     private float tx;
     private float ty;
 
+    public Canvas(final float width, final float height) {
+        this(JedaInternal.createCanvasImp(Jeda.getDisplayMetrics().cmToPixels(width),
+                                          Jeda.getDisplayMetrics().cmToPixels(height)));
+    }
+
     Canvas(final CanvasImp imp) {
         icons = new EnumMap<Icon, Image>(Icon.class);
         alignment = Alignment.BOTTOM_LEFT;
@@ -69,14 +76,13 @@ public class Canvas {
         textSize = DEFAULT_TEXT_SIZE;
         typeface = Typeface.SANS_SERIF;
         this.imp = imp;
-        displayAdaption = new DisplayAdaption(imp.getDpi(), imp.getHeight());
+        displayAdaption = new DisplayAdaption(Jeda.getDisplayMetrics().getDpi(), imp.getHeight());
         // TODO
         imp.setAntiAliasing(antiAliasing);
         imp.setColor(color);
         imp.setLineWidth(lineWidth);
         imp.setTextSize(textSize * displayAdaption.textSizeFactor);
         imp.setTypeface(typeface.imp);
-        System.out.println("Jeda DPI: " + imp.getDpi());
         setWorldTransformation(100f, 0f, 0f);
     }
 

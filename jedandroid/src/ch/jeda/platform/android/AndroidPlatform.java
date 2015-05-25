@@ -16,8 +16,10 @@
  */
 package ch.jeda.platform.android;
 
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.view.WindowManager;
+import ch.jeda.DisplayMetrics;
 import ch.jeda.JedaError;
 import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
@@ -88,6 +90,12 @@ class AndroidPlatform implements Platform {
     @Override
     public AudioManagerImp getAudioManagerImp() {
         return Main.getInstance().getAudioManagerImp();
+    }
+
+    @Override
+    public DisplayMetrics getDisplayMetrics() {
+        android.util.DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
+        return new DisplayMetrics(dm.densityDpi, dm.widthPixels, dm.heightPixels);
     }
 
     @Override

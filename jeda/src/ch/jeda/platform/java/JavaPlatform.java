@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.DisplayMetrics;
 import ch.jeda.JedaError;
 import ch.jeda.LogLevel;
 import ch.jeda.event.SensorType;
@@ -27,7 +28,9 @@ import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ViewRequest;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import javax.swing.UIManager;
@@ -81,6 +84,12 @@ class JavaPlatform implements Platform {
     @Override
     public AudioManagerImp getAudioManagerImp() {
         return audioManager;
+    }
+
+    @Override
+    public DisplayMetrics getDisplayMetrics() {
+        final Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        return new DisplayMetrics(96, (int) size.getWidth(), (int) size.getHeight());
     }
 
     @Override

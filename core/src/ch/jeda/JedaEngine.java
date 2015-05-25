@@ -44,7 +44,6 @@ import org.xml.sax.XMLReader;
 class JedaEngine implements Platform.Callback, Runnable {
 
     private static final TypefaceImp EMPTY_TYPEFACE_IMP = new EmptyTypefaceImp();
-    private static final ImageImp EMPTY_IMAGE_IMP = new EmptyImageImp();
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
     private static final double DEFAULT_TICK_FREQUENCY = 30.0;
     private static final String JEDA_APPLICATION_PROPERTIES_FILE = "res/jeda.properties";
@@ -53,6 +52,7 @@ class JedaEngine implements Platform.Callback, Runnable {
     private final AudioManager audioManager;
     private final Object currentProgramLock;
     private final ImageImp defaultImageImp;
+    private final DisplayMetrics displayMetrics;
     private final EventQueue eventQueue;
     private final FrequencyMeter frequencyMeter;
     private final Object pauseLock;
@@ -86,6 +86,8 @@ class JedaEngine implements Platform.Callback, Runnable {
         audioManager = new AudioManager(platform.getAudioManagerImp());
         // Load default image
         defaultImageImp = platform.createImageImp(DEFAULT_IMAGE_PATH);
+        // Get display metrics
+        displayMetrics = platform.getDisplayMetrics();
         // Find Jeda programs and plugins
         final List<ProgramClassWrapper> programClassList = new ArrayList<ProgramClassWrapper>();
         try {
@@ -218,6 +220,10 @@ class JedaEngine implements Platform.Callback, Runnable {
 
     AudioManager getAudioManager() {
         return audioManager;
+    }
+
+    DisplayMetrics getDisplayMetrics() {
+        return displayMetrics;
     }
 
     String getProgramName() {
