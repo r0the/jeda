@@ -96,21 +96,6 @@ final class PhysicsBodyImp implements BodyImp {
     }
 
     @Override
-    public void drawOverlay(final Canvas canvas) {
-        if (physics.isDebugging()) {
-            canvas.setColor(Color.RED);
-            canvas.setLineWidth(1);
-            canvas.fillCircle(0, 0, 0.1);
-            canvas.drawPolyline(0, 0, 1, 0);
-            for (final Shape shape : shapes) {
-                shape.draw(canvas);
-            }
-
-            canvas.drawText(0.1, -0.5, "angle=" + Convert.toString(Math.toDegrees(getAngleRad()), 0));
-        }
-    }
-
-    @Override
     public float getAngleRad() {
         return MathF.normalizeAngle(imp.getAngle());
     }
@@ -242,6 +227,11 @@ final class PhysicsBodyImp implements BodyImp {
     @Override
     public void setVelocity(final float vx, final float vy) {
         imp.setLinearVelocity(new Vec2(vx, vy));
+    }
+
+    @Override
+    public boolean shouldDrawOverlay() {
+        return physics.isDebugging();
     }
 
     @Override

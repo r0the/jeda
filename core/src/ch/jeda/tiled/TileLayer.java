@@ -21,8 +21,6 @@ import ch.jeda.geometry.Shape;
 import ch.jeda.physics.Body;
 import ch.jeda.physics.BodyType;
 import ch.jeda.physics.PhysicsView;
-import ch.jeda.ui.Canvas;
-import ch.jeda.ui.Color;
 import ch.jeda.ui.Image;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,6 +36,8 @@ import javax.xml.bind.DatatypeConverter;
  */
 public final class TileLayer extends Layer {
 
+    private static final String CLASS = "class";
+    private static final String TYPE = "type";
     private final Tile[] tiles;
 
     TileLayer(final TiledMap map, final ElementWrapper element) {
@@ -72,43 +72,36 @@ public final class TileLayer extends Layer {
             return;
         }
 
-        final BodyType type = BodyType.parse(getProperties().readString("type"));
+        final BodyType type = BodyType.parse(getProperties().readString(TYPE));
 
-        final int tileHeight = getMap().getTileHeight();
-        final int tileWidth = getMap().getTileWidth();
-        int viewX = tileWidth / 2;
-        int viewY = tileHeight / 2;
         int endX = getMap().getWidth();
         int endY = getMap().getHeight();
         for (int x = 0; x < endX; ++x) {
             for (int y = 0; y < endY; ++y) {
                 final Tile tile = getTile(x, y);
                 if (tile != null) {
-                    final Body body = Body.create(getProperties().readString("class"));
+                    final Body body = Body.create(getProperties().readString(CLASS));
                     final Shape[] shapes = tile.getShapes();
                     final Image image = tile.getImage();
+                    final float width = tile.getWidth();
+                    final float height = tile.getHeight();
                     if (shapes.length > 0) {
                         for (int i = 0; i < shapes.length; ++i) {
                             body.addShape(shapes[i]);
                         }
                     }
                     else {
-                        body.addShape(new Rectangle(0.0, 0.0, image.getWidth(), image.getHeight()));
+                        body.addShape(new Rectangle(-width / 2f, -height / 2f, width, height));
                     }
 
+                    body.setName(getName());
                     body.setType(type);
-                    body.setImage(tile.getImage());
+                    body.setImage(image, width, height);
                     body.setOpacity(getOpacity());
-                    body.setPosition(viewX + tile.getOffsetX() + (image.getWidth() - tileWidth) / 2.0,
-                                     viewY + tile.getOffsetY() - (image.getHeight() - tileHeight) / 2.0);
+                    body.setPosition(x + width / 2, endY - y - 1 + height / 2f);
                     view.add(body);
                 }
-
-                viewY += tileHeight;
             }
-
-            viewY = tileHeight / 2;
-            viewX += tileWidth;
         }
     }
 
@@ -120,43 +113,6 @@ public final class TileLayer extends Layer {
         }
 
         return null;
-    }
-
-    private void drawDebugOverlay(final Canvas canvas, final int offsetX, final int offsetY) {
-        canvas.setColor(Color.RED);
-        final int tileHeight = getMap().getTileHeight();
-        final int tileWidth = getMap().getTileWidth();
-        int screenX = offsetX;
-        int screenY = offsetY;
-        int startX = 0;
-        int startY = 0;
-        int endX = getMap().getWidth();
-        int endY = getMap().getHeight();
-        for (int x = startX; x < endX; ++x) {
-            for (int y = startY; y < endY; ++y) {
-                final Tile tile = getTile(x, y);
-                if (tile != null && tile.getTerrainTopLeft() != null) {
-                    canvas.fillRectangle(screenX, screenY, 5, 5);
-                }
-
-                if (tile != null && tile.getTerrainTopRight() != null) {
-                    canvas.fillRectangle(screenX + tileWidth - 5, screenY, 5, 5);
-                }
-
-                if (tile != null && tile.getTerrainBottomLeft() != null) {
-                    canvas.fillRectangle(screenX, screenY + tileHeight - 5, 5, 5);
-                }
-
-                if (tile != null && tile.getTerrainBottomRight() != null) {
-                    canvas.fillRectangle(screenX + tileWidth - 5, screenY + tileHeight - 5, 5, 5);
-                }
-
-                screenY += tileHeight;
-            }
-
-            screenY = offsetY;
-            screenX += tileWidth;
-        }
     }
 
     private static int[] parseData(final ElementWrapper element, final int width, final int height) {

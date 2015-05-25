@@ -31,9 +31,11 @@ import ch.jeda.ui.Image;
 public class Body extends Element {
 
     private Color debugColor;
+    private float height;
     private Image image;
     private BodyImp imp;
     private int opacity;
+    private float width;
 
     /**
      * Creates a new object of a subclass of {@link ch.jeda.physics.Body}. If <code>className</code> does not meet all
@@ -216,6 +218,18 @@ public class Body extends Element {
     }
 
     /**
+     * Returns the height of this body in meters. The body height determines the size of the image representing the body
+     * visually. It has no impact on the physical behavior of the body.
+     *
+     * @return the height of this body in meters
+     *
+     * @since 2.0
+     */
+    public final float getHeight() {
+        return height;
+    }
+
+    /**
      * Returns the image of this body.
      *
      * @return the image of this body
@@ -245,7 +259,7 @@ public class Body extends Element {
 
     /**
      * Returns the opacity of this body. The opacity is a number between 0 and 255 where 0 means totally transparent and
-     * 255 means totally opaque.
+     * 255 means totally opaque. The opacity has no impact on the physical behavior of the body.
      *
      * @return the opacity of this body
      *
@@ -303,6 +317,18 @@ public class Body extends Element {
      */
     public final float getVy() {
         return imp.getVy();
+    }
+
+    /**
+     * Returns the width of this body in meters. The body width determines the size of the image representing the body
+     * visually. It has no impact on the physical behavior of the body.
+     *
+     * @return the width of this body in meters
+     *
+     * @since 2.0
+     */
+    public final float getWidth() {
+        return width;
     }
 
     /**
@@ -433,20 +459,24 @@ public class Body extends Element {
     }
 
     /**
-     * Sets the image for this body. The image has no impact on the physical simulation.
+     * Sets the image for this body. The opacity has no impact on the physical behavior of the body.
      *
      * @param image the image
+     * @param width the width of the image in meters
+     * @param height the height of the image in meters
      *
      * @see #getImage()
      * @since 2.0
      */
-    public final void setImage(final Image image) {
+    public final void setImage(final Image image, final float width, final float height) {
         this.image = image;
+        this.width = width;
+        this.height = height;
     }
 
     /**
      * Sets the opacity of this body. The opacity is a number between 0 and 255 where 0 means totally transparent and
-     * 255 means totally opaque. The opacity has no impact on the physical simulation.
+     * 255 means totally opaque. The opacity has no impact on the physical behavior of the body.
      *
      * @param opacity the opacity of this body
      *
@@ -482,9 +512,9 @@ public class Body extends Element {
     }
 
     /**
-     * Disallows or allows this body to rotate.
+     * Disables or enables this body to rotate.
      *
-     * @param fixed
+     * @param fixed <code>true</code> to disable body rotation, <code>false</code> to enable it
      *
      * @since 2.0
      */
@@ -542,11 +572,13 @@ public class Body extends Element {
     protected final void draw(final Canvas canvas) {
         if (image != null) {
             canvas.setAlignment(Alignment.CENTER);
-            canvas.drawImage(0f, 0f, image);
+            canvas.drawImage(0f, 0f, width, height, image);
         }
 
         drawDecoration(canvas);
-        imp.drawOverlay(canvas);
+        if (imp.shouldDrawOverlay()) {
+            drawOverlay(canvas);
+        }
     }
 
     /**
@@ -604,5 +636,18 @@ public class Body extends Element {
 
     Physics getPhysics() {
         return imp.getPhysics();
+    }
+
+    private void drawOverlay(final Canvas canvas) {
+        canvas.setColor(Color.RED);
+        canvas.setLineWidth(1);
+        canvas.fillCircle(0, 0, 0.1);
+        canvas.drawPolyline(0, 0, 1, 0);
+        for (final Shape shape : getShapes()) {
+            shape.draw(canvas);
+        }
+
+        canvas.setAlignment(Alignment.TOP_LEFT);
+        canvas.drawText(0.2, -0.1, getName());
     }
 }

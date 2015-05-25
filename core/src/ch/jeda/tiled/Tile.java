@@ -28,19 +28,23 @@ import java.util.Arrays;
  */
 public final class Tile {
 
+    private final float height;
     private final int id;
     private final Image image;
     private final Data properties;
     private final Shape[] shapes;
     private final Terrain[] terrain;
     private final TileSet tileSet;
+    private final float width;
 
     Tile(final TiledMap map, final TileSet tileSet, final int id, final Image image, final ElementWrapper element) {
+        height = image.getHeight() / map.getTileHeight();
+        width = image.getWidth() / map.getTileWidth();
         this.id = id;
         this.image = image;
         this.tileSet = tileSet;
         terrain = Parser.parseTerrain(tileSet, element);
-        shapes = Parser.parseShapes(element, -image.getWidth() / 2f, image.getHeight() / 2f);
+        shapes = Parser.parseShapes(element, map, -width / 2f, -height / 2f);
         if (element != null) {
             // Read properties
             properties = element.parsePropertiesChild();
@@ -60,25 +64,17 @@ public final class Tile {
         }
     }
 
-//
-//    /**
-//     * Draws this tile at the specified position.
-//     *
-//     * @param canvas the canvas to draw this tile on
-//     * @param x
-//     * @param y
-//     * @param alpha
-//     *
-//     * @since 2.0
-//     */
-//    public void draw(final Canvas canvas, final int x, final int y, final int alpha) {
-//        canvas.drawImage(x, y, getImage(), alpha, Alignment.BOTTOM_LEFT);
-//        canvas.setColor(Color.RED);
-//        canvas.setLineWidth(3);
-//        for (int i = 0; i < shapes.length; ++i) {
-//            shapes[i].draw(canvas, x, y - tileSet.getTileHeight());
-//        }
-//    }
+    /**
+     * Returns the height of this tile in meters.
+     *
+     * @return the height of this tile in meters
+     *
+     * @since 2.0
+     */
+    public float getHeight() {
+        return height;
+    }
+
     /**
      * Returns the image representing this tile.
      *
@@ -88,28 +84,6 @@ public final class Tile {
      */
     public Image getImage() {
         return image;
-    }
-
-    /**
-     * Returns the horizontal offset for this tile. The tile offset is defined in the tile set this tile belongs to.
-     *
-     * @return the horizontal offset for this tile
-     *
-     * @since 2.0
-     */
-    public int getOffsetX() {
-        return this.tileSet.getTileOffsetX();
-    }
-
-    /**
-     * Returns the vertical offset for this tile. The tile offset is defined in the tile set this tile belongs to.
-     *
-     * @return the vertical offset for this tile
-     *
-     * @since 2.0
-     */
-    public int getOffsetY() {
-        return this.tileSet.getTileOffsetY();
     }
 
     /**
@@ -174,6 +148,17 @@ public final class Tile {
      */
     public Terrain getTerrainTopRight() {
         return terrain[1];
+    }
+
+    /**
+     * Returns the width of this tile in meters.
+     *
+     * @return the width of this tile in meters
+     *
+     * @since 2.0
+     */
+    public float getWidth() {
+        return width;
     }
 
     /**

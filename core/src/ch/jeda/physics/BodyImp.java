@@ -17,7 +17,6 @@
 package ch.jeda.physics;
 
 import ch.jeda.geometry.Shape;
-import ch.jeda.ui.Canvas;
 
 interface BodyImp {
 
@@ -30,8 +29,6 @@ interface BodyImp {
     boolean belongsTo(Physics physics);
 
     void destroy();
-
-    void drawOverlay(Canvas canvas);
 
     float getAngleRad();
 
@@ -82,4 +79,6 @@ interface BodyImp {
     void setType(BodyType type);
 
     void setVelocity(float vx, float vy);
+
+    boolean shouldDrawOverlay();
 }

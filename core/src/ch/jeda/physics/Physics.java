@@ -92,6 +92,11 @@ final class Physics {
 
     public void setGravity(final double ax, final double ay) {
         imp.setGravity(new Vec2((float) ax, (float) ay));
+        org.jbox2d.dynamics.Body body = imp.getBodyList();
+        while (body != null) {
+            body.setAwake(true);
+            body = body.m_next;
+        }
     }
 
     public void setScale(final float scale) {

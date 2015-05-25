@@ -23,8 +23,7 @@ import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
 import ch.jeda.physics.Body;
 import ch.jeda.physics.BodyType;
-import ch.jeda.ui.Alignment;
-import ch.jeda.ui.Canvas;
+import ch.jeda.ui.Image;
 
 /**
  * Represents a Tiled object.
@@ -46,20 +45,19 @@ public final class TiledObject {
     private final float y;
 
     TiledObject(final TiledMap map, final ElementWrapper element) {
-        height = element.getFloatAttribute(Const.HEIGHT);
+        height = element.getFloatAttribute(Const.HEIGHT) / map.getTileHeight();
         name = element.getStringAttribute(Const.NAME);
         properties = element.parsePropertiesChild();
         rotation = element.getFloatAttribute(Const.ROTATION);
-        shape = Parser.parseShape(element, 0f, 0f);
         type = element.getStringAttribute(Const.TYPE);
         visible = element.getBooleanAttribute(Const.VISIBLE, true);
-        width = element.getFloatAttribute(Const.WIDTH);
-        float cx = element.getFloatAttribute(Const.X);
-        float cy = element.getFloatAttribute(Const.Y);
-        if (shape instanceof Circle || shape instanceof Ellipse || shape instanceof Rectangle) {
-            cx = cx + width / 2f;
-            cy = cy + height / 2f;
-        }
+        width = element.getFloatAttribute(Const.WIDTH) / map.getTileWidth();
+
+        shape = Parser.parseShape(element, map, -width / 2f, -height / 2f);
+        float cx = element.getFloatAttribute(Const.X) / map.getTileWidth();
+        float cy = map.getHeight() - element.getFloatAttribute(Const.Y) / map.getTileHeight();
+        cx = cx + width / 2f;
+        cy = cy - height / 2f;
 
         x = cx;
         y = cy;
@@ -193,6 +191,17 @@ public final class TiledObject {
     }
 
     /**
+     * Checks if this object is visible.
+     *
+     * @return <code>true</code> if this object is visible, otherwise <code>false</code>
+     *
+     * @since 2.0
+     */
+    public boolean isVisible() {
+        return visible;
+    }
+
+    /**
      * Converts this Tiled object to a body.
      *
      * @return the body
@@ -206,7 +215,8 @@ public final class TiledObject {
         result.setPosition(x, y);
         result.setType(BodyType.DYNAMIC);
         if (tile != null) {
-            result.setImage(tile.getImage());
+            final Image image = tile.getImage();
+            result.setImage(image, tile.getWidth(), tile.getHeight());
             Shape[] shapes = tile.getShapes();
             for (int i = 0; i < shapes.length; ++i) {
                 result.addShape(shapes[i]);

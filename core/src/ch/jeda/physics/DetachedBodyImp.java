@@ -95,10 +95,6 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
-    public void drawOverlay(final Canvas canvas) {
-    }
-
-    @Override
     public float getAngleRad() {
         return angle;
     }
@@ -223,5 +219,10 @@ class DetachedBodyImp implements BodyImp {
     public void setVelocity(final float vx, final float vy) {
         this.vx = vx;
         this.vy = vy;
+    }
+
+    @Override
+    public boolean shouldDrawOverlay() {
+        return false;
     }
 }
