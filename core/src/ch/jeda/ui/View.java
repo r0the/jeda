@@ -501,12 +501,12 @@ public class View {
      * @since 2.0
      */
     public final void scale(final float factor, final float centerX, final float centerY) {
-        final float relX = centerX - translationX;
-        final float relY = centerY - translationY;
+        final float relX = centerX + translationX;
+        final float relY = centerY + translationY;
         final float oldScale = scale;
         scale = scale * factor;
-        translationX = centerX - relX * scale / oldScale;
-        translationY = centerY - relY * scale / oldScale;
+        translationX = -(centerX - relX / factor);
+        translationY = -(centerY - relY / factor);
     }
 
     /**

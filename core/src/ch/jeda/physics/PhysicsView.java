@@ -67,7 +67,7 @@ public final class PhysicsView extends View implements TickListener {
      * @since 2.0
      */
     public PhysicsView(final ViewFeature... features) {
-        this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        this(DEFAULT_WIDTH, DEFAULT_HEIGHT, features);
     }
 
     /**

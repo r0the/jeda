@@ -10,11 +10,11 @@ import ch.jeda.ui.*;
 
 public class ${name} extends Program {
 
-    private View view;
+    private PhysicsView view;
 
     @Override
     public void run() {
-        view = new View();
+        view = new PhysicsView();
         // Write initialization code here.
         view.addEventListener(this);
     }
