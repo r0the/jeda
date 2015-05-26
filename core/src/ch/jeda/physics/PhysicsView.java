@@ -18,7 +18,6 @@ package ch.jeda.physics;
 
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
-import ch.jeda.geometry.Rectangle;
 import ch.jeda.ui.Element;
 import ch.jeda.ui.View;
 import ch.jeda.ui.ViewFeature;
@@ -93,46 +92,6 @@ public final class PhysicsView extends View implements TickListener {
         physics = new Physics();
         physics.setScale(1);
         addEventListener(this);
-    }
-
-    /**
-     * Adds walls around the visible part of the physics simulation.
-     *
-     * @since 2.0
-     */
-    public void createWalls() {
-        createBox(0f, 0f, getWidth(), getHeight(), 0.5f);
-    }
-
-    /**
-     * Adds walls around the visible part of the physics simulation.
-     *
-     * @since 2.0
-     */
-    public void createBox(final float x, final float y, final float width, final float height, final float thickness) {
-        final Body top = new Body();
-        top.setType(BodyType.STATIC);
-        top.addShape(new Rectangle(0, 0, width + thickness, thickness));
-        top.setPosition(x - thickness, y - thickness);
-        add(top);
-
-        final Body right = new Body();
-        right.setType(BodyType.STATIC);
-        right.addShape(new Rectangle(0, 0, thickness, height + thickness));
-        right.setPosition(x + width, y - thickness);
-        add(right);
-
-        final Body bottom = new Body();
-        bottom.setType(BodyType.STATIC);
-        bottom.addShape(new Rectangle(0, 0, width + thickness, thickness));
-        bottom.setPosition(x, y + height);
-        add(bottom);
-
-        final Body left = new Body();
-        left.setType(BodyType.STATIC);
-        left.addShape(new Rectangle(0, 0, thickness, height + thickness));
-        left.setPosition(x - thickness, y);
-        add(left);
     }
 
     /**

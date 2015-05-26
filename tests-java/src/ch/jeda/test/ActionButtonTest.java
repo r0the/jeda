@@ -6,20 +6,21 @@ import ch.jeda.ui.*;
 
 public class ActionButtonTest extends Program {
 
-    View view;
-    double angle;
+    private static final float BORDER = 60;
+    private static final float STEP = 70;
+    private View view;
 
     @Override
     public void run() {
-        view = new View(1024, 900);
-        double x = 1.5;
-        double y = 1.5;
+        view = new View();
+        double x = BORDER;
+        double y = BORDER;
         for (Icon icon : Icon.values()) {
             view.add(new ActionButton(x, y, icon));
-            x = x + 2;
-            if (x > view.getWidth() - 1.5) {
-                x = 1.5;
-                y = y + 2;
+            x = x + STEP;
+            if (x > view.getWidthDp() - BORDER) {
+                x = BORDER;
+                y = y + STEP;
             }
         }
     }

@@ -89,7 +89,8 @@ class JavaPlatform implements Platform {
     @Override
     public DisplayMetrics getDisplayMetrics() {
         final Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-        return new DisplayMetrics(96, (int) size.getWidth(), (int) size.getHeight());
+        final int dpi = Toolkit.getDefaultToolkit().getScreenResolution();
+        return new DisplayMetrics(dpi, (int) size.getWidth(), (int) size.getHeight());
     }
 
     @Override

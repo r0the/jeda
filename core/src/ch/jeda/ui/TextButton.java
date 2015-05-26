@@ -32,6 +32,8 @@ import ch.jeda.event.PointerListener;
  */
 public class TextButton extends TextWidget implements KeyDownListener, KeyUpListener, PointerListener {
 
+    private static final float DEFAULT_WIDTH = 120;
+    private static final Color DEFAULT_TEXT_COLOR = Color.WHITE;
     private Key key;
     private boolean keyPressed;
     private Integer pointerId;
@@ -64,7 +66,8 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
         super((float) x, (float) y, alignment);
         key = Key.UNDEFINED;
         setText(text);
-        setTextColor(Color.WHITE);
+        setTextColor(DEFAULT_TEXT_COLOR);
+        setWidth(DEFAULT_WIDTH);
     }
 
     /**

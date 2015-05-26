@@ -43,16 +43,16 @@ public final class DisplayMetrics {
     }
 
     /**
-     * Converts centimeters to pixels based on the resolution of the display.
+     * Converts density-independent pixels to pixels based on the resolution of the display.
      *
-     * @param cm the centimeters to convert
+     * @param dp the density-independent pixels to convert
      *
-     * @return the number of pixels
+     * @return the pixels
      *
      * @since 2.0
      */
-    public int cmToPixels(final float cm) {
-        return (int) Math.ceil(cm * dpi / 2.54);
+    public int dpToPx(final float dp) {
+        return (int) (dp * 160f / dpi);
     }
 
     /**
@@ -89,14 +89,15 @@ public final class DisplayMetrics {
     }
 
     /**
-     * Converts pixels to centimeters based on the resolution of the display.
+     * Converts pixels to density-independent pixels based on the resolution of the display.
      *
-     * @param pixels the pixels to convert
-     * @return the centimeters
+     * @param px the pixels to convert
+     *
+     * @return the density-independent pixels
      *
      * @since 2.0
      */
-    public float pixelsToCm(final int pixels) {
-        return pixels * 2.54f / dpi;
+    public float pxToDp(final float px) {
+        return px * dpi / 160f;
     }
 }

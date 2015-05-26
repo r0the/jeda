@@ -21,6 +21,7 @@ package ch.jeda.ui;
  * allows the user to enter an {@link java.lang.String} value.
  *
  * @since 1.3
+ * @version 2
  */
 public class StringInputField extends InputField {
 
@@ -33,9 +34,9 @@ public class StringInputField extends InputField {
      * @param x the x coordinate of the input field
      * @param y the y coordinate of the input field
      *
-     * @since 1.3
+     * @since 2.0
      */
-    public StringInputField(final int x, final int y) {
+    public StringInputField(final double x, final double y) {
         this(x, y, Alignment.TOP_LEFT);
     }
 
@@ -47,9 +48,9 @@ public class StringInputField extends InputField {
      * @param alignment specifies how to align the input field relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
-     * @since 1.3
+     * @since 2.0
      */
-    public StringInputField(final int x, final int y, final Alignment alignment) {
+    public StringInputField(final double x, final double y, final Alignment alignment) {
         super(x, y, alignment);
         maximumLength = 20;
         value = "";

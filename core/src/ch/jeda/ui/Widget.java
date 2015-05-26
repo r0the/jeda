@@ -21,7 +21,7 @@ import ch.jeda.event.ActionEvent;
 
 /**
  * Represents an element of a graphical user interface.
- * </p><p>
+ * <p>
  * A widget can be <b>selected</b> by clicking on it or by calling the method {@link #select()}}. Only one widget can be
  * selected at a time.
  *
@@ -31,6 +31,7 @@ import ch.jeda.event.ActionEvent;
 public abstract class Widget extends Element {
 
     private static final int DEFAULT_DRAW_ORDER = 1000;
+    private static final Color DEFAULT_BACKGROUND_COLOR = Color.LIGHT_GREEN_900;
     private Alignment alignment;
     private Color backgroundColor;
     private boolean selected;
@@ -56,7 +57,7 @@ public abstract class Widget extends Element {
 
         this.x = (float) x;
         this.y = (float) y;
-        backgroundColor = Color.LIGHT_GREEN_900;
+        backgroundColor = DEFAULT_BACKGROUND_COLOR;
         setDrawOrder(DEFAULT_DRAW_ORDER);
         setPinned(true);
     }
@@ -163,6 +164,7 @@ public abstract class Widget extends Element {
      */
     public final void select() {
         if (getView() == null) {
+            selected = true;
             return;
         }
 
@@ -214,11 +216,11 @@ public abstract class Widget extends Element {
      * @param y the y coordinate of the widget
      *
      * @see #setAlignment(ch.jeda.ui.Alignment)
-     * @since 1.3
+     * @since 2.0
      */
-    public final void setPosition(final int x, final int y) {
-        this.x = x;
-        this.y = y;
+    public final void setPosition(final double x, final double y) {
+        this.x = (float) x;
+        this.y = (float) y;
     }
 
     /**

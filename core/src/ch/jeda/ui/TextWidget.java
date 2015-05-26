@@ -43,8 +43,8 @@ public abstract class TextWidget extends Widget {
     protected TextWidget(final double x, final double y, final Alignment alignment) {
         super(x, y, alignment);
         textColor = Color.BLACK;
-        width = 3;
-        height = 1;
+        width = 80f;
+        height = 48f;
         textSize = DEFAULT_TEXT_SIZE;
         typeface = DEFAULT_TYPEFACE;
     }
@@ -106,6 +106,17 @@ public abstract class TextWidget extends Widget {
     }
 
     /**
+     * Sets the height of this widget.
+     *
+     * @param height the height of this widget
+     *
+     * @since 2.0
+     */
+    public final void setHeight(final double height) {
+        this.height = (float) height;
+    }
+
+    /**
      * Sets the text color for this widget.
      *
      * @param textColor the text color for this widget
@@ -140,6 +151,17 @@ public abstract class TextWidget extends Widget {
         this.typeface = typeface;
     }
 
+    /**
+     * Sets the width of this widget.
+     *
+     * @param width the width of this widget
+     *
+     * @since 2.0
+     */
+    public final void setWidth(final double width) {
+        this.width = (float) width;
+    }
+
     @Override
     protected void applyStyle(final Canvas canvas) {
         super.applyStyle(canvas);
@@ -151,5 +173,4 @@ public abstract class TextWidget extends Widget {
     protected final boolean containsLocal(final float x, final float y) {
         return Math.abs(getCenterX() - x) <= width / 2 && Math.abs(getCenterY() - y) <= height / 2;
     }
-
 }

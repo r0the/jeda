@@ -110,19 +110,6 @@ public final class Image {
     }
 
     /**
-     *
-     * @param canvas
-     * @return
-     */
-    public float getHeightOn(final Canvas canvas) {
-        return canvas.lengthToWorld(imp.getHeight());
-    }
-
-    public float getWidthOn(final Canvas canvas) {
-        return canvas.lengthToWorld(imp.getHeight());
-    }
-
-    /**
      * @deprecated Use {@link #getPixel(int, int)} instead.
      */
     public int[] getPixels(final int x, final int y, final int width, final int height) {

@@ -9,12 +9,14 @@ public class ViewInputEventTest extends Program implements KeyListener,
                                                            PointerListener,
                                                            WheelListener {
 
+    float lineHeight;
     View view;
     float y;
 
     @Override
     public void run() {
         view = new View();
+        lineHeight = 30f;
         reset();
         view.addEventListener(this);
     }
@@ -25,11 +27,11 @@ public class ViewInputEventTest extends Program implements KeyListener,
         }
 
         view.getBackground().drawText(0.25, y, message);
-        y = y - 0.5f;
+        y = y - lineHeight;
     }
 
     void reset() {
-        y = view.getHeight() - 0.5f;
+        y = view.getHeightDp() - 0.5f;
         view.getBackground().setColor(Color.WHITE);
         view.getBackground().fill();
         view.getBackground().setColor(Color.BLACK);

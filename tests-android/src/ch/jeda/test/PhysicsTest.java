@@ -14,28 +14,23 @@ public class PhysicsTest extends Program implements TickListener, PointerMovedLi
     PhysicsView view;
     // Daten der Spielfigur
     Player player;
-    TextWidget info;
     PointerEvent pe;
 
     @Override
     public void run() {
         Jeda.setTickFrequency(60);
-        view = new PhysicsView(1400, 700, ViewFeature.USER_SCROLL, ViewFeature.USER_SCALE);
+        view = new PhysicsView(1400, 700, ViewFeature.USER_SCALE);
         view.getBackground().setColor(Color.LIGHT_GREEN_50);
         view.getBackground().fill();
         view.setGravity(0, -9);
         view.setDebugging(true);
         view.createWalls();
         ActionButton button = new ActionButton(1.5, 1.5, Icon.CHEVRON_DOWN);
-        button.setKey(Key.DOWN);
+        button.setKey(Key.PAGE_DOWN);
         view.add(button);
         button = new ActionButton(1.5, 3, Icon.CHEVRON_UP);
-        button.setKey(Key.UP);
+        button.setKey(Key.PAGE_UP);
         view.add(button);
-        info = new TextButton(10, 1, "");
-        view.add(info);
-        info.setTextColor(Color.BLACK);
-        System.out.println("width=" + view.getWidth());
         view.createBox(1, 1, 2, 2, 0.5f);
 
         player = new Player();
@@ -67,8 +62,8 @@ public class PhysicsTest extends Program implements TickListener, PointerMovedLi
 
     @Override
     public void onPointerMoved(PointerEvent pe) {
-        info.setText("x=" + pe.getWorldX() + " y=" + pe.getWorldY());
         this.pe = pe;
+        System.out.println("x=" + pe.getWorldX() + " y=" + pe.getWorldY());
     }
 
     @Override

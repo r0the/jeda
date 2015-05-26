@@ -8,7 +8,8 @@ import java.util.EnumMap;
 public class ViewCanvasTest extends Program implements KeyDownListener,
                                                        PointerDownListener {
 
-    private static final double BORDER = 0.5;
+    private static final double BORDER = 10;
+    private double lineHeight;
     private double w;
     private double h;
     private double cx;
@@ -37,9 +38,10 @@ public class ViewCanvasTest extends Program implements KeyDownListener,
     @Override
     public void run() {
         view = new View();
+        lineHeight = 30;
         background = view.getBackground();
         w = background.getWidth();
-        h = background.getHeight() - 1;
+        h = background.getHeight() - lineHeight - 2 * BORDER;
         cx = w / 2;
         cy = h / 2;
         r = Math.min(w, h) / 2 - 2 * BORDER;
@@ -81,7 +83,6 @@ public class ViewCanvasTest extends Program implements KeyDownListener,
                 setFontSizeTest();
                 break;
             case 1:
-                shadowTest();
                 break;
             case 2:
                 drawPolygonTest();
@@ -130,23 +131,10 @@ public class ViewCanvasTest extends Program implements KeyDownListener,
     private void msg(String message) {
         background.setAlignment(Alignment.BOTTOM_LEFT);
         background.setColor(new Color(200, 200, 200, 200));
-        background.fillRectangle(0, h, w, 1);
+        background.fillRectangle(0, h, w, 2 * BORDER + lineHeight);
         background.setColor(Color.BLACK);
         background.setTextSize(20);
-        background.drawText(0.5, h + 0.3, message);
-    }
-
-    private void shadowTest() {
-        background.setAntiAliasing(true);
-        for (int i = 0; i < 10; ++i) {
-            background.setColor(new Color(0, 0, 0, 10 * i));
-            background.fillCircle(2, 2, 1 + 0.01 * i);
-        }
-
-        background.setColor(new Color(255, 0, 0));
-        background.fillCircle(2, 2, 1);
-
-        msg("shadow");
+        background.drawText(BORDER, h + BORDER, message);
     }
 
     private void drawCircleTest() {
@@ -170,8 +158,8 @@ public class ViewCanvasTest extends Program implements KeyDownListener,
         double x = 1.5;
         double y = 0.5;
         background.setAlignment(Alignment.BOTTOM_CENTER);
-        double width = img.getWidthOn(background);
-        double height = img.getHeightOn(background);
+        double width = img.getWidth();
+        double height = img.getHeight();
         for (int alpha = 255; alpha >= 0; alpha = alpha - 17) {
             background.drawImage(x, y + 0.5, img, alpha);
             background.drawText(x, y, "" + alpha);
@@ -237,22 +225,14 @@ public class ViewCanvasTest extends Program implements KeyDownListener,
         msg("fillPolygonTest()");
     }
 
-    private void jedaColorTest() {
-        background.setColor(new Color(126, 218, 66));
-        background.fill();
-        background.setAlignment(Alignment.CENTER);
-        background.drawImage(w / 2, h / 2, Image.JEDA_LOGO_64x64);
-        msg("Jeda color and Jeda logo");
-    }
-
     private void setFontSizeTest() {
-        background.drawText(1, 1, "default font size");
+        background.drawText(BORDER, BORDER, "default font size");
         background.setTextSize(10);
-        background.drawText(1, 2, "font size 10");
+        background.drawText(BORDER, BORDER + lineHeight, "font size 10");
         background.setTextSize(15);
-        background.drawText(1, 3, "font size 15");
+        background.drawText(BORDER, BORDER + 2 * lineHeight, "font size 15");
         background.setTextSize(20);
-        background.drawText(1, 4, "font size 20");
+        background.drawText(BORDER, BORDER + 3 * lineHeight, "font size 20");
         msg("drawText() with different font sizes");
     }
 

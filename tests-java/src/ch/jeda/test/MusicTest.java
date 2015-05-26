@@ -20,7 +20,7 @@ public class MusicTest extends Program implements TickListener, ActionListener {
         mp3Music = new Music("res:raw/move_forward.mp3");
         oggMusic = new Music("res:raw/evil_laugh.mp3");
         x = 0.5;
-        y = view.getHeight() - 1.5;
+        y = view.getHeightDp() - 1.5;
 
         addButton("Play MP3");
         addButton("Pause MP3");
@@ -30,7 +30,7 @@ public class MusicTest extends Program implements TickListener, ActionListener {
         view.add(mp3State);
         view.add(oggState);
         x = 4.5;
-        y = view.getHeight() - 1.5;
+        y = view.getHeightDp() - 1.5;
         addButton("Play OGG");
         addButton("Pause OGG");
         addButton("Stop OGG");

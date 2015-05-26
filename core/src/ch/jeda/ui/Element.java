@@ -16,7 +16,6 @@
  */
 package ch.jeda.ui;
 
-import ch.jeda.event.ActionEvent;
 import java.util.Comparator;
 
 /**
@@ -204,9 +203,9 @@ public abstract class Element {
     }
 
     void internalDraw(final Canvas canvas) {
-        canvas.worldBegin(pinned, getX(), getY(), getAngleRad());
+        canvas.localBegin(pinned, getX(), getY(), getAngleRad());
         draw(canvas);
-        canvas.worldEnd();
+        canvas.localEnd();
     }
 
     void removeFromView(final View view) {

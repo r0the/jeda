@@ -22,29 +22,24 @@ class DisplayAdaption {
     final int pixelsY;
     final float screenScale;
     final int shadowThickness;
-    final float textSizeFactor;
 
     DisplayAdaption(final int dpi, final int pixelsY) {
         this.pixelsY = pixelsY;
-        this.screenScale = dpi / 2.54f;
+        this.screenScale = 1; //dpi / 2.54f;
         if (dpi > 300) {
             this.shadowThickness = 8;
-            this.textSizeFactor = 2.5f;
             this.iconSize = 48;
         }
         else if (dpi > 200) {
             this.shadowThickness = 5;
-            this.textSizeFactor = 1.8f;
             this.iconSize = 36;
         }
         else if (dpi > 100) {
             this.shadowThickness = 5;
-            this.textSizeFactor = 1.5f;
             this.iconSize = 24;
         }
         else {
             this.shadowThickness = 3;
-            this.textSizeFactor = 1f;
             this.iconSize = 18;
         }
     }

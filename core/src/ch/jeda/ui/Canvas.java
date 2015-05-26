@@ -30,10 +30,10 @@ import java.util.EnumMap;
  * <li> <b>anti-aliasing</b>:
  * <li> <b>color</b>: The color used to draw geometric shapes and text. Initially, the color is black. The color can be
  * changed with {@link #setColor(ch.jeda.ui.Color)}.
- * <li> <b>line width</b>: the line width used to draw geometric shapes in centimeters. Initially, the line width is 1.
- * The line width can be changed with {@link #setLineWidth(double)}.
- * <li> <b>text size</b>: the size of the text in centimeters. Initially, the text size is 16. The text size can be
- * changed with {@link #setTextSize(float)}.
+ * <li> <b>line width</b>: the line width used to draw geometric shapes. Initially, the line width is 1. The line width
+ * can be changed with {@link #setLineWidth(double)}.
+ * <li> <b>text size</b>: the size of the text. Initially, the text size is 16. The text size can be changed with
+ * {@link #setTextSize(float)}.
  * <li> <b>typeface</b>: The typeface (font family) used to render text.
  * </ul>
  * <strong>Example:</strong>
@@ -46,10 +46,15 @@ import java.util.EnumMap;
  */
 public class Canvas {
 
-    private static final float DEFAULT_LINE_WIDTH = 1f;
+    private static final Alignment DEFAULT_ALIGNMENT = Alignment.BOTTOM_LEFT;
+    private static final Color DEFAULT_COLOR = Color.BLACK;
     private static final float DEFAULT_TEXT_SIZE = 16f;
-    private static final Color DEFAULT_FOREGROUND = Color.BLACK;
+    private static final Typeface DEFAULT_TYPEFACE = Typeface.SANS_SERIF;
+    private static final float DEFAULT_LINE_WIDTH = 1f;
     private final EnumMap<Icon, Image> icons;
+    private final float canvasToDevice;
+    private final float deviceToCanvas;
+    private final float pixelsY;
     private CanvasImp imp;
     private Alignment alignment;
     private boolean antiAliasing;
@@ -58,32 +63,42 @@ public class Canvas {
     private float lineWidth;
     private float textSize;
     private Typeface typeface;
-    private float scale;
+    private float sx;
+    private float slx;
+    private float sly;
+    private float sy;
     private float tx;
     private float ty;
 
-    public Canvas(final float width, final float height) {
-        this(JedaInternal.createCanvasImp(Jeda.getDisplayMetrics().cmToPixels(width),
-                                          Jeda.getDisplayMetrics().cmToPixels(height)));
+    public Canvas(final int width, final int height) {
+        this(JedaInternal.createCanvasImp(Jeda.getDisplayMetrics().dpToPx(width),
+                                          Jeda.getDisplayMetrics().dpToPx(height)));
     }
 
     Canvas(final CanvasImp imp) {
+        this.imp = imp;
+
         icons = new EnumMap<Icon, Image>(Icon.class);
-        alignment = Alignment.BOTTOM_LEFT;
+        final int dpi = Jeda.getDisplayMetrics().getDpi();
+        canvasToDevice = dpi / 160f;
+        deviceToCanvas = 160f / dpi;
+        pixelsY = imp.getHeight();
+        // Default drawing properties
+        alignment = DEFAULT_ALIGNMENT;
         antiAliasing = true;
-        color = DEFAULT_FOREGROUND;
+        color = DEFAULT_COLOR;
         lineWidth = DEFAULT_LINE_WIDTH;
         textSize = DEFAULT_TEXT_SIZE;
-        typeface = Typeface.SANS_SERIF;
-        this.imp = imp;
+        typeface = DEFAULT_TYPEFACE;
+
         displayAdaption = new DisplayAdaption(Jeda.getDisplayMetrics().getDpi(), imp.getHeight());
         // TODO
         imp.setAntiAliasing(antiAliasing);
         imp.setColor(color);
-        imp.setLineWidth(lineWidth);
-        imp.setTextSize(textSize * displayAdaption.textSizeFactor);
+        imp.setLineWidth(lineWidth * canvasToDevice);
+        imp.setTextSize(textSize * canvasToDevice);
         imp.setTypeface(typeface.imp);
-        setWorldTransformation(100f, 0f, 0f);
+        setWorldTransformation(1f, 1f, 0f, 0f);
     }
 
     /**
@@ -124,7 +139,7 @@ public class Canvas {
      */
     public void drawCircle(final float centerX, final float centerY, final float radius) {
         if (radius > 0f) {
-            imp.drawEllipse(toPixelX(centerX), toPixelY(centerY), toPixel(radius), toPixel(radius));
+            imp.drawEllipse(centerX * sx + tx, centerY * sy + ty, radius * slx, radius * sly);
         }
     }
 
@@ -156,7 +171,7 @@ public class Canvas {
      */
     public void drawEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
         if (radiusX > 0f && radiusY > 0f) {
-            imp.drawEllipse(toPixelX(centerX), toPixelY(centerY), toPixel(radiusX), toPixel(radiusY));
+            imp.drawEllipse(centerX * sx + tx, centerY * sy + ty, radiusX * slx, radiusY * sly);
         }
     }
 
@@ -228,8 +243,8 @@ public class Canvas {
      */
     void drawImage(float x, float y, final Image image, final int alpha) {
         if (image != null && image.isAvailable()) {
-            x = toPixelX(x);
-            y = toPixelY(y);
+            x = x * sx + tx;
+            y = y * sy + ty;
             final int width = image.getWidth();
             final int height = image.getHeight();
             imp.drawImage(alignX(x, width), alignY(y, height), width, height, image.getImp(), alpha);
@@ -266,10 +281,10 @@ public class Canvas {
      */
     public void drawImage(float x, float y, float width, float height, final Image image) {
         if (image != null && image.isAvailable()) {
-            x = toPixelX(x);
-            y = toPixelY(y);
-            width = toPixel(width);
-            height = toPixel(height);
+            x = x * sx + tx;
+            y = y * sy + ty;
+            width = width * sly;
+            height = height * sly;
             imp.drawImage(alignX(x, width), alignY(y, height), width, height, image.getImp(), 255);
         }
     }
@@ -389,10 +404,10 @@ public class Canvas {
      * @since 2.0
      */
     public void drawRectangle(float x, float y, float width, float height) {
-        x = toPixelX(x);
-        y = toPixelY(y);
-        width = toPixel(width);
-        height = toPixel(height);
+        x = x * sx + tx;
+        y = y * sy + ty;
+        width = width * slx;
+        height = height * sly;
         imp.drawRectangle(alignX(x, width), alignY(y, height), width, height);
     }
 
@@ -405,16 +420,17 @@ public class Canvas {
      *
      * @since 2.0
      */
-    public void drawShadowCircle(float x, float y, float radius) {
-        x = toPixelX(x);
-        y = toPixelY(y);
-        radius = toPixel(radius);
+    public void drawShadowCircle(float x, float y, final float radius) {
+        x = x * sx + tx;
+        y = y * sy + ty;
+        final float rx = radius * slx;
+        final float ry = radius * sly;
         final int SHADOW_MAX_OPACITY = 80;
         final int opacityStep = SHADOW_MAX_OPACITY / displayAdaption.shadowThickness;
         int opacity = SHADOW_MAX_OPACITY;
         for (int i = 0; i < displayAdaption.shadowThickness; i++) {
             imp.setColor(new Color(0, 0, 0, opacity));
-            imp.drawEllipse(x, y, radius + i, radius + i);
+            imp.drawEllipse(x, y, rx + i, ry + i);
             opacity = opacity - opacityStep;
         }
 
@@ -432,10 +448,10 @@ public class Canvas {
      * @since 2.0
      */
     public void drawShadowRectangle(float x, float y, float width, float height) {
-        width = toPixel(width);
-        height = toPixel(height);
-        x = alignX(toPixelX(x), width);
-        y = alignY(toPixelY(y), height);
+        width = width * slx;
+        height = height * sly;
+        x = alignX(x * sx + tx, width);
+        y = alignY(y * sy + ty, height);
         final int SHADOW_MAX_OPACITY = 80;
         final int opacityStep = SHADOW_MAX_OPACITY / displayAdaption.shadowThickness;
         int opacity = SHADOW_MAX_OPACITY;
@@ -476,9 +492,9 @@ public class Canvas {
      */
     public void drawText(float x, float y, final String text) {
         if (text != null && !text.isEmpty()) {
-            x = toPixelX(x);
-            y = toPixelY(y);
-            final float width = imp.measureLength(text, typeface.imp, textSize);
+            x = x * sx + tx;
+            y = y * sy + ty;
+            final float width = imp.measureLength(text, typeface.imp, textSize * canvasToDevice);
             final float height = imp.getTextHeight();
             imp.drawText(alignX(x, width), alignY(y, height), text);
         }
@@ -526,7 +542,9 @@ public class Canvas {
      * @since 2.0
      */
     public void fillCircle(final float centerX, final float centerY, final float radius) {
-        imp.fillEllipse(toPixelX(centerX), toPixelY(centerY), toPixel(radius), toPixel(radius));
+        if (radius > 0f) {
+            imp.fillEllipse(centerX * sx + tx, centerY * sy + ty, radius * slx, radius * sly);
+        }
     }
 
     /**
@@ -556,7 +574,9 @@ public class Canvas {
      * @since 2.0
      */
     public void fillEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
-        imp.fillEllipse(toPixelX(centerX), toPixelY(centerY), toPixel(radiusX), toPixel(radiusY));
+        if (radiusX > 0f && radiusY > 0f) {
+            imp.fillEllipse(centerX * sx + tx, centerY * sy + ty, radiusX * slx, radiusY * sly);
+        }
     }
 
     /**
@@ -628,10 +648,10 @@ public class Canvas {
      * @since 2.0
      */
     public void fillRectangle(float x, float y, float width, float height) {
-        x = toPixelX(x);
-        y = toPixelY(y);
-        width = toPixel(width);
-        height = toPixel(height);
+        x = x * sx + tx;
+        y = y * sy + ty;
+        width = width * slx;
+        height = height * sly;
         imp.fillRectangle(alignX(x, width), alignY(y, height), width, height);
     }
 
@@ -655,22 +675,23 @@ public class Canvas {
     }
 
     /**
-     * Returns the height of this canvas in canvas coordinates.
+     * Returns the height of this canvas in density-independent pixels (dp).
      *
-     * @return the height of this canvas in canvas coordinates
+     * @return the height of this canvas in dp
      *
      * @since 1.0
      */
     public float getHeight() {
-        return imp.getHeight() / displayAdaption.screenScale;
+        return imp.getHeight() * deviceToCanvas;
     }
 
     /**
-     * Returns the current line width in pixels.
+     * Returns the current line width in density-independent pixels (dp).
      *
-     * @return current line width
+     * @return current line width in dp
      *
      * @see #setLineWidth(double)
+     * @see #setLineWidth(float)
      * @since 1.0
      */
     public float getLineWidth() {
@@ -702,14 +723,14 @@ public class Canvas {
     }
 
     /**
-     * Returns the width of this canvas in canvas coordinates.
+     * Returns the width of this canvas in density-independent pixels (dp).
      *
-     * @return the width of this canvas in canvas coordinates
+     * @return the width of this canvas in dp
      *
      * @since 1.0
      */
     public float getWidth() {
-        return imp.getWidth() / displayAdaption.screenScale;
+        return imp.getWidth() * deviceToCanvas;
     }
 
     /**
@@ -738,7 +759,7 @@ public class Canvas {
             return 0f;
         }
         else {
-            return lengthToWorld(imp.measureLength(text, typeface.imp, textSize));
+            return imp.measureLength(text, typeface.imp, textSize * canvasToDevice) / slx;
         }
     }
 
@@ -773,20 +794,15 @@ public class Canvas {
 
     /**
      * Sets the drawing color. The value set by this method is applied to all subsequent <code>draw...</code> and
-     * <code>fill...</code> operations.
+     * <code>fill...</code> operations. Has no effect if <code>color</code> is <code>null</code>.
      *
      * @param color new drawing color.
-     * @throws NullPointerException if <code>color</code> is <code>null</code>
      *
      * @see #getColor()
      * @since 1.0
      */
     public void setColor(final Color color) {
-        if (color == null) {
-            throw new NullPointerException("color");
-        }
-
-        if (!color.equals(this.color)) {
+        if (color != null && !color.equals(this.color)) {
             this.color = color;
             imp.setColor(color);
         }
@@ -800,22 +816,32 @@ public class Canvas {
     }
 
     /**
-     * Sets the line width. The line width set by this method is applied to all subsequent <code>draw...</code>
-     * operations. Set 0 for drawing hairlines independent of the transformation.
+     * Sets the line width in density-independent pixels (dp). The line width set by this method is applied to
+     * subsequent <code>draw...</code> operations. Has no effect if <code>lineWidth</code> is negative.
      *
-     * @param lineWidth the new line width
-     * @throws IllegalArgumentException if <code>lineWidth</code> is negative
+     * @param lineWidth the new line width in dp
      *
      * @see #getLineWidth()
      * @since 1.0
      */
     public void setLineWidth(final double lineWidth) {
-        if (lineWidth < 0.0) {
-            throw new IllegalArgumentException("lineWidth");
-        }
+        setLineWidth((float) lineWidth);
+    }
 
-        this.lineWidth = (float) lineWidth;
-        imp.setLineWidth(this.lineWidth);
+    /**
+     * Sets the line width in density-independent pixels (dp). The line width set by this method is applied to
+     * subsequent <code>draw...</code> operations. Has no effect if <code>lineWidth</code> is negative.
+     *
+     * @param lineWidth the new line width in dp
+     *
+     * @see #getLineWidth()
+     * @since 2.0
+     */
+    public void setLineWidth(final float lineWidth) {
+        if (lineWidth >= 0f) {
+            this.lineWidth = lineWidth;
+            imp.setLineWidth(this.lineWidth * canvasToDevice);
+        }
     }
 
     /**
@@ -849,7 +875,7 @@ public class Canvas {
 
         if (textSize != size) {
             textSize = size;
-            imp.setTextSize(textSize * displayAdaption.textSizeFactor);
+            imp.setTextSize(textSize * canvasToDevice);
         }
     }
 
@@ -920,31 +946,35 @@ public class Canvas {
             return 0;
         }
         else {
-            return imp.measureLength(text, typeface.imp, textSize);
+            return imp.measureLength(text, typeface.imp, textSize * canvasToDevice);
         }
     }
 
-    final void setWorldTransformation(final float scale, final float tx, final float ty) {
-        this.scale = displayAdaption.screenScale * 100f / scale;
-        this.tx = -tx * this.scale;
-        this.ty = ty * this.scale;
+    final void setWorldTransformation(final float scaleX, final float scaleY,
+                                      final float translateX, final float translateY) {
+        sx = canvasToDevice * scaleX;
+        sy = -canvasToDevice * scaleY;
+        slx = Math.abs(sx);
+        sly = Math.abs(sy);
+        tx = translateX * slx;
+        ty = pixelsY - translateY * sly;
     }
 
-    void worldBegin(final boolean pinned, final float tx, final float ty, final float angleRad) {
-        imp.translate(toPixel(tx), -toPixel(ty));
-        imp.rotateRad(-angleRad, toPixelX(0), toPixelY(0));
+    void localBegin(final boolean pinned, final float originX, final float originY, final float angleRad) {
+        imp.translate(originX * slx, -originY * sly);
+        imp.rotateRad(-angleRad, tx, ty);
 
     }
 
-    void worldEnd() {
+    void localEnd() {
         imp.resetTransformation();
     }
 
     private float[] convertPoints(double[] values) {
         final float[] result = new float[values.length];
         for (int i = 0; i < values.length; i = i + 2) {
-            result[i] = toPixelX((float) values[i]);
-            result[i + 1] = toPixelY((float) values[i + 1]);
+            result[i] = (float) values[i] * sx + tx;
+            result[i + 1] = (float) values[i + 1] * sy + ty;
         }
 
         return result;
@@ -953,8 +983,8 @@ public class Canvas {
     private float[] convertPoints(float[] values) {
         final float[] result = new float[values.length];
         for (int i = 0; i < values.length; i = i + 2) {
-            result[i] = toPixelX(values[i]);
-            result[i + 1] = toPixelY(values[i + 1]);
+            result[i] = values[i] * sx + tx;
+            result[i + 1] = values[i + 1] * sy + ty;
         }
 
         return result;
@@ -984,27 +1014,11 @@ public class Canvas {
         }
     }
 
-    float lengthToWorld(final int pixels) {
-        return pixels / scale;
+    float deviceToCanvasX(final float x) {
+        return x * deviceToCanvas;
     }
 
-    float toCanvasX(final float x) {
-        return x / displayAdaption.screenScale;
-    }
-
-    float toCanvasY(final float y) {
-        return (displayAdaption.pixelsY - y) / displayAdaption.screenScale;
-    }
-
-    private float toPixel(final float len) {
-        return len * scale;
-    }
-
-    private float toPixelX(final float x) {
-        return x * scale + tx;
-    }
-
-    private float toPixelY(final float y) {
-        return displayAdaption.pixelsY - y * scale + ty;
+    float deviceToCanvasY(final float y) {
+        return (pixelsY - y) * deviceToCanvas;
     }
 }

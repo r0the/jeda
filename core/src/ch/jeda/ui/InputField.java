@@ -25,11 +25,15 @@ import ch.jeda.event.PointerEvent;
  * Represents a text field. A text field is a {@link ch.jeda.ui.OldWidget} that allows the user to enter text.
  *
  * @since 1.3
- * @version 2
+ * @version 3
  */
 public abstract class InputField extends TextWidget implements KeyTypedListener, PointerDownListener {
 
-    private static final float BORDER = 0.1f;
+    private static final Color DEFAULT_BACKGROUND_COLOR = Color.GRAY;
+    private static final float DEFAULT_HEIGHT = 48f;
+    private static final Color DEFAULT_HIGHLIGHT_COLOR = Color.PINK_A400;
+    private static final float DEFAULT_WIDTH = 200f;
+    private static final float DEFAULT_TEXT_SIZE = 16f;
     private static final char HIDE_CHAR = '*';
     private String displayText;
     private Color highlightColor;
@@ -47,11 +51,13 @@ public abstract class InputField extends TextWidget implements KeyTypedListener,
      *
      * @since 1.3
      */
-    protected InputField(final int x, final int y, final Alignment alignment) {
+    protected InputField(final double x, final double y, final Alignment alignment) {
         super(x, y, alignment);
+        resize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setTextSize(DEFAULT_TEXT_SIZE);
+        setBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+        highlightColor = DEFAULT_HIGHLIGHT_COLOR;
         displayText = "";
-        setBackgroundColor(Color.GRAY);
-        highlightColor = Color.PINK_A400;
         hintText = "Input Field";
         inputHidden = false;
     }
@@ -81,7 +87,9 @@ public abstract class InputField extends TextWidget implements KeyTypedListener,
     /**
      * Returns the hint text for this input field.
      *
-     * @return
+     * @return the hint text for this input field
+     *
+     * @since 2.0
      */
     public final String getHintText() {
         return hintText;
@@ -175,7 +183,7 @@ public abstract class InputField extends TextWidget implements KeyTypedListener,
      *
      * @since 1.3
      */
-    protected abstract void characterTyped(char ch);
+    protected abstract void characterTyped(final char ch);
 
     @Override
     protected void draw(final Canvas canvas) {
@@ -193,15 +201,17 @@ public abstract class InputField extends TextWidget implements KeyTypedListener,
             canvas.setColor(getBackgroundColor());
         }
 
-        canvas.drawPolyline(getLeft(), getBottom(), getRight(), getBottom());
-        canvas.setAlignment(Alignment.LEFT);
+        final float dividerY = getBottom() + 8;
+        canvas.drawPolyline(getLeft(), dividerY, getRight(), dividerY);
+        canvas.setAlignment(Alignment.BOTTOM_LEFT);
+        final float textY = getBottom() + 16;
         if (visibleText == null || visibleText.isEmpty()) {
             canvas.setColor(getBackgroundColor());
-            canvas.drawText(getLeft(), getCenterY(), hintText);
+            canvas.drawText(getLeft(), textY, hintText);
         }
         else {
             canvas.setColor(getTextColor());
-            canvas.drawText(getLeft(), getCenterY(), visibleText);
+            canvas.drawText(getLeft(), textY, visibleText);
         }
     }
 
@@ -239,7 +249,7 @@ public abstract class InputField extends TextWidget implements KeyTypedListener,
     }
 
     private boolean fits(final Canvas canvas, final String text) {
-        final float maxWidth = getWidth() - 2f * BORDER;
+        final float maxWidth = getWidth();
         return canvas.measureLength(text, getTypeface(), getTextSize()) <= maxWidth;
     }
 

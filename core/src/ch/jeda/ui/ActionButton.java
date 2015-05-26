@@ -66,7 +66,7 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
         this.icon = icon;
         setName(icon.name());
         key = Key.UNDEFINED;
-        radius = 0.5f;
+        radius = 28f;
     }
 
     @Override

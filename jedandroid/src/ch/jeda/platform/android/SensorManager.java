@@ -66,7 +66,7 @@ class SensorManager extends Fragment {
         // Android returns value in centimeter
         checkAdd(SensorType.PROXIMITY, 0.01f, 0f, imp.getDefaultSensor(Sensor.TYPE_PROXIMITY));
         // Android returns value in degrees Celcius
-        checkAdd(SensorType.TEMPERATURE, 1f, -273.15f, imp.getDefaultSensor(Sensor.TYPE_TEMPERATURE));
+        checkAdd(SensorType.TEMPERATURE, 1f, -273.15f, imp.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE));
     }
 
     @Override

@@ -2,11 +2,8 @@ package ch.jeda.test;
 
 import ch.jeda.*;
 import ch.jeda.event.*;
-import ch.jeda.geometry.Circle;
-import ch.jeda.geometry.Rectangle;
-import ch.jeda.physics.Body;
-import ch.jeda.physics.BodyType;
-import ch.jeda.physics.PhysicsView;
+import ch.jeda.geometry.*;
+import ch.jeda.physics.*;
 import ch.jeda.ui.*;
 
 public class PhysicsTest extends Program implements TickListener, PointerMovedListener, ActionListener {
@@ -24,15 +21,14 @@ public class PhysicsTest extends Program implements TickListener, PointerMovedLi
         view.getBackground().fill();
         view.setGravity(0, -9);
         view.setDebugging(true);
-        view.createWalls();
+        view.add(new Box(view));
         ActionButton button = new ActionButton(1.5, 1.5, Icon.CHEVRON_DOWN);
         button.setKey(Key.PAGE_DOWN);
         view.add(button);
         button = new ActionButton(1.5, 3, Icon.CHEVRON_UP);
         button.setKey(Key.PAGE_UP);
         view.add(button);
-        System.out.println("width=" + view.getWidth());
-        view.createBox(1, 1, 2, 2, 0.5f);
+        view.add(new Box(2, 2, 1, 1, 0.1));
 
         player = new Player();
         player.setPosition(10, 10);
@@ -64,6 +60,7 @@ public class PhysicsTest extends Program implements TickListener, PointerMovedLi
     @Override
     public void onPointerMoved(PointerEvent pe) {
         this.pe = pe;
+        System.out.println("x=" + pe.getWorldX() + ", y=" + pe.getWorldY());
     }
 
     @Override

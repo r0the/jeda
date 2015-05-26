@@ -6,17 +6,17 @@ import ch.jeda.ui.*;
 
 public class WidgetAlignmentTest extends Program {
 
-    private static final float OFFSET = 0.5f;
-    private static final double RADIUS = 0.2;
+    private static final float OFFSET = 20f;
+    private static final double RADIUS = 4;
     private View view;
 
     @Override
     public void run() {
         view = new View(700, 230);
-        float w = view.getWidth();
-        float h = view.getHeight();
-        view.addEventListener(this);
-        view.add(new TextButton(OFFSET, OFFSET, "Bottom Left", Alignment.BOTTOM_LEFT));
+        float w = view.getWidthDp();
+        float h = view.getHeightDp();
+        TextButton b = new TextButton(OFFSET, OFFSET, "Bottom Left", Alignment.BOTTOM_LEFT);
+        view.add(b);
         view.add(new TextButton(w / 2, OFFSET, "Bottom Center", Alignment.BOTTOM_CENTER));
         view.add(new TextButton(w - OFFSET, OFFSET, "Bottom Center", Alignment.BOTTOM_RIGHT));
         view.add(new TextButton(OFFSET, h / 2, "Left", Alignment.LEFT));
@@ -26,6 +26,7 @@ public class WidgetAlignmentTest extends Program {
         view.add(new TextButton(w / 2, h - OFFSET, "Top Center", Alignment.TOP_CENTER));
         view.add(new TextButton(w - OFFSET, h - OFFSET, "Top Right", Alignment.TOP_RIGHT));
         view.add(new Overlay());
+        view.addEventListener(this);
     }
 
     private static class Overlay extends Element {

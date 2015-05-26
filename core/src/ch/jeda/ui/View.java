@@ -57,6 +57,8 @@ import java.util.Set;
  */
 public class View {
 
+    private static final float METER_TO_DP = 100f * 160f / 2.54f;
+    private static final float DP_TO_METER = 1f / METER_TO_DP;
     private static final int DEFAULT_HEIGHT = 600;
     private static final int DEFAULT_WIDTH = 800;
     private static final EnumSet<ViewFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
@@ -137,7 +139,7 @@ public class View {
         pendingInsertions = new HashSet<Element>();
         pendingRemovals = new HashSet<Element>();
         elements = new Element[0];
-        scale = 100f;
+        scale = 0.01f;
         title = Jeda.getProgramName();
         userControl = new UserControl(this);
         resetImp(width, height, toSet(features));
@@ -210,6 +212,28 @@ public class View {
      */
     public final Canvas getBackground() {
         return background;
+    }
+
+    /**
+     * Returns the horizontal world coordinate of the center of this view.
+     *
+     * @return the horizontal world coordinate of the center of this view
+     *
+     * @since 2.0
+     */
+    public final float getCenterX() {
+        return toWorldX(foreground.getWidth() / 2f);
+    }
+
+    /**
+     * Returns the vertical world coordinate of the center of this view.
+     *
+     * @return the vertical world coordinate of the center of this view
+     *
+     * @since 2.0
+     */
+    public final float getCenterY() {
+        return toWorldY(foreground.getHeight() / 2f);
     }
 
     /**
@@ -327,13 +351,24 @@ public class View {
     }
 
     /**
-     * Returns the height of this view in world coordinates.
+     * Returns the height of this view in device-independent pixels (dp).
      *
-     * @return the height of this view in world coordinates
+     * @return the height of this view in dp
      *
      * @since 2.0
      */
-    public final float getHeight() {
+    public final float getHeightDp() {
+        return foreground.getHeight();
+    }
+
+    /**
+     * Returns the height of this view in meters.
+     *
+     * @return the height of this view in meters
+     *
+     * @since 2.0
+     */
+    public final float getHeightM() {
         return toWorld(foreground.getHeight());
     }
 
@@ -361,13 +396,24 @@ public class View {
     }
 
     /**
-     * Returns the width of this view in world coordinates.
+     * Returns the width of this view in device-independent pixels (dp).
      *
-     * @return the width of this view in world coordinates
+     * @return the width of this view in dp
      *
      * @since 2.0
      */
-    public final float getWidth() {
+    public final float getWidthDp() {
+        return foreground.getWidth();
+    }
+
+    /**
+     * Returns the width of this view in meters.
+     *
+     * @return the width of this view in meters
+     *
+     * @since 2.0
+     */
+    public final float getWidthM() {
         return toWorld(foreground.getWidth());
     }
 
@@ -626,28 +672,16 @@ public class View {
         eventQueue.addEvent(event);
     }
 
-    private float toCanvas(final float length) {
-        return length * 100f / scale;
-    }
-
-    private float toCanvasX(final float x) {
-        return toWorld(x - translationX);
-    }
-
-    private float toCanvasY(final float y) {
-        return toWorld(y - translationY);
-    }
-
     private float toWorld(final float length) {
-        return length * scale / 100f;
+        return length * DP_TO_METER / scale;
     }
 
     private float toWorldX(final float x) {
-        return toWorld(x) + translationX;
+        return toWorld(x) - translationX;
     }
 
     private float toWorldY(final float y) {
-        return toWorld(y) + translationY;
+        return toWorld(y) - translationY;
     }
 
     private void tick(final TickEvent event) {
@@ -657,10 +691,10 @@ public class View {
             foreground.copyFrom(background);
             for (int i = 0; i < elements.length; ++i) {
                 if (elements[i].isPinned()) {
-                    foreground.setWorldTransformation(100f, 0f, 0f);
+                    foreground.setWorldTransformation(1f, 1f, 0f, 0f);
                 }
                 else {
-                    foreground.setWorldTransformation(scale, translationX, translationY);
+                    foreground.setWorldTransformation(scale * METER_TO_DP, scale * METER_TO_DP, translationX, translationY);
                 }
 
                 elements[i].internalDraw(foreground);
@@ -761,32 +795,32 @@ public class View {
 
         @Override
         public void postPointerDown(final Object source, final int pointerId, final EnumSet<Button> pressedButtons, float x, float y) {
-            x = view.foreground.toCanvasX(x);
-            y = view.foreground.toCanvasY(y);
+            x = view.foreground.deviceToCanvasX(x);
+            y = view.foreground.deviceToCanvasY(y);
             postEvent(new PointerEvent(source, EventType.POINTER_DOWN, pointerId, pressedButtons, 0f, x, y,
                                        view.toWorldX(x), view.toWorldY(y)));
         }
 
         @Override
         public void postPointerMoved(final Object source, final int pointerId, final EnumSet<Button> pressedButtons, float x, float y) {
-            x = view.foreground.toCanvasX(x);
-            y = view.foreground.toCanvasY(y);
+            x = view.foreground.deviceToCanvasX(x);
+            y = view.foreground.deviceToCanvasY(y);
             postEvent(new PointerEvent(source, EventType.POINTER_MOVED, pointerId, pressedButtons, 0f, x, y,
                                        view.toWorldX(x), view.toWorldY(y)));
         }
 
         @Override
         public void postPointerUp(final Object source, final int pointerId, final EnumSet<Button> pressedButtons, float x, float y) {
-            x = view.foreground.toCanvasX(x);
-            y = view.foreground.toCanvasY(y);
+            x = view.foreground.deviceToCanvasX(x);
+            y = view.foreground.deviceToCanvasY(y);
             postEvent(new PointerEvent(source, EventType.POINTER_UP, pointerId, pressedButtons, 0f, x, y,
                                        view.toWorldX(x), view.toWorldY(y)));
         }
 
         @Override
         public void postWheel(final Object source, final int pointerId, final EnumSet<Button> pressedButtons, float x, float y, final float rotation) {
-            x = view.foreground.toCanvasX(x);
-            y = view.foreground.toCanvasY(y);
+            x = view.foreground.deviceToCanvasX(x);
+            y = view.foreground.deviceToCanvasY(y);
             postEvent(new PointerEvent(source, EventType.WHEEL, pointerId, pressedButtons, rotation, x, y,
                                        view.toWorldX(x), view.toWorldY(y)));
         }
@@ -832,8 +866,8 @@ public class View {
         @Override
         public void onPointerMoved(final PointerEvent event) {
             if ((lastDragEvent != null) && (event.getPointerId() == lastDragEvent.getPointerId())) {
-                float dx = view.toWorld(lastDragEvent.getCanvasX() - event.getCanvasX());
-                float dy = view.toWorld(lastDragEvent.getCanvasY() - event.getCanvasY());
+                float dx = view.toWorld(event.getCanvasX() - lastDragEvent.getCanvasX());
+                float dy = view.toWorld(event.getCanvasY() - lastDragEvent.getCanvasY());
                 view.translate(dx, dy);
                 lastDragEvent = event;
             }
@@ -850,10 +884,10 @@ public class View {
         public void onWheel(final PointerEvent event) {
             if (scalingEnabled) {
                 if (event.getWheel() > 0f) {
-                    view.scale(1.1, event.getWorldX(), event.getWorldY());
+                    view.scale(1 / 1.1, event.getWorldX(), event.getWorldY());
                 }
                 else {
-                    view.scale(1 / 1.1, event.getWorldX(), event.getWorldY());
+                    view.scale(1.1, event.getWorldX(), event.getWorldY());
                 }
             }
         }

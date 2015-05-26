@@ -16,18 +16,50 @@
  */
 package ch.jeda.ui;
 
+/**
+ * A widget displaying a text.
+ *
+ * @since 2.0
+ */
 public class Text extends TextWidget {
 
     private String text;
 
+    /**
+     * Constructs a new text widget.
+     *
+     * @param x the x coordinate of the widget
+     * @param y the y coordinate of the widget
+     *
+     * @since 2.0
+     */
     public Text(final double x, final double y) {
         this(x, y, null, Alignment.BOTTOM_LEFT);
     }
 
+    /**
+     * Constructs a new text widget.
+     *
+     * @param x the x coordinate of the widget
+     * @param y the y coordinate of the widget
+     * @param text the text to be displayed
+     *
+     * @since 2.0
+     */
     public Text(final double x, final double y, final String text) {
-        this(x, y, text, Alignment.TOP_LEFT);
+        this(x, y, text, Alignment.BOTTOM_LEFT);
     }
 
+    /**
+     * Constructs a new text widget.
+     *
+     * @param x the x coordinate of the widget
+     * @param y the y coordinate of the widget
+     * @param text the text to be displayed
+     * @param alignment the alignment of the widget
+     *
+     * @since 2.0
+     */
     public Text(final double x, final double y, final String text, final Alignment alignment) {
         super(x, y, alignment);
         setText(text);
@@ -38,6 +70,7 @@ public class Text extends TextWidget {
      *
      * @return the text
      *
+     * @see #setText(java.lang.String)
      * @since 2.0
      */
     public final String getText() {
@@ -45,9 +78,9 @@ public class Text extends TextWidget {
     }
 
     /**
-     * Sets the display text of this widget
+     * Sets the text to be displayed by this widget
      *
-     * @param text the display text of this widget
+     * @param text the text
      *
      * @see #getText()
      * @since 2.0
