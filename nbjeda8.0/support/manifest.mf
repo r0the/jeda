@@ -5,5 +5,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: ch.jeda.netbeans.support
 OpenIDE-Module-Localizing-Bundle: ch/jeda/netbeans/support/Bundle.prop
  erties
-OpenIDE-Module-Specification-Version: 2.0.15
+OpenIDE-Module-Specification-Version: 2.0.0
 
