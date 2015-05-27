@@ -128,7 +128,7 @@ public abstract class Program implements Runnable {
      * @since 1.0
      */
     protected final void write(final Object... args) {
-        Jeda.log(LogLevel.INFO, Convert.toString(args));
+        Jeda.writeln(Convert.toString(args));
     }
 
     /**
@@ -136,7 +136,7 @@ public abstract class Program implements Runnable {
      */
     protected final void writeLines(final Object... args) {
         for (int i = 0; i < args.length; ++i) {
-            Jeda.log(LogLevel.INFO, Convert.toString(args[i], "\n"));
+            Jeda.writeln(Convert.toString(args[i], "\n"));
         }
     }
 }

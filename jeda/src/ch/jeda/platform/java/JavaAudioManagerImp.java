@@ -17,7 +17,6 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Log;
-import ch.jeda.Message;
 import ch.jeda.platform.AudioManagerImp;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -68,10 +67,10 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
             soundMap.put(path, new SoundData(buffer.toByteArray()));
         }
         catch (final UnsupportedAudioFileException ex) {
-            Log.err(Message.AUDIO_ERROR_UNSUPPORTED_FILE_FORMAT, path);
+            Log.e("Detected unsupported audio format in file '", path, "'.");
         }
         catch (final IOException ex) {
-            Log.err(ex, Message.AUDIO_ERROR_READ, path);
+            Log.e(ex, "Error while reading audio file '", path, "'.");
         }
     }
 
@@ -92,10 +91,10 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
             }
         }
         catch (final UnsupportedAudioFileException ex) {
-            Log.err(Message.AUDIO_ERROR_UNSUPPORTED_FILE_FORMAT, path);
+            Log.e("Detected unsupported audio format in file '", path, "'.");
         }
         catch (final IOException ex) {
-            Log.err(ex, Message.AUDIO_ERROR_READ, path);
+            Log.e(ex, "Error while reading audio file '", path, "'.");
         }
     }
 

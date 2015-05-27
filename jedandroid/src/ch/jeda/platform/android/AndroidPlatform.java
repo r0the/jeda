@@ -21,7 +21,6 @@ import android.graphics.Typeface;
 import android.view.WindowManager;
 import ch.jeda.DisplayMetrics;
 import ch.jeda.JedaError;
-import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
@@ -124,11 +123,6 @@ class AndroidPlatform implements Platform {
     }
 
     @Override
-    public void log(final LogLevel logLevel, String message) {
-        Main.getInstance().log(logLevel, message);
-    }
-
-    @Override
     public InputStream openResource(final String path) {
         return Main.getInstance().openResource(path);
     }
@@ -161,6 +155,11 @@ class AndroidPlatform implements Platform {
     @Override
     public void shutdown() {
         Main.getInstance().shutdown();
+    }
+
+    @Override
+    public void writeln(String message) {
+        Main.getInstance().writeln(message);
     }
 
     void onPause() {

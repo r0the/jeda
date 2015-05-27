@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import ch.jeda.LogLevel;
 
 class LogFragment extends Fragment {
 
@@ -54,22 +53,6 @@ class LogFragment extends Fragment {
         scrollView.addView(textView);
         updateView();
         return scrollView;
-    }
-
-    void log(final LogLevel logLevel, final String message) {
-        switch (logLevel) {
-            case DEBUG:
-                Log.d("Jeda", message);
-                break;
-            case ERROR:
-                Log.e("Jeda", message);
-                append(message);
-                break;
-            case INFO:
-                System.out.println(message);
-                append(message);
-                break;
-        }
     }
 
     void append(final String text) {

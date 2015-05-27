@@ -43,10 +43,10 @@ class XmlReader {
             return contentHandler.getRootElement();
         }
         catch (final SAXException ex) {
-            Log.err(ex, "Fehler beim Lesen einer TMX-Datei: ", ex.getMessage());
+            Log.e(ex, "Error while reading TMX file.");
         }
         catch (final IOException ex) {
-            Log.err(ex, "Fehler beim Lesen einer TMX-Datei: ", ex.getMessage());
+            Log.e(ex, "Error while reading TMX file.");
         }
 
         return null;

@@ -217,7 +217,7 @@ public final class Image {
 
         final String extension = filePath.substring(pos + 1).toLowerCase();
         if (!FORMAT_MAP.containsKey(extension)) {
-            Log.err("jeda.image.error.format", filePath, extension);
+            Log.e("Invalid Jeda image format '", extension, "'.");
             return false;
         }
 
@@ -232,7 +232,7 @@ public final class Image {
             return imp.write(out, FORMAT_MAP.get(extension));
         }
         catch (final IOException ex) {
-            Log.err(ex, "jeda.image.error.write", filePath);
+            Log.e(ex, "Error while saving image file '", filePath, "'.");
             return false;
         }
         finally {

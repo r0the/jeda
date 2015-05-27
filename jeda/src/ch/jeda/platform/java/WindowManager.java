@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.LogLevel;
 import ch.jeda.platform.InputRequest;
 import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
@@ -52,8 +51,8 @@ class WindowManager {
         windows.add(selectionWindow);
     }
 
-    public void log(final LogLevel logLevel, final String message) {
-        logWindow.log(logLevel, message);
+    public void writeln(final String message) {
+        logWindow.writeln(message);
     }
 
     void showInputRequest(final InputRequest inputRequest) {

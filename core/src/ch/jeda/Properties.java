@@ -63,7 +63,7 @@ public final class Properties {
             imp.load(in);
         }
         catch (final Exception ex) {
-            Log.err("jeda.file.error.read", filePath);
+            Log.e(ex, "Error while reading properties file '", filePath, "'.");
         }
         finally {
             try {

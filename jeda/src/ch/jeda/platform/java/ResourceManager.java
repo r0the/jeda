@@ -17,7 +17,6 @@
 package ch.jeda.platform.java;
 
 import ch.jeda.Log;
-import ch.jeda.Message;
 import ch.jeda.platform.TypefaceImp;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -56,11 +55,11 @@ class ResourceManager {
             return new JavaTypefaceImp(Font.createFont(Font.TRUETYPE_FONT, in));
         }
         catch (final IOException ex) {
-            Log.err(ex, Message.TYPEFACE_ERROR_READ, path);
+            Log.e(ex, "Error while reading truetype font file '", path, "'.");
             return null;
         }
         catch (final FontFormatException ex) {
-            Log.err(ex, Message.TYPEFACE_ERROR_FORMAT, path);
+            Log.e(ex, "Invalid font format in truetype font file '", path, "'.");
             return null;
         }
         finally {
@@ -82,7 +81,7 @@ class ResourceManager {
             return ImageIO.read(in);
         }
         catch (Exception ex) {
-            Log.err(ex, Message.IMAGE_ERROR_READ, path);
+            Log.e(ex, "Error while reading image file '", path, "'.");
             return null;
         }
         finally {
@@ -114,7 +113,7 @@ class ResourceManager {
             return new FileInputStream(path);
         }
         catch (FileNotFoundException ex) {
-            Log.err(ex, Message.FILE_ERROR_NOT_FOUND, path);
+            Log.e(ex, "File '", path, "' not found.");
         }
 
         return null;
@@ -125,11 +124,11 @@ class ResourceManager {
             return new URL(path).openStream();
         }
         catch (MalformedURLException ex) {
-            Log.err(ex, Message.FILE_ERROR_OPEN, path);
+            Log.e(ex, "Cannot open invalid path '", path, "'.");
             return null;
         }
         catch (IOException ex) {
-            Log.err(ex, Message.FILE_ERROR_OPEN, path);
+            Log.e(ex, "Error while reading remote file '", path, "'.");
         }
         return null;
     }
@@ -142,7 +141,7 @@ class ResourceManager {
         }
 
         if (url == null) {
-            Log.err(Message.FILE_ERROR_NOT_FOUND, path);
+            Log.e("Resource file '", path, "' not found.");
             return null;
         }
 
@@ -150,7 +149,7 @@ class ResourceManager {
             return url.openStream();
         }
         catch (IOException ex) {
-            Log.err(ex, Message.FILE_ERROR_OPEN, path);
+            Log.e(ex, "Error while reading resource file '", path, "'.");
         }
 
         return null;

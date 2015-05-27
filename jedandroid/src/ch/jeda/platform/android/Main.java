@@ -28,7 +28,6 @@ import android.view.Surface;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import ch.jeda.Jeda;
-import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
@@ -145,15 +144,6 @@ public final class Main extends Activity {
         return resourceManager.loadClasses();
     }
 
-    void log(final LogLevel logLevel, final String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                doLog(logLevel, message);
-            }
-        });
-    }
-
     InputStream openResource(final String path) {
         return resourceManager.openInputStream(path);
     }
@@ -207,28 +197,24 @@ public final class Main extends Activity {
     void shutdown() {
     }
 
+    void writeln(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                doWriteln(message);
+            }
+        });
+    }
+
     private void addManager(final Fragment fragment, final String tag) {
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.add(fragment, tag);
         ft.commit();
     }
 
-    private void doLog(final LogLevel logLevel, final String message) {
-        switch (logLevel) {
-            case DEBUG:
-                Log.d("Jeda", message);
-                break;
-            case ERROR:
-                Log.e("Jeda", message);
-                logFragment.append(message);
-                showFragment(logFragment);
-                break;
-            case INFO:
-                System.out.println(message);
-                logFragment.append(message);
-                showFragment(logFragment);
-                break;
-        }
+    private void doWriteln(final String message) {
+        logFragment.append(message);
+        showFragment(logFragment);
     }
 
     void doShowInputRequest(final InputRequest request) {

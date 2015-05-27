@@ -228,7 +228,7 @@ public final class Jeda {
             return result.toArray(new String[result.size()]);
         }
         catch (final IOException ex) {
-            Log.err("jeda.file.error.read", path, ex);
+            Log.e("ex", "Error while reading text file '", path, "'.");
             return null;
         }
         finally {
@@ -335,10 +335,6 @@ public final class Jeda {
         return ENGINE.getStandardTypefaceImp(standardTypeface);
     }
 
-    static void log(final LogLevel logLevel, final String message) {
-        ENGINE.log(logLevel, message);
-    }
-
     static InputStream openResource(final String path) {
         return ENGINE.openResource(path);
     }
@@ -349,6 +345,10 @@ public final class Jeda {
 
     static void showInputRequest(final InputRequest inputRequest) {
         ENGINE.showInputRequest(inputRequest);
+    }
+
+    static void writeln(final String message) {
+        ENGINE.writeln(message);
     }
 
     private Jeda() {

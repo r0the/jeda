@@ -17,7 +17,6 @@
 package ch.jeda.platform;
 
 import ch.jeda.DisplayMetrics;
-import ch.jeda.LogLevel;
 import ch.jeda.event.Event;
 import ch.jeda.event.SensorType;
 import java.io.InputStream;
@@ -55,8 +54,6 @@ public interface Platform {
 
     Class<?>[] loadClasses() throws Exception;
 
-    void log(final LogLevel logLevel, final String message);
-
     InputStream openResource(String path);
 
     void setSensorEnabled(SensorType sensorType, boolean enabled);
@@ -70,6 +67,8 @@ public interface Platform {
     void showViewRequest(ViewRequest viewRequest);
 
     void shutdown();
+
+    void writeln(final String message);
 
     interface Callback {
 

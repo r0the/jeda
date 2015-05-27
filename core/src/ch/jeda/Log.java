@@ -16,42 +16,67 @@
  */
 package ch.jeda;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
+import ch.jeda.platform.LogImp;
 
 /**
  * <b>Internal</b>. Do not use this class.
  */
-public class Log {
+public final class Log {
 
-    /**
-     * <b>Internal</b>. Do not use this method.
-     */
-    public static void dbg(final Object... message) {
-        Jeda.log(LogLevel.DEBUG, Convert.toString(message));
+    private static LogImp imp = new SystemLogImp();
+
+    public static final void d(final Object... message) {
+        imp.d(Convert.toString(message), null);
     }
 
-    /**
-     * <b>Internal</b>. Do not use this method.
-     */
-    public static void err(final String messageKey, Object... args) {
-        Jeda.log(LogLevel.ERROR, String.format(Message.get(messageKey), args) + "\n");
+    public static final void d(final Throwable throwable, final Object... message) {
+        imp.d(Convert.toString(message), throwable);
     }
 
-    /**
-     * <b>Internal</b>. Do not use this method.
-     */
-    public static void err(final Throwable throwable, final String messageKey, Object... args) {
-        Jeda.log(LogLevel.ERROR, String.format(Message.get(messageKey), args) + "\n");
-        if (throwable != null) {
-            Jeda.log(LogLevel.ERROR, "  " + throwable + "\n");
-            final StackTraceElement[] stackTrace = throwable.getStackTrace();
-            for (int i = 0; i < stackTrace.length; ++i) {
-                Jeda.log(LogLevel.ERROR, "   " + stackTrace[i].toString() + "\n");
-            }
-        }
+    public static final void e(final Object... message) {
+        imp.e(Convert.toString(message), null);
     }
 
+    public static final void e(final Throwable throwable, final Object... message) {
+        imp.e(Convert.toString(message), throwable);
+    }
+
+    public static final void i(final Object... message) {
+        imp.i(Convert.toString(message), null);
+    }
+
+    public static final void i(final Throwable throwable, final Object... message) {
+        imp.i(Convert.toString(message), throwable);
+    }
+
+    public static final void w(final Object... message) {
+        imp.w(Convert.toString(message), null);
+    }
+
+    public static final void w(final Throwable throwable, final Object... message) {
+        imp.w(Convert.toString(message), throwable);
+    }
+
+//    /**
+//     * <b>Internal</b>. Do not use this method.
+//     */
+//    public static void err(final String messageKey, Object... args) {
+//        Jeda.log(LogLevel.ERROR, String.format(Message.get(messageKey), args) + "\n");
+//    }
+//
+//    /**
+//     * <b>Internal</b>. Do not use this method.
+//     */
+//    public static void err(final Throwable throwable, final String messageKey, Object... args) {
+//        Jeda.log(LogLevel.ERROR, String.format(Message.get(messageKey), args) + "\n");
+//        if (throwable != null) {
+//            Jeda.log(LogLevel.ERROR, "  " + throwable + "\n");
+//            final StackTraceElement[] stackTrace = throwable.getStackTrace();
+//            for (int i = 0; i < stackTrace.length; ++i) {
+//                Jeda.log(LogLevel.ERROR, "   " + stackTrace[i].toString() + "\n");
+//            }
+//        }
+//    }
     private Log() {
     }
 }

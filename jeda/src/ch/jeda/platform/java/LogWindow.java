@@ -16,7 +16,6 @@
  */
 package ch.jeda.platform.java;
 
-import ch.jeda.LogLevel;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.text.AttributeSet;
@@ -43,20 +42,9 @@ class LogWindow extends AutoCloseWindow {
         StyleConstants.setForeground(infoAttributes, Color.BLACK);
     }
 
-    void log(final LogLevel logLevel, final String message) {
-        switch (logLevel) {
-            case DEBUG:
-                System.out.println(message);
-                break;
-            case ERROR:
-                System.err.print(message);
-                append(message, errorAttributes);
-                break;
-            case INFO:
-                System.out.print(message);
-                append(message, infoAttributes);
-                break;
-        }
+    void writeln(final String message) {
+        System.err.print(message);
+        append(message, errorAttributes);
     }
 
     private void append(final String content, final AttributeSet textAttributes) {

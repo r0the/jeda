@@ -101,7 +101,7 @@ class JedaEngine implements Platform.Callback, Runnable {
             }
         }
         catch (final Exception ex) {
-            Log.err(ex, Message.ENGINE_ERROR_INIT_CLASSES);
+            Log.e(ex, "Error while reading classes during Jeda engine initialization.");
         }
 
         programClasses = programClassList.toArray(new ProgramClassWrapper[programClassList.size()]);
@@ -271,15 +271,6 @@ class JedaEngine implements Platform.Callback, Runnable {
         return platform.isVirtualKeyboardVisible();
     }
 
-    void log(final LogLevel logLevel, final String message) {
-        if (platform == null) {
-            System.err.print(message);
-        }
-        else {
-            platform.log(logLevel, message);
-        }
-    }
-
     InputStream openResource(final String path) {
         return platform.openResource(path);
     }
@@ -318,7 +309,8 @@ class JedaEngine implements Platform.Callback, Runnable {
     void startProgram(final String programClassName) {
         synchronized (currentProgramLock) {
             if (currentProgram != null) {
-                Log.err(Message.PROGRAM_ERROR_ALREADY_RUNNING);
+                Log.w("Cannot start a Jeda program. An instance of the program '", currentProgram.getProgramName(),
+                      "' is already running.");
             }
             else {
                 currentProgram = new JedaProgramExecutor(this, programClassName);
@@ -326,6 +318,15 @@ class JedaEngine implements Platform.Callback, Runnable {
                 programThread.setName(Message.get(Message.ENGINE_PROGRAM_THREAD_NAME));
                 programThread.start();
             }
+        }
+    }
+
+    void writeln(final String message) {
+        if (platform == null) {
+            System.err.print(message);
+        }
+        else {
+            platform.writeln(message);
         }
     }
 

@@ -123,7 +123,7 @@ class AndroidAudioManagerImp implements AudioManagerImp, MediaPlayer.OnCompletio
         final int slashPos = path.indexOf('/');
         final int dotPos = path.lastIndexOf('.');
         if (slashPos == -1 || dotPos == -1) {
-            Log.err("jeda.audio.error.invalid-resource-name", path);
+            Log.e("Invalid audio resource name '", path, "'.");
             return 0;
         }
 

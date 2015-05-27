@@ -17,7 +17,6 @@
 package ch.jeda.event;
 
 import ch.jeda.Log;
-import ch.jeda.Message;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -234,7 +233,7 @@ public final class EventQueue {
                 actionListeners.get(i).onAction(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -248,7 +247,7 @@ public final class EventQueue {
                 connectionAcceptedListeners.get(i).onConnectionAccepted(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -262,7 +261,7 @@ public final class EventQueue {
                 connectionClosedListeners.get(i).onConnectionClosed(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -276,7 +275,7 @@ public final class EventQueue {
                 keyDownListeners.get(i).onKeyDown(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -290,7 +289,7 @@ public final class EventQueue {
                 keyTypedListeners.get(i).onKeyTyped(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -304,7 +303,7 @@ public final class EventQueue {
                 keyUpListeners.get(i).onKeyUp(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -318,7 +317,7 @@ public final class EventQueue {
                 messageReceivedListeners.get(i).onMessageReceived(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -332,7 +331,7 @@ public final class EventQueue {
                 pointerDownListeners.get(i).onPointerDown(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -346,7 +345,7 @@ public final class EventQueue {
                 pointerMovedListeners.get(i).onPointerMoved(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -361,7 +360,7 @@ public final class EventQueue {
                 pointerUpListeners.get(i).onPointerUp(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -375,7 +374,7 @@ public final class EventQueue {
                 sensorListeners.get(i).onSensorChanged(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -389,7 +388,7 @@ public final class EventQueue {
                 tickListeners.get(i).onTick(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -403,7 +402,7 @@ public final class EventQueue {
                 wheelListeners.get(i).onWheel(event);
             }
             catch (final Throwable ex) {
-                Log.err(ex, Message.EVENT_ERROR);
+                reportError(ex);
             }
 
             ++i;
@@ -541,5 +540,9 @@ public final class EventQueue {
             pendingRemovals.clear();
             pendingInsertions.clear();
         }
+    }
+
+    private void reportError(final Throwable ex) {
+        Log.e(ex, "Error while dispatching event.");
     }
 }

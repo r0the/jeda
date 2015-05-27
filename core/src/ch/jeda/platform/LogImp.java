@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Stefan Rothe
+ * Copyright (C) 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,9 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.jeda;
+package ch.jeda.platform;
 
-public enum LogLevel {
+public interface LogImp {
 
-    DEBUG, INFO, ERROR
+    void d(String message, Throwable throwable);
+
+    void e(String message, Throwable throwable);
+
+    void i(String message, Throwable throwable);
+
+    void w(String message, Throwable throwable);
 }

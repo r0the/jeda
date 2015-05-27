@@ -64,7 +64,7 @@ class JedaProgramExecutor implements Runnable {
             program.run();
         }
         catch (final Throwable ex) {
-            Log.err(ex, Message.PROGRAM_ERROR_RUN, programClass);
+            Log.e(ex, "Error in run method of Jeda program '", programClass, "'.");
         }
     }
 
@@ -73,7 +73,7 @@ class JedaProgramExecutor implements Runnable {
             return programClass.createInstance();
         }
         catch (final Throwable ex) {
-            Log.err(ex, Message.PROGRAM_ERROR_CREATE);
+            Log.e(ex, "Error in constructor of Jeda program '", programClass, "'.");
             return null;
         }
     }
@@ -88,7 +88,7 @@ class JedaProgramExecutor implements Runnable {
                 }
             }
 
-            Log.err(Message.PROGRAM_ERROR_CLASS_NOT_FOUND, programClassName);
+            Log.e("Error while starting Jeda program. Class  '", programClassName, "' not found.");
             return null;
         }
 
@@ -106,7 +106,7 @@ class JedaProgramExecutor implements Runnable {
         }
 
         if (candidates.length == 0) {
-            Log.err(Message.PROGRAM_ERROR_NO_CLASS_FOUND);
+            Log.e("Error while starting Jeda program. No Jeda program class found.");
             return null;
         }
 
@@ -128,7 +128,7 @@ class JedaProgramExecutor implements Runnable {
             }
         }
         catch (final Exception ex) {
-            Log.err(ex, Message.PROGRAM_ERROR_SELECT);
+            Log.e(ex, "Error while selecting Jeda program.");
             return null;
         }
 

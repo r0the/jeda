@@ -18,7 +18,6 @@ package ch.jeda.platform.java;
 
 import ch.jeda.DisplayMetrics;
 import ch.jeda.JedaError;
-import ch.jeda.LogLevel;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
 import ch.jeda.platform.CanvasImp;
@@ -124,11 +123,6 @@ class JavaPlatform implements Platform {
     }
 
     @Override
-    public void log(final LogLevel logLevel, final String message) {
-        windowManager.log(logLevel, message);
-    }
-
-    @Override
     public InputStream openResource(final String path) {
         return ResourceManager.openInputStream(path);
     }
@@ -161,6 +155,11 @@ class JavaPlatform implements Platform {
     @Override
     public void shutdown() {
         windowManager.shutdown();
+    }
+
+    @Override
+    public void writeln(final String message) {
+        windowManager.writeln(message);
     }
 
     private static void setLookAndFeel() {

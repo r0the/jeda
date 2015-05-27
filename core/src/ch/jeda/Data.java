@@ -550,22 +550,22 @@ public class Data {
             return (T) ctor.newInstance(new Data(document, child));
         }
         catch (final NoSuchMethodException ex) {
-            Log.err(Message.DATA_ERROR_CONSTRUCTOR_NOT_FOUND, className);
+            Log.e(ex, "Error while reading serialized data: Class '", className, "' does not have a matching constructor.");
         }
         catch (final ClassNotFoundException ex) {
-            Log.err(Message.DATA_ERROR_CLASS_NOT_FOUND, className);
+            Log.e(ex, "Error while reading serialized data: Class '", className, "' not found.");
         }
         catch (final InstantiationException ex) {
-            Log.err(Message.DATA_ERROR_INSTANTIATION, className);
+            Log.e(ex, "Error while reading serialized data: Cannot create object of class '", className, "'.");
         }
         catch (final IllegalAccessException ex) {
-            Log.err(Message.DATA_ERROR_ACCESS, className);
+            Log.e(ex, "Error while reading serialized data: Constructor of class '", className, "' is not public.");
         }
         catch (final ExceptionInInitializerError ex) {
-            Log.err(ex.getCause(), Message.DATA_ERROR_CLASS_INITIALIZER, className);
+            Log.e(ex.getCause(), "Error while reading serialized data: Error while initializing class '", className, "'.");
         }
         catch (final InvocationTargetException ex) {
-            Log.err(ex.getCause(), Message.DATA_ERROR_CONSTRUCTOR, className);
+            Log.w(ex.getCause(), "Error while reading serialized data: Error while creating object of class '", className, "'.");
         }
 
         return defaultValue;
