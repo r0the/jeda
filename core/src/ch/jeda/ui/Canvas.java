@@ -18,6 +18,7 @@ package ch.jeda.ui;
 
 import ch.jeda.Jeda;
 import ch.jeda.JedaInternal;
+import ch.jeda.Log;
 import ch.jeda.platform.CanvasImp;
 import java.util.EnumMap;
 
@@ -138,7 +139,10 @@ public class Canvas {
      * @since 2.0
      */
     public void drawCircle(final float centerX, final float centerY, final float radius) {
-        if (radius > 0f) {
+        if (radius <= 0f) {
+            Log.d("Ignoring Canvas.drawCircle() with non-positive radius.");
+        }
+        else {
             imp.drawEllipse(centerX * sx + tx, centerY * sy + ty, radius * slx, radius * sly);
         }
     }
@@ -170,7 +174,10 @@ public class Canvas {
      * @since 2.0
      */
     public void drawEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
-        if (radiusX > 0f && radiusY > 0f) {
+        if (radiusX <= 0f || radiusY <= 0f) {
+            Log.d("Ignoring call with non-positive radius.");
+        }
+        else {
             imp.drawEllipse(centerX * sx + tx, centerY * sy + ty, radiusX * slx, radiusY * sly);
         }
     }
@@ -269,7 +276,7 @@ public class Canvas {
 
     /**
      * Draws an image. The image is positioned relative to (x, y) according to the current alignment. Has no effect if
-     * <code>image</code> is <code>null</code>.
+     * <code>image</code> is <code>null</code> or unavailable.
      *
      * @param x the x coordinate of the image
      * @param y the y coordinate of the image
@@ -280,7 +287,10 @@ public class Canvas {
      * @since 2.0
      */
     public void drawImage(float x, float y, float width, float height, final Image image) {
-        if (image != null && image.isAvailable()) {
+        if (image == null || !image.isAvailable()) {
+            Log.d("Ignoring call with null or unavailable image.");
+        }
+        else {
             x = x * sx + tx;
             y = y * sy + ty;
             width = width * sly;
@@ -491,7 +501,10 @@ public class Canvas {
      * @since 2.0
      */
     public void drawText(float x, float y, final String text) {
-        if (text != null && !text.isEmpty()) {
+        if (text == null || text.isEmpty()) {
+            Log.d("Ignoring call with null or empty text.");
+        }
+        else {
             x = x * sx + tx;
             y = y * sy + ty;
             final float width = imp.measureLength(text, typeface.imp, textSize * canvasToDevice);
@@ -542,7 +555,10 @@ public class Canvas {
      * @since 2.0
      */
     public void fillCircle(final float centerX, final float centerY, final float radius) {
-        if (radius > 0f) {
+        if (radius <= 0f) {
+            Log.d("Ignoring call with non-positive radius.");
+        }
+        else {
             imp.fillEllipse(centerX * sx + tx, centerY * sy + ty, radius * slx, radius * sly);
         }
     }
@@ -574,7 +590,10 @@ public class Canvas {
      * @since 2.0
      */
     public void fillEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
-        if (radiusX > 0f && radiusY > 0f) {
+        if (radiusX <= 0f || radiusY <= 0f) {
+            Log.d("Ignoring call with non-positive radius.");
+        }
+        else {
             imp.fillEllipse(centerX * sx + tx, centerY * sy + ty, radiusX * slx, radiusY * sly);
         }
     }
@@ -771,7 +790,10 @@ public class Canvas {
      * @since 2.0
      */
     public void setAlignment(Alignment alignment) {
-        if (alignment != null) {
+        if (alignment == null) {
+            Log.d("Ignoring call with null alignment.");
+        }
+        else {
             this.alignment = alignment;
         }
     }
@@ -802,7 +824,10 @@ public class Canvas {
      * @since 1.0
      */
     public void setColor(final Color color) {
-        if (color != null && !color.equals(this.color)) {
+        if (color == null) {
+            Log.d("Ignoring call with null color.");
+        }
+        else if (!color.equals(this.color)) {
             this.color = color;
             imp.setColor(color);
         }
@@ -838,7 +863,10 @@ public class Canvas {
      * @since 2.0
      */
     public void setLineWidth(final float lineWidth) {
-        if (lineWidth >= 0f) {
+        if (lineWidth < 0f) {
+            Log.d("Ignoring call with negative line width.");
+        }
+        else {
             this.lineWidth = lineWidth;
             imp.setLineWidth(this.lineWidth * canvasToDevice);
         }
@@ -860,44 +888,37 @@ public class Canvas {
 
     /**
      * Sets the text size. The text size set by this method is applied to all subsequent <code>drawText(...)</code>
-     * operations.
+     * operations. Has no effect if <code>textSize</code> is not positive.
      *
-     * @param size the new text size
-     * @throws IllegalArgumentException if <code>size</code> is not positive
+     * @param textSize the new text size
      *
      * @see #getTextSize()
      * @since 2.0
      */
-    public void setTextSize(final float size) {
-        if (size <= 0) {
-            throw new IllegalArgumentException("size");
+    public void setTextSize(final float textSize) {
+        if (textSize <= 0) {
+            Log.d("Ignoring call with non-positive text size.");
         }
 
-        if (textSize != size) {
-            textSize = size;
-            imp.setTextSize(textSize * canvasToDevice);
+        if (this.textSize != textSize) {
+            this.textSize = textSize;
+            imp.setTextSize(this.textSize * canvasToDevice);
         }
     }
 
     /**
-     * Sets the typeface to be used to draw text.
+     * Sets the typeface to be used to draw text. Has no effect if <code>typeface</code> is <code>null</code> or
+     * unavailable.
      *
      * @param typeface the typeface to be used to draw text
-     * @throws NullPointerException if <code>typeface</code> is <code>null</code>
-     * @throws IllegalArgumentException if <code>typeface.isAvailable()</code> is <code>false</code>
      *
      * @since 1.3
      */
     public void setTypeface(final Typeface typeface) {
-        if (typeface == null) {
-            throw new NullPointerException("typeface");
+        if (typeface == null || !typeface.isAvailable()) {
+            Log.d("Ignoring call with null or unavailable typeface.");
         }
-
-        if (!typeface.isAvailable()) {
-            throw new IllegalArgumentException("typeface");
-        }
-
-        if (!typeface.equals(this.typeface)) {
+        else if (!typeface.equals(this.typeface)) {
             this.typeface = typeface;
             imp.setTypeface(typeface.imp);
         }

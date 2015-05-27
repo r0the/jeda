@@ -16,6 +16,7 @@
  */
 package ch.jeda.physics;
 
+import ch.jeda.Log;
 import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
@@ -430,7 +431,7 @@ public class Body extends Element {
      *
      * @since 2.0
      */
-    public void setDebugColor(Color debugColor) {
+    public void setDebugColor(final Color debugColor) {
         this.debugColor = debugColor;
     }
 
@@ -531,7 +532,12 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setType(final BodyType type) {
-        imp.setType(type);
+        if (type == null) {
+            Log.d("Ignoring call with null body type.");
+        }
+        else {
+            imp.setType(type);
+        }
     }
 
     /**
