@@ -16,7 +16,6 @@
  */
 package ch.jeda.physics;
 
-import ch.jeda.Convert;
 import ch.jeda.MathF;
 import ch.jeda.geometry.Circle;
 import ch.jeda.geometry.Ellipse;
@@ -24,12 +23,11 @@ import ch.jeda.geometry.Polygon;
 import ch.jeda.geometry.Polyline;
 import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
-import ch.jeda.ui.Canvas;
-import ch.jeda.ui.Color;
 import java.util.ArrayList;
 import java.util.List;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 
 final class PhysicsBodyImp implements BodyImp {
@@ -181,7 +179,7 @@ final class PhysicsBodyImp implements BodyImp {
 
     @Override
     public void setAngleRad(final float rotation) {
-        // ignore
+        throw new IllegalStateException("Body is in a physics simulation.");
     }
 
     @Override
@@ -201,12 +199,22 @@ final class PhysicsBodyImp implements BodyImp {
 
     @Override
     public void setDensity(final float density) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Fixture fixture = imp.m_fixtureList;
+        while (fixture != null) {
+            fixture.setDensity(density);
+            fixture = fixture.m_next;
+        }
+
+        imp.resetMassData();
     }
 
     @Override
     public void setFriction(final float friction) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Fixture fixture = imp.m_fixtureList;
+        while (fixture != null) {
+            fixture.setFriction(friction);
+            fixture = fixture.m_next;
+        }
     }
 
     @Override

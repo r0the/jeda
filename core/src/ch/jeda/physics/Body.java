@@ -361,7 +361,8 @@ public class Body extends Element {
     }
 
     /**
-     * Sets the rotation angle of this body in degrees. Has no effect if the body currenly is in a physics simulation.
+     * Sets the rotation angle of this body in degrees. If the body is in a physics simulation, the body will be removed
+     * from the simulation, then re-added to the simulation with the new angle.
      *
      * @param angle the angle of this body in degrees
      *
@@ -375,7 +376,8 @@ public class Body extends Element {
     }
 
     /**
-     * Sets the rotation angle of this body in radians. Has no effect if the body currenly is in a physics simulation.
+     * Sets the rotation angle of this body in radians. If the body is in a physics simulation, the body will be removed
+     * from the simulation, then re-added to the simulation with the new angle.
      *
      * @param angle the angle of this body in radians
      *
@@ -385,7 +387,16 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void setAngleRad(final double angle) {
-        imp.setAngleRad((float) angle);
+        final Physics physics = imp.getPhysics();
+        if (physics == null) {
+            imp.setAngleRad((float) angle);
+        }
+        else {
+            BodyImp detachedImp = new DetachedBodyImp(imp);
+            detachedImp.setAngleRad((float) angle);
+            imp.destroy();
+            imp = new PhysicsBodyImp(physics, this, detachedImp);
+        }
     }
 
     /**
