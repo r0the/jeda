@@ -29,11 +29,13 @@ import ch.jeda.event.PointerListener;
  * it.
  *
  * @since 2.0
+ * @version 2
  */
 public class TextButton extends TextWidget implements KeyDownListener, KeyUpListener, PointerListener {
 
     private static final float DEFAULT_WIDTH = 120;
     private static final Color DEFAULT_TEXT_COLOR = Color.WHITE;
+    private int actionId;
     private Key key;
     private boolean keyPressed;
     private Integer pointerId;
@@ -45,11 +47,12 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
      * @param x the x coordinate of the button
      * @param y the y coordinate of the button
      * @param text the button text
+     * @param actionId the action id
      *
      * @since 2.0
      */
-    public TextButton(final double x, final double y, final String text) {
-        this(x, y, text, Alignment.BOTTOM_LEFT);
+    public TextButton(final double x, final double y, final String text, final int actionId) {
+        this(x, y, text, actionId, Alignment.BOTTOM_LEFT);
     }
 
     /**
@@ -58,16 +61,32 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
      * @param x the x coordinate of the button
      * @param y the y coordinate of the button
      * @param text the button text
+     * @param actionId the action id
      * @param alignment the button's alignment
      *
      * @since 2.0
      */
-    public TextButton(final double x, final double y, final String text, final Alignment alignment) {
+    public TextButton(final double x, final double y, final String text, final int actionId,
+                      final Alignment alignment) {
         super((float) x, (float) y, alignment);
+        this.actionId = actionId;
         key = Key.UNDEFINED;
+        setName("TextButton " + actionId);
         setText(text);
         setTextColor(DEFAULT_TEXT_COLOR);
         setWidth(DEFAULT_WIDTH);
+    }
+
+    /**
+     * Returns the action id of this button. The action id can be used to identify an action event that is caused by
+     * this button.
+     *
+     * @return the action id of this button
+     *
+     * @since 2.1
+     */
+    public final int getActionId() {
+        return actionId;
     }
 
     /**
@@ -102,6 +121,17 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
      */
     public final boolean isPressed() {
         return keyPressed || pointerId != null;
+    }
+
+    /**
+     * Sets the action id for this button. The id can be used to identify an action event that is caused by this button.
+     *
+     * @param actionId the action id
+     *
+     * @since 2.1
+     */
+    public void setActionId(final int actionId) {
+        this.actionId = actionId;
     }
 
     /**
@@ -194,7 +224,7 @@ public class TextButton extends TextWidget implements KeyDownListener, KeyUpList
      * @since 1.3
      */
     protected void clicked() {
-        triggerAction();
+        triggerAction(actionId);
     }
 
     @Override

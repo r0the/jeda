@@ -16,12 +16,11 @@ public class TiledTest extends Program {
     public void run() {
         view = new PhysicsView(700, 700, ViewFeature.USER_SCROLL, ViewFeature.USER_SCALE);
         view.add(new Box(view));
-//        view.setGravity(0, 0);
-//        view.setDebugging(true);
+        view.setGravity(0, 0);
+        view.setDebugging(true);
 //        view.setPaused(true);
-        map = new TiledMap("res:raw/test_xml.tmx");
+        map = new TiledMap("res:raw/racetrack.tmx");
         view.addEventListener(this);
         map.addTo(view);
     }
-
 }

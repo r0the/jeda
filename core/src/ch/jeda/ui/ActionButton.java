@@ -29,10 +29,13 @@ import ch.jeda.event.PointerListener;
  * it.
  *
  * @since 2.0
+ * @version 2
  */
 public class ActionButton extends Widget implements KeyDownListener, KeyUpListener, PointerListener {
 
+    private static final float DEFAULT_RADIUS = 28f;
     private Icon icon;
+    private int actionId;
     private Key key;
     private boolean keyPressed;
     private Integer pointerId;
@@ -44,11 +47,12 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
      * @param x the horizontal canvas coordinate of this button's center
      * @param y the vertical canvas coordinate of this button's center
      * @param icon the icon
+     * @param actionId the action id
      *
      * @since 2.0
      */
-    public ActionButton(final double x, final double y, final Icon icon) {
-        this(x, y, icon, Alignment.CENTER);
+    public ActionButton(final double x, final double y, final Icon icon, final int actionId) {
+        this(x, y, icon, actionId, Alignment.CENTER);
     }
 
     /**
@@ -57,16 +61,31 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
      * @param x the horizontal canvas coordinate of this button's alignment point
      * @param y the vertical canvas coordinate of this button's alignment point
      * @param icon the icon
+     * @param actionId the action id
      * @param alignment the alignment of this button
      *
      * @since 2.0
      */
-    public ActionButton(final double x, final double y, final Icon icon, final Alignment alignment) {
+    public ActionButton(final double x, final double y, final Icon icon, final int actionId,
+                        final Alignment alignment) {
         super((float) x, (float) y, alignment);
+        this.actionId = actionId;
         this.icon = icon;
-        setName(icon.name());
+        setName("ActionButton " + actionId);
         key = Key.UNDEFINED;
-        radius = 28f;
+        radius = DEFAULT_RADIUS;
+    }
+
+    /**
+     * Returns the action id of this button. The action id can be used to identify an action event that is caused by
+     * this button.
+     *
+     * @return the action id of this button
+     *
+     * @since 2.1
+     */
+    public final int getActionId() {
+        return actionId;
     }
 
     @Override
@@ -156,6 +175,17 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
     }
 
     /**
+     * Sets the action id for this button. The id can be used to identify an action event that is caused by this button.
+     *
+     * @param actionId the action id
+     *
+     * @since 2.1
+     */
+    public void setActionId(final int actionId) {
+        this.actionId = actionId;
+    }
+
+    /**
      * Associates a key with the button. Associating a key with the button makes the button a virtual copy of the key:
      * The button will be pressed and released synchronously with the key. Pressing and releasing the button will
      * generate the corresponding key events.
@@ -180,7 +210,7 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
      * @since 2.0
      */
     protected void clicked() {
-        triggerAction();
+        triggerAction(actionId);
     }
 
     @Override

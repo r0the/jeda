@@ -26,7 +26,7 @@ import ch.jeda.event.ActionEvent;
  * selected at a time.
  *
  * @since 1.3
- * @version 3
+ * @version 4
  */
 public abstract class Widget extends Element {
 
@@ -366,11 +366,13 @@ public abstract class Widget extends Element {
      * Creates a new action event and posts the event to the current view. The event will be processed during the next
      * tick. Has no effect if this widget is not part of a view.
      *
-     * @since 2.0
+     * @param id the action id
+     *
+     * @since 2.1
      */
-    protected void triggerAction() {
+    protected void triggerAction(final int id) {
         if (getView() != null) {
-            getView().postEvent(new ActionEvent(this));
+            getView().postEvent(new ActionEvent(this, id));
         }
     }
 

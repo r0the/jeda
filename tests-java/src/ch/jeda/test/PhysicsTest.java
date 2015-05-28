@@ -19,22 +19,23 @@ public class PhysicsTest extends Program implements TickListener, PointerMovedLi
         view = new PhysicsView(1400, 700, ViewFeature.USER_SCROLL, ViewFeature.USER_SCALE);
         view.getBackground().setColor(Color.LIGHT_GREEN_50);
         view.getBackground().fill();
-        view.setGravity(0, -9);
+        view.setGravity(0, 0);
+
         view.setDebugging(true);
         view.add(new Box(view));
-        ActionButton button = new ActionButton(1.5, 1.5, Icon.CHEVRON_DOWN);
-        button.setKey(Key.PAGE_DOWN);
-        view.add(button);
-        button = new ActionButton(1.5, 3, Icon.CHEVRON_UP);
-        button.setKey(Key.PAGE_UP);
-        view.add(button);
         view.add(new Box(2, 2, 1, 1, 0.1));
+
+        Body body = new Body();
+        body.addShape(new Circle(0, 0, 1));
+        body.addShape(new Rectangle(-1, -1, 2, 1));
+        body.setPosition(10, 10);
+        body.setAngleDeg(90);
+        view.add(body);
 
         player = new Player();
         player.setPosition(10, 10);
 
-        view.add(player);
-
+///        view.add(player);
         Body ground = new Body();
         ground.setType(BodyType.STATIC);
         ground.setPosition(0, 1);

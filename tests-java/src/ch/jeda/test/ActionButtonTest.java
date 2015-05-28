@@ -16,7 +16,7 @@ public class ActionButtonTest extends Program {
         double x = BORDER;
         double y = BORDER;
         for (Icon icon : Icon.values()) {
-            view.add(new ActionButton(x, y, icon));
+            view.add(new ActionButton(x, y, icon, 0));
             x = x + STEP;
             if (x > view.getWidthDp() - BORDER) {
                 x = BORDER;

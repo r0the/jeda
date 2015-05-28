@@ -19,27 +19,41 @@ package ch.jeda.event;
 import ch.jeda.ui.Widget;
 
 /**
- * @version 2
  * @since 1.0
+ * @version 3
  */
 public final class ActionEvent extends Event {
 
+    private final int id;
     private final Widget widget;
 
     /**
+     * Constructs an action event.
+     *
+     * @param widget the widget that caused this action.
+     * @param id the id of this action
+     *
      * @since 1.0
      */
-    public ActionEvent(final Widget widget) {
+    public ActionEvent(final Widget widget, final int id) {
         super(widget, EventType.ACTION);
+        this.id = id;
         this.widget = widget;
     }
 
     /**
-     * Returns the name of the widget that caused this action.
+     * Returns the id of this action.
      *
-     * @return the name of the widget that caused this action
+     * @return the id of this action
      *
-     * @since 1.0
+     * @since 2.1
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @deprecated Use {@link #getId()} to determine the kind of action.
      */
     public String getName() {
         return widget.getName();

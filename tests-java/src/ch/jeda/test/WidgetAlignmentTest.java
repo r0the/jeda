@@ -15,16 +15,16 @@ public class WidgetAlignmentTest extends Program {
         view = new View(700, 230);
         float w = view.getWidthDp();
         float h = view.getHeightDp();
-        TextButton b = new TextButton(OFFSET, OFFSET, "Bottom Left", Alignment.BOTTOM_LEFT);
+        TextButton b = new TextButton(OFFSET, OFFSET, "Bottom Left", 0, Alignment.BOTTOM_LEFT);
         view.add(b);
-        view.add(new TextButton(w / 2, OFFSET, "Bottom Center", Alignment.BOTTOM_CENTER));
-        view.add(new TextButton(w - OFFSET, OFFSET, "Bottom Center", Alignment.BOTTOM_RIGHT));
-        view.add(new TextButton(OFFSET, h / 2, "Left", Alignment.LEFT));
-        view.add(new TextButton(w / 2, h / 2, "Center", Alignment.CENTER));
-        view.add(new TextButton(w - OFFSET, h / 2, "Right", Alignment.RIGHT));
-        view.add(new TextButton(OFFSET, h - OFFSET, "Top Left", Alignment.TOP_LEFT));
-        view.add(new TextButton(w / 2, h - OFFSET, "Top Center", Alignment.TOP_CENTER));
-        view.add(new TextButton(w - OFFSET, h - OFFSET, "Top Right", Alignment.TOP_RIGHT));
+        view.add(new TextButton(w / 2, OFFSET, "Bottom Center", 0, Alignment.BOTTOM_CENTER));
+        view.add(new TextButton(w - OFFSET, OFFSET, "Bottom Center", 0, Alignment.BOTTOM_RIGHT));
+        view.add(new TextButton(OFFSET, h / 2, "Left", 0, Alignment.LEFT));
+        view.add(new TextButton(w / 2, h / 2, "Center", 0, Alignment.CENTER));
+        view.add(new TextButton(w - OFFSET, h / 2, "Right", 0, Alignment.RIGHT));
+        view.add(new TextButton(OFFSET, h - OFFSET, "Top Left", 0, Alignment.TOP_LEFT));
+        view.add(new TextButton(w / 2, h - OFFSET, "Top Center", 0, Alignment.TOP_CENTER));
+        view.add(new TextButton(w - OFFSET, h - OFFSET, "Top Right", 0, Alignment.TOP_RIGHT));
         view.add(new Overlay());
         view.addEventListener(this);
     }
