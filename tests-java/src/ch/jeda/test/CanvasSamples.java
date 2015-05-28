@@ -55,6 +55,15 @@ public class CanvasSamples extends Program {
         canvas.drawText(100, 50, "Greetings, programs!");
         markPoint(100, 50, "(x, y)");
         sleep(1000);
+
+        clear();
+        Image image = new Image("res:drawable/spain.jpg");
+        canvas.setAlignment(Alignment.BOTTOM_LEFT);
+        canvas.drawImage(100, 50, 200, 150, image);
+        markPoint(100, 50, "(x, y)");
+        markLine(100, 200 + 8, 300, 200 + 8, "w");
+        markLine(300 + 8, 50, 300 + 8, 200, "h");
+        sleep(1000);
     }
 
     private void clear() {
