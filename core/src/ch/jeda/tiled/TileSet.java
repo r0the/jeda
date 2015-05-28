@@ -80,21 +80,36 @@ final class TileSet {
 
         // Create all tiles
         tiles = new ArrayList<Tile>();
+        if (image != null) {
+            // We are reading a real tile set
+            final int spacing = element.getIntAttribute(Const.SPACING);
+            final int margin = element.getIntAttribute(Const.MARGIN);
 
-        final int spacing = element.getIntAttribute(Const.SPACING);
-        final int margin = element.getIntAttribute(Const.MARGIN);
+            int nextX = margin;
+            int nextY = margin;
 
-        int nextX = margin;
-        int nextY = margin;
-
-        while (nextY + tileHeight + margin <= image.getHeight()) {
-            final Image tileImage = image.subImage(nextX, nextY, tileWidth, tileHeight);
-            final int tileId = tiles.size();
-            tiles.add(new Tile(map, this, tileId, tileImage, tileElements.get(tileId)));
-            nextX += tileWidth + spacing;
-            if (nextX + tileWidth + margin > image.getWidth()) {
-                nextX = margin;
-                nextY += tileHeight + spacing;
+            while (nextY + tileHeight + margin <= image.getHeight()) {
+                final Image tileImage = image.subImage(nextX, nextY, tileWidth, tileHeight);
+                final int tileId = tiles.size();
+                tiles.add(new Tile(map, this, tileId, tileImage, tileElements.get(tileId)));
+                nextX += tileWidth + spacing;
+                if (nextX + tileWidth + margin > image.getWidth()) {
+                    nextX = margin;
+                    nextY += tileHeight + spacing;
+                }
+            }
+        }
+        else {
+            // We are reading an image collection
+            for (int tileId = 0; tileId < tileElements.size(); ++tileId) {
+                if (tileElements.containsKey(tileId)) {
+                    final ElementWrapper tileElement = tileElements.get(tileId);
+                    final Image tileImage = reader.loadImageChild(tileElement);
+                    tiles.add(new Tile(map, this, tileId, tileImage, tileElement));
+                }
+                else {
+                    tiles.add(null);
+                }
             }
         }
     }
