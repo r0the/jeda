@@ -24,13 +24,37 @@ import java.util.Map;
 /**
  * Provides conversion methods.
  *
- * @version 3
+ * @version 4
  * @since 1.0
  */
 public final class Convert {
 
     private static final String FALSE_VALUE = "false";
     private static final String TRUE_VALUE = "true";
+
+    /**
+     * Decodes Base 64-encoded data.
+     *
+     * @param base64 the Base 64-encoded data
+     * @return the raw data
+     *
+     * @since 2.1
+     */
+    public static byte[] fromBase64(final String base64) {
+        return Jeda.decodeBase64(base64);
+    }
+
+    /**
+     * Encodes data with Base 64.
+     *
+     * @param data the data to encode
+     * @return the Base 64-encoded data
+     *
+     * @since 2.1
+     */
+    public static String toBase64(final byte[] data) {
+        return Jeda.encodeBase64(data);
+    }
 
     /**
      * Converts a @{link java.lang.String} to a <code>boolean</code> value. Returns the <code>boolean</code> value

@@ -34,6 +34,7 @@ import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.xml.bind.DatatypeConverter;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -78,6 +79,16 @@ class JavaPlatform implements Platform {
         catch (final SAXException ex) {
             throw new JedaError(JedaError.XML_READER_CREATION_FAILED, ex);
         }
+    }
+
+    @Override
+    public byte[] decodeBase64(final String base64) {
+        return DatatypeConverter.parseBase64Binary(base64);
+    }
+
+    @Override
+    public String encodeBase64(final byte[] data) {
+        return DatatypeConverter.printBase64Binary(data);
     }
 
     @Override

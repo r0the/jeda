@@ -18,6 +18,7 @@ package ch.jeda.platform.android;
 
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.util.Base64;
 import android.view.WindowManager;
 import ch.jeda.DisplayMetrics;
 import ch.jeda.JedaError;
@@ -84,6 +85,16 @@ class AndroidPlatform implements Platform {
         catch (final SAXException ex) {
             throw new JedaError(JedaError.XML_READER_CREATION_FAILED, ex);
         }
+    }
+
+    @Override
+    public byte[] decodeBase64(final String base64) {
+        return Base64.decode(base64, Base64.DEFAULT);
+    }
+
+    @Override
+    public String encodeBase64(final byte[] data) {
+        return Base64.encodeToString(data, Base64.DEFAULT);
     }
 
     @Override

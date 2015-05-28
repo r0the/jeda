@@ -327,6 +327,14 @@ public final class Jeda {
         return ENGINE.createXmlReader();
     }
 
+    static byte[] decodeBase64(final String base64) {
+        return ENGINE.decodeBase64(base64);
+    }
+
+    static String encodeBase64(final byte[] data) {
+        return ENGINE.encodeBase64(data);
+    }
+
     static AudioManager getAudioManager() {
         return ENGINE.getAudioManager();
     }

@@ -40,6 +40,10 @@ public interface Platform {
 
     XMLReader createXmlReader();
 
+    byte[] decodeBase64(final String base64);
+
+    String encodeBase64(final byte[] data);
+
     AudioManagerImp getAudioManagerImp();
 
     DisplayMetrics getDisplayMetrics();

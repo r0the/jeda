@@ -218,6 +218,14 @@ class JedaEngine implements Platform.Callback, Runnable {
         return platform.createXmlReader();
     }
 
+    byte[] decodeBase64(final String base64) {
+        return platform.decodeBase64(base64);
+    }
+
+    String encodeBase64(final byte[] data) {
+        return platform.encodeBase64(data);
+    }
+
     AudioManager getAudioManager() {
         return audioManager;
     }
