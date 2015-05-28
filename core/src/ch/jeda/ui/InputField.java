@@ -202,6 +202,7 @@ public abstract class InputField extends TextWidget implements KeyTypedListener,
         }
 
         final float dividerY = getBottom() + 8;
+        final float endX = canvas.measureLength(visibleText, getTypeface(), getTextSize());
         canvas.drawPolyline(getLeft(), dividerY, getRight(), dividerY);
         canvas.setAlignment(Alignment.BOTTOM_LEFT);
         final float textY = getBottom() + 16;
@@ -210,6 +211,10 @@ public abstract class InputField extends TextWidget implements KeyTypedListener,
             canvas.drawText(getLeft(), textY, hintText);
         }
         else {
+            if (isSelected()) {
+                canvas.drawPolyline(endX, textY, endX, textY + getTextSize());
+            }
+
             canvas.setColor(getTextColor());
             canvas.drawText(getLeft(), textY, visibleText);
         }
