@@ -38,8 +38,8 @@ public final class Tile {
     private final float width;
 
     Tile(final TiledMap map, final TileSet tileSet, final int id, final Image image, final ElementWrapper element) {
-        height = image.getHeight() / map.getTileHeight();
-        width = image.getWidth() / map.getTileWidth();
+        height = (float) image.getHeight() / map.getTileHeight();
+        width = (float) image.getWidth() / map.getTileWidth();
         this.id = id;
         this.image = image;
         this.tileSet = tileSet;
