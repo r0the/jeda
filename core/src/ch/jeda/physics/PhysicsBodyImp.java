@@ -74,8 +74,8 @@ final class PhysicsBodyImp implements BodyImp {
     }
 
     @Override
-    public void applyForce(final float fx, final float fy) {
-        imp.applyForce(new Vec2(fx, fy), imp.getWorldCenter());
+    public void applyForce(final float fx, final float fy, final float x, final float y) {
+        imp.applyForce(new Vec2(fx, fy), imp.getWorldPoint(new Vec2(x, y)));
     }
 
     @Override
@@ -150,6 +150,11 @@ final class PhysicsBodyImp implements BodyImp {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public float getVelocity() {
+        return imp.getLinearVelocity().length();
     }
 
     @Override

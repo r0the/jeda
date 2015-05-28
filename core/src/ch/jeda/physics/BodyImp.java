@@ -22,7 +22,7 @@ interface BodyImp {
 
     void addShape(Shape shape);
 
-    void applyForce(float fx, float fy);
+    void applyForce(float fx, float fy, float x, float y);
 
     void applyTorque(float torque);
 
@@ -49,6 +49,8 @@ interface BodyImp {
     Shape[] getShapes();
 
     BodyType getType();
+
+    float getVelocity();
 
     float getVx();
 

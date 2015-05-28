@@ -16,8 +16,9 @@
  */
 package ch.jeda.physics;
 
+import ch.jeda.Log;
+import ch.jeda.MathF;
 import ch.jeda.geometry.Shape;
-import ch.jeda.ui.Canvas;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,13 +77,13 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
-    public void applyForce(final float fx, final float fy) {
-        throw new IllegalStateException("Cannot apply force to a body that has not been added to a physics.");
+    public void applyForce(float fx, float fy, float x, float y) {
+        Log.w("Cannot apply a force to a body that isn't part of a physics simulation.");
     }
 
     @Override
     public void applyTorque(final float torque) {
-        throw new IllegalStateException("Cannot apply torque to a body that has not been added to a physics.");
+        Log.w("Cannot apply a torque to a body that isn't part of a physics simulation.");
     }
 
     @Override
@@ -142,6 +143,11 @@ class DetachedBodyImp implements BodyImp {
     @Override
     public BodyType getType() {
         return type;
+    }
+
+    @Override
+    public float getVelocity() {
+        return MathF.sqrt(vx * vx + vy * vy);
     }
 
     @Override

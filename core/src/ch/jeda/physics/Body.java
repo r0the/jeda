@@ -110,7 +110,7 @@ public class Body extends Element {
     }
 
     /**
-     * Applies a force to this body. The unit of the force is Newton.
+     * Applies a force to this body's center. The unit of the force is Newton.
      *
      * @param fx the horizontal component of the force in Newton
      * @param fy the vertical component of the force in Newton
@@ -118,7 +118,22 @@ public class Body extends Element {
      * @since 2.0
      */
     public final void applyForce(final double fx, final double fy) {
-        imp.applyForce((float) fx, (float) fy);
+        imp.applyForce((float) fx, (float) fy, 0f, 0f);
+    }
+
+    /**
+     * Applies a force to this body. The force is applied at the point (x, y) specified in local coordinates. The unit
+     * of the force is Newton.
+     *
+     * @param fx the horizontal component of the force in Newton
+     * @param fy the vertical component of the force in Newton
+     * @param x the horizontal local coordinate of the point of origin of the force
+     * @param y the vertical local coordinate of the point of origin of the force
+     *
+     * @since 2.1
+     */
+    public final void applyForce(final double fx, final double fy, final double x, final double y) {
+        imp.applyForce((float) fx, (float) fy, (float) x, (float) y);
     }
 
     /**
@@ -295,11 +310,26 @@ public class Body extends Element {
     }
 
     /**
+     * Returns this body's current linear velocity in meters per second.
+     *
+     * @return this body's current linear velocity in meters per second
+     *
+     * @see #setVelocity(double, double)
+     * @see #getVx()
+     * @see #getVy()
+     * @since 2.1
+     */
+    public final float getVelocity() {
+        return imp.getVelocity();
+    }
+
+    /**
      * Returns the horizontal component of this body's current linear velocity in meters per second.
      *
      * @return the horizontal component of this body's current linear velocity in meters per second
      *
      * @see #setVelocity(double, double)
+     * @see #getVelocity()
      * @see #getVy()
      * @since 2.0
      */
@@ -313,6 +343,7 @@ public class Body extends Element {
      * @return the vertical component of this body's current linear velocity in meters per second
      *
      * @see #setVelocity(double, double)
+     * @see #getVelocity()
      * @see #getVx()
      * @since 2.0
      */
@@ -478,6 +509,20 @@ public class Body extends Element {
      * @param height the height of the image in meters
      *
      * @see #getImage()
+     * @since 2.1
+     */
+    public final void setImage(final Image image, final double width, final double height) {
+        setImage(image, (float) width, (float) height);
+    }
+
+    /**
+     * Sets the image for this body. The opacity has no impact on the physical behavior of the body.
+     *
+     * @param image the image
+     * @param width the width of the image in meters
+     * @param height the height of the image in meters
+     *
+     * @see #getImage()
      * @since 2.0
      */
     public final void setImage(final Image image, final float width, final float height) {
@@ -557,6 +602,7 @@ public class Body extends Element {
      * @param vx the horizontal component of the velocity
      * @param vy the vertical component of the velocity
      *
+     * @see #getVelocity()
      * @see #getVx()
      * @see #getVy()
      * @since 2.0
