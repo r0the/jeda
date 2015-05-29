@@ -55,11 +55,13 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawCanvas(final int x, final int y, final CanvasImp source) {
+    public void drawCanvas(final float x, final float y, final CanvasImp source, final int opacity) {
         assert source != null;
         assert source instanceof AndroidCanvasImp;
+        assert 0 < opacity && opacity <= 255;
 
-        canvas.drawBitmap(((AndroidCanvasImp) source).bitmap, x, y, fillPaint);
+        imagePaint.setAlpha(opacity);
+        canvas.drawBitmap(((AndroidCanvasImp) source).bitmap, x, y, imagePaint);
     }
 
     @Override
@@ -70,11 +72,11 @@ class AndroidCanvasImp implements CanvasImp {
 
     @Override
     public void drawImage(final float x, final float y, final float width, final float height, final ImageImp image,
-                          final int alpha) {
+                          final int opacity) {
         assert image instanceof AndroidImageImp;
-        assert 0 < alpha && alpha <= 255;
+        assert 0 < opacity && opacity <= 255;
 
-        imagePaint.setAlpha(alpha);
+        imagePaint.setAlpha(opacity);
         RectF dest = new RectF(x, y, x + width, y + height);
         canvas.drawBitmap(((AndroidImageImp) image).bitmap, null, dest, imagePaint);
     }

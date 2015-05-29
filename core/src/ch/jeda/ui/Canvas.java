@@ -23,32 +23,39 @@ import ch.jeda.platform.CanvasImp;
 import java.util.EnumMap;
 
 /**
- * Represents a drawing surface. It provides methods to draw geometric primitives and images.
- *
+ * Represents a drawing surface. It provides methods to draw geometric primitives and images. The canvas uses a
+ * mathematical coordinate system: the origin is the lower left corner of the drawing area. The length unit are
+ * density-independent pixels (dp). A dp equals 1/160th of an inch.
  * <p>
  * A canvas has some attributes that influence the drawing operations:
  * <ul>
- * <li> <b>anti-aliasing</b>:
- * <li> <b>color</b>: The color used to draw geometric shapes and text. Initially, the color is black. The color can be
- * changed with {@link #setColor(ch.jeda.ui.Color)}.
- * <li> <b>line width</b>: the line width used to draw geometric shapes. Initially, the line width is 1. The line width
- * can be changed with {@link #setLineWidth(double)}.
- * <li> <b>text size</b>: the size of the text. Initially, the text size is 16. The text size can be changed with
+ * <li> <b>alignment</b>: The alignment defines how rectangular forms are aligned relative to the provided coordinates.
+ * Use {@link #setAlignment(ch.jeda.ui.Alignment)} to change the alignment. The default alignment is
+ * {@link Alignment#BOTTOM_LEFT}.
+ * <li> <b>color</b>: The color used to draw geometric shapes and text. The default color is {@link Color#BLACK}. The
+ * color can be changed with {@link #setColor(ch.jeda.ui.Color)}.
+ * <li> <b>line width</b>: the line width used to draw geometric shapes. The default line width is 1. The line width can
+ * be changed with {@link #setLineWidth(double)}.
+ * <li> <b>opacity</b>: the opacity used to draw images. The default opacity is 255 (fully opaque). The opacity can be
+ * changed with {@link #setOpacity(int)}.
+ * <li> <b>text size</b>: the size of the text. The default text size is 16. The text size can be changed with
  * {@link #setTextSize(float)}.
- * <li> <b>typeface</b>: The typeface (font family) used to render text.
+ * <li> <b>typeface</b>: The typeface (font family) used to render text. The default typeface is
+ * {@link Typeface#SANS_SERIF}.
  * </ul>
  * <strong>Example:</strong>
- * <pre><code> Canvas canvas = new Canvas(100, 100);
+ * <pre><code> Canvas canvas = new Canvas(300, 250);
  * canvas.setColor(Color.RED);
- * canvas.fillCircle(2, 2, 1);</code></pre>
+ * canvas.fillCircle(200, 150, 100);</code></pre>
  *
  * @since 1.0
- * @version 4
+ * @version 5
  */
 public class Canvas {
 
     private static final Alignment DEFAULT_ALIGNMENT = Alignment.BOTTOM_LEFT;
     private static final Color DEFAULT_COLOR = Color.BLACK;
+    private static final int DEFAULT_OPACITY = 255;
     private static final float DEFAULT_TEXT_SIZE = 16f;
     private static final Typeface DEFAULT_TYPEFACE = Typeface.SANS_SERIF;
     private static final float DEFAULT_LINE_WIDTH = 1f;
@@ -62,6 +69,7 @@ public class Canvas {
     private Color color;
     private DisplayAdaption displayAdaption;
     private float lineWidth;
+    private int opacity;
     private float textSize;
     private Typeface typeface;
     private float sx;
@@ -71,6 +79,15 @@ public class Canvas {
     private float tx;
     private float ty;
 
+    /**
+     * Constructs a new canvas. <code>width</code> and <code>height</code> are specified in density-independent pixels.
+     * The actual size of the canvas in pixels is dependent on the pixel density of the device.
+     *
+     * @param width width of the canvas in dp
+     * @param height height of the canvas in dp
+     *
+     * @since 1.0
+     */
     public Canvas(final int width, final int height) {
         this(JedaInternal.createCanvasImp(Jeda.getDisplayMetrics().dpToPx(width),
                                           Jeda.getDisplayMetrics().dpToPx(height)));
@@ -89,11 +106,13 @@ public class Canvas {
         antiAliasing = true;
         color = DEFAULT_COLOR;
         lineWidth = DEFAULT_LINE_WIDTH;
+        opacity = DEFAULT_OPACITY;
         textSize = DEFAULT_TEXT_SIZE;
         typeface = DEFAULT_TYPEFACE;
 
-        displayAdaption = new DisplayAdaption(Jeda.getDisplayMetrics().getDpi(), imp.getHeight());
         // TODO
+        displayAdaption = new DisplayAdaption(Jeda.getDisplayMetrics().getDpi(), imp.getHeight());
+
         imp.setAntiAliasing(antiAliasing);
         imp.setColor(color);
         imp.setLineWidth(lineWidth * canvasToDevice);
@@ -103,15 +122,49 @@ public class Canvas {
     }
 
     /**
-     * Copies the contents of another canvas to this canvas.
-     *
-     * @param canvas the other canvas
-     *
-     * @since 1.0
+     * @deprecated Use {@link #drawCanvas(double, double, ch.jeda.ui.Canvas)} instead.
      */
     public void copyFrom(final Canvas canvas) {
         imp.resetTransformation();
-        imp.drawCanvas(0, 0, canvas.imp);
+        imp.drawCanvas(0, 0, canvas.imp, 255);
+    }
+
+    /**
+     * Copies the contents of another canvas to this canvas. This method uses the current alignment and opacity.
+     *
+     * @param x the horizontal coordinate
+     * @param y the vertical coordinate
+     * @param canvas the other canvas
+     *
+     * @since 2.1
+     */
+    public void drawCanvas(final double x, final double y, final Canvas canvas) {
+        drawCanvas((float) x, (float) y, canvas);
+    }
+
+    /**
+     * Copies the contents of another canvas to this canvas. This method uses the current alignment and opacity.
+     *
+     * @param x the horizontal coordinate
+     * @param y the vertical coordinate
+     * @param canvas the other canvas
+     *
+     * @since 2.1
+     */
+    public void drawCanvas(float x, float y, final Canvas canvas) {
+        if (canvas == null) {
+            Log.d("Ignoring call with null canvas.");
+        }
+        else if (canvas == this) {
+            Log.d("Ignoring drawing of canvas on itself.");
+        }
+        else if (opacity != 0) {
+            x = x * sx + tx;
+            y = y * sy + ty;
+            final float width = canvas.getWidth() * canvasToDevice;
+            final float height = canvas.getHeight() * canvasToDevice;
+            imp.drawCanvas(alignX(x, width), alignY(y, height), imp, opacity);
+        }
     }
 
     /**
@@ -191,8 +244,9 @@ public class Canvas {
     }
 
     /**
-     * Draws an image. The image is positioned relative to (x, y) according to the current alignment. Has no effect if
-     * <code>image</code> is <code>null</code>.
+     * Draws an image. The image is drawn using the current alignment and opacity. The image is positioned relative to
+     * (<code>x</code>, <code>y</code>) according to the current alignment. Has no effect if <code>image</code> is
+     * <code>null</code>.
      *
      * @param x the x coordinate of the image
      * @param y the y coordinate of the image
@@ -201,12 +255,13 @@ public class Canvas {
      * @since 1.0
      */
     public void drawImage(final double x, final double y, final Image image) {
-        drawImage((float) x, (float) y, image, 255);
+        drawImage((float) x, (float) y, image, opacity);
     }
 
     /**
-     * Draws an image. The image is positioned relative to (x, y) according to the current alignment. Has no effect if
-     * <code>image</code> is <code>null</code>.
+     * Draws an image. The image is drawn using the current alignment and opacity. The image is positioned relative to
+     * (<code>x</code>, <code>y</code>) according to the current alignment. Has no effect if <code>image</code> is
+     * <code>null</code>.
      *
      * @param x the x coordinate of the image
      * @param y the y coordinate of the image
@@ -214,53 +269,44 @@ public class Canvas {
      *
      * @since 2.0
      */
-    public void drawImage(final float x, final float y, final Image image) {
-        drawImage(x, y, image, 255);
+    public void drawImage(float x, float y, final Image image) {
+        if (image == null || !image.isAvailable()) {
+            Log.d("Ignoring call with null or unavailable image.");
+        }
+        else if (opacity != 0) {
+            x = x * sx + tx;
+            y = y * sy + ty;
+            final float width = image.getWidth();
+            final float height = image.getHeight();
+            imp.drawImage(alignX(x, width), alignY(y, height), width, height, image.getImp(), opacity);
+        }
     }
 
     /**
-     * Draws an image with translucency. The image is positioned relative to (x, y) according to the current alignment.
-     * The image is drawn with a translucency effect specified by the alpha value. Specify an alpha value of 255 for a
-     * completely opaque image, and alpha value of 0 for a completely transparent image. Has no effect if
-     * <code>image</code> is <code>null</code>.
-     *
-     * @param x the x coordinate of the image
-     * @param y the y coordinate of the image
-     * @param image the image to draw
-     * @param alpha the alpha value
-     *
-     * @since 1.0
+     * @deprecated Use {@link #setOpacity(int)} followed by {@link #drawImage(double, double, ch.jeda.ui.Image)}
+     * instead.
      */
     public void drawImage(final double x, final double y, final Image image, final int alpha) {
         drawImage((float) x, (float) y, image, alpha);
     }
 
     /**
-     * Draws an image with translucency. The image is positioned relative to (x, y) according to the current alignment.
-     * The image is drawn with a translucency effect specified by the alpha value. Specify an alpha value of 255 for a
-     * completely opaque image, and alpha value of 0 for a completely transparent image. Has no effect if
-     * <code>image</code> is <code>null</code>.
-     *
-     * @param x the x coordinate of the image
-     * @param y the y coordinate of the image
-     * @param image the image to draw
-     * @param alpha the alpha value
-     *
-     * @since 2.0
+     * @deprecated Use {@link #setOpacity(int)} followed by {@link #drawImage(float, float, ch.jeda.ui.Image)} instead.
      */
     void drawImage(float x, float y, final Image image, final int alpha) {
         if (image != null && image.isAvailable()) {
             x = x * sx + tx;
             y = y * sy + ty;
-            final int width = image.getWidth();
-            final int height = image.getHeight();
+            final float width = image.getWidth();
+            final float height = image.getHeight();
             imp.drawImage(alignX(x, width), alignY(y, height), width, height, image.getImp(), alpha);
         }
     }
 
     /**
-     * Draws an image. The image is positioned relative to (x, y) according to the current alignment. Has no effect if
-     * <code>image</code> is <code>null</code>.
+     * Draws an image. The image is drawn using the current alignment and opacity. The image is positioned relative to
+     * (<code>x</code>, <code>y</code>) according to the current alignment. Has no effect if <code>image</code> is
+     * <code>null</code>.
      *
      * @param x the x coordinate of the image
      * @param y the y coordinate of the image
@@ -275,8 +321,8 @@ public class Canvas {
     }
 
     /**
-     * Draws an image. The image is positioned relative to (x, y) according to the current alignment. Has no effect if
-     * <code>image</code> is <code>null</code> or unavailable.
+     * Draws an image. The image is positioned relative to (<code>x</code>, <code>y</code>) according to the current
+     * alignment. Has no effect if <code>image</code> is <code>null</code> or unavailable.
      *
      * @param x the x coordinate of the image
      * @param y the y coordinate of the image
@@ -290,18 +336,18 @@ public class Canvas {
         if (image == null || !image.isAvailable()) {
             Log.d("Ignoring call with null or unavailable image.");
         }
-        else {
+        else if (opacity != 0) {
             x = x * sx + tx;
             y = y * sy + ty;
             width = width * sly;
             height = height * sly;
-            imp.drawImage(alignX(x, width), alignY(y, height), width, height, image.getImp(), 255);
+            imp.drawImage(alignX(x, width), alignY(y, height), width, height, image.getImp(), opacity);
         }
     }
 
     /**
      * Draws a straight line. The line is drawn from the coordinates (<code>x1</code>, <code>y1</code>) to the
-     * coordinates (<code>x2</code>, <code>y2</code>) with the current color, line width, and transformation.
+     * coordinates (<code>x2</code>, <code>y2</code>) with the current color and line width.
      *
      * @param x1 the x coordinate of the line's start point
      * @param y1 the y coordinate of the lines' start point
@@ -316,8 +362,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a polygon. The polygon is drawn using the current color, line width, and transformation. The polygon is
-     * defined by a sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
+     * Draws a polygon. The polygon is drawn using the current color and line width. The polygon is defined by a
+     * sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
      * <pre><code>drawPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the corners (x1, y2), (x2,
      * y2), and (x3, y3).
      *
@@ -336,8 +382,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a polygon. The polygon is drawn using the current color, line width, and transformation. The polygon is
-     * defined by a sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
+     * Draws a polygon. The polygon is drawn using the current color and line width. The polygon is defined by a
+     * sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
      * <pre><code>drawPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the corners (x1, y2), (x2,
      * y2), and (x3, y3).
      *
@@ -356,9 +402,9 @@ public class Canvas {
     }
 
     /**
-     * Draws a a connected series of line segments. The polyline is drawn from the coordinates with the current color,
-     * line width, and transformation. The polyline is defined by a sequence of coordinate pairs specifiying the
-     * endpoints of the line segments. For example, the code
+     * Draws a a connected series of line segments. The polyline is drawn with the current color and line width. The
+     * polyline is defined by a sequence of coordinate pairs specifiying the endpoints of the line segments. For
+     * example, the code
      * <pre><code>drawPolyline(x1, y1, x2, y2, x3, y3);</code></pre> will draw two line segments: (x1, y1) to (x2, y2)
      * and (x2, y2) to (x3, y3).
      *
@@ -371,9 +417,9 @@ public class Canvas {
     }
 
     /**
-     * Draws a a connected series of line segments. The polyline is drawn from the coordinates with the current color,
-     * line width, and transformation. The polyline is defined by a sequence of coordinate pairs specifiying the
-     * endpoints of the line segments. For example, the code
+     * Draws a a connected series of line segments. The polyline is drawn with the current color and line width. The
+     * polyline is defined by a sequence of coordinate pairs specifiying the endpoints of the line segments. For
+     * example, the code
      * <pre><code>drawPolyline(x1, y1, x2, y2, x3, y3);</code></pre> will draw two line segments: (x1, y1) to (x2, y2)
      * and (x2, y2) to (x3, y3).
      *
@@ -386,12 +432,12 @@ public class Canvas {
     }
 
     /**
-     * Draws a rectangle. The rectangle is drawn using the current color, line width, and transformation. The bottom
-     * left corner of the rectangle is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if
+     * Draws a rectangle. The rectangle is drawn using the current alignment, color, and line width. The rectangle is
+     * positioned relative to (<code>x</code>, <code>y</code>) according to the current alignment. Has no effect if
      * <code>width</code> or <code>height</code> are not positive.
      *
-     * @param x the x coordinate of the rectangle's bottom left corner
-     * @param y the y coordinate of the rectangle's bottom left corner
+     * @param x the horizontal coordinate of rectangle
+     * @param y the vertical coordinate of rectangle
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      *
@@ -402,12 +448,12 @@ public class Canvas {
     }
 
     /**
-     * Draws a rectangle. The rectangle is drawn using the current color, line width, and transformation. The bottom
-     * left corner of the rectangle is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if
+     * Draws a rectangle. The rectangle is drawn using the current alignment, color, and line width. The rectangle is
+     * positioned relative to (<code>x</code>, <code>y</code>) according to the current alignment. Has no effect if
      * <code>width</code> or <code>height</code> are not positive.
      *
-     * @param x the x coordinate of the rectangle's bottom left corner
-     * @param y the y coordinate of the rectangle's bottom left corner
+     * @param x the horizontal coordinate of rectangle
+     * @param y the vertical coordinate of rectangle
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      *
@@ -437,11 +483,11 @@ public class Canvas {
         final float ry = radius * sly;
         final int SHADOW_MAX_OPACITY = 80;
         final int opacityStep = SHADOW_MAX_OPACITY / displayAdaption.shadowThickness;
-        int opacity = SHADOW_MAX_OPACITY;
+        int shadow = SHADOW_MAX_OPACITY;
         for (int i = 0; i < displayAdaption.shadowThickness; i++) {
-            imp.setColor(new Color(0, 0, 0, opacity));
+            imp.setColor(new Color(0, 0, 0, shadow));
             imp.drawEllipse(x, y, rx + i, ry + i);
-            opacity = opacity - opacityStep;
+            shadow = shadow - opacityStep;
         }
 
         imp.setColor(color);
@@ -464,23 +510,23 @@ public class Canvas {
         y = alignY(y * sy + ty, height);
         final int SHADOW_MAX_OPACITY = 80;
         final int opacityStep = SHADOW_MAX_OPACITY / displayAdaption.shadowThickness;
-        int opacity = SHADOW_MAX_OPACITY;
+        int shadow = SHADOW_MAX_OPACITY;
         for (int i = 0; i < displayAdaption.shadowThickness; i++) {
-            imp.setColor(new Color(0, 0, 0, opacity));
+            imp.setColor(new Color(0, 0, 0, shadow));
             imp.drawRectangle(x - i, y - i, width + 2 * i, height + 2 * i);
-            opacity = opacity - opacityStep;
+            shadow = shadow - opacityStep;
         }
 
         imp.setColor(color);
     }
 
     /**
-     * Draws a text. The text is drawn using the current color, transformation, and text size. The bottom left corner of
-     * the text is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if <code>text</code> is
-     * <code>null</code> or empty.
+     * Draws a text. The text is drawn using the current alignment, color, text size, and typeface. he text is
+     * positioned relative to (<code>x</code>, <code>y</code>) according to the current alignment. Has no effect if
+     * <code>text</code> is <code>null</code> or empty.
      *
-     * @param x the x coordinate of the bottom left corner
-     * @param y the y coordinate of the bottom left corner
+     * @param x the horizontal coordinate of the text
+     * @param y the vertical coordinate of the text
      * @param text the text to draw
      *
      * @since 1.0
@@ -490,21 +536,18 @@ public class Canvas {
     }
 
     /**
-     * Draws a text. The text is drawn using the current color, transformation, and font size. The bottom left corner of
-     * the text is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if <code>text</code> is
-     * <code>null</code> or empty.
+     * Draws a text. The text is drawn using the current alignment, color, text size, and typeface. he text is
+     * positioned relative to (<code>x</code>, <code>y</code>) according to the current alignment. Has no effect if
+     * <code>text</code> is <code>null</code> or empty.
      *
-     * @param x the x coordinate of the bottom left corner
-     * @param y the y coordinate of the bottom left corner
+     * @param x the horizontal coordinate of the text
+     * @param y the vertical coordinate of the text
      * @param text the text to draw
      *
      * @since 2.0
      */
     public void drawText(float x, float y, final String text) {
-        if (text == null || text.isEmpty()) {
-            Log.d("Ignoring call with null or empty text.");
-        }
-        else {
+        if (text != null && !text.isEmpty()) {
             x = x * sx + tx;
             y = y * sy + ty;
             final float width = imp.measureLength(text, typeface.imp, textSize * canvasToDevice);
@@ -531,8 +574,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled a circle. The circle is drawn using the current color and transformation. Has no effect if the
-     * specified radius is not positive.
+     * Draws a filled a circle. The circle is drawn using the current color. Has no effect if the specified radius is
+     * not positive.
      *
      * @param centerX the x coordinate of the circle's center
      * @param centerY the y coordinate of the circle's center
@@ -545,8 +588,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled a circle. The circle is drawn using the current color and transformation. Has no effect if the
-     * specified radius is not positive.
+     * Draws a filled a circle. The circle is drawn using the current color. Has no effect if the specified radius is
+     * not positive.
      *
      * @param centerX the x coordinate of the circle's center
      * @param centerY the y coordinate of the circle's center
@@ -564,8 +607,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no
-     * effect if the specified radii are not positive.
+     * Draws a filled ellipse. The ellipse is drawn using the current color. Has no effect if the specified radii are
+     * not positive.
      *
      * @param centerX the x coordinate of the ellipse's center
      * @param centerY the y coordinate of the ellipse's center
@@ -579,8 +622,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled ellipse. The ellipse is drawn using the current color, line width, and transformation. Has no
-     * effect if the specified radii are not positive.
+     * Draws a filled ellipse. The ellipse is drawn using the current color. Has no effect if the specified radii are
+     * not positive.
      *
      * @param centerX the x coordinate of the ellipse's center
      * @param centerY the y coordinate of the ellipse's center
@@ -599,8 +642,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled polygon. The polygon is drawn using the current color, line width, and transformation. The polygon
-     * is defined by a sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
+     * Draws a filled polygon. The polygon is drawn using the current color. The polygon is defined by a sequence of
+     * coordinate pairs specifiying the corners of the polygon. For example, the code
      * <pre><code>fillPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the corners (x1, y2), (x2,
      * y2), and (x3, y3).
      *
@@ -619,8 +662,8 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled polygon. The polygon is drawn using the current color, line width, and transformation. The polygon
-     * is defined by a sequence of coordinate pairs specifiying the corners of the polygon. For example, the code
+     * Draws a filled polygon. The polygon is drawn using the current color. The polygon is defined by a sequence of
+     * coordinate pairs specifiying the corners of the polygon. For example, the code
      * <pre><code>fillPolygon(x1, y1, x2, y2, x3, y3);</code></pre> will draw a triangle with the corners (x1, y2), (x2,
      * y2), and (x3, y3).
      *
@@ -639,12 +682,12 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled rectangle. The rectangle is drawn using the current color and transformation. The bottom left
-     * corner of the rectangle is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if
+     * Draws a filled rectangle. The rectangle is drawn using the current alignment and color. The rectangle is
+     * positioned relative to (<code>x</code>, <code>y</code>) according to the current alignment. Has no effect if
      * <code>width</code> or <code>height</code> are not positive.
      *
-     * @param x the x coordinate of the rectangle's bottom left corner
-     * @param y the y coordinate of the rectangle's bottom left corner
+     * @param x the horizontal coordinate of rectangle
+     * @param y the vertical coordinate of rectangle
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      *
@@ -655,12 +698,12 @@ public class Canvas {
     }
 
     /**
-     * Draws a filled rectangle. The rectangle is drawn using the current color and transformation. The bottom left
-     * corner of the rectangle is positioned at the coordinates (<code>x</code>, <code>y</code>). Has no effect if
+     * Draws a filled rectangle. The rectangle is drawn using the current alignment and color. The rectangle is
+     * positioned relative to (<code>x</code>, <code>y</code>) according to the current alignment. Has no effect if
      * <code>width</code> or <code>height</code> are not positive.
      *
-     * @param x the x coordinate of the rectangle's bottom left corner
-     * @param y the y coordinate of the rectangle's bottom left corner
+     * @param x the horizontal coordinate of rectangle
+     * @param y the vertical coordinate of rectangle
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      *
@@ -672,6 +715,18 @@ public class Canvas {
         width = width * slx;
         height = height * sly;
         imp.fillRectangle(alignX(x, width), alignY(y, height), width, height);
+    }
+
+    /**
+     * Returns the current alignment.
+     *
+     * @return the current alignment
+     *
+     * @see #setAlignment(ch.jeda.ui.Alignment)
+     * @since 2.1
+     */
+    public Alignment getAlignment() {
+        return alignment;
     }
 
     /**
@@ -715,6 +770,18 @@ public class Canvas {
      */
     public float getLineWidth() {
         return lineWidth;
+    }
+
+    /**
+     * Returns the current opacity.
+     *
+     * @return the current opacity
+     *
+     * @see
+     * @since 2.1
+     */
+    public int getOpacity() {
+        return opacity;
     }
 
     /**
@@ -870,6 +937,21 @@ public class Canvas {
             this.lineWidth = lineWidth;
             imp.setLineWidth(this.lineWidth * canvasToDevice);
         }
+    }
+
+    /**
+     * Sets the opactiy. The opacity is a value between 0 and 255 defining the translucency used when drawing images. 0
+     * means fully transparent, 255 means fully opaque. Values of <code>opacity</code> smaller than 0 are interpreted as
+     * 0, valuers greater than 255 as 255. The opacity is applied to all subsequent <code>drawImage(...)</code>
+     * operations.
+     *
+     * @param opacity the opacity
+     *
+     * @see #getOpacity()
+     * @since 2.1
+     */
+    public void setOpacity(int opacity) {
+        this.opacity = Math.max(0, Math.min(opacity, 255));
     }
 
     /**

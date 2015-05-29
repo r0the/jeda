@@ -32,7 +32,6 @@ import java.awt.Transparency;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,9 +52,19 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public void drawCanvas(final int x, final int y, final CanvasImp source) {
+    public void drawCanvas(final float x, final float y, final CanvasImp source, final int opacity) {
         assert source instanceof JavaCanvasImp;
-        graphics.drawImage(((JavaCanvasImp) source).bitmap, 0, 0, null);
+
+        assert 0 < opacity && opacity <= 255;
+
+        if (opacity != 255) {
+            graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity / 255f));
+        }
+
+        graphics.drawImage(((JavaCanvasImp) source).bitmap, (int) x, (int) y, null);
+        if (opacity != 255) {
+            graphics.setPaintMode();
+        }
     }
 
     @Override
@@ -66,17 +75,16 @@ class JavaCanvasImp implements CanvasImp {
 
     @Override
     public void drawImage(final float x, final float y, final float width, final float height,
-                          final ImageImp image, final int alpha) {
+                          final ImageImp image, final int opacity) {
         assert image instanceof JavaImageImp;
-        assert 0 < alpha && alpha <= 255;
+        assert 0 < opacity && opacity <= 255;
 
-        if (alpha != 255) {
-            graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha / 255f));
+        if (opacity != 255) {
+            graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity / 255f));
         }
 
-        graphics.drawImage(((JavaImageImp) image).bufferedImage, (int) x, (int) y, (int) width, (int) height,
-                           null);
-        if (alpha != 255) {
+        graphics.drawImage(((JavaImageImp) image).bufferedImage, (int) x, (int) y, (int) width, (int) height, null);
+        if (opacity != 255) {
             graphics.setPaintMode();
         }
     }

@@ -23,11 +23,11 @@ import ch.jeda.ui.Color;
  */
 public interface CanvasImp {
 
-    void drawCanvas(int x, int y, CanvasImp source);
+    void drawCanvas(float x, float y, CanvasImp source, int opacity);
 
     void drawEllipse(float centerX, float centerY, float radiusX, float radiusY);
 
-    void drawImage(float x, float y, float width, float height, ImageImp image, int alpha);
+    void drawImage(float x, float y, float width, float height, ImageImp image, int opacity);
 
     void drawPolygon(float[] points);
 
