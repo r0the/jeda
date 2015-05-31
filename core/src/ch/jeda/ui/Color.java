@@ -55,6 +55,174 @@ public final class Color implements Serializable, Storable {
     public static final Color BLUE = new Color(0, 0, 255);
 
     /**
+     * The Google material design color <i>Blue 50</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_50 = new Color("#e3f2fd");
+
+    /**
+     * The Google material design color <i>Blue 100</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_100 = new Color("#bbdefb");
+
+    /**
+     * The Google material design color <i>Blue 200</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_200 = new Color("#90caf9");
+
+    /**
+     * The Google material design color <i>Blue 300</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_300 = new Color("#64b5f6");
+
+    /**
+     * The Google material design color <i>Blue 400</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_400 = new Color("#42a5f5");
+
+    /**
+     * The Google material design color <i>Blue 500</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_500 = new Color("#2196f3");
+
+    /**
+     * The Google material design color <i>Blue 600</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_600 = new Color("#1e88e5");
+
+    /**
+     * The Google material design color <i>Blue 700</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_700 = new Color("#1976d2");
+
+    /**
+     * The Google material design color <i>Blue 800</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_800 = new Color("#1565c0");
+
+    /**
+     * The Google material design color <i>Blue 900</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_900 = new Color("#0d47a1");
+
+    /**
+     * The Google material design color <i>Blue A100</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_A100 = new Color("#82b1ff");
+
+    /**
+     * The Google material design color <i>Blue A200</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_A200 = new Color("#448aff");
+
+    /**
+     * The Google material design color <i>Blue A400</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_A400 = new Color("#2979ff");
+
+    /**
+     * The Google material design color <i>Blue A700</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BLUE_A700 = new Color("#2962ff");
+
+    /**
+     * The Google material design color <i>Brown 50</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BROWN_50 = new Color("#efebe9");
+
+    /**
+     * The Google material design color <i>Brown 100</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BROWN_100 = new Color("#d7ccc8");
+
+    /**
+     * The Google material design color <i>Brown 200</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BROWN_200 = new Color("#bcaaa4");
+
+    /**
+     * The Google material design color <i>Brown 300</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BROWN_300 = new Color("#a1887f");
+
+    /**
+     * The Google material design color <i>Brown 400</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BROWN_400 = new Color("#8d6e63");
+
+    /**
+     * The Google material design color <i>Brown 500</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BROWN_500 = new Color("#795548");
+
+    /**
+     * The Google material design color <i>Brown 600</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BROWN_600 = new Color("#6d4c41");
+
+    /**
+     * The Google material design color <i>Brown 700</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BROWN_700 = new Color("#5d4037");
+
+    /**
+     * The Google material design color <i>Brown 800</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BROWN_800 = new Color("#4e342e");
+
+    /**
+     * The Google material design color <i>Brown 900</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color BROWN_900 = new Color("#3e2723");
+
+    /**
      * The Google material design color <i>Cyan 50</i>.
      *
      * @since 2.0
@@ -153,6 +321,104 @@ public final class Color implements Serializable, Storable {
     public static final Color CYAN_A700 = new Color("#00b8d4");
 
     /**
+     * The Google material design color <i>Deep Orange 50</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_50 = new Color("#fbe9e7");
+
+    /**
+     * The Google material design color <i>Deep Orange 100</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_100 = new Color("#ffccbc");
+
+    /**
+     * The Google material design color <i>Deep Orange 200</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_200 = new Color("#ffab91");
+
+    /**
+     * The Google material design color <i>Deep Orange 300</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_300 = new Color("#ff8a65");
+
+    /**
+     * The Google material design color <i>Deep Orange 400</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_400 = new Color("#ff7043");
+
+    /**
+     * The Google material design color <i>Deep Orange 500</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_500 = new Color("#ff5722");
+
+    /**
+     * The Google material design color <i>Deep Orange 600</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_600 = new Color("#f4511e");
+
+    /**
+     * The Google material design color <i>Deep Orange 700</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_700 = new Color("#e64a19");
+
+    /**
+     * The Google material design color <i>Deep Orange 800</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_800 = new Color("#d84315");
+
+    /**
+     * The Google material design color <i>Deep Orange 900</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_900 = new Color("#bf360c");
+
+    /**
+     * The Google material design color <i>Deep Orange A100</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_A100 = new Color("#ff9e80");
+
+    /**
+     * The Google material design color <i>Deep Orange A200</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_A200 = new Color("#ff6e40");
+
+    /**
+     * The Google material design color <i>Deep Orange A400</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_A400 = new Color("#ff3d00");
+
+    /**
+     * The Google material design color <i>Deep Orange A700</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color DEEP_ORANGE_A700 = new Color("#dd2c00");
+
+    /**
      * The VGA color <i>fuchsia</i>. Same as <code>new Color(255, 0, 255)</code>.
      *
      * @since 1.0
@@ -167,11 +433,179 @@ public final class Color implements Serializable, Storable {
     public static final Color GRAY = new Color(128, 128, 128);
 
     /**
+     * The Google material design color <i>Gray 50</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color GRAY_50 = new Color("#fafafa");
+
+    /**
+     * The Google material design color <i>Gray 100</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color GRAY_100 = new Color("#f5f5f5");
+
+    /**
+     * The Google material design color <i>Gray 200</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color GRAY_200 = new Color("#eeeeee");
+
+    /**
+     * The Google material design color <i>Gray 300</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color GRAY_300 = new Color("#e0e0e0");
+
+    /**
+     * The Google material design color <i>Gray 400</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color GRAY_400 = new Color("#bdbdbd");
+
+    /**
+     * The Google material design color <i>Gray 500</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color GRAY_500 = new Color("#9e9e9e");
+
+    /**
+     * The Google material design color <i>Gray 600</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color GRAY_600 = new Color("#757575");
+
+    /**
+     * The Google material design color <i>Gray 700</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color GRAY_700 = new Color("#616161");
+
+    /**
+     * The Google material design color <i>Gray 800</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color GRAY_800 = new Color("#424242");
+
+    /**
+     * The Google material design color <i>Gray 900</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color GRAY_900 = new Color("#212121");
+
+    /**
      * The VGA color <i>green</i>. Same as <code>new Color(0, 128, 0)</code>.
      *
      * @since 1.0
      */
     public static final Color GREEN = new Color(0, 128, 0);
+
+    /**
+     * The Google material design color <i>Indigo 50</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_50 = new Color("#e8eaf6");
+
+    /**
+     * The Google material design color <i>Indigo 100</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_100 = new Color("#c5cae9");
+
+    /**
+     * The Google material design color <i>Indigo 200</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_200 = new Color("#9fa8da");
+
+    /**
+     * The Google material design color <i>Indigo 300</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_300 = new Color("#7986cb");
+
+    /**
+     * The Google material design color <i>Indigo 400</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_400 = new Color("#5c6bc0");
+
+    /**
+     * The Google material design color <i>Indigo 500</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_500 = new Color("#3f51b5");
+
+    /**
+     * The Google material design color <i>Indigo 600</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_600 = new Color("#3949ab");
+
+    /**
+     * The Google material design color <i>Indigo 700</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_700 = new Color("#303f9f");
+
+    /**
+     * The Google material design color <i>Indigo 800</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_800 = new Color("#283593");
+
+    /**
+     * The Google material design color <i>Indigo 900</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_900 = new Color("#1a237e");
+
+    /**
+     * The Google material design color <i>Indigo A100</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_A100 = new Color("#8c9eff");
+
+    /**
+     * The Google material design color <i>Indigo A200</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_A200 = new Color("#536dfe");
+
+    /**
+     * The Google material design color <i>Indigo A400</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_A400 = new Color("#3d5afe");
+
+    /**
+     * The Google material design color <i>Indigo A700</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color INDIGO_A700 = new Color("#304ffe");
 
     /**
      * The Jeda color. Same as <code>new Color(126, 218, 66)</code>.
@@ -501,6 +935,104 @@ public final class Color implements Serializable, Storable {
      * @since 1.0
      */
     public static final Color OLIVE = new Color(128, 128, 0);
+
+    /**
+     * The Google material design color <i>Orange 50</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_50 = new Color("#fff3e0");
+
+    /**
+     * The Google material design color <i>Orange 100</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_100 = new Color("#ffe0b2");
+
+    /**
+     * The Google material design color <i>Orange 200</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_200 = new Color("#ffcc80");
+
+    /**
+     * The Google material design color <i>Orange 300</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_300 = new Color("#ffb74d");
+
+    /**
+     * The Google material design color <i>Orange 400</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_400 = new Color("#ffa726");
+
+    /**
+     * The Google material design color <i>Orange 500</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_500 = new Color("#ff9800");
+
+    /**
+     * The Google material design color <i>Orange 600</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_600 = new Color("#fb8c00");
+
+    /**
+     * The Google material design color <i>Orange 700</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_700 = new Color("#f57c00");
+
+    /**
+     * The Google material design color <i>Orange 800</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_800 = new Color("#ef6c00");
+
+    /**
+     * The Google material design color <i>Orange 900</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_900 = new Color("#e65100");
+
+    /**
+     * The Google material design color <i>Orange A100</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_A100 = new Color("#ffd180");
+
+    /**
+     * The Google material design color <i>Orange A200</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_A200 = new Color("#ffab40");
+
+    /**
+     * The Google material design color <i>Orange A400</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_A400 = new Color("#ff9100");
+
+    /**
+     * The Google material design color <i>Orange A700</i>.
+     *
+     * @since 2.1
+     */
+    public static final Color ORANGE_A700 = new Color("#ff6d00");
 
     /**
      * The Google material design color <i>Pink 50</i>.
