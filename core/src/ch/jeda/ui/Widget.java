@@ -30,7 +30,7 @@ import ch.jeda.event.ActionEvent;
  */
 public abstract class Widget extends Element {
 
-    private static final int DEFAULT_DRAW_ORDER = Integer.MAX_VALUE;
+    private static final int DEFAULT_DRAW_ORDER = 1;
     private static final Color DEFAULT_BACKGROUND_COLOR = Color.LIGHT_GREEN_900;
     private Alignment alignment;
     private Color backgroundColor;
@@ -55,7 +55,6 @@ public abstract class Widget extends Element {
 
         backgroundColor = DEFAULT_BACKGROUND_COLOR;
         setDrawOrder(DEFAULT_DRAW_ORDER);
-        setPinned(true);
         setPosition(x, y);
     }
 

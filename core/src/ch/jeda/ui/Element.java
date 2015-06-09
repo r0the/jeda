@@ -31,10 +31,10 @@ import java.util.Comparator;
 public abstract class Element {
 
     static final Comparator<Element> DRAW_ORDER = new DrawOrder();
+    private static final int DEFAULT_DRAW_ORDER = -1;
     private float angle;
     private int drawOrder;
     private String name;
-    private boolean pinned;
     private View view;
     private float x;
     private float y;
@@ -45,8 +45,8 @@ public abstract class Element {
      * @since 2.0
      */
     protected Element() {
+        drawOrder = DEFAULT_DRAW_ORDER;
         name = null;
-        pinned = false;
     }
 
     /**
@@ -141,7 +141,7 @@ public abstract class Element {
      * @since 2.0
      */
     public final boolean isPinned() {
-        return pinned;
+        return getDrawOrder() > 0;
     }
 
     /**
@@ -174,7 +174,7 @@ public abstract class Element {
 
     /**
      * Sets the draw order of the element. The draw order determines the order in which the element are drawn on a
-     * {@link ch.jeda.ui.Window}. Elements with a smaller draw order are drawn first.
+     * {@link ch.jeda.ui.View}. Elements with a smaller draw order are drawn first.
      *
      * @param drawOrder the new draw order for this element
      *
@@ -212,14 +212,20 @@ public abstract class Element {
 
     /**
      * Pins or unpins this element. Pinned elements are positioned in the canvas coordinate system rather than the world
-     * coordinate system.
+     * coordinate system. This is achieved by setting the draw order to -1 or 1.
      *
      * @param pinned <code>true</code> to pin the element, <code>false</code> to unpin it
      *
      * @since 2.0
+     * @deprecated Use {@link #setDrawOrder(int)} instead.
      */
     public final void setPinned(final boolean pinned) {
-        this.pinned = pinned;
+        if (pinned) {
+            setDrawOrder(1);
+        }
+        else {
+            setDrawOrder(-1);
+        }
     }
 
     /**
@@ -267,7 +273,7 @@ public abstract class Element {
     }
 
     void internalDraw(final Canvas canvas) {
-        canvas.localBegin(pinned, getX(), getY(), getAngleRad());
+        canvas.localBegin(getX(), getY(), getAngleRad());
         draw(canvas);
         canvas.localEnd();
     }

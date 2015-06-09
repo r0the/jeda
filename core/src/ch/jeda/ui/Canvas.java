@@ -163,7 +163,7 @@ public class Canvas {
             y = y * sy + ty;
             final float width = canvas.getWidth() * canvasToDevice;
             final float height = canvas.getHeight() * canvasToDevice;
-            imp.drawCanvas(alignX(x, width), alignY(y, height), imp, opacity);
+            imp.drawCanvas(alignX(x, width), alignY(y, height), canvas.imp, opacity);
         }
     }
 
@@ -1063,7 +1063,7 @@ public class Canvas {
         ty = pixelsY - translateY * sly;
     }
 
-    void localBegin(final boolean pinned, final float originX, final float originY, final float angleRad) {
+    void localBegin(final float originX, final float originY, final float angleRad) {
         imp.translate(originX * slx, -originY * sly);
         imp.rotateRad(-angleRad, tx, ty);
 

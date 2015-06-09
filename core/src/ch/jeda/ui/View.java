@@ -503,7 +503,6 @@ public class View {
     public final void scale(final float factor, final float centerX, final float centerY) {
         final float relX = centerX + translationX;
         final float relY = centerY + translationY;
-        final float oldScale = scale;
         scale = scale * factor;
         translationX = -(centerX - relX / factor);
         translationY = -(centerY - relY / factor);
@@ -688,13 +687,16 @@ public class View {
         if (imp.isVisible()) {
             updateElements();
             eventQueue.processEvents();
-            foreground.copyFrom(background);
+            foreground.setWorldTransformation(1f, 1f, 0f, 0f);
+            foreground.setOpacity(255);
+            foreground.setAlignment(Alignment.BOTTOM_LEFT);
+            foreground.drawCanvas(0f, 0f, background);
+            foreground.setWorldTransformation(scale * METER_TO_DP, scale * METER_TO_DP, translationX, translationY);
+            boolean world = true;
             for (int i = 0; i < elements.length; ++i) {
-                if (elements[i].isPinned()) {
+                if (world && elements[i].getDrawOrder() >= 0) {
                     foreground.setWorldTransformation(1f, 1f, 0f, 0f);
-                }
-                else {
-                    foreground.setWorldTransformation(scale * METER_TO_DP, scale * METER_TO_DP, translationX, translationY);
+                    world = false;
                 }
 
                 elements[i].internalDraw(foreground);
