@@ -18,6 +18,7 @@ package ch.jeda.ui;
 
 import ch.jeda.Log;
 import ch.jeda.JedaInternal;
+import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -74,9 +75,30 @@ public final class Image {
     }
 
     /**
-     * Creates a horizontally flipped copy of the image.
+     * Creates a filtered copy of the image. The new image has the same width and height as this image. The pixel colors
+     * of the new image are determined by calling {@link ch.jeda.ui.ImageFilter#apply(ch.jeda.ui.Image, int, int)} for
+     * each pixel.
      *
-     * @return a horizontally flipped copy of the image
+     * @param filter the image filter
+     * @return the new image
+     * @throws NullPointerException if <tt>filter</tt> is <tt>null</tt>
+     *
+     * @since 2.1
+     */
+    public Image filter(final ImageFilter filter) {
+        final CanvasImp canvas = JedaInternal.createCanvasImp(this.getWidth(), this.getHeight());
+        for (int x = 0; x < this.getWidth(); ++x) {
+            for (int y = 0; y < this.getHeight(); ++y) {
+                canvas.setPixel(x, y, filter.apply(this, x, y));
+            }
+        }
+        return new Image(canvas.takeSnapshot());
+    }
+
+    /**
+     * Creates a horizontally flipped copy of this image.
+     *
+     * @return a horizontally flipped copy of this image
      *
      * @see #flipVertically()
      * @since 1.1
@@ -86,9 +108,9 @@ public final class Image {
     }
 
     /**
-     * Creates a vertically flipped copy of the image.
+     * Creates a vertically flipped copy of this image.
      *
-     * @return a vertically flipped copy of the image
+     * @return a vertically flipped copy of this image
      *
      * @see #flipVertically()
      * @since 1.1
@@ -98,15 +120,29 @@ public final class Image {
     }
 
     /**
-     * Returns the height of the image in pixels.
+     * Returns the height of this mage in pixels.
      *
-     * @return height of the image
+     * @return height of this image in pixels
      *
      * @see #getWidth()
      * @since 1.0
      */
     public int getHeight() {
         return imp.getHeight();
+    }
+
+    /**
+     * Returns the pixel color at the specified coordinates. If the specified coordinates lay outside the image, the
+     * color of the pixel closest to the coordinates is returned.
+     *
+     * @param x the x coordinate of the pixel
+     * @param y the y coordinate of the pixel
+     * @return the pixel color
+     *
+     * @since 2.1
+     */
+    public Color getPixel(final int x, final int y) {
+        return new Color(this.imp.getPixel(this.toRangeX(x), this.toRangeY(y)));
     }
 
     /**
@@ -141,9 +177,9 @@ public final class Image {
     }
 
     /**
-     * Returns the width of the image in pixels.
+     * Returns the width of this image in pixels.
      *
-     * @return width of the image
+     * @return width of this image in pixels
      *
      * @see #getHeight()
      * @since 1.0
@@ -153,9 +189,9 @@ public final class Image {
     }
 
     /**
-     * Checks if the image is available.
+     * Checks if this image is available.
      *
-     * @return <code>true</code> if the image is available, otherwise <code>false</code>
+     * @return <code>true</code> if this image is available, otherwise <code>false</code>
      *
      * @since 2.0
      */
@@ -171,10 +207,10 @@ public final class Image {
     }
 
     /**
-     * Creates a rotated copy of the image.
+     * Creates a rotated copy of this image.
      *
      * @param angle the angle in degrees
-     * @return the rotated copy of the image
+     * @return the rotated copy of this image
      *
      * @since 2.0
      */
@@ -183,10 +219,10 @@ public final class Image {
     }
 
     /**
-     * Creates a rotated copy of the image.
+     * Creates a rotated copy of this image.
      *
      * @param angle the angle in radians
-     * @return the rotated copy of the image
+     * @return the rotated copy of this image
      *
      * @since 2.0
      */
@@ -195,7 +231,7 @@ public final class Image {
     }
 
     /**
-     * Saves the contents of the image to a file. Saving to a resource file (i.e. a file path starting with ':') is not
+     * Saves the contents of this image to a file. Saving to a resource file (i.e. a file path starting with ':') is not
      * allowed. The file path must end with a valid image file extension. Currently, the extension ".jpeg", ".jpg", and
      * ".png" are supported.
      *
@@ -248,7 +284,7 @@ public final class Image {
     }
 
     /**
-     * Creates a scaled copy of the image. Width and height are both scaled proportionally.
+     * Creates a scaled copy of this image. Width and height are both scaled proportionally.
      *
      * @param factor the scaling factor
      * @return scaled image
@@ -295,7 +331,7 @@ public final class Image {
     }
 
     /**
-     * Returns a rectangular part of the image as a new image.
+     * Returns a rectangular part of this image as a new image.
      *
      * @param x the x coordinate of the top left corner of the part
      * @param y the y coordinate of the top left corner of the part
@@ -339,6 +375,14 @@ public final class Image {
 
     ImageImp getImp() {
         return imp;
+    }
+
+    private int toRangeX(final int x) {
+        return Math.max(0, Math.min(x, this.getWidth() - 1));
+    }
+
+    private int toRangeY(final int y) {
+        return Math.max(0, Math.min(y, this.getHeight() - 1));
     }
 
     private static Map<String, ImageImp.Encoding> initFormatMap() {
