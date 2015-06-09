@@ -30,13 +30,11 @@ import ch.jeda.event.ActionEvent;
  */
 public abstract class Widget extends Element {
 
-    private static final int DEFAULT_DRAW_ORDER = 1000;
+    private static final int DEFAULT_DRAW_ORDER = Integer.MAX_VALUE;
     private static final Color DEFAULT_BACKGROUND_COLOR = Color.LIGHT_GREEN_900;
     private Alignment alignment;
     private Color backgroundColor;
     private boolean selected;
-    private float x;
-    private float y;
 
     /**
      * Constructs a widget at the specified position.
@@ -55,11 +53,10 @@ public abstract class Widget extends Element {
             this.alignment = alignment;
         }
 
-        this.x = (float) x;
-        this.y = (float) y;
         backgroundColor = DEFAULT_BACKGROUND_COLOR;
         setDrawOrder(DEFAULT_DRAW_ORDER);
         setPinned(true);
+        setPosition(x, y);
     }
 
     /**
@@ -73,7 +70,7 @@ public abstract class Widget extends Element {
      * @since 2.0
      */
     public final boolean contains(final float x, final float y) {
-        return containsLocal(x - this.x, y - this.y);
+        return containsLocal(x - this.getX(), y - this.getY());
     }
 
     /**
@@ -122,30 +119,6 @@ public abstract class Widget extends Element {
      * @since 1.3
      */
     public abstract float getWidth();
-
-    /**
-     * Returns the horizontal coordinate of the widget.
-     *
-     * @return the horizontal coordinate of the widget
-     *
-     * @since 1.3
-     */
-    @Override
-    public final float getX() {
-        return x;
-    }
-
-    /**
-     * Returns the vertical alignment coordinate of this widget.
-     *
-     * @return the vertical alignment coordinate of this widget
-     *
-     * @since 1.3
-     */
-    @Override
-    public final float getY() {
-        return y;
-    }
 
     /**
      * Checks if this widget is selected.
@@ -206,21 +179,6 @@ public abstract class Widget extends Element {
      */
     public void setBackgroundColor(final Color backgroundColor) {
         this.backgroundColor = backgroundColor;
-    }
-
-    /**
-     * Sets the position of the widget. The widget is positioned relative to the specified coordinates (<code>x</code>,
-     * <code>y</code>) depending on the current alignment.
-     *
-     * @param x the x coordinate of the widget
-     * @param y the y coordinate of the widget
-     *
-     * @see #setAlignment(ch.jeda.ui.Alignment)
-     * @since 2.0
-     */
-    public final void setPosition(final double x, final double y) {
-        this.x = (float) x;
-        this.y = (float) y;
     }
 
     /**

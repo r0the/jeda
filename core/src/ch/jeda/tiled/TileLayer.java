@@ -16,8 +16,10 @@
  */
 package ch.jeda.tiled;
 
+import ch.jeda.Convert;
 import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
+import ch.jeda.physics.Backdrop;
 import ch.jeda.physics.Body;
 import ch.jeda.physics.BodyType;
 import ch.jeda.physics.PhysicsView;
@@ -27,12 +29,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
-import javax.xml.bind.DatatypeConverter;
 
 /**
  * Represents a Tiled tile layer.
  *
  * @since 2.0
+ * @version 2
  */
 public final class TileLayer extends Layer {
 
@@ -63,19 +65,58 @@ public final class TileLayer extends Layer {
      * </ul>
      *
      * @param view the physics view
+     * @param drawOrder the base draw order for this layer
      *
-     * @since 2.0
+     * @since 2.1
      */
     @Override
-    public void addTo(final PhysicsView view) {
+    public void addTo(final PhysicsView view, final int drawOrder) {
         if (!isVisible()) {
             return;
         }
 
         final BodyType type = BodyType.parse(getProperties().readString(TYPE));
+        if (type == null) {
+            convertToBackdrop(view, drawOrder);
+        }
+        else {
+            convertToBodies(view, type, drawOrder);
+        }
+    }
 
-        int endX = getMap().getWidth();
-        int endY = getMap().getHeight();
+    @Override
+    public Tile getTile(final int x, final int y) {
+        final int index = x + y * getMap().getWidth();
+        if (0 <= index && index < tiles.length && tiles[index] != null) {
+            return tiles[index];
+        }
+
+        return null;
+    }
+
+    private void convertToBackdrop(final PhysicsView view, final int drawOrder) {
+        final int endX = getMap().getWidth();
+        final int endY = getMap().getHeight();
+        for (int x = 0; x < endX; ++x) {
+            for (int y = 0; y < endY; ++y) {
+                final Tile tile = getTile(x, y);
+                if (tile != null) {
+                    final float width = tile.getWidth();
+                    final float height = tile.getHeight();
+                    final Image image = tile.getImage();
+                    final Backdrop backdrop = new Backdrop(x + width / 2f, endY - y - 1f + height / 2f, width, height, image);
+                    backdrop.setName(getName());
+                    backdrop.setOpacity(getOpacity());
+                    backdrop.setDrawOrder(drawOrder);
+                    view.add(backdrop);
+                }
+            }
+        }
+    }
+
+    private void convertToBodies(final PhysicsView view, final BodyType type, final int drawOrder) {
+        final int endX = getMap().getWidth();
+        final int endY = getMap().getHeight();
         for (int x = 0; x < endX; ++x) {
             for (int y = 0; y < endY; ++y) {
                 final Tile tile = getTile(x, y);
@@ -95,24 +136,19 @@ public final class TileLayer extends Layer {
                     }
 
                     body.setName(getName());
+                    body.setDrawOrder(drawOrder);
                     body.setType(type);
                     body.setImage(image, width, height);
                     body.setOpacity(getOpacity());
-                    body.setPosition(x + width / 2, endY - y - 1 + height / 2f);
+                    body.setPosition(x + width / 2f, endY - y - 1f + height / 2f);
+                    body.setAngularDamping(getProperties().readFloat("angulardamping", 0f));
+                    body.setDamping(getProperties().readFloat("damping", 0f));
+                    body.setDensity(getProperties().readFloat("density", 1f));
+                    body.setFriction(getProperties().readFloat("friction", 0f));
                     view.add(body);
                 }
             }
         }
-    }
-
-    @Override
-    public Tile getTile(final int x, final int y) {
-        final int index = x + y * getMap().getWidth();
-        if (0 <= index && index < tiles.length && tiles[index] != null) {
-            return tiles[index];
-        }
-
-        return null;
     }
 
     private static int[] parseData(final ElementWrapper element, final int width, final int height) {
@@ -138,7 +174,7 @@ public final class TileLayer extends Layer {
     private static int[] parseBase64(final ElementWrapper element, final int width, final int height) {
         final String compression = element.getStringAttribute(Const.COMPRESSION);
         try {
-            InputStream in = new ByteArrayInputStream(DatatypeConverter.parseBase64Binary(element.getContent()));
+            InputStream in = new ByteArrayInputStream(Convert.fromBase64(element.getContent()));
             if (Const.GZIP.equalsIgnoreCase(compression)) {
                 in = new GZIPInputStream(in);
             }

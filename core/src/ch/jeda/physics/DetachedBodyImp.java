@@ -19,6 +19,7 @@ package ch.jeda.physics;
 import ch.jeda.Log;
 import ch.jeda.MathF;
 import ch.jeda.geometry.Shape;
+import ch.jeda.ui.Canvas;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,7 +78,22 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
-    public void applyForce(float fx, float fy, float x, float y) {
+    public void applyForce(final float fx, final float fy) {
+        Log.w("Cannot apply a force to a body that isn't part of a physics simulation.");
+    }
+
+    @Override
+    public void applyForce(final float fx, final float fy, final float x, final float y) {
+        Log.w("Cannot apply a force to a body that isn't part of a physics simulation.");
+    }
+
+    @Override
+    public void applyLocalForceRad(final float force, final float angle) {
+        Log.w("Cannot apply a force to a body that isn't part of a physics simulation.");
+    }
+
+    @Override
+    public void applyLocalForceRad(final float force, final float angle, final float x, final float y) {
         Log.w("Cannot apply a force to a body that isn't part of a physics simulation.");
     }
 
@@ -93,6 +109,10 @@ class DetachedBodyImp implements BodyImp {
 
     @Override
     public void destroy() {
+    }
+
+    @Override
+    public void drawDebugOverlay(final Canvas canvas) {
     }
 
     @Override

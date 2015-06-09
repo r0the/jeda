@@ -113,7 +113,7 @@ public final class TiledMap {
         view.getBackground().fill();
 
         for (int i = 0; i < layers.length; ++i) {
-            layers[i].addTo(view);
+            layers[i].addTo(view, i * 10000);
         }
     }
 

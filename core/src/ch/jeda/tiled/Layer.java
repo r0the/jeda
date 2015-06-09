@@ -23,6 +23,7 @@ import ch.jeda.physics.PhysicsView;
  * Base class for Tiled map layers.
  *
  * @since 2.0
+ * @version 2
  */
 public abstract class Layer {
 
@@ -44,10 +45,11 @@ public abstract class Layer {
      * Adds the contents of this layer to a physics view. The behavior of this method depends on the layer type.
      *
      * @param view the view to add this layer to
+     * @param drawOrder the base draw order for this layer
      *
-     * @since 2.0
+     * @since 2.1
      */
-    public abstract void addTo(final PhysicsView view);
+    public abstract void addTo(final PhysicsView view, final int drawOrder);
 
     /**
      * Returns the map this layer belongs to.

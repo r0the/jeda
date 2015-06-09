@@ -23,6 +23,8 @@ import ch.jeda.geometry.Polygon;
 import ch.jeda.geometry.Polyline;
 import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
+import ch.jeda.ui.Canvas;
+import ch.jeda.ui.Color;
 import java.util.ArrayList;
 import java.util.List;
 import org.jbox2d.common.Vec2;
@@ -74,8 +76,25 @@ final class PhysicsBodyImp implements BodyImp {
     }
 
     @Override
+    public void applyForce(final float fx, final float fy) {
+        imp.applyForce(new Vec2(fx, fy), imp.getWorldCenter());
+    }
+
+    @Override
     public void applyForce(final float fx, final float fy, final float x, final float y) {
-        imp.applyForce(new Vec2(fx, fy), imp.getWorldPoint(new Vec2(x, y)));
+        imp.applyForce(new Vec2(fx, fy), new Vec2(x, y));
+    }
+
+    @Override
+    public void applyLocalForceRad(final float force, float angle) {
+        angle = angle + getAngleRad();
+        imp.applyForce(new Vec2(force * MathF.cos(angle), force * MathF.sin(angle)), imp.getWorldCenter());
+    }
+
+    @Override
+    public void applyLocalForceRad(final float force, float angle, final float x, final float y) {
+        angle = angle + getAngleRad();
+        imp.applyForce(new Vec2(force * MathF.cos(angle), force * MathF.sin(angle)), imp.getWorldPoint(new Vec2(x, y)));
     }
 
     @Override
@@ -91,6 +110,35 @@ final class PhysicsBodyImp implements BodyImp {
     @Override
     public void destroy() {
         physics.destroyBodyImp(imp);
+    }
+
+    @Override
+    public void drawDebugOverlay(final Canvas canvas) {
+        Fixture fixture = imp.m_fixtureList;
+        while (fixture != null) {
+            canvas.setLineWidth(1);
+            canvas.setColor(Color.RED);
+            org.jbox2d.collision.shapes.Shape shape = fixture.m_shape;
+            switch (shape.m_type) {
+                case CIRCLE:
+                    org.jbox2d.collision.shapes.CircleShape circle = (org.jbox2d.collision.shapes.CircleShape) shape;
+                    Vec2 c = circle.m_p;
+                    canvas.drawCircle(c.x, c.y, circle.m_radius);
+                    break;
+                case POLYGON:
+                    org.jbox2d.collision.shapes.PolygonShape poly = (org.jbox2d.collision.shapes.PolygonShape) shape;
+                    final double[] points = new double[poly.m_count * 2];
+                    for (int i = 0; i < poly.m_count; ++i) {
+                        Vec2 p = poly.m_vertices[i];
+                        points[2 * i] = p.x;
+                        points[2 * i + 1] = p.y;
+                    }
+
+                    canvas.drawPolygon(points);
+                    break;
+            }
+            fixture = fixture.m_next;
+        }
     }
 
     @Override
@@ -282,7 +330,7 @@ final class PhysicsBodyImp implements BodyImp {
                 return convertCircle(ellipse.toCircle(), scale);
             }
             else {
-                return convertPolygon(ellipse.toPolygon(24), scale);
+                return convertPolygon(ellipse.toPolygon(12), scale);
             }
         }
         else if (shape instanceof Rectangle) {

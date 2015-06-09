@@ -17,18 +17,27 @@
 package ch.jeda.physics;
 
 import ch.jeda.geometry.Shape;
+import ch.jeda.ui.Canvas;
 
 interface BodyImp {
 
     void addShape(Shape shape);
 
+    void applyForce(float fx, float fy);
+
     void applyForce(float fx, float fy, float x, float y);
+
+    void applyLocalForceRad(float force, float angle);
+
+    void applyLocalForceRad(float force, float angle, float x, float y);
 
     void applyTorque(float torque);
 
     boolean belongsTo(Physics physics);
 
     void destroy();
+
+    void drawDebugOverlay(Canvas canvas);
 
     float getAngleRad();
 

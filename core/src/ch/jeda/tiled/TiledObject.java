@@ -17,9 +17,6 @@
 package ch.jeda.tiled;
 
 import ch.jeda.Data;
-import ch.jeda.geometry.Circle;
-import ch.jeda.geometry.Ellipse;
-import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
 import ch.jeda.physics.Body;
 import ch.jeda.physics.BodyType;
@@ -45,28 +42,33 @@ public final class TiledObject {
     private final float y;
 
     TiledObject(final TiledMap map, final ElementWrapper element) {
-        height = element.getFloatAttribute(Const.HEIGHT) / map.getTileHeight();
+        final float tileWidth = map.getTileWidth();
         name = element.getStringAttribute(Const.NAME);
         properties = element.parsePropertiesChild();
         rotation = element.getFloatAttribute(Const.ROTATION);
         type = element.getStringAttribute(Const.TYPE);
         visible = element.getBooleanAttribute(Const.VISIBLE, true);
-        width = element.getFloatAttribute(Const.WIDTH) / map.getTileWidth();
+
+        if (element.hasAttribute(Const.GID)) {
+            tile = map.lookupTile(element.getIntAttribute(Const.GID));
+            height = tile.getHeight();
+            width = tile.getWidth();
+        }
+        else {
+            tile = null;
+            height = element.getFloatAttribute(Const.HEIGHT) / tileWidth;
+            width = element.getFloatAttribute(Const.WIDTH) / tileWidth;
+        }
 
         shape = Parser.parseShape(element, map, -width / 2f, -height / 2f);
-        float cx = element.getFloatAttribute(Const.X) / map.getTileWidth();
-        float cy = map.getHeight() - element.getFloatAttribute(Const.Y) / map.getTileHeight();
+        float cx = element.getFloatAttribute(Const.X) / tileWidth;
+        float cy = map.getHeight() - element.getFloatAttribute(Const.Y) / tileWidth;
         cx = cx + width / 2f;
         cy = cy - height / 2f;
 
         x = cx;
         y = cy;
-        if (element.hasAttribute(Const.GID)) {
-            tile = map.lookupTile(element.getIntAttribute(Const.GID));
-        }
-        else {
-            tile = null;
-        }
+
     }
 
     /**

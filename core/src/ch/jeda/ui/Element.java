@@ -26,14 +26,18 @@ import java.util.Comparator;
  * @see ch.jeda.ui.View#add(ch.jeda.ui.Element)
  * @see ch.jeda.ui.View#remove(ch.jeda.ui.Element)
  * @since 2.0
+ * @version 2
  */
 public abstract class Element {
 
     static final Comparator<Element> DRAW_ORDER = new DrawOrder();
+    private float angle;
     private int drawOrder;
     private String name;
     private boolean pinned;
     private View view;
+    private float x;
+    private float y;
 
     /**
      * Constructs a new element.
@@ -79,18 +83,26 @@ public abstract class Element {
      *
      * @return the horizontal world coordinate of this element
      *
+     * @see #getY()
+     * @see #setPosition(double, double)
      * @since 2.0
      */
-    public abstract float getX();
+    public float getX() {
+        return x;
+    }
 
     /**
      * Returns the vertical world coordinate of this element.
      *
      * @return the vertical world coordinate of this element
      *
+     * @see #getX()
+     * @see #setPosition(double, double)
      * @since 2.0
      */
-    public abstract float getY();
+    public float getY() {
+        return y;
+    }
 
     /**
      * Returns the current rotation angle of this element in degrees.
@@ -98,6 +110,8 @@ public abstract class Element {
      * @return the current rotation angle of this element in degrees
      *
      * @see #getAngleRad()
+     * @see #setAngleDeg(double)
+     * @see #setAngleRad(double)
      * @since 2.0
      */
     public final float getAngleDeg() {
@@ -109,18 +123,53 @@ public abstract class Element {
      *
      * @return the current rotation angle of this element in radians
      *
+     * @see #getAngleDeg()
+     * @see #setAngleDeg(double)
+     * @see #setAngleRad(double)
      * @since 2.0
      */
-    public abstract float getAngleRad();
+    public float getAngleRad() {
+        return this.angle;
+    }
 
     /**
      * Checks if this element is currently pinned to the canvas. Pinned elements are positioned in the canvas coordinate
      * system rather than the world coordinate system.
      *
      * @return <code>true</code>, if this element is currently pinned to the canvas, otherwise <code>false</code>
+     *
+     * @since 2.0
      */
-    public boolean isPinned() {
+    public final boolean isPinned() {
         return pinned;
+    }
+
+    /**
+     * Sets the rotation angle of this element in degrees.
+     *
+     * @param angle the angle of this element in degrees
+     *
+     * @see #getAngleDeg()
+     * @see #getAngleRad()
+     * @see #setAngleRad(double)
+     * @since 2.1
+     */
+    public final void setAngleDeg(final double angle) {
+        this.setAngleRad((float) Math.toRadians(angle));
+    }
+
+    /**
+     * Sets the rotation angle of this element in radians.
+     *
+     * @param angle the angle of this element in radians
+     *
+     * @see #getAngleDeg()
+     * @see #getAngleRad()
+     * @see #setAngleRad(double)
+     * @since 2.1
+     */
+    public void setAngleRad(final double angle) {
+        this.angle = (float) angle;
     }
 
     /**
@@ -169,8 +218,23 @@ public abstract class Element {
      *
      * @since 2.0
      */
-    public void setPinned(final boolean pinned) {
+    public final void setPinned(final boolean pinned) {
         this.pinned = pinned;
+    }
+
+    /**
+     * Sets the position of this element.
+     *
+     * @param x the horizontal coordinate of this element
+     * @param y the vertical coordinate of this element
+     *
+     * @see #getX()
+     * @see #getY()
+     * @since 2.1
+     */
+    public void setPosition(final double x, final double y) {
+        this.x = (float) x;
+        this.y = (float) y;
     }
 
     /**

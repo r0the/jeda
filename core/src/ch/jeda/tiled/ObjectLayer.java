@@ -26,6 +26,7 @@ import java.util.List;
  * Represents a Tiled object layer.
  *
  * @since 2.0
+ * @version 2
  */
 public final class ObjectLayer extends Layer {
 
@@ -47,15 +48,18 @@ public final class ObjectLayer extends Layer {
      * {@link ch.jeda.physics.Body} for each Tiled object in this layer.
      *
      * @param view the physics view
+     * @param drawOrder the base draw order for this layer
      *
-     * @since 2.0
+     * @since 2.1
      */
     @Override
-    public void addTo(final PhysicsView view) {
+    public void addTo(final PhysicsView view, final int drawOrder) {
         if (this.isVisible()) {
             for (int i = 0; i < objects.length; ++i) {
                 final Body body = objects[i].toBody();
                 body.setDebugColor(color);
+                body.setOpacity(getOpacity());
+                body.setDrawOrder(drawOrder);
                 view.add(body);
             }
         }

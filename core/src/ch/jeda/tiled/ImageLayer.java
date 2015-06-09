@@ -16,6 +16,7 @@
  */
 package ch.jeda.tiled;
 
+import ch.jeda.physics.Backdrop;
 import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Image;
 
@@ -23,32 +24,43 @@ import ch.jeda.ui.Image;
  * Represents a Tiled image layer.
  *
  * @since 2.0
+ * @version 2
  */
 public final class ImageLayer extends Layer {
 
+    private final float height;
     private final Image image;
-    private final int x;
-    private final int y;
+    private final float width;
+    private final float x;
+    private final float y;
 
     ImageLayer(final TiledMap map, final ElementWrapper element, final XmlReader reader) {
         super(map, element);
+        final float tileWidth = map.getTileWidth();
         image = reader.loadImageChild(element);
-        x = element.getIntAttribute(Const.X);
-        y = element.getIntAttribute(Const.Y);
+        width = image.getWidth() / tileWidth;
+        height = image.getHeight() / tileWidth;
+        x = element.getFloatAttribute(Const.X) / tileWidth + width / 2f;
+        y = map.getHeight() - element.getFloatAttribute(Const.Y) / tileWidth - height / 2f;
     }
 
     /**
-     * Adds this image layer to a physics view. The image is added by drawing it on the background of the view. This
-     * method has no effect if the layer is not visible.
+     * Adds this image layer to a physics view. Generates a {@link ch.jeda.physics.Backdrop} object representing this
+     * layer and adds it to the view. This method has no effect if the layer is not visible.
      *
      * @param view the view to add this layer to
+     * @param drawOrder the base draw order for this layer
      *
-     * @since 2.0
+     * @since 2.1
      */
     @Override
-    public void addTo(final PhysicsView view) {
+    public void addTo(final PhysicsView view, final int drawOrder) {
         if (isVisible()) {
-            view.getBackground().drawImage(x, y, image, getOpacity());
+            final Backdrop backdrop = new Backdrop(x, y, width, height, image);
+            backdrop.setDrawOrder(drawOrder);
+            backdrop.setName(getName());
+            backdrop.setOpacity(getOpacity());
+            view.add(backdrop);
         }
     }
 
@@ -71,7 +83,7 @@ public final class ImageLayer extends Layer {
      * @see #getY()
      * @since 2.0
      */
-    public int getX() {
+    public float getX() {
         return x;
     }
 
@@ -83,7 +95,7 @@ public final class ImageLayer extends Layer {
      * @see #getX()
      * @since 2.0
      */
-    public int getY() {
+    public float getY() {
         return y;
     }
 }

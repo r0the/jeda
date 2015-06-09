@@ -32,8 +32,6 @@ public final class Backdrop extends Element {
     private final Image image;
     private int opacity;
     private final float width;
-    private final float x;
-    private final float y;
 
     /**
      * Constructs a new backdrop.
@@ -47,11 +45,10 @@ public final class Backdrop extends Element {
      * @since 2.1
      */
     public Backdrop(final float x, final float y, final float width, final float height, final Image image) {
+        setPosition(x, y);
         this.height = height;
         this.image = image;
         this.width = width;
-        this.x = x;
-        this.y = y;
         opacity = 255;
         setDrawOrder(Integer.MIN_VALUE);
     }
@@ -84,16 +81,6 @@ public final class Backdrop extends Element {
      */
     public final int getOpacity() {
         return opacity;
-    }
-
-    @Override
-    public float getX() {
-        return x;
-    }
-
-    @Override
-    public float getY() {
-        return y;
     }
 
     /**
