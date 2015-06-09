@@ -170,10 +170,10 @@ public final class Circle extends Shape implements Storable {
      */
     public Polygon toPolygon(int n) {
         final float[] points = new float[2 * n];
-        for (int i = 0; i < n; i = i + 2) {
+        for (int i = 0; i < n; ++i) {
             float angle = 2f * PI * i / n;
-            points[i] = centerX + radius * cos(angle);
-            points[i + 1] = centerY + radius * sin(angle);
+            points[2 * i] = centerX - radius * cos(angle);
+            points[2 * i + 1] = centerY - radius * sin(angle);
         }
 
         return new Polygon(points);
