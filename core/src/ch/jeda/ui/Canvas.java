@@ -777,7 +777,7 @@ public class Canvas {
      *
      * @return the current opacity
      *
-     * @see
+     * @see #setOpacity(int)
      * @since 2.1
      */
     public int getOpacity() {

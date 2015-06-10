@@ -22,7 +22,7 @@ import ch.jeda.event.PointerDownListener;
 import ch.jeda.event.PointerEvent;
 
 /**
- * Represents a text field. A text field is a {@link ch.jeda.ui.OldWidget} that allows the user to enter text.
+ * Represents a text field. A text field is a {@link ch.jeda.ui.Widget} that allows the user to enter text.
  *
  * @since 1.3
  * @version 3

@@ -141,7 +141,7 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
 
     @Override
     public void onPointerDown(final PointerEvent event) {
-        if (pointerId == null && contains(event.getCanvasX(), event.getCanvasY())) {
+        if (pointerId == null && contains(event.getViewX(), event.getViewY())) {
             pointerId = event.getPointerId();
             select();
             sendKeyEvent(EventType.KEY_DOWN);
@@ -152,7 +152,7 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
     @Override
     public void onPointerMoved(final PointerEvent event) {
         if (pointerId != null && event.getPointerId() == pointerId) {
-            if (contains(event.getCanvasX(), event.getCanvasY())) {
+            if (contains(event.getViewX(), event.getViewY())) {
                 event.consume();
             }
             else {
@@ -167,7 +167,7 @@ public class ActionButton extends Widget implements KeyDownListener, KeyUpListen
         if (pointerId != null && event.getPointerId() == pointerId) {
             pointerId = null;
             sendKeyEvent(EventType.KEY_UP);
-            if (contains(event.getCanvasX(), event.getCanvasY())) {
+            if (contains(event.getViewX(), event.getViewY())) {
                 clicked();
                 event.consume();
             }

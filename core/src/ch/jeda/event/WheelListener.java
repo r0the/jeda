@@ -18,8 +18,8 @@ package ch.jeda.event;
 
 /**
  * Listener interface for receiving wheel events. To have an object receive events of type
- * {@link ch.jeda.event.EventType#POINTER_WHEEL}, have the class of the object implement the interface and register the
- * object with {@link ch.jeda.ui.View#addEventListener(java.lang.Object)}.
+ * {@link ch.jeda.event.EventType#WHEEL}, have the class of the object implement the interface and register the object
+ * with {@link ch.jeda.ui.View#addEventListener(java.lang.Object)}.
  *
  * @since 2.0
  */

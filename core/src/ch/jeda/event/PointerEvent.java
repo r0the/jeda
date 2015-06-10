@@ -29,8 +29,8 @@ public final class PointerEvent extends Event {
 
     private final int pointerId;
     private final EnumSet<Button> pressedButtons;
-    private final float canvasX;
-    private final float canvasY;
+    private final float viewX;
+    private final float viewY;
     private final float wheel;
     private final float worldX;
     private final float worldY;
@@ -43,21 +43,21 @@ public final class PointerEvent extends Event {
      * @param pointerId the id of the pointer
      * @param pressedButtons the currently pressed buttons
      * @param wheel the movement of the wheel
-     * @param canvasX the horizontal canvas coordinate of the pointer
-     * @param canvasY the vertical canvas coordinate of the pointer
+     * @param viewX the horizontal view coordinate of the pointer
+     * @param viewY the vertical view coordinate of the pointer
      * @param worldX the horizontal world coordinate of the pointer
      * @param worldY the vertical world coordinate of the pointer
      *
      * @since 2.0
      */
     public PointerEvent(final Object source, final EventType type, final int pointerId,
-                        final EnumSet<Button> pressedButtons, final float wheel, final float canvasX,
-                        final float canvasY, final float worldX, final float worldY) {
+                        final EnumSet<Button> pressedButtons, final float wheel, final float viewX,
+                        final float viewY, final float worldX, final float worldY) {
         super(source, type);
         this.pointerId = pointerId;
         this.pressedButtons = pressedButtons;
-        this.canvasX = canvasX;
-        this.canvasY = canvasY;
+        this.viewX = viewX;
+        this.viewY = viewY;
         this.wheel = wheel;
         this.worldX = worldX;
         this.worldY = worldY;
@@ -75,25 +75,39 @@ public final class PointerEvent extends Event {
     }
 
     /**
-     * Returns the horizontal canvas coordinate of the pointer.
-     *
-     * @return horizontal canvas coordinate of the pointer
-     *
-     * @since 2.0
+     * @deprecated Use {@link #getViewX()} instead.
      */
     public final float getCanvasX() {
-        return canvasX;
+        return viewX;
     }
 
     /**
-     * Returns the vertical canvas coordinate of the pointer.
-     *
-     * @return vertical canvas coordinate of the pointer
-     *
-     * @since 2.0
+     * @deprecated Use {@link #getViewY()} instead.
      */
     public final float getCanvasY() {
-        return canvasY;
+        return viewY;
+    }
+
+    /**
+     * Returns the horizontal view coordinate of the pointer.
+     *
+     * @return horizontal view coordinate of the pointer
+     *
+     * @since 2.1
+     */
+    public final float getViewX() {
+        return viewX;
+    }
+
+    /**
+     * Returns the vertical view coordinate of the pointer.
+     *
+     * @return vertical view coordinate of the pointer
+     *
+     * @since 2.1
+     */
+    public final float getViewY() {
+        return viewY;
     }
 
     /**
@@ -137,7 +151,7 @@ public final class PointerEvent extends Event {
      * @since 1.0
      */
     public final int getX() {
-        return (int) canvasX;
+        return (int) viewX;
     }
 
     /**
@@ -148,7 +162,7 @@ public final class PointerEvent extends Event {
      * @since 1.0
      */
     public final int getY() {
-        return (int) canvasY;
+        return (int) viewY;
     }
 
     /**
@@ -171,9 +185,9 @@ public final class PointerEvent extends Event {
         result.append(", pointerId=");
         result.append(pointerId);
         result.append(", x=");
-        result.append(canvasX);
+        result.append(viewX);
         result.append(", y=");
-        result.append(canvasY);
+        result.append(viewY);
         result.append(")");
         return result.toString();
     }

@@ -868,8 +868,8 @@ public class View {
         @Override
         public void onPointerMoved(final PointerEvent event) {
             if ((lastDragEvent != null) && (event.getPointerId() == lastDragEvent.getPointerId())) {
-                float dx = view.toWorld(event.getCanvasX() - lastDragEvent.getCanvasX());
-                float dy = view.toWorld(event.getCanvasY() - lastDragEvent.getCanvasY());
+                float dx = view.toWorld(event.getViewX() - lastDragEvent.getViewX());
+                float dy = view.toWorld(event.getViewY() - lastDragEvent.getViewY());
                 view.translate(dx, dy);
                 lastDragEvent = event;
             }
