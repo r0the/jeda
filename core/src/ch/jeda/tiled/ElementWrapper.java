@@ -107,6 +107,7 @@ final class ElementWrapper {
         return Collections.unmodifiableList(children);
     }
 
+    @SuppressWarnings("unchecked")
     List<ElementWrapper> getChildren(final String name) {
         if (childrenByName.containsKey(name)) {
             return Collections.unmodifiableList(childrenByName.get(name));

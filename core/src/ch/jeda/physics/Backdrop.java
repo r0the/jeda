@@ -30,8 +30,8 @@ public final class Backdrop extends Element {
 
     private final float height;
     private final Image image;
-    private int opacity;
     private final float width;
+    private int opacity;
 
     /**
      * Constructs a new backdrop.

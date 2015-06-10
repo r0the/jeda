@@ -497,21 +497,21 @@ public enum Key {
      * The middle mouse button.
      *
      * @since 1.0
-     * @deprecated Use {@link PointerEvent#isPressed(ch.jeda.event.PushButton)} instead.
+     * @deprecated Use {@link PointerEvent#isPressed(ch.jeda.event.Button)} instead.
      */
     MOUSE_MIDDLE,
     /**
      * The primary mouse button (usually left).
      *
      * @since 1.0
-     * @deprecated Use {@link PointerEvent#isPressed(ch.jeda.event.PushButton)} instead.
+     * @deprecated Use {@link PointerEvent#isPressed(ch.jeda.event.Button)} instead.
      */
     MOUSE_PRIMARY,
     /**
      * The seconary mouse button (usually right).
      *
      * @since 1.0
-     * @deprecated Use {@link PointerEvent#isPressed(ch.jeda.event.PushButton)} instead.
+     * @deprecated Use {@link PointerEvent#isPressed(ch.jeda.event.Button)} instead.
      */
     MOUSE_SECONDARY,
     /**

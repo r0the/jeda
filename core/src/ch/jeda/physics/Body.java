@@ -307,7 +307,7 @@ public class Body extends Element {
      *
      * @return the image of this body
      *
-     * @see #setImage(ch.jeda.ui.Image)
+     * @see #setImage(ch.jeda.ui.Image, double, double)
      * @since 2.0
      */
     public final Image getImage() {
