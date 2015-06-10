@@ -46,6 +46,9 @@ public final class Jeda {
 
     private static final JedaEngine ENGINE = JedaEngine.create();
 
+    private Jeda() {
+    }
+
     /**
      * Adds an event listener to the Jeda engine. The listener will receive the following events:
      * <ul>
@@ -357,8 +360,5 @@ public final class Jeda {
 
     static void writeln(final String message) {
         ENGINE.writeln(message);
-    }
-
-    private Jeda() {
     }
 }

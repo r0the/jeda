@@ -33,6 +33,9 @@ public final class MathF {
     public static final float PI = (float) Math.PI;
     private static final float TWO_PI = (float) (2.0 * Math.PI);
 
+    private MathF() {
+    }
+
     /**
      * Returns the cosine of <code>x</code>.
      *
