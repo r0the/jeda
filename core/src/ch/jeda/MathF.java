@@ -16,6 +16,8 @@
  */
 package ch.jeda;
 
+import org.jbox2d.common.MathUtils;
+
 /**
  * Provides mathematical functions and constants with <code>float</code> precision.
  *
@@ -40,7 +42,7 @@ public final class MathF {
      * @since 2.0
      */
     public static final float cos(final float x) {
-        return (float) Math.cos(x);
+        return MathUtils.cos(x);
     }
 
     /**
@@ -68,7 +70,7 @@ public final class MathF {
      * @since 2.0
      */
     public static final float sin(final float x) {
-        return (float) Math.sin(x);
+        return MathUtils.sin(x);
     }
 
     /**
@@ -80,7 +82,7 @@ public final class MathF {
      * @since 2.0
      */
     public static final float sqrt(final float x) {
-        return (float) Math.sqrt(x);
+        return (float) StrictMath.sqrt(x);
     }
 
     public static final float toDegrees(final float angleRad) {
