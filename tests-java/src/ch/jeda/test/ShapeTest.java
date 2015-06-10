@@ -15,7 +15,7 @@ public class ShapeTest extends Program {
         window = new Window();
         shapes = new Shape[4];
 //        shapes[0] = new Circle(50);
-//        shapes[1] = new Ellipse(200, 100);
+        shapes[1] = new Ellipse(0, 0, 200, 100);
         shapes[2] = new Rectangle(0, 0, 100, 200);
         shapes[3] = ((Ellipse) shapes[1]).toPolygon(24);
         int i = 0;

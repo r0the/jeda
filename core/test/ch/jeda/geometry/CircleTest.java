@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public class CircleTest {
 
-    private static final double DELTA = 1E-15;
+    private static final double DELTA = 1E-4;
     private final Circle unit;
     private final Circle other;
     private final Circle zero;
@@ -73,17 +73,17 @@ public class CircleTest {
     public void testToPolygon() {
         Polygon polygon = unit.toPolygon(4);
         assertEquals(polygon.getPointCount(), 4);
-        assertEquals(1, polygon.getPointX(0), DELTA);
+        assertEquals(-1, polygon.getPointX(0), DELTA);
         assertEquals(0, polygon.getPointY(0), DELTA);
 
         assertEquals(0, polygon.getPointX(1), DELTA);
-        assertEquals(1, polygon.getPointY(1), DELTA);
+        assertEquals(-1, polygon.getPointY(1), DELTA);
 
-        assertEquals(-1, polygon.getPointX(2), DELTA);
+        assertEquals(1, polygon.getPointX(2), DELTA);
         assertEquals(0, polygon.getPointY(2), DELTA);
 
         assertEquals(0, polygon.getPointX(3), DELTA);
-        assertEquals(-1, polygon.getPointY(3), DELTA);
+        assertEquals(1, polygon.getPointY(3), DELTA);
     }
 
     @Test

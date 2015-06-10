@@ -23,7 +23,7 @@
    </objectgroup>
   </tile>
  </tileset>
- <imagelayer name="Bildebene 1" x="-101" y="-141">
+ <imagelayer name="Bildebene 1" x="-97" y="-151">
   <image source="colored_desert.png"/>
  </imagelayer>
  <layer name="Boden" width="10" height="10">
@@ -135,6 +135,9 @@
  </layer>
  <layer name="Wände" width="10" height="10">
   <properties>
+   <property name="angularDamping" value=""/>
+   <property name="damping" value=""/>
+   <property name="friction" value="0."/>
    <property name="type" value="dynamic"/>
   </properties>
   <data>
@@ -242,7 +245,7 @@
  </layer>
  <objectgroup name="Objektebene 1">
   <object gid="1" x="426" y="211"/>
-  <object name="Rectangle" x="271" y="115" width="118" height="75"/>
+  <object name="Rectangle" x="269" y="111" width="118" height="75"/>
   <object name="Ellipse" x="115" y="422" width="200" height="68">
    <ellipse/>
   </object>
@@ -252,7 +255,7 @@
   <object name="Chain" x="537" y="116">
    <polyline points="0,0 47,95 -20,147 -109,132 -61,241"/>
   </object>
-  <object name="Tile 2" gid="4" x="533" y="90"/>
+  <object name="Tile 2" gid="4" x="529" y="94"/>
   <object name="Circle" x="357.094" y="421.938" width="133.624" height="136.332" rotation="-0.0882783">
    <ellipse/>
   </object>

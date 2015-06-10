@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="192" tileheight="192">
+ <tileset firstgid="1" name="racetrack" tilewidth="192" tileheight="192">
+  <image source="racetrack.png" width="1152" height="1152"/>
+ </tileset>
+ <tileset firstgid="37" name="cars" tilewidth="96" tileheight="48">
+  <tile id="0">
+   <image width="96" height="48" source="car_cooper_blue.png"/>
+  </tile>
+ </tileset>
+ <imagelayer name="Bildebene 1" x="99" y="44"/>
+ <layer name="Backdrop" width="5" height="5">
+  <properties>
+   <property name="type" value=""/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYAJiASBmBWI2IGYHYg4GCOAGYh4gFmVABSC+JBBLQfmyQCwHxPJArAA1TxmIVYAYADJcAXM=
+  </data>
+ </layer>
+ <layer name="Static" width="5" height="5" visible="0">
+  <properties>
+   <property name="type" value="static"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYAJiASBmBWI2IGYHYg4GCOAGYh4gFmVABSC+JBBLQfmyQCwHxPJArAA1TxmIVYAYADJcAXM=
+  </data>
+ </layer>
+ <objectgroup name="Objektebene 1">
+  <properties>
+   <property name="type" value="dynamic"/>
+  </properties>
+  <object type="dynamic" gid="37" x="430" y="123" width="96" height="48"/>
+ </objectgroup>
+</map>
