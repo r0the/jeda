@@ -4,14 +4,12 @@ package ${package};
 </#if>
 import ch.jeda.*;
 import ch.jeda.event.*;
+import ch.jeda.geometry.*;
+import ch.jeda.physics.*;
 import ch.jeda.ui.*;
 
-public class ${name} extends Program {
+public class ${name} extends Body {
 
-    private View view;
-
-    @Override
-    public void run() {
-        view = new View();
+    public ${name}() {
     }
 }

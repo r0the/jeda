@@ -15,7 +15,5 @@ public class ${name} extends Program {
     @Override
     public void run() {
         view = new PhysicsView();
-        // Write initialization code here.
-        view.addEventListener(this);
     }
 }
