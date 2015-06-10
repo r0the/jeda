@@ -37,7 +37,7 @@ interface BodyImp {
 
     void destroy();
 
-    void drawDebugOverlay(Canvas canvas);
+    void drawOverlay(Canvas canvas);
 
     float getAngleRad();
 
@@ -90,6 +90,4 @@ interface BodyImp {
     void setType(BodyType type);
 
     void setVelocity(float vx, float vy);
-
-    boolean shouldDrawOverlay();
 }

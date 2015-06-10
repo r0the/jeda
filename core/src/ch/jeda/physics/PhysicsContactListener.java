@@ -25,10 +25,8 @@ class PhysicsContactListener implements ContactListener {
 
     @Override
     public void beginContact(final Contact contact) {
-        final org.jbox2d.dynamics.Body jbBodyA = contact.m_fixtureA.m_body;
-        final org.jbox2d.dynamics.Body jbBodyB = contact.m_fixtureB.m_body;
-        final Body bodyA = (Body) jbBodyA.m_userData;
-        final Body bodyB = (Body) jbBodyB.m_userData;
+        final Body bodyA = (Body) contact.m_fixtureA.m_body.m_userData;
+        final Body bodyB = (Body) contact.m_fixtureB.m_body.m_userData;
         if (bodyA != null && bodyB != null) {
             bodyA.internalBeginContact(bodyB);
             bodyB.internalBeginContact(bodyA);

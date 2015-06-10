@@ -38,6 +38,7 @@ final class Physics {
         debugging = false;
         imp = new World(new Vec2(0f, 0f));
         imp.setContactListener(new PhysicsContactListener());
+        imp.setContactFilter(new PhysicsContactFilter());
         // Set default gravity. If default gravity is zero, it cannot be changed later on.
         imp.setGravity(new Vec2(0f, -9.81f));
         paused = false;

@@ -23,6 +23,7 @@ import ch.jeda.geometry.Polygon;
 import ch.jeda.geometry.Polyline;
 import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
+import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 import java.util.ArrayList;
@@ -113,32 +114,27 @@ final class PhysicsBodyImp implements BodyImp {
     }
 
     @Override
-    public void drawDebugOverlay(final Canvas canvas) {
+    public void drawOverlay(final Canvas canvas) {
+        if (!physics.isDebugging()) {
+            return;
+        }
+
+        canvas.setColor(Color.RED);
+        canvas.setLineWidth(1);
+        canvas.fillCircle(0, 0, 0.1);
+        canvas.drawPolyline(0, 0, 1, 0);
+
         Fixture fixture = imp.m_fixtureList;
         while (fixture != null) {
             canvas.setLineWidth(1);
             canvas.setColor(Color.RED);
-            org.jbox2d.collision.shapes.Shape shape = fixture.m_shape;
-            switch (shape.m_type) {
-                case CIRCLE:
-                    org.jbox2d.collision.shapes.CircleShape circle = (org.jbox2d.collision.shapes.CircleShape) shape;
-                    Vec2 c = circle.m_p;
-                    canvas.drawCircle(c.x, c.y, circle.m_radius);
-                    break;
-                case POLYGON:
-                    org.jbox2d.collision.shapes.PolygonShape poly = (org.jbox2d.collision.shapes.PolygonShape) shape;
-                    final double[] points = new double[poly.m_count * 2];
-                    for (int i = 0; i < poly.m_count; ++i) {
-                        Vec2 p = poly.m_vertices[i];
-                        points[2 * i] = p.x;
-                        points[2 * i + 1] = p.y;
-                    }
-
-                    canvas.drawPolygon(points);
-                    break;
-            }
+            drawShape(fixture.m_shape, canvas);
             fixture = fixture.m_next;
         }
+
+        final Body body = (Body) imp.m_userData;
+        canvas.setAlignment(Alignment.TOP_LEFT);
+        canvas.drawText(0.2, -0.1, body.getName());
     }
 
     @Override
@@ -291,11 +287,6 @@ final class PhysicsBodyImp implements BodyImp {
     }
 
     @Override
-    public boolean shouldDrawOverlay() {
-        return physics.isDebugging();
-    }
-
-    @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
         result.append("Body(name=");
@@ -330,7 +321,7 @@ final class PhysicsBodyImp implements BodyImp {
                 return convertCircle(ellipse.toCircle(), scale);
             }
             else {
-                return convertPolygon(ellipse.toPolygon(12), scale);
+                return convertPolygon(ellipse.toPolygon(8), scale);
             }
         }
         else if (shape instanceof Rectangle) {
@@ -375,5 +366,43 @@ final class PhysicsBodyImp implements BodyImp {
 
         result.createChain(vertices, vertices.length);
         return result;
+    }
+
+    private static void drawShape(final org.jbox2d.collision.shapes.Shape shape, final Canvas canvas) {
+        switch (shape.m_type) {
+            case CHAIN:
+                drawChainShape((org.jbox2d.collision.shapes.ChainShape) shape, canvas);
+                break;
+            case CIRCLE:
+                drawCircleShape((org.jbox2d.collision.shapes.CircleShape) shape, canvas);
+                break;
+            case POLYGON:
+                drawPolygonShape((org.jbox2d.collision.shapes.PolygonShape) shape, canvas);
+                break;
+        }
+    }
+
+    private static void drawChainShape(final org.jbox2d.collision.shapes.ChainShape chain, final Canvas canvas) {
+        final double[] points = new double[chain.m_count * 2];
+        for (int i = 0; i < chain.m_count; ++i) {
+            points[2 * i] = chain.m_vertices[i].x;
+            points[2 * i + 1] = chain.m_vertices[i].y;
+        }
+
+        canvas.drawPolyline(points);
+    }
+
+    private static void drawCircleShape(final org.jbox2d.collision.shapes.CircleShape circle, final Canvas canvas) {
+        canvas.drawCircle(circle.m_p.x, circle.m_p.y, circle.m_radius);
+    }
+
+    private static void drawPolygonShape(final org.jbox2d.collision.shapes.PolygonShape polygon, final Canvas canvas) {
+        final double[] points = new double[polygon.m_count * 2];
+        for (int i = 0; i < polygon.m_count; ++i) {
+            points[2 * i] = polygon.m_vertices[i].x;
+            points[2 * i + 1] = polygon.m_vertices[i].y;
+        }
+
+        canvas.drawPolygon(points);
     }
 }

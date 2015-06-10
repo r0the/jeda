@@ -665,16 +665,6 @@ public class Body extends Element {
     protected void beginContact(final Body other) {
     }
 
-    /**
-     * Invoked when the contact with another body ends. Override this method to add new behavior.
-     *
-     * @param other the other body
-     *
-     * @since 2.0
-     */
-    protected void endContact(final Body other) {
-    }
-
     @Override
     protected final void draw(final Canvas canvas) {
         if (image != null) {
@@ -684,9 +674,7 @@ public class Body extends Element {
         }
 
         drawDecoration(canvas);
-        if (imp.shouldDrawOverlay()) {
-            drawOverlay(canvas);
-        }
+        imp.drawOverlay(canvas);
     }
 
     /**
@@ -697,6 +685,30 @@ public class Body extends Element {
      * @since 2.0
      */
     protected void drawDecoration(final Canvas canvas) {
+    }
+
+    /**
+     * Invoked when the contact with another body ends. Override this method to add new behavior.
+     *
+     * @param other the other body
+     *
+     * @since 2.0
+     */
+    protected void endContact(final Body other) {
+    }
+
+    /**
+     * Checks if this body should collide with the other body. By default, this method always returns <code>true</code>.
+     * Override this method to prevent some collisions.
+     *
+     * @param other the other body.
+     * @return <code>true</code> if a collision check should be performed for the two bodies, otherwise
+     * <code>false</code>
+     *
+     * @since 2.1
+     */
+    protected boolean shouldCollide(final Body other) {
+        return true;
     }
 
     /**
@@ -744,19 +756,5 @@ public class Body extends Element {
 
     Physics getPhysics() {
         return imp.getPhysics();
-    }
-
-    private void drawOverlay(final Canvas canvas) {
-        canvas.setColor(Color.RED);
-        canvas.setLineWidth(1);
-        canvas.fillCircle(0, 0, 0.1);
-        canvas.drawPolyline(0, 0, 1, 0);
-        imp.drawDebugOverlay(canvas);
-//        for (final Shape shape : getShapes()) {
-//            shape.draw(canvas);
-//        }
-//
-        canvas.setAlignment(Alignment.TOP_LEFT);
-        canvas.drawText(0.2, -0.1, getName());
     }
 }
