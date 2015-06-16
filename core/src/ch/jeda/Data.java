@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 by Stefan Rothe
+ * Copyright (C) 2014- 2015 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -37,6 +37,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -60,7 +61,7 @@ public class Data {
     private static final int DEFAULT_INT = 0;
     private static final Key DEFAULT_KEY = Key.UNDEFINED;
     private static final String DEFAULT_STRING = null;
-    private static final char NEW_LINE = 0x0085;
+    private static final char NEXT_LINE = 0x0085;
     private static final char LINE_SEPARATOR = 0x2028;
     private static final char PARAGRAPH_SEPARATOR = 0x2029;
 
@@ -87,24 +88,39 @@ public class Data {
     }
 
     /**
-     * Construct a data object from a string.
+     * Construct a data object from a string or from a XML file. If the parameter starts with <code><data></code>, it is
+     * assumed to be an XML string and is read directly. Otherwise, the parameter is assumed to be a resource path. The
+     * corresponding file is opened and read.
      *
-     * @param string the string
+     * @param string the XML string or file path
+     * @throws NullPointerException if <code>string</code> is <code>null</code>
      *
      * @since 1.3
      */
     public Data(final String string) {
+        if (string == null) {
+            throw new NullPointerException("string");
+        }
+
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         try {
             builder = dbf.newDocumentBuilder();
-            document = builder.parse(new InputSource(new StringReader(string)));
+            if (string.startsWith("<data>")) {
+                document = builder.parse(new InputSource(new StringReader(string)));
+            }
+            else {
+                document = builder.parse(JedaInternal.openResource(string));
+            }
+
             element = document.getDocumentElement();
         }
 
-        catch (SAXException ex) {
+        catch (final SAXException ex) {
+            Log.e(ex, "Error while reading XML data in '", string, "'.");
         }
-        catch (IOException ex) {
+        catch (final IOException ex) {
+            Log.e(ex, "Error while reading from file '", string, "'.");
         }
         catch (final ParserConfigurationException ex) {
             throw new RuntimeException(ex);
@@ -595,9 +611,13 @@ public class Data {
      * @since 1.2
      */
     public String readString(final String name, final String defaultValue) {
-        final Node child = getFirstElementByTagName(name);
+        final Element child = (Element) getFirstElementByTagName(name);
         if (child == null) {
             return defaultValue;
+        }
+
+        if ("true".equals(child.getAttribute("null"))) {
+            return null;
         }
 
         return unescape(child.getTextContent());
@@ -630,7 +650,13 @@ public class Data {
         final NodeList nodes = element.getElementsByTagName(name);
         final String[] result = new String[nodes.getLength()];
         for (int i = 0; i < result.length; ++i) {
-            result[i] = unescape(nodes.item(i).getTextContent());
+            Element node = (Element) nodes.item(i);
+            if ("true".equals(node.getAttribute("null"))) {
+                result[i] = null;
+            }
+            else {
+                result[i] = unescape(node.getTextContent());
+            }
         }
 
         return result;
@@ -644,9 +670,14 @@ public class Data {
      * @since 1.2
      */
     public void remove(final String name) {
-        final NodeList nodes = element.getElementsByTagName(name);
-        for (int i = 0; i < nodes.getLength(); ++i) {
-            element.removeChild(nodes.item(i));
+        final NodeList nodeList = element.getElementsByTagName(name);
+        final Node[] nodes = new Node[nodeList.getLength()];
+        for (int i = 0; i < nodes.length; ++i) {
+            nodes[i] = nodeList.item(i);
+        }
+
+        for (int i = 0; i < nodes.length; ++i) {
+            element.removeChild(nodes[i]);
         }
     }
 
@@ -703,6 +734,7 @@ public class Data {
      * @param name the name of the value
      * @param value the value to store
      * @throws NullPointerException if <code>name</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -722,6 +754,7 @@ public class Data {
      * @param name the name of the value
      * @param values the array of values to store
      * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -747,6 +780,7 @@ public class Data {
      * @param name the name of the value
      * @param value the value to store
      * @throws NullPointerException if <code>name</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -766,6 +800,7 @@ public class Data {
      * @param name the name of the value
      * @param values the array of values to store
      * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -791,6 +826,7 @@ public class Data {
      * @param name the name of the value
      * @param value the value to store
      * @throws NullPointerException if <code>name</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -800,7 +836,7 @@ public class Data {
         }
 
         remove(name);
-        addElement(name, Convert.toString(value));
+        addElement(name, String.valueOf(value));
     }
 
     /**
@@ -810,6 +846,7 @@ public class Data {
      * @param name the name of the value
      * @param values the array of values to store
      * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -835,6 +872,7 @@ public class Data {
      * @param name the name of the value
      * @param value the value to store
      * @throws NullPointerException if <code>name</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -854,6 +892,7 @@ public class Data {
      * @param name the name of the value
      * @param values the array of values to store
      * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -880,6 +919,7 @@ public class Data {
      * @param name the name of the value
      * @param value the value to store
      * @throws NullPointerException if <code>name</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -899,6 +939,7 @@ public class Data {
      * @param name the name of the value
      * @param values the array of values to store
      * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -923,6 +964,7 @@ public class Data {
      * @param name the name of the object
      * @param value the {@link ch.jeda.Storable} object to store
      * @throws NullPointerException if <code>name</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -941,6 +983,7 @@ public class Data {
      * @param name the name of the array
      * @param values the array of {@link ch.jeda.Storable} objects to store
      * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -966,6 +1009,7 @@ public class Data {
      * @param name the name of the value
      * @param value the value to store
      * @throws NullPointerException if <code>name</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -985,6 +1029,7 @@ public class Data {
      * @param name the name of the value
      * @param values the array of values to store
      * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
      *
      * @since 1.2
      */
@@ -1014,17 +1059,33 @@ public class Data {
     }
 
     private void addElement(final String name, final String content) {
-        final Element newElement = document.createElement(name);
-        newElement.setTextContent(content);
-        element.appendChild(newElement);
+        try {
+            final Element newElement = document.createElement(name);
+            if (content == null) {
+                newElement.setAttribute("null", "true");
+            }
+            else {
+                newElement.setTextContent(content);
+            }
+
+            element.appendChild(newElement);
+        }
+        catch (final DOMException ex) {
+            throw new IllegalArgumentException("name", ex);
+        }
     }
 
     private void doWriteObject(final String name, final Storable value) {
         if (value != null) {
-            final Element newElement = document.createElement(name);
-            newElement.setAttribute("class", value.getClass().getName());
-            element.appendChild(newElement);
-            value.writeTo(new Data(document, newElement));
+            try {
+                final Element newElement = document.createElement(name);
+                newElement.setAttribute("class", value.getClass().getName());
+                element.appendChild(newElement);
+                value.writeTo(new Data(document, newElement));
+            }
+            catch (final DOMException ex) {
+                throw new IllegalArgumentException("name", ex);
+            }
         }
     }
 
@@ -1051,36 +1112,49 @@ public class Data {
     }
 
     private static String escape(final String text) {
+        if (text == null) {
+            return null;
+        }
+
         final StringBuilder result = new StringBuilder();
         for (int i = 0; i < text.length(); ++i) {
             final char ch = text.charAt(i);
             switch (ch) {
-                case '\n':
-                    result.append("\\n");
-                    break;
-                case '\f':
-                    result.append("\\f");
-                    break;
-                case '\r':
-                    result.append("\\r");
-                    break;
-                case ',':
-                    result.append("\\c");
-                    break;
-                case '=':
-                    result.append("\\e");
+                case '\'':
+                    result.append("\\a");
                     break;
                 case '\\':
                     result.append("\\b");
                     break;
-                case NEW_LINE:
+                case '\f':
+                    result.append("\\f");
+                    break;
+                case '>':
+                    result.append("\\g");
+                    break;
+                case '<':
                     result.append("\\l");
+                    break;
+                case '&':
+                    result.append("\\m");
+                    break;
+                case '\n':
+                    result.append("\\n");
+                    break;
+                case PARAGRAPH_SEPARATOR:
+                    result.append("\\p");
+                    break;
+                case '"':
+                    result.append("\\q");
+                    break;
+                case '\r':
+                    result.append("\\r");
                     break;
                 case LINE_SEPARATOR:
                     result.append("\\s");
                     break;
-                case PARAGRAPH_SEPARATOR:
-                    result.append("\\p");
+                case NEXT_LINE:
+                    result.append("\\x");
                     break;
                 default:
                     result.append(ch);
@@ -1099,32 +1173,41 @@ public class Data {
                 ++i;
                 final char escapeChar = text.charAt(i);
                 switch (escapeChar) {
-                    case 'n':
-                        result.append("\n");
-                        break;
-                    case 'f':
-                        result.append("\f");
-                        break;
-                    case 'r':
-                        result.append("\r");
-                        break;
-                    case 'c':
-                        result.append(",");
-                        break;
-                    case 'e':
-                        result.append("=");
+                    case 'a':
+                        result.append('\'');
                         break;
                     case 'b':
-                        result.append("\\");
+                        result.append('\\');
+                        break;
+                    case 'f':
+                        result.append('\f');
+                        break;
+                    case 'g':
+                        result.append('>');
                         break;
                     case 'l':
-                        result.append(NEW_LINE);
+                        result.append('<');
+                        break;
+                    case 'm':
+                        result.append('&');
+                        break;
+                    case 'n':
+                        result.append('\n');
+                        break;
+                    case 'p':
+                        result.append(PARAGRAPH_SEPARATOR);
+                        break;
+                    case 'q':
+                        result.append('"');
+                        break;
+                    case 'r':
+                        result.append('\r');
                         break;
                     case 's':
                         result.append(LINE_SEPARATOR);
                         break;
-                    case 'p':
-                        result.append(PARAGRAPH_SEPARATOR);
+                    case 'x':
+                        result.append(NEXT_LINE);
                         break;
                     default:
                         // ignore invalid escape
