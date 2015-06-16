@@ -19,6 +19,7 @@ package ch.jeda.platform.android;
 import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import ch.jeda.JedaInternal;
 import ch.jeda.Log;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.TypefaceImp;
@@ -69,7 +70,7 @@ class ResourceManager {
     }
 
     ImageImp openImage(final String path) {
-        final InputStream in = openInputStream(path);
+        final InputStream in = JedaInternal.openResource(path);
         if (in == null) {
             return null;
         }
@@ -103,67 +104,5 @@ class ResourceManager {
         catch (final RuntimeException ex) {
             return null;
         }
-    }
-
-    InputStream openInputStream(final String path) {
-        if (path == null) {
-            throw new NullPointerException("filePath");
-        }
-        else if (path.startsWith(NEW_RESOURCE_PREFIX)) {
-            return openResourceInputStream(path, NEW_RESOURCE_PREFIX.length());
-        }
-        else if (path.startsWith(HTTP_PREFIX)) {
-            return openRemoteInputStream(path);
-        }
-        else {
-            return openFileInputStream(path);
-        }
-    }
-
-    private InputStream openFileInputStream(final String path) {
-        try {
-            return new FileInputStream(path);
-        }
-        catch (final FileNotFoundException ex) {
-            Log.e(ex, "File '", path, "' not found.");
-        }
-
-        return null;
-    }
-
-    private InputStream openRemoteInputStream(final String path) {
-        try {
-            return new URL(path).openStream();
-        }
-        catch (final MalformedURLException ex) {
-            Log.e(ex, "Cannot open invalid path '", path, "'.");
-            return null;
-        }
-        catch (final IOException ex) {
-            Log.e(ex, "Error while reading remote file '", path, "'.");
-        }
-
-        return null;
-    }
-
-    private InputStream openResourceInputStream(final String path, final int prefixLength) {
-        final String resourcePath = "res/" + path.substring(prefixLength);
-        URL url = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
-        if (url == null) {
-            url = Log.class.getClassLoader().getResource(resourcePath);
-        }
-
-        if (url == null) {
-            Log.e("Resource file '", path, "' not found.");
-            return null;
-        }
-        try {
-            return url.openStream();
-        }
-        catch (final IOException ex) {
-            Log.e(ex, "Error while reading resource file '", path, "'.");
-        }
-
-        return null;
     }
 }

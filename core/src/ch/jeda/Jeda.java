@@ -216,7 +216,7 @@ public final class Jeda {
      * @since 1.0
      */
     public static String[] loadTextFile(final String path) {
-        final InputStream in = ENGINE.openResource(path);
+        final InputStream in = ResourceManager.openInputStream(path);
         if (in == null) {
             return null;
         }
@@ -344,10 +344,6 @@ public final class Jeda {
 
     static TypefaceImp getStandardTypefaceImp(final Platform.StandardTypeface standardTypeface) {
         return ENGINE.getStandardTypefaceImp(standardTypeface);
-    }
-
-    static InputStream openResource(final String path) {
-        return ENGINE.openResource(path);
     }
 
     static void postEvent(final Event event) {

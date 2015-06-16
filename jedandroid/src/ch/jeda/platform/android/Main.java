@@ -144,10 +144,6 @@ public final class Main extends Activity {
         return resourceManager.loadClasses();
     }
 
-    InputStream openResource(final String path) {
-        return resourceManager.openInputStream(path);
-    }
-
     void postEvent(final Event event) {
         AndroidPlatform.getInstance().postEvent(event);
     }

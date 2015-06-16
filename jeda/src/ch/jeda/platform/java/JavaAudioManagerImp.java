@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.JedaInternal;
 import ch.jeda.Log;
 import ch.jeda.platform.AudioManagerImp;
 import java.io.BufferedInputStream;
@@ -62,7 +63,7 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
         final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         try {
             final AudioInputStream in = AudioSystem.getAudioInputStream(
-                new BufferedInputStream(ResourceManager.openInputStream(path)));
+                new BufferedInputStream(JedaInternal.openResource(path)));
             AudioSystem.write(in, AudioFileFormat.Type.WAVE, buffer);
             soundMap.put(path, new SoundData(buffer.toByteArray()));
         }

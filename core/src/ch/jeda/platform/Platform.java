@@ -58,8 +58,6 @@ public interface Platform {
 
     Class<?>[] loadClasses() throws Exception;
 
-    InputStream openResource(String path);
-
     void setSensorEnabled(SensorType sensorType, boolean enabled);
 
     void setVirtualKeyboardVisible(boolean visible);

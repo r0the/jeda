@@ -32,7 +32,6 @@ import ch.jeda.platform.Platform;
 import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ViewRequest;
-import java.io.InputStream;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -131,11 +130,6 @@ class AndroidPlatform implements Platform {
     @Override
     public Class<?>[] loadClasses() throws Exception {
         return Main.getInstance().loadClasses();
-    }
-
-    @Override
-    public InputStream openResource(final String path) {
-        return Main.getInstance().openResource(path);
     }
 
     @Override

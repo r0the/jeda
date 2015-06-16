@@ -279,10 +279,6 @@ class JedaEngine implements Platform.Callback, Runnable {
         return platform.isVirtualKeyboardVisible();
     }
 
-    InputStream openResource(final String path) {
-        return platform.openResource(path);
-    }
-
     void programTerminated() {
         synchronized (currentProgramLock) {
             currentProgram = null;

@@ -54,7 +54,7 @@ public final class Properties {
      */
     public Properties(final String filePath) {
         this();
-        final InputStream in = Jeda.openResource(filePath);
+        final InputStream in = ResourceManager.openInputStream(filePath);
         if (in == null) {
             return;
         }

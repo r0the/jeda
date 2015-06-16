@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.JedaInternal;
 import ch.jeda.Log;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -54,7 +55,7 @@ class Mp3AudioPlayer extends AudioPlayer {
     @Override
     protected void playLoop() {
         try {
-            final BufferedInputStream bin = new BufferedInputStream(ResourceManager.openInputStream(path), STREAM_BUFFER_SIZE);
+            final BufferedInputStream bin = new BufferedInputStream(JedaInternal.openResource(path), STREAM_BUFFER_SIZE);
             decoder.play(path, bin);
         }
         catch (final IOException ex) {

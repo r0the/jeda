@@ -134,11 +134,6 @@ class JavaPlatform implements Platform {
     }
 
     @Override
-    public InputStream openResource(final String path) {
-        return ResourceManager.openInputStream(path);
-    }
-
-    @Override
     public void setSensorEnabled(final SensorType sensorType, final boolean enabled) {
         // ignore
     }

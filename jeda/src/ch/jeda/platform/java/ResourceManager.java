@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.JedaInternal;
 import ch.jeda.Log;
 import ch.jeda.platform.TypefaceImp;
 import java.awt.Font;
@@ -36,8 +37,6 @@ import javax.imageio.ImageIO;
 
 class ResourceManager {
 
-    private static final String HTTP_PREFIX = "http://";
-    private static final String NEW_RESOURCE_PREFIX = "res:";
     private static final ResourceFinder RESOURCE_FINDER = new ResourceFinder();
 
     static Class<?>[] loadClasses()
@@ -46,7 +45,7 @@ class ResourceManager {
     }
 
     static TypefaceImp loadTypeface(final String path) {
-        final InputStream in = openInputStream(path);
+        final InputStream in = JedaInternal.openResource(path);
         if (in == null) {
             return null;
         }
@@ -72,7 +71,7 @@ class ResourceManager {
     }
 
     static BufferedImage loadImage(final String path) {
-        final InputStream in = openInputStream(path);
+        final InputStream in = JedaInternal.openResource(path);
         if (in == null) {
             return null;
         }
@@ -90,78 +89,6 @@ class ResourceManager {
             }
             catch (IOException ex) {
             }
-        }
-    }
-
-    static InputStream openInputStream(final String path) {
-        if (path == null) {
-            throw new NullPointerException("path");
-        }
-        else if (path.startsWith(NEW_RESOURCE_PREFIX)) {
-            return openResourceInputStream(path, NEW_RESOURCE_PREFIX.length());
-        }
-        else if (path.startsWith(HTTP_PREFIX)) {
-            return openRemoteInputStream(path);
-        }
-        else {
-            return openFileInputStream(path);
-        }
-    }
-
-    private static InputStream openFileInputStream(final String path) {
-        try {
-            return new FileInputStream(path);
-        }
-        catch (FileNotFoundException ex) {
-            Log.e(ex, "File '", path, "' not found.");
-        }
-
-        return null;
-    }
-
-    private static InputStream openRemoteInputStream(final String path) {
-        try {
-            return new URL(path).openStream();
-        }
-        catch (MalformedURLException ex) {
-            Log.e(ex, "Cannot open invalid path '", path, "'.");
-            return null;
-        }
-        catch (IOException ex) {
-            Log.e(ex, "Error while reading remote file '", path, "'.");
-        }
-        return null;
-    }
-
-    private static InputStream openResourceInputStream(final String path, final int prefixLength) {
-        String resourcePath = path.substring(prefixLength);
-        URL url = findResource("res/" + resourcePath);
-        if (url == null) {
-            url = findResource(resourcePath);
-        }
-
-        if (url == null) {
-            Log.e("Resource file '", path, "' not found.");
-            return null;
-        }
-
-        try {
-            return url.openStream();
-        }
-        catch (IOException ex) {
-            Log.e(ex, "Error while reading resource file '", path, "'.");
-        }
-
-        return null;
-    }
-
-    private static URL findResource(final String resourcePath) {
-        URL result = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
-        if (result == null) {
-            return Log.class.getClassLoader().getResource(resourcePath);
-        }
-        else {
-            return result;
         }
     }
 
