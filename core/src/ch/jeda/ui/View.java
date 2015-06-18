@@ -71,7 +71,9 @@ public class View {
     private final Set<Element> pendingRemovals;
     private final UserControl userControl;
     private Canvas background;
+    private boolean elementLoop;
     private Element[] elements;
+    private boolean elementsChanged;
     private Canvas foreground;
     private ViewImp imp;
     private float scale;
@@ -138,7 +140,9 @@ public class View {
         eventQueue = new EventQueue();
         pendingInsertions = new HashSet<Element>();
         pendingRemovals = new HashSet<Element>();
+        elementLoop = false;
         elements = new Element[0];
+        elementsChanged = false;
         scale = 0.01f;
         title = Jeda.getProgramName();
         userControl = new UserControl(this);
@@ -158,11 +162,12 @@ public class View {
     public final void add(final Element element) {
         if (element != null) {
             synchronized (elementLock) {
-                if (elementSet.contains(element)) {
+                if (elementLoop) {
+                    pendingInsertions.add(element);
                     pendingRemovals.remove(element);
                 }
                 else {
-                    pendingInsertions.add(element);
+                    doAdd(element);
                 }
             }
         }
@@ -260,7 +265,7 @@ public class View {
     }
 
     /**
-     * Returns an elements of the specified class with the specified name.
+     * Returns an element of the specified class with the specified name.
      *
      * @param <T> the type of the element to return
      * @param clazz the class of the element to return
@@ -446,11 +451,12 @@ public class View {
     public final void remove(final Element element) {
         if (element != null) {
             synchronized (elementLock) {
-                if (!elementSet.contains(element)) {
+                if (elementLoop) {
                     pendingInsertions.remove(element);
+                    pendingRemovals.add(element);
                 }
                 else {
-                    pendingRemovals.add(element);
+                    doRemove(element);
                 }
             }
         }
@@ -658,7 +664,7 @@ public class View {
     }
 
     void drawOrderChanged(final Element element) {
-        elements = null;
+        elementsChanged = true;
     }
 
     void removeName(final Element element, final String name) {
@@ -669,6 +675,26 @@ public class View {
 
     void postEvent(final Event event) {
         eventQueue.addEvent(event);
+    }
+
+    private void doAdd(final Element element) {
+        if (elementSet.add(element)) {
+            addEventListener(element);
+            element.addToView(this);
+            addName(element, element.getName());
+            elementAdded(element);
+            elementsChanged = true;
+        }
+    }
+
+    private void doRemove(final Element element) {
+        if (elementSet.remove(element)) {
+            removeEventListener(element);
+            element.removeFromView(this);
+            removeName(element, element.getName());
+            elementRemoved(element);
+            elementsChanged = true;
+        }
     }
 
     private float toWorld(final float length) {
@@ -685,6 +711,7 @@ public class View {
 
     private void tick(final TickEvent event) {
         if (imp.isVisible()) {
+            elementLoop = true;
             updateElements();
             eventQueue.processEvents();
             foreground.setWorldTransformation(1f, 1f, 0f, 0f);
@@ -702,6 +729,7 @@ public class View {
                 elements[i].internalDraw(foreground);
             }
 
+            elementLoop = false;
             imp.update();
         }
     }
@@ -725,30 +753,26 @@ public class View {
 
     private void updateElements() {
         synchronized (elementLock) {
-            if (pendingInsertions.isEmpty() && pendingRemovals.isEmpty()) {
-                return;
+            if (!pendingRemovals.isEmpty()) {
+                for (final Element element : pendingRemovals) {
+                    doRemove(element);
+                }
+
+                pendingRemovals.clear();
             }
 
-            for (final Element element : pendingRemovals) {
-                elementSet.remove(element);
-                removeEventListener(element);
-                element.removeFromView(this);
-                removeName(element, element.getName());
-                elementRemoved(element);
+            if (!pendingInsertions.isEmpty()) {
+                for (final Element element : pendingInsertions) {
+                    doAdd(element);
+                }
+
+                pendingInsertions.clear();
             }
 
-            for (final Element element : pendingInsertions) {
-                elementSet.add(element);
-                addEventListener(element);
-                element.addToView(this);
-                addName(element, element.getName());
-                elementAdded(element);
+            if (elementsChanged) {
+                elements = elementSet.toArray(new Element[elementSet.size()]);
+                Arrays.sort(elements, Element.DRAW_ORDER);
             }
-
-            pendingInsertions.clear();
-            pendingRemovals.clear();
-            elements = elementSet.toArray(new Element[elementSet.size()]);
-            Arrays.sort(elements, Element.DRAW_ORDER);
         }
     }
 
