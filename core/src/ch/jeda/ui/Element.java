@@ -265,8 +265,8 @@ public abstract class Element {
     }
 
     void addToView(final View view) {
-        if (view != this.view && view != null) {
-            view.remove(this);
+        if (view != this.view && this.view != null) {
+            this.view.remove(this);
         }
 
         this.view = view;
