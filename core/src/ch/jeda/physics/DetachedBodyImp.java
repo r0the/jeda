@@ -146,6 +146,11 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
+    public org.jbox2d.dynamics.Body getJBoxBody() {
+        return null;
+    }
+
+    @Override
     public float getMass() {
         return 0f;
     }

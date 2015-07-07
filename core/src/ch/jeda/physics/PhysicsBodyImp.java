@@ -56,7 +56,7 @@ final class PhysicsBodyImp implements BodyImp {
         bodyDef.linearVelocity.y = oldImp.getVy();
         bodyDef.type = convert(oldImp.getType());
         bodyDef.fixedRotation = oldImp.isRotationFixed();
-        imp = physics.createBodyImp(bodyDef);
+        imp = physics.createJBoxBody(bodyDef);
         imp.m_userData = body;
         this.physics = physics;
         for (final Shape shape : oldImp.getShapes()) {
@@ -105,12 +105,12 @@ final class PhysicsBodyImp implements BodyImp {
 
     @Override
     public boolean belongsTo(final Physics physics) {
-        return physics == physics;
+        return this.physics == physics;
     }
 
     @Override
     public void destroy() {
-        physics.destroyBodyImp(imp);
+        physics.destroyJBoxBody(imp);
     }
 
     @Override
@@ -165,6 +165,11 @@ final class PhysicsBodyImp implements BodyImp {
     @Override
     public float getFriction() {
         return friction;
+    }
+
+    @Override
+    public org.jbox2d.dynamics.Body getJBoxBody() {
+        return imp;
     }
 
     @Override

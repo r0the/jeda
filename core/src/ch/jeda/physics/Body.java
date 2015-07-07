@@ -721,6 +721,10 @@ public class Body extends Element {
     protected void step(final double dt) {
     }
 
+    org.jbox2d.dynamics.Body getJBoxBody() {
+        return imp.getJBoxBody();
+    }
+
     boolean setPhysics(final Physics physics) {
         if (imp.belongsTo(physics)) {
             return false;

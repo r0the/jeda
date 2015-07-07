@@ -51,6 +51,8 @@ interface BodyImp {
 
     float getFriction();
 
+    org.jbox2d.dynamics.Body getJBoxBody();
+
     float getMass();
 
     Physics getPhysics();

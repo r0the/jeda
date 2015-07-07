@@ -16,31 +16,35 @@
  */
 package ch.jeda.physics;
 
+import ch.jeda.Log;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.joints.JointDef;
 
 final class Physics {
 
     private final Set<Body> bodySet;
+    private final org.jbox2d.dynamics.World imp;
+    private final Set<Body> pendingInsertions;
     private Body[] bodies;
     private boolean debugging;
-    private final org.jbox2d.dynamics.World imp;
     private float scale;
     private boolean paused;
 
     public Physics() {
         bodySet = new HashSet<Body>();
-        bodies = null;
-        debugging = false;
         imp = new World(new Vec2(0f, 0f));
         imp.setContactListener(new PhysicsContactListener());
         imp.setContactFilter(new PhysicsContactFilter());
         // Set default gravity. If default gravity is zero, it cannot be changed later on.
         imp.setGravity(new Vec2(0f, -9.81f));
+        pendingInsertions = new HashSet<Body>();
+        bodies = null;
+        debugging = false;
         paused = false;
         scale = 100f;
     }
@@ -55,9 +59,12 @@ final class Physics {
             oldPhysics.remove(body);
         }
 
-        bodySet.add(body);
-        bodies = null;
-        body.setPhysics(this);
+        if (imp.isLocked()) {
+            pendingInsertions.add(body);
+        }
+        else {
+            doAdd(body);
+        }
     }
 
     public Body[] getBodies() {
@@ -82,6 +89,7 @@ final class Physics {
             return;
         }
 
+        pendingInsertions.remove(body);
         bodySet.remove(body);
         bodies = null;
         body.setPhysics(null);
@@ -109,7 +117,12 @@ final class Physics {
     }
 
     public void step(final double seconds) {
+        for (final Body body : pendingInsertions) {
+            doAdd(body);
+        }
+
         if (!paused) {
+
             imp.step((float) seconds, 6, 2);
             checkBodies();
             for (final Body body : bodies) {
@@ -118,12 +131,24 @@ final class Physics {
         }
     }
 
-    org.jbox2d.dynamics.Body createBodyImp(final BodyDef bodyDef) {
+    org.jbox2d.dynamics.Body createJBoxBody(final BodyDef bodyDef) {
+        if (imp.isLocked()) {
+            Log.e("Physics Engine is locked!");
+        }
+
         return imp.createBody(bodyDef);
     }
 
-    void destroyBodyImp(final org.jbox2d.dynamics.Body bodyImp) {
-        imp.destroyBody(bodyImp);
+    org.jbox2d.dynamics.joints.Joint createJBoxJoint(final JointDef jointDef) {
+        return imp.createJoint(jointDef);
+    }
+
+    void destroyJBoxBody(final org.jbox2d.dynamics.Body jboxBody) {
+        imp.destroyBody(jboxBody);
+    }
+
+    void destroyJBoxJoint(final org.jbox2d.dynamics.joints.Joint jboxJoint) {
+        imp.destroyJoint(jboxJoint);
     }
 
     float scaleLength(final float length) {
@@ -134,5 +159,11 @@ final class Physics {
         if (bodies == null) {
             bodies = bodySet.toArray(new Body[bodySet.size()]);
         }
+    }
+
+    private void doAdd(final Body body) {
+        bodySet.add(body);
+        bodies = null;
+        body.setPhysics(this);
     }
 }
