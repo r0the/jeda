@@ -655,6 +655,16 @@ public class View {
     protected void elementRemoved(final Element element) {
     }
 
+    /**
+     * This method is invoked after the world elements has been drawn. Override this method to draw an overlay in world
+     * coordinates.
+     *
+     * @param canvas the canvas to draw on
+     * @since 2.2
+     */
+    protected void drawWorldOverlay(final Canvas canvas) {
+    }
+
     void addName(final Element element, final String name) {
         if (!elementsByName.containsKey(name)) {
             elementsByName.put(name, new HashSet<Element>());

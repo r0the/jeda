@@ -124,14 +124,6 @@ final class PhysicsBodyImp implements BodyImp {
         canvas.fillCircle(0, 0, 0.1);
         canvas.drawPolyline(0, 0, 1, 0);
 
-        Fixture fixture = imp.m_fixtureList;
-        while (fixture != null) {
-            canvas.setLineWidth(1);
-            canvas.setColor(Color.RED);
-            drawShape(fixture.m_shape, canvas);
-            fixture = fixture.m_next;
-        }
-
         final Body body = (Body) imp.m_userData;
         canvas.setAlignment(Alignment.TOP_LEFT);
         canvas.drawText(0.2, -0.1, body.getName());
@@ -371,43 +363,5 @@ final class PhysicsBodyImp implements BodyImp {
 
         result.createChain(vertices, vertices.length);
         return result;
-    }
-
-    private static void drawShape(final org.jbox2d.collision.shapes.Shape shape, final Canvas canvas) {
-        switch (shape.m_type) {
-            case CHAIN:
-                drawChainShape((org.jbox2d.collision.shapes.ChainShape) shape, canvas);
-                break;
-            case CIRCLE:
-                drawCircleShape((org.jbox2d.collision.shapes.CircleShape) shape, canvas);
-                break;
-            case POLYGON:
-                drawPolygonShape((org.jbox2d.collision.shapes.PolygonShape) shape, canvas);
-                break;
-        }
-    }
-
-    private static void drawChainShape(final org.jbox2d.collision.shapes.ChainShape chain, final Canvas canvas) {
-        final double[] points = new double[chain.m_count * 2];
-        for (int i = 0; i < chain.m_count; ++i) {
-            points[2 * i] = chain.m_vertices[i].x;
-            points[2 * i + 1] = chain.m_vertices[i].y;
-        }
-
-        canvas.drawPolyline(points);
-    }
-
-    private static void drawCircleShape(final org.jbox2d.collision.shapes.CircleShape circle, final Canvas canvas) {
-        canvas.drawCircle(circle.m_p.x, circle.m_p.y, circle.m_radius);
-    }
-
-    private static void drawPolygonShape(final org.jbox2d.collision.shapes.PolygonShape polygon, final Canvas canvas) {
-        final double[] points = new double[polygon.m_count * 2];
-        for (int i = 0; i < polygon.m_count; ++i) {
-            points[2 * i] = polygon.m_vertices[i].x;
-            points[2 * i + 1] = polygon.m_vertices[i].y;
-        }
-
-        canvas.drawPolygon(points);
     }
 }

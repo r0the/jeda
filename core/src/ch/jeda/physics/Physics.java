@@ -17,6 +17,7 @@
 package ch.jeda.physics;
 
 import ch.jeda.Log;
+import ch.jeda.ui.Canvas;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +29,7 @@ import org.jbox2d.dynamics.joints.JointDef;
 final class Physics {
 
     private final Set<Body> bodySet;
+    private final PhysicsDebugDraw debugDraw;
     private final org.jbox2d.dynamics.World imp;
     private final Set<Body> pendingInsertions;
     private Body[] bodies;
@@ -37,7 +39,9 @@ final class Physics {
 
     public Physics() {
         bodySet = new HashSet<Body>();
+        debugDraw = new PhysicsDebugDraw();
         imp = new World(new Vec2(0f, 0f));
+        imp.setDebugDraw(debugDraw);
         imp.setContactListener(new PhysicsContactListener());
         imp.setContactFilter(new PhysicsContactFilter());
         // Set default gravity. If default gravity is zero, it cannot be changed later on.
@@ -149,6 +153,13 @@ final class Physics {
 
     void destroyJBoxJoint(final org.jbox2d.dynamics.joints.Joint jboxJoint) {
         imp.destroyJoint(jboxJoint);
+    }
+
+    void drawDebugOverlay(final Canvas canvas) {
+        if (debugging) {
+            debugDraw.setCanvas(canvas);
+            imp.drawDebugData();
+        }
     }
 
     float scaleLength(final float length) {

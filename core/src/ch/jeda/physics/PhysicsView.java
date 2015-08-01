@@ -18,6 +18,7 @@ package ch.jeda.physics;
 
 import ch.jeda.event.TickEvent;
 import ch.jeda.event.TickListener;
+import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Element;
 import ch.jeda.ui.View;
 import ch.jeda.ui.ViewFeature;
@@ -137,6 +138,11 @@ public final class PhysicsView extends View implements TickListener {
 
     public void step(final double seconds) {
         physics.step(seconds);
+    }
+
+    @Override
+    protected void drawWorldOverlay(final Canvas canvas) {
+        physics.drawDebugOverlay(canvas);
     }
 
     @Override
