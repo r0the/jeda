@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 class JedaView extends RelativeLayout {
 
     private JedaInputConnection inputConnection;
+    private SurfaceFragment topView;
 
     JedaView(final Context context) {
         super(context);
@@ -34,12 +35,18 @@ class JedaView extends RelativeLayout {
     public InputConnection onCreateInputConnection(final EditorInfo outAttrs) {
         if (inputConnection == null) {
             inputConnection = new JedaInputConnection(this, true);
+            if (topView != null) {
+                inputConnection.setTopView(topView);
+            }
         }
 
         return inputConnection;
     }
 
     public void setTopView(final SurfaceFragment topView) {
-        inputConnection.setTopView(topView);
+        this.topView = topView;
+        if (inputConnection != null) {
+            inputConnection.setTopView(topView);
+        }
     }
 }
