@@ -37,7 +37,6 @@ import ch.jeda.platform.SelectionRequest;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.platform.ViewRequest;
 import ch.jeda.ui.ViewFeature;
-import java.io.InputStream;
 
 public final class Main extends Activity {
 

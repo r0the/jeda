@@ -1104,7 +1104,8 @@ public class Window {
      * @since 1.0
      */
     public Image takeSnapshot() {
-        return new Image(imp.getForeground().takeSnapshot());
+        return new Image(imp.getForeground().takeSnapshot(0, 0, imp.getForeground().getWidth(),
+                                                          imp.getForeground().getHeight()));
     }
 
     /**

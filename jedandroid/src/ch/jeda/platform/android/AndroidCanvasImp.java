@@ -226,8 +226,8 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public ImageImp takeSnapshot() {
-        return new AndroidImageImp(Bitmap.createBitmap(bitmap));
+    public ImageImp takeSnapshot(final int x, final int y, final int width, final int height) {
+        return new AndroidImageImp(Bitmap.createBitmap(bitmap, x, y, width, height));
     }
 
     @Override

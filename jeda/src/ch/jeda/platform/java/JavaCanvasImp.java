@@ -245,9 +245,9 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public ImageImp takeSnapshot() {
-        final BufferedImage result = createBufferedImage(getWidth(), getHeight());
-        result.createGraphics().drawImage(bitmap, 0, 0, getWidth(), getHeight(), null);
+    public ImageImp takeSnapshot(final int x, final int y, final int width, final int height) {
+        final BufferedImage result = createBufferedImage(width, height);
+        result.createGraphics().drawImage(bitmap, 0, 0, width, height, x, y, x + width, y + height, null);
         return new JavaImageImp(result);
     }
 

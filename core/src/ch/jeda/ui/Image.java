@@ -92,7 +92,7 @@ public final class Image {
                 canvas.setPixel(x, y, filter.apply(this, x, y));
             }
         }
-        return new Image(canvas.takeSnapshot());
+        return new Image(canvas.takeSnapshot(0, 0, canvas.getWidth(), canvas.getHeight()));
     }
 
     /**

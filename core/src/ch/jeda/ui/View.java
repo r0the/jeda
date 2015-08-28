@@ -732,6 +732,7 @@ public class View {
             boolean world = true;
             for (int i = 0; i < elements.length; ++i) {
                 if (world && elements[i].getDrawOrder() >= 0) {
+                    drawWorldOverlay(foreground);
                     foreground.setWorldTransformation(1f, 1f, 0f, 0f);
                     world = false;
                 }

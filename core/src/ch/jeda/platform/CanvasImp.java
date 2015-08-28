@@ -71,7 +71,7 @@ public interface CanvasImp {
 
     void setTypeface(TypefaceImp typeface);
 
-    ImageImp takeSnapshot();
+    ImageImp takeSnapshot(int x, int y, int width, int height);
 
     void translate(float tx, float ty);
 }

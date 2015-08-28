@@ -1014,7 +1014,43 @@ public class Canvas {
      * @since 1.0
      */
     public Image takeSnapshot() {
-        return new Image(imp.takeSnapshot());
+        return new Image(imp.takeSnapshot(0, 0, imp.getWidth(), imp.getHeight()));
+    }
+
+    /**
+     * * Takes a snapshot of a rectangular area of the canvas. Creates an image that contains a copy of the contents of
+     * the canvas.
+     *
+     * @param x the horizontal coordinate of the bottom left corner of the area
+     * @param y the vertical coordinate of the bottom left corner of the area
+     * @param width the width of the area
+     * @param height the height of the area
+     * @return the image of the area
+     *
+     * @since 2.2
+     */
+    public Image takeSnapshot(float x, float y, float width, float height) {
+        x = x * sx + tx;
+        y = y * sy + ty;
+        width = width * slx;
+        height = height * sly;
+        return new Image(imp.takeSnapshot((int) alignX(x, width), (int) alignY(y, height), (int) width, (int) height));
+    }
+
+    /**
+     * * Takes a snapshot of a rectangular area of the canvas. Creates an image that contains a copy of the contents of
+     * the canvas.
+     *
+     * @param x the horizontal coordinate of the bottom left corner of the area
+     * @param y the vertical coordinate of the bottom left corner of the area
+     * @param width the width of the area
+     * @param height the height of the area
+     * @return the image of the area
+     *
+     * @since 2.2
+     */
+    public Image takeSnapshot(final double x, final double y, final double width, final double height) {
+        return takeSnapshot((float) x, (float) y, (float) width, (float) height);
     }
 
     /**
