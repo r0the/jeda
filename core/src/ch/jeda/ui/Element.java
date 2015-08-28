@@ -145,6 +145,17 @@ public abstract class Element {
     }
 
     /**
+     * Removes this element from the view. Has no effect if the element is not currently in a view.
+     *
+     * @since 2.2
+     */
+    public final void remove() {
+        if (view != null) {
+            view.remove(this);
+        }
+    }
+
+    /**
      * Sets the rotation angle of this element in degrees.
      *
      * @param angle the angle of this element in degrees
