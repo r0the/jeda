@@ -71,7 +71,6 @@ public class View {
     private final Set<Element> pendingRemovals;
     private final UserControl userControl;
     private Canvas background;
-    private boolean elementLoop;
     private Element[] elements;
     private boolean elementsChanged;
     private Canvas foreground;
@@ -140,7 +139,6 @@ public class View {
         eventQueue = new EventQueue();
         pendingInsertions = new HashSet<Element>();
         pendingRemovals = new HashSet<Element>();
-        elementLoop = false;
         elements = new Element[0];
         elementsChanged = false;
         scale = 0.01f;
@@ -162,13 +160,8 @@ public class View {
     public final void add(final Element element) {
         if (element != null) {
             synchronized (elementLock) {
-                if (elementLoop) {
-                    pendingInsertions.add(element);
-                    pendingRemovals.remove(element);
-                }
-                else {
-                    doAdd(element);
-                }
+                pendingInsertions.add(element);
+                pendingRemovals.remove(element);
             }
         }
     }
@@ -181,8 +174,13 @@ public class View {
      * @since 2.0
      */
     public final void add(final Element... elements) {
-        for (int i = 0; i < elements.length; ++i) {
-            add(elements[i]);
+        synchronized (elementLock) {
+            for (int i = 0; i < elements.length; ++i) {
+                if (elements[i] != null) {
+                    pendingInsertions.add(elements[i]);
+                    pendingRemovals.remove(elements[i]);
+                }
+            }
         }
     }
 
@@ -451,13 +449,8 @@ public class View {
     public final void remove(final Element element) {
         if (element != null) {
             synchronized (elementLock) {
-                if (elementLoop) {
-                    pendingInsertions.remove(element);
-                    pendingRemovals.add(element);
-                }
-                else {
-                    doRemove(element);
-                }
+                pendingInsertions.remove(element);
+                pendingRemovals.add(element);
             }
         }
     }
@@ -470,8 +463,13 @@ public class View {
      * @since 2.0
      */
     public final void remove(final Element... elements) {
-        for (int i = 0; i < elements.length; ++i) {
-            remove(elements[i]);
+        synchronized (elementLock) {
+            for (int i = 0; i < elements.length; ++i) {
+                if (elements[i] != null) {
+                    pendingInsertions.remove(elements[i]);
+                    pendingRemovals.add(elements[i]);
+                }
+            }
         }
     }
 
@@ -721,7 +719,6 @@ public class View {
 
     private void tick(final TickEvent event) {
         if (imp.isVisible()) {
-            elementLoop = true;
             updateElements();
             eventQueue.processEvents();
             foreground.setWorldTransformation(1f, 1f, 0f, 0f);
@@ -740,7 +737,6 @@ public class View {
                 elements[i].internalDraw(foreground);
             }
 
-            elementLoop = false;
             imp.update();
         }
     }
@@ -784,6 +780,8 @@ public class View {
                 elements = elementSet.toArray(new Element[elementSet.size()]);
                 Arrays.sort(elements, Element.DRAW_ORDER);
             }
+
+            elementLock.notifyAll();
         }
     }
 
