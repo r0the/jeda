@@ -49,6 +49,8 @@ interface BodyImp {
 
     float getDensity();
 
+    float getDirectionRad();
+
     float getFriction();
 
     org.jbox2d.dynamics.Body getJBoxBody();

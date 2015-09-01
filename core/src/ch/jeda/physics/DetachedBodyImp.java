@@ -141,6 +141,11 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
+    public float getDirectionRad() {
+        return MathF.atan2(vy, vx);
+    }
+
+    @Override
     public float getFriction() {
         return friction;
     }

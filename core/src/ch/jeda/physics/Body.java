@@ -17,6 +17,7 @@
 package ch.jeda.physics;
 
 import ch.jeda.Log;
+import ch.jeda.MathF;
 import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
@@ -276,6 +277,34 @@ public class Body extends Element {
      */
     public final float getDensity() {
         return imp.getDensity();
+    }
+
+    /**
+     * Returns the current direction of this body in degrees. The direction is derived from the body's velocity and
+     * indicates in which direction the body is moving. It is independent of the body's orientation indicated by
+     * {@link #getAngleDeg()}.
+     *
+     * @return the current direction of this body in degrees
+     *
+     * @see #getDirectionRad()
+     * @since 2.2
+     */
+    public final float getDirectionDeg() {
+        return MathF.toDegrees(imp.getDirectionRad());
+    }
+
+    /**
+     * Returns the current direction of this body in radians. The direction is derived from the body's velocity and
+     * indicates in which direction the body is moving. It is independent of the body's orientation indicated by
+     * {@link #getAngleDeg()}.
+     *
+     * @return the current direction of this body in radians
+     *
+     * @see #getDirectionDeg()
+     * @since 2.2
+     */
+    public final float getDirectionRad() {
+        return imp.getDirectionRad();
     }
 
     /**

@@ -155,6 +155,12 @@ final class PhysicsBodyImp implements BodyImp {
     }
 
     @Override
+    public float getDirectionRad() {
+        final Vec2 vec = imp.getLinearVelocity();
+        return MathF.atan2(vec.y, vec.x);
+    }
+
+    @Override
     public float getFriction() {
         return friction;
     }
