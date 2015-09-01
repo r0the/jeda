@@ -737,6 +737,10 @@ public class View {
                 elements[i].internalDraw(foreground);
             }
 
+            if (world) {
+                drawWorldOverlay(foreground);
+            }
+
             imp.update();
         }
     }
