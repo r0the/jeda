@@ -52,7 +52,7 @@ public final class DisplayMetrics {
      * @since 2.0
      */
     public int dpToPx(final float dp) {
-        return (int) (dp * 160f / dpi);
+        return (int) (dp * dpi / 160f);
     }
 
     /**
@@ -98,6 +98,6 @@ public final class DisplayMetrics {
      * @since 2.0
      */
     public float pxToDp(final float px) {
-        return px * dpi / 160f;
+        return px * 160f / dpi;
     }
 }
