@@ -37,6 +37,19 @@ public final class MathF {
     }
 
     /**
+     * Returns the arcus tangens of <code>y/x</code>.
+     *
+     * @param y the nomniator
+     * @param x the denominator
+     * @return the arcus tangens of <code>y/x</code>
+     *
+     * @since 2.2
+     */
+    public static float atan2(final float y, final float x) {
+        return (float) Math.atan2(y, x);
+    }
+
+    /**
      * Returns the cosine of <code>x</code>.
      *
      * @param x the argument
@@ -44,7 +57,7 @@ public final class MathF {
      *
      * @since 2.0
      */
-    public static final float cos(final float x) {
+    public static float cos(final float x) {
         return MathUtils.cos(x);
     }
 
@@ -72,7 +85,7 @@ public final class MathF {
      *
      * @since 2.0
      */
-    public static final float sin(final float x) {
+    public static float sin(final float x) {
         return MathUtils.sin(x);
     }
 
@@ -84,15 +97,31 @@ public final class MathF {
      *
      * @since 2.0
      */
-    public static final float sqrt(final float x) {
+    public static float sqrt(final float x) {
         return (float) StrictMath.sqrt(x);
     }
 
-    public static final float toDegrees(final float angleRad) {
+    /**
+     * Converts an angle measured in radians to an angle measured in degrees.
+     *
+     * @param angleRad the angle measured in radians
+     * @return the angle measured in degrees
+     *
+     * @since 2.0
+     */
+    public static float toDegrees(final float angleRad) {
         return (float) Math.toDegrees(angleRad);
     }
 
-    public static final float toRadians(final float angleDeg) {
+    /**
+     * Converts an angle measured in degrees to an angle measured in radians.
+     *
+     * @param angleDeg the angle measured in degrees
+     * @return the angle measured in radians
+     *
+     * @since 2.0
+     */
+    public static float toRadians(final float angleDeg) {
         return (float) Math.toRadians(angleDeg);
     }
 }
