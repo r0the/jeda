@@ -451,12 +451,12 @@ class JedaEngine implements Platform.Callback, Runnable {
 
         @Override
         public ImageImp flipHorizontally() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
         public ImageImp flipVertically() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
@@ -466,12 +466,12 @@ class JedaEngine implements Platform.Callback, Runnable {
 
         @Override
         public int getPixel(int x, int y) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
         public int[] getPixels(int x, int y, int width, int height) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
@@ -486,23 +486,22 @@ class JedaEngine implements Platform.Callback, Runnable {
 
         @Override
         public ImageImp rotateRad(double angle) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public boolean save(String path, Encoding encoding) {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
         public ImageImp scale(int width, int height) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
         public ImageImp subImage(int x, int y, int width, int height) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
-
-        @Override
-        public boolean write(OutputStream out, Encoding encoding) throws IOException {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
     }
 }

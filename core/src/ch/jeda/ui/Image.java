@@ -20,10 +20,6 @@ import ch.jeda.Log;
 import ch.jeda.JedaInternal;
 import ch.jeda.platform.CanvasImp;
 import ch.jeda.platform.ImageImp;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -257,30 +253,7 @@ public final class Image {
             return false;
         }
 
-        final java.io.File dir = new File(filePath).getParentFile();
-        if (dir != null) {
-            dir.mkdirs();
-        }
-
-        OutputStream out = null;
-        try {
-            out = new FileOutputStream(filePath);
-            return imp.write(out, FORMAT_MAP.get(extension));
-        }
-        catch (final IOException ex) {
-            Log.e(ex, "Error while saving image file '", filePath, "'.");
-            return false;
-        }
-        finally {
-            if (out != null) {
-                try {
-                    out.close();
-                }
-                catch (final IOException ex) {
-                    // ignore
-                }
-            }
-        }
+        return imp.save(filePath, FORMAT_MAP.get(extension));
     }
 
     /**

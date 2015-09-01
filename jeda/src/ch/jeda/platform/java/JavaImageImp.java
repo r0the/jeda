@@ -16,6 +16,7 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.Log;
 import ch.jeda.platform.ImageImp;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -23,6 +24,8 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Transparency;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import javax.imageio.ImageIO;
@@ -100,6 +103,34 @@ class JavaImageImp implements ImageImp {
     }
 
     @Override
+    public boolean save(final String path, final Encoding encoding) {
+        OutputStream out = null;
+        try {
+            final java.io.File dir = new File(path).getParentFile();
+            if (dir != null) {
+                dir.mkdirs();
+            }
+
+            out = new FileOutputStream(path);
+            return ImageIO.write(bufferedImage, convertEncoding(encoding), out);
+        }
+        catch (final IOException ex) {
+            Log.e(ex, "Error while saving image file '", path, "'.");
+            return false;
+        }
+        finally {
+            if (out != null) {
+                try {
+                    out.close();
+                }
+                catch (final IOException ex) {
+                    // ignore
+                }
+            }
+        }
+    }
+
+    @Override
     public ImageImp scale(final int width, final int height) {
         assert width > 0;
         assert height > 0;
@@ -117,11 +148,6 @@ class JavaImageImp implements ImageImp {
 
         return new JavaImageImp(
             bufferedImage.getSubimage(x, y, width, height));
-    }
-
-    @Override
-    public boolean write(final OutputStream out, final Encoding encoding) throws IOException {
-        return ImageIO.write(bufferedImage, convertEncoding(encoding), out);
     }
 
     private static String convertEncoding(final Encoding encoding) {

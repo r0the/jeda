@@ -16,9 +16,6 @@
  */
 package ch.jeda.platform;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 /**
  * <b>Internal</b>. Do not use this interface.
  */
@@ -45,9 +42,9 @@ public interface ImageImp {
 
     ImageImp rotateRad(double angle);
 
+    boolean save(final String path, final Encoding encoding);
+
     ImageImp scale(int width, int height);
 
     ImageImp subImage(int x, int y, int width, int height);
-
-    boolean write(OutputStream out, Encoding encoding) throws IOException;
 }

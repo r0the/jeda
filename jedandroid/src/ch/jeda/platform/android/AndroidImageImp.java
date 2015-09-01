@@ -19,7 +19,11 @@ package ch.jeda.platform.android;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.os.Environment;
+import ch.jeda.Log;
 import ch.jeda.platform.ImageImp;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -85,6 +89,32 @@ class AndroidImageImp implements ImageImp {
     }
 
     @Override
+    public boolean save(String path, Encoding encoding) {
+        OutputStream out = null;
+        try {
+            File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Jeda");
+            dir.mkdirs();
+            out = new FileOutputStream(new File(dir, path));
+            return bitmap.compress(convertEncoding(encoding), 100, out);
+        }
+        catch (final IOException ex) {
+            Log.e(ex, "Error while saving image file '", path, "'.");
+            return false;
+        }
+        finally {
+            if (out != null) {
+                try {
+                    out.close();
+                }
+                catch (final IOException ex) {
+                    // ignore
+                }
+            }
+        }
+
+    }
+
+    @Override
     public ImageImp scale(final int width, final int height) {
         assert width > 0;
         assert height > 0;
@@ -98,12 +128,6 @@ class AndroidImageImp implements ImageImp {
         assert height > 0;
 
         return new AndroidImageImp(Bitmap.createBitmap(bitmap, x, y, width, height));
-    }
-
-    @Override
-    public boolean write(final OutputStream out, final Encoding encoding)
-        throws IOException {
-        return bitmap.compress(convertEncoding(encoding), 100, out);
     }
 
     private static Bitmap.CompressFormat convertEncoding(Encoding encoding) {

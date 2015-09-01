@@ -69,18 +69,19 @@ class WindowManager {
         int width = viewRequest.getWidth();
         int height = viewRequest.getHeight();
         final BaseWindow window = new BaseWindow(this);
-        if (viewRequest.getFeatures().contains(ViewFeature.FULLSCREEN) && fullscreenWindow == null) {
-            DisplayMode displayMode = findDisplayMode(width, height);
-            width = displayMode.getWidth();
-            height = displayMode.getHeight();
+        final boolean fullscreen = viewRequest.getFeatures().contains(ViewFeature.FULLSCREEN) && fullscreenWindow == null;
+        if (fullscreen) {
             fullscreenWindow = window;
-            GRAPHICS_DEVICE.setFullScreenWindow(fullscreenWindow);
-            GRAPHICS_DEVICE.setDisplayMode(displayMode);
+            width = GRAPHICS_DEVICE.getDisplayMode().getWidth();
+            height = GRAPHICS_DEVICE.getDisplayMode().getHeight();
         }
 
         windows.add(window);
         viewRequest.setResult(new JavaViewImp(window, viewRequest.getCallback(), width, height,
                                               viewRequest.getFeatures()));
+        if (fullscreen) {
+            GRAPHICS_DEVICE.setFullScreenWindow(fullscreenWindow);
+        }
     }
 
     void shutdown() {
