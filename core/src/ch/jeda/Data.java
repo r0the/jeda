@@ -110,7 +110,7 @@ public class Data {
                 document = builder.parse(new InputSource(new StringReader(string)));
             }
             else {
-                document = builder.parse(JedaInternal.openResource(string));
+                document = builder.parse(JedaInternal.openInputStream(string));
             }
 
             element = document.getDocumentElement();

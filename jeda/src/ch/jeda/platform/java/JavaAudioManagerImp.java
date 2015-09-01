@@ -63,7 +63,7 @@ class JavaAudioManagerImp implements AudioManagerImp, LineListener {
         final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         try {
             final AudioInputStream in = AudioSystem.getAudioInputStream(
-                new BufferedInputStream(JedaInternal.openResource(path)));
+                new BufferedInputStream(JedaInternal.openInputStream(path)));
             AudioSystem.write(in, AudioFileFormat.Type.WAVE, buffer);
             soundMap.put(path, new SoundData(buffer.toByteArray()));
         }

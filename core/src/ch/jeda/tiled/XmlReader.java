@@ -38,7 +38,7 @@ class XmlReader {
             final XmlContentHandler contentHandler = new XmlContentHandler();
             xmlReader.setContentHandler(contentHandler);
             xmlReader.setEntityResolver(new TiledEntityResolver());
-            InputSource inputSource = new InputSource(JedaInternal.openResource(prefix + path));
+            InputSource inputSource = new InputSource(JedaInternal.openInputStream(prefix + path));
             xmlReader.parse(inputSource);
             return contentHandler.getRootElement();
         }

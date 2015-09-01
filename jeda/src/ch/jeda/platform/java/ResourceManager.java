@@ -45,7 +45,7 @@ class ResourceManager {
     }
 
     static TypefaceImp loadTypeface(final String path) {
-        final InputStream in = JedaInternal.openResource(path);
+        final InputStream in = JedaInternal.openInputStream(path);
         if (in == null) {
             return null;
         }
@@ -71,7 +71,7 @@ class ResourceManager {
     }
 
     static BufferedImage loadImage(final String path) {
-        final InputStream in = JedaInternal.openResource(path);
+        final InputStream in = JedaInternal.openInputStream(path);
         if (in == null) {
             return null;
         }

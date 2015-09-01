@@ -78,7 +78,7 @@ public class JedaInternal {
     /**
      * <b>Internal</b>. Do not use this method.
      */
-    public static InputStream openResource(final String path) {
+    public static InputStream openInputStream(final String path) {
         return ResourceManager.openInputStream(path);
     }
 }

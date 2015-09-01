@@ -55,7 +55,7 @@ class Mp3AudioPlayer extends AudioPlayer {
     @Override
     protected void playLoop() {
         try {
-            final BufferedInputStream bin = new BufferedInputStream(JedaInternal.openResource(path), STREAM_BUFFER_SIZE);
+            final BufferedInputStream bin = new BufferedInputStream(JedaInternal.openInputStream(path), STREAM_BUFFER_SIZE);
             decoder.play(path, bin);
         }
         catch (final IOException ex) {

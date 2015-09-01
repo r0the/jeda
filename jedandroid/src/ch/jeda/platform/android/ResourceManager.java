@@ -24,12 +24,8 @@ import ch.jeda.Log;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.TypefaceImp;
 import dalvik.system.DexFile;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -70,7 +66,7 @@ class ResourceManager {
     }
 
     ImageImp openImage(final String path) {
-        final InputStream in = JedaInternal.openResource(path);
+        final InputStream in = JedaInternal.openInputStream(path);
         if (in == null) {
             return null;
         }
