@@ -142,7 +142,11 @@ public final class PhysicsView extends View implements TickListener {
 
     @Override
     protected void drawWorldOverlay(final Canvas canvas) {
-        physics.drawDebugOverlay(canvas);
+        // May be called while physics is not initialized yet because the View subscribes to tick events
+        // already in the base constructor.
+        if (physics != null) {
+            physics.drawDebugOverlay(canvas);
+        }
     }
 
     @Override
