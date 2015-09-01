@@ -31,7 +31,6 @@ final class Physics {
     private final Set<Body> bodySet;
     private final PhysicsDebugDraw debugDraw;
     private final org.jbox2d.dynamics.World imp;
-    private final Set<Body> pendingInsertions;
     private Body[] bodies;
     private boolean debugging;
     private float scale;
@@ -46,7 +45,6 @@ final class Physics {
         imp.setContactFilter(new PhysicsContactFilter());
         // Set default gravity. If default gravity is zero, it cannot be changed later on.
         imp.setGravity(new Vec2(0f, -9.81f));
-        pendingInsertions = new HashSet<Body>();
         bodies = null;
         debugging = false;
         paused = false;
@@ -63,12 +61,9 @@ final class Physics {
             oldPhysics.remove(body);
         }
 
-        if (imp.isLocked()) {
-            pendingInsertions.add(body);
-        }
-        else {
-            doAdd(body);
-        }
+        bodySet.add(body);
+        bodies = null;
+        body.setPhysics(this);
     }
 
     public Body[] getBodies() {
@@ -93,7 +88,6 @@ final class Physics {
             return;
         }
 
-        pendingInsertions.remove(body);
         bodySet.remove(body);
         bodies = null;
         body.setPhysics(null);
@@ -121,12 +115,7 @@ final class Physics {
     }
 
     public void step(final double seconds) {
-        for (final Body body : pendingInsertions) {
-            doAdd(body);
-        }
-
         if (!paused) {
-
             imp.step((float) seconds, 6, 2);
             checkBodies();
             for (final Body body : bodies) {
@@ -137,21 +126,33 @@ final class Physics {
 
     org.jbox2d.dynamics.Body createJBoxBody(final BodyDef bodyDef) {
         if (imp.isLocked()) {
-            Log.e("Physics Engine is locked!");
+            Log.e("Cannot create body, physics Engine is locked!");
         }
 
         return imp.createBody(bodyDef);
     }
 
     org.jbox2d.dynamics.joints.Joint createJBoxJoint(final JointDef jointDef) {
+        if (imp.isLocked()) {
+            Log.e("Cannot create joint, physics Engine is locked!");
+        }
+
         return imp.createJoint(jointDef);
     }
 
     void destroyJBoxBody(final org.jbox2d.dynamics.Body jboxBody) {
+        if (imp.isLocked()) {
+            Log.e("Cannot destroy body, physics Engine is locked!");
+        }
+
         imp.destroyBody(jboxBody);
     }
 
     void destroyJBoxJoint(final org.jbox2d.dynamics.joints.Joint jboxJoint) {
+        if (imp.isLocked()) {
+            Log.e("Cannot destroy joint, physics Engine is locked!");
+        }
+
         imp.destroyJoint(jboxJoint);
     }
 
@@ -170,11 +171,5 @@ final class Physics {
         if (bodies == null) {
             bodies = bodySet.toArray(new Body[bodySet.size()]);
         }
-    }
-
-    private void doAdd(final Body body) {
-        bodySet.add(body);
-        bodies = null;
-        body.setPhysics(this);
     }
 }

@@ -24,6 +24,8 @@ import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Color;
 import ch.jeda.ui.Element;
 import ch.jeda.ui.Image;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents a body.
@@ -32,6 +34,7 @@ import ch.jeda.ui.Image;
  */
 public class Body extends Element {
 
+    private final Set<Joint> joints;
     private Color debugColor;
     private float height;
     private Image image;
@@ -80,6 +83,7 @@ public class Body extends Element {
      * @since 2.0
      */
     public Body() {
+        joints = new HashSet<Joint>();
         image = null;
         imp = new DetachedBodyImp();
         opacity = 255;
@@ -750,25 +754,20 @@ public class Body extends Element {
     protected void step(final double dt) {
     }
 
+    void addJoint(final Joint joint) {
+        joints.add(joint);
+    }
+
     org.jbox2d.dynamics.Body getJBoxBody() {
         return imp.getJBoxBody();
     }
 
-    boolean setPhysics(final Physics physics) {
-        if (imp.belongsTo(physics)) {
-            return false;
-        }
+    BodyImp getImp() {
+        return imp;
+    }
 
-        final BodyImp oldImp = imp;
-        if (physics == null) {
-            imp = new DetachedBodyImp(oldImp);
-        }
-        else {
-            imp = new PhysicsBodyImp(physics, this, oldImp);
-        }
-
-        oldImp.destroy();
-        return true;
+    Physics getPhysics() {
+        return imp.getPhysics();
     }
 
     void internalBeginContact(final Body other) {
@@ -783,11 +782,39 @@ public class Body extends Element {
         }
     }
 
-    BodyImp getImp() {
-        return imp;
+    void removeJoint(final Joint joint) {
+        joints.remove(joint);
     }
 
-    Physics getPhysics() {
-        return imp.getPhysics();
+    boolean setPhysics(final Physics physics) {
+        if (imp.belongsTo(physics)) {
+            return false;
+        }
+
+        final BodyImp oldImp = imp;
+        if (physics == null) {
+            imp = new DetachedBodyImp(oldImp);
+            checkJoints();
+        }
+        else {
+            imp = new PhysicsBodyImp(physics, this, oldImp);
+            checkJoints();
+        }
+
+        oldImp.destroy();
+        return true;
+    }
+
+    private void checkJoints() {
+        for (final Joint joint : joints) {
+            final Body otherBody = joint.getOtherBody(this);
+            final Physics physics = imp.getPhysics();
+            if (physics == otherBody.imp.getPhysics()) {
+                joint.setPhysics(physics);
+            }
+            else {
+                joint.setPhysics(null);
+            }
+        }
     }
 }

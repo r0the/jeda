@@ -16,8 +16,6 @@
  */
 package ch.jeda.physics;
 
-import ch.jeda.Log;
-
 /**
  * Represents a connection of two bodies. A joint imposes restrictions of movement and position on the two bodies.
  *
@@ -27,19 +25,20 @@ public abstract class Joint {
 
     private final Body bodyA;
     private final Body bodyB;
-    private final Physics physics;
-    private boolean destroyed;
 
     Joint(final Body bodyA, final Body bodyB) {
-        if (bodyA.getPhysics() == null || bodyB.getPhysics() == null) {
-            Log.e("Ein Body muss in eine PhysicsView eingefügt werden, bevor eine Verbindung erstellt werden kann.");
-            throw new IllegalStateException("Cannot create joint for detachted body.");
+        if (bodyA == null) {
+            throw new NullPointerException("bodyA");
+        }
+
+        if (bodyB == null) {
+            throw new NullPointerException("bodyB");
         }
 
         this.bodyA = bodyA;
         this.bodyB = bodyB;
-        this.physics = bodyA.getPhysics();
-        this.destroyed = false;
+        this.bodyA.addJoint(this);
+        this.bodyB.addJoint(this);
     }
 
     /**
@@ -48,8 +47,9 @@ public abstract class Joint {
      * @since 2.2
      */
     public final void destroy() {
-        physics.destroyJBoxJoint(getJBoxJoint());
-        destroyed = true;
+        setPhysics(null);
+        bodyA.removeJoint(this);
+        bodyB.removeJoint(this);
     }
 
     /**
@@ -74,20 +74,14 @@ public abstract class Joint {
         return bodyB;
     }
 
-    /**
-     * Checks if this joint has been destroyed.
-     *
-     * @return <code>true</code> if this joint has been destroyed, otherwise <code>false</code>
-     *
-     * @since 2.2
-     */
-    public final boolean isDestroyed() {
-        return destroyed;
+    Body getOtherBody(final Body body) {
+        if (body == bodyA) {
+            return bodyB;
+        }
+        else {
+            return bodyA;
+        }
     }
 
-    org.jbox2d.dynamics.joints.Joint createJBoxJoint(org.jbox2d.dynamics.joints.JointDef jointDef) {
-        return physics.createJBoxJoint(jointDef);
-    }
-
-    abstract org.jbox2d.dynamics.joints.Joint getJBoxJoint();
+    abstract boolean setPhysics(final Physics physics);
 }

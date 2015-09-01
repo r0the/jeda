@@ -15,7 +15,7 @@ public class PhysicsSamples extends Program {
     @Override
     public void run() {
         view = new PhysicsView(1400, 700, ViewFeature.USER_SCROLL, ViewFeature.USER_SCALE);
-        view.getBackground().setColor(Color.LIGHT_GREEN_200);
+        view.getBackground().setColor(Color.WHITE);
         view.getBackground().fill();
         view.setGravity(0, 0);
 
@@ -107,16 +107,34 @@ public class PhysicsSamples extends Program {
         body.setPosition(40, 10);
         view.add(body);
 
-        body = new Body();
+        body = new JointBody(0.5, -0.5, "bodyA");
         body.addShape(new Circle(0, 0, 1));
-        body.setPosition(10, 2);
-        Body bodyB = new UserBody();
+        body.setPosition(10, 12);
+        Body bodyB = new JointBody(-0.5, 0.5, "bodyB");
         bodyB.addShape(new Circle(0, 0, 1));
-        bodyB.setPosition(10, 6);
+        bodyB.setPosition(14, 12.5);
 
-        view.add(body, bodyB, new Box(view));
-        new Rod(body, bodyB);
-        view.setGravity(0, -1);
+//        view.add(body, bodyB, new Box(view));
+        new Rod(body, bodyB, 0.5, -0.5, -0.5, 0.5);
+    }
+}
+
+class JointBody extends Body {
+
+    private final double x;
+    private final double y;
+
+    public JointBody(double x, double y, String name) {
+        this.x = x;
+        this.y = y;
+        setName(name);
+    }
+
+    @Override
+    protected void drawDecoration(Canvas canvas) {
+        canvas.setColor(Color.RED_A700);
+        canvas.drawPolyline(0, 0, 0, y, x, y);
+        canvas.fillCircle(x, y, 0.1);
     }
 }
 
@@ -124,6 +142,7 @@ class DecoratedBody extends Body {
 
     @Override
     protected void drawDecoration(Canvas canvas) {
+        super.drawDecoration(canvas);
         canvas.setColor(Color.LIGHT_GREEN_900);
         canvas.setAlignment(Alignment.BOTTOM_LEFT);
         canvas.fillRectangle(0, 0, 2, 1);

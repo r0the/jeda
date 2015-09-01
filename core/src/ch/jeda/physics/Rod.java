@@ -16,10 +16,6 @@
  */
 package ch.jeda.physics;
 
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.joints.DistanceJoint;
-import org.jbox2d.dynamics.joints.DistanceJointDef;
-
 /**
  * A joint that connects two bodies widh a rod. Both bodies can rotate around their attachment point to the rod.
  *
@@ -27,14 +23,13 @@ import org.jbox2d.dynamics.joints.DistanceJointDef;
  */
 public final class Rod extends Joint {
 
-    private final DistanceJoint imp;
+    private RodImp imp;
 
     /**
      * Constructs a rod that connects the centers of two bodies.
      *
      * @param bodyA the first body to connect
      * @param bodyB the second body to connect
-     * @throws IllegalArgumentException if <code>bodyA</code> or <code>bodyB</code> are not in a physical simulation
      * @throws NullPointerException if <code>bodyA</code> or <code>bodyB</code> are <code>null</code>
      *
      * @since 2.2
@@ -52,7 +47,6 @@ public final class Rod extends Joint {
      * @param anchorAy the vertical local coordinate of the connection of the rod to the first body
      * @param anchorBx the horizontal local coordinate of the connection of the rod to the second body
      * @param anchorBy the vertical local coordinate of the connection of the rod to the second body
-     * @throws IllegalArgumentException if <code>bodyA</code> or <code>bodyB</code> are not in a physical simulation
      * @throws NullPointerException if <code>bodyA</code> or <code>bodyB</code> are <code>null</code>
      *
      * @since 2.2
@@ -60,14 +54,7 @@ public final class Rod extends Joint {
     public Rod(final Body bodyA, final Body bodyB, final double anchorAx, final double anchorAy,
                final double anchorBx, final double anchorBy) {
         super(bodyA, bodyB);
-        final org.jbox2d.dynamics.Body jboxBodyA = bodyA.getJBoxBody();
-        final org.jbox2d.dynamics.Body jboxBodyB = bodyB.getJBoxBody();
-        final DistanceJointDef def = new DistanceJointDef();
-        def.initialize(jboxBodyA, jboxBodyB,
-                       jboxBodyA.getWorldPoint(new Vec2((float) anchorAx, (float) anchorAy)),
-                       jboxBodyB.getWorldPoint(new Vec2((float) anchorBx, (float) anchorBy)));
-        def.collideConnected = true;
-        imp = (DistanceJoint) createJBoxJoint(def);
+        imp = new DetachedRodImp((float) anchorAx, (float) anchorAy, (float) anchorBx, (float) anchorBy);
     }
 
     /**
@@ -78,7 +65,7 @@ public final class Rod extends Joint {
      * @since 2.2
      */
     public float getAnchorAx() {
-        return imp.getLocalAnchorA().x;
+        return imp.getAnchorAx();
     }
 
     /**
@@ -89,7 +76,7 @@ public final class Rod extends Joint {
      * @since 2.2
      */
     public float getAnchorAy() {
-        return imp.getLocalAnchorA().y;
+        return imp.getAnchorAy();
     }
 
     /**
@@ -100,7 +87,7 @@ public final class Rod extends Joint {
      * @since 2.2
      */
     public float getAnchorBx() {
-        return imp.getLocalAnchorB().x;
+        return imp.getAnchorBx();
     }
 
     /**
@@ -111,7 +98,7 @@ public final class Rod extends Joint {
      * @since 2.2
      */
     public float getAnchorBy() {
-        return imp.getLocalAnchorA().y;
+        return imp.getAnchorBy();
     }
 
     /**
@@ -137,7 +124,20 @@ public final class Rod extends Joint {
     }
 
     @Override
-    org.jbox2d.dynamics.joints.Joint getJBoxJoint() {
-        return imp;
+    boolean setPhysics(final Physics physics) {
+        if (imp.belongsTo(physics)) {
+            return false;
+        }
+
+        final RodImp oldImp = imp;
+        if (physics == null) {
+            imp = new DetachedRodImp(oldImp);
+        }
+        else {
+            imp = new PhysicsRodImp(physics, this, oldImp);
+        }
+
+        oldImp.destroy();
+        return true;
     }
 }
