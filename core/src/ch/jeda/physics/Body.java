@@ -39,6 +39,7 @@ public class Body extends Element {
     private float height;
     private Image image;
     private BodyImp imp;
+    private boolean jointsDirty;
     private int opacity;
     private float width;
 
@@ -86,6 +87,7 @@ public class Body extends Element {
         joints = new HashSet<Joint>();
         image = null;
         imp = new DetachedBodyImp();
+        jointsDirty = false;
         opacity = 255;
     }
 
@@ -754,39 +756,49 @@ public class Body extends Element {
     protected void step(final double dt) {
     }
 
-    void addJoint(final Joint joint) {
+    final void addJoint(final Joint joint) {
         joints.add(joint);
+        jointsDirty = true;
     }
 
-    org.jbox2d.dynamics.Body getJBoxBody() {
+    final org.jbox2d.dynamics.Body getJBoxBody() {
         return imp.getJBoxBody();
     }
 
-    BodyImp getImp() {
+    final BodyImp getImp() {
         return imp;
     }
 
-    Physics getPhysics() {
+    final Physics getPhysics() {
         return imp.getPhysics();
     }
 
-    void internalBeginContact(final Body other) {
+    final void internalBeginContact(final Body other) {
         if (imp.getPhysics() != null && getView() != null) {
             beginContact(other);
         }
     }
 
-    void internalEndContact(final Body other) {
+    final void internalEndContact(final Body other) {
         if (imp.getPhysics() != null && getView() != null) {
             endContact(other);
         }
     }
 
-    void removeJoint(final Joint joint) {
+    final void internalStep(final double dt) {
+        if (jointsDirty) {
+            checkJoints();
+            jointsDirty = false;
+        }
+
+        step(dt);
+    }
+
+    final void removeJoint(final Joint joint) {
         joints.remove(joint);
     }
 
-    boolean setPhysics(final Physics physics) {
+    final boolean setPhysics(final Physics physics) {
         if (imp.belongsTo(physics)) {
             return false;
         }

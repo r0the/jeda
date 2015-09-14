@@ -119,7 +119,7 @@ final class Physics {
             imp.step((float) seconds, 6, 2);
             checkBodies();
             for (final Body body : bodies) {
-                body.step(seconds);
+                body.internalStep(seconds);
             }
         }
     }
