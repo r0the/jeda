@@ -1894,6 +1894,21 @@ public final class Color implements Serializable, Storable {
 
     /**
      * Constructs an RGB color. The values for the red, green, and blue components of the color can be specified. All
+     * values must be in the range from 0 to 255. Fractions are rounded down, values smaller than 0 are interpreted as
+     * 0, values greater than 255 are interpreted as 255.
+     *
+     * @param red the red component
+     * @param green the green component
+     * @param blue the blue component
+     *
+     * @since 2.3
+     */
+    public Color(final double red, final double green, final double blue) {
+        this((int) red, (int) green, (int) blue, 255);
+    }
+
+    /**
+     * Constructs an RGB color. The values for the red, green, and blue components of the color can be specified. All
      * values must be in the range from 0 to 255. Values smaller than 0 are interpreted as 0, values greater than 255
      * are interpreted as 255.
      *
@@ -1917,10 +1932,25 @@ public final class Color implements Serializable, Storable {
      * @param blue the blue component
      * @param alpha the opacity
      *
+     * @since 2.3
+     */
+    public Color(final double red, final double green, final double blue, final double alpha) {
+        this((int) red, (int) green, (int) blue, (int) alpha);
+    }
+
+    /**
+     * Constructs an RGBA color. The values for the red, green, blue, and alpha components of the color can be
+     * specified. All values must be in the range from 0 to 255. Values smaller than 0 are interpreted as 0, values
+     * greater than 255 are interpreted as 255.
+     *
+     * @param red the red component
+     * @param green the green component
+     * @param blue the blue component
+     * @param alpha the opacity
+     *
      * @since 1.0
      */
     public Color(final int red, final int green, final int blue, final int alpha) {
-
         value = (toRange(alpha) << 24) | (toRange(red) << 16) | (toRange(green) << 8) | toRange(blue);
     }
 
