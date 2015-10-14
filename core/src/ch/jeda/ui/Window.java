@@ -549,7 +549,7 @@ public class Window {
 
         if (text != null && !text.isEmpty()) {
             imp.getForeground().drawText(alignment.oldAlignX(x, imp.getForeground().measureLength(text, typeface.imp, textSize)),
-                                         alignment.oldAlignY(y, imp.getForeground().getTextHeight()), text);
+                                         alignment.oldAlignY(y, imp.getForeground().getFontMetrics().getLineHeight()), text);
         }
     }
 
@@ -1123,7 +1123,7 @@ public class Window {
             return 0;
         }
         else {
-            return imp.getForeground().getTextHeight();
+            return imp.getForeground().getFontMetrics().getLineHeight();
         }
     }
 

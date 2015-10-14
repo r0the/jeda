@@ -18,12 +18,12 @@ package ch.jeda.platform.java;
 
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.CanvasImp;
+import ch.jeda.platform.FontMetrics;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.ui.Color;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Polygon;
@@ -119,7 +119,7 @@ class JavaCanvasImp implements CanvasImp {
         assert text != null;
 
         final TextLayout textLayout = textLayout(text, graphics.getFont());
-        FontMetrics fm = graphics.getFontMetrics();
+        java.awt.FontMetrics fm = graphics.getFontMetrics();
         textLayout.draw(graphics, x, (int) (y + fm.getMaxAscent()));
     }
 
@@ -157,14 +157,13 @@ class JavaCanvasImp implements CanvasImp {
     }
 
     @Override
-    public int getHeight() {
-        return bitmap.getHeight();
+    public FontMetrics getFontMetrics() {
+        return new JavaFontMetrics(graphics.getFontMetrics());
     }
 
     @Override
-    public int getTextHeight() {
-        FontMetrics fm = graphics.getFontMetrics();
-        return fm.getMaxAscent() + fm.getMaxDescent();
+    public int getHeight() {
+        return bitmap.getHeight();
     }
 
     @Override
@@ -258,12 +257,12 @@ class JavaCanvasImp implements CanvasImp {
     private TextLayout textLayout(final String text, final Font font) {
         final FontRenderContext frc = graphics.getFontRenderContext();
         if (!textLayoutCache.containsKey(frc)) {
-            textLayoutCache.put(frc, new HashMap());
+            textLayoutCache.put(frc, new HashMap<java.awt.Font, Map<String, TextLayout>>());
         }
 
         final Map<java.awt.Font, Map<String, TextLayout>> cacheByFont = textLayoutCache.get(frc);
         if (!cacheByFont.containsKey(font)) {
-            cacheByFont.put(font, new HashMap());
+            cacheByFont.put(font, new HashMap<String, TextLayout>());
         }
 
         final Map<String, TextLayout> byText = cacheByFont.get(font);

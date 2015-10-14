@@ -16,6 +16,12 @@ public class CanvasSamples extends Program {
         canvas.setLineWidth(2);
 
         clear();
+        canvas.setAlignment(Alignment.BOTTOM_LEFT);
+        canvas.drawText(100, 50, "Text can be drawn on\nmultiple lines.");
+        markPoint(100, 50, "(x, y)");
+        sleep(100000);
+
+        clear();
         markPoint(200, 150, "(x, y)");
         markLine(200, 150, 200 + 100 * Math.cos(0.75 * Math.PI), 150 + 100 * Math.sin(0.75 * Math.PI), "r");
         canvas.drawCircle(200, 150, 100);

@@ -20,6 +20,7 @@ import ch.jeda.Jeda;
 import ch.jeda.JedaInternal;
 import ch.jeda.Log;
 import ch.jeda.platform.CanvasImp;
+import ch.jeda.platform.FontMetrics;
 import java.util.EnumMap;
 
 /**
@@ -550,9 +551,14 @@ public class Canvas {
         if (text != null && !text.isEmpty()) {
             x = x * sx + tx;
             y = y * sy + ty;
-            final float width = imp.measureLength(text, typeface.imp, textSize * canvasToDevice);
-            final float height = imp.getTextHeight();
-            imp.drawText(alignX(x, width), alignY(y, height), text);
+            final String[] lines = text.split("\n");
+            final float width = internalTextWidth(lines);
+            final float height = internalTextHeight(lines);
+            final FontMetrics fm = imp.getFontMetrics();
+            for (int i = 0; i < lines.length; ++i) {
+                imp.drawText(alignX(x, width), alignY(y, height), lines[i]);
+                y = y + fm.getLineHeight();
+            }
         }
     }
 
@@ -1067,7 +1073,7 @@ public class Canvas {
             return 0;
         }
         else {
-            return imp.getTextHeight();
+            return internalTextHeight(text.split("\n"));
         }
     }
 
@@ -1085,7 +1091,7 @@ public class Canvas {
             return 0;
         }
         else {
-            return imp.measureLength(text, typeface.imp, textSize * canvasToDevice);
+            return internalTextWidth(text.split("\n"));
         }
     }
 
@@ -1159,5 +1165,19 @@ public class Canvas {
 
     float deviceToCanvasY(final float y) {
         return (pixelsY - y) * deviceToCanvas;
+    }
+
+    private int internalTextHeight(final String[] lines) {
+        final FontMetrics fm = imp.getFontMetrics();
+        return lines.length * fm.getLineHeight() + (lines.length - 1) * fm.getLeading();
+    }
+
+    private int internalTextWidth(final String[] lines) {
+        int result = 0;
+        for (int i = 0; i < lines.length; ++i) {
+            result = Math.max(result, imp.measureLength(lines[i], typeface.imp, textSize * canvasToDevice));
+        }
+
+        return result;
     }
 }

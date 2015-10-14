@@ -26,6 +26,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import ch.jeda.MathF;
 import ch.jeda.platform.CanvasImp;
+import ch.jeda.platform.FontMetrics;
 import ch.jeda.platform.ImageImp;
 import ch.jeda.platform.TypefaceImp;
 import ch.jeda.ui.Color;
@@ -147,9 +148,8 @@ class AndroidCanvasImp implements CanvasImp {
     }
 
     @Override
-    public int getTextHeight() {
-        Paint.FontMetricsInt fm = textPaint.getFontMetricsInt();
-        return fm.bottom - fm.top;
+    public FontMetrics getFontMetrics() {
+        return new AndroidFontMetrics(textPaint.getFontMetricsInt());
     }
 
     @Override

@@ -45,9 +45,9 @@ public interface CanvasImp {
 
     void fillRectangle(float x, float y, float width, float height);
 
-    int getHeight();
+    FontMetrics getFontMetrics();
 
-    int getTextHeight();
+    int getHeight();
 
     Color getPixel(int x, int y);
 
