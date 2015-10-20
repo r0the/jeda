@@ -16,8 +16,6 @@
  */
 package ch.jeda.physics;
 
-import ch.jeda.event.TickEvent;
-import ch.jeda.event.TickListener;
 import ch.jeda.ui.Canvas;
 import ch.jeda.ui.Element;
 import ch.jeda.ui.View;
@@ -27,8 +25,9 @@ import ch.jeda.ui.ViewFeature;
  * A view with an integraged physics simulation.
  *
  * @since 2.0
+ * @version 2
  */
-public final class PhysicsView extends View implements TickListener {
+public final class PhysicsView extends View {
 
     private static final int DEFAULT_HEIGHT = 600;
     private static final int DEFAULT_WIDTH = 800;
@@ -132,14 +131,6 @@ public final class PhysicsView extends View implements TickListener {
         physics.setGravity(ax, ay);
     }
 
-    public final void setPaused(final boolean paused) {
-        physics.setPaused(paused);
-    }
-
-    public void step(final double seconds) {
-        physics.step(seconds);
-    }
-
     @Override
     protected void drawWorldOverlay(final Canvas canvas) {
         // May be called while physics is not initialized yet because the View subscribes to tick events
@@ -164,7 +155,7 @@ public final class PhysicsView extends View implements TickListener {
     }
 
     @Override
-    public void onTick(final TickEvent event) {
-        step(event.getDuration());
+    protected void step(final double dt) {
+        physics.step(dt);
     }
 }

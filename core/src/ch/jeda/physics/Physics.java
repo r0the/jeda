@@ -34,7 +34,6 @@ final class Physics {
     private Body[] bodies;
     private boolean debugging;
     private float scale;
-    private boolean paused;
 
     public Physics() {
         bodySet = new HashSet<Body>();
@@ -47,7 +46,6 @@ final class Physics {
         imp.setGravity(new Vec2(0f, -9.81f));
         bodies = null;
         debugging = false;
-        paused = false;
         scale = 100f;
     }
 
@@ -79,10 +77,6 @@ final class Physics {
         return debugging;
     }
 
-    public boolean isPaused() {
-        return paused;
-    }
-
     public void remove(final Body body) {
         if (body == null || !bodySet.contains(body)) {
             return;
@@ -110,17 +104,11 @@ final class Physics {
         this.scale = scale;
     }
 
-    public void setPaused(final boolean paused) {
-        this.paused = paused;
-    }
-
     public void step(final double seconds) {
-        if (!paused) {
-            imp.step((float) seconds, 6, 2);
-            checkBodies();
-            for (final Body body : bodies) {
-                body.internalStep(seconds);
-            }
+        imp.step((float) seconds, 6, 2);
+        checkBodies();
+        for (final Body body : bodies) {
+            body.checkJoints();
         }
     }
 

@@ -54,6 +54,7 @@ import java.util.Set;
  * the y axis points upwards.
  *
  * @since 2.0
+ * @version 2
  */
 public class View {
 
@@ -75,6 +76,7 @@ public class View {
     private boolean elementsChanged;
     private Canvas foreground;
     private ViewImp imp;
+    private boolean paused;
     private float scale;
     private String title;
     private float translationX;
@@ -141,6 +143,7 @@ public class View {
         pendingRemovals = new HashSet<Element>();
         elements = new Element[0];
         elementsChanged = false;
+        paused = false;
         scale = 0.01f;
         title = Jeda.getProgramName();
         userControl = new UserControl(this);
@@ -489,6 +492,8 @@ public class View {
      * translation of this view in order to keep the specified point fixed.
      *
      * @param factor the factor
+     * @param centerX the horizontal coordinate of the fixed point
+     * @param centerY the vertical coordinate of the fixed point
      *
      * @since 2.0
      */
@@ -501,6 +506,8 @@ public class View {
      * translation of this view in order to keep the specified point fixed.
      *
      * @param factor the factor
+     * @param centerX the horizontal coordinate of the fixed point
+     * @param centerY the vertical coordinate of the fixed point
      *
      * @since 2.0
      */
@@ -564,6 +571,17 @@ public class View {
         }
 
         imp.setMouseCursor(mouseCursor);
+    }
+
+    /**
+     * Pauses or resumes the simulation.
+     *
+     * @param paused <code>true</code> to pause the simulation, <code>false</code> to resume it
+     *
+     * @since 2.3
+     */
+    public void setPaused(final boolean paused) {
+        this.paused = paused;
     }
 
     /**
@@ -658,9 +676,20 @@ public class View {
      * coordinates.
      *
      * @param canvas the canvas to draw on
+     *
      * @since 2.2
      */
     protected void drawWorldOverlay(final Canvas canvas) {
+    }
+
+    /**
+     * Performs a simulation step.
+     *
+     * @param dt the duration of this step in seconds
+     *
+     * @since 2.3
+     */
+    protected void step(final double dt) {
     }
 
     void addName(final Element element, final String name) {
@@ -719,8 +748,16 @@ public class View {
 
     private void tick(final TickEvent event) {
         if (imp.isVisible()) {
+            final double dt = event.getDuration();
             updateElements();
             eventQueue.processEvents();
+            if (!paused) {
+                step(dt);
+                for (int i = 0; i < elements.length; ++i) {
+                    elements[i].step(dt);
+                }
+            }
+
             foreground.setWorldTransformation(1f, 1f, 0f, 0f);
             foreground.setOpacity(255);
             foreground.setAlignment(Alignment.BOTTOM_LEFT);

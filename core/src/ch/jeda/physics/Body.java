@@ -761,6 +761,25 @@ public class Body extends Element {
         jointsDirty = true;
     }
 
+    void checkJoints() {
+        if (!jointsDirty) {
+            return;
+        }
+
+        for (final Joint joint : joints) {
+            final Body otherBody = joint.getOtherBody(this);
+            final Physics physics = imp.getPhysics();
+            if (physics == otherBody.imp.getPhysics()) {
+                joint.setPhysics(physics);
+            }
+            else {
+                joint.setPhysics(null);
+            }
+        }
+
+        jointsDirty = false;
+    }
+
     final org.jbox2d.dynamics.Body getJBoxBody() {
         return imp.getJBoxBody();
     }
@@ -785,15 +804,6 @@ public class Body extends Element {
         }
     }
 
-    final void internalStep(final double dt) {
-        if (jointsDirty) {
-            checkJoints();
-            jointsDirty = false;
-        }
-
-        step(dt);
-    }
-
     final void removeJoint(final Joint joint) {
         joints.remove(joint);
     }
@@ -815,18 +825,5 @@ public class Body extends Element {
 
         oldImp.destroy();
         return true;
-    }
-
-    private void checkJoints() {
-        for (final Joint joint : joints) {
-            final Body otherBody = joint.getOtherBody(this);
-            final Physics physics = imp.getPhysics();
-            if (physics == otherBody.imp.getPhysics()) {
-                joint.setPhysics(physics);
-            }
-            else {
-                joint.setPhysics(null);
-            }
-        }
     }
 }

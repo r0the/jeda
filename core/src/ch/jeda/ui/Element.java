@@ -258,11 +258,11 @@ public abstract class Element {
      * Draws the element. This method is called by the {@link ch.jeda.ui.Window} whenever the element needs to be drawn.
      * Override this method to draw the element.
      *
-     * @param canvas the canvas on which the element should be drawn.
+     * @param c the canvas on which the element should be drawn.
      *
      * @since 2.0
      */
-    protected abstract void draw(final Canvas canvas);
+    protected abstract void draw(final Canvas c);
 
     /**
      * Returns the view containing the element. Returns <tt>null</tt> if the element has not yet been added to a view.
@@ -273,6 +273,16 @@ public abstract class Element {
      */
     protected final View getView() {
         return view;
+    }
+
+    /**
+     * Invoked for every step in the simulation. Override this method to add new behaviour.
+     *
+     * @param dt the duration of this step in seconds
+     *
+     * @since 2.3
+     */
+    protected void step(final double dt) {
     }
 
     void addToView(final View view) {
