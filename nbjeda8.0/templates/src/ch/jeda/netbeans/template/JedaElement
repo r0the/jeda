@@ -1,0 +1,22 @@
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import ch.jeda.*;
+import ch.jeda.event.*;
+import ch.jeda.ui.*;
+
+public class ${name} extends Element {
+
+    public ${name}() {
+        setDrawOrder(0);
+    }
+
+    @Override
+    protected void draw(Canvas c) {
+    }
+
+    @Override
+    protected void step(double dt) {
+    }
+}
