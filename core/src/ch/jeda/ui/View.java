@@ -74,6 +74,7 @@ public class View {
     private Canvas background;
     private Element[] elements;
     private boolean elementsChanged;
+    private Element followElement;
     private Canvas foreground;
     private ViewImp imp;
     private boolean paused;
@@ -357,6 +358,17 @@ public class View {
     }
 
     /**
+     * Returns the element the view is currently following.
+     *
+     * @return the element the view is currently following
+     *
+     * @since 2.3
+     */
+    public Element getFollowElement() {
+        return followElement;
+    }
+
+    /**
      * Returns the height of this view in device-independent pixels (dp).
      *
      * @return the height of this view in dp
@@ -557,6 +569,19 @@ public class View {
     }
 
     /**
+     * Sets the element which the view should automatially follow. While the element is part of the world, the view will
+     * always follow the element, so the element will appear to rest in the center of the view. Call this method with
+     * <code>null</code> to stop following an element.
+     *
+     * @param element the element to follow
+     *
+     * @since 2.3
+     */
+    public final void setFollowElement(final Element element) {
+        this.followElement = element;
+    }
+
+    /**
      * Sets the shape of the mouse cursor.
      *
      * @param mouseCursor new shape of mouse cursor
@@ -714,6 +739,13 @@ public class View {
         eventQueue.addEvent(event);
     }
 
+    private void checkFollowElement() {
+        if (followElement != null && followElement.getView() == this && !followElement.isPinned()) {
+            translationX = getWidthM() / 2f - followElement.getX();
+            translationY = getHeightM() / 2f - followElement.getY();
+        }
+    }
+
     private void doAdd(final Element element) {
         if (elementSet.add(element)) {
             addEventListener(element);
@@ -758,6 +790,7 @@ public class View {
                 }
             }
 
+            checkFollowElement();
             foreground.setWorldTransformation(1f, 1f, 0f, 0f);
             foreground.setOpacity(255);
             foreground.setAlignment(Alignment.BOTTOM_LEFT);
