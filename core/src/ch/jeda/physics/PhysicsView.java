@@ -156,6 +156,8 @@ public final class PhysicsView extends View {
 
     @Override
     protected void step(final double dt) {
-        physics.step(dt);
+        if (physics != null) {
+            physics.step(dt);
+        }
     }
 }
