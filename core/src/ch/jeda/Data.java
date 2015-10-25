@@ -60,6 +60,7 @@ public class Data {
     private static final float DEFAULT_FLOAT = 0f;
     private static final int DEFAULT_INT = 0;
     private static final Key DEFAULT_KEY = Key.UNDEFINED;
+    private static final long DEFAULT_LONG = 0l;
     private static final String DEFAULT_STRING = null;
     private static final char NEXT_LINE = 0x0085;
     private static final char LINE_SEPARATOR = 0x2028;
@@ -323,11 +324,11 @@ public class Data {
     }
 
     /**
-     * Returns the value associated with the specified name as a <code>float</code>. Returns <code>0.0</code>, if there
+     * Returns the value associated with the specified name as a <code>float</code>. Returns <code>0f</code>, if there
      * is no valid <code>float</code> value associated with the name.
      *
      * @param name the name of the value to retrieve
-     * @return the <code>float</code> value associated with the name or <code>defaultValue</code>
+     * @return the <code>float</code> value associated with the name or <code>0f</code>
      *
      * @since 2.0
      */
@@ -525,6 +526,72 @@ public class Data {
             catch (final IllegalArgumentException ex) {
                 result[i] = defaultValue;
             }
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns the value associated with the specified name as an <code>long</code>. Returns <code>0l</code>, if there
+     * is no valid <code>long</code> value associated with the name.
+     *
+     * @param name the name of the value to retrieve
+     * @return the <code>long</code> value associated with the name or <code>0l</code>
+     *
+     * @since 2.4
+     */
+    public final long readLong(final String name) {
+        return readLong(name, DEFAULT_LONG);
+    }
+
+    /**
+     * Returns the value associated with the specified name as an <code>long</code>. Returns <code>defaultValue</code>,
+     * if there is no valid <code>long</code> value associated with the name.
+     *
+     * @param name the name of the value to retrieve
+     * @param defaultValue the default value
+     * @return the <code>long</code> value associated with the name or <code>defaultValue</code>
+     *
+     * @since 2.4
+     */
+    public final long readLong(final String name, final long defaultValue) {
+        final Node child = getFirstElementByTagName(name);
+        if (child == null) {
+            return defaultValue;
+        }
+        else {
+            return Convert.toLong(child.getTextContent(), defaultValue);
+        }
+    }
+
+    /**
+     * Returns the array associated with the specified name. Returns an empty array, if there is no valid array
+     * associated with the name.
+     *
+     * @param name the name of the array to retrieve
+     * @return the array associated with the name.
+     *
+     * @since 2.4
+     */
+    public long[] readLongs(final String name) {
+        return readLongs(name, DEFAULT_LONG);
+    }
+
+    /**
+     * Returns the array associated with the specified name. Returns an empty array, if there is no valid array
+     * associated with the name.
+     *
+     * @param name the name of the array to retrieve
+     * @param defaultValue the default value
+     * @return the array associated with the name.
+     *
+     * @since 2.4
+     */
+    public long[] readLongs(final String name, final long defaultValue) {
+        final NodeList nodes = element.getElementsByTagName(name);
+        final long[] result = new long[nodes.getLength()];
+        for (int i = 0; i < result.length; ++i) {
+            result[i] = Convert.toLong(nodes.item(i).getTextContent(), defaultValue);
         }
 
         return result;
@@ -955,6 +1022,52 @@ public class Data {
         remove(name);
         for (int i = 0; i < values.length; ++i) {
             addElement(name, values[i].toString());
+        }
+    }
+
+    /**
+     * Stores the specified value with the specified name in the data object. Overwrites any previously stored value
+     * with the same name.
+     *
+     * @param name the name of the value
+     * @param value the value to store
+     * @throws NullPointerException if <code>name</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
+     *
+     * @since 2.4
+     */
+    public void writeLong(final String name, final long value) {
+        if (name == null) {
+            throw new NullPointerException("name");
+        }
+
+        remove(name);
+        addElement(name, Convert.toString(value));
+    }
+
+    /**
+     * Stores the specified array with the specified name in the data object. Overwrites any previously stored value
+     * with the same name.
+     *
+     * @param name the name of the value
+     * @param values the array of values to store
+     * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
+     *
+     * @since 1.2
+     */
+    public void writeLongs(final String name, final long[] values) {
+        if (name == null) {
+            throw new NullPointerException("name");
+        }
+
+        if (values == null) {
+            throw new NullPointerException("values");
+        }
+
+        remove(name);
+        for (int i = 0; i < values.length; ++i) {
+            addElement(name, Convert.toString(values[i]));
         }
     }
 

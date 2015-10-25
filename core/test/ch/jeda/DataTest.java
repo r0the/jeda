@@ -102,6 +102,28 @@ public class DataTest {
     }
 
     @Test
+    public void longTest() {
+        final Data data = new Data();
+        // test read/write
+        data.writeLong(KEY, 42l);
+        assertEquals(42l, data.readLong(KEY));
+        assertEquals("<data><key>42</key></data>", data.toLine());
+        data.writeLong(KEY, Long.MIN_VALUE);
+        assertEquals(Long.MIN_VALUE, data.readLong(KEY));
+        assertEquals("<data><key>-9223372036854775808</key></data>", data.toLine());
+        // test default value for invalid value
+        data.writeString(KEY, "not a long");
+        assertEquals(-42l, data.readLong(KEY, -42l));
+        // test default value for non-existing key
+        assertEquals(-42l, data.readLong(NO_KEY, -42l));
+        // test default default value
+        assertEquals(0l, data.readLong(NO_KEY));
+        // test reading of null value
+        data.writeString(KEY, null);
+        assertEquals(0l, data.readLong(KEY));
+    }
+
+    @Test
     public void stringTest() {
         final Data data = new Data();
         // test read/write

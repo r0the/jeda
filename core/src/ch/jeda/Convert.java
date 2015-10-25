@@ -89,6 +89,7 @@ public final class Convert {
      * @param defaultValue the default value
      * @return the <code>double</code> value represented by <code>value</code> or the <code>defaultValue</code>
      *
+     * @see #toString(double)
      * @since 1.2
      */
     public static double toDouble(final String value, final double defaultValue) {
@@ -129,6 +130,7 @@ public final class Convert {
      * @param defaultValue the default value
      * @return the <code>int</code> value represented by <code>value</code> or the <code>defaultValue</code>
      *
+     * @see #toString(int)
      * @since 1.2
      */
     public static int toInt(final String value, final int defaultValue) {
@@ -204,6 +206,27 @@ public final class Convert {
     }
 
     /**
+     * Converts a @{link java.lang.String} to an <code>long</code> value. Returns the <code>long</code> value
+     * represented by the {@link java.lang.String}. Returns the <code>defaultValue</code>, if <code>value</code> does
+     * not represent a valid <code>long</code>.
+     *
+     * @param value the string to be converted to a <code>long</code>
+     * @param defaultValue the default value
+     * @return the <code>long</code> value represented by <code>value</code> or the <code>defaultValue</code>
+     *
+     * @see #toString(long)
+     * @since 2.4
+     */
+    public static long toLong(final String value, final long defaultValue) {
+        try {
+            return Long.parseLong(value);
+        }
+        catch (final NumberFormatException ex) {
+            return defaultValue;
+        }
+    }
+
+    /**
      * Converts a <code>boolean</code> value to a {@link java.lang.String}. Converts <code>true</code> to the string
      * <code>"true"</code> and <code>false</code> to the string <code>"false"</code>.
      *
@@ -268,6 +291,19 @@ public final class Convert {
      * @since 1.2
      */
     public static String toString(final int value) {
+        return String.valueOf(value);
+    }
+
+    /**
+     * Converts an <code>long</code> value to a {@link java.lang.String}.
+     *
+     * @param value the <code>long</code> value to be converted
+     * @return the {@link java.lang.String} representing the <code>value</code>
+     *
+     * @see #toLong(java.lang.String, long)
+     * @since 2.4
+     */
+    public static String toString(final long value) {
         return String.valueOf(value);
     }
 
