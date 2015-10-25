@@ -24,6 +24,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.xml.parsers.DocumentBuilder;
@@ -622,36 +624,29 @@ public class Data {
      *
      * @since 1.2
      */
-    @SuppressWarnings("unchecked")
     public <T extends Storable> T readObject(final String name, final T defaultValue) {
-        final Element child = (Element) getFirstElementByTagName(name);
-        final String className = child.getAttribute("class");
-        try {
-            final Class clazz = Class.forName(className);
-            final Constructor ctor = clazz.getConstructor(Data.class);
-            ctor.setAccessible(true);
-            return (T) ctor.newInstance(new Data(document, child));
-        }
-        catch (final NoSuchMethodException ex) {
-            Log.e(ex, "Error while reading serialized data: Class '", className, "' does not have a matching constructor.");
-        }
-        catch (final ClassNotFoundException ex) {
-            Log.e(ex, "Error while reading serialized data: Class '", className, "' not found.");
-        }
-        catch (final InstantiationException ex) {
-            Log.e(ex, "Error while reading serialized data: Cannot create object of class '", className, "'.");
-        }
-        catch (final IllegalAccessException ex) {
-            Log.e(ex, "Error while reading serialized data: Constructor of class '", className, "' is not public.");
-        }
-        catch (final ExceptionInInitializerError ex) {
-            Log.e(ex.getCause(), "Error while reading serialized data: Error while initializing class '", className, "'.");
-        }
-        catch (final InvocationTargetException ex) {
-            Log.w(ex.getCause(), "Error while reading serialized data: Error while creating object of class '", className, "'.");
+        return doReadObject((Element) getFirstElementByTagName(name), defaultValue);
+    }
+
+    /**
+     * Reads a list of {@link ch.jeda.Storable} objects with the specified name. Creates a list of new objects from the
+     * information stored in this data.
+     *
+     * @param <T> the class of the objects to return
+     * @param name the name of the objects to retrieve
+     * @return the list of {@link ch.jeda.Storable} object associated with the name
+     *
+     * @since 2.4
+     */
+    public final <T extends Storable> List<T> readObjectList(final String name) {
+        final List<T> result = new ArrayList<T>();
+        final NodeList nodes = element.getElementsByTagName(name);
+        for (int i = 0; i < nodes.getLength(); ++i) {
+            final T object = doReadObject((Element) nodes.item(i), null);
+            result.add(object);
         }
 
-        return defaultValue;
+        return result;
     }
 
     /**
@@ -1093,6 +1088,7 @@ public class Data {
     /**
      * Stores an array of {@link ch.jeda.Storable} objects in the data object.
      *
+     * @param <T> the class of objects to store
      * @param name the name of the array
      * @param values the array of {@link ch.jeda.Storable} objects to store
      * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
@@ -1100,7 +1096,7 @@ public class Data {
      *
      * @since 1.2
      */
-    public void writeObjects(final String name, final Storable[] values) {
+    public <T extends Storable> void writeObjects(final String name, final T[] values) {
         if (name == null) {
             throw new NullPointerException("name");
         }
@@ -1112,6 +1108,32 @@ public class Data {
         remove(name);
         for (int i = 0; i < values.length; ++i) {
             doWriteObject(name, values[i]);
+        }
+    }
+
+    /**
+     * Stores a list of {@link ch.jeda.Storable} objects in the data object.
+     *
+     * @param <T> the class of objects to store
+     * @param name the name of the list
+     * @param values the array of {@link ch.jeda.Storable} objects to store
+     * @throws NullPointerException if <code>name</code> or <code>values</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>name</code> is not a valid XML name
+     *
+     * @since 2.4
+     */
+    public <T extends Storable> void writeObjectList(final String name, final List<T> values) {
+        if (name == null) {
+            throw new NullPointerException("name");
+        }
+
+        if (values == null) {
+            throw new NullPointerException("values");
+        }
+
+        remove(name);
+        for (int i = 0; i < values.size(); ++i) {
+            doWriteObject(name, values.get(i));
         }
     }
 
@@ -1186,6 +1208,37 @@ public class Data {
         catch (final DOMException ex) {
             throw new IllegalArgumentException("name", ex);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Storable> T doReadObject(final Element element, final T defaultValue) {
+        final String className = element.getAttribute("class");
+        try {
+            final Class clazz = Class.forName(className);
+            final Constructor ctor = clazz.getConstructor(Data.class);
+            ctor.setAccessible(true);
+            return (T) ctor.newInstance(new Data(document, element));
+        }
+        catch (final NoSuchMethodException ex) {
+            Log.e(ex, "Error while reading serialized data: Class '", className, "' does not have a matching constructor.");
+        }
+        catch (final ClassNotFoundException ex) {
+            Log.e(ex, "Error while reading serialized data: Class '", className, "' not found.");
+        }
+        catch (final InstantiationException ex) {
+            Log.e(ex, "Error while reading serialized data: Cannot create object of class '", className, "'.");
+        }
+        catch (final IllegalAccessException ex) {
+            Log.e(ex, "Error while reading serialized data: Constructor of class '", className, "' is not public.");
+        }
+        catch (final ExceptionInInitializerError ex) {
+            Log.e(ex.getCause(), "Error while reading serialized data: Error while initializing class '", className, "'.");
+        }
+        catch (final InvocationTargetException ex) {
+            Log.w(ex.getCause(), "Error while reading serialized data: Error while creating object of class '", className, "'.");
+        }
+
+        return defaultValue;
     }
 
     private void doWriteObject(final String name, final Storable value) {

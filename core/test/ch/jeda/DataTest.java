@@ -2,6 +2,8 @@ package ch.jeda;
 
 import ch.jeda.event.Key;
 import ch.jeda.ui.Color;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -158,6 +160,17 @@ public class DataTest {
         data.writeInts(KEY, squares);
         assertEquals(1, data.readInt(KEY));
         assertArrayEquals(squares, data.readInts(KEY));
+    }
+
+    @Test
+    public void objectListTest() {
+        final Data data = new Data();
+        final List<Color> colors = new ArrayList<Color>();
+        colors.add(Color.RED);
+        colors.add(Color.BLUE);
+        colors.add(Color.GREEN);
+        data.writeObjectList("Colors", colors);
+        assertEquals(colors, data.readObjectList("Colors"));
     }
 
     @Test
