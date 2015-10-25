@@ -111,7 +111,6 @@ public final class TiledMap {
     public void addTo(final PhysicsView view) {
         view.getBackground().setColor(getBackgroundColor());
         view.getBackground().fill();
-
         for (int i = 0; i < layers.length; ++i) {
             layers[i].addTo(view, (i - layers.length) * 10000);
         }

@@ -44,7 +44,7 @@ public final class Tile {
         this.image = image;
         this.tileSet = tileSet;
         terrain = Parser.parseTerrain(tileSet, element);
-        shapes = Parser.parseShapes(element, map, -width / 2f, -height / 2f);
+        shapes = Parser.parseShapes(element, map, -width / 2f, height / 2f);
         if (element != null) {
             // Read properties
             properties = element.parsePropertiesChild();

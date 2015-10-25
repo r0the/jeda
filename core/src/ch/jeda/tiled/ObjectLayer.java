@@ -54,6 +54,7 @@ public final class ObjectLayer extends Layer {
      */
     @Override
     public void addTo(final PhysicsView view, final int drawOrder) {
+        String followElement = getMap().getProperties().readString(Const.FOLLOW_OBJECT);
         if (this.isVisible()) {
             for (int i = 0; i < objects.length; ++i) {
                 final Body body = objects[i].toBody();
@@ -61,6 +62,9 @@ public final class ObjectLayer extends Layer {
                 body.setOpacity(getOpacity());
                 body.setDrawOrder(drawOrder);
                 view.add(body);
+                if (followElement != null && followElement.equals(body.getName())) {
+                    view.setFollowElement(body);
+                }
             }
         }
     }

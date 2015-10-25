@@ -43,32 +43,32 @@ public final class TiledObject {
 
     TiledObject(final TiledMap map, final ElementWrapper element) {
         final float tileWidth = map.getTileWidth();
+        final float tileHeight = map.getTileHeight();
         name = element.getStringAttribute(Const.NAME);
         properties = element.parsePropertiesChild();
         rotation = element.getFloatAttribute(Const.ROTATION);
         type = element.getStringAttribute(Const.TYPE);
         visible = element.getBooleanAttribute(Const.VISIBLE, true);
 
+        final float objectX = element.getFloatAttribute(Const.X) / tileWidth;
+        float objectY = element.getFloatAttribute(Const.Y) / tileHeight;
         if (element.hasAttribute(Const.GID)) {
             tile = map.lookupTile(element.getIntAttribute(Const.GID));
             height = tile.getHeight();
             width = tile.getWidth();
+            objectY = objectY - height;
         }
         else {
             tile = null;
-            height = element.getFloatAttribute(Const.HEIGHT) / tileWidth;
+            height = element.getFloatAttribute(Const.HEIGHT) / tileHeight;
             width = element.getFloatAttribute(Const.WIDTH) / tileWidth;
         }
 
-        shape = Parser.parseShape(element, map, -width / 2f, -height / 2f);
-        float cx = element.getFloatAttribute(Const.X) / tileWidth;
-        float cy = map.getHeight() - element.getFloatAttribute(Const.Y) / tileWidth;
-        cx = cx + width / 2f;
-        cy = cy - height / 2f;
-
-        x = cx;
-        y = cy;
-
+        final float halfWidth = width / 2f;
+        final float halfHeight = height / 2f;
+        shape = Parser.parseShape(element, map, -objectX - halfWidth, objectY + halfHeight);
+        x = objectX + halfWidth;
+        y = map.getHeight() - objectY - halfHeight;
     }
 
     /**
@@ -211,11 +211,16 @@ public final class TiledObject {
      * @since 2.0
      */
     public Body toBody() {
-        final Body result = Body.create(getType());
+        final Body result = Body.create(getProperties().readString(Const.CLASS));
         result.addShape(shape);
         result.setName(name);
         result.setPosition(x, y);
-        result.setType(BodyType.DYNAMIC);
+        result.setType(BodyType.parse(type, BodyType.DYNAMIC));
+        result.setAngularDamping(properties.readFloat(Const.ANGULAR_DAMPING, 0f));
+        result.setDamping(properties.readFloat(Const.DAMPING, 0f));
+        result.setDensity(properties.readFloat(Const.DENSITY, 1f));
+        result.setFriction(properties.readFloat(Const.FRICTION, 0f));
+        result.setRotationFixed(properties.readBoolean(Const.ROTATION_FIXED, false));
         if (tile != null) {
             final Image image = tile.getImage();
             result.setImage(image, tile.getWidth(), tile.getHeight());

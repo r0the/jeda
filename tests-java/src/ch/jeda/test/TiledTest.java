@@ -18,7 +18,7 @@ public class TiledTest extends Program {
         view.add(new Box(view));
 //        view.setGravity(0, 0);
         view.setDebugging(true);
-//        view.setPaused(true);
+        view.setPaused(true);
 //        map = new TiledMap("res:raw/racetrack.tmx");
         map = new TiledMap("res:raw/test_xml.tmx");
         view.addEventListener(this);

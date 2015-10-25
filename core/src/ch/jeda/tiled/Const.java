@@ -18,17 +18,23 @@ package ch.jeda.tiled;
 
 class Const {
 
+    static final String ANGULAR_DAMPING = "angularDamping";
     static final String ANIMATION = "animation";
     static final String BACKGROUNDCOLOR = "backgroundcolor";
     static final String BASE64 = "base64";
+    static final String CLASS = "class";
     static final String COLOR = "color";
     static final String COMPRESSION = "compression";
     static final String CSV = "csv";
+    static final String DAMPING = "damping";
     static final String DATA = "data";
+    static final String DENSITY = "density";
     static final String DURATION = "duration";
     static final String ELLIPSE = "ellipse";
     static final String ENCODING = "encoding";
     static final String FIRSTGID = "firstgid";
+    static final String FOLLOW_OBJECT = "followObject";
+    static final String FRICTION = "friction";
     static final String FRAME = "frame";
     static final String GID = "gid";
     static final String GZIP = "gzip";
@@ -48,6 +54,7 @@ class Const {
     static final String PROPERTIES = "properties";
     static final String PROPERTY = "property";
     static final String ROTATION = "rotation";
+    static final String ROTATION_FIXED = "rotationFixed";
     static final String SOURCE = "source";
     static final String SPACING = "spacing";
     static final String TERRAIN = "terrain";

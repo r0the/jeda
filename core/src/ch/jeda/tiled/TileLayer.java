@@ -17,6 +17,7 @@
 package ch.jeda.tiled;
 
 import ch.jeda.Convert;
+import ch.jeda.Data;
 import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
 import ch.jeda.physics.Backdrop;
@@ -38,8 +39,6 @@ import java.util.zip.InflaterInputStream;
  */
 public final class TileLayer extends Layer {
 
-    private static final String CLASS = "class";
-    private static final String TYPE = "type";
     private final Tile[] tiles;
 
     TileLayer(final TiledMap map, final ElementWrapper element) {
@@ -75,7 +74,7 @@ public final class TileLayer extends Layer {
             return;
         }
 
-        final BodyType type = BodyType.parse(getProperties().readString(TYPE));
+        final BodyType type = BodyType.parse(getProperties().readString(Const.TYPE));
         if (type == null) {
             convertToBackdrop(view, drawOrder);
         }
@@ -121,7 +120,7 @@ public final class TileLayer extends Layer {
             for (int y = 0; y < endY; ++y) {
                 final Tile tile = getTile(x, y);
                 if (tile != null) {
-                    final Body body = Body.create(getProperties().readString(CLASS));
+                    final Body body = Body.create(getProperties().readString(Const.CLASS));
                     final Shape[] shapes = tile.getShapes();
                     final Image image = tile.getImage();
                     final float width = tile.getWidth();
@@ -141,10 +140,12 @@ public final class TileLayer extends Layer {
                     body.setImage(image, width, height);
                     body.setOpacity(getOpacity());
                     body.setPosition(x + width / 2f, endY - y - 1f + height / 2f);
-                    body.setAngularDamping(getProperties().readFloat("angulardamping", 0f));
-                    body.setDamping(getProperties().readFloat("damping", 0f));
-                    body.setDensity(getProperties().readFloat("density", 1f));
-                    body.setFriction(getProperties().readFloat("friction", 0f));
+                    final Data properties = getProperties();
+                    body.setAngularDamping(properties.readFloat(Const.ANGULAR_DAMPING, 0f));
+                    body.setDamping(properties.readFloat(Const.DAMPING, 0f));
+                    body.setDensity(properties.readFloat(Const.DENSITY, 1f));
+                    body.setFriction(properties.readFloat(Const.FRICTION, 0f));
+                    body.setRotationFixed(properties.readBoolean(Const.ROTATION_FIXED, false));
                     view.add(body);
                 }
             }

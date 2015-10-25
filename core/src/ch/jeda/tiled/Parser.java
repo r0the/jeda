@@ -56,26 +56,29 @@ class Parser {
      */
     static Shape parseShape(final ElementWrapper objectElement, final TiledMap map,
                             final float offsetX, final float offsetY) {
-        final float width = objectElement.getFloatAttribute(Const.WIDTH) / map.getTileWidth();
-        final float height = objectElement.getFloatAttribute(Const.HEIGHT) / map.getTileHeight();
+        final int tileWidth = map.getTileWidth();
+        final int tileHeight = map.getTileHeight();
+        final float x = offsetX + objectElement.getFloatAttribute(Const.X, 0f) / tileWidth;
+        final float y = offsetY - objectElement.getFloatAttribute(Const.Y, 0f) / tileHeight;
+        final float width = objectElement.getFloatAttribute(Const.WIDTH) / tileWidth;
+        final float height = objectElement.getFloatAttribute(Const.HEIGHT) / tileHeight;
         if (objectElement.hasChild(Const.ELLIPSE)) {
-            return new Ellipse(offsetX + width / 2f, offsetY + height / 2f, width / 2f, height / 2f);
+            return new Ellipse(x + width / 2f, y - height / 2f, width / 2f, height / 2f);
         }
         else if (objectElement.hasChild(Const.POLYGON)) {
             final String points = objectElement.getChild(Const.POLYGON).getStringAttribute(Const.POINTS);
-            return new Polygon(parsePoints(points, map, offsetX, offsetY));
+            return new Polygon(parsePoints(points, map, x, y));
         }
         else if (objectElement.hasChild(Const.POLYLINE)) {
             final String points = objectElement.getChild(Const.POLYLINE).getStringAttribute(Const.POINTS);
-            return new Polyline(parsePoints(points, map, offsetX, offsetY));
+            return new Polyline(parsePoints(points, map, x, y));
         }
         else if (width > 0 && height > 0) {
-            return new Rectangle(offsetX, offsetY, width, height);
+            return new Rectangle(x, y - height, width, height);
         }
         else {
             return null;
         }
-
     }
 
     /**
