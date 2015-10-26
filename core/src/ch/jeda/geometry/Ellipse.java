@@ -98,6 +98,16 @@ public final class Ellipse extends Shape implements Storable {
         canvas.fillEllipse(centerX, centerY, radiusX, radiusY);
     }
 
+    @Override
+    public Shape flipHorizontally() {
+        return new Ellipse(-centerX, centerY, radiusX, radiusY);
+    }
+
+    @Override
+    public Shape flipVertically() {
+        return new Ellipse(centerX, -centerY, radiusX, radiusY);
+    }
+
     /**
      * Returns the area of this ellipse.
      *

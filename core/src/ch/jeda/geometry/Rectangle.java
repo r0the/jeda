@@ -86,6 +86,16 @@ public final class Rectangle extends Shape {
         canvas.fillRectangle(x, y, width, height);
     }
 
+    @Override
+    public Shape flipHorizontally() {
+        return new Rectangle(-x, y, width, height);
+    }
+
+    @Override
+    public Shape flipVertically() {
+        return new Rectangle(x, -y, width, height);
+    }
+
     /**
      * Returns the area of this rectangle.
      *

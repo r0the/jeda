@@ -66,4 +66,8 @@ public abstract class Shape {
      * @since 2.0
      */
     public abstract void fill(Canvas canvas);
+
+    public abstract Shape flipHorizontally();
+
+    public abstract Shape flipVertically();
 }

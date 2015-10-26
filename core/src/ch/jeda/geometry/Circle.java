@@ -93,6 +93,16 @@ public final class Circle extends Shape implements Storable {
         canvas.fillCircle(centerX, centerY, radius);
     }
 
+    @Override
+    public Shape flipHorizontally() {
+        return new Circle(-centerX, centerY, radius);
+    }
+
+    @Override
+    public Shape flipVertically() {
+        return new Circle(centerX, -centerY, radius);
+    }
+
     /**
      * Returns the area of this circle.
      *
@@ -198,4 +208,5 @@ public final class Circle extends Shape implements Storable {
         data.writeFloat(CENTER_Y, centerY);
         data.writeFloat(RADIUS, radius);
     }
+
 }

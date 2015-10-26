@@ -108,6 +108,26 @@ public final class Polygon extends Shape {
         canvas.fillPolygon(points);
     }
 
+    @Override
+    public Shape flipHorizontally() {
+        final float newPoints[] = Arrays.copyOf(points, points.length);
+        for (int i = 0; i < newPoints.length; i = i + 2) {
+            newPoints[i] = -newPoints[i];
+        }
+
+        return new Polygon(newPoints);
+    }
+
+    @Override
+    public Shape flipVertically() {
+        final float newPoints[] = Arrays.copyOf(points, points.length);
+        for (int i = 1; i < newPoints.length; i = i + 2) {
+            newPoints[i] = -newPoints[i];
+        }
+
+        return new Polygon(newPoints);
+    }
+
     /**
      * Returns the number of vertices of this polygon.
      *
