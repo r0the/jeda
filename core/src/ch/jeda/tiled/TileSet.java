@@ -91,7 +91,7 @@ final class TileSet {
             while (nextY + tileHeight + margin <= image.getHeight()) {
                 final Image tileImage = image.subImage(nextX, nextY, tileWidth, tileHeight);
                 final int tileId = tiles.size();
-                tiles.add(new Tile(map, this, tileId, tileImage, tileElements.get(tileId)));
+                tiles.add(new DefaultTile(map, this, tileId, tileImage, tileElements.get(tileId)));
                 nextX += tileWidth + spacing;
                 if (nextX + tileWidth + margin > image.getWidth()) {
                     nextX = margin;
@@ -105,7 +105,7 @@ final class TileSet {
                 if (tileElements.containsKey(tileId)) {
                     final ElementWrapper tileElement = tileElements.get(tileId);
                     final Image tileImage = reader.loadImageChild(tileElement);
-                    tiles.add(new Tile(map, this, tileId, tileImage, tileElement));
+                    tiles.add(new DefaultTile(map, this, tileId, tileImage, tileElement));
                 }
                 else {
                     tiles.add(null);

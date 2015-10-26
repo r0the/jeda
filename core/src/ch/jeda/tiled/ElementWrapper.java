@@ -86,6 +86,10 @@ final class ElementWrapper {
         return attributes.readFloat(name, defaultValue);
     }
 
+    long getLongAttribute(final String name) {
+        return attributes.readLong(name);
+    }
+
     int getIntAttribute(final String name) {
         return attributes.readInt(name);
     }

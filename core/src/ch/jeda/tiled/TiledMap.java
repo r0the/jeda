@@ -230,7 +230,7 @@ public final class TiledMap {
      *
      * @since 2.0
      */
-    public Tile lookupTile(final int globalId) {
+    public Tile lookupTile(final long globalId) {
         return tileSets.lookupTile(globalId);
     }
 

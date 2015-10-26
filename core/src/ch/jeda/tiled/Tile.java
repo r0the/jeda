@@ -19,49 +19,15 @@ package ch.jeda.tiled;
 import ch.jeda.Data;
 import ch.jeda.geometry.Shape;
 import ch.jeda.ui.Image;
-import java.util.Arrays;
 
 /**
  * Represents a Tiled tile.
  *
  * @since 2.0
  */
-public final class Tile {
+public abstract class Tile {
 
-    private final float height;
-    private final int id;
-    private final Image image;
-    private final Data properties;
-    private final Shape[] shapes;
-    private final Terrain[] terrain;
-    private final TileSet tileSet;
-    private final float width;
-
-    Tile(final TiledMap map, final TileSet tileSet, final int id, final Image image, final ElementWrapper element) {
-        height = (float) image.getHeight() / map.getTileHeight();
-        width = (float) image.getWidth() / map.getTileWidth();
-        this.id = id;
-        this.image = image;
-        this.tileSet = tileSet;
-        terrain = Parser.parseTerrain(tileSet, element);
-        shapes = Parser.parseShapes(element, map, -width / 2f, height / 2f);
-        if (element != null) {
-            // Read properties
-            properties = element.parsePropertiesChild();
-        }
-        else {
-            properties = new Data();
-        }
-
-        // Read animation
-        if (element != null) {
-            final ElementWrapper animationElement = element.getChild(Const.ANIMATION);
-            if (animationElement != null) {
-                for (final ElementWrapper frameElement : animationElement.getChildren(Const.FRAME)) {
-
-                }
-            }
-        }
+    protected Tile() {
     }
 
     /**
@@ -71,9 +37,7 @@ public final class Tile {
      *
      * @since 2.0
      */
-    public float getHeight() {
-        return height;
-    }
+    public abstract float getHeight();
 
     /**
      * Returns the image representing this tile.
@@ -82,9 +46,7 @@ public final class Tile {
      *
      * @since 2.0
      */
-    public Image getImage() {
-        return image;
-    }
+    public abstract Image getImage();
 
     /**
      * Retursn the properties of this tile.
@@ -93,18 +55,14 @@ public final class Tile {
      *
      * @since 2.0
      */
-    public Data getProperties() {
-        return properties;
-    }
+    public abstract Data getProperties();
 
     /**
      * Returns the collision shapes of this tile.
      *
      * @return the collision shapes of this tile
      */
-    public Shape[] getShapes() {
-        return Arrays.copyOf(shapes, shapes.length);
-    }
+    public abstract Shape[] getShapes();
 
     /**
      * Returns the terrain at the bottom left corner of this tile.
@@ -113,9 +71,7 @@ public final class Tile {
      *
      * @since 2.0
      */
-    public Terrain getTerrainBottomLeft() {
-        return terrain[2];
-    }
+    public abstract Terrain getTerrainBottomLeft();
 
     /**
      * Returns the terrain at the bottom right corner of this tile.
@@ -124,9 +80,7 @@ public final class Tile {
      *
      * @since 2.0
      */
-    public Terrain getTerrainBottomRight() {
-        return terrain[3];
-    }
+    public abstract Terrain getTerrainBottomRight();
 
     /**
      * Returns the terrain at the top left corner of this tile.
@@ -135,9 +89,7 @@ public final class Tile {
      *
      * @since 2.0
      */
-    public Terrain getTerrainTopLeft() {
-        return terrain[0];
-    }
+    public abstract Terrain getTerrainTopLeft();
 
     /**
      * Returns the terrain at the top right corner of this tile.
@@ -146,9 +98,7 @@ public final class Tile {
      *
      * @since 2.0
      */
-    public Terrain getTerrainTopRight() {
-        return terrain[1];
-    }
+    public abstract Terrain getTerrainTopRight();
 
     /**
      * Returns the width of this tile in meters.
@@ -157,9 +107,7 @@ public final class Tile {
      *
      * @since 2.0
      */
-    public float getWidth() {
-        return width;
-    }
+    public abstract float getWidth();
 
     /**
      * Calculates the horizontal screen coordinate of the center of this tile from a given tile coordinate.
@@ -167,10 +115,7 @@ public final class Tile {
      * @param tileX the horizontal tile coordinate of the tile
      * @return the horizontal screen coordinate of the center of this tile
      */
-    int screenX(int tileX) {
-        return tileX * tileSet.getMap().getTileWidth() + tileSet.getTileWidth() / 2 +
-               tileSet.getTileOffsetX();
-    }
+    abstract int screenX(int tileX);
 
     /**
      * Calculates the vertical screen coordinate of the center of this tile from a given tile coordinate.
@@ -178,8 +123,5 @@ public final class Tile {
      * @param tileY the vertical tile coordinate of the tile
      * @return the vertical screen coordinate of the center of this tile
      */
-    int screenY(int tileY) {
-        return (tileY + 1) * tileSet.getMap().getTileHeight() - tileSet.getTileHeight() / 2 +
-               tileSet.getTileOffsetY();
-    }
+    abstract int screenY(int tileY);
 }

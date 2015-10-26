@@ -53,7 +53,7 @@ public final class TiledObject {
         final float objectX = element.getFloatAttribute(Const.X) / tileWidth;
         float objectY = element.getFloatAttribute(Const.Y) / tileHeight;
         if (element.hasAttribute(Const.GID)) {
-            tile = map.lookupTile(element.getIntAttribute(Const.GID));
+            tile = map.lookupTile(element.getLongAttribute(Const.GID));
             height = tile.getHeight();
             width = tile.getWidth();
             objectY = objectY - height;

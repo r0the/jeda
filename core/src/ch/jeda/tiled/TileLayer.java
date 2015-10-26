@@ -46,7 +46,7 @@ public final class TileLayer extends Layer {
         // Read tile ids
         final int width = map.getWidth();
         final int height = map.getHeight();
-        final int[] tileIds = parseData(element.getChild(Const.DATA), width, height);
+        final long[] tileIds = parseData(element.getChild(Const.DATA), width, height);
         tiles = new Tile[width * height];
         for (int i = 0; i < tileIds.length; ++i) {
             tiles[i] = map.lookupTile(tileIds[i]);
@@ -152,7 +152,7 @@ public final class TileLayer extends Layer {
         }
     }
 
-    private static int[] parseData(final ElementWrapper element, final int width, final int height) {
+    private static long[] parseData(final ElementWrapper element, final int width, final int height) {
         final String encoding = element.getStringAttribute(Const.ENCODING);
         if (Const.BASE64.equalsIgnoreCase(encoding)) {
             return parseBase64(element, width, height);
@@ -161,10 +161,10 @@ public final class TileLayer extends Layer {
             return parseCsv(element.getContent(), width, height);
         }
         else {
-            final int[] result = new int[width * height];
+            final long[] result = new long[width * height];
             int i = 0;
             for (final ElementWrapper tileElement : element.getChildren(Const.TILE)) {
-                result[i] = tileElement.getIntAttribute(Const.GID);
+                result[i] = tileElement.getLongAttribute(Const.GID);
                 ++i;
             }
 
@@ -172,7 +172,7 @@ public final class TileLayer extends Layer {
         }
     }
 
-    private static int[] parseBase64(final ElementWrapper element, final int width, final int height) {
+    private static long[] parseBase64(final ElementWrapper element, final int width, final int height) {
         final String compression = element.getStringAttribute(Const.COMPRESSION);
         try {
             InputStream in = new ByteArrayInputStream(Convert.fromBase64(element.getContent()));
@@ -186,10 +186,10 @@ public final class TileLayer extends Layer {
                 throw new RuntimeException("Unknown compression method: " + compression);
             }
 
-            final int[] result = new int[width * height];
+            final long[] result = new long[width * height];
             for (int y = 0; y < height; ++y) {
                 for (int x = 0; x < width; ++x) {
-                    int tileId = 0;
+                    long tileId = 0;
                     tileId |= in.read();
                     tileId |= in.read() << 8;
                     tileId |= in.read() << 16;
@@ -205,16 +205,16 @@ public final class TileLayer extends Layer {
         }
     }
 
-    private static int[] parseCsv(final String data, final int width, final int height) {
+    private static long[] parseCsv(final String data, final int width, final int height) {
         final String[] csvTileIds = data.trim().split("[\\s]*,[\\s]*");
         if (csvTileIds.length != width * height) {
             throw new RuntimeException("Number of tiles does not match the layer's width and height");
         }
 
-        final int[] result = new int[width * height];
+        final long[] result = new long[width * height];
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
-                result[x + y * width] = Integer.parseInt(csvTileIds[x + y * width]);
+                result[x + y * width] = Long.parseLong(csvTileIds[x + y * width]);
             }
         }
 

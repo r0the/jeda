@@ -21,6 +21,10 @@ import java.util.TreeMap;
 
 final class TileSets {
 
+    private static final int FLIP_HORIZONTALLY_FLAG = 0x80000000;
+    private static final int FLIP_VERTICALLY_FLAG = 0x40000000;
+    private static final int FLIP_DIAGONALLY_FLAG = 0x20000000;
+    private static final int FLAGS = FLIP_HORIZONTALLY_FLAG | FLIP_VERTICALLY_FLAG | FLIP_DIAGONALLY_FLAG;
     private final TreeMap<Integer, TileSet> tileSetsByGid;
 
     TileSets() {
@@ -31,13 +35,21 @@ final class TileSets {
         tileSetsByGid.put(tileSet.getFirstGlobalId(), tileSet);
     }
 
-    Tile lookupTile(final int globalId) {
-        Map.Entry<Integer, TileSet> entry = tileSetsByGid.floorEntry(globalId);
+    Tile lookupTile(final long globalId) {
+        long flags = globalId & FLAGS;
+        int id = (int) (globalId & ~FLAGS);
+        Map.Entry< Integer, TileSet> entry = tileSetsByGid.floorEntry(id);
         if (entry == null) {
             return null;
         }
-        else {
-            return entry.getValue().getTile(globalId - entry.getKey());
+
+        Tile tile = entry.getValue().getTile(id - entry.getKey());
+        if (flags != 0) {
+            tile = new ProxyTile(tile,
+                                 (flags & FLIP_HORIZONTALLY_FLAG) != 0,
+                                 (flags & FLIP_VERTICALLY_FLAG) != 0);
         }
+
+        return tile;
     }
 }
