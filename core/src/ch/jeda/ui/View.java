@@ -79,6 +79,7 @@ public class View {
     private ViewImp imp;
     private boolean paused;
     private float scale;
+    private double simulationTime;
     private String title;
     private float translationX;
     private float translationY;
@@ -146,6 +147,7 @@ public class View {
         elementsChanged = false;
         paused = false;
         scale = 0.01f;
+        simulationTime = 0f;
         title = Jeda.getProgramName();
         userControl = new UserControl(this);
         resetImp(width, height, toSet(features));
@@ -309,7 +311,9 @@ public class View {
      * @since 2.0
      */
     public final Element[] getElements() {
-        return Arrays.copyOf(elements, elements.length);
+        synchronized (elementLock) {
+            return Arrays.copyOf(elements, elements.length);
+        }
     }
 
     /**
@@ -328,10 +332,12 @@ public class View {
     @SuppressWarnings("unchecked")
     public final <T extends Element> T[] getElements(final Class<T> clazz) {
         final List<T> result = new ArrayList<T>();
-        for (int i = 0; i < elements.length; ++i) {
-            if (clazz.isInstance(elements[i])) {
-                // Unchecked cast
-                result.add((T) elements[i]);
+        synchronized (elementLock) {
+            for (int i = 0; i < elements.length; ++i) {
+                if (clazz.isInstance(elements[i])) {
+                    // Unchecked cast
+                    result.add((T) elements[i]);
+                }
             }
         }
 
@@ -399,6 +405,18 @@ public class View {
      */
     public final float getScale() {
         return scale;
+    }
+
+    /**
+     * Returns the current simulation time in seconds. This is the time in seconds that has passed since the start of
+     * the simulation.
+     *
+     * @return current simulation time
+     *
+     * @since 2.4
+     */
+    public final double getSimulationTime() {
+        return simulationTime;
     }
 
     /**
@@ -784,6 +802,7 @@ public class View {
             updateElements();
             eventQueue.processEvents();
             if (!paused) {
+                simulationTime = simulationTime + dt;
                 step(dt);
                 for (int i = 0; i < elements.length; ++i) {
                     elements[i].step(dt);
@@ -993,10 +1012,10 @@ public class View {
         public void onWheel(final PointerEvent event) {
             if (scalingEnabled) {
                 if (event.getWheel() > 0f) {
-                    view.scale(1 / 1.1, event.getWorldX(), event.getWorldY());
+                    view.scale(1 / 1.1f, event.getWorldX(), event.getWorldY());
                 }
                 else {
-                    view.scale(1.1, event.getWorldX(), event.getWorldY());
+                    view.scale(1.1f, event.getWorldX(), event.getWorldY());
                 }
             }
         }

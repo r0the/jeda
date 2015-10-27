@@ -265,6 +265,23 @@ public abstract class Element {
     protected abstract void draw(final Canvas c);
 
     /**
+     * Returns the current simulation time in seconds. This is the time in seconds that has passed since the start of
+     * the simulation.
+     *
+     * @return current simulation time
+     *
+     * @since 2.4
+     */
+    protected final double getSimulationTime() {
+        if (view == null) {
+            return 0.0;
+        }
+        else {
+            return view.getSimulationTime();
+        }
+    }
+
+    /**
      * Returns the view containing the element. Returns <tt>null</tt> if the element has not yet been added to a view.
      *
      * @return the view containing the element
