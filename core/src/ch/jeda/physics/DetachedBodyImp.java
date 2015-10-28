@@ -73,6 +73,11 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
+    public void addSensor(final Sensor sensor) {
+        // ignore
+    }
+
+    @Override
     public void addShape(final Shape shape) {
         shapes.add(shape);
     }

@@ -19,42 +19,61 @@ package ch.jeda.physics;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.contacts.Contact;
 
 class PhysicsContactListener implements ContactListener {
 
     @Override
     public void beginContact(final Contact contact) {
-        final Body bodyA = (Body) contact.m_fixtureA.m_body.m_userData;
-        final Body bodyB = (Body) contact.m_fixtureB.m_body.m_userData;
-        if (bodyA != null && bodyB != null) {
-            bodyA.internalBeginContact(bodyB);
-            bodyB.internalBeginContact(bodyA);
+        final Fixture fixA = contact.m_fixtureA;
+        final Fixture fixB = contact.m_fixtureB;
+        if (fixA.m_isSensor) {
+            final Sensor sensor = (Sensor) fixA.m_userData;
+            if (!fixB.m_isSensor) {
+                sensor.internalBeginContact(fixB);
+            }
         }
-//        if (bodyA.isDestructible() || bodyB.isDestructible()) {
-//            final Vec2 va = jbBodyA.getLinearVelocity();
-//            final Vec2 vb = jbBodyB.getLinearVelocity();
-//            final double rvx = va.x - vb.x;
-//            final double rvy = va.y - vb.y;
-//            final double rv = Math.sqrt(rvx * rvx + rvy * rvy);
-//            final double pa = rv * jbBodyB.m_mass;
-//            final double pb = rv * jbBodyA.m_mass;
-//            if (bodyA.isDestructible() && bodyA.getFatigueThreshold() <= pa) {
-//                bodyA.fatigue += pa;
-//            }
-//
-//            if (bodyB.isDestructible() && bodyB.getFatigueThreshold() <= pb) {
-//                bodyB.fatigue += pb;
-//            }
-//        }
+        else if (fixB.m_isSensor) {
+            final Sensor sensor = (Sensor) fixB.m_userData;
+            if (!fixA.m_isSensor) {
+                sensor.internalBeginContact(fixA);
+            }
+        }
+        else {
+            final Body bodyA = (Body) fixA.m_body.m_userData;
+            final Body bodyB = (Body) fixB.m_body.m_userData;
+            if (bodyA != null && bodyB != null) {
+                bodyA.internalBeginContact(bodyB);
+                bodyB.internalBeginContact(bodyA);
+            }
+        }
     }
 
     @Override
     public void endContact(final Contact contact) {
-        final Body bodyA = (Body) contact.m_fixtureA.m_body.m_userData;
-        final Body bodyB = (Body) contact.m_fixtureB.m_body.m_userData;
-        bodyA.internalEndContact(bodyB);
-        bodyB.internalEndContact(bodyA);
+        final Fixture fixA = contact.m_fixtureA;
+        final Fixture fixB = contact.m_fixtureB;
+        if (fixA.m_isSensor) {
+            final Sensor sensor = (Sensor) fixA.m_userData;
+            if (!fixB.m_isSensor) {
+                sensor.internalEndContact(fixB);
+            }
+        }
+        else if (fixB.m_isSensor) {
+            final Sensor sensor = (Sensor) fixB.m_userData;
+            if (!fixA.m_isSensor) {
+                sensor.internalEndContact(fixA);
+            }
+        }
+        else {
+            final Body bodyA = (Body) fixA.m_body.m_userData;
+            final Body bodyB = (Body) fixB.m_body.m_userData;
+            if (bodyA != null && bodyB != null) {
+                bodyA.internalEndContact(bodyB);
+                bodyB.internalEndContact(bodyA);
+            }
+        }
     }
 
     @Override
@@ -63,19 +82,5 @@ class PhysicsContactListener implements ContactListener {
 
     @Override
     public void postSolve(final Contact contact, final ContactImpulse impulse) {
-//        final Body bodyA = (Body) contact.m_fixtureA.m_body.m_userData;
-//        final Body bodyB = (Body) contact.m_fixtureB.m_body.m_userData;
-//        final double i = impulse.normalImpulses[0];
-//        if (impulse.normalImpulses.length > 1) {
-//            System.out.println("LENGTH: " + impulse.normalImpulses.length);
-//        }
-//
-//        if (i >= bodyA.fatigueThreshold) {
-//            bodyA.fatigue += i;
-//        }
-//
-//        if (i >= bodyB.fatigueThreshold) {
-//            bodyB.fatigue += i;
-//        }
     }
 }

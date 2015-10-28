@@ -35,6 +35,7 @@ import java.util.Set;
 public class Body extends Element {
 
     private final Set<Joint> joints;
+    private final Set<Sensor> sensors;
     private Color debugColor;
     private float height;
     private Image image;
@@ -85,6 +86,7 @@ public class Body extends Element {
      */
     public Body() {
         joints = new HashSet<Joint>();
+        sensors = new HashSet<Sensor>();
         image = null;
         imp = new DetachedBodyImp();
         jointsDirty = false;
@@ -376,6 +378,10 @@ public class Body extends Element {
      */
     public final int getOpacity() {
         return opacity;
+    }
+
+    public Sensor[] getSensors() {
+        return sensors.toArray(new Sensor[sensors.size()]);
     }
 
     /**
@@ -746,19 +752,14 @@ public class Body extends Element {
         return true;
     }
 
-    /**
-     * Invoked for every step in the physics simulation. Override this method to add new behaviour.
-     *
-     * @param dt the time of this step in seconds
-     *
-     * @since 2.0
-     */
-    protected void step(final double dt) {
-    }
-
     final void addJoint(final Joint joint) {
         joints.add(joint);
         jointsDirty = true;
+    }
+
+    final void addSensor(final Sensor sensor) {
+        sensors.add(sensor);
+        imp.addSensor(sensor);
     }
 
     void checkJoints() {

@@ -21,6 +21,8 @@ import ch.jeda.ui.Canvas;
 
 interface BodyImp {
 
+    void addSensor(Sensor sensor);
+
     void addShape(Shape shape);
 
     void applyForce(float fx, float fy);

@@ -59,16 +59,29 @@ final class PhysicsBodyImp implements BodyImp {
         imp = physics.createJBoxBody(bodyDef);
         imp.m_userData = body;
         this.physics = physics;
+        for (final Sensor sensor : body.getSensors()) {
+            addSensor(sensor);
+        }
+
         for (final Shape shape : oldImp.getShapes()) {
             addShape(shape);
         }
     }
 
     @Override
+    public void addSensor(final Sensor sensor) {
+        final FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = convert(sensor.getShape(), physics.getScale());
+        fixtureDef.isSensor = true;
+        fixtureDef.userData = sensor;
+        imp.createFixture(fixtureDef);
+    }
+
+    @Override
     public void addShape(final Shape shape) {
         shapes.add(shape);
-        final FixtureDef fixtureDef = new FixtureDef();
 
+        final FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = convert(shape, physics.getScale());
         fixtureDef.density = density;
         fixtureDef.friction = friction;
