@@ -30,8 +30,8 @@ public final class MathF {
      *
      * @since 2.0
      */
-    public static final float PI = (float) Math.PI;
-    private static final float TWO_PI = (float) (2.0 * Math.PI);
+    public static final float PI = MathUtils.PI;
+    private static final float TWO_PI = MathUtils.TWOPI;
 
     private MathF() {
     }
@@ -46,7 +46,7 @@ public final class MathF {
      * @since 2.2
      */
     public static float atan2(final float y, final float x) {
-        return (float) Math.atan2(y, x);
+        return MathUtils.atan2(y, x);
     }
 
     /**
@@ -62,11 +62,42 @@ public final class MathF {
     }
 
     /**
+     * Returns the Euclidean distance between the origin and the point (<code>x</code>, <code>y</code>).
+     *
+     * @param x the horizontal coordinate of the point
+     * @param y the vertical coordinate of the point
+     * @return the Euclidean distance between the origin and the point
+     *
+     * @since 2.4
+     */
+    public static float distance(final float x, final float y) {
+        return sqrt(x * x + y * y);
+    }
+
+    /**
+     * Returns the Euclidean distance between the points (<code>x1</code>, <code>y1</code>) and (<code>x2</code>,
+     * <code>y2</code>).
+     *
+     * @param x1 the horizontal coordinate of the first point
+     * @param y1 the vertical coordinate of the first point
+     * @param x2 the horizontal coordinate of the second point
+     * @param y2 the vertical coordinate of the second point
+     * @return the Euclidean distance between the two points
+     *
+     * @since 2.4
+     */
+    public static float distance(final float x1, final float y1, final float x2, final float y2) {
+        return distance(x1 - x2, y1 - y2);
+    }
+
+    /**
      * Returns the normalized value of <code>angle</code>. The normalized angle is the value between <code>0</code> and
      * <code>2 * PI</code>.
      *
      * @param angle the original angle
      * @return the normalized angle
+     *
+     * @since 2.0
      */
     public static float normalizeAngle(float angle) {
         angle = angle % TWO_PI;
@@ -98,7 +129,7 @@ public final class MathF {
      * @since 2.0
      */
     public static float sqrt(final float x) {
-        return (float) StrictMath.sqrt(x);
+        return MathUtils.sqrt(x);
     }
 
     /**
