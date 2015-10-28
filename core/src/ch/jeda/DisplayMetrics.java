@@ -20,9 +20,24 @@ package ch.jeda;
  * Contains information about the display.
  *
  * @since 2.0
+ * @version 2
  */
 public final class DisplayMetrics {
 
+    /**
+     * Factor for conversion from meters to device-independent pixels. The factor is equal to
+     * <code>100f * 160f / 2.54f</code>.
+     *
+     * @since 2.4
+     */
+    public static final float METER_TO_DP = 100f * 160f / 2.54f;
+    /**
+     * Factor for conversion from device-independent pixels to meters. The factor is equal to
+     * <code>1f / METER_TO_DP</code>.
+     *
+     * @since 2.4
+     */
+    public static final float DP_TO_METER = 1f / METER_TO_DP;
     private final int dpi;
     private final int displayHeight;
     private final int displayWidth;
@@ -43,11 +58,11 @@ public final class DisplayMetrics {
     }
 
     /**
-     * Converts density-independent pixels to pixels based on the resolution of the display.
+     * Converts a lengh in density-independent pixels to pixels based on the resolution of the display.
      *
-     * @param dp the density-independent pixels to convert
+     * @param dp the length in density-independent pixels to convert
      *
-     * @return the pixels
+     * @return the length in pixels
      *
      * @since 2.0
      */
@@ -89,15 +104,38 @@ public final class DisplayMetrics {
     }
 
     /**
-     * Converts pixels to density-independent pixels based on the resolution of the display.
+     * Converts a lenght in meters to pixels based on the resolution of the display.
      *
-     * @param px the pixels to convert
+     * @param m the length in meters
+     * @return the length in pixels
      *
-     * @return the density-independent pixels
+     * @since 2.4
+     */
+    public int mToPx(final float m) {
+        return (int) (m * METER_TO_DP * dpi / 160f);
+    }
+
+    /**
+     * Converts a length in pixels to density-independent pixels based on the resolution of the display.
+     *
+     * @param px the length in pixels to convert
+     * @return the length in density-independent pixels
      *
      * @since 2.0
      */
     public float pxToDp(final float px) {
         return px * 160f / dpi;
+    }
+
+    /**
+     * Converts a length in pixels to meters based on the resolution of the display
+     *
+     * @param px the length in pixels to convert
+     * @return the length in meters
+     *
+     * @since 2.4
+     */
+    public float pxToM(final float px) {
+        return px * DP_TO_METER * 160f / dpi;
     }
 }
