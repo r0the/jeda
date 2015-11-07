@@ -23,8 +23,13 @@ class PhysicsContactFilter extends ContactFilter {
 
     @Override
     public boolean shouldCollide(final Fixture fixtureA, final Fixture fixtureB) {
-        final Body bodyA = (Body) fixtureA.m_body.m_userData;
-        final Body bodyB = (Body) fixtureB.m_body.m_userData;
-        return bodyA.shouldCollide(bodyB);
+        if (fixtureA.m_isSensor || fixtureB.m_isSensor) {
+            return true;
+        }
+        else {
+            final Body bodyA = (Body) fixtureA.m_body.m_userData;
+            final Body bodyB = (Body) fixtureB.m_body.m_userData;
+            return bodyA.shouldCollide(bodyB) && bodyB.shouldCollide(bodyA);
+        }
     }
 }
