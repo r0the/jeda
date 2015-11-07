@@ -78,6 +78,9 @@ public final class TileLayer extends Layer {
         if (type == null) {
             convertToBackdrop(view, drawOrder);
         }
+        else if (type == BodyType.STATIC) {
+            view.add(new LayerBody(this));
+        }
         else {
             convertToBodies(view, type, drawOrder);
         }
