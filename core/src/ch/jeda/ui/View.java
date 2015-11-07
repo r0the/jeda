@@ -16,6 +16,7 @@
  */
 package ch.jeda.ui;
 
+import ch.jeda.DisplayMetrics;
 import ch.jeda.Jeda;
 import ch.jeda.JedaInternal;
 import ch.jeda.event.Button;
@@ -58,8 +59,6 @@ import java.util.Set;
  */
 public class View {
 
-    private static final float METER_TO_DP = 100f * 160f / 2.54f;
-    private static final float DP_TO_METER = 1f / METER_TO_DP;
     private static final int DEFAULT_HEIGHT = 600;
     private static final int DEFAULT_WIDTH = 800;
     private static final EnumSet<ViewFeature> IMP_CHANGING_FEATURES = initImpChangingFeatures();
@@ -785,7 +784,7 @@ public class View {
     }
 
     private float toWorld(final float length) {
-        return length * DP_TO_METER / scale;
+        return length * DisplayMetrics.DP_TO_METER / scale;
     }
 
     private float toWorldX(final float x) {
@@ -814,7 +813,8 @@ public class View {
             foreground.setOpacity(255);
             foreground.setAlignment(Alignment.BOTTOM_LEFT);
             foreground.drawCanvas(0f, 0f, background);
-            foreground.setWorldTransformation(scale * METER_TO_DP, scale * METER_TO_DP, translationX, translationY);
+            final float s = scale * DisplayMetrics.METER_TO_DP;
+            foreground.setWorldTransformation(s, s, translationX, translationY);
             boolean world = true;
             for (int i = 0; i < elements.length; ++i) {
                 if (world && elements[i].getDrawOrder() >= 0) {
