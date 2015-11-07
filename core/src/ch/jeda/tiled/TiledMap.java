@@ -17,6 +17,7 @@
 package ch.jeda.tiled;
 
 import ch.jeda.Data;
+import ch.jeda.Jeda;
 import ch.jeda.physics.PhysicsView;
 import ch.jeda.ui.Color;
 import java.util.ArrayList;
@@ -111,6 +112,7 @@ public final class TiledMap {
     public void addTo(final PhysicsView view) {
         view.getBackground().setColor(getBackgroundColor());
         view.getBackground().fill();
+        view.setScale(Jeda.getDisplayMetrics().pxToM(tileWidth));
         for (int i = 0; i < layers.length; ++i) {
             layers[i].addTo(view, (i - layers.length) * 10000);
         }
