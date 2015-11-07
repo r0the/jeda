@@ -227,6 +227,11 @@ public final class Ellipse extends Shape implements Storable {
     }
 
     @Override
+    public Shape translate(final float dx, final float dy) {
+        return new Ellipse(centerX + dx, centerY + dy, radiusX, radiusY);
+    }
+
+    @Override
     public void writeTo(final Data data) {
         data.writeFloat(CENTER_X, centerX);
         data.writeFloat(CENTER_Y, centerY);

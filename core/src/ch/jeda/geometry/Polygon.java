@@ -110,22 +110,22 @@ public final class Polygon extends Shape {
 
     @Override
     public Shape flipHorizontally() {
-        final float newPoints[] = Arrays.copyOf(points, points.length);
-        for (int i = 0; i < newPoints.length; i = i + 2) {
-            newPoints[i] = -newPoints[i];
+        final Polygon result = new Polygon(points);
+        for (int i = 0; i < result.points.length; i = i + 2) {
+            result.points[i] = -result.points[i];
         }
 
-        return new Polygon(newPoints);
+        return result;
     }
 
     @Override
     public Shape flipVertically() {
-        final float newPoints[] = Arrays.copyOf(points, points.length);
-        for (int i = 1; i < newPoints.length; i = i + 2) {
-            newPoints[i] = -newPoints[i];
+        final Polygon result = new Polygon(points);
+        for (int i = 1; i < result.points.length; i = i + 2) {
+            result.points[i] = -result.points[i];
         }
 
-        return new Polygon(newPoints);
+        return result;
     }
 
     /**
@@ -163,5 +163,16 @@ public final class Polygon extends Shape {
      */
     public float getPointY(int i) {
         return points[2 * i + 1];
+    }
+
+    @Override
+    public Shape translate(final float dx, final float dy) {
+        final Polygon result = new Polygon(points);
+        for (int i = 0; i < result.points.length; i = i + 2) {
+            result.points[i] = result.points[i] + dx;
+            result.points[i + 1] = result.points[i + 1] + dy;
+        }
+
+        return result;
     }
 }

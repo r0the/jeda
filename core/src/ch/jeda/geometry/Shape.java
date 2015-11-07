@@ -28,8 +28,8 @@ public abstract class Shape {
     /**
      * Checks if this shape contains a point.
      *
-     * @param x the x coordinate of the point
-     * @param y the y coordinate of the point
+     * @param x the horizontal coordinate of the point
+     * @param y the vertical coordinate of the point
      * @return <code>true</code>, if the shape contains the point, otherwise <code>false</code>
      *
      * @since 2.0
@@ -41,8 +41,8 @@ public abstract class Shape {
     /**
      * Checks if this shape contains a point.
      *
-     * @param x the x coordinate of the point
-     * @param y the y coordinate of the point
+     * @param x the horizontal coordinate of the point
+     * @param y the vertical coordinate of the point
      * @return <code>true</code>, if the shape contains the point, otherwise <code>false</code>
      *
      * @since 2.0
@@ -67,7 +67,23 @@ public abstract class Shape {
      */
     public abstract void fill(Canvas canvas);
 
+    /**
+     * Returns a horizontally flipped copy of this shape.
+     *
+     * @return a horizontally flipped copy of this shape
+     *
+     * @since 2.4
+     */
     public abstract Shape flipHorizontally();
 
+    /**
+     * Returns a vertically flipped copy of this shape.
+     *
+     * @return a vertically flipped copy of this shape
+     *
+     * @since 2.4
+     */
     public abstract Shape flipVertically();
+
+    public abstract Shape translate(float dx, float dy);
 }

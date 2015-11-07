@@ -142,4 +142,15 @@ public class Polyline extends Shape {
     public float getPointY(int i) {
         return points[2 * i + 1];
     }
+
+    @Override
+    public Shape translate(final float dx, final float dy) {
+        final Polyline result = new Polyline(points);
+        for (int i = 0; i < result.points.length; i = i + 2) {
+            result.points[i] = result.points[i] + dx;
+            result.points[i + 1] = result.points[i + 1] + dy;
+        }
+
+        return result;
+    }
 }

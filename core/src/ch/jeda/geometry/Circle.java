@@ -203,6 +203,11 @@ public final class Circle extends Shape implements Storable {
     }
 
     @Override
+    public Shape translate(final float dx, final float dy) {
+        return new Circle(centerX + dx, centerY + dy, radius);
+    }
+
+    @Override
     public void writeTo(final Data data) {
         data.writeFloat(CENTER_X, centerX);
         data.writeFloat(CENTER_Y, centerY);

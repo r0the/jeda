@@ -34,6 +34,8 @@ public final class Rectangle extends Shape {
     /**
      * Constructs a new rectangle shape. With and height must be positive.
      *
+     * @param x the horizontal coordinate of the rectangle's center
+     * @param y the vertical coordinate of the rectangle's center
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      * @throws IllegalArgumentException if <code>width</code> or <code>height</code> are not positive
@@ -48,6 +50,8 @@ public final class Rectangle extends Shape {
      * Constructs a new rectangle shape. With and height must be positive. The center of the rectangle is the origin of
      * the local coordinate system.
      *
+     * @param x the horizontal coordinate of the rectangle's center
+     * @param y the vertical coordinate of the rectangle's center
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      * @throws IllegalArgumentException if <code>width</code> or <code>height</code> are not positive
@@ -138,5 +142,10 @@ public final class Rectangle extends Shape {
      */
     public Polygon toPolygon() {
         return new Polygon(x, y, x + width, y, x + width, y + height, x, y + height);
+    }
+
+    @Override
+    public Shape translate(final float dx, final float dy) {
+        return new Rectangle(x + dx, y + dy, width, height);
     }
 }
