@@ -71,9 +71,7 @@ class JavaViewImp implements ViewImp, FocusListener, KeyListener,
         window.getContentPane().add(bitmapCanvas);
         window.setResizable(false);
         window.setIgnoreRepaint(true);
-        System.out.println("Setting undecorated to " + features.contains(ViewFeature.FULLSCREEN));
         window.setUndecorated(features.contains(ViewFeature.FULLSCREEN));
-
         window.getContentPane().addKeyListener(this);
         window.addKeyListener(this);
 
