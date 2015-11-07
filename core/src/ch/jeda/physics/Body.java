@@ -37,6 +37,7 @@ public class Body extends Element {
     private final Set<Joint> joints;
     private final Set<Sensor> sensors;
     private Color debugColor;
+    private boolean gravityIgnored;
     private float height;
     private Image image;
     private BodyImp imp;
@@ -490,6 +491,30 @@ public class Body extends Element {
     }
 
     /**
+     * Checks if this body ignores gravity.
+     *
+     * @return <code>true</code> if this body ignores gravity, otherwise <code>false</code>
+     *
+     * @see #setGravityIgnored(boolean)
+     * @since 2.5
+     */
+    public boolean isGravityIgnored() {
+        return gravityIgnored;
+    }
+
+    /**
+     * Checks if this body is able to rotate.
+     *
+     * @return <code>true</code> if this body is <b>not</b> able to rotate, otherwise <code>false</code>
+     *
+     * @see #setRotationFixed(boolean)
+     * @since 2.5
+     */
+    public final boolean isRotationFixed() {
+        return imp.isRotationFixed();
+    }
+
+    /**
      * Sets the rotation angle of this body in radians. If the body is in a physics simulation, the body will be removed
      * from the simulation, then re-added to the simulation with the new angle.
      *
@@ -583,6 +608,19 @@ public class Body extends Element {
      */
     public final void setFriction(final double friction) {
         imp.setFriction((float) friction);
+    }
+
+    /**
+     * Disables or enables the effect of gravity on this body.
+     *
+     * @param gravityIgnored <code>true</code> to disable gravity for this body, <code>false</code> to enable it
+     *
+     * @see #isGravityIgnored()
+     * @since 2.5
+     */
+    public void setGravityIgnored(final boolean gravityIgnored) {
+        this.gravityIgnored = gravityIgnored;
+        imp.setGravityIgnored(gravityIgnored);
     }
 
     /**
@@ -708,9 +746,9 @@ public class Body extends Element {
 
     @Override
     protected final void draw(final Canvas canvas) {
+        canvas.setAlignment(Alignment.CENTER);
+        canvas.setOpacity(opacity);
         if (image != null) {
-            canvas.setAlignment(Alignment.CENTER);
-            canvas.setOpacity(opacity);
             canvas.drawImage(0f, 0f, width, height, image);
         }
 

@@ -56,6 +56,13 @@ final class PhysicsBodyImp implements BodyImp {
         bodyDef.linearVelocity.y = oldImp.getVy();
         bodyDef.type = convert(oldImp.getType());
         bodyDef.fixedRotation = oldImp.isRotationFixed();
+        if (body.isGravityIgnored()) {
+            bodyDef.gravityScale = 0f;
+        }
+        else {
+            bodyDef.gravityScale = 1f;
+        }
+
         imp = physics.createJBoxBody(bodyDef);
         imp.m_userData = body;
         this.physics = physics;
@@ -279,6 +286,16 @@ final class PhysicsBodyImp implements BodyImp {
         while (fixture != null) {
             fixture.setFriction(friction);
             fixture = fixture.m_next;
+        }
+    }
+
+    @Override
+    public void setGravityIgnored(final boolean gravityIgnored) {
+        if (gravityIgnored) {
+            imp.setGravityScale(0f);
+        }
+        else {
+            imp.setGravityScale(1f);
         }
     }
 

@@ -89,6 +89,8 @@ interface BodyImp {
 
     void setFriction(float friction);
 
+    void setGravityIgnored(boolean gravityIgnored);
+
     void setPosition(float x, float y);
 
     void setRotationFixed(boolean rotationFixed);

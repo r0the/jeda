@@ -241,6 +241,11 @@ class DetachedBodyImp implements BodyImp {
     }
 
     @Override
+    public void setGravityIgnored(boolean gravityIgnored) {
+        // ignore
+    }
+
+    @Override
     public void setPosition(final float x, final float y) {
         this.x = x;
         this.y = y;
