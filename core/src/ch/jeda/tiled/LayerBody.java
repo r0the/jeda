@@ -21,6 +21,7 @@ import ch.jeda.geometry.Rectangle;
 import ch.jeda.geometry.Shape;
 import ch.jeda.physics.Body;
 import ch.jeda.physics.BodyType;
+import ch.jeda.ui.Alignment;
 import ch.jeda.ui.Canvas;
 
 public class LayerBody extends Body {
@@ -69,6 +70,7 @@ public class LayerBody extends Body {
 
     @Override
     protected void drawDecoration(Canvas canvas) {
+        canvas.setAlignment(Alignment.TOP_LEFT);
         final int endX = layer.getMap().getWidth();
         final int endY = layer.getMap().getHeight();
         for (int x = 0; x < endX; ++x) {
