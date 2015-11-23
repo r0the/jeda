@@ -27,7 +27,7 @@ class DetachedRodImp extends DetachedJointImp implements RodImp {
 
     DetachedRodImp(float anchorAx, float anchorAy, float anchorBx, float anchorBy) {
         super(anchorAx, anchorAy, anchorBx, anchorBy);
-        this.length = 0f;
+        this.length = -1f;
     }
 
     @Override

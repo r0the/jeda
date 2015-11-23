@@ -24,6 +24,6 @@ public class FollowElementTest extends Program {
         bodyB.setPosition(10, 5);
         view.add(bodyA, bodyB);
         new Rod(bodyA, bodyB);
-        view.setScrollLock(bodyB);
+        view.setFollowElement(bodyB);
     }
 }

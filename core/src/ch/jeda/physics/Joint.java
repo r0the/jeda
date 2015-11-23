@@ -37,8 +37,6 @@ public abstract class Joint {
 
         this.bodyA = bodyA;
         this.bodyB = bodyB;
-        this.bodyA.addJoint(this);
-        this.bodyB.addJoint(this);
     }
 
     /**

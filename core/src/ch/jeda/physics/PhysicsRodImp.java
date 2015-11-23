@@ -33,7 +33,12 @@ class PhysicsRodImp implements RodImp {
                        jboxBodyA.getWorldPoint(new Vec2(oldImp.getAnchorAx(), oldImp.getAnchorAy())),
                        jboxBodyB.getWorldPoint(new Vec2(oldImp.getAnchorBx(), oldImp.getAnchorBy())));
         def.collideConnected = true;
+        def.dampingRatio = 1f;
+        def.frequencyHz = 1f;
         imp = (DistanceJoint) physics.createJBoxJoint(def);
+        if (oldImp.getLength() > 0f) {
+            imp.setLength(oldImp.getLength());
+        }
     }
 
     @Override

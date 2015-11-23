@@ -55,6 +55,8 @@ public final class Rod extends Joint {
                final double anchorBx, final double anchorBy) {
         super(bodyA, bodyB);
         imp = new DetachedRodImp((float) anchorAx, (float) anchorAy, (float) anchorBx, (float) anchorBy);
+        bodyA.addJoint(this);
+        bodyB.addJoint(this);
     }
 
     /**
@@ -117,9 +119,9 @@ public final class Rod extends Joint {
      *
      * @param length the length of the rod
      *
-     * @since 2.2
+     * @since 2.5
      */
-    void setLength(final double length) {
+    public void setLength(final double length) {
         imp.setLength((float) length);
     }
 

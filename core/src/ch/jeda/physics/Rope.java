@@ -16,9 +16,6 @@
  */
 package ch.jeda.physics;
 
-import org.jbox2d.dynamics.joints.RopeJoint;
-import org.jbox2d.dynamics.joints.RopeJointDef;
-
 /**
  * A joint that connects two bodies widh a rope. Both bodies can rotate around their attachment point to the rope.
  *
@@ -58,7 +55,8 @@ public final class Rope extends Joint {
                 final double anchorBx, final double anchorBy) {
         super(bodyA, bodyB);
         imp = new DetachedRopeImp((float) anchorAx, (float) anchorAy, (float) anchorBx, (float) anchorBy);
-
+        bodyA.addJoint(this);
+        bodyB.addJoint(this);
     }
 
     /**
@@ -144,5 +142,4 @@ public final class Rope extends Joint {
         oldImp.destroy();
         return true;
     }
-
 }
