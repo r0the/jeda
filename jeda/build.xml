@@ -6,7 +6,8 @@
     <!-- Set properties -->
     <property name="jeda.core.dir" value="../core"/>
     <property name="jeda.jbox2d.dir" value="../jbox2d"/>
-    <property name="jeda.nbjeda.dir" value="../nbjeda8.0"/>
+    <property name="jeda.nbjeda8.0.dir" value="../nbjeda8.0"/>
+    <property name="jeda.nbjeda8.1.dir" value="../nbjeda8.1"/>
 
     <target name="-post-jar">
         <!-- Load jeda version -->
@@ -37,19 +38,35 @@
         </jar>
 
         <!-- Update Jeda library in nbjeda -->
-        <copy file="${dist.jar}" tofile="${jeda.nbjeda.dir}/jeda/src/ch/jeda/netbeans/java/res/jeda.jar"/>
+        <copy file="${dist.jar}" tofile="${jeda.nbjeda8.0.dir}/jeda/src/ch/jeda/netbeans/java/res/jeda.jar"/>
+        <copy file="${dist.jar}" tofile="${jeda.nbjeda8.1.dir}/jeda/src/ch/jeda/netbeans/java/res/jeda.jar"/>
 
         <!-- Update Jeda version in nbjeda -->
-        <manifest file="${jeda.nbjeda.dir}/jeda/manifest.mf" mode="update">
+        <manifest file="${jeda.nbjeda8.0.dir}/jeda/manifest.mf" mode="update">
             <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
         </manifest>
-        <manifest file="${jeda.nbjeda.dir}/jedandroid/manifest.mf" mode="update">
+        <manifest file="${jeda.nbjeda8.1.dir}/jeda/manifest.mf" mode="update">
             <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
         </manifest>
-        <manifest file="${jeda.nbjeda.dir}/support/manifest.mf" mode="update">
+
+        <manifest file="${jeda.nbjeda8.0.dir}/jedandroid/manifest.mf" mode="update">
             <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
         </manifest>
-        <manifest file="${jeda.nbjeda.dir}/templates/manifest.mf" mode="update">
+        <manifest file="${jeda.nbjeda8.1.dir}/jedandroid/manifest.mf" mode="update">
+            <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
+        </manifest>
+
+        <manifest file="${jeda.nbjeda8.0.dir}/support/manifest.mf" mode="update">
+            <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
+        </manifest>
+        <manifest file="${jeda.nbjeda8.1.dir}/support/manifest.mf" mode="update">
+            <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
+        </manifest>
+
+        <manifest file="${jeda.nbjeda8.0.dir}/templates/manifest.mf" mode="update">
+            <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
+        </manifest>
+        <manifest file="${jeda.nbjeda8.1.dir}/templates/manifest.mf" mode="update">
             <attribute name="OpenIDE-Module-Specification-Version" value="${jeda.version}"/>
         </manifest>
     </target>

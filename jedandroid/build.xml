@@ -7,8 +7,10 @@
     <!-- Set properties -->
     <property name="jeda.core.dir" value="../core"/>
     <property name="jeda.jbox2d.dir" value="../jbox2d"/>
-    <property name="jeda.nbjeda.dir" value="../nbjeda8.0"/>
-    <property name="jeda.nbjeda.jedandroid.jar" value="${jeda.nbjeda.dir}/jedandroid/src/ch/jeda/netbeans/android/res/jedandroid.jar"/>
+    <property name="jeda.nbjeda8.0.dir" value="../nbjeda8.0"/>
+    <property name="jeda.nbjeda8.1.dir" value="../nbjeda8.1"/>
+    <property name="jeda.nbjeda8.0.jedandroid.jar" value="${jeda.nbjeda8.0.dir}/jedandroid/src/ch/jeda/netbeans/android/res/jedandroid.jar"/>
+    <property name="jeda.nbjeda8.1.jedandroid.jar" value="${jeda.nbjeda8.1.dir}/jedandroid/src/ch/jeda/netbeans/android/res/jedandroid.jar"/>
 
     <condition property="sdk.dir" value="${env.ANDROID_HOME}">
         <isset property="env.ANDROID_HOME"/>
@@ -26,16 +28,34 @@
 
     <target name="-post-package">
         <!-- Update Jedandroid library in nbjeda -->
-        <copy file="bin/classes.jar" tofile="${jeda.nbjeda.jedandroid.jar}"/>
+        <copy file="bin/classes.jar" tofile="${jeda.nbjeda8.0.jedandroid.jar}"/>
         <!-- Add core library to Jedandroid library in nbjeda -->
-        <jar update="true" jarfile="${jeda.nbjeda.jedandroid.jar}">
+        <jar update="true" jarfile="${jeda.nbjeda8.0.jedandroid.jar}">
             <zipfileset src="libs/core.jar"/>
             <zipfileset src="${jeda.jbox2d.dir}/dist/jbox2d.jar"/>
         </jar>
         <!-- Load jeda version -->
         <property file="${jeda.core.dir}/src/res/jeda/system.properties"/>
         <!-- Add information to library manifest -->
-        <jar update="true" destfile="${jeda.nbjeda.jedandroid.jar}">
+        <jar update="true" destfile="${jeda.nbjeda8.0.jedandroid.jar}">
+            <manifest>
+                <attribute name="Implementation-Title" value="Jedandroid Library"/>
+                <attribute name="Implementation-URL" value="http://jeda.ch/"/>
+                <attribute name="Implementation-Version" value="${jeda.version}"/>
+            </manifest>
+        </jar>
+        
+        <!-- Update Jedandroid library in nbjeda -->
+        <copy file="bin/classes.jar" tofile="${jeda.nbjeda8.1.jedandroid.jar}"/>
+        <!-- Add core library to Jedandroid library in nbjeda -->
+        <jar update="true" jarfile="${jeda.nbjeda8.1.jedandroid.jar}">
+            <zipfileset src="libs/core.jar"/>
+            <zipfileset src="${jeda.jbox2d.dir}/dist/jbox2d.jar"/>
+        </jar>
+        <!-- Load jeda version -->
+        <property file="${jeda.core.dir}/src/res/jeda/system.properties"/>
+        <!-- Add information to library manifest -->
+        <jar update="true" destfile="${jeda.nbjeda8.1.jedandroid.jar}">
             <manifest>
                 <attribute name="Implementation-Title" value="Jedandroid Library"/>
                 <attribute name="Implementation-URL" value="http://jeda.ch/"/>

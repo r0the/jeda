@@ -1,0 +1,19 @@
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import ch.jeda.*;
+import ch.jeda.event.*;
+import ch.jeda.geometry.*;
+import ch.jeda.physics.*;
+import ch.jeda.ui.*;
+
+public class ${name} extends Program {
+
+    private PhysicsView view;
+
+    @Override
+    public void run() {
+        view = new PhysicsView();
+    }
+}

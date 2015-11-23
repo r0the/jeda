@@ -1,0 +1,51 @@
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import ch.jeda.*;
+import ch.jeda.event.*;
+import ch.jeda.ui.*;
+import java.util.*;
+
+public class ${name} extends Program implements ServerListener {
+
+    private static final int MAX_CONNECTIONS = 10;
+    private static final int PORT = 1248;
+    private TcpServer server;
+    private int connectionCount;
+
+    @Override
+    public void run() {
+        server = new TcpServer();
+        Jeda.addEventListener(this);
+        if (server.start(PORT)) {
+            writeLines("Server listening on port " + PORT + ".");
+        }
+        else {
+            writeLines("Can't start server. Check if port " + PORT + " is already in use.");
+        }
+    }
+
+    @Override
+    public void onConnectionAccepted(ConnectionEvent event) {
+        if (connectionCount < MAX_CONNECTIONS) {
+            writeLines("Accepting connection from " + event.getConnection().getRemoteAddress());
+            ++connectionCount;
+        }
+        else {
+            event.getConnection().sendLine("We are full, sorry. Bye.");
+            event.getConnection().close();
+        }
+    }
+
+   @Override
+    public void onConnectionClosed(ConnectionEvent event) {
+        writeLines("Closed connection from " + event.getConnection().getRemoteAddress());
+        --connectionCount;
+    }
+
+    @Override
+    public void onMessageReceived(MessageEvent event) {
+        // Handle message from client
+    }
+}

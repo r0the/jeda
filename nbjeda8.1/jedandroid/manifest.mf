@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.9.4
+Created-By: 1.7.0_65-b32 (Oracle Corporation)
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ch.jeda.netbeans.android
+OpenIDE-Module-Localizing-Bundle: ch/jeda/netbeans/android/Bundle.prop
+ erties
+OpenIDE-Module-Specification-Version: 2.5.0
+

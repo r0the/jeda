@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="${ProjectName}" default="help">
+    <property file="local.properties"/>
+    <property file="ant.properties"/>
+    <property environment="env"/>
+    <condition property="sdk.dir" value="${env.ANDROID_HOME}">
+        <isset property="env.ANDROID_HOME"/>
+    </condition>
+    <property file="project.properties"/>
+    <fail message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable." unless="sdk.dir"/>
+
+    <!-- Load Jeda project configuration -->
+    <property file="jeda.properties"/>
+    <!-- Predefined AndroidManifest building blocks -->
+    <property name="jeda.android-manifest.start"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="]]>${jeda.application.package}<![CDATA["
+      android:versionCode="]]>${jeda.application.version.code}<![CDATA["
+      android:versionName="]]>${jeda.application.version.name}<![CDATA[">
+    <supports-screens android:largeScreens="true"
+                      android:xlargeScreens="true"/>
+    <uses-sdk android:minSdkVersion="15"
+              android:targetSdkVersion="21"/>
+]]></property>
+    <property name="jeda.android-manifest.permission.internet.true"><![CDATA[    <uses-permission android:name="android.permission.INTERNET"/>
+]]></property>
+    <property name="jeda.android-manifest.end"><![CDATA[
+    <application android:label="@string/app_name"
+                 android:icon="@drawable/icon">
+        <activity android:name="ch.jeda.platform.android.Main"
+                  android:icon="@drawable/icon"
+                  android:label="@string/app_name"
+                  android:configChanges="orientation|screenLayout|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+]]></property>
+
+    <!-- Choose AndroidManifest blocks according to Jeda project configuration. -->
+    <condition property="jeda.android-manifest.permission.internet" value="${jeda.android-manifest.permission.internet.true}">
+        <equals arg1="${jeda.android.networking}" arg2="true" casesensitive="false"/>
+    </condition>
+    <condition property="jeda.android-manifest.permission.internet" value="">
+        <not><equals arg1="${jeda.android.networking}" arg2="true" casesensitive="false"/></not>
+    </condition>
+
+    <!-- Write AndroidManifest.xml. -->
+    <!-- This cannot be done with the echoxml task because of namespace problems. -->
+    <echo output="AndroidManifest.xml" append="false" message="${jeda.android-manifest.start}"/>
+    <echo output="AndroidManifest.xml" append="true" message="${jeda.android-manifest.permission.internet}"/>
+    <echo output="AndroidManifest.xml" append="true" message="${jeda.android-manifest.end}"/>
+    <import file="custom_rules.xml" optional="true"/>
+    <import file="${sdk.dir}/tools/ant/build.xml"/>
+
+    <target name="-pre-build">
+        <mkdir dir="res/values"/>
+        <copy file="jeda.properties" todir="src/res"/>
+        <echoxml file="res/values/strings.xml" append="false">
+            <resources>
+                <string name="app_name">${jeda.application.title}</string>
+            </resources>
+        </echoxml>
+    </target>
+
+    <target name="-post-build">
+        <delete dir="src/res"/>
+    </target>
+</project>
