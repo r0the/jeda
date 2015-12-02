@@ -39,7 +39,7 @@ public class IntInputField extends InputField {
      * @since 1.3
      */
     public IntInputField(final int x, final int y) {
-        this(x, y, Alignment.TOP_LEFT);
+        this(x, y, Alignment.BOTTOM_LEFT);
     }
 
     /**

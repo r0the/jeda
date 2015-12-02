@@ -37,7 +37,7 @@ public class StringInputField extends InputField {
      * @since 2.0
      */
     public StringInputField(final double x, final double y) {
-        this(x, y, Alignment.TOP_LEFT);
+        this(x, y, Alignment.BOTTOM_LEFT);
     }
 
     /**
