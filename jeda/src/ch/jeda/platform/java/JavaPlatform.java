@@ -16,7 +16,9 @@
  */
 package ch.jeda.platform.java;
 
+import ch.jeda.Configuration;
 import ch.jeda.DisplayMetrics;
+import ch.jeda.Jeda;
 import ch.jeda.JedaError;
 import ch.jeda.event.SensorType;
 import ch.jeda.platform.AudioManagerImp;
@@ -99,7 +101,8 @@ class JavaPlatform implements Platform {
     @Override
     public DisplayMetrics getDisplayMetrics() {
         final Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-        final int dpi = Toolkit.getDefaultToolkit().getScreenResolution();
+        int dpi = Toolkit.getDefaultToolkit().getScreenResolution();
+        dpi = Configuration.getInt("jeda.canvas.dpi", dpi);
         return new DisplayMetrics(dpi, (int) size.getWidth(), (int) size.getHeight());
     }
 
