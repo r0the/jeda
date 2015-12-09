@@ -55,7 +55,7 @@ import java.util.Set;
  * the y axis points upwards.
  *
  * @since 2.0
- * @version 2
+ * @version 3
  */
 public class View {
 
@@ -67,8 +67,8 @@ public class View {
     private final Map<String, Set<Element>> elementsByName;
     private final Set<Element> elementSet;
     private final EventQueue eventQueue;
-    private final Set<Element> pendingInsertions;
-    private final Set<Element> pendingRemovals;
+    private final List<Element> pendingInsertions;
+    private final List<Element> pendingRemovals;
     private final UserControl userControl;
     private Canvas background;
     private Element[] elements;
@@ -140,8 +140,8 @@ public class View {
         elementsByName = new HashMap<String, Set<Element>>();
         elementSet = new HashSet<Element>();
         eventQueue = new EventQueue();
-        pendingInsertions = new HashSet<Element>();
-        pendingRemovals = new HashSet<Element>();
+        pendingInsertions = new ArrayList<Element>();
+        pendingRemovals = new ArrayList<Element>();
         elements = new Element[0];
         elementsChanged = false;
         paused = false;
