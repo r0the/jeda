@@ -25,16 +25,16 @@ abstract class ProgramClassWrapper {
     private final String name;
 
     @SuppressWarnings("unchecked")
-    static ProgramClassWrapper tryCreate(final Class<?> candidate, final Properties properties) {
+    static ProgramClassWrapper tryCreate(final Class<?> candidate) {
         // An abstract class cannot be a valid Jeda program.
         if (Modifier.isAbstract(candidate.getModifiers())) {
             return null;
         }
         else if (Program.class.isAssignableFrom(candidate)) {
-            return tryCreateInherited((Class<Program>) candidate, properties);
+            return tryCreateInherited((Class<Program>) candidate);
         }
         else if (hasInterface(candidate, JedaProgram.class)) {
-            return tryCreateJedaProgram(candidate, properties);
+            return tryCreateJedaProgram(candidate);
         }
         else {
             return null;
@@ -70,11 +70,11 @@ abstract class ProgramClassWrapper {
     }
 
     @SuppressWarnings("unchecked")
-    private static ProgramClassWrapper tryCreateJedaProgram(final Class<?> candidate, final Properties properties) {
+    private static ProgramClassWrapper tryCreateJedaProgram(final Class<?> candidate) {
         try {
             final Constructor<JedaProgram> constructor = (Constructor<JedaProgram>) candidate.getDeclaredConstructor();
             constructor.setAccessible(true);
-            return new JedaProgramClassWrapper(programName(candidate, properties), constructor);
+            return new JedaProgramClassWrapper(programName(candidate), constructor);
         }
         catch (final NoSuchMethodException ex) {
             return null;
@@ -84,22 +84,22 @@ abstract class ProgramClassWrapper {
         }
     }
 
-    private static ProgramClassWrapper tryCreateInherited(final Class<Program> candidate, final Properties properties) {
+    private static ProgramClassWrapper tryCreateInherited(final Class<Program> candidate) {
         try {
             final Constructor<Program> constructor = candidate.getDeclaredConstructor();
             if (!Modifier.isPublic(constructor.getModifiers())) {
                 return null;
             }
 
-            return new InheritedProgramClassWrapper(programName(candidate, properties), constructor);
+            return new InheritedProgramClassWrapper(programName(candidate), constructor);
         }
         catch (final NoSuchMethodException ex) {
             return null;
         }
     }
 
-    private static String programName(final Class<?> programClass, final Properties properties) {
-        final String name = properties.getString(programClass.getName());
+    private static String programName(final Class<?> programClass) {
+        final String name = Configuration.getString(programClass.getName(), null);
         if (name == null) {
             return programClass.getSimpleName();
         }

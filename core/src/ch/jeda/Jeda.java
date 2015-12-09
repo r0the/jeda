@@ -132,9 +132,10 @@ public final class Jeda {
      * @return the Jeda system properties
      *
      * @since 1.0
+     * @deprecated Use {@link Configuration} class instead.
      */
     public static Properties getProperties() {
-        return ENGINE.getProperties();
+        return Configuration.getProperties();
     }
 
     /**

@@ -30,12 +30,8 @@ import ch.jeda.platform.ViewCallback;
 import ch.jeda.platform.ViewImp;
 import ch.jeda.platform.ViewRequest;
 import ch.jeda.ui.ViewFeature;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -46,9 +42,6 @@ class JedaEngine implements Platform.Callback, Runnable {
     private static final TypefaceImp EMPTY_TYPEFACE_IMP = new EmptyTypefaceImp();
     private static final String DEFAULT_IMAGE_PATH = "res:jeda/logo-64x64.png";
     private static final double DEFAULT_TICK_FREQUENCY = 30.0;
-    private static final String JEDA_APPLICATION_PROPERTIES_FILE = "res/jeda.properties";
-    private static final String JEDA_PLATFORM_PROPERTIES_FILE = "res/jeda/platform.properties";
-    private static final String JEDA_SYSTEM_PROPERTIES_FILE = "res/jeda/system.properties";
     private final AudioManager audioManager;
     private final Object currentProgramLock;
     private final ImageImp defaultImageImp;
@@ -58,7 +51,6 @@ class JedaEngine implements Platform.Callback, Runnable {
     private final Object pauseLock;
     private final Platform platform;
     private final ProgramClassWrapper[] programClasses;
-    private final Properties properties;
     private final Timer timer;
     private JedaProgramExecutor currentProgram;
     private boolean paused;
@@ -78,10 +70,8 @@ class JedaEngine implements Platform.Callback, Runnable {
         frequencyMeter = new FrequencyMeter();
         pauseLock = new Object();
         timer = new Timer(DEFAULT_TICK_FREQUENCY);
-        // Load properties
-        properties = initProperties();
         // Init platform
-        platform = initPlatform(properties.getString("jeda.platform.class"), this);
+        platform = initPlatform(Configuration.getString("jeda.platform.class", null), this);
         // Init audio manager
         audioManager = new AudioManager(platform.getAudioManagerImp());
         // Load default image
@@ -94,7 +84,7 @@ class JedaEngine implements Platform.Callback, Runnable {
             final Class[] classes = platform.loadClasses();
             // Load jeda plugins and jeda programs
             for (int i = 0; i < classes.length; ++i) {
-                final ProgramClassWrapper pcw = ProgramClassWrapper.tryCreate(classes[i], properties);
+                final ProgramClassWrapper pcw = ProgramClassWrapper.tryCreate(classes[i]);
                 if (pcw != null) {
                     programClassList.add(pcw);
                 }
@@ -249,10 +239,6 @@ class JedaEngine implements Platform.Callback, Runnable {
         return programClasses;
     }
 
-    Properties getProperties() {
-        return properties;
-    }
-
     TypefaceImp getStandardTypefaceImp(final Platform.StandardTypeface standardTypeface) {
         final TypefaceImp result = platform.getStandardTypefaceImp(standardTypeface);
         if (result == null) {
@@ -378,42 +364,6 @@ class JedaEngine implements Platform.Callback, Runnable {
         catch (final InvocationTargetException ex) {
             initErr(ex.getCause(), Message.ENGINE_ERROR_PLATFORM_CONSTRUCTOR, platformClassName);
             return null;
-        }
-    }
-
-    private static Properties initProperties() {
-        final java.util.Properties result = new java.util.Properties();
-        loadProperties(result, JEDA_SYSTEM_PROPERTIES_FILE);
-        loadProperties(result, JEDA_PLATFORM_PROPERTIES_FILE);
-        loadProperties(result, JEDA_APPLICATION_PROPERTIES_FILE);
-        result.putAll(System.getProperties());
-        return new Properties(result);
-    }
-
-    private static void loadProperties(final java.util.Properties properties, final String path) {
-        final URL url = JedaEngine.class.getClassLoader().getResource(path);
-        if (url == null) {
-            initErr(Message.ENGINE_ERROR_PROPERTIES_NOT_FOUND, path);
-            return;
-        }
-
-        InputStream in = null;
-        try {
-            in = url.openStream();
-            properties.load(in);
-        }
-        catch (final Exception ex) {
-            initErr(Message.ENGINE_ERROR_PROPERTIES_READ, path);
-        }
-        finally {
-            if (in != null) {
-                try {
-                    in.close();
-                }
-                catch (final IOException ex) {
-                    // ignore
-                }
-            }
         }
     }
 

@@ -27,6 +27,7 @@ import java.util.TreeSet;
  *
  * @since 1.0
  * @version 2
+ * @deprecated Use {@link Configuration} or {@link Data} instead.
  */
 public final class Properties {
 

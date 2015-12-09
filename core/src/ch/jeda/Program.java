@@ -56,6 +56,7 @@ public abstract class Program implements Runnable {
      * @return the Jeda system properties
      *
      * @since 1.0
+     * @deprecated Use {@link Configuration} class instead.
      */
     protected final Properties getProperties() {
         return Jeda.getProperties();

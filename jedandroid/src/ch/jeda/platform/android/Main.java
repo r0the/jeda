@@ -77,7 +77,7 @@ public final class Main extends Activity {
                        ViewGroup.LayoutParams.MATCH_PARENT));
         Log.d("Jeda", "onCreate");
         addManager(sensorManager, "SensorManager");
-        Log.i("Jeda", "Starting Jeda " + Jeda.getProperties().getString("jeda.version"));
+        Log.i("Jeda", "Starting Jeda " + ch.jeda.Configuration.getString("jeda.version", "unknown version"));
         if (savedInstanceState == null) {
             Jeda.startProgram();
         }

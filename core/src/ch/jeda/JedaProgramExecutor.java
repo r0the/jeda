@@ -93,7 +93,7 @@ class JedaProgramExecutor implements Runnable {
         }
 
         // No program class is specified, try default program
-        final String defaultProgramName = engine.getProperties().getString(DEFAULT_PROGRAM_PROPERTY);
+        final String defaultProgramName = Configuration.getString(DEFAULT_PROGRAM_PROPERTY, null);
         for (int i = 0; i < candidates.length; ++i) {
             if (candidates[i].getProgramClassName().equals(defaultProgramName)) {
                 return candidates[i];
