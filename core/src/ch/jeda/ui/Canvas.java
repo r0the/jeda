@@ -154,10 +154,10 @@ public class Canvas {
      */
     public void drawCanvas(float x, float y, final Canvas canvas) {
         if (canvas == null) {
-            Log.d("Ignoring call with null canvas.");
+            Log.d("Ignoring Canvas.drawCanvas() with null canvas.");
         }
         else if (canvas == this) {
-            Log.d("Ignoring drawing of canvas on itself.");
+            Log.d("Ignoring Canvas.drawCanvas() trying to draw canvas on itself.");
         }
         else if (opacity != 0) {
             x = x * sx + tx;
@@ -229,7 +229,7 @@ public class Canvas {
      */
     public void drawEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
         if (radiusX <= 0f || radiusY <= 0f) {
-            Log.d("Ignoring call with non-positive radius.");
+            Log.d("Ignoring Canvas.drawEllipse() with non-positive radius.");
         }
         else {
             imp.drawEllipse(centerX * sx + tx, centerY * sy + ty, radiusX * slx, radiusY * sly);
@@ -272,7 +272,7 @@ public class Canvas {
      */
     public void drawImage(float x, float y, final Image image) {
         if (image == null || !image.isAvailable()) {
-            Log.d("Ignoring call with null or unavailable image.");
+            Log.d("Ignoring Canvas.drawImage() with null or unavailable image.");
         }
         else if (opacity != 0) {
             x = x * sx + tx;
@@ -287,6 +287,7 @@ public class Canvas {
      * @deprecated Use {@link #setOpacity(int)} followed by {@link #drawImage(double, double, ch.jeda.ui.Image)}
      * instead.
      */
+    @Deprecated
     public void drawImage(final double x, final double y, final Image image, final int alpha) {
         drawImage((float) x, (float) y, image, alpha);
     }
@@ -294,6 +295,7 @@ public class Canvas {
     /**
      * @deprecated Use {@link #setOpacity(int)} followed by {@link #drawImage(float, float, ch.jeda.ui.Image)} instead.
      */
+    @Deprecated
     void drawImage(float x, float y, final Image image, final int alpha) {
         if (image != null && image.isAvailable()) {
             x = x * sx + tx;
@@ -335,7 +337,7 @@ public class Canvas {
      */
     public void drawImage(float x, float y, float width, float height, final Image image) {
         if (image == null || !image.isAvailable()) {
-            Log.d("Ignoring call with null or unavailable image.");
+            Log.d("Ignoring Canvas.drawImage() with null or unavailable image.");
         }
         else if (opacity != 0) {
             x = x * sx + tx;
@@ -461,11 +463,19 @@ public class Canvas {
      * @since 2.0
      */
     public void drawRectangle(float x, float y, float width, float height) {
-        x = x * sx + tx;
-        y = y * sy + ty;
-        width = width * slx;
-        height = height * sly;
-        imp.drawRectangle(alignX(x, width), alignY(y, height), width, height);
+        if (width <= 0) {
+            Log.d("Ignoring Canvas.drawRectangle() with non-positive width.");
+        }
+        else if (height <= 0) {
+            Log.d("Ignoring Canvas.drawRectangle() with non-positive height.");
+        }
+        else {
+            x = x * sx + tx;
+            y = y * sy + ty;
+            width = width * slx;
+            height = height * sly;
+            imp.drawRectangle(alignX(x, width), alignY(y, height), width, height);
+        }
     }
 
     /**
@@ -548,7 +558,10 @@ public class Canvas {
      * @since 2.0
      */
     public void drawText(float x, float y, final String text) {
-        if (text != null && !text.isEmpty()) {
+        if (text != null || text.isEmpty()) {
+            Log.d("Ignoring Canvas.drawText() with null or empty text.");
+        }
+        else {
             x = x * sx + tx;
             y = y * sy + ty;
             final String[] lines = text.split("\n");
@@ -605,7 +618,7 @@ public class Canvas {
      */
     public void fillCircle(final float centerX, final float centerY, final float radius) {
         if (radius <= 0f) {
-            Log.d("Ignoring call with non-positive radius.");
+            Log.d("Ignoring Canvas.fillCircle() with non-positive radius.");
         }
         else {
             imp.fillEllipse(centerX * sx + tx, centerY * sy + ty, radius * slx, radius * sly);
@@ -640,7 +653,7 @@ public class Canvas {
      */
     public void fillEllipse(final float centerX, final float centerY, final float radiusX, final float radiusY) {
         if (radiusX <= 0f || radiusY <= 0f) {
-            Log.d("Ignoring call with non-positive radius.");
+            Log.d("Ignoring Canvas.fillEllipse() with non-positive radius.");
         }
         else {
             imp.fillEllipse(centerX * sx + tx, centerY * sy + ty, radiusX * slx, radiusY * sly);
@@ -716,11 +729,19 @@ public class Canvas {
      * @since 2.0
      */
     public void fillRectangle(float x, float y, float width, float height) {
-        x = x * sx + tx;
-        y = y * sy + ty;
-        width = width * slx;
-        height = height * sly;
-        imp.fillRectangle(alignX(x, width), alignY(y, height), width, height);
+        if (width <= 0) {
+            Log.d("Ignoring Canvas.fillRectangle() with non-positive width.");
+        }
+        else if (height <= 0) {
+            Log.d("Ignoring Canvas.fillRectangle() with non-positive height.");
+        }
+        else {
+            x = x * sx + tx;
+            y = y * sy + ty;
+            width = width * slx;
+            height = height * sly;
+            imp.fillRectangle(alignX(x, width), alignY(y, height), width, height);
+        }
     }
 
     /**
@@ -864,7 +885,7 @@ public class Canvas {
      */
     public void setAlignment(Alignment alignment) {
         if (alignment == null) {
-            Log.d("Ignoring call with null alignment.");
+            Log.d("Ignoring Canvas.setAlignment() with null alignment.");
         }
         else {
             this.alignment = alignment;
@@ -898,7 +919,7 @@ public class Canvas {
      */
     public void setColor(final Color color) {
         if (color == null) {
-            Log.d("Ignoring call with null color.");
+            Log.d("Ignoring Canvas.setColor() with null color.");
         }
         else if (!color.equals(this.color)) {
             this.color = color;
@@ -937,7 +958,7 @@ public class Canvas {
      */
     public void setLineWidth(final float lineWidth) {
         if (lineWidth < 0f) {
-            Log.d("Ignoring call with negative line width.");
+            Log.d("Ignoring Canvas.setLineWidth() with negative line width.");
         }
         else {
             this.lineWidth = lineWidth;
@@ -985,7 +1006,7 @@ public class Canvas {
      */
     public void setTextSize(final float textSize) {
         if (textSize <= 0) {
-            Log.d("Ignoring call with non-positive text size.");
+            Log.d("Ignoring Canvas.setTextSize() with non-positive text size.");
         }
 
         if (this.textSize != textSize) {
@@ -1004,7 +1025,7 @@ public class Canvas {
      */
     public void setTypeface(final Typeface typeface) {
         if (typeface == null || !typeface.isAvailable()) {
-            Log.d("Ignoring call with null or unavailable typeface.");
+            Log.d("Ignoring Canvas.setTypeface() with null or unavailable typeface.");
         }
         else if (!typeface.equals(this.typeface)) {
             this.typeface = typeface;
