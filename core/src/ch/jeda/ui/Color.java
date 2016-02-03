@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2015 by Stefan Rothe
+ * Copyright (C) 2011 - 2016 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,6 +18,7 @@ package ch.jeda.ui;
 
 import ch.jeda.Data;
 import ch.jeda.Storable;
+import ch.jeda.Util;
 import java.io.Serializable;
 
 /**
@@ -1869,6 +1870,15 @@ public final class Color implements Serializable, Storable {
     public static final Color YELLOW_A700 = new Color("#ffd600");
 
     private final int value;
+
+    /**
+     * Constructs a random color.
+     *
+     * @since 2.6
+     */
+    public Color() {
+        this(Util.randomInt(256), Util.randomInt(256), Util.randomInt(256));
+    }
 
     /**
      * Constructs a color from an internal value.
