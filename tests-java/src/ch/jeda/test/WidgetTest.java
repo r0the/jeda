@@ -17,9 +17,17 @@ public class WidgetTest extends Program {
         input.setTextSize(20);
 
         IntInputField bla = new IntInputField(200, 400);
+        bla.setMinimumValue(100);
+        bla.setMaximumValue(600);
         bla.setHintText("Age");
-        view.add(input, bla);
-        // Write initialization code here.
+
+        StringInputField pwd = new StringInputField(200, 600);
+        pwd.setHintText("Password");
+        pwd.setInputHidden(true);
+        pwd.setTextColor(Color.BLACK);
+        pwd.setTextSize(20);
+
+        view.add(input, bla, pwd);
         view.addEventListener(this);
     }
 }

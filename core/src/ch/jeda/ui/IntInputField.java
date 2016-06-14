@@ -19,22 +19,22 @@ package ch.jeda.ui;
 import ch.jeda.Convert;
 
 /**
- * Represents an input field for <tt>int</tt> values. An input field is a {@link ch.jeda.ui.Widget} that allows the user
- * to enter an <tt>int</tt> value.
+ * Represents an input field for <code>int</code> values. An input field is a {@link ch.jeda.ui.Widget}.
  *
  * @since 1.3
  */
 public class IntInputField extends InputField {
 
+    private static final char NEGATE_CHAR = '-';
     private int maximumValue;
     private int minimumValue;
-    private int value;
+    private String text;
 
     /**
-     * Constructs an input field for int values at the specified position.
+     * Constructs an input field for <code>int</code> values at the specified position.
      *
-     * @param x the x coordinate of the input field
-     * @param y the y coordinate of the input field
+     * @param x the horizontal coordinate of this input field
+     * @param y the vertical coordinate of this input field
      *
      * @since 1.3
      */
@@ -43,12 +43,12 @@ public class IntInputField extends InputField {
     }
 
     /**
-     * Constructs an input field for int values at the specified position with the specified alignment.
+     * Constructs an input field for <code>int</code> values at the specified position with the specified alignment.
      *
-     * @param x the x coordinate of the input field
-     * @param y the y coordinate of the input field
+     * @param x the horizontal coordinate of this input field
+     * @param y the vertical coordinate of this input field
      * @param alignment the alignment of the input field
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     * @throws NullPointerException if <code>alignment</code> is <code>null</code>
      *
      * @since 1.3
      */
@@ -56,6 +56,7 @@ public class IntInputField extends InputField {
         super(x, y, alignment);
         minimumValue = Integer.MIN_VALUE;
         maximumValue = Integer.MAX_VALUE;
+        text = "";
         setValue(0);
     }
 
@@ -96,7 +97,33 @@ public class IntInputField extends InputField {
      * @since 1.3
      */
     public final int getValue() {
-        return value;
+        try {
+            int value = Integer.parseInt(text);
+            if (minimumValue <= value && value <= maximumValue) {
+                return value;
+            }
+        }
+        catch (NumberFormatException ex) {
+        }
+
+        return 0;
+    }
+
+    /**
+     * Checks if the current input is a valid <code>int</code> in the specified range.
+     *
+     * @return <code>true</code> is the current input is valid, otherwise <code>false</code>
+     *
+     * @since 2.6
+     */
+    public final boolean isValid() {
+        try {
+            int value = Integer.parseInt(text);
+            return minimumValue <= value && value <= maximumValue;
+        }
+        catch (NumberFormatException ex) {
+            return false;
+        }
     }
 
     /**
@@ -111,7 +138,6 @@ public class IntInputField extends InputField {
      */
     public final void setMaximumValue(final int maximumValue) {
         this.maximumValue = maximumValue;
-        checkValue();
     }
 
     /**
@@ -126,7 +152,6 @@ public class IntInputField extends InputField {
      */
     public final void setMinimumValue(final int minimumValue) {
         this.minimumValue = minimumValue;
-        checkValue();
     }
 
     /**
@@ -138,38 +163,36 @@ public class IntInputField extends InputField {
      * @since 1.3
      */
     public final void setValue(final int value) {
-        this.value = value;
-        checkValue();
+        text = Convert.toString(value);
     }
 
     @Override
     protected void characterDeleted() {
-        value = value / 10;
-        setDisplayText(Convert.toString(value));
+        if (text.length() > 0) {
+            text = text.substring(0, text.length() - 1);
+            // Delete a leading negate sign
+            if (text.equals("-")) {
+                text = "";
+            }
+
+            setDisplayText(text);
+        }
     }
 
     @Override
     protected void characterTyped(final char ch) {
-        if (ch == '-') {
-            value = -value;
+        if (ch == NEGATE_CHAR) {
+            if (text.length() > 0 && text.charAt(0) == NEGATE_CHAR) {
+                text = text.substring(1);
+            }
+            else {
+                text = NEGATE_CHAR + text;
+            }
         }
         else if (Character.isDigit(ch)) {
-            final int digit = Character.digit(ch, 10);
-            long candidate = digit;
-            if (value != 0) {
-                candidate = value * 10l + MathUtil.signum(value) * digit;
-            }
-
-            if (minimumValue <= candidate && candidate <= maximumValue) {
-                value = (int) candidate;
-            }
+            text = text + ch;
         }
 
-        setDisplayText(Convert.toString(value));
-    }
-
-    private void checkValue() {
-        value = Math.max(minimumValue, Math.min(value, maximumValue));
-        setDisplayText(Convert.toString(value));
+        setDisplayText(text);
     }
 }

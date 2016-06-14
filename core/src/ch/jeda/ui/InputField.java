@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 - 2015 by Stefan Rothe
+ * Copyright (C) 2014 - 2016 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,7 +34,7 @@ public abstract class InputField extends TextWidget implements KeyTypedListener,
     private static final Color DEFAULT_HIGHLIGHT_COLOR = Color.PINK_A400;
     private static final float DEFAULT_WIDTH = 200f;
     private static final float DEFAULT_TEXT_SIZE = 16f;
-    private static final char HIDE_CHAR = '*';
+    private static final char HIDE_CHAR = '\u2022';
     private String displayText;
     private Color highlightColor;
     private String hintText;
@@ -44,8 +44,8 @@ public abstract class InputField extends TextWidget implements KeyTypedListener,
     /**
      * Constructs an input field at the specified position with the specified alignment.
      *
-     * @param x the x coordinate of this input field
-     * @param y the y coordinate of this input field
+     * @param x the horizontal coordinate of this input field
+     * @param y the vertical coordinate of this input field
      * @param alignment specifies how to align the input field relative to (<tt>x</tt>, <tt>y</tt>)
      * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
      *
@@ -58,7 +58,7 @@ public abstract class InputField extends TextWidget implements KeyTypedListener,
         setBackgroundColor(DEFAULT_BACKGROUND_COLOR);
         highlightColor = DEFAULT_HIGHLIGHT_COLOR;
         displayText = "";
-        hintText = "Input Field";
+        hintText = "";
         inputHidden = false;
     }
 
@@ -212,6 +212,7 @@ public abstract class InputField extends TextWidget implements KeyTypedListener,
         }
         else {
             if (isSelected()) {
+                // Draw text cursor
                 canvas.drawPolyline(endX, textY, endX, textY + getTextSize());
             }
 

@@ -17,8 +17,7 @@
 package ch.jeda.ui;
 
 /**
- * Represents an input field for {@link java.lang.String} values. An input field is a {@link ch.jeda.ui.Widget} that
- * allows the user to enter an {@link java.lang.String} value.
+ * Represents an input field for {@link java.lang.String} values. An input field is a {@link ch.jeda.ui.Widget}.
  *
  * @since 1.3
  * @version 2
@@ -31,8 +30,8 @@ public class StringInputField extends InputField {
     /**
      * Constructs an input field for String values at the specified position.
      *
-     * @param x the x coordinate of the input field
-     * @param y the y coordinate of the input field
+     * @param x the horizontal coordinate of this input field
+     * @param y the vertical coordinate of this input field
      *
      * @since 2.0
      */
@@ -43,10 +42,10 @@ public class StringInputField extends InputField {
     /**
      * Constructs an input field for String values at the specified position with the specified alignment.
      *
-     * @param x the x coordinate of the input field
-     * @param y the y coordinate of the input field
-     * @param alignment specifies how to align the input field relative to (<tt>x</tt>, <tt>y</tt>)
-     * @throws NullPointerException if <tt>alignment</tt> is <tt>null</tt>
+     * @param x the horizontal coordinate of this input field
+     * @param y the vertical coordinate of this input field
+     * @param alignment specifies how to align the input field relative to (<code>x</code>, <code>y</code>)
+     * @throws NullPointerException if <code>alignment</code> is <code>null</code>
      *
      * @since 2.0
      */
@@ -84,7 +83,7 @@ public class StringInputField extends InputField {
      * Sets the maximum length of text the user is allowed to enter.
      *
      * @param maximumLength the maximum length of text
-     * @throws IllegalArgumentException if <tt>maximumLength</tt> is smaller than <tt>1</tt>
+     * @throws IllegalArgumentException if <code>maximumLength</code> is smaller than <code>1</code>
      *
      * @see #getMaximumLength()
      * @since 1.3
