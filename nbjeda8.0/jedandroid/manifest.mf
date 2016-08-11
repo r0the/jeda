@@ -5,5 +5,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ch.jeda.netbeans.android
 OpenIDE-Module-Localizing-Bundle: ch/jeda/netbeans/android/Bundle.prop
  erties
-OpenIDE-Module-Specification-Version: 2.5.0
+OpenIDE-Module-Specification-Version: 2.6.0
 

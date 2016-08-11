@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 by Stefan Rothe
+ * Copyright (C) 2015 - 2016 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,7 +26,7 @@ import org.jbox2d.common.MathUtils;
 public final class MathF {
 
     /**
-     * The closest appxorimation of pi.
+     * The closest approximation of pi.
      *
      * @since 2.0
      */
@@ -37,11 +37,11 @@ public final class MathF {
     }
 
     /**
-     * Returns the arcus tangens of <code>y/x</code>.
+     * Returns the arcus tangent of <code>y/x</code>.
      *
-     * @param y the nomniator
+     * @param y the nominator
      * @param x the denominator
-     * @return the arcus tangens of <code>y/x</code>
+     * @return the arcus tangent of <code>y/x</code>
      *
      * @since 2.2
      */

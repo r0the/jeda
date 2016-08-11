@@ -12,9 +12,44 @@
  </tileset>
  <tileset firstgid="16" name="blocks_70x140" tilewidth="70" tileheight="140">
   <image source="blocks_70x140.png" width="350" height="700"/>
+  <tile id="5">
+   <objectgroup draworder="index">
+    <object x="3" y="-54" width="65" height="142">
+     <ellipse/>
+    </object>
+    <object x="5" y="131">
+     <polygon points="0,0 33,-83 60,-2"/>
+    </object>
+    <object x="2" y="40" width="67" height="56"/>
+   </objectgroup>
+  </tile>
  </tileset>
  <tileset firstgid="41" name="blocks_140x70" tilewidth="140" tileheight="70">
   <image source="blocks_140x70.png" width="700" height="700"/>
+  <tile id="2">
+   <objectgroup draworder="index">
+    <object x="58" y="-8" width="23" height="23">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="10">
+   <objectgroup draworder="index">
+    <object x="4" y="69">
+     <polygon points="0,0 -2,0 66,-66 134,1"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="12">
+   <objectgroup draworder="index">
+    <object x="71" y="3">
+     <polygon points="0,0 69,66 -71,66"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="20">
+   <objectgroup draworder="index"/>
+  </tile>
   <tile id="30">
    <objectgroup draworder="index">
     <object x="3" y="70">
@@ -33,10 +68,10 @@
   <data>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="1073741875"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="1073741867"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -222,13 +257,13 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="21"/>
-   <tile gid="71"/>
+   <tile gid="51"/>
    <tile gid="0"/>
-   <tile gid="71"/>
+   <tile gid="51"/>
    <tile gid="0"/>
-   <tile gid="71"/>
+   <tile gid="53"/>
    <tile gid="0"/>
-   <tile gid="71"/>
+   <tile gid="53"/>
    <tile gid="0"/>
    <tile gid="21"/>
    <tile gid="0"/>
@@ -244,7 +279,7 @@
   </data>
  </layer>
  <objectgroup name="Objektebene 1">
-  <object gid="1" x="426" y="211"/>
+  <object gid="1" x="431.333" y="211"/>
   <object name="Rectangle" x="269" y="111" width="118" height="75"/>
   <object name="Ellipse" x="115" y="422" width="200" height="68">
    <ellipse/>

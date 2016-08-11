@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2015 by Stefan Rothe
+ * Copyright (C) 2011 - 2016 by Stefan Rothe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -558,7 +558,7 @@ public class Canvas {
      * @since 2.0
      */
     public void drawText(float x, float y, final String text) {
-        if (text != null || text.isEmpty()) {
+        if (text == null || text.isEmpty()) {
             Log.d("Ignoring Canvas.drawText() with null or empty text.");
         }
         else {

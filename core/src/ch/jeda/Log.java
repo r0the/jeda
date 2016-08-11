@@ -36,7 +36,7 @@ public final class Log {
      * @since 2.1
      */
     public static final void d(final Object... message) {
-        imp.d(Convert.toString(message), null);
+        //imp.d(Convert.toString(message), null);
     }
 
     /**
@@ -46,7 +46,7 @@ public final class Log {
      * @since 2.1
      */
     public static final void d(final Throwable throwable, final Object... message) {
-        imp.d(Convert.toString(message), throwable);
+        //imp.d(Convert.toString(message), throwable);
     }
 
     /**
